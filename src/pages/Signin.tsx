@@ -1,23 +1,33 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { z, ZodType } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import FormErrors from "../components/FormErrors";
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 const Signin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const loginSchema: ZodType<LoginFormData> = z.object({
+    email: z.string().email(),
+    password: z.string(),
+  });
 
-  function handleSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
-    console.log(email, password);
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const submitLoginData = (data: LoginFormData) => {
+    console.log("IT WORKED", data);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -47,58 +57,52 @@ const Signin = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-            />
+          <form onSubmit={handleSubmit(submitLoginData)}>
+            <Box sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                autoComplete="email"
+                autoFocus
+                {...register("email")}
+              />
+              {errors.email && <FormErrors errors={errors.email.message} />}
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                {...register("password")}
+              />
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link to="#" style={{ padding: 5 }}>
-                  Forgot Password
-                </Link>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link to="#" style={{ padding: 5 }}>
+                    Forgot Password
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link to="/register" style={{ padding: 5 }}>
+                    Register
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link to="/register" style={{ padding: 5 }}>
-                  Register
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
+            </Box>
+          </form>
         </Paper>
       </Box>
     </Container>
