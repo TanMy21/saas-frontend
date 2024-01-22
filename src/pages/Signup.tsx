@@ -8,19 +8,65 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { z, ZodType } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import FormErrors from "../components/FormErrors";
+
+interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  organization: string;
+}
 
 const Signup = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [organization, setOrganization] = useState("");
+  const registerSchema: ZodType<RegisterFormData> = z
+    .object({
+      firstName: z
+        .string()
+        .min(2, { message: "First Name should be more than 1 character *" })
+        .max(30, { message: "First Name should be less than 30 characters *" }),
+      lastName: z
+        .string()
+        .min(2, { message: "Last Name should be more than 1 character *" })
+        .max(30, { message: "Last Name should be less than 30 characters *" }),
+      email: z.string().email(),
+      password: z
+        .string()
+        .min(6, { message: "password should be more than 6 characters *" })
+        .max(20, { message: "password should be less than 20 characters *" }),
+      confirmPassword: z
+        .string()
+        .min(6, { message: "password should be more than 6 characters *" })
+        .max(20, { message: "password should be less than 20 characters *" }),
+      organization: z
+        .string()
+        .min(2, {
+          message: "organization name should be more than 1 character *",
+        })
+        .max(30, {
+          message: "organization name should be less than 30 characters *",
+        }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords do not match *",
+      path: ["confirmPassword"],
+    });
 
-  function handleSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
-    console.log(firstName, lastName, email, password);
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const submitRegisterData = (data: RegisterFormData) => {
+    console.log("IT WORKED", data);
+  };
 
   return (
     <>
@@ -34,7 +80,7 @@ const Signup = () => {
           }}
         >
           <Paper
-            elevation={8}
+            elevation={2}
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -52,104 +98,107 @@ const Signup = () => {
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
-            <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit}
-              sx={{ mt: 3 }}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    autoComplete="given-name"
-                    name="firstName"
-                    required
-                    fullWidth
-                    id="firstName"
-                    label="First Name"
-                    autoFocus
-                    onChange={(e) => setFirstName(e.target.value)}
-                    value={firstName}
-                  />
+            <form onSubmit={handleSubmit(submitRegisterData)}>
+              <Box sx={{ mt: 3 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      autoComplete="given-name"
+                      required
+                      fullWidth
+                      id="firstName"
+                      label="First Name"
+                      autoFocus
+                      {...register("firstName")}
+                    />
+                    {errors.firstName && (
+                      <FormErrors errors={errors.firstName.message} />
+                    )}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="lastName"
+                      label="Last Name"
+                      autoComplete="family-name"
+                      {...register("lastName")}
+                    />
+                    {errors.lastName && (
+                      <FormErrors errors={errors.lastName.message} />
+                    )}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      autoComplete="email"
+                      {...register("email")}
+                    />
+                    {errors.email && (
+                      <FormErrors errors={errors.email.message} />
+                    )}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="new-password"
+                      {...register("password")}
+                    />
+                    {errors.password && (
+                      <FormErrors errors={errors.password.message} />
+                    )}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      label="confirm password"
+                      type="password"
+                      id="confirmPassword"
+                      autoComplete="confirm-password"
+                      {...register("confirmPassword")}
+                    />
+                    {errors.confirmPassword && (
+                      <FormErrors errors={errors.confirmPassword.message} />
+                    )}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      label="organization"
+                      type="organization"
+                      id="organization"
+                      autoComplete="organization"
+                      {...register("organization")}
+                    />
+                    {errors.organization && (
+                      <FormErrors errors={errors.organization.message} />
+                    )}
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="lastName"
-                    label="Last Name"
-                    name="lastName"
-                    autoComplete="family-name"
-                    onChange={(e) => setLastName(e.target.value)}
-                    value={lastName}
-                  />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign Up
+                </Button>
+                <Grid container justifyContent="flex-end">
+                  <Grid item>
+                    <Link to="/login">Already have an account? Sign in</Link>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="confirmPassword"
-                    label="confirm password"
-                    type="confirmPassword"
-                    id="confirmPassword"
-                    autoComplete="confirm-password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="organization"
-                    label="organization"
-                    type="organization"
-                    id="organization"
-                    autoComplete="organization"
-                    onChange={(e) => setOrganization(e.target.value)}
-                    value={organization}
-                  />
-                </Grid>
-              </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign Up
-              </Button>
-              <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <Link to="/login">Already have an account? Sign in</Link>
-                </Grid>
-              </Grid>
-            </Box>
+              </Box>
+            </form>
           </Paper>
         </Box>
       </Container>
