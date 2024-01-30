@@ -7,15 +7,17 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import FormErrors from "../components/FormErrors";
+import { useAddNewUserMutation } from "../app/slices/userApiSlice";
+import { useEffect } from "react";
 
 interface RegisterFormData {
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -23,13 +25,23 @@ interface RegisterFormData {
 }
 
 const Signup = () => {
+  const [addNewUser, { isSuccess }] = useAddNewUserMutation();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/login");
+    }
+  }, [isSuccess, navigate]);
+
   const registerSchema: ZodType<RegisterFormData> = z
     .object({
-      firstName: z
+      firstname: z
         .string()
         .min(2, { message: "First Name should be more than 1 character *" })
         .max(30, { message: "First Name should be less than 30 characters *" }),
-      lastName: z
+      lastname: z
         .string()
         .min(2, { message: "Last Name should be more than 1 character *" })
         .max(30, { message: "Last Name should be less than 30 characters *" }),
@@ -64,8 +76,10 @@ const Signup = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const submitRegisterData = (data: RegisterFormData) => {
+  const submitRegisterData = async (data: RegisterFormData) => {
     console.log("IT WORKED", data);
+    const { confirmPassword, ...newData } = data;
+    await addNewUser(newData);
   };
 
   return (
@@ -109,10 +123,10 @@ const Signup = () => {
                       id="firstName"
                       label="First Name"
                       autoFocus
-                      {...register("firstName")}
+                      {...register("firstname")}
                     />
-                    {errors.firstName && (
-                      <FormErrors errors={errors.firstName.message} />
+                    {errors.firstname && (
+                      <FormErrors errors={errors.firstname.message} />
                     )}
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -122,10 +136,10 @@ const Signup = () => {
                       id="lastName"
                       label="Last Name"
                       autoComplete="family-name"
-                      {...register("lastName")}
+                      {...register("lastname")}
                     />
-                    {errors.lastName && (
-                      <FormErrors errors={errors.lastName.message} />
+                    {errors.lastname && (
+                      <FormErrors errors={errors.lastname.message} />
                     )}
                   </Grid>
                   <Grid item xs={12}>
