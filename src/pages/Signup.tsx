@@ -159,7 +159,7 @@ const Signup = () => {
                     <TextField
                       required
                       fullWidth
-                      label="confirm password"
+                      label="Confirm password"
                       type="password"
                       id="confirmPassword"
                       autoComplete="confirm-password"
@@ -173,7 +173,7 @@ const Signup = () => {
                     <TextField
                       required
                       fullWidth
-                      label="organization"
+                      label="Organization"
                       type="organization"
                       id="organization"
                       autoComplete="organization"

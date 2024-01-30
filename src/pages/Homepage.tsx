@@ -23,7 +23,7 @@ const Homepage = () => {
               style={{ textDecoration: "none", color: "white" }}
             >
               <Button
-                style={{ backgroundColor: "#3C46FF" }}
+                style={{ backgroundColor: "#0068FF" }}
                 variant="contained"
                 size="large"
               >
@@ -31,7 +31,7 @@ const Homepage = () => {
               </Button>
             </Link>
             <Button
-              style={{ backgroundColor: "#08088C" }}
+              style={{ backgroundColor: "#44546A" }}
               variant="contained"
               size="large"
             >
