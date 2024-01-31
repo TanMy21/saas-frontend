@@ -1,10 +1,13 @@
 import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import FormErrors from "../components/FormErrors";
+import { useDispatch } from "react-redux";
+import { useLoginMutation } from "../app/slices/authApiSlice";
+import { setCredentials } from "../app/slices/authSlice";
 
 interface LoginFormData {
   email: string;
@@ -12,6 +15,13 @@ interface LoginFormData {
 }
 
 const Signin = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [login, { isLoading }] = useLoginMutation();
+
+  if (isLoading) return <p>Loading...</p>;
+
   const loginSchema: ZodType<LoginFormData> = z.object({
     email: z.string().email(),
     password: z.string(),
@@ -25,8 +35,13 @@ const Signin = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const submitLoginData = (data: LoginFormData) => {
+  const submitLoginData = async (data: LoginFormData) => {
     console.log("IT WORKED", data);
+    const { email, password } = data;
+    //unwrap for try catch block add if needed
+    const { accessToken } = await login({ email, password }).unwrap();
+    dispatch(setCredentials({ accessToken }));
+    navigate("/dash");
   };
 
   return (
