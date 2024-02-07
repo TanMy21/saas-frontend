@@ -1,6 +1,12 @@
 import { apiSlice } from "../api/apiSlice";
 import { logOut } from "./authSlice";
 
+
+interface AuthResponse {
+  accessToken: string;
+}
+
+
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
@@ -29,7 +35,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
-    refresh: builder.mutation({
+    refresh: builder.mutation<AuthResponse, void>({
       query: () => ({
         url: "/refresh",
         method: "GET",

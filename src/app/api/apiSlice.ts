@@ -8,6 +8,14 @@ import {
 import { RootState } from "../store";
 import { setCredentials } from "../slices/authSlice";
 
+interface CustomError {
+  data: {
+    message: string;
+    stack: string;
+  };
+  status: number;
+}
+
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:8686",
   credentials: "include",
@@ -24,6 +32,7 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
+  CustomError,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   // console.log(args) // request url, method, body

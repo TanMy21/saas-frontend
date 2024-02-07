@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import FormErrors from "../components/FormErrors";
 import { useAddNewUserMutation } from "../app/slices/userApiSlice";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 interface RegisterFormData {
   firstname: string;
@@ -25,15 +26,35 @@ interface RegisterFormData {
 }
 
 const Signup = () => {
-  const [addNewUser, { isSuccess }] = useAddNewUserMutation();
+  const [addNewUser, { isSuccess, isError, error }] = useAddNewUserMutation();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isSuccess) {
+      toast.success("Registration Successful !", {
+        position: "top-right",
+        autoClose: 3000,
+        closeOnClick: true,
+        theme: "colored",
+      });
       navigate("/login");
     }
-  }, [isSuccess, navigate]);
+
+    if (isError) {
+      if (Array.isArray((error as any).data.error)) {
+        (error as any).data.error.forEach((el: any) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error((error as any).data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isSuccess, isError, navigate]);
 
   const registerSchema: ZodType<RegisterFormData> = z
     .object({
@@ -77,9 +98,9 @@ const Signup = () => {
   });
 
   const submitRegisterData = async (data: RegisterFormData) => {
-    console.log("IT WORKED", data);
     const { confirmPassword, ...newData } = data;
-    await addNewUser(newData);
+    const userRegistered = await addNewUser(newData);
+    console.log(userRegistered);
   };
 
   return (
