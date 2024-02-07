@@ -1,11 +1,13 @@
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import DashBoardHeader from "../components/DashBoardHeader";
 import { useNavigate } from "react-router-dom";
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
 import { useEffect } from "react";
-
+import useAuth from "../hooks/useAuth";
 const Dashboard = () => {
   const navigate = useNavigate();
+
+  const { email, isAdmin, isAuthenticated } = useAuth();
 
   const [
     sendLogout,
@@ -30,7 +32,18 @@ const Dashboard = () => {
   return (
     <>
       <DashBoardHeader />
-      <div>Dashboard</div>
+      <Typography variant="h1" component="h2">
+        Dashboard
+      </Typography>
+      <Typography variant="h5" component="h2">
+        {email}
+      </Typography>
+      <Typography variant="h5" component="h2">
+        {isAdmin ? "Admin" : "Not Admin"}
+      </Typography>
+      <Typography variant="h5" component="h2">
+        {isAuthenticated ? "Authenticated" : "Not Authenticated"}
+      </Typography>
       <Button
         style={{ backgroundColor: "#44546A" }}
         variant="contained"
