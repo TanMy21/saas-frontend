@@ -99,8 +99,7 @@ const Signup = () => {
 
   const submitRegisterData = async (data: RegisterFormData) => {
     const { confirmPassword, ...newData } = data;
-    const userRegistered = await addNewUser(newData);
-    console.log(userRegistered);
+    await addNewUser(newData);
   };
 
   return (

@@ -7,24 +7,20 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 import { setCredentials } from "../slices/authSlice";
-
-interface CustomError {
-  data: {
-    message: string;
-    stack: string;
-  };
-  status: number;
-}
+// import Cookies from "js-cookie";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:8686",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
+    // const acc_token = Cookies.get("acc_tk");
+   /* console.log("Slice Token: ", acc_token);*/
     const token = (getState() as RootState).auth.token;
-
+    console.log("Slice Token: ", getState() as RootState);
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
     }
+    console.log("Slice Headers: ", headers);
     return headers;
   },
 });
@@ -32,7 +28,6 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
-  CustomError,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   // console.log(args) // request url, method, body
@@ -40,14 +35,14 @@ const baseQueryWithReauth: BaseQueryFn<
   // console.log(extraOptions) //custom like {shout: true}
 
   let result = await baseQuery(args, api, extraOptions);
-
+  console.log("Slice Result: ", result);
   // If you want, handle other status codes, too
   if (result?.error?.status === 403) {
     console.log("sending refresh token");
 
     // send refresh token to get new access token
     const refreshResult = await baseQuery("/refresh", api, extraOptions);
-
+    console.log("Refresh Send: ", refreshResult);
     if (refreshResult?.data) {
       // store the new token
       api.dispatch(setCredentials({ ...refreshResult.data }));
@@ -70,5 +65,5 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
   tagTypes: ["User"],
-  endpoints: (builder) => ({}),
+  endpoints: () => ({}),
 });

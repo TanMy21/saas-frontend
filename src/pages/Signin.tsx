@@ -8,6 +8,8 @@ import FormErrors from "../components/FormErrors";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../app/slices/authApiSlice";
 import { setCredentials } from "../app/slices/authSlice";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 interface LoginFormData {
   email: string;
@@ -18,9 +20,25 @@ const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading, isError, error }] = useLoginMutation();
 
   if (isLoading) return <p>Loading...</p>;
+
+  useEffect(() => {
+    if (isError) {
+      if (Array.isArray((error as any).data.error)) {
+        (error as any).data.error.forEach((el: any) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error((error as any).data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isError]);
 
   const loginSchema: ZodType<LoginFormData> = z.object({
     email: z.string().email(),
@@ -36,7 +54,6 @@ const Signin = () => {
   });
 
   const submitLoginData = async (data: LoginFormData) => {
-    console.log("IT WORKED", data);
     const { email, password } = data;
     //unwrap for try catch block add if needed
     const { accessToken } = await login({ email, password }).unwrap();

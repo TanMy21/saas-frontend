@@ -1,11 +1,9 @@
 import { apiSlice } from "../api/apiSlice";
 import { logOut } from "./authSlice";
 
-
 interface AuthResponse {
   accessToken: string;
 }
-
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -16,15 +14,17 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body: { ...credentials },
       }),
     }),
-    sendLogout: builder.mutation({
+    sendLogout: builder.mutation<any, void>({
       query: () => ({
         url: "/logout",
         method: "POST",
+        credentials: "include",
       }),
-      async onQueryStarted({ dispatch, queryFulfilled }) {
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
+          console.log("Auth Api Slice: ", dispatch);
           const { data } = await queryFulfilled;
-          console.log(data);
+          console.log("Auth Api Slice: ", data);
           dispatch(logOut());
           // dispatch(apiSlice.util.resetApiState());
           setTimeout(() => {
