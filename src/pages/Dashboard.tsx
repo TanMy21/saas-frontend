@@ -1,9 +1,10 @@
 import { Button, Typography } from "@mui/material";
 import DashBoardHeader from "../components/DashBoardHeader";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
 import { useEffect } from "react";
 import useAuth from "../hooks/useAuth";
+
 const Dashboard = () => {
   const navigate = useNavigate();
 
@@ -44,6 +45,15 @@ const Dashboard = () => {
       <Typography variant="h5" component="h2">
         {isAuthenticated ? "Authenticated" : "Not Authenticated"}
       </Typography>
+      <Link to="/profile" style={{ textDecoration: "none", color: "white" }}>
+        <Button
+          style={{ backgroundColor: "#0068FF" }}
+          variant="contained"
+          size="large"
+        >
+          Profile
+        </Button>
+      </Link>
       <Button
         style={{ backgroundColor: "#44546A" }}
         variant="contained"

@@ -6,6 +6,7 @@ import Signin from "../pages/Signin";
 import Signup from "../pages/Signup";
 import Dashboard from "../pages/Dashboard";
 import Protected from "../components/Protected";
+import Profile from "../pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,14 @@ const router = createBrowserRouter([
   },
   { path: "/register", element: <Signup /> },
   { path: "/login", element: <Signin /> },
+  {
+    path: "/profile",
+    element: (
+      <Protected>
+        <Profile />
+      </Protected>
+    ),
+  },
   {
     path: "/dash",
     element: (

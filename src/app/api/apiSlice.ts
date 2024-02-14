@@ -6,21 +6,23 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
-import { setCredentials } from "../slices/authSlice";
-// import Cookies from "js-cookie";
+import { setCredentials, logOut } from "../slices/authSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:8686",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     // const acc_token = Cookies.get("acc_tk");
-   /* console.log("Slice Token: ", acc_token);*/
+    /* console.log("Slice Token: ", acc_token);*/
+    // const state = getState() as RootState;
     const token = (getState() as RootState).auth.token;
-    console.log("Slice Token: ", getState() as RootState);
+    console.log("Slice Token: ", token);
     if (token) {
+      console.log("Inside if token: ", token);
       headers.set("authorization", `Bearer ${token}`);
     }
-    console.log("Slice Headers: ", headers);
+    console.log("Slice Headers: ", headers.get("authorization"));
+    console.log("Slice Token: ", token);
     return headers;
   },
 });
@@ -45,7 +47,7 @@ const baseQueryWithReauth: BaseQueryFn<
     console.log("Refresh Send: ", refreshResult);
     if (refreshResult?.data) {
       // store the new token
-      api.dispatch(setCredentials({ ...refreshResult.data }));
+      api.dispatch(setCredentials(refreshResult?.data));
 
       // retry original query with new access token
       result = await baseQuery(args, api, extraOptions);

@@ -1,13 +1,26 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+
+interface AuthState {
+  token: string | null;
+  accessToken: string | null;
+}
+
+const initialState: AuthState = {
+  token: null,
+  accessToken: null,
+};
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: { token: null },
+  initialState,
   reducers: {
-    setCredentials: (state, action) => {
-      const { accessToken } = action.payload;
+    setCredentials: (state, { payload }: PayloadAction<AuthState>) => {
+      console.log("Set Credentaials Hit");
+      const { accessToken } = payload;
       state.token = accessToken;
+      console.log("Auth SLice: ", state.token);
+      // state.token = JSON.stringify(action.payload);
     },
     logOut: (state) => {
       state.token = null;

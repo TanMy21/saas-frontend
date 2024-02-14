@@ -1,5 +1,5 @@
 import { apiSlice } from "../api/apiSlice";
-import { logOut } from "./authSlice";
+import { setCredentials, logOut } from "./authSlice";
 
 interface AuthResponse {
   accessToken: string;
@@ -12,7 +12,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: "/login",
         method: "POST",
         body: { ...credentials },
-      }),
+      }), 
     }),
     sendLogout: builder.mutation<any, void>({
       query: () => ({
@@ -41,6 +41,16 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      try {
+        const { data } = await queryFulfilled;
+        console.log(data);
+        const { accessToken } = data;
+        dispatch(setCredentials({ accessToken }));
+      } catch (err) {
+        console.log(err);
+      }
+    },
   }),
 });
 
