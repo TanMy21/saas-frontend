@@ -7,7 +7,16 @@ import { Link } from "react-router-dom";
 // import useAuth from "../hooks/useAuth";
 
 const Profile = () => {
-  const { data: profile, isLoading, isError, error } = useGetMeQuery();
+  const {
+    data: profile,
+    isLoading,
+    isError,
+    error,
+  } = useGetMeQuery("getMe", {
+    pollingInterval: 10000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
 
   useEffect(() => {
     if (isError) {
@@ -27,8 +36,8 @@ const Profile = () => {
 
   if (isLoading) return <p>Logging Out...</p>;
 
-  if (isError) return <p>Error: </p>;
-  console.log(profile);
+  // if (isError) return <p>Error: </p>;
+  // console.log(profile);
   const { firstname, lastname, email, organization, verified, isAdmin } =
     profile;
   return (

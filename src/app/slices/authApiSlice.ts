@@ -12,7 +12,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: "/login",
         method: "POST",
         body: { ...credentials },
-      }), 
+      }),
     }),
     sendLogout: builder.mutation<any, void>({
       query: () => ({
@@ -22,9 +22,8 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
-          console.log("Auth Api Slice: ", dispatch);
-          const { data } = await queryFulfilled;
-          console.log("Auth Api Slice: ", data);
+          // const { data } = await queryFulfilled;
+
           dispatch(logOut());
           // dispatch(apiSlice.util.resetApiState());
           setTimeout(() => {
@@ -44,8 +43,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
     async onQueryStarted(arg, { dispatch, queryFulfilled }) {
       try {
         const { data } = await queryFulfilled;
-        console.log(data);
+        console.log("Auth Api Slice OQS: ", data);
         const { accessToken } = data;
+        console.log("Auth Api Slice OQS: ", accessToken);
         dispatch(setCredentials({ accessToken }));
       } catch (err) {
         console.log(err);

@@ -15,6 +15,7 @@ import usePersist from "../hooks/persist";
 interface LoginFormData {
   email: string;
   password: string;
+  accessToken: string;
 }
 
 const Signin = () => {
@@ -42,14 +43,11 @@ const Signin = () => {
     }
   }, [isError]);
 
-
   useEffect(() => {
     if (isSuccess) {
       setPersist((prev) => !prev);
     }
   }, [isSuccess, setPersist]);
-  
-
 
   const loginSchema: ZodType<LoginFormData> = z.object({
     email: z.string().email(),
@@ -68,7 +66,6 @@ const Signin = () => {
     const { email, password } = data;
     //unwrap for try catch block add if needed
     const { accessToken } = await login({ email, password }).unwrap();
-    console.log("Sign IN: ", accessToken);
     dispatch(setCredentials({ accessToken }));
     navigate("/dash");
   };
