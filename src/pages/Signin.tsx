@@ -10,7 +10,6 @@ import { useLoginMutation } from "../app/slices/authApiSlice";
 import { setCredentials } from "../app/slices/authSlice";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
-import usePersist from "../hooks/persist";
 
 interface LoginFormData {
   email: string;
@@ -21,7 +20,6 @@ interface LoginFormData {
 const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [persist, setPersist] = usePersist();
 
   const [login, { isSuccess, isLoading, isError, error }] = useLoginMutation();
 
@@ -45,9 +43,10 @@ const Signin = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      setPersist((prev) => !prev);
+      // handleToggle();
+      console.log("Signin: ", persist);
     }
-  }, [isSuccess, setPersist]);
+  }, [isSuccess]);
 
   const loginSchema: ZodType<LoginFormData> = z.object({
     email: z.string().email(),

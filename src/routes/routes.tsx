@@ -6,7 +6,8 @@ import Signin from "../pages/Signin";
 import Signup from "../pages/Signup";
 import Dashboard from "../pages/Dashboard";
 import Protected from "../components/Protected";
-import Profile from "../pages/Profile";
+import Workspace from "../pages/Workspace";
+import PersistLogin from "../app/slices/PersistLogin";
 
 const router = createBrowserRouter([
   {
@@ -17,21 +18,42 @@ const router = createBrowserRouter([
   { path: "/register", element: <Signup /> },
   { path: "/login", element: <Signin /> },
   {
-    path: "/profile",
-    element: (
-      <Protected>
-        <Profile />
-      </Protected>
-    ),
+    element: <PersistLogin />,
+    children: [
+      {
+        path: "/dash",
+        element: (
+          // <Protected>
+          <Dashboard />
+          // </Protected>
+        ),
+      },
+      {
+        path: "/workspace",
+        element: (
+          // <Protected>
+          <Workspace />
+          // </Protected>
+        ),
+      },
+    ],
   },
-  {
-    path: "/dash",
-    element: (
-      <Protected>
-        <Dashboard />
-      </Protected>
-    ),
-  },
+  // {
+  //   path: "/workspace",
+  //   element: (
+  //     <Protected>
+  //       <Workspace />
+  //     </Protected>
+  //   ),
+  // },
+  // {
+  //   path: "/dash",
+  //   element: (
+  //     <Protected>
+  //       <Dashboard />
+  //     </Protected>
+  //   ),
+  // },
 ]);
 
 export default router;

@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectLoggedInState } from "../app/slices/authSlice";
 
 const usePersist = () => {
+  const isLoggedIn = useSelector(selectLoggedInState);
+
   const [persist, setPersist] = useState(
-    JSON.parse(localStorage.getItem("persist") || "") || false
+    localStorage.getItem("persist") || false
   );
 
   useEffect(() => {
-    localStorage.setItem("persist", JSON.stringify(persist));
-  }, [persist]);
+    if (isLoggedIn) {
+      localStorage.setItem("persist", "true");
+      console.log("Persist Hook: ", persist);
+    }
+  }, [isLoggedIn]);
 
   return [persist, setPersist];
 };

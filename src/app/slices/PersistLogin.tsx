@@ -18,7 +18,7 @@ const PersistLogin = () => {
   useEffect(() => {
     if (
       effectRan.current === true ||
-      process.env.REACT_APP_NODE_ENV !== "development"
+      import.meta.env.VITE_REACT_APP_NODE_ENV !== "development"
     ) {
       // React 18 Strict Mode
 
