@@ -1,8 +1,12 @@
 import {
   Box,
   Button,
+  Card,
+  CardActions,
+  CardContent,
   Divider,
   Drawer,
+  Grid,
   List,
   ListItem,
   ListItemButton,
@@ -18,9 +22,10 @@ import useAuth from "../hooks/useAuth";
 import { useGetMeQuery } from "../app/slices/userApiSlice";
 import { toast } from "react-toastify";
 import AddIcon from "@mui/icons-material/Add";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { email: authEmail, isAdmin } = useAuth();
 
@@ -35,19 +40,19 @@ const Dashboard = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  const [
-    sendLogout,
-    {
-      isLoading: isLoadingLogout,
-      isSuccess: isSuccessLogout,
-      isError: isErrorLogout,
-      // error
-    },
-  ] = useSendLogoutMutation();
+  // const [
+  //   sendLogout,
+  //   {
+  //     isLoading: isLoadingLogout,
+  //     isSuccess: isSuccessLogout,
+  //     isError: isErrorLogout,
+  //     // error
+  //   },
+  // ] = useSendLogoutMutation();
 
-  useEffect(() => {
-    if (isSuccessLogout) navigate("/");
-  }, [isSuccessLogout, navigate]);
+  // useEffect(() => {
+  //   if (isSuccessLogout) navigate("/");
+  // }, [isSuccessLogout, navigate]);
 
   useEffect(() => {
     if (isError) {
@@ -65,12 +70,10 @@ const Dashboard = () => {
     }
   }, [isError]);
 
-  const onLogoutClicked = () => sendLogout();
-
   if (isLoading) return <p>Logging Out...</p>;
-  if (isLoadingLogout) return <p>Logging Out...</p>;
+  // if (isLoadingLogout) return <p>Logging Out...</p>;
 
-  if (isErrorLogout) return <p>Error: </p>;
+  // if (isErrorLogout) return <p>Error: </p>;
   const { firstname, lastname, organization, verified, email } = profile;
   const drawerWidth = 240;
   const displayName = `${firstname}'${
@@ -141,17 +144,11 @@ const Dashboard = () => {
             Workspace
           </Typography>
           <Typography variant="h5" component="h2">
-            Welcome, {firstname} {lastname}
-          </Typography>
-          <Typography variant="h5" component="h2">
-            {organization}
-          </Typography>
-          <Typography variant="h5" component="h2">
-            {verified ? "Verified" : "Not Verified "}
-          </Typography>
-          <Typography variant="h5" component="h2">
+            Welcome, {firstname} {lastname} , {organization} ,{" "}
+            {verified ? "Verified" : "Not Verified "} ,
             {isAdmin ? "Admin" : "Not Admin"}
           </Typography>
+
           <Box sx={{ mt: 2 }}>
             <Link
               to="/workspace"
@@ -170,14 +167,31 @@ const Dashboard = () => {
                 Create New Survey
               </Button>
             </Link>
-            <Button
-              style={{ backgroundColor: "#44546A" }}
-              variant="contained"
-              size="large"
-              onClick={onLogoutClicked}
+          </Box>
+
+          <Divider sx={{ mt: 2, mb: 2 }} />
+          <Box display="flex" flexDirection="row">
+            <Grid
+              container
+              spacing={{ xs: 2, md: 3 }}
+              columns={{ xs: 8, sm: 16, md: 24 }}
             >
-              Logout
-            </Button>
+              {Array.from(Array(20)).map((_, index) => (
+                <Grid item xs={2} sm={4} md={4} key={index}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="h3">Survey Title</Typography>
+                    </CardContent>
+                    <Divider />
+                    <CardActions>
+                      <Button>
+                        <MoreHorizIcon />
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
           </Box>
         </Box>
 
