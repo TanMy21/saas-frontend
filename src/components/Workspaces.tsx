@@ -12,14 +12,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { Link, NavLink } from "react-router-dom";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import CloseIcon from "@mui/icons-material/Close";
 
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
+import { useCreateNewWorkspaceMutation } from "../app/slices/workspaceApiSlice";
+import { toast } from "react-toastify";
+import WorkspaceSurveysListCount from "./WorkspaceSurveysListCount";
+
 const Workspaces = ({ workspaces }) => {
+  const [createNewWorkspace, { isSuccess, isError, error }] =
+    useCreateNewWorkspaceMutation();
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -33,8 +40,35 @@ const Workspaces = ({ workspaces }) => {
   const createWorkspace = async (data) => {
     const { workspaceName } = data;
     //unwrap for try catch block add if needed
+    await createNewWorkspace({ workspaceName });
     console.log(workspaceName);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Workspace Created !", {
+        position: "top-right",
+        autoClose: 3000,
+        closeOnClick: true,
+        theme: "colored",
+      });
+      handleClose();
+    }
+
+    if (isError) {
+      if (Array.isArray((error as any).data.error)) {
+        (error as any).data.error.forEach((el: any) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error((error as any).data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isSuccess, isError]);
 
   return (
     <>
@@ -46,7 +80,7 @@ const Workspaces = ({ workspaces }) => {
               background: "#47658F",
               width: "32px",
               height: "32px",
-              marginLeft: "80%",
+              marginLeft: "92%",
               marginTop: "8%",
               borderRadius: 1,
               color: "white",
@@ -162,7 +196,6 @@ const Workspaces = ({ workspaces }) => {
                   </Box>
                 </form>
               </Box>
-              <Box></Box>
             </Box>
           </Modal>
         </Box>
@@ -198,9 +231,9 @@ const Workspaces = ({ workspaces }) => {
                           primary={workspace?.name}
                         />
                       </Box>
-                      <Box>
-                        <ListItemText primary={"0"} />
-                      </Box>
+                      <WorkspaceSurveysListCount
+                        workspaceId={workspace?.workspaceId}
+                      />
                     </Box>
                   </NavLink>
                 </ListItemButton>
