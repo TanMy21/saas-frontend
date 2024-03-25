@@ -12,7 +12,6 @@ const usePersist = () => {
   useEffect(() => {
     if (isLoggedIn) {
       localStorage.setItem("persist", "true");
-      console.log("Persist Hook: ", persist);
     }
   }, [isLoggedIn]);
 

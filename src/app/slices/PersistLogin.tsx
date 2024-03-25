@@ -64,11 +64,11 @@ const PersistLogin = () => {
     );
   } else if (isSuccess && trueSuccess) {
     //persist: yes, token: yes
-    console.log("success");
+    // console.log("success");
     content = <Outlet />;
   } else if (token && isUninitialized) {
     //persist: yes, token: yes
-    console.log("token and uninit");
+    // console.log("token and uninit");
     console.log(isUninitialized);
     content = <Outlet />;
   }

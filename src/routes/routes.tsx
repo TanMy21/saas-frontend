@@ -8,13 +8,11 @@ import Dashboard from "../pages/Dashboard";
 import Protected from "../components/Protected";
 import Workspace from "../pages/Workspace";
 import PersistLogin from "../app/slices/PersistLogin";
+import SurveysListMain from "../components/SurveysListMain";
+import Layout from "../components/Layout";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Homepage />,
-    errorElement: <ErrorPage />,
-  },
+  { path: "/", element: <Homepage />, errorElement: <ErrorPage /> },
   { path: "/register", element: <Signup /> },
   { path: "/login", element: <Signin /> },
   {
@@ -22,38 +20,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/dash",
-        element: (
-          // <Protected>
-          <Dashboard />
-          // </Protected>
-        ),
-      },
-      {
-        path: "/workspace",
-        element: (
-          // <Protected>
-          <Workspace />
-          // </Protected>
-        ),
+        element: <Dashboard />,
+        children: [{ path: "w/:workspaceId", element: <SurveysListMain /> }],
       },
     ],
   },
-  // {
-  //   path: "/workspace",
-  //   element: (
-  //     <Protected>
-  //       <Workspace />
-  //     </Protected>
-  //   ),
-  // },
-  // {
-  //   path: "/dash",
-  //   element: (
-  //     <Protected>
-  //       <Dashboard />
-  //     </Protected>
-  //   ),
-  // },
 ]);
 
 export default router;

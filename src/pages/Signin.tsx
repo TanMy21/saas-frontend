@@ -44,7 +44,6 @@ const Signin = () => {
   useEffect(() => {
     if (isSuccess) {
       // handleToggle();
-      console.log("Signin: ", persist);
     }
   }, [isSuccess]);
 
