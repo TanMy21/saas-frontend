@@ -15,7 +15,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -24,6 +24,10 @@ import { toast } from "react-toastify";
 import WorkspaceSurveysListCount from "./WorkspaceSurveysListCount";
 
 const Workspaces = ({ workspaces }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState();
+
   const [createNewWorkspace, { isSuccess, isError, error }] =
     useCreateNewWorkspaceMutation();
 
@@ -69,6 +73,18 @@ const Workspaces = ({ workspaces }) => {
       }
     }
   }, [isSuccess, isError]);
+
+  useEffect(() => {
+    if (workspaces?.length > 0) {
+      const firstWorkspaceId = workspaces[0].workspaceId;
+      navigate(`/dash/w/${firstWorkspaceId}`);
+    }
+  }, [workspaces, navigate]);
+
+  useEffect(() => {
+    console.log("Workspace: ", location);
+    navigate(location.pathname);
+  }, [location.pathname]);
 
   return (
     <>
@@ -169,6 +185,7 @@ const Workspaces = ({ workspaces }) => {
                             "&.MuiButton-root:hover": {
                               bgcolor: "#E4E2E2",
                             },
+                            textTransform: "capitalize",
                           }}
                         >
                           Cancel
@@ -187,6 +204,7 @@ const Workspaces = ({ workspaces }) => {
                             "&.MuiButton-root:hover": {
                               bgcolor: "#E4E2E2",
                             },
+                            textTransform: "capitalize",
                           }}
                         >
                           Create Workspace
@@ -227,7 +245,7 @@ const Workspaces = ({ workspaces }) => {
                     >
                       <Box>
                         <ListItemText
-                          sx={{ fontSize: ".4rem" }}
+                          sx={{ fontSize: "12px" }}
                           primary={workspace?.name}
                         />
                       </Box>

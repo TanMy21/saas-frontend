@@ -10,7 +10,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 
 const RenameWorkspaceModal = ({ visible }) => {
-  console.log("Rename Modal: ", visible);
   const [open, setOpen] = useState(visible);
   const handleClose = () => setOpen(false);
 
@@ -99,6 +98,7 @@ const RenameWorkspaceModal = ({ visible }) => {
                         "&.MuiButton-root:hover": {
                           bgcolor: "#E4E2E2",
                         },
+                        textTransform: "capitalize",
                       }}
                     >
                       Cancel
@@ -117,6 +117,7 @@ const RenameWorkspaceModal = ({ visible }) => {
                         "&.MuiButton-root:hover": {
                           bgcolor: "#E4E2E2",
                         },
+                        textTransform: "capitalize",
                       }}
                     >
                       Rename

@@ -44,18 +44,40 @@ const DashBoardHeader = () => {
       sx={{ m: "0px", bgcolor: "white", borderBottom: 2, height: "48px" }}
     >
       <Stack direction="row" spacing={2}>
-        <Box sx={{ width: "80%", height: "40px" }}>
-          <Typography
-            variant="subtitle1"
-            sx={{
-              fontWeight: "bold",
-              color: "black",
-              padding: "8px",
-            }}
-            ml={2}
-          >
-            {email}
-          </Typography>
+        <Box
+          display={"flex"}
+          flexDirection={"row"}
+          justifyContent={"start"}
+          alignContent={"center"}
+          sx={{ width: "80%", height: "40px" }}
+        >
+          <Box ml={2}>
+            <Avatar
+              sx={{
+                bgcolor: "#44546A",
+                color: "white",
+                width: 32,
+                height: 32,
+                marginTop: "8px",
+              }}
+              variant="rounded"
+            >
+              {email.charAt(0).toUpperCase()}
+            </Avatar>
+          </Box>
+          <Box>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: "bold",
+                color: "black",
+                padding: "8px",
+              }}
+              ml={2}
+            >
+              {email}
+            </Typography>
+          </Box>
         </Box>
         <Box sx={{ width: "20%", height: "40px" }}>
           <Button

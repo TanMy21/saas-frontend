@@ -9,7 +9,8 @@ import Protected from "../components/Protected";
 import Workspace from "../pages/Workspace";
 import PersistLogin from "../app/slices/PersistLogin";
 import SurveysListMain from "../components/SurveysListMain";
-import Layout from "../components/Layout";
+import Layout from "../components/ListLayout";
+import SurveyBuilder from "../pages/SurveyBuilder";
 
 const router = createBrowserRouter([
   { path: "/", element: <Homepage />, errorElement: <ErrorPage /> },
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
         path: "/dash",
         element: <Dashboard />,
         children: [{ path: "w/:workspaceId", element: <SurveysListMain /> }],
+      },
+      {
+        path: "/survey/:surveyId/create",
+        element: <SurveyBuilder />,
       },
     ],
   },

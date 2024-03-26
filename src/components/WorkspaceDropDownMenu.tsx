@@ -173,6 +173,7 @@ const WorkspaceDropDown = ({ wsName }) => {
                           "&.MuiButton-root:hover": {
                             bgcolor: "#E4E2E2",
                           },
+                          textTransform: "capitalize",
                         }}
                       >
                         Cancel
@@ -191,6 +192,7 @@ const WorkspaceDropDown = ({ wsName }) => {
                           "&.MuiButton-root:hover": {
                             bgcolor: "#E4E2E2",
                           },
+                          textTransform: "capitalize",
                         }}
                       >
                         Rename
@@ -295,6 +297,7 @@ const WorkspaceDropDown = ({ wsName }) => {
                           "&.MuiButton-root:hover": {
                             bgcolor: "#E4E2E2",
                           },
+                          textTransform: "capitalize",
                         }}
                       >
                         Cancel
@@ -313,6 +316,7 @@ const WorkspaceDropDown = ({ wsName }) => {
                           "&.MuiButton-root:hover": {
                             bgcolor: "#B31212",
                           },
+                          textTransform: "capitalize",
                         }}
                         color="error"
                       >
