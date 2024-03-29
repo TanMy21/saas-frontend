@@ -1,6 +1,13 @@
+import { JwtPayload, jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
 import { selectCurrentToken } from "../app/slices/authSlice";
-import { JwtPayload, jwtDecode } from "jwt-decode";
+
+interface ICustomePayload extends JwtPayload {
+  UserInfo?: {
+    email?: string;
+    admin?: boolean;
+  };
+}
 
 const useAuth = () => {
   const token = useSelector(selectCurrentToken);
@@ -8,8 +15,8 @@ const useAuth = () => {
   let isAuthenticated = false;
 
   if (token) {
-    const decoded = jwtDecode(token) as JwtPayload;
-    const { email, admin } = decoded.UserInfo;
+    const decoded = jwtDecode(token) as ICustomePayload;
+    const { email, admin } = decoded.UserInfo || {};
     isAuthenticated = true;
     if (admin) {
       isAdmin = true;

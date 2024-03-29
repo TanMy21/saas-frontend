@@ -1,8 +1,7 @@
 import Box from "@mui/material/Box";
-
 import page404 from "../assets/404.svg";
+
 const ErrorPage = () => {
-  //   const error = useRouteError();
   return (
     <>
       <Box

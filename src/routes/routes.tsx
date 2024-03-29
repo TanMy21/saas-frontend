@@ -1,15 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
-// import Layout from "../layout";
+import Dashboard from "../pages/Dashboard";
 import ErrorPage from "../pages/ErrorPage";
 import Homepage from "../pages/Homepage";
+import PersistLogin from "../app/slices/PersistLogin";
 import Signin from "../pages/Signin";
 import Signup from "../pages/Signup";
-import Dashboard from "../pages/Dashboard";
-import Protected from "../components/Protected";
-import Workspace from "../pages/Workspace";
-import PersistLogin from "../app/slices/PersistLogin";
 import SurveysListMain from "../components/SurveysListMain";
-import Layout from "../components/ListLayout";
 import SurveyBuilder from "../pages/SurveyBuilder";
 
 const router = createBrowserRouter([

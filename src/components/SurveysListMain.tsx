@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { useOutletContext, useParams } from "react-router-dom";
 import {
   Box,
   Divider,
@@ -11,24 +13,21 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
-import { useLocation, useOutletContext, useParams } from "react-router-dom";
+import GridViewIcon from "@mui/icons-material/GridView";
+import ListIcon from "@mui/icons-material/List";
 import {
   useGetWorkspaceSurveysQuery,
   useUpdateWorkspaceNameMutation,
 } from "../app/slices/workspaceApiSlice";
 import CreateNewSurveyBtn from "./CreateNewSurveyBtn";
-import { useEffect, useState } from "react";
-import WorkspaceDropDown from "./WorkspaceDropDownMenu";
-import ListIcon from "@mui/icons-material/List";
-import GridViewIcon from "@mui/icons-material/GridView";
-import ListLayout from "./ListLayout";
 import GridLayout from "./GridLayout";
+import ListLayout from "./ListLayout";
 import SurveysNotFound from "./SurveysNotFound";
-import { set } from "zod";
+import WorkspaceDropDown from "./WorkspaceDropDownMenu";
 
 const SurveysListMain = () => {
   const { workspaceId } = useParams();
-  const location = useLocation();
+  // const location = useLocation();
   const { workspaces } = useOutletContext();
 
   const { data: surveys } = useGetWorkspaceSurveysQuery(workspaceId);
@@ -48,7 +47,7 @@ const SurveysListMain = () => {
   );
 
   const handleSortChange = (event: SelectChangeEvent) => {
-    setSortBy(event.target.value as string);
+    setSortBy(event.target.value);
   };
 
   const handleLayoutChange = (

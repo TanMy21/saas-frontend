@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   Box,
   Button,
@@ -12,22 +16,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-
+import CloseIcon from "@mui/icons-material/Close";
 import { useCreateNewWorkspaceMutation } from "../app/slices/workspaceApiSlice";
-import { toast } from "react-toastify";
+import { ErrorData } from "../utils/types";
 import WorkspaceSurveysListCount from "./WorkspaceSurveysListCount";
 
 const Workspaces = ({ workspaces }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState();
-
   const [createNewWorkspace, { isSuccess, isError, error }] =
     useCreateNewWorkspaceMutation();
 
@@ -35,17 +32,15 @@ const Workspaces = ({ workspaces }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const createWorkspace = async (data) => {
     const { workspaceName } = data;
-    //unwrap for try catch block add if needed
-    await createNewWorkspace({ workspaceName });
-    console.log(workspaceName);
+    try {
+      await createNewWorkspace({ workspaceName });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -60,19 +55,20 @@ const Workspaces = ({ workspaces }) => {
     }
 
     if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) =>
+      const errorData = error as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
           })
         );
       } else {
-        toast.error((error as any).data.message, {
+        toast.error(errorData.data.message, {
           position: "top-right",
         });
       }
     }
-  }, [isSuccess, isError]);
+  }, [isSuccess, isError, error]);
 
   useEffect(() => {
     if (workspaces?.length > 0) {
@@ -82,9 +78,8 @@ const Workspaces = ({ workspaces }) => {
   }, [workspaces, navigate]);
 
   useEffect(() => {
-    console.log("Workspace: ", location);
     navigate(location.pathname);
-  }, [location.pathname]);
+  }, [location.pathname, navigate]);
 
   return (
     <>
@@ -115,7 +110,7 @@ const Workspaces = ({ workspaces }) => {
           >
             <Box
               sx={{
-                position: "absolute" as "absolute",
+                position: "absolute",
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
@@ -224,7 +219,7 @@ const Workspaces = ({ workspaces }) => {
                 <ListItemButton sx={{ padding: "0px", marginBottom: "4px" }}>
                   <NavLink
                     to={`/dash/w/${workspace?.workspaceId}`}
-                    style={({ isActive, isPending, isTransitioning }) => {
+                    style={({ isActive /*isPending, isTransitioning*/ }) => {
                       return {
                         width: "100%",
                         height: "32px",

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,7 +8,6 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useEffect, useState } from "react";
 
 const RenameWorkspaceModal = ({ visible }) => {
   const [open, setOpen] = useState(visible);
@@ -16,8 +16,6 @@ const RenameWorkspaceModal = ({ visible }) => {
   useEffect(() => {
     setOpen(visible);
   }, [visible]);
-
-  console.log("Rename Modal: ", open);
 
   const internalHandleClose = () => {
     handleClose();
@@ -33,7 +31,7 @@ const RenameWorkspaceModal = ({ visible }) => {
       >
         <Box
           sx={{
-            position: "absolute" as "absolute",
+            position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",

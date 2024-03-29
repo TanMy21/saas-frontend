@@ -1,5 +1,11 @@
+html {
+  scrollbar-width: always;
+  /* For Firefox */
+}
+
 body {
   margin: 0;
+  overflow-y: scroll;
 }
 
 :root {

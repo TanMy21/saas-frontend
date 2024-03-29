@@ -1,10 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { Avatar, Box, ButtonBase, Grid, Typography } from "@mui/material";
 import FeedIcon from "@mui/icons-material/Feed";
 import formatDate from "../utils/formatDate";
 import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
-import { useNavigate } from "react-router-dom";
+
 const ListLayout = ({ surveys, workspaceId, layout }) => {
-  
   const navigate = useNavigate();
   const goToSurvey = () => {
     navigate("/survey/123/create", { state: { workspaceId, layout } });
@@ -75,7 +75,7 @@ const ListLayout = ({ surveys, workspaceId, layout }) => {
                   <ButtonBase
                     onClick={goToSurvey}
                     sx={{
-                      textTransform: "none", // Prevents text transformation globally within the ButtonBase
+                      textTransform: "none",
                     }}
                   >
                     <Box>

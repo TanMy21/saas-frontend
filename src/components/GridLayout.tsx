@@ -1,6 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import {
   Box,
-  Button,
   ButtonBase,
   Card,
   CardActions,
@@ -10,10 +10,9 @@ import {
   Typography,
 } from "@mui/material";
 import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
-import { useNavigate } from "react-router-dom";
 
 const GridLayout = ({ surveys, workspaceId, layout }) => {
-  console.log("GridLayout surveys", layout);
+  // console.log("GridLayout surveys", layout);
   const navigate = useNavigate();
 
   const goToSurvey = () => {
@@ -28,9 +27,9 @@ const GridLayout = ({ surveys, workspaceId, layout }) => {
             <ButtonBase
               onClick={goToSurvey}
               sx={{
-                width: "100%", // Ensures the ButtonBase fills its container
-                display: "block", // Makes the ButtonBase behave as a block element to wrap the Card
-                textTransform: "none", // Prevents text transformation globally within the ButtonBase
+                width: "100%",
+                display: "block",
+                textTransform: "none",
               }}
             >
               <CardContent

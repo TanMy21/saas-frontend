@@ -1,3 +1,9 @@
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { z, ZodType } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
   Button,
@@ -7,23 +13,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { z, ZodType } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import FormErrors from "../components/FormErrors";
 import { useAddNewUserMutation } from "../app/slices/userApiSlice";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
-
-interface RegisterFormData {
-  firstname: string;
-  lastname: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  organization: string;
-}
+import { ErrorData, RegisterFormData } from "../utils/types";
+import FormErrors from "../components/FormErrors";
 
 const Signup = () => {
   const [addNewUser, { isSuccess, isError, error }] = useAddNewUserMutation();
@@ -42,19 +34,20 @@ const Signup = () => {
     }
 
     if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) =>
+      const errorData = error as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
           })
         );
       } else {
-        toast.error((error as any).data.message, {
+        toast.error(errorData.data.message, {
           position: "top-right",
         });
       }
     }
-  }, [isSuccess, isError, navigate]);
+  }, [isSuccess, isError, navigate, error]);
 
   const registerSchema: ZodType<RegisterFormData> = z
     .object({

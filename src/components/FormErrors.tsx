@@ -1,13 +1,14 @@
 import { Typography } from "@mui/material";
-
-interface errorsProp {
-  errors?: string;
-}
+import { errorsProp } from "../utils/types";
 
 const FormErrors = ({ errors }: errorsProp) => {
   return (
     <span>
-      <Typography variant="h6" sx={{ fontSize: 12, color:"red", marginTop:"8px" }} gutterBottom>
+      <Typography
+        variant="h6"
+        sx={{ fontSize: 12, color: "red", marginTop: "8px" }}
+        gutterBottom
+      >
         {errors}
       </Typography>
     </span>

@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   Box,
   Button,
@@ -9,19 +13,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { useForm } from "react-hook-form";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import {
   useDeleteWorkspaceMutation,
   useUpdateWorkspaceNameMutation,
 } from "../app/slices/workspaceApiSlice";
-import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 const WorkspaceDropDown = ({ wsName }) => {
-  let { workspaceId } = useParams();
+  const { workspaceId } = useParams();
 
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
@@ -42,15 +42,11 @@ const WorkspaceDropDown = ({ wsName }) => {
     setMenuAnchor(e.currentTarget);
   };
 
-  const handleClose = (option: string) => {
+  const handleClose = () => {
     setMenuAnchor(null);
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const renameWorkspace = async (data) => {
     const { workspaceName } = data;
@@ -103,7 +99,7 @@ const WorkspaceDropDown = ({ wsName }) => {
         >
           <Box
             sx={{
-              position: "absolute" as "absolute",
+              position: "absolute",
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
@@ -213,7 +209,7 @@ const WorkspaceDropDown = ({ wsName }) => {
         >
           <Box
             sx={{
-              position: "absolute" as "absolute",
+              position: "absolute",
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",

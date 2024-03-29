@@ -1,42 +1,10 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Stack,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Stack, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import { useSendLogoutMutation } from "../app/slices/authApiSlice";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import HeaderIconMenu from "./HeaderIconMenu";
 import useAuth from "../hooks/useAuth";
 
 const DashBoardHeader = () => {
-  const navigate = useNavigate();
-
-  const { email, isAdmin } = useAuth();
-
-  const [
-    sendLogout,
-    {
-      isSuccess: isSuccessLogout,
-      // isError: isErrorLogout,
-      // // error
-    },
-  ] = useSendLogoutMutation();
-
-  useEffect(() => {
-    if (isSuccessLogout) navigate("/");
-  }, [isSuccessLogout, navigate]);
-
-  const onLogoutClicked = () => {
-    sendLogout();
-    navigate("/");
-  };
+  const { email } = useAuth();
 
   return (
     <AppBar
@@ -62,7 +30,7 @@ const DashBoardHeader = () => {
               }}
               variant="rounded"
             >
-              {email.charAt(0).toUpperCase()}
+              {email?.charAt(0).toUpperCase()}
             </Avatar>
           </Box>
           <Box>
@@ -79,19 +47,13 @@ const DashBoardHeader = () => {
             </Typography>
           </Box>
         </Box>
-        <Box sx={{ width: "20%", height: "40px" }}>
-          <Button
-            style={{
-              backgroundColor: "#44546A",
-              marginTop: "1%",
-              marginLeft: "64%",
-            }}
-            variant="contained"
-            size="medium"
-            onClick={onLogoutClicked}
-          >
-            Logout
-          </Button>
+        <Box
+          display={"flex"}
+          justifyContent={"end"}
+          alignContent={"center"}
+          sx={{ width: "16%", height: "40px", marginTop: "8%" }}
+        >
+          <HeaderIconMenu />
         </Box>
       </Stack>
     </AppBar>

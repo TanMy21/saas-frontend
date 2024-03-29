@@ -1,9 +1,9 @@
-import { Outlet, Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { useRefreshMutation } from "./authApiSlice";
-import usePersist from "../../hooks/persist";
 import { useSelector } from "react-redux";
+import { Outlet, Link } from "react-router-dom";
+import { useRefreshMutation } from "./authApiSlice";
 import { selectCurrentToken } from "./authSlice";
+import usePersist from "../../hooks/persist";
 
 const PersistLogin = () => {
   const [persist] = usePersist();
@@ -69,7 +69,7 @@ const PersistLogin = () => {
   } else if (token && isUninitialized) {
     //persist: yes, token: yes
     // console.log("token and uninit");
-    console.log(isUninitialized);
+    // console.log(isUninitialized);
     content = <Outlet />;
   }
 

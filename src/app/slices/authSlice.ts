@@ -1,11 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-
-interface AuthState {
-  token: string | null;
-  accessToken: string | null;
-  isLoggedIn: boolean;
-}
+import { AuthState } from "../../utils/types";
 
 const initialState: AuthState = {
   token: null,
@@ -21,8 +16,6 @@ const authSlice = createSlice({
       const { accessToken } = payload;
       state.token = accessToken;
       state.isLoggedIn = true;
-      
-      // state.token = JSON.stringify(action.payload);
     },
     logOut: (state) => {
       state.token = null;

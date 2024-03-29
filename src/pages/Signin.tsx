@@ -1,51 +1,46 @@
-import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
-import Container from "@mui/material/Container";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import FormErrors from "../components/FormErrors";
-import { useDispatch } from "react-redux";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useLoginMutation } from "../app/slices/authApiSlice";
 import { setCredentials } from "../app/slices/authSlice";
-import { toast } from "react-toastify";
-import { useEffect } from "react";
-
-interface LoginFormData {
-  email: string;
-  password: string;
-  accessToken: string;
-}
+import { ErrorData, LoginFormData } from "../utils/types";
+import FormErrors from "../components/FormErrors";
 
 const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [login, { isSuccess, isLoading, isError, error }] = useLoginMutation();
-
-  if (isLoading) return <p>Loading...</p>;
+  const [login, { isLoading, isError, error }] = useLoginMutation();
 
   useEffect(() => {
     if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) =>
+      const errorData = error as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
           })
         );
       } else {
-        toast.error((error as any).data.message, {
+        toast.error(errorData.data.message, {
           position: "top-right",
         });
       }
     }
-  }, [isError]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      // handleToggle();
-    }
-  }, [isSuccess]);
+  }, [isError, error]);
 
   const loginSchema: ZodType<LoginFormData> = z.object({
     email: z.string().email(),
@@ -62,11 +57,16 @@ const Signin = () => {
 
   const submitLoginData = async (data: LoginFormData) => {
     const { email, password } = data;
-    //unwrap for try catch block add if needed
-    const { accessToken } = await login({ email, password }).unwrap();
-    dispatch(setCredentials({ accessToken }));
-    navigate("/dash");
+    try {
+      const { accessToken } = await login({ email, password }).unwrap();
+      dispatch(setCredentials({ accessToken }));
+      navigate("/dash");
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <Container component="main" maxWidth="xs">

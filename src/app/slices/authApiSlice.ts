@@ -1,9 +1,6 @@
-import { apiSlice } from "../api/apiSlice";
 import { setCredentials, logOut } from "./authSlice";
-
-interface AuthResponse {
-  accessToken: string;
-}
+import { AuthResponse, ILogoutResponse } from "../../utils/types";
+import { apiSlice } from "../api/apiSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -14,7 +11,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body: { ...credentials },
       }),
     }),
-    sendLogout: builder.mutation<any, void>({
+    sendLogout: builder.mutation<ILogoutResponse, void>({
       query: () => ({
         url: "/logout",
         method: "POST",
@@ -22,10 +19,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
-          // const { data } = await queryFulfilled;
+          // const { data } =
+          await queryFulfilled;
 
           dispatch(logOut());
-          // dispatch(apiSlice.util.resetApiState());
+
           setTimeout(() => {
             dispatch(apiSlice.util.resetApiState());
           }, 1000);
@@ -39,18 +37,22 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: "/refresh",
         method: "GET",
       }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          const { accessToken } = data;
+          dispatch(
+            setCredentials({
+              token: accessToken,
+              accessToken,
+              isLoggedIn: true,
+            })
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      },
     }),
-    async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-      try {
-        const { data } = await queryFulfilled;
-        console.log("Auth Api Slice OQS: ", data);
-        const { accessToken } = data;
-        console.log("Auth Api Slice OQS: ", accessToken);
-        dispatch(setCredentials({ accessToken }));
-      } catch (err) {
-        console.log(err);
-      }
-    },
   }),
 });
 

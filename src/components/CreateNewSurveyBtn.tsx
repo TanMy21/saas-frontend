@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Avatar,
   Box,
@@ -7,11 +9,9 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import UploadIcon from "@mui/icons-material/Upload";
-import { useState } from "react";
 
 const CreateNewSurveyBtn = () => {
   const navigate = useNavigate();
@@ -26,10 +26,6 @@ const CreateNewSurveyBtn = () => {
   return (
     <>
       <Box sx={{ mt: 1 }}>
-        {/* <Link
-          to="/workspace"
-          style={{ textDecoration: "none", color: "white" }}
-        > */}
         <Button
           sx={{
             backgroundColor: "#44546A",
@@ -51,7 +47,7 @@ const CreateNewSurveyBtn = () => {
         >
           <Box
             sx={{
-              position: "absolute" as "absolute",
+              position: "absolute",
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
@@ -241,7 +237,6 @@ const CreateNewSurveyBtn = () => {
             </Box>
           </Box>
         </Modal>
-        {/* </Link> */}
       </Box>
     </>
   );
