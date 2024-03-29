@@ -10,6 +10,8 @@ const ListLayout = ({ surveys, workspaceId, layout }) => {
     navigate("/survey/123/create", { state: { workspaceId, layout } });
   };
 
+  console.log("List Layout: ", surveys);
+
   return (
     <>
       <Grid

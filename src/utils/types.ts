@@ -49,3 +49,23 @@ export interface RegisterFormData {
 export interface UserInfo {
   accessToken: string;
 }
+
+interface Workspace {
+  createdAt: string;
+  description: string;
+  isActive: boolean;
+  name: string;
+  workspaceName: string;
+  ownerId: string;
+  updatedAt: string;
+  visibility: string;
+  workspaceId: string;
+}
+
+export interface WorkspacesProp {
+  workspaces: Workspace[];
+}
+
+export interface WorkspaceData {
+  workspaceName: string;
+}
