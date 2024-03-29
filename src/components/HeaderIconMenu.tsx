@@ -13,10 +13,11 @@ import { useSendLogoutMutation } from "../app/slices/authApiSlice";
 import useAuth from "../hooks/useAuth";
 
 const HeaderIconMenu = () => {
-  const { email } = useAuth();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { email } = useAuth();
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -25,14 +26,7 @@ const HeaderIconMenu = () => {
     setAnchorEl(null);
   };
 
-  const [
-    sendLogout,
-    {
-      isSuccess: isSuccessLogout,
-      // isError: isErrorLogout,
-      // // error
-    },
-  ] = useSendLogoutMutation();
+  const [sendLogout, { isSuccess: isSuccessLogout }] = useSendLogoutMutation();
 
   useEffect(() => {
     if (isSuccessLogout) navigate("/");

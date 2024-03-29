@@ -1,23 +1,40 @@
-import { Grid, Paper } from "@mui/material";
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-// import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { CircularProgress, Grid, Paper } from "@mui/material";
+import { ErrorData } from "../utils/types";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
 import DashBoardHeader from "../components/DashBoardHeader";
 import Workspaces from "../components/Workspaces";
-// import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const {
     data: workspaces,
-    // isLoading: isLoadingWorkspaces,
-    // isSuccess: isSuccessWorkspaces,
-    // isError: isErrorWorkspaces,
-    // error: workspaceError,
+    isLoading: isLoadingWorkspaces,
+    isError: isErrorWorkspaces,
+    error: workspaceError,
   } = useGetWorkspacesQuery("workspacesList", {
-    pollingInterval: 2000,
+    pollingInterval: 5000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+
+  useEffect(() => {
+    if (isErrorWorkspaces) {
+      const errorData = workspaceError as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isErrorWorkspaces, workspaceError]);
 
   return (
     <>
@@ -40,7 +57,11 @@ const Dashboard = () => {
                 position: "sticky",
               }}
             >
-              <Workspaces workspaces={workspaces} />
+              {isLoadingWorkspaces ? (
+                <CircularProgress />
+              ) : (
+                <Workspaces workspaces={workspaces} />
+              )}
             </Paper>
           </Grid>
           <Grid

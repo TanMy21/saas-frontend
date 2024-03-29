@@ -37,6 +37,11 @@ export interface ILogoutResponse {
   message: string;
 }
 
+export interface NewSurveyModalProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export interface RegisterFormData {
   firstname: string;
   lastname: string;
