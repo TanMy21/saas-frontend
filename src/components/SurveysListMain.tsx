@@ -115,7 +115,7 @@ const SurveysListMain = () => {
               </div>
             </Box>
             <Box>
-              <WorkspaceDropDown wsName={workspace?.name} />
+              <WorkspaceDropDown workspaceName={workspace?.name} />
             </Box>
           </Box>
           <Box

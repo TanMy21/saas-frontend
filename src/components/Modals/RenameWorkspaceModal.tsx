@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   Box,
   Button,
@@ -8,24 +8,58 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { useUpdateWorkspaceNameMutation } from "../../app/slices/workspaceApiSlice";
+import { ErrorData, WorkspaceRenameModalProps } from "../../utils/types";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
-const RenameWorkspaceModal = ({ visible }) => {
-  const [open, setOpen] = useState(visible);
-  const handleClose = () => setOpen(false);
+const RenameWorkspaceModal = ({
+  open,
+  onClose,
+  workspaceId,
+  workspaceName,
+}: WorkspaceRenameModalProps) => {
+  const [updateWorkspaceName, { isSuccess, isError, error }] =
+    useUpdateWorkspaceNameMutation();
+  const { register, handleSubmit } = useForm<WorkspaceRenameModalProps>();
+
+  const renameWorkspace = async (data: WorkspaceRenameModalProps) => {
+    const { workspaceName } = data;
+    updateWorkspaceName({ workspaceId, name: workspaceName });
+    onClose();
+  };
 
   useEffect(() => {
-    setOpen(visible);
-  }, [visible]);
+    if (isSuccess) {
+      toast.success("Workspace Renamed Successfully !", {
+        position: "top-right",
+        autoClose: 3000,
+        closeOnClick: true,
+        theme: "colored",
+      });
+    }
 
-  const internalHandleClose = () => {
-    handleClose();
-  };
+    if (isError) {
+      const errorData = error as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isSuccess, isError, error]);
 
   return (
     <>
       <Modal
         open={open}
-        onClose={internalHandleClose}
+        onClose={onClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -49,7 +83,7 @@ const RenameWorkspaceModal = ({ visible }) => {
             >
               <Box>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Rename workspace
+                  Rename Workspace
                 </Typography>
               </Box>
               <Box>
@@ -57,7 +91,7 @@ const RenameWorkspaceModal = ({ visible }) => {
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
-                  onClick={handleClose}
+                  onClick={onClose}
                 >
                   <CloseIcon />
                 </IconButton>
@@ -65,17 +99,18 @@ const RenameWorkspaceModal = ({ visible }) => {
             </Box>
           </Box>
           <Box>
-            <form>
+            <form onSubmit={handleSubmit(renameWorkspace)}>
               <Box sx={{ mt: 1 }}>
                 <TextField
                   margin="normal"
                   required
                   fullWidth
                   size="small"
-                  defaultValue={"Name your workspace"}
+                  defaultValue={workspaceName}
                   id="workspaceName"
                   autoComplete="Name of Workspace"
                   autoFocus
+                  {...register("workspaceName")}
                 />
                 <Box
                   display={"flex"}
@@ -85,7 +120,7 @@ const RenameWorkspaceModal = ({ visible }) => {
                   <Box mr={2}>
                     <Button
                       type="button"
-                      onClick={handleClose}
+                      onClick={onClose}
                       variant="text"
                       size="small"
                       sx={{
@@ -125,10 +160,10 @@ const RenameWorkspaceModal = ({ visible }) => {
               </Box>
             </form>
           </Box>
-          <Box></Box>
         </Box>
       </Modal>
     </>
   );
 };
+
 export default RenameWorkspaceModal;

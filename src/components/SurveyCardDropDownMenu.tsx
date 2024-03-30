@@ -4,6 +4,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
+import { Workspace } from "../utils/types";
 
 const SurveyCardDropDownMenu = (/*{ survey }*/) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
@@ -93,7 +94,7 @@ const SurveyCardDropDownMenu = (/*{ survey }*/) => {
               </Box>
             </MenuItem>
             <Divider />
-            {workspaces?.map((workspace) => (
+            {workspaces?.map((workspace: Workspace) => (
               <MenuItem>{workspace.name}</MenuItem>
             ))}
           </Box>
@@ -114,7 +115,7 @@ const SurveyCardDropDownMenu = (/*{ survey }*/) => {
               </Box>
             </MenuItem>
             <Divider />
-            {workspaces?.map((workspace) => (
+            {workspaces?.map((workspace: Workspace) => (
               <MenuItem key={workspace.workspaceId}>{workspace.name}</MenuItem>
             ))}
           </Box>

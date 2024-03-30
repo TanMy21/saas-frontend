@@ -15,7 +15,10 @@ import HeaderIconMenu from "./HeaderIconMenu";
 const SurveyBuilderHeader = () => {
   const [value, setValue] = useState(0);
 
-  const handleChange = (event, newValue: number) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLElement>,
+    newValue: number
+  ) => {
     setValue(newValue);
   };
 

@@ -51,11 +51,31 @@ export interface RegisterFormData {
   organization: string;
 }
 
+export interface Survey {
+  createdAt: string;
+  creatorId: string;
+  description: string;
+  email: string;
+  endDate: string;
+  isTemplate: boolean;
+  language: string;
+  responseLimit: number;
+  sharedLink: string;
+  startDate: string;
+  status: string;
+  surveyID: string;
+  surveyTag: string[];
+  title: string;
+  updatedAt: string;
+  visibility: string;
+  workspaceId: string;
+}
+
 export interface UserInfo {
   accessToken: string;
 }
 
-interface Workspace {
+export interface Workspace {
   createdAt: string;
   description: string;
   isActive: boolean;
@@ -64,11 +84,26 @@ interface Workspace {
   ownerId: string;
   updatedAt: string;
   visibility: string;
-  workspaceId: string;
+  workspaceId?: string;
 }
 
 export interface WorkspacesProp {
   workspaces: Workspace[];
+}
+
+export interface WorkspaceRenameModalProps {
+  open: boolean;
+  onClose: () => void;
+  workspaceId?: string;
+  workspaceName: string;
+}
+
+export interface WorkspaceDeleteModalProps {
+  open: boolean;
+  onClose: () => void;
+  wsID?: string;
+  wsName: string;
+  workspaceName?: string;
 }
 
 export interface WorkspaceData {

@@ -1,7 +1,8 @@
 import { Box, ListItemText } from "@mui/material";
 import { useGetWorkspaceSurveysQuery } from "../app/slices/workspaceApiSlice";
+import { Workspace } from "../utils/types";
 
-const WorkspaceSurveysListCount = ({ workspaceId }) => {
+const WorkspaceSurveysListCount = ({ workspaceId }: Workspace) => {
   const { data: surveys } = useGetWorkspaceSurveysQuery(workspaceId);
 
   return (
