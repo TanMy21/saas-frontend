@@ -6,8 +6,55 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
       query: () => "/s/surveys",
       providesTags: ["Surveys"],
     }),
+    getSurveyById: builder.query({
+      query: (surveyID) => `/s/survey/${surveyID}`,
+      providesTags: ["Surveys"],
+    }),
+    retitleSurvey: builder.mutation({
+      query: ({ surveyID, title }) => ({
+        url: `/s/title/${surveyID}`,
+        method: "PATCH",
+        body: { title },
+      }),
+      invalidatesTags: ["Surveys"],
+    }),
+    duplicateSurvey: builder.mutation({
+      query: (surveyID) => ({
+        url: `/s/duplicate/${surveyID}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Surveys"],
+    }),
+    copySurvey: builder.mutation({
+      query: ({ surveyID, workspaceId }) => ({
+        url: `/s/${surveyID}/copy/${workspaceId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Surveys"],
+    }),
+    moveSurvey: builder.mutation({
+      query: ({ surveyID, workspaceId }) => ({
+        url: `/s/${surveyID}/move/${workspaceId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Surveys"],
+    }),
+    deleteSurvey: builder.mutation({
+      query: (surveyID) => ({
+        url: `/s/delete/${surveyID}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Surveys"],
+    }),
   }),
 });
 
-export const { useGetSurveysQuery } = surveysApiSlice;
-
+export const {
+  useGetSurveysQuery,
+  useGetSurveyByIdQuery,
+  useRetitleSurveyMutation,
+  useDuplicateSurveyMutation,
+  useCopySurveyMutation,
+  useMoveSurveyMutation,
+  useDeleteSurveyMutation,
+} = surveysApiSlice;

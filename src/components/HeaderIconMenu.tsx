@@ -52,6 +52,7 @@ const HeaderIconMenu = () => {
           sx={{
             width: 32,
             height: 32,
+            marginRight: "48px",
             backgroundColor: "#ADEBE4",
             color: "#13137F",
           }}

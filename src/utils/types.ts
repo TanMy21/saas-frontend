@@ -3,14 +3,14 @@ export type AuthInitialState = {
 };
 
 export interface AuthResponse {
-  accessToken: string;
+  accessToken?: string;
   isLoggedIn: boolean;
 }
 
 export interface AuthState {
-  token: string | null;
-  accessToken: string | null;
-  isLoggedIn: boolean;
+  token?: string | null;
+  accessToken?: string | null;
+  isLoggedIn?: boolean;
 }
 
 interface ErrorMessage {
@@ -71,6 +71,19 @@ export interface Survey {
   workspaceId: string;
 }
 
+export interface SurveyRenameProps {
+  open: boolean;
+  onClose: () => void;
+  survey?: Survey;
+  sID?: string;
+  sTitle?: string;
+  surveyTitle?: string;
+}
+
+export interface SurveyDropDownMenuProps {
+  survey: Survey;
+}
+
 export interface UserInfo {
   accessToken: string;
 }
@@ -95,17 +108,27 @@ export interface WorkspaceRenameModalProps {
   open: boolean;
   onClose: () => void;
   workspaceId?: string;
-  workspaceName: string;
+  workspaceName?: string;
 }
 
 export interface WorkspaceDeleteModalProps {
   open: boolean;
   onClose: () => void;
   wsID?: string;
-  wsName: string;
+  wsName?: string;
   workspaceName?: string;
 }
 
 export interface WorkspaceData {
-  workspaceName: string;
+  workspaceName?: string;
+}
+
+export interface WorkspaceLayoutProps {
+  surveys: Survey[];
+  workspaceId: string;
+  layout?: string;
+}
+
+export interface WorkspaceSurveysListCountProps {
+  workspaceId?: string;
 }

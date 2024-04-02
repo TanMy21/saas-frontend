@@ -21,6 +21,7 @@ const RenameWorkspaceModal = ({
 }: WorkspaceRenameModalProps) => {
   const [updateWorkspaceName, { isSuccess, isError, error }] =
     useUpdateWorkspaceNameMutation();
+
   const { register, handleSubmit } = useForm<WorkspaceRenameModalProps>();
 
   const renameWorkspace = async (data: WorkspaceRenameModalProps) => {

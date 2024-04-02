@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { toast } from "react-toastify";
-import { CircularProgress, Grid, Paper } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 import { ErrorData } from "../utils/types";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
 import DashBoardHeader from "../components/DashBoardHeader";
-import Workspaces from "../components/Workspaces";
+import Workspaces from "../components/Workspaces/Workspaces";
 
 const Dashboard = () => {
   const {
@@ -14,7 +14,7 @@ const Dashboard = () => {
     isError: isErrorWorkspaces,
     error: workspaceError,
   } = useGetWorkspacesQuery("workspacesList", {
-    pollingInterval: 5000,
+    pollingInterval: 15000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
@@ -41,20 +41,42 @@ const Dashboard = () => {
       <Grid container direction={"column"}>
         <Grid
           item
-          xs={16}
-          sx={{ background: "blue", height: "5vh", zIndex: "20" }}
+          xs={12}
+          sx={{
+            width: "100%",
+            height: "5vh",
+            zIndex: "10",
+            position: "sticky",
+            top: "0",
+          }}
         >
           <DashBoardHeader />
         </Grid>
-        <Grid item container direction={"row"}>
-          <Grid item sx={{ background: "red", height: "100vh", width: "12%" }}>
-            <Paper
-              elevation={1}
-              square={true}
-              style={{
+        <Grid
+          item
+          container
+          display={"flex"}
+          direction={"row"}
+          sx={{ width: "100%", minHeight: "95vh" }}
+        >
+          {/* Left Sidebar Workspaces*/}
+          <Grid
+            item
+            container
+            sx={{
+              background: "white",
+              width: "12%",
+              borderRight: 1,
+              borderColor: "#EDEDED",
+            }}
+          >
+            <Box
+              sx={{
                 background: "white",
+                width: "12%",
                 height: "100vh",
-                position: "sticky",
+                position: "fixed",
+                top: "5vh",
               }}
             >
               {isLoadingWorkspaces ? (
@@ -62,12 +84,20 @@ const Dashboard = () => {
               ) : (
                 <Workspaces workspaces={workspaces} />
               )}
-            </Paper>
+            </Box>
           </Grid>
           <Grid
             item
-            sx={{ background: "#EDEDED", height: "100vh", width: "88%" }}
+            sx={{
+              bgcolor: "#EDEDED",
+              minWidth: "88%",
+              maxWidth: "88%",
+              minHeight: "100vh",
+              marginLeft: "12%",
+              overflowX: "hidden",
+            }}
           >
+            {/* Main content area */}
             <Outlet context={{ workspaces }} />
           </Grid>
         </Grid>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import {
   Box,
@@ -18,17 +18,18 @@ import ListIcon from "@mui/icons-material/List";
 import {
   useGetWorkspaceSurveysQuery,
   useUpdateWorkspaceNameMutation,
-} from "../app/slices/workspaceApiSlice";
+} from "../../app/slices/workspaceApiSlice";
 import CreateNewSurveyBtn from "./CreateNewSurveyBtn";
 import GridLayout from "./GridLayout";
 import ListLayout from "./ListLayout";
 import SurveysNotFound from "./SurveysNotFound";
-import WorkspaceDropDown from "./WorkspaceDropDownMenu";
+import WorkspaceDropDown from "../Workspaces/WorkspaceDropDownMenu";
+import { WorkspacesProp } from "../../utils/types";
 
 const SurveysListMain = () => {
   const { workspaceId } = useParams();
   // const location = useLocation();
-  const { workspaces } = useOutletContext();
+  const { workspaces } = useOutletContext<WorkspacesProp>();
 
   const { data: surveys } = useGetWorkspaceSurveysQuery(workspaceId);
 
@@ -43,15 +44,36 @@ const SurveysListMain = () => {
   };
 
   const workspace = workspaces?.find(
-    (item) => item.workspaceId.toString() === workspaceId
+    (item) => item.workspaceId?.toString() === workspaceId
   );
+
+  const sortedSurveys = useMemo(() => {
+    if (!Array.isArray(surveys)) return [];
+
+    switch (sortBy) {
+      case "Date created":
+        return [...surveys].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      case "Date updated":
+        return [...surveys].sort(
+          (a, b) =>
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
+      case "Alphabetically":
+        return [...surveys].sort((a, b) => a.title.localeCompare(b.title));
+      default:
+        return surveys;
+    }
+  }, [surveys, sortBy]);
 
   const handleSortChange = (event: SelectChangeEvent) => {
     setSortBy(event.target.value);
   };
 
   const handleLayoutChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _event: React.MouseEvent<HTMLElement>,
     newLayout: string | null
   ) => {
     setLayout(newLayout);
@@ -59,7 +81,7 @@ const SurveysListMain = () => {
 
   const [text, setText] = useState(workspace?.name);
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
 
@@ -136,8 +158,8 @@ const SurveysListMain = () => {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={sortBy}
                     onChange={handleSortChange}
+                    value={sortBy}
                   >
                     <MenuItem value={"Date created"}>Date created</MenuItem>
                     <MenuItem value={"Date updated"}>Date updated</MenuItem>
@@ -203,12 +225,13 @@ const SurveysListMain = () => {
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 8, sm: 16, md: 24 }}
+            columns={{ lg: 8, md: 6, sm: 4, xs: 2 }}
           >
             {surveys?.length === 0 ? (
               <SurveysNotFound />
             ) : layout === "grid" ? (
               <Grid
+                container
                 display={"flex"}
                 flexDirection={"row"}
                 ml={2}
@@ -217,10 +240,11 @@ const SurveysListMain = () => {
                   width: "100vw",
                   minHeight: 600,
                 }}
+                columns={{ xs: 2, sm: 4, md: 6, lg: 8 }}
               >
                 <GridLayout
-                  surveys={surveys}
-                  workspaceId={workspaceId}
+                  surveys={sortedSurveys}
+                  workspaceId={workspaceId!}
                   layout={layout}
                 />
               </Grid>
@@ -230,13 +254,12 @@ const SurveysListMain = () => {
                 sx={{
                   width: "100vw",
                   minHeight: "72vh",
-                  maxHeight: "80vh",
                 }}
               >
                 <ListLayout
-                  surveys={surveys}
-                  workspaceId={workspaceId}
-                  layout={layout}
+                  surveys={sortedSurveys}
+                  workspaceId={workspaceId!}
+                  layout={layout || "list"}
                 />
               </Grid>
             )}

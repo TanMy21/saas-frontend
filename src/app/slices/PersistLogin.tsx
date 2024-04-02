@@ -4,6 +4,7 @@ import { Outlet, Link } from "react-router-dom";
 import { useRefreshMutation } from "./authApiSlice";
 import { selectCurrentToken } from "./authSlice";
 import usePersist from "../../hooks/persist";
+import { ErrorData } from "../../utils/types";
 
 const PersistLogin = () => {
   const [persist] = usePersist();
@@ -55,10 +56,11 @@ const PersistLogin = () => {
     content = <p>Loading...</p>;
   } else if (isError) {
     //persist: yes, token: no
+    const errorData = error as ErrorData;
     console.log("error");
     content = (
       <p className="errmsg">
-        {`${error?.data?.message} - `}
+        {`${errorData?.data?.message} - `}
         <Link to="/login">Please login again</Link>.
       </p>
     );

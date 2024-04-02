@@ -10,15 +10,13 @@ import {
   Typography,
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import HeaderIconMenu from "./HeaderIconMenu";
+import HeaderIconMenu from "../HeaderIconMenu";
+import { SurveyDropDownMenuProps } from "../../utils/types";
 
-const SurveyBuilderHeader = () => {
+const SurveyBuilderHeader = ({ survey }: SurveyDropDownMenuProps) => {
   const [value, setValue] = useState(0);
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLElement>,
-    newValue: number
-  ) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -51,7 +49,7 @@ const SurveyBuilderHeader = () => {
                 Workspace name /
               </Typography>
               <Typography sx={{ color: "#262666" }}>
-                &nbsp; Survey name
+                &nbsp; {survey?.title}
               </Typography>
             </Typography>
           </Grid>

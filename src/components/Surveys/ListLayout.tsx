@@ -1,16 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { Avatar, Box, ButtonBase, Grid, Typography } from "@mui/material";
 import FeedIcon from "@mui/icons-material/Feed";
-import formatDate from "../utils/formatDate";
+import formatDate from "../../utils/formatDate";
 import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
+import { WorkspaceLayoutProps } from "../../utils/types";
 
-const ListLayout = ({ surveys, workspaceId, layout }) => {
+const ListLayout = ({ surveys, workspaceId, layout }: WorkspaceLayoutProps) => {
   const navigate = useNavigate();
-  const goToSurvey = () => {
-    navigate("/survey/123/create", { state: { workspaceId, layout } });
+  const goToSurvey = (surveyID: string) => {
+    navigate(`/survey/${surveyID}/create`, { state: { workspaceId, layout } });
   };
-
-  console.log("List Layout: ", surveys);
 
   return (
     <>
@@ -18,7 +17,7 @@ const ListLayout = ({ surveys, workspaceId, layout }) => {
         container
         direction="column"
         spacing={2}
-        sx={{ width: "98%", height: "100%", paddingLeft: "2%" }}
+        sx={{ width: "98%", minHeight: "100%", paddingLeft: "2%" }}
       >
         {/* Header */}
         <Grid
@@ -50,14 +49,14 @@ const ListLayout = ({ surveys, workspaceId, layout }) => {
             item
             container
             key={survey.surveyID}
-            mt={1}
+            mt={"12px"}
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyItems: "center",
               backgroundColor: "#FFFFFF",
-              borderRadius: 2,
+              borderRadius: "8px",
               boxShadow: "0 6px 9px -9px rgba(0,0,0,0.4)",
             }}
           >
@@ -75,7 +74,7 @@ const ListLayout = ({ surveys, workspaceId, layout }) => {
               <Grid item xs={3}>
                 <Box display={"flex"} flexDirection={"row"} pb={1}>
                   <ButtonBase
-                    onClick={goToSurvey}
+                    onClick={() => goToSurvey(survey.surveyID)}
                     sx={{
                       textTransform: "none",
                     }}
@@ -89,12 +88,16 @@ const ListLayout = ({ surveys, workspaceId, layout }) => {
                       </Avatar>
                     </Box>
                     <Box display={"flex"} flexDirection={"column"} ml={1}>
-                      <Typography sx={{ fontSize: "12px" }} noWrap>
-                        {survey.title}
-                      </Typography>
-                      <Typography sx={{ fontSize: "12px", color: "#7E7571" }}>
-                        created: {formatDate(survey.createdAt)}
-                      </Typography>
+                      <Box>
+                        <Typography sx={{ fontSize: "12px" }} noWrap>
+                          {survey.title}
+                        </Typography>
+                      </Box>
+                      <Box display={"flex"} justifyContent={"start"}>
+                        <Typography sx={{ fontSize: "12px", color: "#7E7571" }}>
+                          created: {formatDate(survey.createdAt)}
+                        </Typography>
+                      </Box>
                     </Box>
                   </ButtonBase>
                 </Box>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import NewSurveyModal from "./Modals/NewSurveyModal";
+import NewSurveyModal from "../Modals/NewSurveyModal";
 
 const CreateNewSurveyBtn = () => {
   const [open, setOpen] = useState(false);
@@ -15,6 +15,9 @@ const CreateNewSurveyBtn = () => {
             backgroundColor: "#44546A",
             mr: 2,
             textTransform: "capitalize",
+            "&:hover": {
+              backgroundColor: "#47658F",
+            },
           }}
           variant="contained"
           size="small"

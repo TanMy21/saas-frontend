@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Divider, IconButton, Menu, MenuItem } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { Workspace } from "../utils/types";
-import RenameWorkspaceModal from "./Modals/RenameWorkspaceModal";
-import DeleteWorkspaceModal from "./Modals/DeleteWorkspaceModal";
+import { WorkspaceData } from "../../utils/types";
+import RenameWorkspaceModal from "../Modals/RenameWorkspaceModal";
+import DeleteWorkspaceModal from "../Modals/DeleteWorkspaceModal";
 
-const WorkspaceDropDown = ({ workspaceName: wsName }: Workspace) => {
+const WorkspaceDropDown = ({ workspaceName: wsName }: WorkspaceData) => {
   const { workspaceId: wsID } = useParams();
 
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
@@ -58,7 +58,7 @@ const WorkspaceDropDown = ({ workspaceName: wsName }: Workspace) => {
             Delete
           </MenuItem>
         </Menu>
-        {/* /* Modal **/}
+        {/* Remame Modal */}
         <RenameWorkspaceModal
           open={openRenameModel}
           onClose={() => setOpenRenameModel(false)}

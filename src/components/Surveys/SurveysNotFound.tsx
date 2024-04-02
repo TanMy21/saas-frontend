@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from "@mui/material";
 import CreateNewSurveyBtn from "./CreateNewSurveyBtn";
-import notFound from "../assets/notFound2.svg";
+import notFound from "../../assets/notFound2.svg";
 
 const SurveysNotFound = () => {
   return (
@@ -32,7 +32,7 @@ const SurveysNotFound = () => {
                   fontFamily: "Roboto",
                 }}
               >
-                No forms are visible
+                No surveys are visible
               </Typography>
             </Box>
             <Box

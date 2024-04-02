@@ -10,22 +10,38 @@ import {
   Typography,
 } from "@mui/material";
 import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
+import { WorkspaceLayoutProps } from "../../utils/types";
 
-const GridLayout = ({ surveys, workspaceId, layout }) => {
+const GridLayout = ({ surveys, workspaceId, layout }: WorkspaceLayoutProps) => {
   // console.log("GridLayout surveys", layout);
   const navigate = useNavigate();
 
-  const goToSurvey = () => {
-    navigate("/survey/123/create", { state: { workspaceId, layout } });
+  const goToSurvey = (surveyID: string) => {
+   navigate(`/survey/${surveyID}/create`, { state: { workspaceId, layout } });
   };
 
   return (
     <>
       {surveys?.map((survey) => (
-        <Grid item xs={2} sm={4} md={4} key={survey.surveyID}>
-          <Card sx={{ width: "180px", height: "210px" }}>
+        <Grid
+          item
+          xs={1}
+          sm={1}
+          md={1}
+          lg={1}
+          xl={1}
+          key={survey.surveyID}
+          sx={{ marginRight: "10px", marginBottom: "4px" }}
+        >
+          <Card
+            sx={{
+              width: "180px",
+              height: "210px",
+              borderRadius: "12px",
+            }}
+          >
             <ButtonBase
-              onClick={goToSurvey}
+              onClick={() => goToSurvey(survey.surveyID)}
               sx={{
                 width: "100%",
                 display: "block",
@@ -37,18 +53,32 @@ const GridLayout = ({ surveys, workspaceId, layout }) => {
                   display: "flex",
                   flexDirection: "column",
                   justifyItems: "center",
-                  marginBottom: "24%",
+                  marginBottom: "-8%",
                   alignItems: "center",
                 }}
               >
                 <Box
+                  p={2}
                   sx={{
-                    width: "90%",
-                    height: "80%",
+                    zIndex: 20,
+                    overflow: "hidden",
+                    overflowWrap: "break-word",
+                    width: "160px",
+                    height: "100px",
                   }}
-                  mt={8}
+                  mt={2}
                 >
-                  <Typography sx={{ fontSize: "16px" }} noWrap>
+                  <Typography
+                    sx={{
+                      display: "block",
+                      fontSize: "16px",
+                      lineHeight: "24px",
+                      fontFamily:
+                        " BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                      color: "black",
+                    }}
+                    // noWrap
+                  >
                     {survey.title}
                   </Typography>
                 </Box>
@@ -59,6 +89,7 @@ const GridLayout = ({ surveys, workspaceId, layout }) => {
               display={"flex"}
               flexDirection={"row"}
               justifyContent={"space-between"}
+              alignContent={"center"}
             >
               <Box p={"6px"} mt={1} pl={1}>
                 <Typography sx={{ fontSize: "12px", color: "#C1C1D3" }}>

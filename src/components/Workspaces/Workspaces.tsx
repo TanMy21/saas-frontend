@@ -9,9 +9,9 @@ import {
   ListItemText,
   Stack,
 } from "@mui/material";
-import { WorkspacesProp } from "../utils/types";
+import { WorkspacesProp } from "../../utils/types";
 import WorkspaceSurveysListCount from "./WorkspaceSurveysListCount";
-import NewWorkspaceModal from "./Modals/NewWorkspaceModal";
+import NewWorkspaceModal from "../Modals/NewWorkspaceModal";
 
 const Workspaces = ({ workspaces }: WorkspacesProp) => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const Workspaces = ({ workspaces }: WorkspacesProp) => {
         <Box>
           <NewWorkspaceModal />
         </Box>
-        <Box sx={{ width: "100%", height: "200px" }}>
+        <Box sx={{ width: "100%", minHeight: "200px", marginTop: "8%" }}>
           <List>
             {workspaces?.map((workspace) => (
               <ListItem key={workspace?.workspaceId} disablePadding>
@@ -43,13 +43,17 @@ const Workspaces = ({ workspaces }: WorkspacesProp) => {
                     to={`/dash/w/${workspace?.workspaceId}`}
                     style={({ isActive /*isPending, isTransitioning*/ }) => {
                       return {
+                        display: "block",
                         width: "100%",
                         height: "32px",
                         padding: "8px",
+                        color: isActive ? "#262626" : "#737373",
                         fontWeight: isActive ? "bold" : "",
+                        fontSize: "14px",
+                        fontFamily:
+                          "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                        lineHeight: "20px",
                         textDecoration: "none",
-                        color: "#262627",
-                        fontFamily: "sans-serif",
                         textOverflow: "ellipsis",
                         backgroundColor: isActive ? "#E4E2E2" : "",
                       };
@@ -62,7 +66,7 @@ const Workspaces = ({ workspaces }: WorkspacesProp) => {
                     >
                       <Box>
                         <ListItemText
-                          sx={{ fontSize: "12px" }}
+                          // sx={{ fontSize: "12px" }}
                           primary={workspace?.name}
                         />
                       </Box>

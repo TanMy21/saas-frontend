@@ -1,11 +1,17 @@
 // import { useLocation } from "react-router-dom";
-import { Box, Grid } from "@mui/material";
-import SurveyBuilderHeader from "../components/SurveyBuilderHeader";
+import { Box, Grid, Typography } from "@mui/material";
+import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
+import { useGetSurveyByIdQuery } from "../app/slices/surveysApiSlice";
+import { useParams } from "react-router-dom";
 
 const SurveyBuilder = () => {
+  const { surveyID } = useParams();
   // const navigate = useNavigate();
   // const location = useLocation();
   // const { workspaceId } = location.state || {};
+
+  const { data: survey } = useGetSurveyByIdQuery(surveyID);
+
   return (
     <>
       <Grid container direction={"column"}>
@@ -13,7 +19,6 @@ const SurveyBuilder = () => {
           item
           xs={12}
           sx={{
-            bgcolor: "blue",
             width: "100%",
             height: "5vh",
             zIndex: "10",
@@ -21,13 +26,13 @@ const SurveyBuilder = () => {
             top: "0",
           }}
         >
-          <SurveyBuilderHeader />
+          <SurveyBuilderHeader survey={survey} />
         </Grid>
         <Grid
           item
           container
           direction={"row"}
-          sx={{ background: "red", width: "100%", minHeight: "95vh" }}
+          sx={{ width: "100%", minHeight: "95vh" }}
         >
           {/* Left Sidebar */}
           <Grid
@@ -57,7 +62,11 @@ const SurveyBuilder = () => {
             sx={{ bgcolor: "#EDEDED", height: "100vh", overflowY: "auto" }}
           >
             {/* Main content area */}
-            <Box />
+            <Box p={4}>
+              <Typography variant="h5">
+                Create Survey: {survey?.title}
+              </Typography>
+            </Box>
           </Grid>
           {/* Right Sidebar */}
           <Grid item sx={{ background: "white", width: "14%" }}>

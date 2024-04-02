@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import {
   Box,
   Button,
@@ -9,39 +7,37 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CloseIcon from "@mui/icons-material/Close";
-import { useCreateNewWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
-import { ErrorData, WorkspaceData } from "../../utils/types";
+import { useRetitleSurveyMutation } from "../../app/slices/surveysApiSlice";
+import { ErrorData, SurveyRenameProps } from "../../utils/types";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
-const NewWorkspaceModal = () => {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
+  const [retitleSurvey, { isSuccess, isError, error }] =
+    useRetitleSurveyMutation();
 
-  const [createNewWorkspace, { isSuccess, isError, error }] =
-    useCreateNewWorkspaceMutation();
+  const { register, handleSubmit } = useForm<SurveyRenameProps>();
 
-  const { register, handleSubmit } = useForm<WorkspaceData>();
-
-  const createWorkspace = async (data: WorkspaceData) => {
-    const { workspaceName } = data;
+  const renameSurvey = async (data: SurveyRenameProps) => {
+    const { surveyTitle } = data;
+    const { surveyID } = survey!;
     try {
-      await createNewWorkspace({ workspaceName });
+      await retitleSurvey({ surveyID, title: surveyTitle });
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
+    onClose();
   };
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Workspace Created !", {
+      toast.success("Survey Renamed Successfully !", {
         position: "top-right",
         autoClose: 3000,
         closeOnClick: true,
         theme: "colored",
       });
-      handleClose();
     }
 
     if (isError) {
@@ -61,27 +57,10 @@ const NewWorkspaceModal = () => {
   }, [isSuccess, isError, error]);
 
   return (
-    <Box sx={{ width: "90%", height: "60px" }}>
-      <IconButton
-        onClick={handleOpen}
-        sx={{
-          background: "#47658F",
-          width: "32px",
-          height: "32px",
-          marginLeft: "92%",
-          marginTop: "16%",
-          borderRadius: 1,
-          color: "white",
-          "&:hover": {
-            backgroundColor: "#47658F",
-          },
-        }}
-      >
-        <AddOutlinedIcon fontSize="medium" />
-      </IconButton>
+    <>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={onClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -105,7 +84,7 @@ const NewWorkspaceModal = () => {
             >
               <Box>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Create a new workspace
+                  Rename Survey
                 </Typography>
               </Box>
               <Box>
@@ -113,7 +92,7 @@ const NewWorkspaceModal = () => {
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
-                  onClick={handleClose}
+                  onClick={onClose}
                 >
                   <CloseIcon />
                 </IconButton>
@@ -121,18 +100,18 @@ const NewWorkspaceModal = () => {
             </Box>
           </Box>
           <Box>
-            <form onSubmit={handleSubmit(createWorkspace)}>
+            <form onSubmit={handleSubmit(renameSurvey)}>
               <Box sx={{ mt: 1 }}>
                 <TextField
                   margin="normal"
                   required
                   fullWidth
                   size="small"
-                  defaultValue={"Name your workspace"}
-                  id="workspaceName"
-                  autoComplete="Name of Workspace"
+                  defaultValue={survey?.title}
+                  id="surveyTitle"
+                  autoComplete="Name of Survey"
                   autoFocus
-                  {...register("workspaceName")}
+                  {...register("surveyTitle")}
                 />
                 <Box
                   display={"flex"}
@@ -142,7 +121,7 @@ const NewWorkspaceModal = () => {
                   <Box mr={2}>
                     <Button
                       type="button"
-                      onClick={handleClose}
+                      onClick={onClose}
                       variant="text"
                       size="small"
                       sx={{
@@ -175,7 +154,7 @@ const NewWorkspaceModal = () => {
                         textTransform: "capitalize",
                       }}
                     >
-                      Create Workspace
+                      Rename
                     </Button>
                   </Box>
                 </Box>
@@ -184,7 +163,8 @@ const NewWorkspaceModal = () => {
           </Box>
         </Box>
       </Modal>
-    </Box>
+    </>
   );
 };
-export default NewWorkspaceModal;
+
+export default RenameSurveyModal;

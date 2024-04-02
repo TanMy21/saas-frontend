@@ -5,7 +5,7 @@ import Homepage from "../pages/Homepage";
 import PersistLogin from "../app/slices/PersistLogin";
 import Signin from "../pages/Signin";
 import Signup from "../pages/Signup";
-import SurveysListMain from "../components/SurveysListMain";
+import SurveysListMain from "../components/Surveys/SurveysListMain";
 import SurveyBuilder from "../pages/SurveyBuilder";
 
 const router = createBrowserRouter([
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
         children: [{ path: "w/:workspaceId", element: <SurveysListMain /> }],
       },
       {
-        path: "/survey/:surveyId/create",
+        path: "/survey/:surveyID/create",
         element: <SurveyBuilder />,
       },
     ],
