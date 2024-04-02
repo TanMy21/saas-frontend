@@ -12,6 +12,7 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  CircularProgress,
 } from "@mui/material";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ListIcon from "@mui/icons-material/List";
@@ -31,7 +32,7 @@ const SurveysListMain = () => {
   // const location = useLocation();
   const { workspaces } = useOutletContext<WorkspacesProp>();
 
-  const { data: surveys } = useGetWorkspaceSurveysQuery(workspaceId);
+  const { data: surveys, isLoading } = useGetWorkspaceSurveysQuery(workspaceId);
 
   const [updateWorkspaceName] = useUpdateWorkspaceNameMutation();
 
@@ -227,7 +228,9 @@ const SurveysListMain = () => {
             spacing={{ xs: 2, md: 3 }}
             columns={{ lg: 8, md: 6, sm: 4, xs: 2 }}
           >
-            {surveys?.length === 0 ? (
+            {isLoading ? (
+              <CircularProgress />
+            ) : surveys?.length === 0 ? (
               <SurveysNotFound />
             ) : layout === "grid" ? (
               <Grid
@@ -235,7 +238,8 @@ const SurveysListMain = () => {
                 display={"flex"}
                 flexDirection={"row"}
                 ml={2}
-                p={4}
+                pl={4}
+                pt={4}
                 sx={{
                   width: "100vw",
                   minHeight: 600,
@@ -245,6 +249,7 @@ const SurveysListMain = () => {
                 <GridLayout
                   surveys={sortedSurveys}
                   workspaceId={workspaceId!}
+                  workspaceName={workspace?.name!}
                   layout={layout}
                 />
               </Grid>
@@ -259,6 +264,7 @@ const SurveysListMain = () => {
                 <ListLayout
                   surveys={sortedSurveys}
                   workspaceId={workspaceId!}
+                  workspaceName={workspace?.name!}
                   layout={layout || "list"}
                 />
               </Grid>

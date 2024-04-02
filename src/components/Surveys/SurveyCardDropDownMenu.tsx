@@ -101,11 +101,14 @@ const SurveyCardDropDownMenu = ({ survey }: SurveyDropDownMenuProps) => {
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}
+        sx={{
+          width: "100%",
+        }}
       >
         {/* Parent Menu */}
         {currentMenu === "parent" && (
           <Box>
-            <MenuItem sx={{ width: 200 }}>Open</MenuItem>
+            <MenuItem>Open</MenuItem>
             <MenuItem>Copy Link</MenuItem>
             <Divider />
             <MenuItem>Share</MenuItem>

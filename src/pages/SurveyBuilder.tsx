@@ -2,13 +2,13 @@
 import { Box, Grid, Typography } from "@mui/material";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import { useGetSurveyByIdQuery } from "../app/slices/surveysApiSlice";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
   // const navigate = useNavigate();
-  // const location = useLocation();
-  // const { workspaceId } = location.state || {};
+  const location = useLocation();
+  const { workspaceId, workspaceName } = location.state || {};
 
   const { data: survey } = useGetSurveyByIdQuery(surveyID);
 
@@ -26,7 +26,11 @@ const SurveyBuilder = () => {
             top: "0",
           }}
         >
-          <SurveyBuilderHeader survey={survey} />
+          <SurveyBuilderHeader
+            survey={survey}
+            workspaceId={workspaceId}
+            workspaceName={workspaceName}
+          />
         </Grid>
         <Grid
           item

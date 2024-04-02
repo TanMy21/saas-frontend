@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
 import useAuth from "../hooks/useAuth";
+import { useGetMeQuery } from "../app/slices/userApiSlice";
 
 const HeaderIconMenu = () => {
   const navigate = useNavigate();
@@ -25,6 +26,8 @@ const HeaderIconMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const { data: me } = useGetMeQuery(undefined);
 
   const [sendLogout, { isSuccess: isSuccessLogout }] = useSendLogoutMutation();
 
@@ -111,7 +114,13 @@ const HeaderIconMenu = () => {
               </Avatar>
             </Box>
             <Box ml={2}>
-              <Box>Name</Box>
+              <Box>
+                <Typography
+                  sx={{ color: "black", fontWeight: "bold", fontSize: "16px" }}
+                >
+                  {me?.firstname}
+                </Typography>
+              </Box>
               <Box sx={{ fontSize: "12px" }}>{email}</Box>
             </Box>
           </Box>

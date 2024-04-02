@@ -5,10 +5,18 @@ import formatDate from "../../utils/formatDate";
 import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
 import { WorkspaceLayoutProps } from "../../utils/types";
 
-const ListLayout = ({ surveys, workspaceId, layout }: WorkspaceLayoutProps) => {
+const ListLayout = ({
+  surveys,
+  workspaceId,
+  workspaceName,
+  layout,
+}: WorkspaceLayoutProps) => {
   const navigate = useNavigate();
+
   const goToSurvey = (surveyID: string) => {
-    navigate(`/survey/${surveyID}/create`, { state: { workspaceId, layout } });
+    navigate(`/survey/${surveyID}/create`, {
+      state: { workspaceId, workspaceName, layout },
+    });
   };
 
   return (

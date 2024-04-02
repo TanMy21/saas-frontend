@@ -82,6 +82,8 @@ export interface SurveyRenameProps {
 
 export interface SurveyDropDownMenuProps {
   survey: Survey;
+  workspaceId?: string;
+  workspaceName?: string;
 }
 
 export interface UserInfo {
@@ -126,6 +128,7 @@ export interface WorkspaceData {
 export interface WorkspaceLayoutProps {
   surveys: Survey[];
   workspaceId: string;
+  workspaceName: string;
   layout?: string;
 }
 

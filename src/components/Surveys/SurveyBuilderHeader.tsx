@@ -12,8 +12,13 @@ import {
 import AppBar from "@mui/material/AppBar";
 import HeaderIconMenu from "../HeaderIconMenu";
 import { SurveyDropDownMenuProps } from "../../utils/types";
+import { NavLink } from "react-router-dom";
 
-const SurveyBuilderHeader = ({ survey }: SurveyDropDownMenuProps) => {
+const SurveyBuilderHeader = ({
+  survey,
+  workspaceId,
+  workspaceName,
+}: SurveyDropDownMenuProps) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -45,10 +50,39 @@ const SurveyBuilderHeader = ({ survey }: SurveyDropDownMenuProps) => {
                 ml: 4,
               }}
             >
-              <Typography sx={{ color: "#898989" }}>
-                Workspace name /
-              </Typography>
-              <Typography sx={{ color: "#262666" }}>
+              <NavLink
+                to={`/dash/w/${workspaceId}`}
+                style={({ isActive /*isPending, isTransitioning*/ }) => {
+                  return {
+                    display: "block",
+                    color: isActive ? "#262626" : "#262666",
+                    lineHeight: "20px",
+                    textDecoration: "none",
+                  };
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: "#898989",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "clip",
+                    maxWidth: "100%",
+                  }}
+                >
+                  {workspaceName} /
+                </Typography>
+              </NavLink>
+
+              <Typography
+                sx={{
+                  color: "#262666",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "clip",
+                  maxWidth: "50%",
+                }}
+              >
                 &nbsp; {survey?.title}
               </Typography>
             </Typography>
@@ -112,11 +146,12 @@ const SurveyBuilderHeader = ({ survey }: SurveyDropDownMenuProps) => {
               justifyContent={"space-between"}
               sx={{ marginTop: "1%" }}
             >
-              <Box>
+              <Box sx={{ width: "120px" }}>
                 <Button
                   sx={{
                     backgroundColor: "#44546A",
                     marginTop: "2%",
+                    marginRight: 1,
                     marginLeft: "100%",
                     textTransform: "capitalize",
                   }}
@@ -126,8 +161,13 @@ const SurveyBuilderHeader = ({ survey }: SurveyDropDownMenuProps) => {
                   Publish
                 </Button>
               </Box>
-              <Divider orientation="vertical" variant="middle" flexItem />
-              <Box sx={{ marginRight: "25%" }}>
+              <Divider
+                orientation="vertical"
+                variant="middle"
+                flexItem
+                sx={{ marginLeft: 8 }}
+              />
+              <Box sx={{ marginRight: "20%" }}>
                 <HeaderIconMenu />
               </Box>
             </Box>
