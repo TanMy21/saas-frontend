@@ -3,8 +3,6 @@ import {
   Box,
   ButtonBase,
   Card,
-  CardActions,
-  CardContent,
   Divider,
   Grid,
   Typography,
@@ -32,49 +30,47 @@ const GridLayout = ({
         {surveys?.map((survey) => (
           <Grid
             item
-            xs={4 / 8}
-            sm={6 / 8}
-            md={8 / 8}
-            lg={10 / 8}
-            xl={24 / 8}
+            xs={12}
+            sm={8}
+            md={6}
+            lg={4}
+            xl={3}
             key={survey.surveyID}
             sx={{ marginRight: "20px" }}
           >
             <Card
               sx={{
                 width: "96%",
-                height: "22vh",
+                height: "90%",
+                maxWidth: "180px",
                 maxHeight: "210px",
                 borderRadius: "12px",
               }}
             >
-              <ButtonBase
-                onClick={() => goToSurvey(survey.surveyID)}
-                sx={{
-                  width: "100%",
-                  display: "block",
-                  textTransform: "none",
-                }}
-              >
-                <CardContent
+              <Box display={"flex"} flexDirection={"column"}>
+                <Box
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    justifyItems: "center",
-                    marginBottom: "-10%",
+                    justifyContent: "center",
                     alignItems: "center",
+                    zIndex: 20,
+                    padding: "20px",
+                    margin: "auto",
+                    overflow: "hidden",
+                    overflowWrap: "break-word",
+                    width: "72%",
+                    height: "70%",
+                    minHeight: "120px",
                   }}
                 >
-                  <Box
-                    p={2}
+                  <ButtonBase
+                    onClick={() => goToSurvey(survey.surveyID)}
                     sx={{
-                      zIndex: 20,
-                      overflow: "hidden",
-                      overflowWrap: "break-word",
-                      width: "160px",
-                      height: "100px",
+                      width: "100%",
+                      display: "block",
+                      textTransform: "none",
                     }}
-                    mt={2}
                   >
                     <Typography
                       sx={{
@@ -89,25 +85,33 @@ const GridLayout = ({
                     >
                       {survey.title}
                     </Typography>
-                  </Box>
-                </CardContent>
-              </ButtonBase>
-              <Divider />
-              <Box
-                display={"flex"}
-                flexDirection={"row"}
-                justifyContent={"space-between"}
-                alignContent={"center"}
-              >
-                <Box p={"6px"} mt={1} pl={1}>
-                  <Typography sx={{ fontSize: "12px", color: "#C1C1D3" }}>
-                    No Responses
-                  </Typography>
+                  </ButtonBase>
                 </Box>
-                <Box sx={{ marginTop: "-2%" }}>
-                  <CardActions>
+                <Divider />
+                <Box
+                  display={"flex"}
+                  flexDirection={"row"}
+                  justifyContent={"space-between"}
+                  alignContent={"center"}
+                >
+                  <Box p={"6px"} mt={1} pl={1}>
+                    <Typography sx={{ fontSize: "12px", color: "#C1C1D3" }}>
+                      No Responses
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginTop: "1%",
+                    }}
+                  >
+                    {/* <CardActions> */}
                     <SurveyCardDropDownMenu survey={survey} />
-                  </CardActions>
+                    {/* </CardActions> */}
+                  </Box>
                 </Box>
               </Box>
             </Card>

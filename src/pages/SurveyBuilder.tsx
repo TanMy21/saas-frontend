@@ -1,16 +1,27 @@
 // import { useLocation } from "react-router-dom";
-import { Box, Grid, Typography } from "@mui/material";
-import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
+import { useState } from "react";
+import { Box, Grid } from "@mui/material";
 import { useGetSurveyByIdQuery } from "../app/slices/surveysApiSlice";
 import { useLocation, useParams } from "react-router-dom";
+import { ElementType } from "../utils/types";
+import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
+import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
+import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
+import SurveyBuilderCanvas from "../components/Surveys/SurveyBuilderCanvas";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
   // const navigate = useNavigate();
   const location = useLocation();
   const { workspaceId, workspaceName } = location.state || {};
+  const isOpen = location.state?.openModal || false;
+  const [surveyTitle, setSurveyTitle] = useState<string>("");
+  const [elements, setElements] = useState<ElementType[]>([]);
+  const [elementDetail, setElementDetail] = useState<ElementType>(elements[0]);
+  const [qIndex, setQIndex] = useState<string>(" ");
+  const { data: survey } = useGetSurveyByIdQuery(surveyID, { skip: !surveyID });
 
-  const { data: survey } = useGetSurveyByIdQuery(surveyID);
+  console.log("Builder: ", surveyTitle);
 
   return (
     <>
@@ -30,35 +41,37 @@ const SurveyBuilder = () => {
             survey={survey}
             workspaceId={workspaceId}
             workspaceName={workspaceName}
+            title={surveyTitle}
           />
         </Grid>
+        <CreateNewSurveyModal
+          isOpen={isOpen}
+          workspaceId={workspaceId}
+          setSurveyTitle={setSurveyTitle}
+        />
         <Grid
           item
           container
           direction={"row"}
-          sx={{ width: "100%", minHeight: "95vh" }}
+          sx={{ width: "100vw", minHeight: "95vh" }}
         >
-          {/* Left Sidebar */}
           <Grid
             item
+            mr={1}
             sx={{
               background: "white",
-              width: "14%",
+              width: "16%",
               borderRight: 1,
               borderColor: "#EDEDED",
             }}
           >
-            <Box
-              p={2}
-              sx={{
-                background: "white",
-                height: "100vh",
-                position: "fixed",
-                top: "5vh",
-              }}
-            >
-              Questions
-            </Box>
+            {/* Left Sidebar */}
+            <SurveyBuilderLeftSidebar
+              setElementDetail={setElementDetail}
+              setQIndex={setQIndex}
+              setElements={setElements}
+              elements={elements}
+            />
           </Grid>
           <Grid
             item
@@ -66,14 +79,14 @@ const SurveyBuilder = () => {
             sx={{ bgcolor: "#EDEDED", height: "100vh", overflowY: "auto" }}
           >
             {/* Main content area */}
-            <Box p={4}>
-              <Typography variant="h5">
-                Create Survey: {survey?.title}
-              </Typography>
-            </Box>
+            <SurveyBuilderCanvas
+              survey={survey}
+              elementDetail={elementDetail}
+              qIndex={qIndex}
+            />
           </Grid>
-          {/* Right Sidebar */}
           <Grid item sx={{ background: "white", width: "14%" }}>
+            {/* Right Sidebar */}
             <Box
               p={2}
               sx={{

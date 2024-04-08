@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Divider, IconButton, Menu, MenuItem } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -9,9 +9,14 @@ import {
   useCopySurveyMutation,
   useMoveSurveyMutation,
 } from "../../app/slices/surveysApiSlice";
-import { Workspace, SurveyDropDownMenuProps } from "../../utils/types";
+import {
+  Workspace,
+  SurveyDropDownMenuProps,
+  ErrorData,
+} from "../../utils/types";
 import RenameSurveyModal from "../Modals/RenameSurveyModal";
 import DeleteSurveyModal from "../Modals/DeleteSurveyModal";
+import { toast } from "react-toastify";
 
 const SurveyCardDropDownMenu = ({ survey }: SurveyDropDownMenuProps) => {
   const { surveyID } = survey;
@@ -30,8 +35,11 @@ const SurveyCardDropDownMenu = ({ survey }: SurveyDropDownMenuProps) => {
   });
 
   const [duplicateSurvey] = useDuplicateSurveyMutation();
-  const [copySurvey] = useCopySurveyMutation();
-  const [moveSurvey] = useMoveSurveyMutation();
+  const [copySurvey, { isSuccess, isError, error }] = useCopySurveyMutation();
+  const [
+    moveSurvey,
+    { isSuccess: moveSuccess, isError: moveIsError, error: moveError },
+  ] = useMoveSurveyMutation();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setMenuAnchor(e.currentTarget);
@@ -82,6 +90,56 @@ const SurveyCardDropDownMenu = ({ survey }: SurveyDropDownMenuProps) => {
     }
     handleClose();
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Copy Successfull!", {
+        position: "top-right",
+        autoClose: 3000,
+        closeOnClick: true,
+        theme: "colored",
+      });
+    }
+
+    if (moveSuccess) {
+      toast.success("Survey moved Successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        closeOnClick: true,
+        theme: "colored",
+      });
+    }
+
+    if (isError) {
+      const errorData = error as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+
+    if (moveIsError) {
+      const moveErrorData = moveError as ErrorData;
+      if (Array.isArray(moveErrorData.data.error)) {
+        moveErrorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(moveErrorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isSuccess, moveSuccess, moveIsError, isError, error, moveError]);
 
   return (
     <>

@@ -64,7 +64,7 @@ const Signup = () => {
 
   return (
     <>
-      <Container component="main" sx={{ width: "100%" }}>
+      <Container component="main" sx={{ width: "100%", minHeight: "900px" }}>
         <Box
           sx={{
             marginTop: 12,

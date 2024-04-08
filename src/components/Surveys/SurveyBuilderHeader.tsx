@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -18,12 +18,17 @@ const SurveyBuilderHeader = ({
   survey,
   workspaceId,
   workspaceName,
+  title,
 }: SurveyDropDownMenuProps) => {
   const [value, setValue] = useState(0);
-
+  const [surveyTitle, setSurveyTitle] = useState<string | undefined>("");
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    setSurveyTitle(title);
+  }, [title]);
 
   return (
     <AppBar
@@ -34,7 +39,8 @@ const SurveyBuilderHeader = ({
         bgcolor: "white",
         borderBottom: 1,
         borderColor: "#EDEDED",
-        height: "5vh",
+        width: "100vw",
+        height: "52px",
       }}
     >
       <Toolbar disableGutters>
@@ -80,10 +86,10 @@ const SurveyBuilderHeader = ({
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "clip",
-                  maxWidth: "50%",
+                  maxWidth: "80%",
                 }}
               >
-                &nbsp; {survey?.title}
+                &nbsp; {surveyTitle ? surveyTitle : survey?.title}
               </Typography>
             </Typography>
           </Grid>
@@ -109,7 +115,7 @@ const SurveyBuilderHeader = ({
                 height: "100%",
                 width: "60%",
                 margin: "-2%",
-                fontSize: "8px",
+                fontSize: "16px",
                 color: "black",
                 ".MuiTabs-indicator": {
                   height: "2px",
@@ -146,11 +152,11 @@ const SurveyBuilderHeader = ({
               justifyContent={"space-between"}
               sx={{ marginTop: "1%" }}
             >
-              <Box sx={{ width: "120px" }}>
+              <Box sx={{ width: "160px" }}>
                 <Button
                   sx={{
                     backgroundColor: "#44546A",
-                    marginTop: "2%",
+                    marginTop: "4%",
                     marginRight: 1,
                     marginLeft: "100%",
                     textTransform: "capitalize",
@@ -167,7 +173,14 @@ const SurveyBuilderHeader = ({
                 flexItem
                 sx={{ marginLeft: 8 }}
               />
-              <Box sx={{ marginRight: "20%" }}>
+              <Box
+                sx={{
+                  marginRight: "12%",
+                  marginTop: "2px",
+                  md: { marginRight: 0, marginLeft: 50 },
+                  lg: { marginRight: 0, marginLeft: 5 },
+                }}
+              >
                 <HeaderIconMenu />
               </Box>
             </Box>

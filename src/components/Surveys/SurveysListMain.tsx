@@ -147,7 +147,10 @@ const SurveysListMain = () => {
             justifyContent={"space-between"}
           >
             <Box>
-              <CreateNewSurveyBtn />
+              <CreateNewSurveyBtn
+                workspaceId={workspaceId}
+                workspaceName={workspace?.name}
+              />
             </Box>
             <Box
               component="main"
@@ -194,7 +197,7 @@ const SurveysListMain = () => {
                     }}
                   >
                     <ListIcon />
-                    <span> List</span>
+                    <span>List</span>
                   </ToggleButton>
                   <ToggleButton
                     size="small"
@@ -241,7 +244,7 @@ const SurveysListMain = () => {
                 pl={4}
                 pt={4}
                 sx={{
-                  width: "100vw",
+                  width: "100%",
                   minHeight: 600,
                 }}
                 columns={{ xs: 2, sm: 4, md: 6, lg: 8 }}
@@ -255,9 +258,12 @@ const SurveysListMain = () => {
               </Grid>
             ) : (
               <Grid
+                container
+                display={"flex"}
+                flexDirection={"column"}
                 p={4}
                 sx={{
-                  width: "100vw",
+                  width: "100%",
                   minHeight: "72vh",
                 }}
               >

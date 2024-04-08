@@ -61,15 +61,24 @@ const NewWorkspaceModal = () => {
   }, [isSuccess, isError, error]);
 
   return (
-    <Box sx={{ width: "90%", height: "60px" }}>
+    <Box
+      display={"flex"}
+      flexDirection={"row"}
+      justifyContent={"end"}
+      sx={{
+        width: "96%",
+        height: "48px",
+        marginTop: "8%",
+      }}
+    >
       <IconButton
         onClick={handleOpen}
         sx={{
           background: "#47658F",
-          width: "32px",
-          height: "32px",
-          marginLeft: "92%",
-          marginTop: "16%",
+          maxWidth: "32px",
+          maxHeight: "32px",
+          marginRight: "2%",
+          marginTop: "8%",
           borderRadius: 1,
           color: "white",
           "&:hover": {

@@ -13,13 +13,20 @@ import CloseIcon from "@mui/icons-material/Close";
 import UploadIcon from "@mui/icons-material/Upload";
 import { NewSurveyModalProps } from "../../utils/types";
 
-const NewSurveyModal = ({ open, setOpen }: NewSurveyModalProps) => {
+const NewSurveyModal = ({
+  open,
+  setOpen,
+  workspaceId,
+  workspaceName,
+}: NewSurveyModalProps) => {
   const navigate = useNavigate();
 
   const handleClose = () => setOpen(false);
-
+  const openModal = true;
   const handleCreateFromScratch = () => {
-    navigate("/survey/123/create");
+    navigate("/s/create", {
+      state: { workspaceId, workspaceName, openModal },
+    });
   };
 
   return (

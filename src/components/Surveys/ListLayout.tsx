@@ -34,19 +34,19 @@ const ListLayout = ({
           spacing={2}
           sx={{ padding: 2, backgroundColor: "transparent", borderRadius: 2 }}
         >
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <Typography sx={{ fontSize: "14px" }}>Surveys</Typography>
           </Grid>
-          <Grid item xs>
+          <Grid item xs={2}>
             <Typography sx={{ fontSize: "14px" }}>Questions</Typography>
           </Grid>
-          <Grid item xs>
+          <Grid item xs={2}>
             <Typography sx={{ fontSize: "14px" }}>Responses</Typography>
           </Grid>
-          <Grid item xs>
+          <Grid item xs={2}>
             <Typography sx={{ fontSize: "14px" }}>Updated</Typography>
           </Grid>
-          <Grid item xs>
+          <Grid item xs={2}>
             <Typography sx={{ fontSize: "14px" }}>Actions</Typography>
           </Grid>
         </Grid>
@@ -79,7 +79,7 @@ const ListLayout = ({
                 padding: "8px",
               }}
             >
-              <Grid item xs={3}>
+              <Grid item xs={4}>
                 <Box display={"flex"} flexDirection={"row"} pb={1}>
                   <ButtonBase
                     onClick={() => goToSurvey(survey.surveyID)}
@@ -89,15 +89,24 @@ const ListLayout = ({
                   >
                     <Box>
                       <Avatar
-                        sx={{ bgcolor: "#44546A", width: 32, height: 32 }}
+                        sx={{ bgcolor: "#168578", width: 32, height: 32 }}
                         variant="rounded"
                       >
                         <FeedIcon />
                       </Avatar>
                     </Box>
-                    <Box display={"flex"} flexDirection={"column"} ml={1}>
+                    <Box
+                      display={"flex"}
+                      flexDirection={"column"}
+                      ml={1}
+                      width={"100%"}
+                      maxWidth={"250px"}
+                    >
                       <Box>
-                        <Typography sx={{ fontSize: "12px" }} noWrap>
+                        <Typography
+                          sx={{ fontSize: "12px", textOverflow: "clip" }}
+                          noWrap
+                        >
                           {survey.title}
                         </Typography>
                       </Box>
@@ -110,22 +119,22 @@ const ListLayout = ({
                   </ButtonBase>
                 </Box>
               </Grid>
-              <Grid item xs>
-                <Typography sx={{ fontSize: "14px" }} mt={1} ml={2}>
+              <Grid item xs={2}>
+                <Typography sx={{ fontSize: "14px" }} mt={1} ml={3}>
                   1
                 </Typography>
               </Grid>
-              <Grid item xs>
-                <Typography sx={{ fontSize: "14px" }} mt={1} ml={2}>
+              <Grid item xs={2}>
+                <Typography sx={{ fontSize: "14px" }} mt={1} ml={3}>
                   0
                 </Typography>
               </Grid>
-              <Grid item xs>
+              <Grid item xs={2}>
                 <Typography sx={{ fontSize: "14px" }} mt={1}>
                   {formatDate(survey.updatedAt)}
                 </Typography>
               </Grid>
-              <Grid item xs>
+              <Grid item xs={2}>
                 <SurveyCardDropDownMenu survey={survey} />
               </Grid>
             </Grid>

@@ -9,7 +9,14 @@ const DashBoardHeader = () => {
   return (
     <AppBar
       position="static"
-      sx={{ m: "0px", bgcolor: "white", borderBottom: 2, height: "48px" }}
+      elevation={0}
+      sx={{
+        m: "0px",
+        bgcolor: "white",
+        borderBottom: 1,
+        borderColor: "#EDEDED",
+        height: "48px",
+      }}
     >
       <Grid
         container

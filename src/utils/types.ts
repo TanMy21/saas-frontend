@@ -13,6 +13,18 @@ export interface AuthState {
   isLoggedIn?: boolean;
 }
 
+export interface ElementProps {
+  qNO: string;
+  // index: number;
+}
+
+export interface ElementType {
+  type: string;
+  icon: JSX.Element;
+  question: string;
+  Element: React.ComponentType<ElementProps>;
+}
+
 interface ErrorMessage {
   message: string;
 }
@@ -40,6 +52,8 @@ export interface ILogoutResponse {
 export interface NewSurveyModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  workspaceId: string;
+  workspaceName: string;
 }
 
 export interface RegisterFormData {
@@ -71,6 +85,34 @@ export interface Survey {
   workspaceId: string;
 }
 
+export interface SurveyBuilderCanvasProps {
+  survey?: Survey;
+  elementDetail: ElementType;
+  qIndex: string;
+}
+
+export interface SurveyBuilderLeftSidebarProps {
+  setElementDetail: React.Dispatch<React.SetStateAction<ElementType>>;
+  setQIndex: React.Dispatch<React.SetStateAction<string>>;
+  setElements: React.Dispatch<React.SetStateAction<ElementType[]>>;
+  elements: ElementType[];
+}
+
+export interface SurveyNameProps {
+  isOpen: boolean;
+  workspaceId: string;
+  surveyName?: string;
+  title?: string;
+  description?: string;
+  surveyDescription?: string;
+  setSurveyTitle: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface NewSurveyProps {
+  workspaceId?: string;
+  workspaceName?: string;
+}
+
 export interface SurveyRenameProps {
   open: boolean;
   onClose: () => void;
@@ -84,6 +126,7 @@ export interface SurveyDropDownMenuProps {
   survey: Survey;
   workspaceId?: string;
   workspaceName?: string;
+  title?: string;
 }
 
 export interface UserInfo {
