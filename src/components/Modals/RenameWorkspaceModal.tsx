@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import {
   Box,
@@ -10,8 +12,6 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useUpdateWorkspaceNameMutation } from "../../app/slices/workspaceApiSlice";
 import { ErrorData, WorkspaceRenameModalProps } from "../../utils/types";
-import { toast } from "react-toastify";
-import { useEffect } from "react";
 
 const RenameWorkspaceModal = ({
   open,

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -9,7 +10,6 @@ import {
 import { ElementProps } from "../../../utils/types";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { MdAdd } from "react-icons/md";
-import { useState } from "react";
 
 const CheckBoxElement = ({ qNO }: ElementProps) => {
   const [choices, setChoices] = useState(["Choice A"]);

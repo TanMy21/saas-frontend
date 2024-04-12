@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import {
   Box,
@@ -10,8 +12,6 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useRetitleSurveyMutation } from "../../app/slices/surveysApiSlice";
 import { ErrorData, SurveyRenameProps } from "../../utils/types";
-import { toast } from "react-toastify";
-import { useEffect } from "react";
 
 const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
   const [retitleSurvey, { isSuccess, isError, error }] =

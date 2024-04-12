@@ -1,9 +1,9 @@
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDeleteSurveyMutation } from "../../app/slices/surveysApiSlice";
 import { ErrorData, SurveyRenameProps } from "../../utils/types";
-import { useEffect } from "react";
 
 const DeleteSurveyModal = ({
   open,

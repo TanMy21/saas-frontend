@@ -3,11 +3,11 @@ import { NavLink, useNavigate } from "react-router-dom";
 import {
   Box,
   Divider,
+  Grid,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
-  Stack,
 } from "@mui/material";
 import { WorkspacesProp } from "../../utils/types";
 import WorkspaceSurveysListCount from "./WorkspaceSurveysListCount";
@@ -30,10 +30,22 @@ const Workspaces = ({ workspaces }: WorkspacesProp) => {
 
   return (
     <>
-      <Stack>
-        <Box>
+      <Grid container display={"flex"} flexDirection={"column"}>
+        <Grid
+          item
+          display={"flex"}
+          flexDirection={"row"}
+          justifyContent={"end"}
+          mt={2}
+          mb={2}
+          sx={{
+            width: "98%",
+            height: "50px",
+          }}
+        >
           <NewWorkspaceModal />
-        </Box>
+        </Grid>
+
         <Box sx={{ width: "100%", minHeight: "200px", marginTop: "8%" }}>
           <List>
             {workspaces?.map((workspace) => (
@@ -65,10 +77,7 @@ const Workspaces = ({ workspaces }: WorkspacesProp) => {
                       justifyContent={"space-between"}
                     >
                       <Box>
-                        <ListItemText
-                          // sx={{ fontSize: "12px" }}
-                          primary={workspace?.name}
-                        />
+                        <ListItemText primary={workspace?.name} />
                       </Box>
                       <WorkspaceSurveysListCount
                         workspaceId={workspace?.workspaceId}
@@ -81,7 +90,7 @@ const Workspaces = ({ workspaces }: WorkspacesProp) => {
           </List>
           <Divider />
         </Box>
-      </Stack>
+      </Grid>
     </>
   );
 };

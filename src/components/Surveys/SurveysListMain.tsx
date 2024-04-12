@@ -236,8 +236,7 @@ const SurveysListMain = () => {
             ) : surveys?.length === 0 ? (
               <SurveysNotFound />
             ) : layout === "grid" ? (
-              <Grid
-                container
+              <Box
                 display={"flex"}
                 flexDirection={"row"}
                 ml={2}
@@ -246,8 +245,8 @@ const SurveysListMain = () => {
                 sx={{
                   width: "100%",
                   minHeight: 600,
+                  // border: "2px solid black",
                 }}
-                columns={{ xs: 2, sm: 4, md: 6, lg: 8 }}
               >
                 <GridLayout
                   surveys={sortedSurveys}
@@ -255,7 +254,7 @@ const SurveysListMain = () => {
                   workspaceName={workspace?.name!}
                   layout={layout}
                 />
-              </Grid>
+              </Box>
             ) : (
               <Grid
                 container

@@ -100,9 +100,13 @@ const ListLayout = ({
                       flexDirection={"column"}
                       ml={1}
                       width={"100%"}
-                      maxWidth={"250px"}
+                      maxWidth={"220px"}
                     >
-                      <Box>
+                      <Box
+                        display={"flex"}
+                        flexDirection={"row"}
+                        justifyContent={"start"}
+                      >
                         <Typography
                           sx={{ fontSize: "12px", textOverflow: "clip" }}
                           noWrap

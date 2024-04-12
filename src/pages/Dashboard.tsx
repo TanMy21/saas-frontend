@@ -38,70 +38,86 @@ const Dashboard = () => {
 
   return (
     <>
-      <Grid container direction={"column"}>
+      <Box
+        sx={{
+          bgcolor: "green",
+          overflowX: "hidden",
+          width: "100%",
+          height: "100%",
+        }}
+      >
         <Grid
-          item
+          container
+          display={"flex"}
+          flexDirection={"row"}
           xs={12}
           sx={{
-            width: "100%",
-            height: "5vh",
-            zIndex: "10",
             position: "sticky",
             top: "0",
+            width: "100%",
+            // height: "5vh",
+            zIndex: "5",
           }}
         >
           <DashBoardHeader />
         </Grid>
         <Grid
-          item
           container
+          xl={12}
+          lg={12}
+          md={12}
+          xs={12}
           display={"flex"}
-          direction={"row"}
-          sx={{ width: "100%", minHeight: "95vh" }}
+          flexDirection={"row"}
+          zIndex={1}
+          sx={{
+            width: "100%",
+            minHeight: "95vh",
+            overflowX: "hidden",
+          }}
         >
+          {/* content area */}
           {/* Left Sidebar Workspaces*/}
           <Grid
             item
-            container
+            xl={2}
+            lg={2}
+            md={2}
+            xs={2}
             sx={{
               background: "white",
-              width: "12%",
-              borderRight: 1,
-              borderColor: "#EDEDED",
+              position: "sticky",
+              top: "5vh",
+              left: "0",
+              zIndex: "5",
             }}
           >
-            <Box
-              sx={{
-                background: "white",
-                width: "12%",
-                height: "100vh",
-                position: "fixed",
-                top: "5vh",
-              }}
-            >
-              {isLoadingWorkspaces ? (
-                <CircularProgress />
-              ) : (
-                <Workspaces workspaces={workspaces} />
-              )}
-            </Box>
+            {isLoadingWorkspaces ? (
+              <CircularProgress />
+            ) : (
+              <Workspaces workspaces={workspaces} />
+            )}
           </Grid>
+          {/* Main content area */}
           <Grid
             item
+            xl={10}
+            lg={10}
+            md={10}
+            xs={10}
             sx={{
-              bgcolor: "#EDEDED",
-              minWidth: "88%",
-              maxWidth: "88%",
-              minHeight: "100vh",
-              marginLeft: "12%",
+              background: "#EBEBEB",
+              flexGrow: 1,
+              width: "80%",
+              minHeight: "95vh",
+              overflowY: "auto",
               overflowX: "hidden",
             }}
           >
-            {/* Main content area */}
             <Outlet context={{ workspaces }} />
           </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </>
   );
 };

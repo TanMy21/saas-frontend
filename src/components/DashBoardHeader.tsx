@@ -15,6 +15,7 @@ const DashBoardHeader = () => {
         bgcolor: "white",
         borderBottom: 1,
         borderColor: "#EDEDED",
+        width: "100%",
         height: "48px",
       }}
     >

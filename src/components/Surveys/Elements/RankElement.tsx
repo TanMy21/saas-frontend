@@ -1,7 +1,7 @@
+import { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { ElementProps } from "../../../utils/types";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { useState } from "react";
 import { MdAdd } from "react-icons/md";
 
 const RankElement = ({ qNO }: ElementProps) => {
@@ -91,7 +91,8 @@ const RankElement = ({ qNO }: ElementProps) => {
             onClick={addRank}
             sx={{
               backgroundColor: "#0445AF",
-              mr: 2,
+              mr: 1,
+              mb: 2,
               textTransform: "capitalize",
               "&:hover": {
                 backgroundColor: "#0445AF",

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import {
@@ -11,7 +12,6 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useDeleteWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
 import { ErrorData, WorkspaceDeleteModalProps } from "../../utils/types";
-import { useEffect } from "react";
 
 const DeleteWorkspaceModal = ({
   open,

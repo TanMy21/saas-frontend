@@ -39,7 +39,7 @@ const SurveyBuilderHeader = ({
         bgcolor: "white",
         borderBottom: 1,
         borderColor: "#EDEDED",
-        width: "100vw",
+        width: "100%",
         height: "52px",
       }}
     >
@@ -84,9 +84,8 @@ const SurveyBuilderHeader = ({
                 sx={{
                   color: "#262666",
                   whiteSpace: "nowrap",
-                  overflow: "hidden",
                   textOverflow: "clip",
-                  maxWidth: "80%",
+                  maxWidth: "90%",
                 }}
               >
                 &nbsp; {surveyTitle ? surveyTitle : survey?.title}
@@ -149,20 +148,23 @@ const SurveyBuilderHeader = ({
           >
             <Box
               display={"flex"}
-              justifyContent={"space-between"}
-              sx={{ marginTop: "1%" }}
+              justifyContent={"space-around"}
+              sx={{ width: "96%", marginTop: "1%" }}
             >
-              <Box sx={{ width: "160px" }}>
+              <Box
+                display={"flex"}
+                flexDirection={"row"}
+                justifyContent={"end"}
+                sx={{ width: "80%" }}
+              >
                 <Button
                   sx={{
                     backgroundColor: "#44546A",
-                    marginTop: "4%",
-                    marginRight: 1,
-                    marginLeft: "100%",
+                    marginRight: "4%",
                     textTransform: "capitalize",
                   }}
                   variant="contained"
-                  size="medium"
+                  size="small"
                 >
                   Publish
                 </Button>
@@ -171,14 +173,15 @@ const SurveyBuilderHeader = ({
                 orientation="vertical"
                 variant="middle"
                 flexItem
-                sx={{ marginLeft: 8 }}
+                color="#3C3C3C"
               />
               <Box
+                display={"flex"}
+                flexDirection={"row"}
+                justifyContent={"end"}
                 sx={{
-                  marginRight: "12%",
+                  width: "20%",
                   marginTop: "2px",
-                  md: { marginRight: 0, marginLeft: 50 },
-                  lg: { marginRight: 0, marginLeft: 5 },
                 }}
               >
                 <HeaderIconMenu />

@@ -1,12 +1,12 @@
+import { useState } from "react";
 import {
   Box,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
 import { SurveyBuilderCanvasProps } from "../../utils/types";
-import { useState } from "react";
+import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
 
 const SurveyBuilderCanvas = ({
   survey,
@@ -28,7 +28,7 @@ const SurveyBuilderCanvas = ({
       </Box>
       <Box
         margin={"auto"}
-        width={"96%"}
+        width={"98%"}
         minHeight={"75vh"}
         borderRadius={"12px"}
         bgcolor={"#FFFFFF"}
@@ -40,7 +40,7 @@ const SurveyBuilderCanvas = ({
           <SurveyWelcomeElement />
         )}
       </Box>
-      <Box mt={4} display={"flex"} justifyContent={"center"}>
+      <Box mt={4} mb={2} display={"flex"} justifyContent={"center"}>
         <ToggleButtonGroup
           color="primary"
           value={layout}
@@ -56,10 +56,10 @@ const SurveyBuilderCanvas = ({
               color: "black",
               bgcolor: "#E3E3E3",
               "&.Mui-selected": {
-                bgcolor: "#3C3737", // color when button is selected (clicked)
+                bgcolor: "#3C3737",
                 color: "white",
                 "&:hover": {
-                  bgcolor: "#868383", // color when button is selected and hovered over
+                  bgcolor: "#868383",
                   color: "white",
                 },
               },
@@ -75,10 +75,10 @@ const SurveyBuilderCanvas = ({
               color: "black",
               bgcolor: "#E3E3E3",
               "&.Mui-selected": {
-                bgcolor: "#3C3737", // color when button is selected (clicked)
+                bgcolor: "#3C3737",
                 color: "white",
                 "&:hover": {
-                  bgcolor: "#868383", // color when button is selected and hovered over
+                  bgcolor: "#868383",
                   color: "white",
                 },
               },

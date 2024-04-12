@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { GoArrowUpLeft } from "react-icons/go";
+
 const SurveyWelcomeElement = () => {
   return (
     <Box
@@ -20,7 +21,7 @@ const SurveyWelcomeElement = () => {
         height={"100px"}
         mt={8}
       >
-        <Typography variant="h1">
+        <Typography fontSize={"4rem"}>
           <GoArrowUpLeft />
         </Typography>
       </Box>
@@ -29,14 +30,14 @@ const SurveyWelcomeElement = () => {
         flexDirection={"column"}
         justifyContent={"center"}
         alignItems={"center"}
-        width={"80%"}
-        height={"400px"}
+        width={"84%"}
+        height={"60%"}
       >
-        <Typography variant="h3" color={"#171D5C"}>
+        <Typography fontSize={"3rem"} color={"#171D5C"}>
           Welcome to the survey!
         </Typography>
-        <Typography variant="h5" color={"#424242"} mt={2}>
-          Get started by clicking on the Add button to add Survey Elements.
+        <Typography fontSize={"1.4rem"} color={"#424242"} mt={2}>
+          Get started by clicking on the Add button + to add Survey Elements.
         </Typography>
       </Box>
     </Box>

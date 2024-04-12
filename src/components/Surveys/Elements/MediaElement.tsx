@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -12,7 +13,6 @@ import { ElementProps } from "../../../utils/types";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { BiImageAdd } from "react-icons/bi";
 import { MdAdd } from "react-icons/md";
-import { useState } from "react";
 
 const MediaElement = ({ qNO }: ElementProps) => {
   const [media, setMedia] = useState(["A"]);
@@ -32,8 +32,8 @@ const MediaElement = ({ qNO }: ElementProps) => {
       justifyContent={"start"}
       alignItems={"center"}
       margin={"auto"}
-      width={"70%"}
-      height={"100%"}
+      width={"92%"}
+      minHeight={"100%"}
       zIndex={20}
     >
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "4%" }}>
@@ -76,19 +76,40 @@ const MediaElement = ({ qNO }: ElementProps) => {
           </Typography>
         </Box>
       </Box>
-      <Box display={"flex"} mt={4} sx={{ width: "90%" }}>
-        <Grid container spacing={2}>
+      <Box width={"96%"} minHeight={"60vh"} p={2}>
+        <Grid
+          container
+          margin={"auto"}
+          width={"100%"}
+          height={"100%"}
+          spacing={"8px"}
+          columns={12}
+          display={"flex"}
+          flexDirection={"row"}
+          justifyContent={"center"}
+        >
           {media.map((m, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Box
+              key={index}
+              sx={{
+                p: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                width: 180,
+                height: 210,
+                marginRight: "4px",
+              }}
+            >
               <Card
                 sx={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
-                  width: 160,
-                  height: 180,
-                  mr: 2,
+                  width: { xs: "100%", sm: "90%", md: "72%", lg: 160, xl: 180 },
+                  height: { xs: 150, sm: 170, md: 190, lg: 180, xl: 210 },
                   border: "1px solid #DFCF94",
                   bgcolor: "#DFCF94",
                 }}
@@ -139,38 +160,41 @@ const MediaElement = ({ qNO }: ElementProps) => {
                   </CardActions>
                 </CardActionArea>
               </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-      <Box>
-        <Card
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            width: 160,
-            height: 180,
-            m: 2,
-            border: "1px solid #DFCF94",
-            bgcolor: "#DFCF94",
-          }}
-        >
-          <Button onClick={addMedia} sx={{ width: "100%", height: "100%" }}>
-            <Box
-              display={"flex"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              width={"90%"}
-              height={"76%"}
-            >
-              <IconButton>
-                <MdAdd color={"#745C07"} size={"48px"} />
-              </IconButton>
             </Box>
-          </Button>
-        </Card>
+          ))}
+
+          {/* Add Card Button */}
+
+          <Grid item xs={12} sm={6} md={3} lg={3} xl={3}>
+            <Card
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                width: { xs: "100%", sm: "90%", md: "72%", lg: 160, xl: 180 },
+                height: { xs: 150, sm: 170, md: 190, lg: 180, xl: 210 },
+                marginTop: { lg: "12px" },
+                border: "1px solid #DFCF94",
+                bgcolor: "#DFCF94",
+              }}
+            >
+              <Button onClick={addMedia} sx={{ width: "100%", height: "100%" }}>
+                <Box
+                  display={"flex"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  width={"90%"}
+                  height={"76%"}
+                >
+                  <IconButton>
+                    <MdAdd color={"#745C07"} size={"48px"} />
+                  </IconButton>
+                </Box>
+              </Button>
+            </Card>
+          </Grid>
+        </Grid>
       </Box>
     </Box>
   );

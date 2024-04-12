@@ -19,22 +19,33 @@ const SurveyBuilder = () => {
   const [elements, setElements] = useState<ElementType[]>([]);
   const [elementDetail, setElementDetail] = useState<ElementType>(elements[0]);
   const [qIndex, setQIndex] = useState<string>(" ");
-  const { data: survey } = useGetSurveyByIdQuery(surveyID, { skip: !surveyID });
-
-  console.log("Builder: ", surveyTitle);
+  const { data: survey } = useGetSurveyByIdQuery(surveyID, {
+    skip: !surveyID,
+    pollingInterval: 15000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
 
   return (
     <>
-      <Grid container direction={"column"}>
+      <Box
+        sx={{
+          overflowX: "hidden",
+          overflowY: "hidden",
+          width: "100%",
+          height: "100%",
+        }}
+      >
         <Grid
-          item
+          container
+          display={"flex"}
+          flexDirection={"row"}
           xs={12}
           sx={{
-            width: "100%",
-            height: "5vh",
-            zIndex: "10",
             position: "sticky",
             top: "0",
+            width: "100%",
+            zIndex: "10",
           }}
         >
           <SurveyBuilderHeader
@@ -50,22 +61,34 @@ const SurveyBuilder = () => {
           setSurveyTitle={setSurveyTitle}
         />
         <Grid
-          item
           container
-          direction={"row"}
-          sx={{ width: "100vw", minHeight: "95vh" }}
+          xl={12}
+          lg={12}
+          md={12}
+          xs={12}
+          display={"flex"}
+          flexDirection={"row"}
+          sx={{
+            width: "100%",
+            minHeight: "100vh",
+          }}
         >
+          {/* content area */}
+          {/* Left Sidebar */}
           <Grid
             item
-            mr={1}
+            xl={2}
+            lg={2}
+            md={2}
+            xs={2}
             sx={{
               background: "white",
-              width: "16%",
-              borderRight: 1,
-              borderColor: "#EDEDED",
+              position: "sticky",
+              top: "5vh",
+              left: "0",
+              zIndex: "5",
             }}
           >
-            {/* Left Sidebar */}
             <SurveyBuilderLeftSidebar
               setElementDetail={setElementDetail}
               setQIndex={setQIndex}
@@ -73,27 +96,52 @@ const SurveyBuilder = () => {
               elements={elements}
             />
           </Grid>
+          {/* </Box> */}
+          {/* Main content area */}
           <Grid
             item
-            xs
-            sx={{ bgcolor: "#EDEDED", height: "100vh", overflowY: "auto" }}
+            xl={8}
+            lg={8}
+            md={8}
+            xs={8}
+            sx={{
+              flexGrow: 1,
+              width: "80%",
+              minHeight: "90%",
+              overflowY: "auto",
+            }}
           >
-            {/* Main content area */}
-            <SurveyBuilderCanvas
-              survey={survey}
-              elementDetail={elementDetail}
-              qIndex={qIndex}
-            />
+            <Box
+              sx={{
+                marginLeft: "1%",
+                maxWidth: "98%",
+                minHeight: "84%",
+              }}
+            >
+              <SurveyBuilderCanvas
+                survey={survey}
+                elementDetail={elementDetail}
+                qIndex={qIndex}
+              />
+            </Box>
           </Grid>
-          <Grid item sx={{ background: "white", width: "14%" }}>
-            {/* Right Sidebar */}
+          {/* Right Sidebar */}
+          <Grid
+            item
+            xl={2}
+            md={2}
+            xs={2}
+            sx={{ background: "red", width: "14%", minHeight: "92%" }}
+          >
             <Box
               p={2}
               sx={{
                 background: "white",
-                height: "100vh",
-                position: "fixed",
+                width: "100%",
+                height: "100%",
+                position: "sticky",
                 top: "5vh",
+                left: "0",
                 right: "0",
               }}
             >
@@ -101,7 +149,7 @@ const SurveyBuilder = () => {
             </Box>
           </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </>
   );
 };

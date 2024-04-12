@@ -61,16 +61,7 @@ const NewWorkspaceModal = () => {
   }, [isSuccess, isError, error]);
 
   return (
-    <Box
-      display={"flex"}
-      flexDirection={"row"}
-      justifyContent={"end"}
-      sx={{
-        width: "96%",
-        height: "48px",
-        marginTop: "8%",
-      }}
-    >
+    <>
       <IconButton
         onClick={handleOpen}
         sx={{
@@ -193,7 +184,7 @@ const NewWorkspaceModal = () => {
           </Box>
         </Box>
       </Modal>
-    </Box>
+    </>
   );
 };
 export default NewWorkspaceModal;

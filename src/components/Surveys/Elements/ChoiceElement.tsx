@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -10,7 +11,6 @@ import {
 import { ElementProps } from "../../../utils/types";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { MdAdd } from "react-icons/md";
-import { useState } from "react";
 
 const ChoiceElement = ({ qNO }: ElementProps) => {
   const [choices, setChoices] = useState(["Choice 1"]);
@@ -98,6 +98,7 @@ const ChoiceElement = ({ qNO }: ElementProps) => {
             sx={{
               backgroundColor: "#0445AF",
               mr: 2,
+              mb: 4,
               textTransform: "capitalize",
               "&:hover": {
                 backgroundColor: "#0445AF",

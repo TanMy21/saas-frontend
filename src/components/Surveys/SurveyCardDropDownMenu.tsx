@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Box, Divider, IconButton, Menu, MenuItem } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -16,7 +17,6 @@ import {
 } from "../../utils/types";
 import RenameSurveyModal from "../Modals/RenameSurveyModal";
 import DeleteSurveyModal from "../Modals/DeleteSurveyModal";
-import { toast } from "react-toastify";
 
 const SurveyCardDropDownMenu = ({ survey }: SurveyDropDownMenuProps) => {
   const { surveyID } = survey;
