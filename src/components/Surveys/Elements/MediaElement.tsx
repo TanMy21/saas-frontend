@@ -18,7 +18,7 @@ const MediaElement = ({ qNO }: ElementProps) => {
   const [media, setMedia] = useState(["A"]);
 
   const addMedia = () => {
-    if (media.length < 26) {
+    if (media.length < 10) {
       const nextCharCode = "A".charCodeAt(0) + media.length;
       const nextChoiceLetter = String.fromCharCode(nextCharCode);
       setMedia([...media, `${nextChoiceLetter}`]);
@@ -164,36 +164,40 @@ const MediaElement = ({ qNO }: ElementProps) => {
           ))}
 
           {/* Add Card Button */}
-
-          <Grid item xs={12} sm={6} md={3} lg={3} xl={3}>
-            <Card
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: { xs: "100%", sm: "90%", md: "72%", lg: 160, xl: 180 },
-                height: { xs: 150, sm: 170, md: 190, lg: 180, xl: 210 },
-                marginTop: { lg: "12px" },
-                border: "1px solid #DFCF94",
-                bgcolor: "#DFCF94",
-              }}
-            >
-              <Button onClick={addMedia} sx={{ width: "100%", height: "100%" }}>
-                <Box
-                  display={"flex"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  width={"90%"}
-                  height={"76%"}
+          {media.length < 10 && (
+            <Grid item xs={12} sm={6} md={3} lg={3} xl={3}>
+              <Card
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: { xs: "100%", sm: "90%", md: "72%", lg: 160, xl: 180 },
+                  height: { xs: 150, sm: 170, md: 190, lg: 180, xl: 210 },
+                  marginTop: { lg: "12px", xl: "0px" },
+                  border: "1px solid #DFCF94",
+                  bgcolor: "#DFCF94",
+                }}
+              >
+                <Button
+                  onClick={addMedia}
+                  sx={{ width: "100%", height: "100%" }}
                 >
-                  <IconButton>
-                    <MdAdd color={"#745C07"} size={"48px"} />
-                  </IconButton>
-                </Box>
-              </Button>
-            </Card>
-          </Grid>
+                  <Box
+                    display={"flex"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    width={"90%"}
+                    height={"76%"}
+                  >
+                    <IconButton>
+                      <MdAdd color={"#745C07"} size={"48px"} />
+                    </IconButton>
+                  </Box>
+                </Button>
+              </Card>
+            </Grid>
+          )}
         </Grid>
       </Box>
     </Box>

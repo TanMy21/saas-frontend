@@ -119,7 +119,7 @@ const SurveysListMain = () => {
             sx={{ minWidth: "16%", maxWidth: "30%", p: 1 }}
           >
             <Box>
-              <div onDoubleClick={handleDoubleClick}>
+              <Box onDoubleClick={handleDoubleClick}>
                 {isEditing ? (
                   <TextField
                     id="outlined-basic"
@@ -128,14 +128,28 @@ const SurveysListMain = () => {
                     value={text}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    sx={{ backgroundColor: "transparent" }}
+                    sx={{
+                      backgroundColor: "transparent",
+                    }}
                   />
                 ) : (
-                  <Typography variant="h6" component="h2">
+                  <Typography
+                    variant="h6"
+                    component="h2"
+                    sx={{
+                      padding: "4px",
+                      borderRadius: "4px",
+                      transition: "all 0.1s ease",
+                      "&:hover": {
+                        border: "2px solid #9D9C9C",
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
                     {workspace?.name}
                   </Typography>
                 )}
-              </div>
+              </Box>
             </Box>
             <Box>
               <WorkspaceDropDown workspaceName={workspace?.name} />

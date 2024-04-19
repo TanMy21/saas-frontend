@@ -11,6 +11,9 @@ import {
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import HeaderIconMenu from "../HeaderIconMenu";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import ShareIcon from "@mui/icons-material/Share";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 import { SurveyDropDownMenuProps } from "../../utils/types";
 import { NavLink } from "react-router-dom";
 
@@ -40,12 +43,12 @@ const SurveyBuilderHeader = ({
         borderBottom: 1,
         borderColor: "#EDEDED",
         width: "100%",
-        height: "52px",
+        height: "60px",
       }}
     >
       <Toolbar disableGutters>
         <Grid container>
-          <Grid item xs={3} sx={{ width: "20%", height: "4vh" }}>
+          <Grid item xs={3} sx={{ width: "10%", height: "6vh" }}>
             <Typography
               sx={{
                 display: "flex",
@@ -54,6 +57,7 @@ const SurveyBuilderHeader = ({
                 fontSize: "16px",
                 color: "black",
                 ml: 4,
+                marginTop: { lg: "6%", xl: "4%" },
               }}
             >
               <NavLink
@@ -84,8 +88,9 @@ const SurveyBuilderHeader = ({
                 sx={{
                   color: "#262666",
                   whiteSpace: "nowrap",
+                  overflow: "hidden",
                   textOverflow: "clip",
-                  maxWidth: "90%",
+                  width: { md: "64%", lg: "98%", xl: "90%" },
                 }}
               >
                 &nbsp; {surveyTitle ? surveyTitle : survey?.title}
@@ -103,7 +108,7 @@ const SurveyBuilderHeader = ({
               padding: 0,
               top: 0,
               width: "60%",
-              height: "4vh",
+              height: { xl: "6vh" },
             }}
           >
             <Tabs
@@ -113,28 +118,60 @@ const SurveyBuilderHeader = ({
               sx={{
                 height: "100%",
                 width: "60%",
-                margin: "-2%",
+                marginTop: "-4px",
                 fontSize: "16px",
                 color: "black",
                 ".MuiTabs-indicator": {
                   height: "2px",
-                  backgroundColor: "#262627",
+                  backgroundColor: "#2D71B8",
                 },
                 "& .MuiButtonBase-root": {
                   minHeight: "48px",
                 },
                 "& .Mui-selected": {
-                  color: "#262627",
+                  color: "#2D71B8",
+                  "& .MuiTab-iconWrapper": {
+                    color: "#2D71B8", // Changes the icon color when selected
+                  },
                 },
                 "& .MuiTab-root": {
                   textTransform: "capitalize",
-                  color: "#262627",
                 },
               }}
             >
-              <Tab label="Create" />
-              <Tab label="Share" />
-              <Tab label="Results" />
+              <Tab
+                icon={<BorderColorIcon />}
+                label="Create"
+                sx={{
+                  fontWeight: 600,
+                  color: "#6463EB",
+                  "& .MuiTab-iconWrapper": {
+                    color: "#6463EB",
+                  },
+                }}
+              />
+              <Tab
+                icon={<ShareIcon />}
+                label="Share"
+                sx={{
+                  fontWeight: 600,
+                  color: "#1ED760",
+                  "& .MuiTab-iconWrapper": {
+                    color: "#1ED760",
+                  },
+                }}
+              />
+              <Tab
+                icon={<AssessmentIcon />}
+                label="Results"
+                sx={{
+                  fontWeight: 600,
+                  color: "#B9A90B",
+                  "& .MuiTab-iconWrapper": {
+                    color: "#B9A90B",
+                  },
+                }}
+              />
             </Tabs>
           </Grid>
           <Grid
@@ -143,13 +180,13 @@ const SurveyBuilderHeader = ({
             sx={{
               marginTop: -2,
               width: "20%",
-              height: "5vh",
+              height: "6vh",
             }}
           >
             <Box
               display={"flex"}
               justifyContent={"space-around"}
-              sx={{ width: "96%", marginTop: "1%" }}
+              sx={{ width: "96%", marginTop: { lg: "8%", xl: "4%" } }}
             >
               <Box
                 display={"flex"}
@@ -161,6 +198,9 @@ const SurveyBuilderHeader = ({
                   sx={{
                     backgroundColor: "#44546A",
                     marginRight: "4%",
+                    marginTop: "1%",
+                    width: "30%",
+                    height: "80%",
                     textTransform: "capitalize",
                   }}
                   variant="contained"
@@ -181,7 +221,6 @@ const SurveyBuilderHeader = ({
                 justifyContent={"end"}
                 sx={{
                   width: "20%",
-                  marginTop: "2px",
                 }}
               >
                 <HeaderIconMenu />

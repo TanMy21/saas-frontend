@@ -46,75 +46,77 @@ const Dashboard = () => {
           height: "100%",
         }}
       >
-        <Grid
-          container
-          display={"flex"}
-          flexDirection={"row"}
-          xs={12}
-          sx={{
-            position: "sticky",
-            top: "0",
-            width: "100%",
-            // height: "5vh",
-            zIndex: "5",
-          }}
-        >
-          <DashBoardHeader />
-        </Grid>
-        <Grid
-          container
-          xl={12}
-          lg={12}
-          md={12}
-          xs={12}
-          display={"flex"}
-          flexDirection={"row"}
-          zIndex={1}
-          sx={{
-            width: "100%",
-            minHeight: "95vh",
-            overflowX: "hidden",
-          }}
-        >
-          {/* content area */}
-          {/* Left Sidebar Workspaces*/}
+        <Grid container>
           <Grid
             item
-            xl={2}
-            lg={2}
-            md={2}
-            xs={2}
+            display={"flex"}
+            flexDirection={"row"}
+            xs={12}
             sx={{
-              background: "white",
               position: "sticky",
-              top: "5vh",
-              left: "0",
+              top: "0",
+              width: "100%",
+              // height: "5vh",
               zIndex: "5",
             }}
           >
-            {isLoadingWorkspaces ? (
-              <CircularProgress />
-            ) : (
-              <Workspaces workspaces={workspaces} />
-            )}
+            <DashBoardHeader />
           </Grid>
-          {/* Main content area */}
           <Grid
             item
-            xl={10}
-            lg={10}
-            md={10}
-            xs={10}
+            xl={12}
+            lg={12}
+            md={12}
+            xs={12}
+            display={"flex"}
+            flexDirection={"row"}
+            zIndex={1}
             sx={{
-              background: "#EBEBEB",
-              flexGrow: 1,
-              width: "80%",
+              width: "100%",
               minHeight: "95vh",
-              overflowY: "auto",
               overflowX: "hidden",
             }}
           >
-            <Outlet context={{ workspaces }} />
+            {/* content area */}
+            {/* Left Sidebar Workspaces*/}
+            <Grid
+              item
+              xl={2}
+              lg={2}
+              md={2}
+              xs={2}
+              sx={{
+                background: "white",
+                position: "sticky",
+                top: "5vh",
+                left: "0",
+                zIndex: "5",
+              }}
+            >
+              {isLoadingWorkspaces ? (
+                <CircularProgress />
+              ) : (
+                <Workspaces workspaces={workspaces} />
+              )}
+            </Grid>
+            {/* Main content area */}
+            <Grid
+              item
+              xl={10}
+              lg={10}
+              md={10}
+              xs={10}
+              sx={{
+                background: "#EBEBEB",
+                flexGrow: 1,
+                width: "80%",
+                minHeight: "95vh",
+                overflowY: "auto",
+                overflowX: "hidden",
+              }}
+            >
+              <Outlet context={{ workspaces }} />
+            </Grid>
           </Grid>
         </Grid>
       </Box>

@@ -14,7 +14,7 @@ const BinaryElement = ({ qNO }: ElementProps) => {
       height={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "24%" }}>
+      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "12%" }}>
         <Box
           display={"flex"}
           flexDirection={"column"}
@@ -22,7 +22,7 @@ const BinaryElement = ({ qNO }: ElementProps) => {
           alignItems={"center"}
           mr={1}
         >
-          <Typography variant="h4" fontWeight={"bold"} color={"black"}>
+          <Typography variant="h4" fontWeight={"bold"} color={"black"} mt={1}>
             {qNO}
           </Typography>
         </Box>

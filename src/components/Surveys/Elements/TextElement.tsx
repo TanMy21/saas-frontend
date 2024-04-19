@@ -15,7 +15,7 @@ const TextElement = ({ qNO }: ElementProps) => {
       height={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "24%" }}>
+      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "16%" }}>
         <Box
           display={"flex"}
           flexDirection={"column"}
@@ -23,7 +23,7 @@ const TextElement = ({ qNO }: ElementProps) => {
           alignItems={"center"}
           mr={1}
         >
-          <Typography variant="h4" fontWeight={"bold"} color={"black"}>
+          <Typography variant="h4" fontWeight={"bold"} color={"black"} mt={1}>
             {qNO}
           </Typography>
         </Box>
@@ -64,24 +64,43 @@ const TextElement = ({ qNO }: ElementProps) => {
             fullWidth
             maxRows={10}
             variant="standard"
-            color="info"
-            sx={{ height: "100px", width: "400px" }}
+            sx={{
+              width: "600px",
+              "& .MuiInputBase-input": {
+                height: "5rem",
+                fontSize: "2rem",
+                padding: "12px",
+                lineHeight: "normal",
+              },
+              "& .MuiInputBase-input::placeholder": {
+                color: "#BDCEEA",
+                opacity: 1,
+              },
+              "& .MuiInput-underline:before": {
+                borderBottomColor: "#BDCEEA",
+              },
+              "& .MuiInput-underline:after": {
+                borderBottomColor: "blue",
+              },
+            }}
           />
         </Box>
         <Box>
           <Button
             sx={{
               backgroundColor: "#0445AF",
-              mr: 2,
+              marginTop: "2%",
+              marginLeft: "1%",
               textTransform: "capitalize",
               "&:hover": {
                 backgroundColor: "#0445AF",
               },
             }}
             variant="contained"
-            size="small"
+            size="large"
+            endIcon={<BiCheck />}
           >
-            Ok <BiCheck />
+            Ok
           </Button>
         </Box>
       </Box>

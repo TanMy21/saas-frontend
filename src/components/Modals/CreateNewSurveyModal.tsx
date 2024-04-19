@@ -11,18 +11,18 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { ErrorData, SurveyNameProps } from "../../utils/types";
 import { useEffect, useState } from "react";
-import { useCreateSurveyMutation } from "../../app/slices/surveysApiSlice";
+import { useUpdateSurveyTitleandDescriptionMutation } from "../../app/slices/surveysApiSlice";
 
 const CreateNewSurveyModal = ({
   isOpen,
-  workspaceId,
+  surveyID,
   setSurveyTitle,
 }: SurveyNameProps) => {
   const { register, handleSubmit } = useForm<SurveyNameProps>();
   const [open, setOpen] = useState(isOpen);
 
-  const [createSurvey, { isSuccess, isError, error }] =
-    useCreateSurveyMutation();
+  const [updateSurveyTitleandDescription, { isSuccess, isError, error }] =
+    useUpdateSurveyTitleandDescriptionMutation();
 
   const onClose = () => {
     setOpen(false);
@@ -31,10 +31,10 @@ const CreateNewSurveyModal = ({
   const handleNameSurvey = async (data: SurveyNameProps) => {
     const { surveyName, surveyDescription } = data;
     try {
-      const surveyCreated = await createSurvey({
+      const surveyCreated = await updateSurveyTitleandDescription({
+        surveyID,
         title: surveyName,
         description: surveyDescription,
-        workspaceId,
       }).unwrap();
 
       if (surveyCreated) {

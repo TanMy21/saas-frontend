@@ -1,19 +1,20 @@
 import { useState } from "react";
-import {
-  Box,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from "@mui/material";
-import { SurveyBuilderCanvasProps } from "../../utils/types";
+import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
+import { useGetElementByIDQuery } from "../../app/slices/elementApiSlice";
+import { elementComponents } from "../../utils/elementsConfig";
 
 const SurveyBuilderCanvas = ({
-  survey,
-  elementDetail,
-  qIndex,
+  // elementDetail,
+  // qIndex,
+  questionId,
 }: SurveyBuilderCanvasProps) => {
   const [layout, setLayout] = useState<string | null>("desktop");
+
+  const { data } = useGetElementByIDQuery(questionId, { skip: !questionId });
+
+  const QuestionComponent = elementComponents[data?.type as QuestionTypeKey];
 
   const handleLayoutChange = (
     _event: React.MouseEvent<HTMLElement>,
@@ -21,21 +22,28 @@ const SurveyBuilderCanvas = ({
   ) => {
     setLayout(newLayout);
   };
+
+  // useEffect(() => {
+  //   if (questionId) {
+  //     const { data } = useGetElementByIDQuery(questionId, {
+  //       skip: !questionId,
+  //     });
+  //   }
+  // }, [questionId]);
+
   return (
     <Box display={"flex"} flexDirection={"column"}>
-      <Box p={4}>
-        <Typography variant="h5">Create Survey: {survey?.title}</Typography>
-      </Box>
       <Box
         margin={"auto"}
         width={"98%"}
         minHeight={"75vh"}
         borderRadius={"12px"}
         bgcolor={"#FFFFFF"}
+        mt={"6%"}
       >
         {/* Element view */}
-        {elementDetail ? (
-          <elementDetail.Element qNO={qIndex} />
+        {data?.type ? (
+          <QuestionComponent qNO={data?.order.toString()} />
         ) : (
           <SurveyWelcomeElement />
         )}

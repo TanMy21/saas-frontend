@@ -11,7 +11,10 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import UploadIcon from "@mui/icons-material/Upload";
-import { NewSurveyModalProps } from "../../utils/types";
+import { ErrorData, NewSurveyModalProps } from "../../utils/types";
+import { useCreateSurveyMutation } from "../../app/slices/surveysApiSlice";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const NewSurveyModal = ({
   open,
@@ -23,11 +26,41 @@ const NewSurveyModal = ({
 
   const handleClose = () => setOpen(false);
   const openModal = true;
-  const handleCreateFromScratch = () => {
-    navigate("/s/create", {
-      state: { workspaceId, workspaceName, openModal },
-    });
+
+  const [createSurvey, { isError, error }] = useCreateSurveyMutation();
+
+  const handleCreateFromScratch = async () => {
+    try {
+      const surveyCreated = await createSurvey({
+        workspaceId,
+      }).unwrap();
+
+      if (surveyCreated) {
+        navigate(`/survey/${surveyCreated.surveyID}/create`, {
+          state: { workspaceId, workspaceName, openModal },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  useEffect(() => {
+    if (isError) {
+      const errorData = error as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isError, error]);
 
   return (
     <Modal

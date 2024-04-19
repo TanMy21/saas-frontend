@@ -1,9 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { Avatar, Box, ButtonBase, Grid, Typography } from "@mui/material";
-import FeedIcon from "@mui/icons-material/Feed";
-import formatDate from "../../utils/formatDate";
-import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
+import { Grid, Typography } from "@mui/material";
 import { WorkspaceLayoutProps } from "../../utils/types";
+import SurveyListCard from "./SurveyListCard";
 
 const ListLayout = ({
   surveys,
@@ -11,14 +8,6 @@ const ListLayout = ({
   workspaceName,
   layout,
 }: WorkspaceLayoutProps) => {
-  const navigate = useNavigate();
-
-  const goToSurvey = (surveyID: string) => {
-    navigate(`/survey/${surveyID}/create`, {
-      state: { workspaceId, workspaceName, layout },
-    });
-  };
-
   return (
     <>
       <Grid
@@ -53,96 +42,13 @@ const ListLayout = ({
 
         {/* Rows */}
         {surveys.map((survey) => (
-          <Grid
-            item
-            container
+          <SurveyListCard
             key={survey.surveyID}
-            mt={"12px"}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyItems: "center",
-              backgroundColor: "#FFFFFF",
-              borderRadius: "8px",
-              boxShadow: "0 6px 9px -9px rgba(0,0,0,0.4)",
-            }}
-          >
-            <Grid
-              item
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                width: "100%",
-                height: "56px",
-                marginTop: "-1%",
-                padding: "8px",
-              }}
-            >
-              <Grid item xs={4}>
-                <Box display={"flex"} flexDirection={"row"} pb={1}>
-                  <ButtonBase
-                    onClick={() => goToSurvey(survey.surveyID)}
-                    sx={{
-                      textTransform: "none",
-                    }}
-                  >
-                    <Box>
-                      <Avatar
-                        sx={{ bgcolor: "#168578", width: 32, height: 32 }}
-                        variant="rounded"
-                      >
-                        <FeedIcon />
-                      </Avatar>
-                    </Box>
-                    <Box
-                      display={"flex"}
-                      flexDirection={"column"}
-                      ml={1}
-                      width={"100%"}
-                      maxWidth={"220px"}
-                    >
-                      <Box
-                        display={"flex"}
-                        flexDirection={"row"}
-                        justifyContent={"start"}
-                      >
-                        <Typography
-                          sx={{ fontSize: "12px", textOverflow: "clip" }}
-                          noWrap
-                        >
-                          {survey.title}
-                        </Typography>
-                      </Box>
-                      <Box display={"flex"} justifyContent={"start"}>
-                        <Typography sx={{ fontSize: "12px", color: "#7E7571" }}>
-                          created: {formatDate(survey.createdAt)}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </ButtonBase>
-                </Box>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography sx={{ fontSize: "14px" }} mt={1} ml={3}>
-                  1
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography sx={{ fontSize: "14px" }} mt={1} ml={3}>
-                  0
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography sx={{ fontSize: "14px" }} mt={1}>
-                  {formatDate(survey.updatedAt)}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <SurveyCardDropDownMenu survey={survey} />
-              </Grid>
-            </Grid>
-          </Grid>
+            survey={survey}
+            workspaceId={workspaceId}
+            workspaceName={workspaceName}
+            layout={layout}
+          />
         ))}
       </Grid>
     </>

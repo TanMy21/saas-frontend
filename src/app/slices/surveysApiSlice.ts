@@ -18,6 +18,14 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Surveys"],
     }),
+    updateSurveyTitleandDescription: builder.mutation({
+      query: ({ surveyID, title, description }) => ({
+        url: `/s/utd/${surveyID}`,
+        method: "PATCH",
+        body: { title, description },
+      }),
+      invalidatesTags: ["Surveys"],
+    }),
     retitleSurvey: builder.mutation({
       query: ({ surveyID, title }) => ({
         url: `/s/title/${surveyID}`,
@@ -61,6 +69,7 @@ export const {
   useGetSurveysQuery,
   useGetSurveyByIdQuery,
   useCreateSurveyMutation,
+  useUpdateSurveyTitleandDescriptionMutation,
   useRetitleSurveyMutation,
   useDuplicateSurveyMutation,
   useCopySurveyMutation,

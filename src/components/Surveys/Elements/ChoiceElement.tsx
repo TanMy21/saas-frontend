@@ -3,23 +3,53 @@ import {
   Box,
   Button,
   FormControl,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
+  IconButton,
+  TextField,
   Typography,
 } from "@mui/material";
+import { List, ListItem, RadioGroup, Radio } from "@mui/joy";
 import { ElementProps } from "../../../utils/types";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { MdAdd } from "react-icons/md";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const ChoiceElement = ({ qNO }: ElementProps) => {
   const [choices, setChoices] = useState(["Choice 1"]);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   const addChoice = () => {
     if (choices.length < 10) {
       const nextChoiceNumber = choices.length + 1;
       setChoices([...choices, `Choice ${nextChoiceNumber}`]);
     }
+  };
+
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    index: number
+  ) => {
+    const newChoices = [...choices];
+    newChoices[index] = event.target.value;
+    setChoices(newChoices);
+  };
+
+  const deleteChoice = (indexToRemove: number) => {
+    setChoices((currentElements) =>
+      currentElements.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
+  const handleDoubleClick = (index: number) => {
+    setEditingIndex(index);
+  };
+
+  const handleBlur = () => {
+    setEditingIndex(null);
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
   };
 
   return (
@@ -41,7 +71,7 @@ const ChoiceElement = ({ qNO }: ElementProps) => {
           alignItems={"center"}
           mr={1}
         >
-          <Typography variant="h4" fontWeight={"bold"} color={"black"}>
+          <Typography variant="h4" fontWeight={"bold"} color={"black"} mt={1}>
             {qNO}
           </Typography>
         </Box>
@@ -76,18 +106,149 @@ const ChoiceElement = ({ qNO }: ElementProps) => {
       <Box display={"flex"} flexDirection={"column"} mt={4}>
         <FormControl>
           <RadioGroup
-            aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue="Choice 1"
-            name="radio-buttons-group"
+            aria-label="Your plan"
+            name="people"
+            defaultValue="Individual"
           >
-            {choices.map((choice, index) => (
-              <FormControlLabel
-                key={index}
-                value={choice}
-                control={<Radio />}
-                label={choice}
-              />
-            ))}
+            <List
+              sx={{
+                minWidth: 240,
+                "--List-gap": "0.5rem",
+                "--ListItem-radius": "4px",
+                "--ListItemDecorator-size": "32px",
+              }}
+            >
+              {choices.map((choice, index) => (
+                <ListItem
+                  variant="outlined"
+                  key={index}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    color: "black",
+                    fontWeight: "bold",
+                    fontSize: "16px",
+                    boxShadow: "sm",
+                    backgroundColor: "#E5ECF7",
+                    "&:hover .close-button": {
+                      visibility: "visible",
+                    },
+                  }}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                >
+                  <Box
+                    display={"flex"}
+                    flexDirection={"row"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    width={"96%"}
+                    height={"96%"}
+                  >
+                    <Box
+                      display={"flex"}
+                      flexDirection={"row"}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                      mr={2}
+                      sx={{
+                        height: "100%",
+                      }}
+                    >
+                      <Radio
+                        value={choice}
+                        sx={{ flexGrow: 1, flexDirection: "row" }}
+                        slotProps={{
+                          action: ({ checked }) => ({
+                            sx: () => ({
+                              ...(checked && {
+                                inset: -1,
+                                border: "1px solid blue",
+                              }),
+                            }),
+                          }),
+                        }}
+                      />
+                    </Box>
+                    <Box
+                      display={"flex"}
+                      flexDirection={"row"}
+                      alignItems={"center"}
+                      onDoubleClick={() => handleDoubleClick(index)}
+                      sx={{
+                        width: "90%",
+                        height: "100%",
+                        padding: "4px",
+                      }}
+                    >
+                      {editingIndex === index ? (
+                        <TextField
+                          id="outlined-basic"
+                          variant="outlined"
+                          type="text"
+                          value={choice}
+                          onChange={(event) => handleChange(event, index)}
+                          onBlur={handleBlur}
+                          autoFocus
+                          InputProps={{
+                            sx: {
+                              height: "100%",
+                              padding: "0px",
+                              "& input": {
+                                padding: "4px 8px",
+                              },
+                            },
+                          }}
+                          sx={{
+                            backgroundColor: "transparent",
+                            width: "100%",
+                            height: "100%",
+                            "& .MuiOutlinedInput-root": {
+                              height: "100%",
+                              "& fieldset": {
+                                border: "none",
+                              },
+                            },
+                          }}
+                        />
+                      ) : (
+                        <Typography
+                          ml={4}
+                          sx={{ fontSize: "16px" }}
+                          onClick={handleClick}
+                        >
+                          {choice}
+                        </Typography>
+                      )}
+                    </Box>
+                  </Box>
+
+                  {hoveredIndex === index && (
+                    <IconButton
+                      className="close-button"
+                      onClick={() => deleteChoice(index)}
+                      z-index={20}
+                      sx={{
+                        position: "absolute",
+                        top: "50%",
+                        right: "-12px",
+                        transform: "translateY(-50%)",
+                        visibility: "hidden",
+                        width: "24px",
+                        height: "24px",
+                        backgroundColor: "red",
+                        color: "white",
+                        "&:hover": {
+                          backgroundColor: "darkred",
+                        },
+                      }}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  )}
+                </ListItem>
+              ))}
+            </List>
           </RadioGroup>
         </FormControl>
       </Box>
@@ -107,7 +268,8 @@ const ChoiceElement = ({ qNO }: ElementProps) => {
             variant="contained"
             size="small"
           >
-            Add Choice &nbsp;<MdAdd fontSize={"24px"}/>
+            Add Choice &nbsp;
+            <MdAdd fontSize={"24px"} />
           </Button>
         )}
       </Box>

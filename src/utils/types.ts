@@ -13,20 +13,49 @@ export interface AuthState {
   isLoggedIn?: boolean;
 }
 
+export interface AddElementMenuProps {
+  surveyID: string;
+  anchorEl: null | HTMLElement;
+  open: boolean;
+  handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  handleClose: () => void;
+  handleElementAdd?: (menuOption: string) => void;
+}
+
 export interface ElementProps {
   qNO: string;
+  type?: string;
   // index: number;
 }
 
+export interface ElementDropDownMenuProps {
+  questionID: string;
+  refetch: () => void;
+}
+
 export interface ElementType {
+  questionID?: string;
   type: string;
   icon: JSX.Element;
-  question: string;
-  Element: React.ComponentType<ElementProps>;
+  text: string;
+  order?: number;
+  Element?: React.ComponentType<ElementProps>;
 }
 
 interface ErrorMessage {
   message: string;
+}
+
+export interface ElementsResponse {
+  elements: ElementType[];
+}
+
+export interface ElementsPanelProps {
+  elements?: ElementType[];
+  surveyID: string;
+  setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
+  // handleElementClick: (element: ElementType, index: number) => void;
+  // setElements: React.Dispatch<React.SetStateAction<ElementType[]>>;
 }
 
 export interface ErrorData {
@@ -49,11 +78,31 @@ export interface ILogoutResponse {
   message: string;
 }
 
+export interface IconMapping {
+  [key: string]: JSX.Element;
+}
+
 export interface NewSurveyModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   workspaceId: string;
   workspaceName: string;
+}
+
+export type QuestionTypeKey =
+  | "BINARY"
+  | "RADIO"
+  | "TEXT"
+  | "NUMBER"
+  | "RANK"
+  | "RANGE"
+  | "MEDIA"
+  | "MULTIPLE_CHOICE";
+
+export interface QuestionDetail {
+  type: QuestionTypeKey;
+  text: string;
+  order: number;
 }
 
 export interface RegisterFormData {
@@ -87,20 +136,31 @@ export interface Survey {
 
 export interface SurveyBuilderCanvasProps {
   survey?: Survey;
-  elementDetail: ElementType;
-  qIndex: string;
+  questionId: string | null;
+  // elementDetail: ElementType;
+  // qIndex: string;
 }
 
 export interface SurveyBuilderLeftSidebarProps {
-  setElementDetail: React.Dispatch<React.SetStateAction<ElementType>>;
-  setQIndex: React.Dispatch<React.SetStateAction<string>>;
-  setElements: React.Dispatch<React.SetStateAction<ElementType[]>>;
-  elements: ElementType[];
+  surveyID?: string;
+  setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
+  // setElementDetail: React.Dispatch<React.SetStateAction<ElementType>>;
+  // setQIndex: React.Dispatch<React.SetStateAction<string>>;
+  // setElements: React.Dispatch<React.SetStateAction<ElementType[]>>;
+  // elements: ElementType[];
+}
+
+export interface SurveyListCardProps {
+  survey: Survey;
+  workspaceId: string;
+  workspaceName: string;
+  layout?: string;
 }
 
 export interface SurveyNameProps {
   isOpen: boolean;
-  workspaceId: string;
+  workspaceId?: string;
+  surveyID?: string;
   surveyName?: string;
   title?: string;
   description?: string;
