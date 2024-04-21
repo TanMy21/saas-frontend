@@ -19,6 +19,15 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
+    updateElementText: builder.mutation({
+      query: ({ questionID, text }) => ({
+        url: `/q/${questionID}`,
+        method: "PATCH",
+        body: { text },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+
     duplicateElement: builder.mutation({
       query: (questionID) => ({
         url: `/q/duplicate/${questionID}`,
@@ -40,6 +49,7 @@ export const {
   useGetElementsForSurveyQuery,
   useGetElementByIDQuery,
   useCreateElementMutation,
+  useUpdateElementTextMutation,
   useDuplicateElementMutation,
   useDeleteElementMutation,
 } = elementApiSlice;

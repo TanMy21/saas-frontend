@@ -25,7 +25,8 @@ export interface AddElementMenuProps {
 export interface ElementProps {
   qNO: string;
   type?: string;
-  // index: number;
+  qText?: string;
+  qID: string;
 }
 
 export interface ElementDropDownMenuProps {
@@ -171,6 +172,17 @@ export interface SurveyNameProps {
 export interface NewSurveyProps {
   workspaceId?: string;
   workspaceName?: string;
+}
+
+export interface OptionType {
+  qID?: string;
+  optionID: string;
+  relatedQuestionID: string;
+  creatorId: string;
+  text: string;
+  value: string;
+  image: string;
+  order: number;
 }
 
 export interface SurveyRenameProps {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import {
   Box,
   Button,
@@ -9,21 +9,74 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { ElementProps } from "../../../utils/types";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
 import { BiImageAdd } from "react-icons/bi";
 import { MdAdd } from "react-icons/md";
+import ClearIcon from "@mui/icons-material/Clear";
+import ElementQuestionText from "./ElementQuestionText";
+import {
+  useCreateNewOptionMutation,
+  useDeleteOptionMutation,
+  useGetOptionsOfQuestionQuery,
+} from "../../../app/slices/optionApiSlice";
+import { toast } from "react-toastify";
 
-const MediaElement = ({ qNO }: ElementProps) => {
-  const [media, setMedia] = useState(["A"]);
+const MediaElement = ({ qID, qNO, qText }: ElementProps) => {
+  // const [editingID, setEditingID] = useState<string | null>(null);
 
-  const addMedia = () => {
-    if (media.length < 10) {
-      const nextCharCode = "A".charCodeAt(0) + media.length;
-      const nextChoiceLetter = String.fromCharCode(nextCharCode);
-      setMedia([...media, `${nextChoiceLetter}`]);
+  const { data: options = [] as OptionType[] } =
+    useGetOptionsOfQuestionQuery(qID);
+
+  const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
+
+  // const [updateOptionTextandValue] = useUpdateOptionTextandValueMutation();
+
+  const [deleteOption] = useDeleteOptionMutation();
+
+  const addMedia = async () => {
+    const order = options ? options.length + 1 : 1;
+
+    try {
+      if (options.length < 10) {
+        const nextCharCode = "A".charCodeAt(0) + options.length;
+        const nextChoiceLetter = String.fromCharCode(nextCharCode);
+
+        await createNewOption({
+          questionID: qID,
+          text: `${nextChoiceLetter}`,
+          value: `${nextChoiceLetter}`,
+          order,
+        });
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
+
+  const deleteChoice = async (optionID: string) => {
+    try {
+      await deleteOption(optionID).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (isError) {
+      const errorData = error as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isError, error, options]);
 
   return (
     <Box
@@ -37,44 +90,7 @@ const MediaElement = ({ qNO }: ElementProps) => {
       zIndex={20}
     >
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "4%" }}>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={1}
-        >
-          <Typography variant="h4" fontWeight={"bold"} color={"black"}>
-            {qNO}
-          </Typography>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={2}
-        >
-          <Typography variant="h6" mt={1}>
-            <FaArrowRightLong />
-          </Typography>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          <Typography
-            variant="h3"
-            fontStyle={"italic"}
-            fontFamily={
-              "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
-            }
-          >
-            Your question here.
-          </Typography>
-        </Box>
+        <ElementQuestionText qID={qID} qNO={qNO} qText={qText} />
       </Box>
       <Box width={"96%"} minHeight={"60vh"} p={2}>
         <Grid
@@ -88,9 +104,9 @@ const MediaElement = ({ qNO }: ElementProps) => {
           flexDirection={"row"}
           justifyContent={"center"}
         >
-          {media.map((m, index) => (
+          {options.map((option) => (
             <Box
-              key={index}
+              key={option.optionID}
               sx={{
                 p: 1,
                 display: "flex",
@@ -155,16 +171,37 @@ const MediaElement = ({ qNO }: ElementProps) => {
                         borderRadius: "2px",
                       }}
                     >
-                      <Typography variant="subtitle2">{m}</Typography>
+                      <Typography variant="subtitle2">{option.text}</Typography>
                     </Box>
                   </CardActions>
                 </CardActionArea>
               </Card>
+              <IconButton
+                className="close-button"
+                onClick={() => deleteChoice(option.optionID)}
+                z-index={10}
+                sx={{
+                  position: "absolute",
+                  top: "10%",
+                  right: "-12px",
+                  transform: "translateY(-20%)",
+                  // visibility: "hidden",
+                  width: "24px",
+                  height: "24px",
+                  backgroundColor: "red",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "darkred",
+                  },
+                }}
+              >
+                <ClearIcon />
+              </IconButton>
             </Box>
           ))}
 
           {/* Add Card Button */}
-          {media.length < 10 && (
+          {options.length < 10 && (
             <Grid item xs={12} sm={6} md={3} lg={3} xl={3}>
               <Card
                 sx={{

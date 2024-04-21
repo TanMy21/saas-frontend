@@ -1,8 +1,8 @@
-import { Box, Button, Typography } from "@mui/material";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { Box, Button } from "@mui/material";
 import { ElementProps } from "../../../utils/types";
+import ElementQuestionText from "./ElementQuestionText";
 
-const BinaryElement = ({ qNO }: ElementProps) => {
+const BinaryElement = ({ qID, qNO, qText }: ElementProps) => {
   return (
     <Box
       display={"flex"}
@@ -15,44 +15,7 @@ const BinaryElement = ({ qNO }: ElementProps) => {
       zIndex={20}
     >
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "12%" }}>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={1}
-        >
-          <Typography variant="h4" fontWeight={"bold"} color={"black"} mt={1}>
-            {qNO}
-          </Typography>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={2}
-        >
-          <Typography variant="h6" mt={1}>
-            <FaArrowRightLong />
-          </Typography>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          <Typography
-            variant="h3"
-            fontStyle={"italic"}
-            fontFamily={
-              "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
-            }
-          >
-            Your question here.
-          </Typography>
-        </Box>
+        <ElementQuestionText qID={qID} qNO={qNO} qText={qText}/>
       </Box>
       <Box display={"flex"} mt={4}>
         <Button variant="outlined" size="large" sx={{ marginRight: "12%" }}>

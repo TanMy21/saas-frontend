@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
@@ -11,6 +11,7 @@ const SurveyBuilderCanvas = ({
   questionId,
 }: SurveyBuilderCanvasProps) => {
   const [layout, setLayout] = useState<string | null>("desktop");
+  const [isFirstLoad, setIsFirstLoad] = useState<Boolean>(true);
 
   const { data } = useGetElementByIDQuery(questionId, { skip: !questionId });
 
@@ -23,13 +24,9 @@ const SurveyBuilderCanvas = ({
     setLayout(newLayout);
   };
 
-  // useEffect(() => {
-  //   if (questionId) {
-  //     const { data } = useGetElementByIDQuery(questionId, {
-  //       skip: !questionId,
-  //     });
-  //   }
-  // }, [questionId]);
+  useEffect(() => {
+    setIsFirstLoad(false);
+  }, []);
 
   return (
     <Box display={"flex"} flexDirection={"column"}>
@@ -42,8 +39,18 @@ const SurveyBuilderCanvas = ({
         mt={"6%"}
       >
         {/* Element view */}
-        {data?.type ? (
-          <QuestionComponent qNO={data?.order.toString()} />
+        {isFirstLoad && data ? (
+          <QuestionComponent
+            qID={data[0].questionID}
+            qNO={data[0]?.order.toString()}
+            qText={data[0].text}
+          />
+        ) : data?.type ? (
+          <QuestionComponent
+            qID={data.questionID}
+            qNO={data?.order.toString()}
+            qText={data.text}
+          />
         ) : (
           <SurveyWelcomeElement />
         )}

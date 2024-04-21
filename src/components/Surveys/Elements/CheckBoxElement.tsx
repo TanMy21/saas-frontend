@@ -1,49 +1,97 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
-import { ElementProps } from "../../../utils/types";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
 import { MdAdd } from "react-icons/md";
 import ClearIcon from "@mui/icons-material/Clear";
 import Checkbox from "@mui/joy/Checkbox";
+import ElementQuestionText from "./ElementQuestionText";
+import {
+  useCreateNewOptionMutation,
+  useDeleteOptionMutation,
+  useGetOptionsOfQuestionQuery,
+  useUpdateOptionTextandValueMutation,
+} from "../../../app/slices/optionApiSlice";
+import { toast } from "react-toastify";
 
-const CheckBoxElement = ({ qNO }: ElementProps) => {
-  const [choices, setChoices] = useState(["Choice A"]);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+const CheckBoxElement = ({ qID, qNO, qText }: ElementProps) => {
+  const [editingID, setEditingID] = useState<string | null>(null);
+  const [editText, setEditText] = useState<string>("");
 
-  const handleDoubleClick = (index: number) => {
-    setEditingIndex(index);
+  const { data: options = [] as OptionType[] } =
+    useGetOptionsOfQuestionQuery(qID);
+
+  const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
+
+  const [updateOptionTextandValue] = useUpdateOptionTextandValueMutation();
+
+  const [deleteOption] = useDeleteOptionMutation();
+
+  const handleDoubleClick = (option: OptionType) => {
+    setEditingID(option.optionID);
+    setEditText(option.text);
   };
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number
-  ) => {
-    const newChoices = [...choices];
-    newChoices[index] = event.target.value;
-    setChoices(newChoices);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditText(event.target.value);
   };
 
-  const handleBlur = () => {
-    setEditingIndex(null);
+  const handleBlur = async () => {
+    await updateOptionTextandValue({
+      optionID: editingID,
+      text: editText,
+      value: editText,
+    });
+    setEditingID(null);
   };
 
-  const addChoice = () => {
-    if (choices.length < 26) {
-      const nextCharCode = "A".charCodeAt(0) + choices.length;
-      const nextChoiceLetter = String.fromCharCode(nextCharCode);
-      setChoices([...choices, `Choice ${nextChoiceLetter}`]);
+  const addChoice = async () => {
+    const order = options ? options.length + 1 : 1;
+
+    try {
+      if (options.length < 26) {
+        const nextCharCode = "A".charCodeAt(0) + options.length;
+        const nextChoiceLetter = String.fromCharCode(nextCharCode);
+        await createNewOption({
+          questionID: qID,
+          text: `Choice ${nextChoiceLetter}`,
+          value: `Choice ${nextChoiceLetter}`,
+          order,
+        });
+        // refetch();
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const deleteChoice = (indexToRemove: number) => {
-    setChoices((currentElements) =>
-      currentElements.filter((_, index) => index !== indexToRemove)
-    );
+  const deleteChoice = async (optionID: string) => {
+    try {
+      await deleteOption(optionID).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
   };
+
+  useEffect(() => {
+    if (isError) {
+      const errorData = error as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isError, error, options]);
 
   return (
     <Box
@@ -57,47 +105,10 @@ const CheckBoxElement = ({ qNO }: ElementProps) => {
       zIndex={20}
     >
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "12%" }}>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={1}
-        >
-          <Typography variant="h4" fontWeight={"bold"} color={"black"} mt={1}>
-            {qNO}
-          </Typography>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={2}
-        >
-          <Typography variant="h6" mt={1}>
-            <FaArrowRightLong />
-          </Typography>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          <Typography
-            variant="h3"
-            fontStyle={"italic"}
-            fontFamily={
-              "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
-            }
-          >
-            Your question here.
-          </Typography>
-        </Box>
+        <ElementQuestionText qID={qID} qNO={qNO} qText={qText} />
       </Box>
       <Box display={"flex"} flexDirection={"column"} mt={4}>
-        {choices.map((choice, index) => (
+        {options.map((option, index) => (
           <Box
             key={index}
             sx={{
@@ -127,7 +138,7 @@ const CheckBoxElement = ({ qNO }: ElementProps) => {
               alignItems={"center"}
               sx={{ width: "20%", height: "28px" }}
             >
-              <Checkbox key={index} onClick={handleClick} />
+              <Checkbox key={option.optionID} onClick={handleClick} />
             </Box>
             <Box sx={{ width: "70%", height: "28px" }}>
               <Box
@@ -136,16 +147,16 @@ const CheckBoxElement = ({ qNO }: ElementProps) => {
                 alignItems={"center"}
                 width={"100%"}
                 height={"100%"}
-                onDoubleClick={() => handleDoubleClick(index)}
+                onDoubleClick={() => handleDoubleClick(option)}
                 sx={{ flexGrow: 1, cursor: "pointer" }}
               >
-                {editingIndex === index ? (
+                {editingID === option.optionID ? (
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
                     type="text"
-                    value={choice}
-                    onChange={(event) => handleChange(event, index)}
+                    value={editText}
+                    onChange={handleChange}
                     onBlur={handleBlur}
                     autoFocus
                     InputProps={{
@@ -175,14 +186,14 @@ const CheckBoxElement = ({ qNO }: ElementProps) => {
                     sx={{ fontSize: "16px" }}
                     onClick={handleClick}
                   >
-                    {choice}
+                    {option.text}
                   </Typography>
                 )}
               </Box>
             </Box>
             <IconButton
               className="close-button"
-              onClick={() => deleteChoice(index)}
+              onClick={() => deleteChoice(option.optionID)}
               z-index={10}
               sx={{
                 position: "absolute",
@@ -192,8 +203,8 @@ const CheckBoxElement = ({ qNO }: ElementProps) => {
                 visibility: "hidden",
                 width: "24px",
                 height: "24px",
-                backgroundColor: "red", // Custom background color
-                color: "white", // Custom icon color
+                backgroundColor: "red",
+                color: "white",
                 "&:hover": {
                   backgroundColor: "darkred",
                 },
@@ -205,7 +216,7 @@ const CheckBoxElement = ({ qNO }: ElementProps) => {
         ))}
       </Box>
       <Box mt={2} mb={2}>
-        {choices.length < 10 && (
+        {options.length < 10 && (
           <Button
             onClick={addChoice}
             sx={{

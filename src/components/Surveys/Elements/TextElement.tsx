@@ -1,9 +1,9 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { ElementProps } from "../../../utils/types";
-import { FaArrowRightLong } from "react-icons/fa6";
 import { BiCheck } from "react-icons/bi";
+import ElementQuestionText from "./ElementQuestionText";
 
-const TextElement = ({ qNO }: ElementProps) => {
+const TextElement = ({ qID, qNO, qText }: ElementProps) => {
   return (
     <Box
       display={"flex"}
@@ -16,44 +16,7 @@ const TextElement = ({ qNO }: ElementProps) => {
       zIndex={20}
     >
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "16%" }}>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={1}
-        >
-          <Typography variant="h4" fontWeight={"bold"} color={"black"} mt={1}>
-            {qNO}
-          </Typography>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={2}
-        >
-          <Typography variant="h6" mt={1}>
-            <FaArrowRightLong />
-          </Typography>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          <Typography
-            variant="h3"
-            fontStyle={"italic"}
-            fontFamily={
-              "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
-            }
-          >
-            Your question here.
-          </Typography>
-        </Box>
+        <ElementQuestionText qID={qID} qNO={qNO} qText={qText} />
       </Box>
       <Box display={"flex"} flexDirection={"column"} mt={4}>
         <Box>

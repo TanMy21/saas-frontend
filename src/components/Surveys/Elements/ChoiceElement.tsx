@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -8,49 +8,99 @@ import {
   Typography,
 } from "@mui/material";
 import { List, ListItem, RadioGroup, Radio } from "@mui/joy";
-import { ElementProps } from "../../../utils/types";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
 import { MdAdd } from "react-icons/md";
 import ClearIcon from "@mui/icons-material/Clear";
+import ElementQuestionText from "./ElementQuestionText";
+import {
+  useCreateNewOptionMutation,
+  useDeleteOptionMutation,
+  useGetOptionsOfQuestionQuery,
+  useUpdateOptionTextandValueMutation,
+} from "../../../app/slices/optionApiSlice";
+import { toast } from "react-toastify";
 
-const ChoiceElement = ({ qNO }: ElementProps) => {
-  const [choices, setChoices] = useState(["Choice 1"]);
+const ChoiceElement = ({ qID, qNO, qText }: ElementProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editingID, setEditingID] = useState<string | null>(null);
+  const [editText, setEditText] = useState<string>("");
 
-  const addChoice = () => {
-    if (choices.length < 10) {
-      const nextChoiceNumber = choices.length + 1;
-      setChoices([...choices, `Choice ${nextChoiceNumber}`]);
+  const { data: options = [] as OptionType[] } =
+    useGetOptionsOfQuestionQuery(qID);
+
+  const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
+
+  const [updateOptionTextandValue] = useUpdateOptionTextandValueMutation();
+
+  const [deleteOption] = useDeleteOptionMutation();
+
+  const addChoice = async () => {
+    const order = options ? options.length + 1 : 1;
+
+    try {
+      if (options.length < 10) {
+        const nextChoiceNumber = options.length + 1;
+
+        await createNewOption({
+          questionID: qID,
+          text: `Choice ${nextChoiceNumber}`,
+          value: `Choice ${nextChoiceNumber}`,
+          order,
+        });
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const newChoices = [...choices];
-    newChoices[index] = event.target.value;
-    setChoices(newChoices);
+    setEditText(event.target.value);
   };
 
-  const deleteChoice = (indexToRemove: number) => {
-    setChoices((currentElements) =>
-      currentElements.filter((_, index) => index !== indexToRemove)
-    );
+  const deleteChoice = async (optionID: string) => {
+    try {
+      await deleteOption(optionID).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleDoubleClick = (index: number) => {
-    setEditingIndex(index);
+  const handleDoubleClick = (option: OptionType) => {
+    setEditingID(option.optionID);
+    setEditText(option.text);
   };
 
-  const handleBlur = () => {
-    setEditingIndex(null);
+  const handleBlur = async () => {
+    await updateOptionTextandValue({
+      optionID: editingID,
+      text: editText,
+      value: editText,
+    });
+    setEditingID(null);
   };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
   };
+
+  useEffect(() => {
+    if (isError) {
+      const errorData = error as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isError, error, options]);
 
   return (
     <Box
@@ -64,44 +114,7 @@ const ChoiceElement = ({ qNO }: ElementProps) => {
       zIndex={20}
     >
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "12%" }}>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={1}
-        >
-          <Typography variant="h4" fontWeight={"bold"} color={"black"} mt={1}>
-            {qNO}
-          </Typography>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={2}
-        >
-          <Typography variant="h6" mt={1}>
-            <FaArrowRightLong />
-          </Typography>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"start"}
-        >
-          <Typography
-            variant="h3"
-            fontStyle={"italic"}
-            fontFamily={
-              "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
-            }
-          >
-            Your question here.
-          </Typography>
-        </Box>
+        <ElementQuestionText qID={qID} qNO={qNO} qText={qText} />
       </Box>
       <Box display={"flex"} flexDirection={"column"} mt={4}>
         <FormControl>
@@ -118,10 +131,10 @@ const ChoiceElement = ({ qNO }: ElementProps) => {
                 "--ListItemDecorator-size": "32px",
               }}
             >
-              {choices.map((choice, index) => (
+              {options.map((option, index) => (
                 <ListItem
                   variant="outlined"
-                  key={index}
+                  key={option.optionID}
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -156,7 +169,7 @@ const ChoiceElement = ({ qNO }: ElementProps) => {
                       }}
                     >
                       <Radio
-                        value={choice}
+                        value={editText}
                         sx={{ flexGrow: 1, flexDirection: "row" }}
                         slotProps={{
                           action: ({ checked }) => ({
@@ -174,20 +187,20 @@ const ChoiceElement = ({ qNO }: ElementProps) => {
                       display={"flex"}
                       flexDirection={"row"}
                       alignItems={"center"}
-                      onDoubleClick={() => handleDoubleClick(index)}
+                      onDoubleClick={() => handleDoubleClick(option)}
                       sx={{
                         width: "90%",
                         height: "100%",
                         padding: "4px",
                       }}
                     >
-                      {editingIndex === index ? (
+                      {editingID === option.optionID ? (
                         <TextField
                           id="outlined-basic"
                           variant="outlined"
                           type="text"
-                          value={choice}
-                          onChange={(event) => handleChange(event, index)}
+                          value={editText}
+                          onChange={handleChange}
                           onBlur={handleBlur}
                           autoFocus
                           InputProps={{
@@ -217,7 +230,7 @@ const ChoiceElement = ({ qNO }: ElementProps) => {
                           sx={{ fontSize: "16px" }}
                           onClick={handleClick}
                         >
-                          {choice}
+                          {option.text}
                         </Typography>
                       )}
                     </Box>
@@ -226,7 +239,7 @@ const ChoiceElement = ({ qNO }: ElementProps) => {
                   {hoveredIndex === index && (
                     <IconButton
                       className="close-button"
-                      onClick={() => deleteChoice(index)}
+                      onClick={() => deleteChoice(option.optionID)}
                       z-index={20}
                       sx={{
                         position: "absolute",
@@ -253,7 +266,7 @@ const ChoiceElement = ({ qNO }: ElementProps) => {
         </FormControl>
       </Box>
       <Box mt={2}>
-        {choices.length < 10 && (
+        {options.length < 10 && (
           <Button
             onClick={addChoice}
             sx={{
