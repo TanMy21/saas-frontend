@@ -25,7 +25,7 @@ const NumberElement = ({qID, qNO, qText }: ElementProps) => {
             placeholder="Type your answer here..."
             variant="standard"
             sx={{
-              width: "600px",
+              width: "clamp(300px, 100%, 600px)",
               "& .MuiInputBase-input": {
                 height: "4rem",
                 fontSize: "2rem",

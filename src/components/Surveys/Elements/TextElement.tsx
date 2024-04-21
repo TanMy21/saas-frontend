@@ -28,10 +28,10 @@ const TextElement = ({ qID, qNO, qText }: ElementProps) => {
             maxRows={10}
             variant="standard"
             sx={{
-              width: "600px",
+              width: "98%",
               "& .MuiInputBase-input": {
                 height: "5rem",
-                fontSize: "2rem",
+                fontSize: "calc(0.5rem + 1vw)",
                 padding: "12px",
                 lineHeight: "normal",
               },

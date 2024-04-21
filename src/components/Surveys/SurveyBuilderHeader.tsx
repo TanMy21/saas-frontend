@@ -14,20 +14,23 @@ import HeaderIconMenu from "../HeaderIconMenu";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import ShareIcon from "@mui/icons-material/Share";
 import AssessmentIcon from "@mui/icons-material/Assessment";
-import { SurveyDropDownMenuProps } from "../../utils/types";
+import { SurveyBuilderHeaderProps } from "../../utils/types";
 import { NavLink } from "react-router-dom";
 
 const SurveyBuilderHeader = ({
+  display,
   survey,
   workspaceId,
   workspaceName,
   title,
-}: SurveyDropDownMenuProps) => {
-  const [value, setValue] = useState(0);
+  handleLayoutChange,
+}: SurveyBuilderHeaderProps) => {
+  // const [value, setValue] = useState(0);
   const [surveyTitle, setSurveyTitle] = useState<string | undefined>("");
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+
+  // const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+  //   setValue(newValue);
+  // };
 
   useEffect(() => {
     setSurveyTitle(title);
@@ -112,9 +115,9 @@ const SurveyBuilderHeader = ({
             }}
           >
             <Tabs
-              value={value}
+              value={display}
               centered
-              onChange={handleChange}
+              onChange={handleLayoutChange}
               sx={{
                 height: "100%",
                 width: "60%",
@@ -142,6 +145,7 @@ const SurveyBuilderHeader = ({
               <Tab
                 icon={<BorderColorIcon />}
                 label="Create"
+                value="create"
                 sx={{
                   fontWeight: 600,
                   color: "#6463EB",
@@ -151,24 +155,26 @@ const SurveyBuilderHeader = ({
                 }}
               />
               <Tab
-                icon={<ShareIcon />}
-                label="Share"
-                sx={{
-                  fontWeight: 600,
-                  color: "#1ED760",
-                  "& .MuiTab-iconWrapper": {
-                    color: "#1ED760",
-                  },
-                }}
-              />
-              <Tab
                 icon={<AssessmentIcon />}
                 label="Results"
+                value="results"
                 sx={{
                   fontWeight: 600,
                   color: "#B9A90B",
                   "& .MuiTab-iconWrapper": {
                     color: "#B9A90B",
+                  },
+                }}
+              />
+              <Tab
+                icon={<ShareIcon />}
+                label="Share"
+                value="share"
+                sx={{
+                  fontWeight: 600,
+                  color: "#1ED760",
+                  "& .MuiTab-iconWrapper": {
+                    color: "#1ED760",
                   },
                 }}
               />

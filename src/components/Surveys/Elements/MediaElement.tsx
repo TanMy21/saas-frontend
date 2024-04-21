@@ -181,17 +181,18 @@ const MediaElement = ({ qID, qNO, qText }: ElementProps) => {
                 onClick={() => deleteChoice(option.optionID)}
                 z-index={10}
                 sx={{
-                  position: "absolute",
-                  top: "10%",
-                  right: "-12px",
-                  transform: "translateY(-20%)",
-                  // visibility: "hidden",
+                  position: "relative",
+                  top: "-80%",
+                  right: "-44%",
+                  transform: "translateY(-80%)",
+                  visibility: "visible",
                   width: "24px",
                   height: "24px",
                   backgroundColor: "red",
                   color: "white",
                   "&:hover": {
                     backgroundColor: "darkred",
+                    visibility: "visible",
                   },
                 }}
               >

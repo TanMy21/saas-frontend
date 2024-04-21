@@ -1,6 +1,6 @@
 // import { useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Box, Grid } from "@mui/material";
+import { Box, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useGetSurveyByIdQuery } from "../app/slices/surveysApiSlice";
 import { useLocation, useParams } from "react-router-dom";
 // import { ElementType } from "../utils/types";
@@ -8,6 +8,8 @@ import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
 import SurveyBuilderCanvas from "../components/Surveys/SurveyBuilderCanvas";
+import SurveyBuilderCanvasMobile from "../components/Surveys/SurveyBuilderCanvasMobile";
+import SurveyShare from "../components/Surveys/SurveyShare";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
@@ -19,8 +21,22 @@ const SurveyBuilder = () => {
   // const [elements, setElements] = useState<ElementType[]>([]);
   // const [elementDetail, setElementDetail] = useState<ElementType>(elements[0]);
   // const [qIndex, setQIndex] = useState<string>(" ");
-
+  const [value, setValue] = useState("question");
+  // const [headerTabValue, setHeaderTabValue] = useState(0);
   const [questionId, setQuestionId] = useState<string | null>(null);
+  const [display, setDisplay] = useState<string | null>("desktop");
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
+
+  const handleLayoutChange = (
+    _event: React.SyntheticEvent,
+    display: string | null
+  ) => {
+    setDisplay(display);
+    // setHeaderTabValue(display);
+  };
 
   const { data: survey } = useGetSurveyByIdQuery(surveyID, {
     skip: !surveyID,
@@ -28,6 +44,45 @@ const SurveyBuilder = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+
+  let content;
+
+  if (display === "desktop" || display === "create") {
+    content = (
+      <SurveyBuilderCanvas
+        survey={survey}
+        questionId={questionId}
+        display={display}
+        handleLayoutChange={handleLayoutChange}
+        // elementDetail={elementDetail}
+        // qIndex={qIndex}
+      />
+    );
+  } else if (display === "mobile" || display === "create") {
+    content = (
+      <SurveyBuilderCanvasMobile
+        survey={survey}
+        questionId={questionId}
+        display={display}
+        handleLayoutChange={handleLayoutChange}
+        // elementDetail={elementDetail}
+        // qIndex={qIndex}
+      />
+    );
+  } else if (display === "share") {
+    content = <SurveyShare />;
+  } else {
+    content = (
+      <SurveyBuilderCanvas
+        survey={survey}
+        questionId={questionId}
+        display={display}
+        handleLayoutChange={handleLayoutChange}
+        // elementDetail={elementDetail}
+        // qIndex={qIndex}
+      />
+    );
+  }
 
   return (
     <>
@@ -53,10 +108,13 @@ const SurveyBuilder = () => {
             }}
           >
             <SurveyBuilderHeader
+              display={display}
+              // headerTabValue={headerTabValue}
               survey={survey}
               workspaceId={workspaceId}
               workspaceName={workspaceName}
               title={surveyTitle}
+              handleLayoutChange={handleLayoutChange}
             />
           </Grid>
           <CreateNewSurveyModal
@@ -121,12 +179,7 @@ const SurveyBuilder = () => {
                   minHeight: "84%",
                 }}
               >
-                <SurveyBuilderCanvas
-                  survey={survey}
-                  questionId={questionId}
-                  // elementDetail={elementDetail}
-                  // qIndex={qIndex}
-                />
+                {content}
               </Box>
             </Grid>
             {/* Right Sidebar */}
@@ -135,10 +188,9 @@ const SurveyBuilder = () => {
               xl={2}
               md={2}
               xs={2}
-              sx={{ background: "red", width: "14%", minHeight: "92%" }}
+              sx={{ width: "14%", minHeight: "92%" }}
             >
               <Box
-                p={2}
                 sx={{
                   background: "white",
                   width: "100%",
@@ -149,7 +201,81 @@ const SurveyBuilder = () => {
                   right: "0",
                 }}
               >
-                Toolbar
+                <Box
+                  sx={{
+                    padding: { md: "2%", lg: "4%", xl: "2%" },
+                    width: { md: "84%", lg: "88%", xl: "92%" },
+                    height: "60px",
+                  }}
+                >
+                  <Tabs
+                    value={value}
+                    centered
+                    onChange={handleChange}
+                    sx={{
+                      height: "100%",
+                      width: "100%",
+                      fontSize: "16px",
+                      color: "black",
+                      ".MuiTabs-indicator": {
+                        height: "2px",
+                        bottom: 16,
+                        backgroundColor: "black",
+                      },
+                      "& .MuiButtonBase-root": {
+                        maxHeight: "48px",
+                      },
+                      "& .Mui-selected": {
+                        color: "black",
+                        "& .MuiTab-iconWrapper": {
+                          color: "black",
+                        },
+                      },
+                      "& .MuiTab-root": {
+                        textTransform: "capitalize",
+                      },
+                    }}
+                  >
+                    <Tab
+                      label="Question"
+                      value="question"
+                      sx={{
+                        fontWeight: 600,
+                        color: "black",
+                      }}
+                    />
+                    <Tab
+                      label="Flow"
+                      value="flow"
+                      sx={{
+                        fontWeight: 600,
+                        color: "black",
+                      }}
+                    />
+                  </Tabs>
+                </Box>
+                <Divider sx={{ marginTop: { lg: "-12%", xl: "-8%" } }} />
+
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  sx={{
+                    paddingLeft: { md: "2%", lg: "8%", xl: "4%" },
+                    width: { md: "84%", lg: "88%", xl: "92%" },
+                    height: "84vh",
+                    marginTop: "2%",
+                  }}
+                >
+                  {value === "question" ? (
+                    <Typography variant="h4">Customize Question</Typography>
+                  ) : (
+                    <Typography variant="h4">
+                      Design Flow of Questions
+                    </Typography>
+                  )}
+                </Box>
               </Box>
             </Grid>
           </Grid>

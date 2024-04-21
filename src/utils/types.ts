@@ -101,6 +101,7 @@ export type QuestionTypeKey =
   | "MULTIPLE_CHOICE";
 
 export interface QuestionDetail {
+  questionID: string;
   type: QuestionTypeKey;
   text: string;
   order: number;
@@ -136,8 +137,13 @@ export interface Survey {
 }
 
 export interface SurveyBuilderCanvasProps {
+  display: string | null;
   survey?: Survey;
   questionId: string | null;
+  handleLayoutChange: (
+    _event: React.MouseEvent<HTMLElement>,
+    display: string | null
+  ) => void;
   // elementDetail: ElementType;
   // qIndex: string;
 }
@@ -199,6 +205,19 @@ export interface SurveyDropDownMenuProps {
   workspaceId?: string;
   workspaceName?: string;
   title?: string;
+}
+
+export interface SurveyBuilderHeaderProps {
+  survey: Survey;
+  workspaceId: string;
+  workspaceName: string;
+  title: string;
+  display: string | null;
+  // headerTabValue: number;
+  handleLayoutChange: (
+    _event: React.SyntheticEvent,
+    display: string | null
+  ) => void;
 }
 
 export interface UserInfo {

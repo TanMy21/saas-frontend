@@ -176,7 +176,7 @@ const RankElement = ({ qID, qNO, qText }: ElementProps) => {
                           display: "flex",
                           marginTop: "1%",
                           marginBottom: "1%",
-                          width: "32%",
+                          width: "clamp(100px, 80%, 200px)",
                           height: "100%",
                           border: "2px solid #4880DE",
                           borderRadius: "4px",

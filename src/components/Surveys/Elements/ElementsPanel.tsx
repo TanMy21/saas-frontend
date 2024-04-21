@@ -92,6 +92,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                             borderRadius: "8px",
                             position: "relative",
                             "&:hover .close-button": {
+                              cursor: "pointer",
                               visibility: "visible",
                             },
                           }}
@@ -111,6 +112,9 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                               sx={{
                                 width: "10%",
                                 height: "100%",
+                                "&:hover": {
+                                  cursor: "pointer",
+                                },
                               }}
                             >
                               <Typography fontSize={"1.6rem"} mt={1}>
@@ -134,6 +138,9 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                                   xl: "4%",
                                 },
                                 marginTop: "1%",
+                                "&:hover": {
+                                  cursor: "pointer",
+                                },
                               }}
                             >
                               <Typography
@@ -151,6 +158,9 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                               sx={{
                                 width: { md: "50%", lg: "52%", xl: "70%" },
                                 height: "100%",
+                                "&:hover": {
+                                  cursor: "pointer",
+                                },
                               }}
                             >
                               <Typography
@@ -163,6 +173,9 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                                   textOverflow: "clip",
                                   overflow: "hidden",
                                   width: "100%",
+                                  "&:hover": {
+                                    cursor: "pointer",
+                                  },
                                 }}
                               >
                                 {element.text}

@@ -64,7 +64,7 @@ const ScaleElement = ({ qID, qNO, qText }: ElementProps) => {
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "20%" }}>
         <ElementQuestionText qID={qID} qNO={qNO} qText={qText} />
       </Box>
-      <Box display={"flex"} mt={4} width={"600px"}>
+      <Box display={"flex"} mt={4} sx={{ width: "clamp(200px, 100%, 600px)" }}>
         <Slider
           aria-label="Always visible"
           defaultValue={2}

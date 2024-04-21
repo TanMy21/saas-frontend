@@ -1,17 +1,10 @@
-// import { useState, useEffect } from "react";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import {
-  // QuestionDetail,
-  QuestionTypeKey,
-  SurveyBuilderCanvasProps,
-} from "../../utils/types";
-import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
 import { useGetElementByIDQuery } from "../../app/slices/elementApiSlice";
 import { elementComponents } from "../../utils/elementsConfig";
+import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
+import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
 
-const SurveyBuilderCanvas = ({
-  // elementDetail,
-  // qIndex,
+const SurveyBuilderCanvasMobile = ({
   questionId,
   display,
   handleLayoutChange,
@@ -39,12 +32,14 @@ const SurveyBuilderCanvas = ({
   return (
     <Box display={"flex"} flexDirection={"column"}>
       <Box
+        border={"2px solid red"}
         margin={"auto"}
-        width={"98%"}
-        minHeight={"75vh"}
+        width={"32%"}
+        minHeight={"64vh"}
         borderRadius={"12px"}
         bgcolor={"#FFFFFF"}
-        mt={"6%"}
+        mt={"4%"}
+        pt={"8%"}
       >
         {/* Element view */}
         {questions?.type ? (
@@ -109,4 +104,4 @@ const SurveyBuilderCanvas = ({
   );
 };
 
-export default SurveyBuilderCanvas;
+export default SurveyBuilderCanvasMobile;
