@@ -49,7 +49,7 @@ const marks = [
   },
 ];
 
-const ScaleElement = ({ qID, qNO, qText }: ElementProps) => {
+const ScaleElement = ({ qID, qNO, qText, display }: ElementProps) => {
   return (
     <Box
       display={"flex"}
@@ -62,7 +62,12 @@ const ScaleElement = ({ qID, qNO, qText }: ElementProps) => {
       zIndex={20}
     >
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "20%" }}>
-        <ElementQuestionText qID={qID} qNO={qNO} qText={qText} />
+        <ElementQuestionText
+          qID={qID}
+          qNO={qNO}
+          qText={qText}
+          display={display}
+        />
       </Box>
       <Box display={"flex"} mt={4} sx={{ width: "clamp(200px, 100%, 600px)" }}>
         <Slider

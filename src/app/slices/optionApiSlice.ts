@@ -23,6 +23,15 @@ export const optionApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Options"],
     }),
+    uploadImage: builder.mutation({
+      query: ({ formData, optionID }) => ({
+        url: `/op/img/${optionID}`,
+        method: "PATCH",
+        body: formData,
+        // headers: { "Content-Type": "multipart/form-data" },
+      }),
+      invalidatesTags: ["Options"],
+    }),
     deleteOption: builder.mutation({
       query: (optionID) => ({
         url: `/op/delete/${optionID}`,
@@ -37,5 +46,6 @@ export const {
   useGetOptionsOfQuestionQuery,
   useCreateNewOptionMutation,
   useUpdateOptionTextandValueMutation,
+  useUploadImageMutation,
   useDeleteOptionMutation,
 } = optionApiSlice;

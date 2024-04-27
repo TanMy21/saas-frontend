@@ -13,7 +13,7 @@ import {
 } from "../../../app/slices/optionApiSlice";
 import { toast } from "react-toastify";
 
-const CheckBoxElement = ({ qID, qNO, qText }: ElementProps) => {
+const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
   const [editingID, setEditingID] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
 
@@ -105,7 +105,12 @@ const CheckBoxElement = ({ qID, qNO, qText }: ElementProps) => {
       zIndex={20}
     >
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "12%" }}>
-        <ElementQuestionText qID={qID} qNO={qNO} qText={qText} />
+        <ElementQuestionText
+          qID={qID}
+          qNO={qNO}
+          qText={qText}
+          display={display}
+        />
       </Box>
       <Box display={"flex"} flexDirection={"column"} mt={4}>
         {options.map((option, index) => (
@@ -203,10 +208,10 @@ const CheckBoxElement = ({ qID, qNO, qText }: ElementProps) => {
                 visibility: "hidden",
                 width: "24px",
                 height: "24px",
-                backgroundColor: "red",
+                backgroundColor: "darkred",
                 color: "white",
                 "&:hover": {
-                  backgroundColor: "darkred",
+                  backgroundColor: "red",
                 },
               }}
             >

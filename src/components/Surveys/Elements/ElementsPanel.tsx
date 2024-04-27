@@ -5,21 +5,58 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import { Box, Typography } from "@mui/material";
-import {
-  ElementType,
-  ElementsPanelProps,
-  IconMapping,
-} from "../../../utils/types";
+import { Element, ElementsPanelProps, IconMapping } from "../../../utils/types";
 import { elementIcons } from "../../../utils/elementsConfig";
 import ElementDropDownMenu from "./ElementDropDownMenu";
 import { useGetElementsForSurveyQuery } from "../../../app/slices/elementApiSlice";
 
 const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
-  const { data: elements = [] as ElementType[], refetch } =
+  const { data: elements = [] as Element[], refetch } =
     useGetElementsForSurveyQuery(
       surveyID
       //{ pollingInterval: 1000 }
     );
+  const nonOrderableTypes = [
+    "WELCOME_SCREEN",
+    "END_SCREEN",
+    "INSTRUCTIONS",
+    "EMAIL_CONTACT",
+  ];
+  let isNonOrderableType;
+  const elementStartTypes = ["WELCOME_SCREEN", "INSTRUCTIONS", "EMAIL_CONTACT"];
+  const orderedElementTypes = [
+    "BINARY",
+    "MEDIA",
+    "MULTIPLE_CHOICE",
+    "NUMBER",
+    "RADIO",
+    "RANGE",
+    "RANK",
+    "TEXT",
+  ];
+
+  const startElementTypeOrder: { [key: string]: number } = {
+    "WELCOME_SCREEN": 1,
+    "INSTRUCTIONS": 2,
+    "EMAIL_CONTACT": 3,
+  };
+
+  const startElements = elements
+    .filter((q) => elementStartTypes.includes(q.type))
+    .sort(
+      (a, b) => startElementTypeOrder[a.type] - startElementTypeOrder[b.type]
+    );
+  const orderedElements = elements
+    .filter((e) => orderedElementTypes.includes(e.type))
+    .sort((a, b) => a.order! - b.order!);
+
+  const endElements = elements.filter((e) => e.type === "END_SCREEN");
+
+  const displayedQuestions = [
+    ...startElements,
+    ...orderedElements,
+    ...endElements,
+  ];
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -42,7 +79,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
           padding: "8px",
           overflowY: "scroll",
           overflowX: "hidden",
-          maxWidth: { md: "82%", lg: "91%", xl: "98%" },
+          maxWidth: { md: "82%", lg: "92%", xl: "95%" },
           maxHeight: "400px",
           "&::-webkit-scrollbar": {
             width: "10px", // Scrollbar width
@@ -64,7 +101,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
             <Droppable droppableId="elements">
               {(provided) => (
                 <Box {...provided.droppableProps} ref={provided.innerRef}>
-                  {elements.map((element, index) => (
+                  {displayedQuestions.map((element, index) => (
                     <Draggable
                       key={element.questionID}
                       draggableId={element?.questionID as string}
@@ -125,32 +162,40 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                                 }
                               </Typography>
                             </Box>
-                            <Box
-                              display={"flex"}
-                              justifyContent={"center"}
-                              alignItems={"center"}
-                              sx={{
-                                width: "10%",
-                                height: "100%",
-                                marginLeft: {
-                                  md: "12%",
-                                  lg: "8%",
-                                  xl: "4%",
-                                },
-                                marginTop: "1%",
-                                "&:hover": {
-                                  cursor: "pointer",
-                                },
-                              }}
-                            >
-                              <Typography
-                                color={"black"}
-                                fontSize={"1.2rem"}
-                                fontWeight={"bold"}
-                              >
-                                {element.order}
-                              </Typography>
-                            </Box>
+
+                            {
+                              (isNonOrderableType = nonOrderableTypes.includes(
+                                element.type!
+                              ) ? null : (
+                                <Box
+                                  display={"flex"}
+                                  justifyContent={"center"}
+                                  alignItems={"center"}
+                                  sx={{
+                                    width: "10%",
+                                    height: "100%",
+                                    marginLeft: {
+                                      md: "12%",
+                                      lg: "8%",
+                                      xl: "4%",
+                                    },
+                                    marginTop: "1%",
+                                    "&:hover": {
+                                      cursor: "pointer",
+                                    },
+                                  }}
+                                >
+                                  <Typography
+                                    color={"black"}
+                                    fontSize={"1.2rem"}
+                                    fontWeight={"bold"}
+                                  >
+                                    {element.order}
+                                  </Typography>
+                                </Box>
+                              ))
+                            }
+
                             <Box
                               display={"flex"}
                               justifyContent={"center"}

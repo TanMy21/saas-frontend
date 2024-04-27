@@ -50,8 +50,9 @@ const SurveyBuilderCanvas = ({
         {questions?.type ? (
           <QuestionComponent
             qID={questions?.questionID}
-            qNO={questions?.order.toString()}
+            qNO={questions?.order?.toString()}
             qText={questions?.text}
+            qType={questions?.type}
           />
         ) : (
           <SurveyWelcomeElement />

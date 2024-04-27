@@ -2,28 +2,75 @@ import { Box, Button } from "@mui/material";
 import { ElementProps } from "../../../utils/types";
 import ElementQuestionText from "./ElementQuestionText";
 
-const BinaryElement = ({ qID, qNO, qText }: ElementProps) => {
+const BinaryElement = ({ qID, qNO, qText, display }: ElementProps) => {
+  const widthBtn = display === "mobile" ? "80px" : "100px";
+  const heightBtn = display === "mobile" ? "80px" : "100px";
+
   return (
     <Box
       display={"flex"}
       flexDirection={"column"}
       justifyContent={"start"}
       alignItems={"center"}
-      margin={"auto"}
-      width={"70%"}
+      // margin={"auto"}
+      width={"98%"}
       height={"100%"}
       zIndex={20}
     >
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "12%" }}>
-        <ElementQuestionText qID={qID} qNO={qNO} qText={qText}/>
+        <ElementQuestionText
+          qID={qID}
+          qNO={qNO}
+          qText={qText}
+          display={display}
+        />
       </Box>
-      <Box display={"flex"} mt={4}>
-        <Button variant="outlined" size="large" sx={{ marginRight: "12%" }}>
-          Yes
-        </Button>
-        <Button variant="outlined" size="large">
-          No
-        </Button>
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        justifyContent={"center"}
+        width={"90%"}
+        mt={8}
+      >
+        <Box
+          sx={{
+            width: widthBtn,
+            height: heightBtn,
+          }}
+        >
+          <Button
+            variant="outlined"
+            size="large"
+            sx={{
+              marginRight: "12%",
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+            }}
+          >
+            Yes
+          </Button>
+        </Box>
+        <Box
+          ml={4}
+          sx={{
+            width: widthBtn,
+            height: heightBtn,
+          }}
+        >
+          <Button
+            variant="outlined"
+            size="large"
+            sx={{
+              marginRight: "12%",
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+            }}
+          >
+            No
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

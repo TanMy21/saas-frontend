@@ -22,10 +22,24 @@ export interface AddElementMenuProps {
   handleElementAdd?: (menuOption: string) => void;
 }
 
+export interface Element {
+  questionID: string;
+  relatedSurveyId: string;
+  creatorId: string;
+  text: string;
+  type: string;
+  order?: number;
+  minOptions: number;
+  maxOptions: number;
+  required: boolean;
+}
+
 export interface ElementProps {
   qNO: string;
   type?: string;
   qText?: string;
+  qType?: string;
+  display?: string | null;
   qID: string;
 }
 
@@ -92,13 +106,17 @@ export interface NewSurveyModalProps {
 
 export type QuestionTypeKey =
   | "BINARY"
-  | "RADIO"
-  | "TEXT"
+  | "EMAIL_CONTACT"
+  | "END_SCREEN"
+  | "INSTRUCTIONS"
+  | "MEDIA"
   | "NUMBER"
+  | "RADIO"
   | "RANK"
   | "RANGE"
-  | "MEDIA"
-  | "MULTIPLE_CHOICE";
+  | "TEXT"
+  | "MULTIPLE_CHOICE"
+  | "WELCOME_SCREEN";
 
 export interface QuestionDetail {
   questionID: string;

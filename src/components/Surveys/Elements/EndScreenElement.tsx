@@ -1,27 +1,13 @@
 import { useState } from "react";
-import { Box, TextField, Typography } from "@mui/material";
-import { FaArrowRightLong } from "react-icons/fa6";
 import { ElementProps } from "../../../utils/types";
-import { useUpdateElementTextMutation } from "../../../app/slices/elementApiSlice";
+import { Box, TextField, Typography } from "@mui/material";
 
-const ElementQuestionText = ({
-  qID,
-  qNO,
-  qText,
-  qType,
-  display,
-}: ElementProps) => {
-  const [text, setText] = useState(qText);
+const EndScreenElement = ({ qText, display }: ElementProps) => {
+  const [text, setText] = useState("Say Bye!");
   const [isEditing, setIsEditing] = useState(false);
 
-  const qFontSize = display === "mobile" ? "20px" : "36px";
-  const qWhiteSpace = display === "mobile" ? "normal" : "nowrap";
-
-  const nonOrderableTypes = ["INSTRUCTIONS", "EMAIL_CONTACT"];
-
-  const isNonOrderableType = nonOrderableTypes.includes(qType!);
-
-  const [updateElementText] = useUpdateElementTextMutation();
+  const marginTopTextXl = display === "mobile" ? "52%" : "32%";
+  const marginTopTextLg = display === "mobile" ? "64%" : "36%";
 
   const handleDoubleClick = () => {
     setIsEditing(true);
@@ -32,49 +18,31 @@ const ElementQuestionText = ({
   };
 
   const handleBlur = () => {
-    updateElementText({ questionID: qID, text });
+    // updateElementText({ questionID: qID, text });
     setIsEditing(false);
   };
-
   return (
-    <>
+    <Box
+      display={"flex"}
+      flexDirection={"column"}
+      justifyContent={"start"}
+      alignItems={"center"}
+      margin={"auto"}
+      width={"70%"}
+      height={"100%"}
+      zIndex={20}
+    >
       <Box
         display={"flex"}
         flexDirection={"row"}
-        // margin={"auto"}
-        sx={{ width: "98%", padding: "2%" }}
+        sx={{
+          marginTop: {
+            md: marginTopTextXl,
+            lg: marginTopTextLg,
+            xl: marginTopTextLg,
+          },
+        }}
       >
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={1}
-          sx={{ width: "auto" }}
-        >
-          <Typography
-            variant="h4"
-            fontWeight={"bold"}
-            color={"black"}
-            mt={1}
-            sx={{ fontSize: "24px" }}
-          >
-            {qNO}
-          </Typography>
-        </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          mr={2}
-        >
-          {isNonOrderableType ? null : (
-            <Typography variant="h6" mt={1}>
-              <FaArrowRightLong />
-            </Typography>
-          )}
-        </Box>
         <Box
           display={"flex"}
           flexDirection={"column"}
@@ -119,18 +87,18 @@ const ElementQuestionText = ({
                 "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
               }
               sx={{
-                whiteSpace: qWhiteSpace,
+                whiteSpace: "nowrap",
                 width: "100%",
-                fontSize: qFontSize,
+                fontSize: "clamp(16px, 2.2vw, 48px)",
               }}
             >
-              {qText}
+              {text}
             </Typography>
           )}
         </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 
-export default ElementQuestionText;
+export default EndScreenElement;

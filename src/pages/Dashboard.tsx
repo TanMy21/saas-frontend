@@ -40,7 +40,6 @@ const Dashboard = () => {
     <>
       <Box
         sx={{
-          bgcolor: "green",
           overflowX: "hidden",
           width: "100%",
           height: "100%",

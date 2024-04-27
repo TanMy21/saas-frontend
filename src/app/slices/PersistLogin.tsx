@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useRefreshMutation } from "./authApiSlice";
 import { selectCurrentToken } from "./authSlice";
 import usePersist from "../../hooks/persist";
 import { ErrorData } from "../../utils/types";
 
 const PersistLogin = () => {
+  const navigate = useNavigate();
   const [persist] = usePersist();
   const token = useSelector(selectCurrentToken);
   const effectRan = useRef(false);
@@ -32,6 +33,7 @@ const PersistLogin = () => {
           setTrueSuccess(true);
         } catch (err) {
           console.error(err);
+          // navigate("/login");
         }
       };
 
@@ -56,6 +58,7 @@ const PersistLogin = () => {
     content = <p>Loading...</p>;
   } else if (isError) {
     //persist: yes, token: no
+
     const errorData = error as ErrorData;
     console.log("error");
     content = (

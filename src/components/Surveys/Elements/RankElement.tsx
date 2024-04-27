@@ -19,9 +19,11 @@ import {
 } from "../../../app/slices/optionApiSlice";
 import { toast } from "react-toastify";
 
-const RankElement = ({ qID, qNO, qText }: ElementProps) => {
+const RankElement = ({ qID, qNO, qText, display }: ElementProps) => {
   const [editingID, setEditingID] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
+
+  const iconRight = display === "mobile" ? "-12%" : "-8%";
 
   const { data: options = [] as OptionType[] } =
     useGetOptionsOfQuestionQuery(qID);
@@ -118,18 +120,35 @@ const RankElement = ({ qID, qNO, qText }: ElementProps) => {
     <Box
       display={"flex"}
       flexDirection={"column"}
-      justifyContent={"start"}
+      justifyContent={"center"}
       alignItems={"center"}
       margin={"auto"}
-      width={"70%"}
+      width={"90%"}
       height={"100%"}
       zIndex={20}
     >
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "8%" }}>
-        <ElementQuestionText qID={qID} qNO={qNO} qText={qText} />
+        <ElementQuestionText
+          qID={qID}
+          qNO={qNO}
+          qText={qText}
+          display={display}
+        />
       </Box>
-      <Box>
-        <Typography variant="h6" mt={1} mb={4} color={"#0A49B1"}>
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        justifyContent={"center"}
+        width={"100%"}
+        p={"2%"}
+      >
+        <Typography
+          whiteSpace={"normal"}
+          variant="h6"
+          mt={1}
+          mb={2}
+          color={"#0A49B1"}
+        >
           Rank the following choices in the order of preference.
         </Typography>
       </Box>
@@ -174,8 +193,7 @@ const RankElement = ({ qID, qNO, qText }: ElementProps) => {
                         key={option.order}
                         sx={{
                           display: "flex",
-                          marginTop: "1%",
-                          marginBottom: "1%",
+                          marginBottom: "4%",
                           width: "clamp(100px, 80%, 200px)",
                           height: "100%",
                           border: "2px solid #4880DE",
@@ -195,6 +213,9 @@ const RankElement = ({ qID, qNO, qText }: ElementProps) => {
                             width: "28px",
                             height: "90%",
                             color: "#E5ECF7",
+                            "&:hover": {
+                              cursor: "grab",
+                            },
                           }}
                         >
                           <DragIndicatorIcon />
@@ -252,17 +273,18 @@ const RankElement = ({ qID, qNO, qText }: ElementProps) => {
                           className="close-button"
                           onClick={() => deleteRank(option.optionID)}
                           sx={{
-                            position: "absolute",
-                            top: "50%",
-                            right: "12px",
+                            position: "relative",
+                            top: "12px",
+                            right: iconRight,
                             transform: "translateY(-50%)",
                             visibility: "hidden",
                             width: "24px",
                             height: "24px",
-                            backgroundColor: "red",
+                            backgroundColor: "darkred",
                             color: "white",
                             "&:hover": {
-                              backgroundColor: "darkred",
+                              backgroundColor: "red",
+                              visibility: "visible",
                             },
                           }}
                         >

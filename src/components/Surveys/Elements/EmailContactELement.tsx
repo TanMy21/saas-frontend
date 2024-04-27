@@ -1,16 +1,15 @@
 import { Box, Button, TextField } from "@mui/material";
 import { ElementProps } from "../../../utils/types";
-import { BiCheck } from "react-icons/bi";
 import ElementQuestionText from "./ElementQuestionText";
 
-const NumberElement = ({ qID, qNO, qText, display }: ElementProps) => {
+const EmailContactELement = ({ qID, qNO, qType, display }: ElementProps) => {
   const marginLeftBtn = display === "mobile" ? "12%" : "25%";
   const marginTopBtn = display === "mobile" ? "2%" : "1%";
-  const textFieldWidth = display === "mobile" ? "100%" : "80%";
+  const textFieldWidth = display === "mobile" ? "100%" : "76%";
   const inputWidth = display === "mobile" ? "80%" : "70%";
-  const textFieldMarginLeft = display === "mobile" ? "4%" : "0%";
   const textFieldPaddingLeft = display === "mobile" ? "2%" : "24%";
-  const textFieldFontSize = display === "mobile" ? "16px" : "36px";
+  const textFieldMarginLeft = display === "mobile" ? "4%" : "0%";
+  const textFieldFontSize = display === "mobile" ? "20px" : "36px";
 
   return (
     <Box
@@ -27,7 +26,8 @@ const NumberElement = ({ qID, qNO, qText, display }: ElementProps) => {
         <ElementQuestionText
           qID={qID}
           qNO={qNO}
-          qText={qText}
+          qType={qType}
+          qText={"Enter your email here."}
           display={display}
         />
       </Box>
@@ -40,14 +40,14 @@ const NumberElement = ({ qID, qNO, qText, display }: ElementProps) => {
         <Box
           sx={{
             width: inputWidth,
-            margin: textFieldMarginLeft,
+            marginLeft: textFieldMarginLeft,
             padding: "2%",
             paddingLeft: textFieldPaddingLeft,
           }}
         >
           <TextField
             id="standard-multiline-flexible"
-            placeholder="Type your answer here..."
+            placeholder="name@example.com"
             variant="standard"
             sx={{
               width: textFieldWidth,
@@ -63,9 +63,12 @@ const NumberElement = ({ qID, qNO, qText, display }: ElementProps) => {
                 opacity: 1,
               },
               "& .MuiInput-underline:before": {
-                borderBottomColor: "#BDCEEA",
+                borderBottomColor: "blue",
               },
               "& .MuiInput-underline:after": {
+                borderBottomColor: "blue",
+              },
+              ".MuiInput-underline:hover": {
                 borderBottomColor: "blue",
               },
             }}
@@ -84,13 +87,13 @@ const NumberElement = ({ qID, qNO, qText, display }: ElementProps) => {
             }}
             variant="contained"
             size="large"
-            endIcon={<BiCheck />}
           >
-            Ok
+            Submit
           </Button>
         </Box>
       </Box>
     </Box>
   );
 };
-export default NumberElement;
+
+export default EmailContactELement;

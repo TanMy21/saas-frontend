@@ -1,8 +1,8 @@
 // import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useGetSurveyByIdQuery } from "../app/slices/surveysApiSlice";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 // import { ElementType } from "../utils/types";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
@@ -10,10 +10,11 @@ import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSid
 import SurveyBuilderCanvas from "../components/Surveys/SurveyBuilderCanvas";
 import SurveyBuilderCanvasMobile from "../components/Surveys/SurveyBuilderCanvasMobile";
 import SurveyShare from "../components/Surveys/SurveyShare";
+import { ErrorData } from "../utils/types";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const { workspaceId, workspaceName } = location.state || {};
   const isOpen = location.state?.openModal || false;
@@ -38,7 +39,11 @@ const SurveyBuilder = () => {
     // setHeaderTabValue(display);
   };
 
-  const { data: survey } = useGetSurveyByIdQuery(surveyID, {
+  const {
+    data: survey,
+    isError,
+    error,
+  } = useGetSurveyByIdQuery(surveyID, {
     skip: !surveyID,
     pollingInterval: 15000,
     refetchOnFocus: true,
@@ -83,6 +88,14 @@ const SurveyBuilder = () => {
       />
     );
   }
+
+  useEffect(() => {
+    if (isError) {
+      // navigate("/login");
+      const errorData = error as ErrorData;
+      console.log("Error: ", errorData);
+    }
+  }, [isError, error]);
 
   return (
     <>
@@ -205,7 +218,7 @@ const SurveyBuilder = () => {
                   sx={{
                     padding: { md: "2%", lg: "4%", xl: "2%" },
                     width: { md: "84%", lg: "88%", xl: "92%" },
-                    height: "60px",
+                    height: "48px",
                   }}
                 >
                   <Tabs
@@ -213,17 +226,20 @@ const SurveyBuilder = () => {
                     centered
                     onChange={handleChange}
                     sx={{
-                      height: "100%",
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "start",
+                      height: "80%",
                       width: "100%",
-                      fontSize: "16px",
+                      fontSize: "20px",
                       color: "black",
                       ".MuiTabs-indicator": {
                         height: "2px",
-                        bottom: 16,
+                        bottom: { lg: 6, xl: 4 },
                         backgroundColor: "black",
                       },
                       "& .MuiButtonBase-root": {
-                        maxHeight: "48px",
+                        maxHeight: "40px",
                       },
                       "& .Mui-selected": {
                         color: "black",
@@ -254,7 +270,7 @@ const SurveyBuilder = () => {
                     />
                   </Tabs>
                 </Box>
-                <Divider sx={{ marginTop: { lg: "-12%", xl: "-8%" } }} />
+                <Divider sx={{ marginTop: { lg: "-8%", xl: "-4%" } }} />
 
                 <Box
                   display={"flex"}

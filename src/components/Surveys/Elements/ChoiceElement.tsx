@@ -20,10 +20,11 @@ import {
 } from "../../../app/slices/optionApiSlice";
 import { toast } from "react-toastify";
 
-const ChoiceElement = ({ qID, qNO, qText }: ElementProps) => {
+const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [editingID, setEditingID] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
+  const [selectedOptionID, setSelectedOptionID] = useState<string | null>(null);
 
   const { data: options = [] as OptionType[] } =
     useGetOptionsOfQuestionQuery(qID);
@@ -114,11 +115,18 @@ const ChoiceElement = ({ qID, qNO, qText }: ElementProps) => {
       zIndex={20}
     >
       <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "12%" }}>
-        <ElementQuestionText qID={qID} qNO={qNO} qText={qText} />
+        <ElementQuestionText
+          qID={qID}
+          qNO={qNO}
+          qText={qText}
+          display={display}
+        />
       </Box>
       <Box display={"flex"} flexDirection={"column"} mt={4}>
         <FormControl>
           <RadioGroup
+            value={selectedOptionID}
+            onChange={(event) => setSelectedOptionID(event.target.value)}
             aria-label="Your plan"
             name="people"
             defaultValue="Individual"
@@ -169,7 +177,11 @@ const ChoiceElement = ({ qID, qNO, qText }: ElementProps) => {
                       }}
                     >
                       <Radio
-                        value={editText}
+                        value={option.optionID}
+                        checked={selectedOptionID === option.optionID}
+                        onChange={(event) =>
+                          setSelectedOptionID(event.target.value)
+                        }
                         sx={{ flexGrow: 1, flexDirection: "row" }}
                         slotProps={{
                           action: ({ checked }) => ({
@@ -249,10 +261,10 @@ const ChoiceElement = ({ qID, qNO, qText }: ElementProps) => {
                         visibility: "hidden",
                         width: "24px",
                         height: "24px",
-                        backgroundColor: "red",
+                        backgroundColor: "darkred",
                         color: "white",
                         "&:hover": {
-                          backgroundColor: "darkred",
+                          backgroundColor: "red",
                         },
                       }}
                     >
@@ -280,9 +292,9 @@ const ChoiceElement = ({ qID, qNO, qText }: ElementProps) => {
             }}
             variant="contained"
             size="small"
+            endIcon={<MdAdd fontSize={"24px"} />}
           >
             Add Choice &nbsp;
-            <MdAdd fontSize={"24px"} />
           </Button>
         )}
       </Box>

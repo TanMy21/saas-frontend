@@ -45,7 +45,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
             setCredentials({
               token: accessToken,
               accessToken,
-              isLoggedIn: true,
+              // isLoggedIn: true,
             })
           );
         } catch (err) {

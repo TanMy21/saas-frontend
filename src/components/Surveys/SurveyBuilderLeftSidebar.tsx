@@ -54,7 +54,7 @@ SurveyBuilderLeftSidebarProps) => {
         // setElements={setElements}
       />
 
-      <Divider sx={{ marginTop: "24px" }} />
+      <Divider sx={{ marginTop: "4px" }} />
     </Grid>
   );
 };

@@ -32,21 +32,24 @@ const SurveyBuilderCanvasMobile = ({
   return (
     <Box display={"flex"} flexDirection={"column"}>
       <Box
-        border={"2px solid red"}
         margin={"auto"}
-        width={"32%"}
-        minHeight={"64vh"}
+        width={"36%"}
+        minHeight={"68vh"}
         borderRadius={"12px"}
         bgcolor={"#FFFFFF"}
         mt={"4%"}
         pt={"8%"}
+        pl={"1%"}
+        pr={"1%"}
       >
         {/* Element view */}
         {questions?.type ? (
           <QuestionComponent
             qID={questions?.questionID}
-            qNO={questions?.order.toString()}
+            qNO={questions?.order?.toString()}
             qText={questions?.text}
+            qType={questions?.type}
+            display={display}
           />
         ) : (
           <SurveyWelcomeElement />

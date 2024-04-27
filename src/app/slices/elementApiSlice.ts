@@ -1,9 +1,9 @@
-import { ElementType } from "../../utils/types";
+import { Element } from "../../utils/types";
 import { apiSlice } from "../api/apiSlice";
 
 export const elementApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getElementsForSurvey: builder.query<ElementType[], string>({
+    getElementsForSurvey: builder.query<Element[], string>({
       query: (surveyID) => `/q/all/${surveyID}`,
       providesTags: ["Elements"],
     }),
@@ -14,6 +14,14 @@ export const elementApiSlice = apiSlice.injectEndpoints({
     createElement: builder.mutation({
       query: (data) => ({
         url: "/q/create",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    createScreenElement: builder.mutation({
+      query: (data) => ({
+        url: "/q/screen/create",
         method: "POST",
         body: data,
       }),
@@ -49,6 +57,7 @@ export const {
   useGetElementsForSurveyQuery,
   useGetElementByIDQuery,
   useCreateElementMutation,
+  useCreateScreenElementMutation,
   useUpdateElementTextMutation,
   useDuplicateElementMutation,
   useDeleteElementMutation,
