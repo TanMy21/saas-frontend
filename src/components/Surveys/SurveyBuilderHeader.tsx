@@ -7,6 +7,7 @@ import {
   Tab,
   Tabs,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
@@ -18,19 +19,16 @@ import { SurveyBuilderHeaderProps } from "../../utils/types";
 import { NavLink } from "react-router-dom";
 
 const SurveyBuilderHeader = ({
-  display,
+  // display,
+  tabValue,
   survey,
   workspaceId,
   workspaceName,
   title,
-  handleLayoutChange,
+  handleScreenChange,
+  // handleLayoutChange,
 }: SurveyBuilderHeaderProps) => {
-  // const [value, setValue] = useState(0);
   const [surveyTitle, setSurveyTitle] = useState<string | undefined>("");
-
-  // const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-  //   setValue(newValue);
-  // };
 
   useEffect(() => {
     setSurveyTitle(title);
@@ -51,7 +49,7 @@ const SurveyBuilderHeader = ({
     >
       <Toolbar disableGutters>
         <Grid container>
-          <Grid item xs={3} sx={{ width: "10%", height: "6vh" }}>
+          <Grid item xs={3} sx={{ width: "16%", height: "6vh" }}>
             <Typography
               sx={{
                 display: "flex",
@@ -86,18 +84,19 @@ const SurveyBuilderHeader = ({
                   {workspaceName} /
                 </Typography>
               </NavLink>
-
-              <Typography
-                sx={{
-                  color: "#262666",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "clip",
-                  width: { md: "64%", lg: "98%", xl: "90%" },
-                }}
-              >
-                &nbsp; {surveyTitle ? surveyTitle : survey?.title}
-              </Typography>
+              <Tooltip title={survey?.title}>
+                <Typography
+                  sx={{
+                    color: "#262666",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "clip",
+                    width: { md: "64%", lg: "100%", xl: "98%" },
+                  }}
+                >
+                  &nbsp; {surveyTitle ? surveyTitle : survey?.title}
+                </Typography>
+              </Tooltip>
             </Typography>
           </Grid>
           {/* Tabs centered in the middle */}
@@ -115,9 +114,9 @@ const SurveyBuilderHeader = ({
             }}
           >
             <Tabs
-              value={display}
+              value={tabValue}
               centered
-              onChange={handleLayoutChange}
+              onChange={handleScreenChange}
               sx={{
                 height: "100%",
                 width: "60%",

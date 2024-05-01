@@ -39,6 +39,13 @@ export const optionApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Options"],
     }),
+    removeImage: builder.mutation({
+      query: (optionID) => ({
+        url: `/op/remove/img/${optionID}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Options"],
+    }),
   }),
 });
 
@@ -48,4 +55,5 @@ export const {
   useUpdateOptionTextandValueMutation,
   useUploadImageMutation,
   useDeleteOptionMutation,
+  useRemoveImageMutation,
 } = optionApiSlice;

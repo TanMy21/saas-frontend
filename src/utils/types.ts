@@ -35,12 +35,12 @@ export interface Element {
 }
 
 export interface ElementProps {
-  qNO: string;
+  qNO?: string;
   type?: string;
   qText?: string;
   qType?: string;
   display?: string | null;
-  qID: string;
+  qID?: string;
 }
 
 export interface ElementDropDownMenuProps {
@@ -230,9 +230,9 @@ export interface SurveyBuilderHeaderProps {
   workspaceId: string;
   workspaceName: string;
   title: string;
-  display: string | null;
+  tabValue: string | null;
   // headerTabValue: number;
-  handleLayoutChange: (
+  handleScreenChange: (
     _event: React.SyntheticEvent,
     display: string | null
   ) => void;

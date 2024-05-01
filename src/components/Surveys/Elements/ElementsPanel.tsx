@@ -23,6 +23,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
     "EMAIL_CONTACT",
   ];
   let isNonOrderableType;
+
   const elementStartTypes = ["WELCOME_SCREEN", "INSTRUCTIONS", "EMAIL_CONTACT"];
   const orderedElementTypes = [
     "BINARY",
@@ -201,7 +202,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                               justifyContent={"center"}
                               alignItems={"center"}
                               sx={{
-                                width: { md: "50%", lg: "52%", xl: "70%" },
+                                minWidth: { md: "50%", lg: "52%", xl: "70%" },
                                 height: "100%",
                                 "&:hover": {
                                   cursor: "pointer",

@@ -9,9 +9,6 @@ const SurveyBuilderCanvasMobile = ({
   display,
   handleLayoutChange,
 }: SurveyBuilderCanvasProps) => {
-  // const [selectedQuestion, setSelectedQuestion] =
-  //   useState<QuestionDetail | null>(null);
-
   const { data: questions } = useGetElementByIDQuery(questionId, {
     skip: !questionId,
   });
@@ -26,8 +23,6 @@ const SurveyBuilderCanvasMobile = ({
     /*selectedQuestion*/
     /*?*/ elementComponents[questions?.type as QuestionTypeKey];
   // : SurveyWelcomeElement;
-
-  // console.log("QuestionComponent: ", selectedQuestion);
 
   return (
     <Box display={"flex"} flexDirection={"column"}>

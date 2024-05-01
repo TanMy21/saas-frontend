@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   Divider,
@@ -15,18 +15,17 @@ import NewWorkspaceModal from "../Modals/NewWorkspaceModal";
 
 const Workspaces = ({ workspaces }: WorkspacesProp) => {
   const navigate = useNavigate();
-  // const location = useLocation();
+
+  const { workspaceId } = useParams();
 
   useEffect(() => {
     if (workspaces?.length > 0) {
-      const firstWorkspaceId = workspaces[0].workspaceId;
-      navigate(`/dash/w/${firstWorkspaceId}`);
-    }
-  }, [workspaces, navigate]);
+      const defaultWorkspaceId = workspaces[0].workspaceId;
+      const targetWorkspaceId = workspaceId || defaultWorkspaceId;
 
-  // useEffect(() => {
-  //   navigate(location.pathname);
-  // }, [location.pathname, navigate]);
+      navigate(`/dash/w/${targetWorkspaceId}`, { replace: true });
+    }
+  }, [workspaces, navigate, workspaceId]);
 
   return (
     <>

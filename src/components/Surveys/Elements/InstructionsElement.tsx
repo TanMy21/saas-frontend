@@ -34,8 +34,9 @@ const InstructionsElement = ({
 
   const marginLeftListItem = display === "mobile" ? "10%" : "10%";
 
-  const { data: options = [] as OptionType[] } =
-    useGetOptionsOfQuestionQuery(qID);
+  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
+    qID!
+  );
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
@@ -114,7 +115,7 @@ const InstructionsElement = ({
       justifyContent={"start"}
       alignItems={"center"}
       margin={"auto"}
-      maxWidth={"80%"}
+      maxWidth={"100%"}
       height={"100%"}
       zIndex={20}
     >
@@ -122,7 +123,7 @@ const InstructionsElement = ({
         <ElementQuestionText
           qID={qID}
           qNO={qNO}
-          qText={"Your Instructions here."}
+          qText={qText}
           qType={qType}
           display={display}
         />
@@ -138,7 +139,7 @@ const InstructionsElement = ({
           <List
             sx={{
               minWidth: "400px",
-              maxWidth: "90%",
+              maxWidth: "100%",
               "--List-gap": "0.5rem",
               "--ListItem-radius": "4px",
               "--ListItemDecorator-size": "32px",
@@ -148,14 +149,14 @@ const InstructionsElement = ({
               <ListItem
                 key={option.optionID}
                 sx={{
-                  width: "70%",
+                  minWidth: "70%",
+                  maxWidth: "100%",
                   display: "flex",
                   marginLeft: { lg: "-4%", xl: "10%" },
                   justifyContent: "space-between",
                   color: "black",
                   fontWeight: "bold",
                   fontSize: "24px",
-
                   "&:hover .close-button": {
                     visibility: "visible",
                   },
@@ -247,7 +248,7 @@ const InstructionsElement = ({
                       />
                     ) : (
                       <Typography
-                        sx={{ whiteSpace: "normal", fontSize: "24px" }}
+                        sx={{ whiteSpace: "normal", fontSize: "20px" }}
                         // onClick={handleClick}
                       >
                         {option.text}

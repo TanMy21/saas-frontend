@@ -3,11 +3,11 @@ import {
   Box,
   Button,
   Card,
-  CardActionArea,
-  CardActions,
   Grid,
   IconButton,
   Modal,
+  TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -17,20 +17,27 @@ import { MdAdd } from "react-icons/md";
 import ClearIcon from "@mui/icons-material/Clear";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import SaveIcon from "@mui/icons-material/Save";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import ImageIcon from "@mui/icons-material/Image";
 import { FiUpload } from "react-icons/fi";
 import ElementQuestionText from "./ElementQuestionText";
 import {
   useCreateNewOptionMutation,
   useDeleteOptionMutation,
   useGetOptionsOfQuestionQuery,
+  useRemoveImageMutation,
+  useUpdateOptionTextandValueMutation,
   useUploadImageMutation,
 } from "../../../app/slices/optionApiSlice";
 import { toast } from "react-toastify";
 
 const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
   const [open, setOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedOptionID, setSelectedOptionID] = useState<string | null>("");
+  const [editingID, setEditingID] = useState<string | null>(null);
+  const [editText, setEditText] = useState<string>("");
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleOpen = (optionID: string) => {
@@ -46,12 +53,13 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
 
   // const [editingID, setEditingID] = useState<string | null>(null);
 
-  const { data: options = [] as OptionType[] } =
-    useGetOptionsOfQuestionQuery(qID);
+  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
+    qID!
+  );
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
-  // const [updateOptionTextandValue] = useUpdateOptionTextandValueMutation();
+  const [updateOptionTextandValue] = useUpdateOptionTextandValueMutation();
 
   const [
     uploadImage,
@@ -66,6 +74,7 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
   const btnContainerWidth = display === "mobile" ? "50%" : "20%";
 
   const [deleteOption] = useDeleteOptionMutation();
+  const [removeImage] = useRemoveImageMutation();
 
   const addMedia = async () => {
     const order = options ? options.length + 1 : 1;
@@ -78,7 +87,7 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
         await createNewOption({
           questionID: qID,
           text: `${nextChoiceLetter}`,
-          value: `${nextChoiceLetter}`,
+          value: `Choice ${nextChoiceLetter}`,
           order,
         });
       }
@@ -90,6 +99,14 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
   const deleteChoice = async (optionID: string) => {
     try {
       await deleteOption(optionID).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleRemoveImage = async (optionID: string) => {
+    try {
+      await removeImage(optionID).unwrap();
     } catch (error) {
       console.error(error);
     }
@@ -124,9 +141,30 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
     }
   };
 
-  const handleRemoveImage = () => {
+  const handlePreviewImage = () => {
     setSelectedFile(null);
     setPreview(null);
+  };
+
+  const handleDoubleClick = (option: OptionType) => {
+    setEditingID(option.optionID);
+    setEditText(option.value);
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditText(event.target.value);
+  };
+
+  const handleBlur = async () => {
+    await updateOptionTextandValue({
+      optionID: editingID,
+      value: editText,
+    });
+    setEditingID(null);
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
   };
 
   useEffect(() => {
@@ -248,12 +286,78 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
                     border={"2px solid #E4BD34"}
                     bgcolor={"#E4BD34"}
                     mt={1}
+                    position={"relative"}
+                    sx={{
+                      "&:hover .control-buttons": {
+                        visibility: "visible",
+                        opacity: 1,
+                        transition: "opacity 0.3s ease",
+                      },
+                    }}
+                    onMouseEnter={() => setIsHovered(option.optionID)}
+                    onMouseLeave={() => setIsHovered(null)}
                   >
                     {option.image ? (
-                      <img
-                        src={option.image}
-                        style={{ width: "100%", height: "100%" }}
-                      />
+                      <>
+                        <img
+                          src={option.image}
+                          style={{ width: "100%", height: "100%" }}
+                        />
+                        <Box
+                          className="control-buttons"
+                          sx={{
+                            position: "absolute",
+                            top: "4%",
+                            right: "4%",
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "flex-end",
+                            backgroundColor: "transparent",
+                            alignSelf: "end",
+                            gap: 1,
+                            visibility: isHovered ? "visible" : "hidden",
+                            opacity: isHovered ? 1 : 0,
+                            transition: "opacity 0.3s ease",
+                          }}
+                        >
+                          <Tooltip title="Replace">
+                            <IconButton
+                              onClick={() => handleOpen(option.optionID)}
+                              sx={{
+                                backgroundColor: "#E3E3E3",
+                                color: "#3A3A3A",
+                                width: "28px",
+                                height: "28px",
+                                borderRadius: "8%",
+                                "&:hover": {
+                                  backgroundColor: "#E3E3E3",
+                                  color: "#3A3A3A",
+                                },
+                              }}
+                            >
+                              <ImageIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Remove">
+                            <IconButton
+                              onClick={() => handleRemoveImage(option.optionID)}
+                              sx={{
+                                width: "28px",
+                                height: "28px",
+                                borderRadius: "8%",
+                                backgroundColor: "#E3E3E3",
+                                color: "#3A3A3A",
+                                "&:hover": {
+                                  backgroundColor: "#E3E3E3",
+                                  color: "#3A3A3A",
+                                },
+                              }}
+                            >
+                              <DeleteForeverIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </>
                     ) : (
                       <>
                         <IconButton onClick={() => handleOpen(option.optionID)}>
@@ -363,14 +467,21 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
                                         }}
                                       />
                                       <IconButton
-                                        onClick={handleRemoveImage}
+                                        onClick={handlePreviewImage}
                                         sx={{
                                           backgroundColor: "red",
                                           position: "absolute",
                                           width: "24px",
                                           height: "24px",
-                                          top: "27%",
-                                          right: "6%",
+                                          top: {
+                                            // md: "24%",
+                                            lg: "28%",
+                                            xl: "27%",
+                                          },
+                                          right: {
+                                            lg: "6%",
+                                            xl: "6%",
+                                          },
                                           color: "white",
                                           "&:hover": {
                                             backgroundColor: "red",
@@ -567,8 +678,9 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
                       </>
                     )}
                   </Box>
-                  <CardActionArea
+                  <Box
                     sx={{
+                      width: "90%",
                       height: "20%",
                       display: "flex",
                       flexDirection: "row",
@@ -576,10 +688,12 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
                       justifyContent: "start",
                     }}
                   >
-                    <CardActions
+                    <Box
                       sx={{
+                        width: "100%",
+                        height: "100%",
                         display: "flex",
-                        justifyContent: "center",
+                        justifyContent: "start",
                         alignItems: "center",
                       }}
                     >
@@ -598,8 +712,52 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
                           {option.text}
                         </Typography>
                       </Box>
-                    </CardActions>
-                  </CardActionArea>
+                      <Box
+                        onDoubleClick={() => handleDoubleClick(option)}
+                        sx={{ cursor: "pointer" }}
+                      >
+                        {editingID === option.optionID ? (
+                          <TextField
+                            id="outlined-basic"
+                            variant="outlined"
+                            type="text"
+                            value={editText}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            autoFocus
+                            InputProps={{
+                              sx: {
+                                height: "100%",
+                                padding: "0px",
+                                "& input": {
+                                  padding: "4px 8px",
+                                },
+                              },
+                            }}
+                            sx={{
+                              backgroundColor: "transparent",
+                              width: "100%",
+                              height: "100%",
+                              "& .MuiOutlinedInput-root": {
+                                height: "100%",
+                                "& fieldset": {
+                                  border: "none",
+                                },
+                              },
+                            }}
+                          />
+                        ) : (
+                          <Typography
+                            ml={4}
+                            sx={{ fontSize: "16px" }}
+                            onClick={handleClick}
+                          >
+                            {option.value}
+                          </Typography>
+                        )}
+                      </Box>
+                    </Box>
+                  </Box>
                 </Card>
                 <IconButton
                   className="close-button"
@@ -607,8 +765,8 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
                   z-index={10}
                   sx={{
                     position: "relative",
-                    top: "-84%",
-                    right: "-50%",
+                    top: { lg: "-82%", xl: "-84%" },
+                    right: { lg: "-44%", xl: "-50%" },
                     transform: "translateY(-80%)",
                     visibility: "visible",
                     width: "24px",
@@ -654,7 +812,10 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
                   bgcolor: "#DFCF94",
                 }}
               >
-                <Button
+                <Box
+                  display={"flex"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
                   onClick={addMedia}
                   sx={{ width: "100%", height: "100%" }}
                 >
@@ -669,7 +830,7 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
                       <MdAdd color={"#745C07"} size={"48px"} />
                     </IconButton>
                   </Box>
-                </Button>
+                </Box>
               </Card>
               // </Grid>
             )}

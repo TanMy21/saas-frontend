@@ -66,6 +66,10 @@ const AddElementMenu = ({
     }
   };
 
+  const containsWelcome = elements?.some(
+    (element) => element.type === "WELCOME_SCREEN"
+  );
+
   useEffect(() => {
     if (isError) {
       const errorData = error as ErrorData;
@@ -238,7 +242,10 @@ const AddElementMenu = ({
                 </Typography>
               </Box>
             </MenuItem>
-            <MenuItem onClick={() => handleScreenElementAdd("WELCOME_SCREEN")}>
+            <MenuItem
+              onClick={() => handleScreenElementAdd("WELCOME_SCREEN")}
+              disabled={containsWelcome}
+            >
               <Box display={"flex"} flexDirection={"row"} alignItems={"center"}>
                 <Typography sx={{ fontSize: "24px", color: "#c45161" }} mt={1}>
                   {elementIcons.WELCOME_SCREEN}

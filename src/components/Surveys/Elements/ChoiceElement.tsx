@@ -26,8 +26,9 @@ const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
   const [editText, setEditText] = useState<string>("");
   const [selectedOptionID, setSelectedOptionID] = useState<string | null>(null);
 
-  const { data: options = [] as OptionType[] } =
-    useGetOptionsOfQuestionQuery(qID);
+  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
+    qID!
+  );
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
@@ -122,7 +123,14 @@ const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
           display={display}
         />
       </Box>
-      <Box display={"flex"} flexDirection={"column"} mt={4}>
+      <Box
+        display={"flex"}
+        flexDirection={"column"}
+        mt={4}
+        sx={{
+          width: "80%",
+        }}
+      >
         <FormControl>
           <RadioGroup
             value={selectedOptionID}
@@ -133,7 +141,10 @@ const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
           >
             <List
               sx={{
-                minWidth: 240,
+                margin: "auto",
+                minWidth: 300,
+                maxWidth: "90%",
+
                 "--List-gap": "0.5rem",
                 "--ListItem-radius": "4px",
                 "--ListItemDecorator-size": "32px",
@@ -172,6 +183,7 @@ const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
                       justifyContent={"center"}
                       alignItems={"center"}
                       mr={2}
+                      ml={1}
                       sx={{
                         height: "100%",
                       }}
@@ -201,7 +213,8 @@ const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
                       alignItems={"center"}
                       onDoubleClick={() => handleDoubleClick(option)}
                       sx={{
-                        width: "90%",
+                        minWidth: "90%",
+                        maxWidth: "98%",
                         height: "100%",
                         padding: "4px",
                       }}
@@ -238,9 +251,12 @@ const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
                         />
                       ) : (
                         <Typography
-                          ml={4}
+                          ml={1}
                           sx={{ fontSize: "16px" }}
                           onClick={handleClick}
+                          whiteSpace={"nowrap"}
+                          overflow={"hidden"}
+                          textOverflow={"string"}
                         >
                           {option.text}
                         </Typography>

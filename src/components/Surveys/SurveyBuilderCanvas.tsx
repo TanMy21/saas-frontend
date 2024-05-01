@@ -1,46 +1,29 @@
-// import { useState, useEffect } from "react";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import {
-  // QuestionDetail,
-  QuestionTypeKey,
-  SurveyBuilderCanvasProps,
-} from "../../utils/types";
+import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
 import { useGetElementByIDQuery } from "../../app/slices/elementApiSlice";
 import { elementComponents } from "../../utils/elementsConfig";
 
 const SurveyBuilderCanvas = ({
-  // elementDetail,
-  // qIndex,
   questionId,
   display,
   handleLayoutChange,
 }: SurveyBuilderCanvasProps) => {
-  // const [selectedQuestion, setSelectedQuestion] =
-  //   useState<QuestionDetail | null>(null);
-
   const { data: questions } = useGetElementByIDQuery(questionId, {
     skip: !questionId,
   });
-
-  // useEffect(() => {
-  //   if (questions && questions.length > 0) {
-  //     setSelectedQuestion(questions[0]);
-  //   }
-  // }, [questions]);
 
   const QuestionComponent =
     /*selectedQuestion*/
     /*?*/ elementComponents[questions?.type as QuestionTypeKey];
   // : SurveyWelcomeElement;
 
-  // console.log("QuestionComponent: ", selectedQuestion);
-
   return (
     <Box display={"flex"} flexDirection={"column"}>
       <Box
         margin={"auto"}
-        width={"98%"}
+        minWidth={"98%"}
+        maxWidth={"98%"}
         minHeight={"75vh"}
         borderRadius={"12px"}
         bgcolor={"#FFFFFF"}
@@ -55,7 +38,7 @@ const SurveyBuilderCanvas = ({
             qType={questions?.type}
           />
         ) : (
-          <SurveyWelcomeElement />
+          <SurveyWelcomeElement display={display} />
         )}
       </Box>
       <Box mt={4} mb={2} display={"flex"} justifyContent={"center"}>

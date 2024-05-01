@@ -17,8 +17,9 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
   const [editingID, setEditingID] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
 
-  const { data: options = [] as OptionType[] } =
-    useGetOptionsOfQuestionQuery(qID);
+  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
+    qID!
+  );
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
@@ -112,7 +113,12 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
           display={display}
         />
       </Box>
-      <Box display={"flex"} flexDirection={"column"} mt={4}>
+      <Box
+        display={"flex"}
+        flexDirection={"column"}
+        mt={4}
+        sx={{ minWidth: "36%", maxWidth: "96%", border: "2px solid red" }}
+      >
         {options.map((option, index) => (
           <Box
             key={index}
@@ -123,7 +129,8 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
               alignItems: "center",
               marginBottom: "12px",
               padding: "4px",
-              width: "200px",
+              minWidth: "200px",
+              maxWidth: "98%",
               height: "36px",
               backgroundColor: "#E5ECF7",
               borderRadius: "4px",
@@ -141,16 +148,17 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
               flexDirection={"row"}
               justifyContent={"center"}
               alignItems={"center"}
+              mr={2}
               sx={{ width: "20%", height: "28px" }}
             >
               <Checkbox key={option.optionID} onClick={handleClick} />
             </Box>
-            <Box sx={{ width: "70%", height: "28px" }}>
+            <Box sx={{ minWidth: "70%", maxWidth: "96%", height: "28px" }}>
               <Box
                 display={"flex"}
                 flexDirection={"row"}
                 alignItems={"center"}
-                width={"100%"}
+                maxWidth={"100%"}
                 height={"100%"}
                 onDoubleClick={() => handleDoubleClick(option)}
                 sx={{ flexGrow: 1, cursor: "pointer" }}
@@ -187,8 +195,13 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
                   />
                 ) : (
                   <Typography
-                    ml={4}
-                    sx={{ fontSize: "16px" }}
+                    ml={1}
+                    sx={{
+                      fontSize: "16px",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "clip",
+                    }}
                     onClick={handleClick}
                   >
                     {option.text}

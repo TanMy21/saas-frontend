@@ -54,7 +54,7 @@ const EndScreenElement = ({ qText, display }: ElementProps) => {
             <TextField
               id="outlined-basic"
               type="text"
-              value={text}
+              value={qText ? qText : text}
               onChange={handleChange}
               onBlur={handleBlur}
               sx={{
@@ -92,7 +92,7 @@ const EndScreenElement = ({ qText, display }: ElementProps) => {
                 fontSize: "clamp(16px, 2.2vw, 48px)",
               }}
             >
-              {text}
+              {qText ? qText : text}
             </Typography>
           )}
         </Box>

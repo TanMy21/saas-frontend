@@ -7,11 +7,7 @@ import ElementsPanel from "./Elements/ElementsPanel";
 const SurveyBuilderLeftSidebar = ({
   surveyID,
   setQuestionId,
-}: // setElementDetail,
-// setQIndex,
-// setElements,
-// elements,
-SurveyBuilderLeftSidebarProps) => {
+}: SurveyBuilderLeftSidebarProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
 
@@ -44,15 +40,9 @@ SurveyBuilderLeftSidebarProps) => {
           open={open}
           handleClick={handleClick}
           handleClose={handleClose}
-          // handleElementAdd={handleElementAdd}
         />
       </Grid>
-      <ElementsPanel
-        surveyID={surveyID!}
-        setQuestionId={setQuestionId}
-        // handleElementClick={handleElementClick}
-        // setElements={setElements}
-      />
+      <ElementsPanel surveyID={surveyID!} setQuestionId={setQuestionId} />
 
       <Divider sx={{ marginTop: "4px" }} />
     </Grid>

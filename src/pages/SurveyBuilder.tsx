@@ -1,16 +1,14 @@
-// import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Box, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useGetSurveyByIdQuery } from "../app/slices/surveysApiSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-// import { ElementType } from "../utils/types";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
 import SurveyBuilderCanvas from "../components/Surveys/SurveyBuilderCanvas";
 import SurveyBuilderCanvasMobile from "../components/Surveys/SurveyBuilderCanvasMobile";
 import SurveyShare from "../components/Surveys/SurveyShare";
-import { ErrorData } from "../utils/types";
+import CustomizeElement from "../components/Surveys/CustomizeElement";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
@@ -19,14 +17,10 @@ const SurveyBuilder = () => {
   const { workspaceId, workspaceName } = location.state || {};
   const isOpen = location.state?.openModal || false;
   const [surveyTitle, setSurveyTitle] = useState<string>("");
-  // const [elements, setElements] = useState<ElementType[]>([]);
-  // const [elementDetail, setElementDetail] = useState<ElementType>(elements[0]);
-  // const [qIndex, setQIndex] = useState<string>(" ");
   const [value, setValue] = useState("question");
-  // const [headerTabValue, setHeaderTabValue] = useState(0);
   const [questionId, setQuestionId] = useState<string | null>(null);
   const [display, setDisplay] = useState<string | null>("desktop");
-
+  const [tabValue, setTabValue] = useState<string | null>("create");
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -36,7 +30,13 @@ const SurveyBuilder = () => {
     display: string | null
   ) => {
     setDisplay(display);
-    // setHeaderTabValue(display);
+  };
+
+  const handleScreenChange = (
+    _event: React.SyntheticEvent,
+    tabValue: string | null
+  ) => {
+    setTabValue(tabValue);
   };
 
   const {
@@ -51,31 +51,26 @@ const SurveyBuilder = () => {
   });
 
   let content;
-
-  if (display === "desktop" || display === "create") {
+  if (tabValue === "share") {
+    content = <SurveyShare />;
+  } else if (display === "desktop") {
     content = (
       <SurveyBuilderCanvas
         survey={survey}
         questionId={questionId}
         display={display}
         handleLayoutChange={handleLayoutChange}
-        // elementDetail={elementDetail}
-        // qIndex={qIndex}
       />
     );
-  } else if (display === "mobile" || display === "create") {
+  } else if (display === "mobile") {
     content = (
       <SurveyBuilderCanvasMobile
         survey={survey}
         questionId={questionId}
         display={display}
         handleLayoutChange={handleLayoutChange}
-        // elementDetail={elementDetail}
-        // qIndex={qIndex}
       />
     );
-  } else if (display === "share") {
-    content = <SurveyShare />;
   } else {
     content = (
       <SurveyBuilderCanvas
@@ -83,17 +78,13 @@ const SurveyBuilder = () => {
         questionId={questionId}
         display={display}
         handleLayoutChange={handleLayoutChange}
-        // elementDetail={elementDetail}
-        // qIndex={qIndex}
       />
     );
   }
 
   useEffect(() => {
     if (isError) {
-      // navigate("/login");
-      const errorData = error as ErrorData;
-      console.log("Error: ", errorData);
+      navigate("/login");
     }
   }, [isError, error]);
 
@@ -121,13 +112,12 @@ const SurveyBuilder = () => {
             }}
           >
             <SurveyBuilderHeader
-              display={display}
-              // headerTabValue={headerTabValue}
+              tabValue={tabValue}
               survey={survey}
               workspaceId={workspaceId}
               workspaceName={workspaceName}
               title={surveyTitle}
-              handleLayoutChange={handleLayoutChange}
+              handleScreenChange={handleScreenChange}
             />
           </Grid>
           <CreateNewSurveyModal
@@ -166,11 +156,10 @@ const SurveyBuilder = () => {
             >
               <SurveyBuilderLeftSidebar
                 surveyID={surveyID}
-                // setElementDetail={setElementDetail}
                 setQuestionId={setQuestionId}
               />
             </Grid>
-            {/* </Box> */}
+
             {/* Main content area */}
             <Grid
               item
@@ -271,24 +260,21 @@ const SurveyBuilder = () => {
                   </Tabs>
                 </Box>
                 <Divider sx={{ marginTop: { lg: "-8%", xl: "-4%" } }} />
-
                 <Box
                   display={"flex"}
                   flexDirection={"column"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
                   sx={{
-                    paddingLeft: { md: "2%", lg: "8%", xl: "4%" },
-                    width: { md: "84%", lg: "88%", xl: "92%" },
+                    width: { md: "99%", lg: "99%", xl: "99%" },
                     height: "84vh",
                     marginTop: "2%",
+                    //border: "1px solid red",
                   }}
                 >
                   {value === "question" ? (
-                    <Typography variant="h4">Customize Question</Typography>
+                    <CustomizeElement />
                   ) : (
-                    <Typography variant="h4">
-                      Design Flow of Questions
+                    <Typography variant="h4" ml={4}>
+                      Flow
                     </Typography>
                   )}
                 </Box>
