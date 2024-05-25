@@ -32,7 +32,7 @@ const InstructionsElement = ({
   const [editingID, setEditingID] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
 
-  const marginLeftListItem = display === "mobile" ? "10%" : "10%";
+  // const marginLeftListItem = display === "mobile" ? "10%" : "10%";
 
   const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
     qID!
@@ -118,8 +118,13 @@ const InstructionsElement = ({
       maxWidth={"100%"}
       height={"100%"}
       zIndex={20}
+      // sx={{ border: "2px solid orange" }}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "12%" }}>
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        sx={{ width: "96%", marginTop: "12%" }}
+      >
         <ElementQuestionText
           qID={qID}
           qNO={qNO}
@@ -133,27 +138,27 @@ const InstructionsElement = ({
         flexDirection={"column"}
         justifyContent={"center"}
         mt={4}
-        sx={{ maxWidth: "100%" }}
+        sx={{ margin: "auto", width: "96%" }}
       >
         <FormControl>
           <List
             sx={{
-              minWidth: "400px",
-              maxWidth: "100%",
+              width: "96%",
               "--List-gap": "0.5rem",
               "--ListItem-radius": "4px",
               "--ListItemDecorator-size": "32px",
+              margin: "auto",
+              // border: "2px solid red",
             }}
           >
             {options.map((option, index) => (
               <ListItem
                 key={option.optionID}
                 sx={{
-                  minWidth: "70%",
-                  maxWidth: "100%",
+                  width: "96%",
                   display: "flex",
-                  marginLeft: { lg: "-4%", xl: "10%" },
-                  justifyContent: "space-between",
+                  margin: "auto",
+                  justifyContent: "space-around",
                   color: "black",
                   fontWeight: "bold",
                   fontSize: "24px",
@@ -167,10 +172,12 @@ const InstructionsElement = ({
                 <Box
                   display={"flex"}
                   flexDirection={"row"}
-                  justifyContent={"center"}
+                  justifyContent={"space-around"}
                   alignItems={"center"}
                   width={"96%"}
                   height={"96%"}
+                  // border={"2px solid darkred"}
+                  margin={"auto"}
                 >
                   <Box
                     display={"flex"}
@@ -179,11 +186,12 @@ const InstructionsElement = ({
                     alignItems={"center"}
                     mr={2}
                     sx={{
+                      width: "4%",
                       height: "100%",
+                      // border: "2px solid yellow",
                     }}
                   >
                     <Typography
-                      ml={2}
                       sx={{
                         display: "inline",
                         fontSize: "24px",
@@ -211,9 +219,10 @@ const InstructionsElement = ({
                     alignItems={"center"}
                     onDoubleClick={() => handleDoubleClick(option)}
                     sx={{
-                      width: "70%",
+                      width: "96%",
                       height: "100%",
                       padding: "4px",
+                      // border: "2px solid darkblue",
                     }}
                   >
                     {editingID === option.optionID ? (
@@ -248,7 +257,12 @@ const InstructionsElement = ({
                       />
                     ) : (
                       <Typography
-                        sx={{ whiteSpace: "normal", fontSize: "20px" }}
+                        sx={{
+                          whiteSpace: "wrap",
+                          fontSize: "20px",
+                          textAlign: "justify",
+                          lineHeight: "1",
+                        }}
                         // onClick={handleClick}
                       >
                         {option.text}

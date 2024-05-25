@@ -31,7 +31,13 @@ import {
 } from "../../../app/slices/optionApiSlice";
 import { toast } from "react-toastify";
 
-const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
+const MediaElement = ({
+  qID,
+  qNO,
+  qText,
+  qDescription,
+  display,
+}: ElementProps) => {
   const [open, setOpen] = useState(false);
   const [isHovered, setIsHovered] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -219,11 +225,16 @@ const MediaElement = ({ qID, qNO, qText, display }: ElementProps) => {
       minHeight={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "4%" }}>
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        sx={{ width: "98%", marginTop: "4%" }}
+      >
         <ElementQuestionText
           qID={qID}
           qNO={qNO}
           qText={qText}
+          qDescription={qDescription}
           display={display}
         />
       </Box>

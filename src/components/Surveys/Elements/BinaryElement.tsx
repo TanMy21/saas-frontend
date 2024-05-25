@@ -2,7 +2,13 @@ import { Box, Button } from "@mui/material";
 import { ElementProps } from "../../../utils/types";
 import ElementQuestionText from "./ElementQuestionText";
 
-const BinaryElement = ({ qID, qNO, qText, display }: ElementProps) => {
+const BinaryElement = ({
+  qID,
+  qNO,
+  qText,
+  qDescription,
+  display,
+}: ElementProps) => {
   const widthBtn = display === "mobile" ? "80px" : "100px";
   const heightBtn = display === "mobile" ? "80px" : "100px";
 
@@ -17,11 +23,12 @@ const BinaryElement = ({ qID, qNO, qText, display }: ElementProps) => {
       height={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "12%" }}>
+      <Box display={"flex"} flexDirection={"row"} sx={{ width: "98%", marginTop: "12%" }}>
         <ElementQuestionText
           qID={qID}
           qNO={qNO}
           qText={qText}
+          qDescription={qDescription}
           display={display}
         />
       </Box>

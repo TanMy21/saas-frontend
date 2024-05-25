@@ -2,27 +2,33 @@ import { useState } from "react";
 import { Box, TextField, Typography } from "@mui/material";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { ElementProps } from "../../../utils/types";
-import { useUpdateElementTextMutation } from "../../../app/slices/elementApiSlice";
+import {
+  useUpdateElementDescriptionMutation,
+  useUpdateElementTextMutation,
+} from "../../../app/slices/elementApiSlice";
 
 const ElementQuestionText = ({
   qID,
   qNO,
   qText,
+  qDescription,
   qType,
   display,
 }: ElementProps) => {
   const [text, setText] = useState(qText);
+  const [description, setDescription] = useState(qDescription);
   const [isEditing, setIsEditing] = useState(false);
 
-  const qFontSize = display === "mobile" ? "20px" : "36px";
+  const qFontSize = display === "mobile" ? "28px" : "36px";
   const descritptionFontSize = display === "mobile" ? "16px" : "20px";
-  const qWhiteSpace = display === "mobile" ? "normal" : "normal";
+  const qWhiteSpace = display === "mobile" ? "0.1em" : "normal";
 
   const nonOrderableTypes = ["INSTRUCTIONS", "EMAIL_CONTACT"];
 
   const isNonOrderableType = nonOrderableTypes.includes(qType!);
 
   const [updateElementText] = useUpdateElementTextMutation();
+  const [updateElementDescription] = useUpdateElementDescriptionMutation();
 
   const handleDoubleClick = () => {
     setIsEditing(true);
@@ -32,8 +38,19 @@ const ElementQuestionText = ({
     setText(event.target.value);
   };
 
+  const handleChangeDescription = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setDescription(event.target.value);
+  };
+
   const handleBlur = () => {
     updateElementText({ questionID: qID, text });
+    setIsEditing(false);
+  };
+
+  const handleBlurDescription = () => {
+    updateElementDescription({ questionID: qID, description });
     setIsEditing(false);
   };
 
@@ -44,19 +61,23 @@ const ElementQuestionText = ({
         flexDirection={"column"}
         justifyContent={"center"}
         sx={{
-          minWidth: "70%",
-          maxWidth: "100%",
+          margin: "auto",
+          width: "96%",
           padding: "1%",
+          // border: "2px solid red",
         }}
       >
         <Box
           display={"flex"}
           flexDirection={"row"}
-          // margin={"auto"}
+          justifyContent={"center"}
+          alignContent={"center"}
+          alignItems={"center"}
           sx={{
-            minWidth: "70%",
-            maxWidth: "96%",
+            margin: "auto",
+            width: "96%",
             padding: "2%",
+            // border: "2px solid green",
           }}
         >
           <Box
@@ -65,17 +86,19 @@ const ElementQuestionText = ({
             justifyContent={"center"}
             alignItems={"center"}
             mr={1}
-            sx={{ width: "auto" }}
+            sx={{ width: "fit-content", }}
           >
-            <Typography
-              variant="h4"
-              fontWeight={"bold"}
-              color={"black"}
-              mt={1}
-              sx={{ fontSize: "24px" }}
-            >
-              {qNO}
-            </Typography>
+            {isNonOrderableType ? null : (
+              <Typography
+                variant="h4"
+                fontWeight={"bold"}
+                color={"black"}
+                mt={1}
+                sx={{ fontSize: "24px" }}
+              >
+                {qNO}
+              </Typography>
+            )}
           </Box>
           <Box
             display={"flex"}
@@ -83,6 +106,7 @@ const ElementQuestionText = ({
             justifyContent={"center"}
             alignItems={"center"}
             mr={2}
+            // sx={{ border: "2px solid green" }}
           >
             {isNonOrderableType ? null : (
               <Typography variant="h6" mt={1}>
@@ -96,6 +120,7 @@ const ElementQuestionText = ({
             justifyContent={"center"}
             alignItems={"center"}
             onDoubleClick={handleDoubleClick}
+            // sx={{ border: "2px solid red" }}
           >
             {isEditing ? (
               <TextField
@@ -137,6 +162,7 @@ const ElementQuestionText = ({
                   whiteSpace: qWhiteSpace,
                   width: "100%",
                   fontSize: qFontSize,
+                  textAlign: "justify",
                 }}
               >
                 {qText}
@@ -144,21 +170,47 @@ const ElementQuestionText = ({
             )}
           </Box>
         </Box>
-        <Box sx={{ marginLeft: "20%" }}>
-          <Typography
-            fontStyle={"italic"}
-            fontFamily={
-              "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
-            }
-            sx={{
-              whiteSpace: qWhiteSpace,
-              width: "100%",
-              fontSize: descritptionFontSize,
-              color: "#888888",
-            }}
-          >
-            {"Description (optional)"}
-          </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            margin: "auto",
+            // border: "2px solid black",
+          }}
+        >
+          <Box onDoubleClick={handleDoubleClick}>
+            {isEditing ? (
+              <TextField
+                id="outlined-basic"
+                variant="outlined"
+                type="text"
+                value={description}
+                onChange={handleChangeDescription}
+                onBlur={handleBlurDescription}
+                sx={{
+                  backgroundColor: "transparent",
+                }}
+              />
+            ) : (
+              <Typography
+                fontStyle={"italic"}
+                fontFamily={
+                  "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
+                }
+                sx={{
+                  whiteSpace: qWhiteSpace,
+                  width: "fit-content",
+                  fontSize: descritptionFontSize,
+                  color: "#888888",
+                }}
+              >
+                {description}
+              </Typography>
+            )}
+          </Box>
         </Box>
       </Box>
     </>

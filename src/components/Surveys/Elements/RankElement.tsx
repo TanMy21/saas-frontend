@@ -19,14 +19,22 @@ import {
 } from "../../../app/slices/optionApiSlice";
 import { toast } from "react-toastify";
 
-const RankElement = ({ qID, qNO, qText, display }: ElementProps) => {
+const RankElement = ({
+  qID,
+  qNO,
+  qText,
+  qDescription,
+  display,
+}: ElementProps) => {
   const [editingID, setEditingID] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
+  const [rankNumber, setRankNumber] = useState<number[]>([]);
 
   const iconRight = display === "mobile" ? "-12%" : "-8%";
 
-  const { data: options = [] as OptionType[] } =
-    useGetOptionsOfQuestionQuery(qID);
+  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
+    qID!
+  );
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
@@ -86,17 +94,17 @@ const RankElement = ({ qID, qNO, qText, display }: ElementProps) => {
   };
 
   const onDragEnd = (result: DropResult) => {
-    const { /*source, */ destination } = result;
+    const { source, destination } = result;
 
     if (!destination) {
       return;
     }
 
-    // const newRanks = Array.from(rankNumber);
-    // const [removed] = newRanks.splice(source.index, 1);
-    // newRanks.splice(destination.index, 0, removed);
+    const newRanks = Array.from(rankNumber);
+    const [removed] = newRanks.splice(source.index, 1);
+    newRanks.splice(destination.index, 0, removed);
 
-    // setRankNumber(newRanks);
+    setRankNumber(newRanks);
   };
 
   useEffect(() => {
@@ -127,11 +135,12 @@ const RankElement = ({ qID, qNO, qText, display }: ElementProps) => {
       height={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "8%" }}>
+      <Box display={"flex"} flexDirection={"row"} sx={{ width: "98%", marginTop: "8%" }}>
         <ElementQuestionText
           qID={qID}
           qNO={qNO}
           qText={qText}
+          qDescription={qDescription}
           display={display}
         />
       </Box>
@@ -182,7 +191,7 @@ const RankElement = ({ qID, qNO, qText, display }: ElementProps) => {
                       width={"80%"}
                       sx={{
                         display: "flex",
-                        marginBottom: "2%",
+                        marginBottom: "2px",
                         backgroundColor: snapshot.isDragging
                           ? "action.hover"
                           : "white",
@@ -193,7 +202,7 @@ const RankElement = ({ qID, qNO, qText, display }: ElementProps) => {
                         key={option.order}
                         sx={{
                           display: "flex",
-                          marginBottom: "4%",
+                          marginBottom: "2%",
                           width: "clamp(100px, 80%, 200px)",
                           height: "100%",
                           border: "2px solid #4880DE",
@@ -223,7 +232,7 @@ const RankElement = ({ qID, qNO, qText, display }: ElementProps) => {
                         <Box
                           display={"flex"}
                           flexDirection={"row"}
-                          justifyContent={"center"}
+                          justifyContent={"flex-start"}
                           alignItems={"center"}
                           width={"100%"}
                           height={"100%"}

@@ -18,8 +18,9 @@ const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
     setText(event.target.value);
   };
 
-  const marginTopTextXl = display === "mobile" ? "52%" : "32%";
-  const marginTopTextLg = display === "mobile" ? "64%" : "36%";
+  const marginTopTextXl = display === "mobile" ? "52%" : "28%";
+  const marginTopTextLg = display === "mobile" ? "64%" : "28%";
+  const fontSizeXL = display === "mobile" ? "1.6rem" : "2.8rem";
 
   const handleBlur = () => {
     updateElementText({ questionID: qID, text });
@@ -33,27 +34,33 @@ const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
       justifyContent={"start"}
       alignItems={"center"}
       margin={"auto"}
-      width={"70%"}
-      height={"100%"}
+      width={"84%"}
+      height={"68vh"}
       zIndex={20}
+      // border={"2px solid red"}
     >
       <Box
         display={"flex"}
         flexDirection={"row"}
         sx={{
+          width: "100%",
           marginTop: {
             md: marginTopTextXl,
             lg: marginTopTextLg,
             xl: marginTopTextLg,
           },
         }}
+        // border={"2px solid blue"}
       >
         <Box
           display={"flex"}
           flexDirection={"column"}
           justifyContent={"center"}
           alignItems={"center"}
+          width={"98%"}
+          margin={"auto"}
           onDoubleClick={handleDoubleClick}
+          // border={"2px solid black"}
         >
           {isEditing ? (
             <TextField
@@ -92,9 +99,12 @@ const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
                 "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
               }
               sx={{
-                whiteSpace: "nowrap",
+                whiteSpace: "wrap",
                 width: "100%",
-                fontSize: "clamp(16px, 2.2vw, 48px)",
+                textAlign: "justify",
+                lineHeight: "1",
+                fontSize: fontSizeXL,
+                wordSpacing: "1px",
               }}
             >
               {qText ? qText : text}
@@ -102,7 +112,7 @@ const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
           )}
         </Box>
       </Box>
-      <Box mt={2}>
+      <Box mt={4}>
         <Button
           sx={{
             backgroundColor: "#0445AF",

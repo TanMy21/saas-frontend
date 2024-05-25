@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { ElementProps } from "../../../utils/types";
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 
 const EndScreenElement = ({ qText, display }: ElementProps) => {
   const [text, setText] = useState("Say Bye!");
   const [isEditing, setIsEditing] = useState(false);
 
-  const marginTopTextXl = display === "mobile" ? "52%" : "32%";
-  const marginTopTextLg = display === "mobile" ? "64%" : "36%";
+  const marginTopText = display === "mobile" ? "80%" : "28%";
+  const fontSizeXL = display === "mobile" ? "1.6rem" : "2.8rem";
 
   const handleDoubleClick = () => {
     setIsEditing(true);
@@ -25,22 +25,20 @@ const EndScreenElement = ({ qText, display }: ElementProps) => {
     <Box
       display={"flex"}
       flexDirection={"column"}
-      justifyContent={"start"}
+      justifyContent={"center"}
       alignItems={"center"}
       margin={"auto"}
-      width={"70%"}
+      width={"84%"}
       height={"100%"}
       zIndex={20}
     >
       <Box
         display={"flex"}
         flexDirection={"row"}
+        justifyContent={"center"}
+        width={"100%"}
         sx={{
-          marginTop: {
-            md: marginTopTextXl,
-            lg: marginTopTextLg,
-            xl: marginTopTextLg,
-          },
+          marginTop: marginTopText,
         }}
       >
         <Box
@@ -48,6 +46,8 @@ const EndScreenElement = ({ qText, display }: ElementProps) => {
           flexDirection={"column"}
           justifyContent={"center"}
           alignItems={"center"}
+          width={"72%"}
+          margin={"auto"}
           onDoubleClick={handleDoubleClick}
         >
           {isEditing ? (
@@ -87,15 +87,35 @@ const EndScreenElement = ({ qText, display }: ElementProps) => {
                 "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
               }
               sx={{
-                whiteSpace: "nowrap",
+                whiteSpace: "wrap",
                 width: "100%",
-                fontSize: "clamp(16px, 2.2vw, 48px)",
+                textAlign: "justify",
+                lineHeight: "1",
+                fontSize: fontSizeXL,
+                wordSpacing: "1px",
               }}
             >
               {qText ? qText : text}
             </Typography>
           )}
         </Box>
+      </Box>
+      <Box mt={4}>
+        <Button
+          sx={{
+            backgroundColor: "#0445AF",
+            mr: 2,
+            mb: 4,
+            textTransform: "capitalize",
+            "&:hover": {
+              backgroundColor: "#0445AF",
+            },
+          }}
+          variant="contained"
+          size="large"
+        >
+          Submit
+        </Button>
       </Box>
     </Box>
   );

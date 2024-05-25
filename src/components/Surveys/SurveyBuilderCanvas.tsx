@@ -7,14 +7,14 @@ import { elementComponents } from "../../utils/elementsConfig";
 const SurveyBuilderCanvas = ({
   questionId,
   display,
-  handleLayoutChange,
+  // handleLayoutChange,
 }: SurveyBuilderCanvasProps) => {
   const { data: questions } = useGetElementByIDQuery(questionId, {
     skip: !questionId,
   });
 
   const QuestionComponent =
-    /*selectedQuestion*/
+    // selectedQuestion
     /*?*/ elementComponents[questions?.type as QuestionTypeKey];
   // : SurveyWelcomeElement;
 
@@ -22,26 +22,36 @@ const SurveyBuilderCanvas = ({
     <Box display={"flex"} flexDirection={"column"}>
       <Box
         margin={"auto"}
-        minWidth={"98%"}
-        maxWidth={"98%"}
-        minHeight={"75vh"}
+        width={"96%"}
+        minHeight={"72vh"}
         borderRadius={"12px"}
         bgcolor={"#FFFFFF"}
-        mt={"6%"}
+        mt={"2%"}
+        p={2}
+        sx={{ transition: "minWidth 1s ease-in-out , opacity 1s ease-in-out" }}
       >
-        {/* Element view */}
-        {questions?.type ? (
-          <QuestionComponent
-            qID={questions?.questionID}
-            qNO={questions?.order?.toString()}
-            qText={questions?.text}
-            qType={questions?.type}
-          />
-        ) : (
-          <SurveyWelcomeElement display={display} />
-        )}
+        <Box
+          sx={{
+            margin: "auto",
+            width: "96%",
+            height: "100%",
+          }}
+        >
+          {/* Element view */}
+          {questions?.type ? (
+            <QuestionComponent
+              qID={questions?.questionID}
+              qNO={questions?.order?.toString()}
+              qText={questions?.text}
+              qDescription={questions?.description}
+              qType={questions?.type}
+            />
+          ) : (
+            <SurveyWelcomeElement display={display} />
+          )}
+        </Box>
       </Box>
-      <Box mt={4} mb={2} display={"flex"} justifyContent={"center"}>
+      {/* <Box mt={4} mb={2} display={"flex"} justifyContent={"center"}>
         <ToggleButtonGroup
           color="primary"
           value={display}
@@ -88,7 +98,7 @@ const SurveyBuilderCanvas = ({
             Desktop
           </ToggleButton>
         </ToggleButtonGroup>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

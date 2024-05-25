@@ -60,7 +60,25 @@ const AddElementMenu = ({
 
   const handleScreenElementAdd = async (type: string) => {
     try {
-      await createScreenElement({ surveyID, type });
+      let order;
+
+      if (type === "WELCOME_SCREEN") {
+        order = -2;
+      }
+
+      if (type === "INSTRUCTIONS") {
+        order = -1;
+      }
+
+      if (type === "EMAIL_CONTACT") {
+        order = 0;
+      }
+
+      if (type === "END_SCREEN") {
+        order = 9999;
+      }
+
+      await createScreenElement({ surveyID, type, order });
     } catch (error) {
       console.error(error);
     }
@@ -68,6 +86,10 @@ const AddElementMenu = ({
 
   const containsWelcome = elements?.some(
     (element) => element.type === "WELCOME_SCREEN"
+  );
+
+  const containsInstruction = elements?.some(
+    (element) => element.type === "INSTRUCTIONS"
   );
 
   useEffect(() => {
@@ -232,7 +254,10 @@ const AddElementMenu = ({
                 </Typography>
               </Box>
             </MenuItem>
-            <MenuItem onClick={() => handleScreenElementAdd("INSTRUCTIONS")}>
+            <MenuItem
+              onClick={() => handleScreenElementAdd("INSTRUCTIONS")}
+              disabled={containsInstruction}
+            >
               <Box display={"flex"} flexDirection={"row"} alignItems={"center"}>
                 <Typography sx={{ fontSize: "24px", color: "#f7c435" }} mt={1}>
                   {elementIcons.INSTRUCTIONS}

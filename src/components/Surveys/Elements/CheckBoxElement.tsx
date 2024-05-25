@@ -13,7 +13,13 @@ import {
 } from "../../../app/slices/optionApiSlice";
 import { toast } from "react-toastify";
 
-const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
+const CheckBoxElement = ({
+  qID,
+  qNO,
+  qText,
+  qDescription,
+  display,
+}: ElementProps) => {
   const [editingID, setEditingID] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
 
@@ -101,7 +107,7 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
       justifyContent={"start"}
       alignItems={"center"}
       margin={"auto"}
-      width={"70%"}
+      width={"96%"}
       height={"100%"}
       zIndex={20}
     >
@@ -110,6 +116,7 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
           qID={qID}
           qNO={qNO}
           qText={qText}
+          qDescription={qDescription}
           display={display}
         />
       </Box>
@@ -117,7 +124,12 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
         display={"flex"}
         flexDirection={"column"}
         mt={4}
-        sx={{ minWidth: "36%", maxWidth: "96%", border: "2px solid red" }}
+        sx={{
+          width: "fit-content",
+          maxWidth: "96%",
+          padding: "2%",
+          // border: "2px solid red",
+        }}
       >
         {options.map((option, index) => (
           <Box
@@ -129,8 +141,7 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
               alignItems: "center",
               marginBottom: "12px",
               padding: "4px",
-              minWidth: "200px",
-              maxWidth: "98%",
+              width: "100%",
               height: "36px",
               backgroundColor: "#E5ECF7",
               borderRadius: "4px",
@@ -153,15 +164,16 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
             >
               <Checkbox key={option.optionID} onClick={handleClick} />
             </Box>
-            <Box sx={{ minWidth: "70%", maxWidth: "96%", height: "28px" }}>
+            <Box sx={{ width: "100%", height: "28px" }}>
               <Box
                 display={"flex"}
                 flexDirection={"row"}
+                justifyContent={"start"}
                 alignItems={"center"}
-                maxWidth={"100%"}
+                width={"100%"}
                 height={"100%"}
                 onDoubleClick={() => handleDoubleClick(option)}
-                sx={{ flexGrow: 1, cursor: "pointer" }}
+                sx={{ flex: "1 1 auto", flexGrow: 1, cursor: "pointer" }}
               >
                 {editingID === option.optionID ? (
                   <TextField
@@ -185,6 +197,7 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
                       backgroundColor: "transparent",
                       width: "100%",
                       height: "100%",
+                      marginRight: "4%",
                       "& .MuiOutlinedInput-root": {
                         height: "100%",
                         "& fieldset": {
@@ -194,18 +207,29 @@ const CheckBoxElement = ({ qID, qNO, qText, display }: ElementProps) => {
                     }}
                   />
                 ) : (
-                  <Typography
-                    ml={1}
+                  <Box
                     sx={{
-                      fontSize: "16px",
-                      whiteSpace: "nowrap",
+                      display: "flex",
+                      alignItems: "center",
+                      width: "100%",
+                      height: "auto",
+                      padding: "4%",
                       overflow: "hidden",
-                      textOverflow: "clip",
+                      // border: "2px solid black",
                     }}
-                    onClick={handleClick}
                   >
-                    {option.text}
-                  </Typography>
+                    <Typography
+                      // ml={1}
+                      sx={{
+                        fontSize: "16px",
+                        whiteSpace: "wrap",
+                        marginRight: "2%",
+                      }}
+                      onClick={handleClick}
+                    >
+                      {option.text}
+                    </Typography>
+                  </Box>
                 )}
               </Box>
             </Box>

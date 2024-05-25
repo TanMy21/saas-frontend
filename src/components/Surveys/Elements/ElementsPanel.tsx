@@ -4,7 +4,7 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { Box, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import { Element, ElementsPanelProps, IconMapping } from "../../../utils/types";
 import { elementIcons } from "../../../utils/elementsConfig";
 import ElementDropDownMenu from "./ElementDropDownMenu";
@@ -139,6 +139,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                             display={"flex"}
                             alignItems={"center"}
                             flexDirection={"row"}
+                            gap={"4px"}
                             width={"100%"}
                             height={"100%"}
                           >
@@ -146,6 +147,8 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                               display={"flex"}
                               justifyContent={"center"}
                               alignItems={"center"}
+                              flexBasis={"auto"}
+                              flexGrow={1}
                               ml={1}
                               sx={{
                                 width: "10%",
@@ -172,14 +175,12 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                                   display={"flex"}
                                   justifyContent={"center"}
                                   alignItems={"center"}
+                                  flexBasis={"auto"}
+                                  flexGrow={1}
                                   sx={{
                                     width: "10%",
                                     height: "100%",
-                                    marginLeft: {
-                                      md: "12%",
-                                      lg: "8%",
-                                      xl: "4%",
-                                    },
+
                                     marginTop: "1%",
                                     "&:hover": {
                                       cursor: "pointer",
@@ -199,33 +200,38 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
 
                             <Box
                               display={"flex"}
-                              justifyContent={"center"}
+                              justifyContent={"flex-start"}
                               alignItems={"center"}
+                              flexBasis={"64%"}
+                              flexGrow={0}
+                              maxWidth={"80%"}
                               sx={{
-                                minWidth: { md: "50%", lg: "52%", xl: "70%" },
+                                minWidth: { md: "50%", lg: "52%", xl: "64%" },
                                 height: "100%",
                                 "&:hover": {
                                   cursor: "pointer",
                                 },
                               }}
                             >
-                              <Typography
-                                ml={1}
-                                sx={{
-                                  color: "black",
-                                  fontSize: "14px",
-                                  whiteSpace: "nowrap",
-                                  textTransform: "capitalize",
-                                  textOverflow: "clip",
-                                  overflow: "hidden",
-                                  width: "100%",
-                                  "&:hover": {
-                                    cursor: "pointer",
-                                  },
-                                }}
-                              >
-                                {element.text}
-                              </Typography>
+                              <Tooltip title={element.text} placement="top">
+                                <Typography
+                                  ml={1}
+                                  sx={{
+                                    color: "black",
+                                    fontSize: "14px",
+                                    whiteSpace: "nowrap",
+                                    textTransform: "capitalize",
+                                    textOverflow: "clip",
+                                    overflow: "hidden",
+                                    width: "96%",
+                                    "&:hover": {
+                                      cursor: "pointer",
+                                    },
+                                  }}
+                                >
+                                  {element.text}
+                                </Typography>
+                              </Tooltip>
                             </Box>
                             <Box
                               sx={{
@@ -233,7 +239,9 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                                 flexDirection: "row",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                width: "12%",
+                                flexBasis: "auto",
+                                flexGrow: 1,
+                                width: "fit-content",
                                 height: "80%",
                                 color: "#A4A4A4",
                               }}

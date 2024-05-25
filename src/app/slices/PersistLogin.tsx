@@ -49,7 +49,7 @@ const PersistLogin = () => {
   let content;
   if (!persist) {
     // persist: no
-    console.log("no persist");
+    // console.log("no persist");
     content = <Outlet />;
   } else if (isLoading) {
     //persist: yes, token: no

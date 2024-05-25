@@ -3,13 +3,18 @@ import { ElementProps } from "../../../utils/types";
 import { BiCheck } from "react-icons/bi";
 import ElementQuestionText from "./ElementQuestionText";
 
-const NumberElement = ({ qID, qNO, qText, display }: ElementProps) => {
-  const marginLeftBtn = display === "mobile" ? "12%" : "25%";
+const NumberElement = ({
+  qID,
+  qNO,
+  qText,
+  qDescription,
+  display,
+}: ElementProps) => {
+  const marginTop = display === "mobile" ? "20%" : "8%";
+  const inputContainerWidth = display === "mobile" ? "96%" : "56%";
   const marginTopBtn = display === "mobile" ? "2%" : "1%";
   const textFieldWidth = display === "mobile" ? "100%" : "80%";
-  const inputWidth = display === "mobile" ? "80%" : "70%";
   const textFieldMarginLeft = display === "mobile" ? "4%" : "0%";
-  const textFieldPaddingLeft = display === "mobile" ? "2%" : "24%";
   const textFieldFontSize = display === "mobile" ? "16px" : "36px";
 
   return (
@@ -23,71 +28,84 @@ const NumberElement = ({ qID, qNO, qText, display }: ElementProps) => {
       height={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "16%" }}>
+      <Box display={"flex"} flexDirection={"row"} sx={{  width: "98%", marginTop: marginTop }}>
         <ElementQuestionText
           qID={qID}
           qNO={qNO}
           qText={qText}
+          qDescription={qDescription}
           display={display}
         />
       </Box>
       <Box
         display={"flex"}
         flexDirection={"column"}
-        mt={4}
+        justifyContent={"center"}
+        alignItems={"center"}
+        mt={1}
         sx={{ width: "98%", padding: "2%" }}
       >
         <Box
           sx={{
-            width: inputWidth,
-            margin: textFieldMarginLeft,
-            padding: "2%",
-            paddingLeft: textFieldPaddingLeft,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "start",
+            width: inputContainerWidth,
+            height: "96%",
           }}
         >
-          <TextField
-            id="standard-multiline-flexible"
-            placeholder="Type your answer here..."
-            variant="standard"
+          <Box
             sx={{
-              width: textFieldWidth,
-              "& .MuiInputBase-input": {
-                whiteSpace: "noWrap",
-                height: "50px",
-                fontSize: textFieldFontSize,
-                padding: "0px 8px 0px",
-                lineHeight: 1,
-              },
-              "& .MuiInputBase-input::placeholder": {
-                color: "#BDCEEA",
-                opacity: 1,
-              },
-              "& .MuiInput-underline:before": {
-                borderBottomColor: "#BDCEEA",
-              },
-              "& .MuiInput-underline:after": {
-                borderBottomColor: "blue",
-              },
+              width: "90%",
+              margin: textFieldMarginLeft,
+              padding: "2%",
             }}
-          />
-        </Box>
-        <Box>
-          <Button
-            sx={{
-              backgroundColor: "#0445AF",
-              marginTop: marginTopBtn,
-              marginLeft: marginLeftBtn,
-              textTransform: "capitalize",
-              "&:hover": {
-                backgroundColor: "#0445AF",
-              },
-            }}
-            variant="contained"
-            size="large"
-            endIcon={<BiCheck />}
           >
-            Ok
-          </Button>
+            <TextField
+              id="standard-multiline-flexible"
+              placeholder="Type your answer here..."
+              variant="standard"
+              sx={{
+                width: textFieldWidth,
+                "& .MuiInputBase-input": {
+                  whiteSpace: "noWrap",
+                  height: "52px",
+                  fontSize: textFieldFontSize,
+                  padding: "0px 8px 0px",
+                  lineHeight: 1,
+                },
+                "& .MuiInputBase-input::placeholder": {
+                  color: "#BDCEEA",
+                  opacity: 1,
+                },
+                "& .MuiInput-underline:before": {
+                  borderBottomColor: "#BDCEEA",
+                },
+                "& .MuiInput-underline:after": {
+                  borderBottomColor: "blue",
+                },
+              }}
+            />
+          </Box>
+          <Box>
+            <Button
+              sx={{
+                backgroundColor: "#0445AF",
+                marginTop: marginTopBtn,
+                marginLeft: "16%",
+                textTransform: "capitalize",
+                "&:hover": {
+                  backgroundColor: "#0445AF",
+                },
+              }}
+              variant="contained"
+              size="large"
+              endIcon={<BiCheck />}
+            >
+              Ok
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

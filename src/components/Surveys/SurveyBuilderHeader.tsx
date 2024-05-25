@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   Box,
-  Button,
-  Divider,
   Grid,
   Tab,
   Tabs,
@@ -13,7 +11,6 @@ import {
 import AppBar from "@mui/material/AppBar";
 import HeaderIconMenu from "../HeaderIconMenu";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import ShareIcon from "@mui/icons-material/Share";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { SurveyBuilderHeaderProps } from "../../utils/types";
 import { NavLink } from "react-router-dom";
@@ -49,55 +46,69 @@ const SurveyBuilderHeader = ({
     >
       <Toolbar disableGutters>
         <Grid container>
-          <Grid item xs={3} sx={{ width: "16%", height: "6vh" }}>
-            <Typography
+          <Grid item xs={3} sx={{ padding: "0%", width: "16%", height: "6vh" }}>
+            <Box
               sx={{
                 display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
                 alignItems: "center",
-                flexGrow: 0,
-                fontSize: "16px",
-                color: "black",
-                ml: 4,
-                marginTop: { lg: "6%", xl: "4%" },
+                top: "0px",
+                marginTop: "0px",
+                width: "100%",
+                height: "100%",
+                // border: "2px solid black",
               }}
             >
-              <NavLink
-                to={`/dash/w/${workspaceId}`}
-                style={({ isActive /*isPending, isTransitioning*/ }) => {
-                  return {
-                    display: "block",
-                    color: isActive ? "#262626" : "#262666",
-                    lineHeight: "20px",
-                    textDecoration: "none",
-                  };
+              <Typography
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexGrow: 0,
+                  fontSize: "16px",
+                  color: "black",
+                  ml: { lg: 8, xl: 0 },
+                  marginTop: { lg: "4%", xl: "0%" },
                 }}
               >
-                <Typography
-                  sx={{
-                    color: "#898989",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "clip",
-                    maxWidth: "100%",
+                <NavLink
+                  to={`/dash/w/${workspaceId}`}
+                  style={({ isActive /*isPending, isTransitioning*/ }) => {
+                    return {
+                      display: "block",
+                      color: isActive ? "#262626" : "#262666",
+                      lineHeight: "20px",
+                      textDecoration: "none",
+                    };
                   }}
                 >
-                  {workspaceName} /
-                </Typography>
-              </NavLink>
-              <Tooltip title={survey?.title}>
-                <Typography
-                  sx={{
-                    color: "#262666",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "clip",
-                    width: { md: "64%", lg: "100%", xl: "98%" },
-                  }}
-                >
-                  &nbsp; {surveyTitle ? surveyTitle : survey?.title}
-                </Typography>
-              </Tooltip>
-            </Typography>
+                  <Typography
+                    sx={{
+                      color: "#898989",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "clip",
+                      maxWidth: "100%",
+                    }}
+                  >
+                    {workspaceName} /
+                  </Typography>
+                </NavLink>
+                <Tooltip title={survey?.title}>
+                  <Typography
+                    sx={{
+                      color: "#262666",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "clip",
+                      width: { md: "64%", lg: "100%", xl: "98%" },
+                    }}
+                  >
+                    &nbsp; {surveyTitle ? surveyTitle : survey?.title}
+                  </Typography>
+                </Tooltip>
+              </Typography>
+            </Box>
           </Grid>
           {/* Tabs centered in the middle */}
           <Grid
@@ -165,67 +176,39 @@ const SurveyBuilderHeader = ({
                   },
                 }}
               />
-              <Tab
-                icon={<ShareIcon />}
-                label="Share"
-                value="share"
-                sx={{
-                  fontWeight: 600,
-                  color: "#1ED760",
-                  "& .MuiTab-iconWrapper": {
-                    color: "#1ED760",
-                  },
-                }}
-              />
             </Tabs>
           </Grid>
           <Grid
             item
             xs={3}
             sx={{
-              marginTop: -2,
-              width: "20%",
+              // marginTop: -2,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              // width: "10%",
               height: "6vh",
+              // border: "2px solid black",
             }}
           >
             <Box
-              display={"flex"}
-              justifyContent={"space-around"}
-              sx={{ width: "96%", marginTop: { lg: "8%", xl: "4%" } }}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "end",
+                alignItems: "center",
+                width: "96%",
+                // border: "2px solid blue",
+                marginTop: { lg: "4%", xl: "0%" },
+              }}
             >
               <Box
                 display={"flex"}
                 flexDirection={"row"}
                 justifyContent={"end"}
-                sx={{ width: "80%" }}
-              >
-                <Button
-                  sx={{
-                    backgroundColor: "#44546A",
-                    marginRight: "4%",
-                    marginTop: "1%",
-                    width: "30%",
-                    height: "80%",
-                    textTransform: "capitalize",
-                  }}
-                  variant="contained"
-                  size="small"
-                >
-                  Publish
-                </Button>
-              </Box>
-              <Divider
-                orientation="vertical"
-                variant="middle"
-                flexItem
-                color="#3C3C3C"
-              />
-              <Box
-                display={"flex"}
-                flexDirection={"row"}
-                justifyContent={"end"}
                 sx={{
-                  width: "20%",
+                  width: "4%",
+                  // border: "2px solid red",
                 }}
               >
                 <HeaderIconMenu />

@@ -7,8 +7,8 @@ import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
 import SurveyBuilderCanvas from "../components/Surveys/SurveyBuilderCanvas";
 import SurveyBuilderCanvasMobile from "../components/Surveys/SurveyBuilderCanvasMobile";
-import SurveyShare from "../components/Surveys/SurveyShare";
 import CustomizeElement from "../components/Surveys/CustomizeElement";
+import SurveyBuilderIsland from "../components/Surveys/SurveyBuilderIsland";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
@@ -23,13 +23,6 @@ const SurveyBuilder = () => {
   const [tabValue, setTabValue] = useState<string | null>("create");
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
-  };
-
-  const handleLayoutChange = (
-    _event: React.SyntheticEvent,
-    display: string | null
-  ) => {
-    setDisplay(display);
   };
 
   const handleScreenChange = (
@@ -52,14 +45,14 @@ const SurveyBuilder = () => {
 
   let content;
   if (tabValue === "share") {
-    content = <SurveyShare />;
+    navigate(`/s/share/${surveyID}`);
   } else if (display === "desktop") {
     content = (
       <SurveyBuilderCanvas
         survey={survey}
         questionId={questionId}
         display={display}
-        handleLayoutChange={handleLayoutChange}
+        // handleLayoutChange={handleLayoutChange}
       />
     );
   } else if (display === "mobile") {
@@ -68,7 +61,7 @@ const SurveyBuilder = () => {
         survey={survey}
         questionId={questionId}
         display={display}
-        handleLayoutChange={handleLayoutChange}
+        // handleLayoutChange={handleLayoutChange}
       />
     );
   } else {
@@ -77,7 +70,7 @@ const SurveyBuilder = () => {
         survey={survey}
         questionId={questionId}
         display={display}
-        handleLayoutChange={handleLayoutChange}
+        // handleLayoutChange={handleLayoutChange}
       />
     );
   }
@@ -174,6 +167,7 @@ const SurveyBuilder = () => {
                 overflowY: "auto",
               }}
             >
+              <SurveyBuilderIsland setDisplay={setDisplay} />
               <Box
                 sx={{
                   marginLeft: "1%",

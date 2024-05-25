@@ -2,8 +2,16 @@ import { Box, Button, TextField } from "@mui/material";
 import { ElementProps } from "../../../utils/types";
 import ElementQuestionText from "./ElementQuestionText";
 
-const EmailContactELement = ({ qID, qNO, qType, display }: ElementProps) => {
-  const marginLeftBtn = display === "mobile" ? "12%" : "25%";
+const EmailContactELement = ({
+  qID,
+  qNO,
+  qType,
+  qText,
+  qDescription,
+  display,
+}: ElementProps) => {
+  const marginTop = display === "mobile" ? "32%" : "8%";
+  const marginLeftBtn = display === "mobile" ? "8%" : "24%";
   const marginTopBtn = display === "mobile" ? "2%" : "1%";
   const textFieldWidth = display === "mobile" ? "100%" : "76%";
   const inputWidth = display === "mobile" ? "80%" : "70%";
@@ -22,12 +30,17 @@ const EmailContactELement = ({ qID, qNO, qType, display }: ElementProps) => {
       height={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "16%" }}>
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        sx={{ width: "96%", marginTop: marginTop }}
+      >
         <ElementQuestionText
           qID={qID}
           qNO={qNO}
           qType={qType}
-          qText={"Enter your email here."}
+          qText={qText}
+          qDescription={qDescription}
           display={display}
         />
       </Box>

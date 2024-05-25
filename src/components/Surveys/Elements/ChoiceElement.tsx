@@ -20,7 +20,13 @@ import {
 } from "../../../app/slices/optionApiSlice";
 import { toast } from "react-toastify";
 
-const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
+const ChoiceElement = ({
+  qID,
+  qNO,
+  qText,
+  qDescription,
+  display,
+}: ElementProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [editingID, setEditingID] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
@@ -111,15 +117,20 @@ const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
       justifyContent={"start"}
       alignItems={"center"}
       margin={"auto"}
-      width={"70%"}
+      width={"96%"}
       height={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "12%" }}>
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        sx={{ margin: "auto", width: "98%", marginTop: "12%" }}
+      >
         <ElementQuestionText
           qID={qID}
           qNO={qNO}
           qText={qText}
+          qDescription={qDescription}
           display={display}
         />
       </Box>
@@ -128,7 +139,9 @@ const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
         flexDirection={"column"}
         mt={4}
         sx={{
-          width: "80%",
+          width: "fit-content",
+          maxWidth: "96%",
+          border: "2px solid red",
         }}
       >
         <FormControl>
@@ -142,9 +155,8 @@ const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
             <List
               sx={{
                 margin: "auto",
-                minWidth: 300,
-                maxWidth: "90%",
-
+                width: "100%",
+                border: "2px solid blue",
                 "--List-gap": "0.5rem",
                 "--ListItem-radius": "4px",
                 "--ListItemDecorator-size": "32px",
@@ -158,6 +170,7 @@ const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
                     display: "flex",
                     justifyContent: "space-between",
                     color: "black",
+                    width: "100%",
                     fontWeight: "bold",
                     fontSize: "16px",
                     boxShadow: "sm",
@@ -254,7 +267,7 @@ const ChoiceElement = ({ qID, qNO, qText, display }: ElementProps) => {
                           ml={1}
                           sx={{ fontSize: "16px" }}
                           onClick={handleClick}
-                          whiteSpace={"nowrap"}
+                          whiteSpace={"wrap"}
                           overflow={"hidden"}
                           textOverflow={"string"}
                         >

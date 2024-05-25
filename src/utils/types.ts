@@ -38,6 +38,7 @@ export interface ElementProps {
   qNO?: string;
   type?: string;
   qText?: string;
+  qDescription?: string;
   qType?: string;
   display?: string | null;
   qID?: string;
@@ -134,6 +135,21 @@ export interface RegisterFormData {
   organization: string;
 }
 
+export interface SettingsFormData {
+  title: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  responseLimit: number;
+  language: string;
+  isTemplate: boolean;
+}
+
+export interface SnackbarAlertProps {
+  openSnackbar: boolean;
+  handleCloseSnackbar: () => void;
+}
+
 export interface Survey {
   createdAt: string;
   creatorId: string;
@@ -158,7 +174,7 @@ export interface SurveyBuilderCanvasProps {
   display: string | null;
   survey?: Survey;
   questionId: string | null;
-  handleLayoutChange: (
+  handleLayoutChange?: (
     _event: React.MouseEvent<HTMLElement>,
     display: string | null
   ) => void;
@@ -216,6 +232,23 @@ export interface SurveyRenameProps {
   sID?: string;
   sTitle?: string;
   surveyTitle?: string;
+}
+
+export interface ShareSurveyProps {
+  open: boolean;
+  setShareBtnSelected: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  openSnackbar: boolean;
+  setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface SurveySettingsProps {
+  openSettings: boolean;
+  setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface SurveyIslandProps {
+  setDisplay: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export interface SurveyDropDownMenuProps {
