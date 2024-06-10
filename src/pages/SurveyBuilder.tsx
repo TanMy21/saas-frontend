@@ -20,16 +20,9 @@ const SurveyBuilder = () => {
   const [value, setValue] = useState("question");
   const [questionId, setQuestionId] = useState<string | null>(null);
   const [display, setDisplay] = useState<string | null>("desktop");
-  const [tabValue, setTabValue] = useState<string | null>("create");
+
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
-  };
-
-  const handleScreenChange = (
-    _event: React.SyntheticEvent,
-    tabValue: string | null
-  ) => {
-    setTabValue(tabValue);
   };
 
   const {
@@ -44,9 +37,10 @@ const SurveyBuilder = () => {
   });
 
   let content;
-  if (tabValue === "share") {
-    navigate(`/s/share/${surveyID}`);
-  } else if (display === "desktop") {
+  // if (tabValue === "results") {
+  //   navigate(`/s/results/${surveyID}`, { state: { headerProps } });
+  // } else
+  if (display === "desktop") {
     content = (
       <SurveyBuilderCanvas
         survey={survey}
@@ -81,6 +75,8 @@ const SurveyBuilder = () => {
     }
   }, [isError, error]);
 
+  // console.log("Tab: ", tabValue);
+
   return (
     <>
       <Box
@@ -105,12 +101,12 @@ const SurveyBuilder = () => {
             }}
           >
             <SurveyBuilderHeader
-              tabValue={tabValue}
+              // tabValue={tabValue}
               survey={survey}
               workspaceId={workspaceId}
               workspaceName={workspaceName}
               title={surveyTitle}
-              handleScreenChange={handleScreenChange}
+              // handleScreenChange={handleScreenChange}
             />
           </Grid>
           <CreateNewSurveyModal

@@ -19,7 +19,7 @@ const GridLayout = ({
   const navigate = useNavigate();
 
   const goToSurvey = (surveyID: string) => {
-    navigate(`/survey/${surveyID}/create`, {
+    navigate(`/survey/${surveyID}`, {
       state: { workspaceId, workspaceName, layout },
     });
   };
@@ -125,7 +125,11 @@ const GridLayout = ({
                     marginTop: "1%",
                   }}
                 >
-                  <SurveyCardDropDownMenu survey={survey} />
+                  <SurveyCardDropDownMenu
+                    survey={survey}
+                    workspaceId={workspaceId}
+                    workspaceName={workspaceName}
+                  />
                 </Box>
               </Box>
             </Box>

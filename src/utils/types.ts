@@ -1,3 +1,5 @@
+import { MRT_ColumnDef } from "material-react-table";
+
 export type AuthInitialState = {
   token: string | null;
 };
@@ -21,6 +23,18 @@ export interface AddElementMenuProps {
   handleClose: () => void;
   handleElementAdd?: (menuOption: string) => void;
 }
+export interface RowData {
+  [key: string]: string;
+}
+export interface DownloadResponsesModalProps {
+  setResponsesData: React.Dispatch<React.SetStateAction<string>>;
+  setDownloadFileFormat: React.Dispatch<React.SetStateAction<string>>;
+  open: boolean;
+  // setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleClose: () => void;
+  rowData: RowData[];
+  columns: MRT_ColumnDef<RowData>[];
+}
 
 export interface Element {
   questionID: string;
@@ -29,6 +43,7 @@ export interface Element {
   text: string;
   type: string;
   order?: number;
+  response: ElementResponse[];
   minOptions: number;
   maxOptions: number;
   required: boolean;
@@ -74,6 +89,16 @@ export interface ElementsPanelProps {
   // setElements: React.Dispatch<React.SetStateAction<ElementType[]>>;
 }
 
+interface ElementResponse {
+  responseID: string;
+  relatedQuestionID: string;
+  relatedOptionID?: string;
+  participantID: string;
+  questionType: string;
+  surveyID: string;
+  response: QuestionResponse;
+}
+
 export interface ErrorData {
   data: {
     error?: ErrorMessage[];
@@ -88,6 +113,15 @@ export interface errorsProp {
 export interface LoginFormData {
   email: string;
   password: string;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordFormData {
+  password: string;
+  confirmPassword: string;
 }
 
 export interface ILogoutResponse {
@@ -126,6 +160,27 @@ export interface QuestionDetail {
   order: number;
 }
 
+export interface Questions {
+  questionID: string;
+  relatedSurveyId: string;
+  text: string;
+  description: string;
+  type: string;
+  order: number;
+  required: boolean;
+  response: QuestionResponse[];
+}
+
+export interface QuestionResponse {
+  responseID: string;
+  relatedQuestionID: string;
+  relatedOptionID: string;
+  participantID: string;
+  response: Record<string, string>;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface RegisterFormData {
   firstname: string;
   lastname: string;
@@ -133,6 +188,11 @@ export interface RegisterFormData {
   password: string;
   confirmPassword: string;
   organization: string;
+}
+
+export interface ResultsResponse {
+  surveyID: string;
+  questions: Questions[];
 }
 
 export interface SettingsFormData {
@@ -260,12 +320,13 @@ export interface SurveyDropDownMenuProps {
 
 export interface SurveyBuilderHeaderProps {
   survey: Survey;
+  // surveyID: string | null;
   workspaceId: string;
   workspaceName: string;
   title: string;
-  tabValue: string | null;
+  tabValue?: string | null;
   // headerTabValue: number;
-  handleScreenChange: (
+  handleScreenChange?: (
     _event: React.SyntheticEvent,
     display: string | null
   ) => void;

@@ -1,35 +1,57 @@
 import { useEffect, useState } from "react";
-import {
-  Box,
-  Grid,
-  Tab,
-  Tabs,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Tab, Tabs, Toolbar, Tooltip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import HeaderIconMenu from "../HeaderIconMenu";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { SurveyBuilderHeaderProps } from "../../utils/types";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const SurveyBuilderHeader = ({
   // display,
-  tabValue,
+  // tabValue,
   survey,
+  // surveyID,
   workspaceId,
   workspaceName,
   title,
-  handleScreenChange,
+  // handleScreenChange,
   // handleLayoutChange,
 }: SurveyBuilderHeaderProps) => {
   const [surveyTitle, setSurveyTitle] = useState<string | undefined>("");
+  const [tabValue, setTabValue] = useState<string | null>("create");
+  const navigate = useNavigate();
+
+  const { surveyID } = survey || {};
+
+  const headerProps = {
+    tabValue,
+    survey,
+    workspaceId,
+    workspaceName,
+  };
+
+  const handleScreenChange = (
+    _event: React.SyntheticEvent,
+    newValue: string
+  ) => {
+    setTabValue(newValue);
+
+    if (newValue === "results") {
+      navigate(`/s/results/${surveyID}`, { state: { headerProps } });
+    } else if (newValue === "create") {
+      navigate(`/survey/${surveyID}`, { state: { headerProps } });
+    }
+  };
 
   useEffect(() => {
+    if (location.pathname.includes("/results")) {
+      setTabValue("results");
+    } else if (location.pathname.includes("/survey")) {
+      setTabValue("create");
+    }
     setSurveyTitle(title);
-  }, [title]);
+  }, [title, location.pathname]);
 
   return (
     <AppBar
@@ -45,83 +67,76 @@ const SurveyBuilderHeader = ({
       }}
     >
       <Toolbar disableGutters>
-        <Grid container>
-          <Grid item xs={3} sx={{ padding: "0%", width: "16%", height: "6vh" }}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                top: "0px",
-                marginTop: "0px",
-                width: "100%",
-                height: "100%",
-                // border: "2px solid black",
-              }}
-            >
-              <Typography
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  flexGrow: 0,
-                  fontSize: "16px",
-                  color: "black",
-                  ml: { lg: 8, xl: 0 },
-                  marginTop: { lg: "4%", xl: "0%" },
-                }}
-              >
-                <NavLink
-                  to={`/dash/w/${workspaceId}`}
-                  style={({ isActive /*isPending, isTransitioning*/ }) => {
-                    return {
-                      display: "block",
-                      color: isActive ? "#262626" : "#262666",
-                      lineHeight: "20px",
-                      textDecoration: "none",
-                    };
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      color: "#898989",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "clip",
-                      maxWidth: "100%",
-                    }}
-                  >
-                    {workspaceName} /
-                  </Typography>
-                </NavLink>
-                <Tooltip title={survey?.title}>
-                  <Typography
-                    sx={{
-                      color: "#262666",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "clip",
-                      width: { md: "64%", lg: "100%", xl: "98%" },
-                    }}
-                  >
-                    &nbsp; {surveyTitle ? surveyTitle : survey?.title}
-                  </Typography>
-                </Tooltip>
-              </Typography>
-            </Box>
-          </Grid>
-          {/* Tabs centered in the middle */}
-          <Grid
-            item
-            xs={6}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: "2%",
+            margin: "auto",
+            width: "96%",
+            height: "92%",
+            // border: "2px solid black",
+          }}
+        >
+          {/* ------------------- workspace name and survey title -------------------- */}
+          <Box
             sx={{
               display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              top: "0px",
+              marginTop: "0px",
+              width: "32%",
+              height: "100%",
+              // border: "2px solid red",
+            }}
+          >
+            <Box sx={{ width: "fit-content" }}>
+              <NavLink
+                to={`/dash/w/${workspaceId}`}
+                style={({ isActive /*isPending, isTransitioning*/ }) => {
+                  return {
+                    display: "block",
+                    color: isActive ? "#262626" : "#262666",
+                    lineHeight: "20px",
+                    textDecoration: "none",
+                  };
+                }}
+              >
+                {workspaceName} /
+              </NavLink>
+            </Box>
+            <Box sx={{ width: "68%" }}>
+              <Tooltip title={survey?.title}>
+                <Box
+                  sx={{
+                    fontSize: "16px",
+                    textDecoration: "none",
+                    color: "#262626",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "clip",
+                  }}
+                >
+                  &nbsp; {surveyTitle ? surveyTitle : survey?.title}
+                </Box>
+              </Tooltip>
+            </Box>
+          </Box>
+          {/* ------------------- Tabs ----------------------------------------------- */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
               justifyContent: "center",
-              alignItems: "start",
-              padding: 0,
-              top: 0,
-              width: "60%",
-              height: { xl: "6vh" },
+              alignItems: "center",
+              top: "0px",
+              marginTop: "0px",
+              width: "36%",
+              height: "100%",
+              // border: "2px solid green",
             }}
           >
             <Tabs
@@ -177,45 +192,24 @@ const SurveyBuilderHeader = ({
                 }}
               />
             </Tabs>
-          </Grid>
-          <Grid
-            item
-            xs={3}
+          </Box>
+          {/* ------------------- Header Icon ---------------------------------------- */}
+          <Box
             sx={{
-              // marginTop: -2,
               display: "flex",
               flexDirection: "row",
+              justifyContent: "flex-end",
               alignItems: "center",
-              // width: "10%",
-              height: "6vh",
-              // border: "2px solid black",
+              top: "0px",
+              marginTop: "0px",
+              width: "32%",
+              height: "100%",
+              // border: "2px solid orange",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "end",
-                alignItems: "center",
-                width: "96%",
-                // border: "2px solid blue",
-                marginTop: { lg: "4%", xl: "0%" },
-              }}
-            >
-              <Box
-                display={"flex"}
-                flexDirection={"row"}
-                justifyContent={"end"}
-                sx={{
-                  width: "4%",
-                  // border: "2px solid red",
-                }}
-              >
-                <HeaderIconMenu />
-              </Box>
-            </Box>
-          </Grid>
-        </Grid>
+            <HeaderIconMenu />
+          </Box>
+        </Box>
       </Toolbar>
     </AppBar>
   );

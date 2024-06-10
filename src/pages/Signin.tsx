@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
@@ -19,6 +18,7 @@ import { useLoginMutation } from "../app/slices/authApiSlice";
 import { setCredentials } from "../app/slices/authSlice";
 import { ErrorData, LoginFormData } from "../utils/types";
 import FormErrors from "../components/FormErrors";
+import { loginSchema } from "../utils/schema";
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -43,10 +43,7 @@ const Signin = () => {
     }
   }, [isError, error]);
 
-  const loginSchema: ZodType<LoginFormData> = z.object({
-    email: z.string().email(),
-    password: z.string(),
-  });
+  
 
   const {
     register,
@@ -131,7 +128,7 @@ const Signin = () => {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link to="#" style={{ padding: 5 }}>
+                  <Link to="/forgot" style={{ padding: 5 }}>
                     Forgot Password
                   </Link>
                 </Grid>

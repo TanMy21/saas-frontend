@@ -21,9 +21,12 @@ const useAuth = () => {
     if (admin) {
       isAdmin = true;
     }
+    console.log("A 1: ", isAuthenticated);
 
     return { email, isAdmin, isAuthenticated };
   }
+
+  console.log("A 2: ", isAuthenticated);
 
   return { email: "", isAdmin, isAuthenticated };
 };

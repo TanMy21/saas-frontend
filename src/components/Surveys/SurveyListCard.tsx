@@ -1,6 +1,6 @@
 import { Avatar, Box, ButtonBase, Grid, Typography } from "@mui/material";
 import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
-import formatDate from "../../utils/formatDate";
+import { formatDate } from "../../utils/formatDate";
 import { useNavigate } from "react-router-dom";
 import FeedIcon from "@mui/icons-material/Feed";
 import { SurveyListCardProps } from "../../utils/types";
@@ -16,7 +16,7 @@ const SurveyListCard = ({
   const { data: elements = [] } = useGetElementsForSurveyQuery(survey.surveyID);
 
   const goToSurvey = (surveyID: string) => {
-    navigate(`/survey/${surveyID}/create`, {
+    navigate(`/survey/${surveyID}`, {
       state: { workspaceId, workspaceName, layout },
     });
   };
@@ -109,7 +109,11 @@ const SurveyListCard = ({
             </Typography>
           </Grid>
           <Grid item xs={2}>
-            <SurveyCardDropDownMenu survey={survey} />
+            <SurveyCardDropDownMenu
+              survey={survey}
+              workspaceId={workspaceId}
+              workspaceName={workspaceName}
+            />
           </Grid>
         </Grid>
       </Grid>

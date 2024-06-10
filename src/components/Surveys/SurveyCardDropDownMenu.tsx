@@ -17,13 +17,26 @@ import {
 } from "../../utils/types";
 import RenameSurveyModal from "../Modals/RenameSurveyModal";
 import DeleteSurveyModal from "../Modals/DeleteSurveyModal";
+import { useNavigate } from "react-router-dom";
+import SnackbarAlert from "../SnackbarAlert";
 
-const SurveyCardDropDownMenu = ({ survey }: SurveyDropDownMenuProps) => {
+const SurveyCardDropDownMenu = ({
+  survey,
+  workspaceId,
+  workspaceName,
+}: SurveyDropDownMenuProps) => {
   const { surveyID } = survey;
+
+  const navigate = useNavigate();
+
+  const shareBaseURL = import.meta.env.VITE_SHARE_BASE_URL;
+  const shareURL = `${shareBaseURL}/${surveyID}`;
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [currentMenu, setCurrentMenu] = useState<string | null>("parent");
-
+  // const [tabValue, setTabValue] = useState<string | null>("create");
   const [openRenameModel, setOpenRenameModel] = useState(false);
   const [openDeleteModel, setOpenDeleteModel] = useState(false);
 
@@ -43,6 +56,36 @@ const SurveyCardDropDownMenu = ({ survey }: SurveyDropDownMenuProps) => {
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setMenuAnchor(e.currentTarget);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  const headerProps = {
+    // tabValue,
+    survey,
+    workspaceId,
+    workspaceName,
+  };
+
+  const handleOpenSurvey = (surveyID: string) => {
+    navigate(`/survey/${surveyID}`, {
+      state: { workspaceId, workspaceName },
+    });
+  };
+
+  const handleShareSurvey = async () => {
+    try {
+      await navigator.clipboard.writeText(shareURL);
+      setOpenSnackbar(true);
+    } catch (err) {
+      console.error("Unable to copy to clipboard.", err);
+    }
+  };
+
+  const handleOpenResultsPage = () => {
+    navigate(`/s/results/${surveyID}`, { state: { headerProps } });
   };
 
   const handleClose = () => {
@@ -166,11 +209,14 @@ const SurveyCardDropDownMenu = ({ survey }: SurveyDropDownMenuProps) => {
         {/* Parent Menu */}
         {currentMenu === "parent" && (
           <Box>
-            <MenuItem>Open</MenuItem>
-            <MenuItem>Copy Link</MenuItem>
+            <MenuItem onClick={() => handleOpenSurvey(surveyID)}>Open</MenuItem>
             <Divider />
-            <MenuItem>Share</MenuItem>
-            <MenuItem>Results</MenuItem>
+            <MenuItem onClick={handleShareSurvey}>Share</MenuItem>
+            <SnackbarAlert
+              openSnackbar={openSnackbar}
+              handleCloseSnackbar={handleCloseSnackbar}
+            />
+            <MenuItem onClick={handleOpenResultsPage}>Results</MenuItem>
             <Divider />
             <MenuItem onClick={handleOpenModalRename}>Rename</MenuItem>
             <MenuItem onClick={() => handleDuplicateSurvey(surveyID)}>

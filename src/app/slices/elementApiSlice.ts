@@ -35,6 +35,14 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
+    updateElementOrder: builder.mutation({
+      query: ({ questions }) => ({
+        url: `/q/order`,
+        method: "PUT",
+        body: { questions },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
     updateElementDescription: builder.mutation({
       query: ({ questionID, description }) => ({
         url: `/q/desc/${questionID}`,
@@ -67,6 +75,7 @@ export const {
   useCreateElementMutation,
   useCreateScreenElementMutation,
   useUpdateElementTextMutation,
+  useUpdateElementOrderMutation,
   useUpdateElementDescriptionMutation,
   useDuplicateElementMutation,
   useDeleteElementMutation,

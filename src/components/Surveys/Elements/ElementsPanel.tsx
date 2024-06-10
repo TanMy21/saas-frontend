@@ -8,7 +8,12 @@ import { Box, Tooltip, Typography } from "@mui/material";
 import { Element, ElementsPanelProps, IconMapping } from "../../../utils/types";
 import { elementIcons } from "../../../utils/elementsConfig";
 import ElementDropDownMenu from "./ElementDropDownMenu";
-import { useGetElementsForSurveyQuery } from "../../../app/slices/elementApiSlice";
+import {
+  useGetElementsForSurveyQuery,
+  useUpdateElementOrderMutation,
+} from "../../../app/slices/elementApiSlice";
+import debounce from "lodash/debounce";
+import { useCallback } from "react";
 
 const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
   const { data: elements = [] as Element[], refetch } =
@@ -16,6 +21,10 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
       surveyID
       //{ pollingInterval: 1000 }
     );
+
+  const [updateElementOrder /*{ isError, error }*/] =
+    useUpdateElementOrderMutation();
+
   const nonOrderableTypes = [
     "WELCOME_SCREEN",
     "END_SCREEN",
@@ -59,6 +68,19 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
     ...endElements,
   ];
 
+  const debounceUpdateOrder = useCallback(
+    debounce((newElements) => {
+      const orderedElements = newElements
+        .filter((e: Element) => orderedElementTypes.includes(e.type))
+        .map((e: Element, index: number) => ({ ...e, order: index + 1 }));
+      updateElementOrder({ questions: orderedElements })
+        .unwrap()
+        .then((response) => console.log("Order update response:", response))
+        .catch((error) => console.error("Order update error:", error));
+    }, 500),
+    [updateElementOrder]
+  );
+
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
     if (!destination) {
@@ -67,10 +89,22 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
     if (source.index === destination.index) {
       return;
     }
-    const newElements = Array.from(elements);
+    const newElements = Array.from(displayedQuestions);
     const [moved] = newElements.splice(source.index, 1);
     newElements.splice(destination.index, 0, moved);
     // setElements(newElements);
+
+    // Reorder elements
+    const reorderedElements = newElements.map((el, index) => {
+      if (orderedElementTypes.includes(el.type)) {
+        return { ...el, order: index + 1 };
+      }
+      return el;
+    });
+
+    console.log("Reordered Elements: ", reorderedElements);
+
+    debounceUpdateOrder(reorderedElements);
   };
 
   return (

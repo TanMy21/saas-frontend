@@ -26,7 +26,7 @@ const baseQueryWithReauth: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  // console.log("Args: ", args); // request url, method, body
+  console.log("Args: ", args); // request url, method, body
   // console.log("Api: ", api); // signal, dispatch, getState()
   // console.log("extraOptions: ", extraOptions); //custom like {shout: true}
 
@@ -58,6 +58,6 @@ const baseQueryWithReauth: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["User", "Surveys", "Workspaces", "Elements", "Options"],
+  tagTypes: ["User", "Surveys", "Workspaces", "Elements", "Options", "Results"],
   endpoints: () => ({}),
 });

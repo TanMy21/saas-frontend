@@ -1,0 +1,68 @@
+import { Box, Grid } from "@mui/material";
+import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
+import { useLocation } from "react-router-dom";
+import Results from "../components/Surveys/Results";
+
+const SurveyResults = () => {
+  const location = useLocation();
+  const { headerProps } = location.state || {};
+  const { tabValue, survey, workspaceId, workspaceName } = headerProps || {};
+  const { title } = survey || "";
+
+  return (
+    <>
+      <Box
+        sx={{
+          overflowX: "hidden",
+          overflowY: "hidden",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <Grid container>
+          <Grid
+            item
+            display={"flex"}
+            flexDirection={"row"}
+            xs={12}
+            sx={{
+              position: "sticky",
+              top: "0",
+              width: "100%",
+              zIndex: "10",
+            }}
+          >
+            <SurveyBuilderHeader
+              tabValue={tabValue}
+              survey={survey}
+              workspaceId={workspaceId}
+              workspaceName={workspaceName}
+              title={title}
+            />
+          </Grid>
+          <Grid
+            item
+            xl={12}
+            lg={12}
+            md={12}
+            xs={12}
+            display={"flex"}
+            flexDirection={"row"}
+            sx={{
+              width: "100%",
+              minHeight: "90%",
+              overflowX: "hidden",
+              overflowY: "auto",
+              // border: "2px solid green",
+            }}
+          >
+            {/* Main content area */}
+            <Results />
+          </Grid>
+        </Grid>
+      </Box>
+    </>
+  );
+};
+
+export default SurveyResults;
