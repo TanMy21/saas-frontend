@@ -43,7 +43,6 @@ const SurveyBuilderLeftSidebar = ({
         />
       </Grid>
       <ElementsPanel surveyID={surveyID!} setQuestionId={setQuestionId} />
-
       <Divider sx={{ marginTop: "4px" }} />
     </Grid>
   );

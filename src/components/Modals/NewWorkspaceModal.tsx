@@ -65,7 +65,7 @@ const NewWorkspaceModal = () => {
       <IconButton
         onClick={handleOpen}
         sx={{
-          background: "#47658F",
+          background: "#4F46E5",
           maxWidth: "32px",
           maxHeight: "32px",
           marginRight: "2%",
@@ -73,7 +73,7 @@ const NewWorkspaceModal = () => {
           borderRadius: 1,
           color: "white",
           "&:hover": {
-            backgroundColor: "#47658F",
+            backgroundColor: "#4F46E5",
           },
         }}
       >

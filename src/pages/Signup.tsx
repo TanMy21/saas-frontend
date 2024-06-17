@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { FaSignInAlt } from "react-icons/fa";
 import { useAddNewUserMutation } from "../app/slices/userApiSlice";
 import { ErrorData, RegisterFormData } from "../utils/types";
 import FormErrors from "../components/FormErrors";
@@ -81,6 +82,7 @@ const Signup = () => {
               alignItems: "center",
               width: "50%",
               p: 4,
+              borderRadius: "16px",
             }}
           >
             <Link to="/" style={{ textDecoration: "none" }}>
@@ -89,7 +91,11 @@ const Signup = () => {
               </Typography>
             </Link>
 
-            <Typography component="h1" variant="h5">
+            <Typography
+              component="h1"
+              variant="h4"
+              sx={{ fontWeight: 800, color: "#101828" }}
+            >
               Sign up
             </Typography>
             <form onSubmit={handleSubmit(submitRegisterData)}>
@@ -182,13 +188,39 @@ const Signup = () => {
                   type="submit"
                   fullWidth
                   variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
+                  sx={{
+                    mt: 2,
+                    mb: 2,
+                    fontWeight: 700,
+                    backgroundColor: "#4C6FFF",
+                    textTransform: "capitalize",
+                    borderRadius: "4px",
+                    "&:hover": {
+                      backgroundColor: "#4C6FFF",
+                    },
+                  }}
                 >
                   Sign Up
                 </Button>
                 <Grid container justifyContent="flex-end">
                   <Grid item>
-                    <Link to="/login">Already have an account? Sign in</Link>
+                    <Link to="/login" style={{ textDecoration: "none" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 1,
+                          fontWeight: 600,
+                          color: "#494454",
+                        }}
+                      >
+                        <Box>Already have an account?&nbsp; Sign in</Box>
+                        <Box sx={{ fontSize: "24px", marginTop: "2%" }}>
+                          <FaSignInAlt />
+                        </Box>
+                      </Box>
+                    </Link>
                   </Grid>
                 </Grid>
               </Box>

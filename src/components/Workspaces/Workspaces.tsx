@@ -47,45 +47,61 @@ const Workspaces = ({ workspaces }: WorkspacesProp) => {
 
         <Box sx={{ width: "100%", minHeight: "200px", marginTop: "8%" }}>
           <List>
-            {workspaces?.map((workspace) => (
-              <ListItem key={workspace?.workspaceId} disablePadding>
-                <ListItemButton sx={{ padding: "0px", marginBottom: "4px" }}>
-                  <NavLink
-                    to={`/dash/w/${workspace?.workspaceId}`}
-                    style={({ isActive /*isPending, isTransitioning*/ }) => {
-                      return {
-                        display: "block",
-                        width: "100%",
-                        height: "32px",
-                        padding: "8px",
-                        color: isActive ? "#262626" : "#737373",
-                        fontWeight: isActive ? "bold" : "",
-                        fontSize: "14px",
-                        fontFamily:
-                          "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                        lineHeight: "20px",
-                        textDecoration: "none",
-                        textOverflow: "ellipsis",
-                        backgroundColor: isActive ? "#E4E2E2" : "",
-                      };
-                    }}
-                  >
-                    <Box
-                      component="main"
-                      display={"flex"}
-                      justifyContent={"space-between"}
+            {workspaces?.map((workspace) => {
+              const match =
+                location.pathname === `/dash/w/${workspace?.workspaceId}`;
+              return (
+                <ListItem key={workspace?.workspaceId} disablePadding>
+                  <ListItemButton sx={{ padding: "0px", marginBottom: "4px" }}>
+                    <NavLink
+                      to={`/dash/w/${workspace?.workspaceId}`}
+                      className={({ isActive }) => (isActive ? "active" : "")}
+                      style={({ isActive /*isPending, isTransitioning*/ }) => {
+                        return {
+                          display: "block",
+                          width: "100%",
+                          height: "32px",
+                          padding: "8px",
+                          color: isActive ? "#4C6FFF" : "#425466",
+                          fontWeight: 900,
+                          fontSize: "14px",
+                          fontFamily:
+                            "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                          lineHeight: "20px",
+                          textDecoration: "none",
+                          textOverflow: "ellipsis",
+                          // backgroundColor: isActive ? "#E4E2E2" : "",
+                          borderLeft: isActive ? "5px solid #4C6FFF" : "",
+                        };
+                      }}
                     >
-                      <Box>
-                        <ListItemText primary={workspace?.name} />
+                      <Box
+                        component="main"
+                        display={"flex"}
+                        justifyContent={"space-between"}
+                        alignItems={"center"}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            marginTop: "1%",
+                            fontWeight: 900,
+                          }}
+                        >
+                          {workspace?.name}
+                        </Box>
+                        {match && (
+                          <WorkspaceSurveysListCount
+                            workspaceId={workspace?.workspaceId}
+                          />
+                        )}
                       </Box>
-                      <WorkspaceSurveysListCount
-                        workspaceId={workspace?.workspaceId}
-                      />
-                    </Box>
-                  </NavLink>
-                </ListItemButton>
-              </ListItem>
-            ))}
+                    </NavLink>
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
           </List>
           <Divider />
         </Box>

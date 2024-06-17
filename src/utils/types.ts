@@ -30,7 +30,6 @@ export interface DownloadResponsesModalProps {
   setResponsesData: React.Dispatch<React.SetStateAction<string>>;
   setDownloadFileFormat: React.Dispatch<React.SetStateAction<string>>;
   open: boolean;
-  // setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleClose: () => void;
   rowData: RowData[];
   columns: MRT_ColumnDef<RowData>[];
@@ -85,8 +84,6 @@ export interface ElementsPanelProps {
   elements?: ElementType[];
   surveyID: string;
   setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
-  // handleElementClick: (element: ElementType, index: number) => void;
-  // setElements: React.Dispatch<React.SetStateAction<ElementType[]>>;
 }
 
 interface ElementResponse {
@@ -108,6 +105,13 @@ export interface ErrorData {
 
 export interface errorsProp {
   errors?: string;
+}
+
+export interface FetchBaseQueryError {
+  status: number;
+  data?: {
+    message?: string;
+  };
 }
 
 export interface LoginFormData {
@@ -195,6 +199,10 @@ export interface ResultsResponse {
   questions: Questions[];
 }
 
+export interface ResetPassword {
+  code: string;
+}
+
 export interface SettingsFormData {
   title: string;
   description: string;
@@ -238,17 +246,11 @@ export interface SurveyBuilderCanvasProps {
     _event: React.MouseEvent<HTMLElement>,
     display: string | null
   ) => void;
-  // elementDetail: ElementType;
-  // qIndex: string;
 }
 
 export interface SurveyBuilderLeftSidebarProps {
   surveyID?: string;
   setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
-  // setElementDetail: React.Dispatch<React.SetStateAction<ElementType>>;
-  // setQIndex: React.Dispatch<React.SetStateAction<string>>;
-  // setElements: React.Dispatch<React.SetStateAction<ElementType[]>>;
-  // elements: ElementType[];
 }
 
 export interface SurveyListCardProps {
@@ -320,12 +322,10 @@ export interface SurveyDropDownMenuProps {
 
 export interface SurveyBuilderHeaderProps {
   survey: Survey;
-  // surveyID: string | null;
   workspaceId: string;
   workspaceName: string;
   title: string;
   tabValue?: string | null;
-  // headerTabValue: number;
   handleScreenChange?: (
     _event: React.SyntheticEvent,
     display: string | null

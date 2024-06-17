@@ -1,10 +1,13 @@
 import { Avatar, Box, Grid, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import HeaderIconMenu from "./HeaderIconMenu";
-import useAuth from "../hooks/useAuth";
+
+import { useGetMeQuery } from "../app/slices/userApiSlice";
 
 const DashBoardHeader = () => {
-  const { email } = useAuth();
+  const { data: user } = useGetMeQuery("User");
+
+  const { email } = user || {};
 
   return (
     <AppBar
@@ -42,7 +45,7 @@ const DashBoardHeader = () => {
               <Box ml={2}>
                 <Avatar
                   sx={{
-                    bgcolor: "#44546A",
+                    bgcolor: "#656DFF",
                     color: "white",
                     width: 32,
                     height: 32,
@@ -58,7 +61,7 @@ const DashBoardHeader = () => {
                   variant="subtitle1"
                   sx={{
                     fontWeight: "bold",
-                    color: "black",
+                    color: "#332C49",
                     padding: "8px",
                   }}
                   ml={2}

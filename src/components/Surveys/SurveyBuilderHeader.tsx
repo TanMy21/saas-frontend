@@ -6,6 +6,7 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { SurveyBuilderHeaderProps } from "../../utils/types";
 import { NavLink, useNavigate } from "react-router-dom";
+import { FaAngleRight } from "react-icons/fa6";
 
 const SurveyBuilderHeader = ({
   // display,
@@ -105,8 +106,16 @@ const SurveyBuilderHeader = ({
                   };
                 }}
               >
-                {workspaceName} /
+                {workspaceName} &nbsp;
               </NavLink>
+            </Box>
+            <Box
+              sx={{
+                marginTop: { md: "2%", lg: "2%", xl: "1%" },
+                color: "#727272",
+              }}
+            >
+              <FaAngleRight />
             </Box>
             <Box sx={{ width: "68%" }}>
               <Tooltip title={survey?.title}>
@@ -148,18 +157,18 @@ const SurveyBuilderHeader = ({
                 width: "60%",
                 marginTop: "-4px",
                 fontSize: "16px",
-                color: "black",
+                color: "#4F46E5",
                 ".MuiTabs-indicator": {
                   height: "2px",
-                  backgroundColor: "#2D71B8",
+                  backgroundColor: "#4F46E5",
                 },
                 "& .MuiButtonBase-root": {
                   minHeight: "48px",
                 },
                 "& .Mui-selected": {
-                  color: "#2D71B8",
+                  color: "#4F46E5",
                   "& .MuiTab-iconWrapper": {
-                    color: "#2D71B8", // Changes the icon color when selected
+                    color: "#4F46E5", // Changes the icon color when selected
                   },
                 },
                 "& .MuiTab-root": {
@@ -173,10 +182,10 @@ const SurveyBuilderHeader = ({
                 value="create"
                 sx={{
                   fontWeight: 600,
-                  color: "#6463EB",
-                  "& .MuiTab-iconWrapper": {
-                    color: "#6463EB",
-                  },
+                  // color: "#4F46E5",
+                  // "& .MuiTab-iconWrapper": {
+                  //   color: "#4F46E5",
+                  // },
                 }}
               />
               <Tab

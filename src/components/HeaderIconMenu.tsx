@@ -10,14 +10,15 @@ import {
   Typography,
 } from "@mui/material";
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
-import useAuth from "../hooks/useAuth";
 import { useGetMeQuery } from "../app/slices/userApiSlice";
 
 const HeaderIconMenu = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { email } = useAuth();
+  const { data: user } = useGetMeQuery("User");
+
+  const { email, firstname } = user || {};
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -26,8 +27,6 @@ const HeaderIconMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const { data: me } = useGetMeQuery(undefined);
 
   const [sendLogout, { isSuccess: isSuccessLogout }] = useSendLogoutMutation();
 
@@ -118,7 +117,7 @@ const HeaderIconMenu = () => {
                 <Typography
                   sx={{ color: "black", fontWeight: "bold", fontSize: "16px" }}
                 >
-                  {me?.firstname}
+                  {firstname}
                 </Typography>
               </Box>
               <Box sx={{ fontSize: "12px" }}>{email}</Box>

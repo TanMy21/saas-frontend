@@ -29,7 +29,6 @@ import { WorkspacesProp } from "../../utils/types";
 
 const SurveysListMain = () => {
   const { workspaceId } = useParams();
-  // const location = useLocation();
   const { workspaces } = useOutletContext<WorkspacesProp>();
 
   const { data: surveys, isLoading } = useGetWorkspaceSurveysQuery(workspaceId);

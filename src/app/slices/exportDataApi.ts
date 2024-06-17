@@ -15,7 +15,6 @@ export const exportDataApi = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           const today = exportDataDate(new Date().toISOString());
-
           const blob = new Blob([data], { type: data.type });
           saveAs(blob, `export_${today}.${format}`);
         } catch (error) {

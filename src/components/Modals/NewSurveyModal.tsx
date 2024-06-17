@@ -36,7 +36,7 @@ const NewSurveyModal = ({
       }).unwrap();
 
       if (surveyCreated) {
-        navigate(`/survey/${surveyCreated.surveyID}/create`, {
+        navigate(`/survey/${surveyCreated.surveyID}`, {
           state: { workspaceId, workspaceName, openModal },
         });
       }

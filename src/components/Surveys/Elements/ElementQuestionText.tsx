@@ -19,7 +19,7 @@ const ElementQuestionText = ({
   const [description, setDescription] = useState(qDescription);
   const [isEditing, setIsEditing] = useState(false);
 
-  const qFontSize = display === "mobile" ? "28px" : "36px";
+  const qFontSize = display === "mobile" ? "28px" : "32px";
   const descritptionFontSize = display === "mobile" ? "16px" : "20px";
   const qWhiteSpace = display === "mobile" ? "0.1em" : "normal";
 
@@ -86,7 +86,7 @@ const ElementQuestionText = ({
             justifyContent={"center"}
             alignItems={"center"}
             mr={1}
-            sx={{ width: "fit-content", }}
+            sx={{ width: "fit-content" }}
           >
             {isNonOrderableType ? null : (
               <Typography

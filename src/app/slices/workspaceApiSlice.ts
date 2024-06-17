@@ -24,16 +24,6 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { name },
       }),
-      onQueryStarted: (arg, { queryFulfilled }) => {
-        console.log("Query Slice: ", arg);
-        queryFulfilled
-          .then((response) => {
-            console.log("Success:", response);
-          })
-          .catch((error) => {
-            console.log("Error:", error);
-          });
-      },
       invalidatesTags: ["Workspaces"],
     }),
     deleteWorkspace: builder.mutation({

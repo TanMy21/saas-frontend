@@ -10,7 +10,9 @@ const Homepage = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Typography variant="h1">Landing Page</Typography>
+        <Box sx={{ marginTop: "16%" }}>
+          <Typography variant="h1">Landing Page</Typography>
+        </Box>
         <Box sx={{ m: 4 }}>
           <Stack
             direction="row"
@@ -20,28 +22,50 @@ const Homepage = () => {
           >
             <Link
               to="/register"
-              style={{ textDecoration: "none", color: "white" }}
+              style={{
+                textDecoration: "none",
+                color: "white",
+              }}
             >
               <Button
-                style={{ backgroundColor: "#0068FF" }}
+                sx={{
+                  backgroundColor: "#4F46E5",
+                  textTransform: "capitalize",
+                  borderRadius: "8px",
+                  fontWeight: 600,
+                  "&:hover": {
+                    backgroundColor: "#4F46E5",
+                  },
+                }}
                 variant="contained"
                 size="large"
               >
                 Sign up
               </Button>
             </Link>
-            <Button
-              style={{ backgroundColor: "#44546A" }}
-              variant="contained"
-              size="large"
+            <Link
+              to="/login"
+              style={{
+                textDecoration: "none",
+                color: "white",
+              }}
             >
-              <Link
-                to="/login"
-                style={{ textDecoration: "none", color: "white" }}
+              <Button
+                sx={{
+                  backgroundColor: "#494454",
+                  textTransform: "capitalize",
+                  borderRadius: "8px",
+                  fontWeight: 600,
+                  "&:hover": {
+                    backgroundColor: "#494454",
+                  },
+                }}
+                variant="contained"
+                size="large"
               >
                 Sign in
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </Stack>
         </Box>
       </Box>

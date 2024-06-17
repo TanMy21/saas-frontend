@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Box, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Divider,
+  Grid,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { useGetSurveyByIdQuery } from "../app/slices/surveysApiSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
@@ -9,6 +17,10 @@ import SurveyBuilderCanvas from "../components/Surveys/SurveyBuilderCanvas";
 import SurveyBuilderCanvasMobile from "../components/Surveys/SurveyBuilderCanvasMobile";
 import CustomizeElement from "../components/Surveys/CustomizeElement";
 import SurveyBuilderIsland from "../components/Surveys/SurveyBuilderIsland";
+import { useGetElementsForSurveyQuery } from "../app/slices/elementApiSlice";
+import SurveyWelcomeElement from "../components/Surveys/Elements/SurveyWelcomeElement";
+import { Element } from "../utils/types";
+import ScrollbarStyle from "../components/ScrollbarStyle";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
@@ -20,6 +32,8 @@ const SurveyBuilder = () => {
   const [value, setValue] = useState("question");
   const [questionId, setQuestionId] = useState<string | null>(null);
   const [display, setDisplay] = useState<string | null>("desktop");
+  const [loading, setLoading] = useState(false);
+  const [noElements, setNoElements] = useState(false);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -36,38 +50,11 @@ const SurveyBuilder = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  let content;
-  // if (tabValue === "results") {
-  //   navigate(`/s/results/${surveyID}`, { state: { headerProps } });
-  // } else
-  if (display === "desktop") {
-    content = (
-      <SurveyBuilderCanvas
-        survey={survey}
-        questionId={questionId}
-        display={display}
-        // handleLayoutChange={handleLayoutChange}
-      />
-    );
-  } else if (display === "mobile") {
-    content = (
-      <SurveyBuilderCanvasMobile
-        survey={survey}
-        questionId={questionId}
-        display={display}
-        // handleLayoutChange={handleLayoutChange}
-      />
-    );
-  } else {
-    content = (
-      <SurveyBuilderCanvas
-        survey={survey}
-        questionId={questionId}
-        display={display}
-        // handleLayoutChange={handleLayoutChange}
-      />
-    );
-  }
+  const {
+    data: Elements,
+    isLoading,
+    isFetching,
+  } = useGetElementsForSurveyQuery(surveyID!);
 
   useEffect(() => {
     if (isError) {
@@ -75,16 +62,54 @@ const SurveyBuilder = () => {
     }
   }, [isError, error]);
 
-  // console.log("Tab: ", tabValue);
+  useEffect(() => {
+    if (!isLoading && !isFetching) {
+      setLoading(false);
+      setNoElements(!Elements || Elements.length === 0);
+
+      if (Elements && Elements.length > 0 && !questionId) {
+        const sortedQuestions = [...Elements].sort(
+          (a: Element, b: Element) => a.order! - b.order!
+        );
+        setQuestionId(sortedQuestions[0].questionID);
+      }
+    } else {
+      setLoading(true);
+    }
+  }, [isLoading, isFetching, Elements, questionId]);
+
+  let content;
+
+  if (loading) {
+    content = <CircularProgress />;
+  }
+
+  if (noElements) {
+    content = <SurveyWelcomeElement />;
+  }
 
   return (
     <>
+      <ScrollbarStyle />
       <Box
         sx={{
           overflowX: "hidden",
           overflowY: "hidden",
           width: "100%",
           height: "100%",
+          "&::-webkit-scrollbar": {
+            width: "10px", // Scrollbar width
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "#f1f1f1", // Scrollbar track color
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#61A5D2", // Scrollbar thumb color
+            borderRadius: "10px", // Rounded corners on the scrollbar thumb
+            "&:hover": {
+              background: "#555", // Scrollbar thumb hover color
+            },
+          },
         }}
       >
         <Grid container>
@@ -94,6 +119,7 @@ const SurveyBuilder = () => {
             flexDirection={"row"}
             xs={12}
             sx={{
+              overflowY: "hidden",
               position: "sticky",
               top: "0",
               width: "100%",
@@ -141,6 +167,7 @@ const SurveyBuilder = () => {
                 top: "5vh",
                 left: "0",
                 zIndex: "5",
+                overflowY: "hidden",
               }}
             >
               <SurveyBuilderLeftSidebar
@@ -171,7 +198,23 @@ const SurveyBuilder = () => {
                   minHeight: "84%",
                 }}
               >
-                {content}
+                {noElements ? (
+                  content
+                ) : display === "mobile" ? (
+                  <SurveyBuilderCanvasMobile
+                    survey={survey}
+                    questionId={questionId}
+                    display={display}
+                    // handleLayoutChange={handleLayoutChange}
+                  />
+                ) : (
+                  <SurveyBuilderCanvas
+                    survey={survey}
+                    questionId={questionId}
+                    display={display}
+                    // handleLayoutChange={handleLayoutChange}
+                  />
+                )}
               </Box>
             </Grid>
             {/* Right Sidebar */}
@@ -180,7 +223,7 @@ const SurveyBuilder = () => {
               xl={2}
               md={2}
               xs={2}
-              sx={{ width: "14%", minHeight: "92%" }}
+              sx={{ width: "14%", minHeight: "92%", overflowY: "hidden" }}
             >
               <Box
                 sx={{

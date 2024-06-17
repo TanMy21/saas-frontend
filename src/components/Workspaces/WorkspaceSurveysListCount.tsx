@@ -9,8 +9,22 @@ const WorkspaceSurveysListCount = ({
 
   return (
     <>
-      <Box>
-        <ListItemText primary={surveys?.length} />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "1%",
+          width: "40px",
+          height: "32px",
+          borderRadius: "32px",
+          backgroundColor: "#E1E8FF",
+          fontWeight: 800,
+          color: "#4C6FFF",
+        }}
+      >
+        {surveys?.length}
       </Box>
     </>
   );

@@ -1,15 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useRefreshMutation } from "./authApiSlice";
 import { selectCurrentToken } from "./authSlice";
 import usePersist from "../../hooks/persist";
 import { ErrorData } from "../../utils/types";
+import { CircularProgress } from "@mui/material";
 
 const PersistLogin = () => {
   const [persist] = usePersist();
   const token = useSelector(selectCurrentToken);
-  const effectRan = useRef(false);
+  const navigate = useNavigate();
 
   const [trueSuccess, setTrueSuccess] = useState(false);
 
@@ -17,34 +18,43 @@ const PersistLogin = () => {
     useRefreshMutation();
 
   useEffect(() => {
-    if (
-      effectRan.current === true ||
-      import.meta.env.VITE_REACT_APP_NODE_ENV !== "development"
-    ) {
-      // React 18 Strict Mode
-
-      const verifyRefreshToken = async () => {
-        console.log("verifying refresh token");
-        try {
-          //const response =
-          await refresh();
-          //const { accessToken } = response.data
-          setTrueSuccess(true);
-        } catch (err) {
-          console.error(err);
-          // navigate("/login");
-        }
-      };
-
-      if (!token && persist) verifyRefreshToken();
-    }
-
-    return () => {
-      effectRan.current = true;
+    const verifyRefreshToken = async () => {
+      console.log("verifying refresh token");
+      try {
+        //const response =
+        await refresh();
+        //const { accessToken } = response.data
+        setTrueSuccess(true);
+      } catch (err) {
+        console.error(err);
+        navigate("/login", { replace: true });
+      }
     };
 
+    if (
+      !token &&
+      persist
+      // &&
+      // (effectRan.current === true ||
+      //   import.meta.env.VITE_REACT_APP_NODE_ENV !== "development")
+    ) {
+      verifyRefreshToken();
+    }
+    // return () => {
+    //   effectRan.current = true;
+    // };
+
+    const interval = setInterval(() => {
+      if (persist) {
+        console.log("interval");
+        verifyRefreshToken();
+      }
+    }, 360000);
+
+    return () => clearInterval(interval);
+
     // eslint-disable-next-line
-  }, []);
+  }, [token, persist, refresh, navigate]);
 
   let content;
   if (!persist) {
@@ -53,13 +63,13 @@ const PersistLogin = () => {
     content = <Outlet />;
   } else if (isLoading) {
     //persist: yes, token: no
-    console.log("loading");
-    content = <p>Loading...</p>;
+    // console.log("loading");
+    content = <CircularProgress />;
   } else if (isError) {
     //persist: yes, token: no
 
     const errorData = error as ErrorData;
-    console.log("error");
+    // console.log("error");
     content = (
       <p className="errmsg">
         {`${errorData?.data?.message} - `}

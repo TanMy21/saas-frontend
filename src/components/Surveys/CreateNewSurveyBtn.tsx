@@ -13,11 +13,12 @@ const CreateNewSurveyBtn = ({ workspaceId, workspaceName }: NewSurveyProps) => {
       <Box sx={{ mt: 1 }}>
         <Button
           sx={{
-            backgroundColor: "#44546A",
+            backgroundColor: "#494454",
             mr: 2,
+            fontWeight: 600,
             textTransform: "capitalize",
             "&:hover": {
-              backgroundColor: "#47658F",
+              backgroundColor: "#494454",
             },
           }}
           variant="contained"

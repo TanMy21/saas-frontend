@@ -11,8 +11,8 @@ const TextElement = ({
   display,
 }: ElementProps) => {
   const marginTop = display === "mobile" ? "20%" : "16%";
-  const inputContainerWidth = display === "mobile" ? "96%" : "56%";
-  const textFieldWidth = display === "mobile" ? "100%" : "80%";
+  const inputContainerWidth = display === "mobile" ? "96%" : "68%";
+  const textFieldWidth = display === "mobile" ? "100%" : "96%";
   const textFieldMarginLeft = display === "mobile" ? "4%" : "0%";
   const textFieldFontSize = display === "mobile" ? "16px" : "36px";
 

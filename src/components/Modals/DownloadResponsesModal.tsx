@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -26,10 +27,7 @@ import { toast } from "react-toastify";
 const DownloadResponsesModal = ({
   rowData,
   columns,
-  setResponsesData,
-  setDownloadFileFormat,
   open,
-  // setOpen,
   handleClose,
 }: DownloadResponsesModalProps) => {
   const {
@@ -83,7 +81,7 @@ const DownloadResponsesModal = ({
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 400,
-            height: "60vh",
+            height: "36vh",
             bgcolor: "background.paper",
             borderRadius: 1,
             p: 4,
@@ -93,11 +91,11 @@ const DownloadResponsesModal = ({
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: "4%",
+              // gap: "4px",
               margin: "auto",
               width: "100%",
               height: "100%",
-              border: "2px solid orange",
+              // border: "2px solid orange",
             }}
           >
             <Box
@@ -107,7 +105,7 @@ const DownloadResponsesModal = ({
                 margin: "auto",
                 width: "100%",
                 height: "12%",
-                border: "2px solid black",
+                // border: "2px solid black",
               }}
             >
               <Box
@@ -117,11 +115,14 @@ const DownloadResponsesModal = ({
                   alignItems: "center",
                   width: "90%",
                   height: "92%",
-                  border: "2px solid red",
+                  fontSize: "1.2rem",
+                  fontWeight: "bold",
+                  // border: "2px solid red",
                 }}
               >
                 Choose Format to download responses
               </Box>
+
               <Box
                 sx={{
                   display: "flex",
@@ -129,7 +130,7 @@ const DownloadResponsesModal = ({
                   alignItems: "center",
                   width: "10%",
                   height: "92%",
-                  border: "2px solid red",
+                  // border: "2px solid red",
                 }}
               >
                 <IconButton
@@ -137,12 +138,12 @@ const DownloadResponsesModal = ({
                   aria-controls="long-menu"
                   aria-haspopup="true"
                   onClick={handleClose}
+                  sx={{ top: "10%" }}
                 >
                   <CloseIcon />
                 </IconButton>
               </Box>
             </Box>
-
             <Box
               sx={{
                 display: "flex",
@@ -150,8 +151,8 @@ const DownloadResponsesModal = ({
                 gap: "4%",
                 margin: "auto",
                 width: "100%",
-                height: "84%",
-                border: "2px solid green",
+                height: "60%",
+                // border: "2px solid green",
               }}
             >
               <form onSubmit={handleSubmit(handleDownloadFormSubmit)}>
@@ -161,9 +162,9 @@ const DownloadResponsesModal = ({
                     flexDirection: "row",
                     margin: "auto",
                     padding: "2%",
-                    width: "98%",
-                    height: "40%",
-                    border: "2px solid black",
+                    width: "96%",
+                    height: "60%",
+                    // border: "2px solid black",
                   }}
                 >
                   <FormControl error={!!errors.fileFormatGroup}>
@@ -183,15 +184,15 @@ const DownloadResponsesModal = ({
                               control={<CustomRadioButton />}
                               label="XLSX"
                             />
-                            <FormControlLabel
+                            {/* <FormControlLabel
                               value="pdf"
                               control={<CustomRadioButton />}
                               label="pdf"
-                            />
+                            /> */}
                           </RadioGroup>
                         </>
                       )}
-                    />{" "}
+                    />
                     {errors.fileFormatGroup && (
                       <FormHelperText>
                         {errors.fileFormatGroup.message}
@@ -199,6 +200,7 @@ const DownloadResponsesModal = ({
                     )}
                   </FormControl>
                 </Box>
+                <Divider sx={{ marginTop: "2%", borderBottomWidth:"2px" }} />
                 <Box
                   sx={{
                     display: "flex",
@@ -206,10 +208,11 @@ const DownloadResponsesModal = ({
                     justifyContent: "flex-end",
                     alignItems: "center",
                     margin: "auto",
-                    paddingRight: "4%",
-                    width: "100%",
-                    height: "8%",
-                    border: "2px solid black",
+                    marginTop: "4%",
+                    paddingRight: "2%",
+                    width: "96%",
+                    height: "24%",
+                    // border: "2px solid black",
                   }}
                 >
                   <Box
@@ -221,7 +224,7 @@ const DownloadResponsesModal = ({
                       gap: "12px",
                       width: "48%",
                       height: "100%",
-                      border: "2px solid blue",
+                      // border: "2px solid blue",
                     }}
                   >
                     <Button

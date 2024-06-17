@@ -18,6 +18,19 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body: { email },
       }),
     }),
+    resetPassword: builder.mutation({
+      query: ({ password, code }) => ({
+        url: "/password/reset",
+        method: "POST",
+        body: { password, code },
+      }),
+    }),
+    verifyEmail: builder.query({
+      query: (verificationCode) => ({
+        url: `/verify/${verificationCode}`,
+        method: "GET",
+      }),
+    }),
     sendLogout: builder.mutation<ILogoutResponse, void>({
       query: () => ({
         url: "/logout",
@@ -50,7 +63,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
           const { accessToken } = data;
           dispatch(
             setCredentials({
-              token: accessToken,
+              // token: accessToken,
               accessToken,
               // isLoggedIn: true,
             })
@@ -68,4 +81,6 @@ export const {
   useSendLogoutMutation,
   useRefreshMutation,
   useForgotPasswordMutation,
+  useVerifyEmailQuery,
+  useResetPasswordMutation,
 } = authApiSlice;

@@ -141,7 +141,6 @@ const ChoiceElement = ({
         sx={{
           width: "fit-content",
           maxWidth: "96%",
-          border: "2px solid red",
         }}
       >
         <FormControl>
@@ -156,7 +155,7 @@ const ChoiceElement = ({
               sx={{
                 margin: "auto",
                 width: "100%",
-                border: "2px solid blue",
+                // border: "2px solid blue",
                 "--List-gap": "0.5rem",
                 "--ListItem-radius": "4px",
                 "--ListItemDecorator-size": "32px",
@@ -213,7 +212,7 @@ const ChoiceElement = ({
                             sx: () => ({
                               ...(checked && {
                                 inset: -1,
-                                border: "1px solid blue",
+                                // border: "1px solid blue",
                               }),
                             }),
                           }),

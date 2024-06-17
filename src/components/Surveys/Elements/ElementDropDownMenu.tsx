@@ -41,6 +41,7 @@ const ElementDropDownMenu = ({
         aria-controls="long-menu"
         aria-haspopup="true"
         onClick={handleClick}
+        sx={{ marginRight: "48%" }}
       >
         <MoreVertIcon />
       </IconButton>

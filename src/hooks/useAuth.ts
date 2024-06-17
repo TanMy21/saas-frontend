@@ -6,6 +6,7 @@ interface ICustomePayload extends JwtPayload {
   UserInfo?: {
     email?: string;
     admin?: boolean;
+    verified?: boolean;
   };
 }
 
@@ -13,21 +14,21 @@ const useAuth = () => {
   const token = useSelector(selectCurrentToken);
   let isAdmin = false;
   let isAuthenticated = false;
+  let isVerified;
 
   if (token) {
-    const decoded = jwtDecode(token) as ICustomePayload;
-    const { email, admin } = decoded.UserInfo || {};
-    isAuthenticated = true;
+    const decoded = jwtDecode<ICustomePayload>(token);
+    const { email, admin, verified } = decoded.UserInfo || {};
+    isAuthenticated = localStorage.getItem("persist") === "true" ? true : false;
+    isVerified = !!verified;
+
     if (admin) {
       isAdmin = true;
     }
-    console.log("A 1: ", isAuthenticated);
 
-    return { email, isAdmin, isAuthenticated };
+    return { email, isAdmin, isAuthenticated, isVerified };
   }
 
-  console.log("A 2: ", isAuthenticated);
-
-  return { email: "", isAdmin, isAuthenticated };
+  return { email: "", isAdmin, isAuthenticated, isVerified };
 };
 export default useAuth;

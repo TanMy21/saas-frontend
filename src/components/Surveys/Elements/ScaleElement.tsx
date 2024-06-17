@@ -58,7 +58,7 @@ const ScaleElement = ({
   display,
 }: ElementProps) => {
   const marginTop = display === "mobile" ? "4%" : "8%";
-  const sliderWidth = display === "mobile" ? "88%" : "64%";
+  const sliderWidth = display === "mobile" ? "88%" : "80%";
   const sliderPadding = display === "mobile" ? "4%" : "2%";
 
   return (
@@ -72,7 +72,15 @@ const ScaleElement = ({
       height={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: marginTop }}>
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        sx={{
+          width: "80%",
+          maxWidth: "92%",
+          marginTop: marginTop,
+        }}
+      >
         <ElementQuestionText
           qID={qID}
           qNO={qNO}

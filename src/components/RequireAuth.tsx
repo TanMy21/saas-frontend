@@ -3,7 +3,6 @@ import useAuth from "../hooks/useAuth";
 
 const RequireAuth = () => {
   const { isAuthenticated } = useAuth();
-
   const location = useLocation();
 
   if (isAuthenticated) {

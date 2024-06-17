@@ -16,15 +16,52 @@ import {
 } from "@mui/material";
 import { useLoginMutation } from "../app/slices/authApiSlice";
 import { setCredentials } from "../app/slices/authSlice";
-import { ErrorData, LoginFormData } from "../utils/types";
+import { ErrorData, FetchBaseQueryError, LoginFormData } from "../utils/types";
 import FormErrors from "../components/FormErrors";
 import { loginSchema } from "../utils/schema";
+import usePersist from "../hooks/persist";
 
 const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [persist, setPersist] = usePersist();
 
   const [login, { isLoading, isError, error }] = useLoginMutation();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const handlePersist = () => setPersist((prev) => !prev);
+
+  const submitLoginData = async (data: LoginFormData) => {
+    const { email, password } = data;
+    try {
+      const { accessToken } = await login({ email, password }).unwrap();
+      dispatch(setCredentials({ accessToken }));
+      handlePersist();
+      navigate("/dash");
+    } catch (error) {
+      const errorData = error as FetchBaseQueryError;
+      if (!errorData.status) {
+        toast.error("No Server Response", { position: "top-right" });
+      } else if (errorData.status === 400) {
+        toast.error("Missing Username or Password", {
+          position: "top-right",
+        });
+      } else if (errorData.status === 401) {
+        toast.error("Unauthorized", { position: "top-right" });
+      } else {
+        toast.error(errorData.data?.message || "An error occurred", {
+          position: "top-right",
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     if (isError) {
@@ -42,27 +79,6 @@ const Signin = () => {
       }
     }
   }, [isError, error]);
-
-  
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-  });
-
-  const submitLoginData = async (data: LoginFormData) => {
-    const { email, password } = data;
-    try {
-      const { accessToken } = await login({ email, password }).unwrap();
-      dispatch(setCredentials({ accessToken }));
-      navigate("/dash");
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   if (isLoading) return <CircularProgress />;
 
@@ -84,6 +100,7 @@ const Signin = () => {
             alignItems: "center",
             width: "80%",
             p: 4,
+            borderRadius: "16px",
           }}
         >
           <Link to="/" style={{ textDecoration: "none" }}>
@@ -91,7 +108,11 @@ const Signin = () => {
               Logo
             </Typography>
           </Link>
-          <Typography component="h1" variant="h5">
+          <Typography
+            component="h1"
+            variant="h5"
+            sx={{ fontWeight: 800, color: "#101828" }}
+          >
             Sign in
           </Typography>
           <form onSubmit={handleSubmit(submitLoginData)}>
@@ -122,18 +143,44 @@ const Signin = () => {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 2,
+                  mb: 2,
+                  fontWeight: 700,
+                  backgroundColor: "#4C6FFF",
+                  textTransform: "capitalize",
+                  borderRadius: "4px",
+                  "&:hover": {
+                    backgroundColor: "#4C6FFF",
+                  },
+                }}
               >
                 Sign In
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link to="/forgot" style={{ padding: 5 }}>
-                    Forgot Password
+                  <Link
+                    to="/forgot"
+                    style={{
+                      padding: 5,
+                      textDecoration: "none",
+                      fontWeight: 600,
+                      color: "#494454",
+                    }}
+                  >
+                    Forgot Password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link to="/register" style={{ padding: 5 }}>
+                  <Link
+                    to="/register"
+                    style={{
+                      padding: 5,
+                      textDecoration: "none",
+                      fontWeight: 600,
+                      color: "#494454",
+                    }}
+                  >
                     Register
                   </Link>
                 </Grid>

@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useGetElementByIDQuery } from "../../app/slices/elementApiSlice";
 import { elementComponents } from "../../utils/elementsConfig";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
-import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
+
 
 const SurveyBuilderCanvasMobile = ({
   questionId,
@@ -41,7 +41,7 @@ const SurveyBuilderCanvasMobile = ({
         }}
       >
         {/* Element view */}
-        {questions?.type ? (
+        {questions?.type && (
           <QuestionComponent
             qID={questions?.questionID}
             qNO={questions?.order?.toString()}
@@ -50,8 +50,6 @@ const SurveyBuilderCanvasMobile = ({
             qType={questions?.type}
             display={display}
           />
-        ) : (
-          <SurveyWelcomeElement />
         )}
       </Box>
     </Box>

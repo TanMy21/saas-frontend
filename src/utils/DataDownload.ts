@@ -38,7 +38,7 @@ export const exportToXlsx = (
   const worksheetData = [headers, ...data];
 
   const sheetOptions = {
-    "!cols": columns.map(() => ({ wch: 10 })), // Example of setting column width
+    "!cols": columns.map(() => ({ wch: 10 })), // setting column width
   };
 
   // Create worksheet

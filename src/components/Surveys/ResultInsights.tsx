@@ -1,6 +1,45 @@
 import { Box, Typography } from "@mui/material";
+import { useGetInsightsQuery } from "../../app/slices/insightsApiSlice";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { ErrorData } from "../../utils/types";
+import { toast } from "react-toastify";
 
 const ResultInsights = () => {
+  const { surveyID } = useParams();
+
+  const {
+    data: results,
+    isLoading,
+    isError,
+    error,
+  } = useGetInsightsQuery(surveyID);
+
+  const {
+    views,
+    starts,
+    completions,
+    completionRate,
+    averageCompletionTimeInMinutes,
+  } = results || {};
+
+  useEffect(() => {
+    if (isError) {
+      const errorData = error as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isError, error]);
+
   return (
     <>
       <Box
@@ -9,9 +48,9 @@ const ResultInsights = () => {
           flexDirection: "column",
           justifyContent: "center",
           margin: "auto",
+          marginTop: "2%",
           width: "60%",
           height: "40%",
-          border: "2px solid black",
         }}
       >
         <Box
@@ -30,9 +69,11 @@ const ResultInsights = () => {
         <Box
           sx={{
             display: "flex",
-            width: "64%",
-            height: "40%",
+            width: { sm: "96%", md: "96%", lg: "96%", xl: "60%" },
+            height: "64%",
             marginTop: "2%",
+            gap: "2%",
+            padding: "2%",
           }}
         >
           <Box
@@ -52,6 +93,7 @@ const ResultInsights = () => {
                 width: "98%",
                 height: "28%",
                 fontSize: "20px",
+                fontWeight: 600,
                 color: "#353148",
               }}
             >
@@ -69,7 +111,7 @@ const ResultInsights = () => {
               }}
             >
               <Typography sx={{ fontSize: "40px", fontStyle: "bold" }}>
-                10
+                {views || 0}
               </Typography>
             </Box>
           </Box>
@@ -90,6 +132,7 @@ const ResultInsights = () => {
                 width: "98%",
                 height: "28%",
                 fontSize: "20px",
+                fontWeight: 600,
                 color: "#353148",
               }}
             >
@@ -107,7 +150,7 @@ const ResultInsights = () => {
               }}
             >
               <Typography sx={{ fontSize: "40px", fontStyle: "bold" }}>
-                10
+                {starts || 0}
               </Typography>
             </Box>
           </Box>
@@ -128,6 +171,7 @@ const ResultInsights = () => {
                 width: "98%",
                 height: "28%",
                 fontSize: "20px",
+                fontWeight: 600,
                 color: "#353148",
               }}
             >
@@ -145,7 +189,7 @@ const ResultInsights = () => {
               }}
             >
               <Typography sx={{ fontSize: "40px", fontStyle: "bold" }}>
-                10
+                {completions || 0}
               </Typography>
             </Box>
           </Box>
@@ -165,6 +209,7 @@ const ResultInsights = () => {
                 width: "98%",
                 height: "28%",
                 fontSize: "20px",
+                fontWeight: 600,
                 color: "#353148",
               }}
             >
@@ -182,7 +227,7 @@ const ResultInsights = () => {
               }}
             >
               <Typography sx={{ fontSize: "40px", fontStyle: "bold" }}>
-                100 %
+                {completionRate || 0}%
               </Typography>
             </Box>
           </Box>
@@ -202,6 +247,7 @@ const ResultInsights = () => {
                 width: "98%",
                 height: "28%",
                 fontSize: "20px",
+                fontWeight: 600,
                 color: "#353148",
               }}
             >
@@ -219,7 +265,7 @@ const ResultInsights = () => {
               }}
             >
               <Typography sx={{ fontSize: "40px", fontStyle: "bold" }}>
-                00:00
+                {averageCompletionTimeInMinutes || "00:00"}
               </Typography>
             </Box>
           </Box>

@@ -1,22 +1,22 @@
-import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Box } from "@mui/material";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
-import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
+// import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
 import { useGetElementByIDQuery } from "../../app/slices/elementApiSlice";
 import { elementComponents } from "../../utils/elementsConfig";
 
 const SurveyBuilderCanvas = ({
   questionId,
-  display,
+  //display,
   // handleLayoutChange,
 }: SurveyBuilderCanvasProps) => {
-  const { data: questions } = useGetElementByIDQuery(questionId, {
+  const { data: questions } = useGetElementByIDQuery(questionId ?? "", {
     skip: !questionId,
   });
 
   const QuestionComponent =
-    // selectedQuestion
-    /*?*/ elementComponents[questions?.type as QuestionTypeKey];
-  // : SurveyWelcomeElement;
+    // firstQuestion
+    elementComponents[questions?.type as QuestionTypeKey];
+  // : null;
 
   return (
     <Box display={"flex"} flexDirection={"column"}>
@@ -38,7 +38,7 @@ const SurveyBuilderCanvas = ({
           }}
         >
           {/* Element view */}
-          {questions?.type ? (
+          {questions?.type && (
             <QuestionComponent
               qID={questions?.questionID}
               qNO={questions?.order?.toString()}
@@ -46,59 +46,9 @@ const SurveyBuilderCanvas = ({
               qDescription={questions?.description}
               qType={questions?.type}
             />
-          ) : (
-            <SurveyWelcomeElement display={display} />
           )}
         </Box>
       </Box>
-      {/* <Box mt={4} mb={2} display={"flex"} justifyContent={"center"}>
-        <ToggleButtonGroup
-          color="primary"
-          value={display}
-          exclusive
-          onChange={handleLayoutChange}
-          aria-label="Platform"
-        >
-          <ToggleButton
-            size="small"
-            value="mobile"
-            sx={{
-              textTransform: "capitalize",
-              color: "black",
-              bgcolor: "#E3E3E3",
-              "&.Mui-selected": {
-                bgcolor: "#3C3737",
-                color: "white",
-                "&:hover": {
-                  bgcolor: "#868383",
-                  color: "white",
-                },
-              },
-            }}
-          >
-            <span>Mobile</span>
-          </ToggleButton>
-          <ToggleButton
-            size="small"
-            value="desktop"
-            sx={{
-              textTransform: "capitalize",
-              color: "black",
-              bgcolor: "#E3E3E3",
-              "&.Mui-selected": {
-                bgcolor: "#3C3737",
-                color: "white",
-                "&:hover": {
-                  bgcolor: "#868383",
-                  color: "white",
-                },
-              },
-            }}
-          >
-            Desktop
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Box> */}
     </Box>
   );
 };

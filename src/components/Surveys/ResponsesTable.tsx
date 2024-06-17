@@ -53,7 +53,13 @@ const ResponsesTable = () => {
   const handleClose = () => setOpenDownloadModal(false);
 
   const { data: results, isLoading: isDataLoading } = useGetResultsQuery(
-    surveyID!
+    surveyID!,
+    // {
+    //   skip: !surveyID,
+    //   pollingInterval: 30000,
+    //   refetchOnFocus: true,
+    //   refetchOnMountOrArgChange: true,
+    // }
   );
 
   const questions = results?.questions ?? [];
@@ -80,9 +86,6 @@ const ResponsesTable = () => {
       .rows.map((row) => row.original);
     setRowData(selectedRows);
   };
-
-  console.log("Selected Responses: ", responsesData);
-  console.log("Download File Format: ", downloadFileFormat);
 
   const columns = useMemo(() => {
     if (!questions) return [];

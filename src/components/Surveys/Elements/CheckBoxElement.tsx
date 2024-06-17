@@ -111,7 +111,11 @@ const CheckBoxElement = ({
       height={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: "12%" }}>
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        sx={{ width: "80%", maxWidth: "96%", marginTop: "12%" }}
+      >
         <ElementQuestionText
           qID={qID}
           qNO={qNO}

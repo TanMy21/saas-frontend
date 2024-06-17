@@ -2,10 +2,11 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { AuthState } from "../../utils/types";
 
+
 const initialState: AuthState = {
   token: null,
-  accessToken: null,
-  isLoggedIn: false,
+  // accessToken: null,
+  // isLoggedIn: false,
 };
 
 const authSlice = createSlice({
@@ -15,11 +16,13 @@ const authSlice = createSlice({
     setCredentials: (state, { payload }: PayloadAction<AuthState>) => {
       const { accessToken } = payload;
       state.token = accessToken;
-      state.isLoggedIn = true;
+      // state.isLoggedIn = true;
+      localStorage.setItem("persist", "true");
     },
     logOut: (state) => {
       state.token = null;
-      state.isLoggedIn = false;
+      // state.isLoggedIn = false;
+      localStorage.removeItem("persist");
     },
   },
 });
@@ -29,4 +32,4 @@ export const { setCredentials, logOut } = authSlice.actions;
 export default authSlice.reducer;
 
 export const selectCurrentToken = (state: RootState) => state.auth.token;
-export const selectLoggedInState = (state: RootState) => state.auth.isLoggedIn;
+// export const selectLoggedInState = (state: RootState) => state.auth.isLoggedIn;

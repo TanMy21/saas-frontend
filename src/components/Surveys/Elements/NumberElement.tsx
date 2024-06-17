@@ -13,7 +13,7 @@ const NumberElement = ({
   const marginTop = display === "mobile" ? "20%" : "8%";
   const inputContainerWidth = display === "mobile" ? "96%" : "56%";
   const marginTopBtn = display === "mobile" ? "2%" : "1%";
-  const textFieldWidth = display === "mobile" ? "100%" : "80%";
+  const textFieldWidth = display === "mobile" ? "100%" : "100%";
   const textFieldMarginLeft = display === "mobile" ? "4%" : "0%";
   const textFieldFontSize = display === "mobile" ? "16px" : "36px";
 
@@ -57,7 +57,7 @@ const NumberElement = ({
         >
           <Box
             sx={{
-              width: "90%",
+              width: "96%",
               margin: textFieldMarginLeft,
               padding: "2%",
             }}

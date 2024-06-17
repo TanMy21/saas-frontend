@@ -102,8 +102,6 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
       return el;
     });
 
-    console.log("Reordered Elements: ", reorderedElements);
-
     debounceUpdateOrder(reorderedElements);
   };
 
@@ -123,7 +121,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
             background: "#f1f1f1", // Scrollbar track color
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "#888", // Scrollbar thumb color
+            background: "#61A5D2", // Scrollbar thumb color
             borderRadius: "10px", // Rounded corners on the scrollbar thumb
             "&:hover": {
               background: "#555", // Scrollbar thumb hover color
@@ -216,6 +214,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                                     height: "100%",
 
                                     marginTop: "1%",
+                                    marginLeft: "4%", 
                                     "&:hover": {
                                       cursor: "pointer",
                                     },
@@ -223,7 +222,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                                 >
                                   <Typography
                                     color={"black"}
-                                    fontSize={"1.2rem"}
+                                    fontSize={"1.4rem"}
                                     fontWeight={"bold"}
                                   >
                                     {element.order}
@@ -231,7 +230,6 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                                 </Box>
                               ))
                             }
-
                             <Box
                               display={"flex"}
                               justifyContent={"flex-start"}

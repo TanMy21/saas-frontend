@@ -3,17 +3,16 @@ import {
   Box,
   CircularProgress,
   Container,
-  Paper,
   Typography,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
+import { useVerifyEmailQuery } from "../app/slices/authApiSlice";
 
 const VerifyUser = () => {
   const { verificationCode } = useParams();
 
-  const isLoading = false;
-  const isSuccess = false;
-  const isError = false;
+  const { isLoading, isSuccess, isError } =
+    useVerifyEmailQuery(verificationCode);
 
   return (
     <Container component="main" maxWidth="xs" sx={{ marginTop: "12%" }}>
@@ -25,8 +24,7 @@ const VerifyUser = () => {
           alignItems: "center",
         }}
       >
-        <Paper
-          elevation={8}
+        <Box
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -106,7 +104,7 @@ const VerifyUser = () => {
               </Box>
             )}
           </Box>
-        </Paper>
+        </Box>
       </Box>
     </Container>
   );
