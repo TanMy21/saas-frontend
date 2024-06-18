@@ -11,17 +11,30 @@ import { CiViewList } from "react-icons/ci";
 import { RxCardStack } from "react-icons/rx";
 import { LuGalleryVerticalEnd } from "react-icons/lu";
 import BinaryElement from "../components/Surveys/Elements/BinaryElement";
+import BinaryElementSettings from "../components/Surveys/ElementSettings/BinaryElementSettings";
 import ChoiceElement from "../components/Surveys/Elements/ChoiceElement";
+import ChoiceElementSettings from "../components/Surveys/ElementSettings/ChoiceElementSettings";
 import CheckBoxElement from "../components/Surveys/Elements/CheckBoxElement";
+import CheckBoxElementSettings from "../components/Surveys/ElementSettings/CheckBoxElementSettings";
 import EmailContactELement from "../components/Surveys/Elements/EmailContactELement";
+import EmailContactElementSettings from "../components/Surveys/ElementSettings/EmailContactElementSettings";
 import EndScreenElement from "../components/Surveys/Elements/EndScreenElement";
+import EndScreenElementSettings from "../components/Surveys/ElementSettings/EndScreenElementSettings";
 import InstructionsElement from "../components/Surveys/Elements/InstructionsElement";
+import InstructionsElementSettings from "../components/Surveys/ElementSettings/InstructionsElementSettings";
 import MediaElement from "../components/Surveys/Elements/MediaElement";
+import MediaElementSettings from "../components/Surveys/ElementSettings/MediaElementSettings";
 import NumberElement from "../components/Surveys/Elements/NumberElement";
+import NumberElementSettings from "../components/Surveys/ElementSettings/NumberElementSettings";
 import RankElement from "../components/Surveys/Elements/RankElement";
+import RankElementSettings from "../components/Surveys/ElementSettings/RankElementSettings";
 import ScaleElement from "../components/Surveys/Elements/ScaleElement";
+import ScaleElementSettings from "../components/Surveys/ElementSettings/ScaleElementSettings";
 import TextElement from "../components/Surveys/Elements/TextElement";
+import TextElementSettings from "../components/Surveys/ElementSettings/TextElementSettings";
 import WelcomeScreenElement from "../components/Surveys/Elements/WelcomeScreenElement";
+import WelcomeScreenElementSettings from "../components/Surveys/ElementSettings/WelcomeScreenElementSettings";
+
 import {
   ElementType,
   IconMapping,
@@ -61,77 +74,106 @@ export const elementComponents: {
   WELCOME_SCREEN: WelcomeScreenElement,
 };
 
+export const elementSettingsComponents: {
+  [key in QuestionTypeKey]: React.ComponentType<ElementProps>;
+} = {
+  BINARY: BinaryElementSettings,
+  EMAIL_CONTACT: EmailContactElementSettings,
+  END_SCREEN: EndScreenElementSettings,
+  INSTRUCTIONS: InstructionsElementSettings,
+  MEDIA: MediaElementSettings,
+  MULTIPLE_CHOICE: CheckBoxElementSettings,
+  NUMBER: NumberElementSettings,
+  RADIO: ChoiceElementSettings,
+  RANK: RankElementSettings,
+  RANGE: ScaleElementSettings,
+  TEXT: TextElementSettings,
+  WELCOME_SCREEN: WelcomeScreenElementSettings,
+};
+
 export const elementTypes: { [key: string]: ElementType } = {
   Binary: {
     type: "Binary",
     icon: elementIcons.BINARY,
     text: "Your question here",
     Element: BinaryElement,
+    Settings: BinaryElementSettings,
   },
   Checkbox: {
     type: "Checkbox",
     icon: elementIcons.MULTIPLE_CHOICE,
     text: "Your question here",
     Element: CheckBoxElement,
+    Settings: CheckBoxElementSettings,
   },
   Choice: {
     type: "Choice",
     icon: elementIcons.RADIO,
     text: "Your question here",
     Element: ChoiceElement,
+    Settings: ChoiceElementSettings,
   },
   EmailContact: {
     type: "EmailContact",
     icon: elementIcons.EMAIL_CONTACT,
     text: "Your question here",
     Element: EmailContactELement,
+    Settings: EmailContactElementSettings,
   },
   EndScreen: {
     type: "EndScreen",
     icon: elementIcons.END_SCREEN,
     text: "Your question here",
     Element: EndScreenElement,
+    Settings: EndScreenElementSettings,
   },
   Instructions: {
     type: "Instructions",
     icon: elementIcons.INSTRUCTIONS,
     text: "Your question here",
     Element: InstructionsElement,
+    Settings: InstructionsElementSettings,
   },
   Media: {
     type: "Media",
     icon: elementIcons.MEDIA,
     text: "Your question here",
     Element: MediaElement,
+    Settings: MediaElementSettings,
   },
   Number: {
     type: "Number",
     icon: elementIcons.NUMBER,
     text: "Your question here",
     Element: NumberElement,
+    Settings: NumberElementSettings,
   },
   Rank: {
     type: "Rank",
     icon: elementIcons.RANK,
     text: "Your question here",
     Element: RankElement,
+    Settings: RankElementSettings,
   },
   Scale: {
     type: "Scale",
     icon: elementIcons.RANGE,
     text: "Your question here",
     Element: ScaleElement,
+    Settings: ScaleElementSettings,
   },
   Text: {
     type: "Text",
     icon: elementIcons.TEXT,
     text: "Your question here",
     Element: TextElement,
+    Settings: TextElementSettings,
   },
   WelcomeScreen: {
     type: "WelcomeScreen",
     icon: elementIcons.WELCOME_SCREEN,
     text: "Your question here",
     Element: WelcomeScreenElement,
+    Settings: WelcomeScreenElementSettings,
   },
 };

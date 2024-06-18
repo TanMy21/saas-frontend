@@ -1,13 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Box,
-  CircularProgress,
-  Divider,
-  Grid,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Box, CircularProgress, Divider, Grid } from "@mui/material";
 import { useGetSurveyByIdQuery } from "../app/slices/surveysApiSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
@@ -15,12 +7,12 @@ import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
 import SurveyBuilderCanvas from "../components/Surveys/SurveyBuilderCanvas";
 import SurveyBuilderCanvasMobile from "../components/Surveys/SurveyBuilderCanvasMobile";
-import CustomizeElement from "../components/Surveys/CustomizeElement";
 import SurveyBuilderIsland from "../components/Surveys/SurveyBuilderIsland";
 import { useGetElementsForSurveyQuery } from "../app/slices/elementApiSlice";
 import SurveyWelcomeElement from "../components/Surveys/Elements/SurveyWelcomeElement";
 import { Element } from "../utils/types";
 import ScrollbarStyle from "../components/ScrollbarStyle";
+import ElementSettingsContainer from "../components/Surveys/ElementSettings/ElementSettingsContainer";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
@@ -243,54 +235,7 @@ const SurveyBuilder = () => {
                     height: "48px",
                   }}
                 >
-                  <Tabs
-                    value={value}
-                    centered
-                    onChange={handleChange}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "start",
-                      height: "80%",
-                      width: "100%",
-                      fontSize: "20px",
-                      color: "black",
-                      ".MuiTabs-indicator": {
-                        height: "2px",
-                        bottom: { lg: 6, xl: 4 },
-                        backgroundColor: "black",
-                      },
-                      "& .MuiButtonBase-root": {
-                        maxHeight: "40px",
-                      },
-                      "& .Mui-selected": {
-                        color: "black",
-                        "& .MuiTab-iconWrapper": {
-                          color: "black",
-                        },
-                      },
-                      "& .MuiTab-root": {
-                        textTransform: "capitalize",
-                      },
-                    }}
-                  >
-                    <Tab
-                      label="Question"
-                      value="question"
-                      sx={{
-                        fontWeight: 600,
-                        color: "black",
-                      }}
-                    />
-                    <Tab
-                      label="Flow"
-                      value="flow"
-                      sx={{
-                        fontWeight: 600,
-                        color: "black",
-                      }}
-                    />
-                  </Tabs>
+                  Customization
                 </Box>
                 <Divider sx={{ marginTop: { lg: "-8%", xl: "-4%" } }} />
                 <Box
@@ -303,13 +248,11 @@ const SurveyBuilder = () => {
                     //border: "1px solid red",
                   }}
                 >
-                  {value === "question" ? (
-                    <CustomizeElement />
-                  ) : (
-                    <Typography variant="h4" ml={4}>
-                      Flow
-                    </Typography>
-                  )}
+                  <ElementSettingsContainer
+                    survey={survey}
+                    questionId={questionId}
+                    display={display}
+                  />
                 </Box>
               </Box>
             </Grid>

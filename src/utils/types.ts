@@ -70,6 +70,7 @@ export interface ElementType {
   text: string;
   order?: number;
   Element?: React.ComponentType<ElementProps>;
+  Settings?: React.ComponentType<ElementProps>;
 }
 
 interface ErrorMessage {
