@@ -21,15 +21,10 @@ const SurveyBuilder = () => {
   const { workspaceId, workspaceName } = location.state || {};
   const isOpen = location.state?.openModal || false;
   const [surveyTitle, setSurveyTitle] = useState<string>("");
-  const [value, setValue] = useState("question");
   const [questionId, setQuestionId] = useState<string | null>(null);
   const [display, setDisplay] = useState<string | null>("desktop");
   const [loading, setLoading] = useState(false);
   const [noElements, setNoElements] = useState(false);
-
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
 
   const {
     data: survey,
@@ -215,13 +210,21 @@ const SurveyBuilder = () => {
               xl={2}
               md={2}
               xs={2}
-              sx={{ width: "14%", minHeight: "92%", overflowY: "hidden" }}
+              sx={{
+                width: "14%",
+                minHeight: "92%",
+                overflowX: "hidden",
+                overflowY: "hidden",
+              }}
             >
               <Box
                 sx={{
+                  display: "flex",
+                  flexDirection: "column",
                   background: "white",
                   width: "100%",
                   height: "100%",
+                  gap: "1%",
                   position: "sticky",
                   top: "5vh",
                   left: "0",
@@ -230,22 +233,36 @@ const SurveyBuilder = () => {
               >
                 <Box
                   sx={{
-                    padding: { md: "2%", lg: "4%", xl: "2%" },
-                    width: { md: "84%", lg: "88%", xl: "92%" },
-                    height: "48px",
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "end",
+                    width: "92%",
+                    margin: "auto",
+                    marginTop: "4%",
+                    height: { lg: "4%", xl: "2%" },
+                    fontSize: "20px",
+                    fontWeight: 600,
+                    // border: "1px solid red",
                   }}
                 >
                   Customization
                 </Box>
-                <Divider sx={{ marginTop: { lg: "-8%", xl: "-4%" } }} />
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
+                <Divider
                   sx={{
-                    width: { md: "99%", lg: "99%", xl: "99%" },
-                    height: "84vh",
-                    marginTop: "2%",
-                    //border: "1px solid red",
+                    marginTop: { lg: "0%", xl: "0%" },
+                    marginBottom: { lg: "0%", xl: "0%" },
+                  }}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "92%",
+                    margin: "auto",
+                    marginTop: "0%",
+                    padding: "1%",
+                    height: "92%",
+                    border: "1px solid black",
                   }}
                 >
                   <ElementSettingsContainer

@@ -54,3 +54,88 @@ export const resetPasswordSchema = z
     message: "Passwords do not match *",
     path: ["confirmPassword"],
   });
+
+export const rankSettingsSchema = z.object({
+  required: z.boolean(),
+  questionText: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
+});
+
+export const textSettingsSchema = z.object({
+  required: z.boolean(),
+  questionText: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
+});
+
+export const numberSettingsSchema = z.object({
+  questionText: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
+  required: z.boolean(),
+  minSwitch: z.boolean(),
+  maxSwitch: z.boolean(),
+  minValue: z.number().optional(),
+  maxValue: z.number().optional(),
+});
+
+export const scaleSettingsSchema = z.object({
+  questionText: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
+  required: z.boolean(),
+  minValue: z.number().optional(),
+  maxValue: z.number().optional(),
+});
+
+export const welcomeSettingsSchema = z.object({
+  welcomeText: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
+  buttonText: z
+    .string()
+    .min(1, "Button text must be at least 1 character long")
+    .max(24, "Button text must be at most 24 characters long"),
+});
+
+export const binarySettingsSchema = z.object({
+  questionText: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
+  required: z.boolean(),
+  button1Text: z
+    .string()
+    .min(1, "Button text must be at least 1 character long")
+    .max(24, "Button text must be at most 24 characters long"),
+  button2Text: z
+    .string()
+    .min(1, "Button text must be at least 1 character long")
+    .max(24, "Button text must be at most 24 characters long"),
+});
+
+export const instructionsSettingsSchema = z.object({
+  buttonText: z
+    .string()
+    .min(1, "Button text must be at least 1 character long")
+    .max(24, "Button text must be at most 24 characters long"),
+});
+
+export const choiceSettingsSchema = z.object({
+  required: z.boolean(),
+  questionText: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
+});
+
+export const checkboxSettingsSchema = z.object({
+  required: z.boolean(),
+  multipleSelection: z.boolean(),
+  questionText: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
+});
+
+export const emailContactSettingsSchema = z.object({
+  required: z.boolean(),
+});

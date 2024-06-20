@@ -176,6 +176,20 @@ export interface Questions {
   response: QuestionResponse[];
 }
 
+export interface QuestionSetting {
+  required?: boolean;
+  questionText?: string;
+  buttonText?: string;
+  button1Text?: string;
+  button2Text?: string;
+  minValue?: number;
+  minSwitch?: boolean;
+  maxValue?: number;
+  maxSwitch?: boolean;
+  multipleSelection?: boolean;
+  welcomeText?: string;
+}
+
 export interface QuestionResponse {
   responseID: string;
   relatedQuestionID: string;
