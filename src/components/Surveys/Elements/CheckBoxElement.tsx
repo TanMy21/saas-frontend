@@ -107,7 +107,7 @@ const CheckBoxElement = ({
       justifyContent={"start"}
       alignItems={"center"}
       margin={"auto"}
-      width={"96%"}
+      width={"98%"}
       height={"100%"}
       zIndex={20}
     >
@@ -127,12 +127,17 @@ const CheckBoxElement = ({
       <Box
         display={"flex"}
         flexDirection={"column"}
-        mt={4}
+        alignItems={"center"}
+        mt={2}
         sx={{
-          width: "fit-content",
-          maxWidth: "96%",
+          width: "100%",
+          maxWidth: "240px",
           padding: "2%",
-          // border: "2px solid red",
+          border: "2px solid red",
+          "@media (max-width: 600px)": {
+            width: "95%",
+            padding: "0",
+          },
         }}
       >
         {options.map((option, index) => (
@@ -141,12 +146,12 @@ const CheckBoxElement = ({
             sx={{
               display: "flex",
               flexDirection: "row",
-              justifyContent: "space-evenly",
+              justifyContent: "space-between",
               alignItems: "center",
               marginBottom: "12px",
-              padding: "4px",
+              padding: "1px 2px",
               width: "100%",
-              height: "36px",
+              minHeight: "36px",
               backgroundColor: "#E5ECF7",
               borderRadius: "4px",
               border: "1px solid #003DAC",
@@ -156,6 +161,13 @@ const CheckBoxElement = ({
               "&:hover .close-button": {
                 visibility: "visible",
               },
+              "@media (max-width: 600px)": {
+                flexDirection: "column",
+                alignItems: "flex-start",
+                minHeight: "32px",
+                padding: "2px 4px",
+                marginBottom: "4px",
+              },
             }}
           >
             <Box
@@ -163,12 +175,35 @@ const CheckBoxElement = ({
               flexDirection={"row"}
               justifyContent={"center"}
               alignItems={"center"}
+              ml={2}
               mr={2}
-              sx={{ width: "20%", height: "28px" }}
+              sx={{
+                width: "auto",
+                marginRight: "12px",
+                "@media (max-width: 600px)": {
+                  marginBottom: "8px",
+                },
+              }}
             >
-              <Checkbox key={option.optionID} onClick={handleClick} />
+              <Checkbox
+                key={option.optionID}
+                onClick={handleClick}
+                sx={{
+                  "@media (max-width: 600px)": {
+                    "& .MuiSvgIcon-root": { fontSize: 18 },
+                  },
+                }}
+              />
             </Box>
-            <Box sx={{ width: "100%", height: "28px" }}>
+            <Box
+              sx={{
+                flexGrow: 1,
+                width: "calc(100% - 48px)",
+                "@media (max-width: 600px)": {
+                  width: "calc(100% - 30px)", 
+                },
+              }}
+            >
               <Box
                 display={"flex"}
                 flexDirection={"row"}
@@ -226,8 +261,10 @@ const CheckBoxElement = ({
                       // ml={1}
                       sx={{
                         fontSize: "16px",
-                        whiteSpace: "wrap",
-                        marginRight: "2%",
+                        whiteSpace: "normal",  
+                        wordBreak: "break-word",  
+                        width: "100%",  
+                        padding: "4px 0", 
                       }}
                       onClick={handleClick}
                     >

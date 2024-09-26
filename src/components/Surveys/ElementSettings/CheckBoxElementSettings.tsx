@@ -1,34 +1,56 @@
 import { Controller, useForm } from "react-hook-form";
-import { QuestionSetting } from "../../../utils/types";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkboxSettingsSchema } from "../../../utils/schema";
 import { useEffect, useRef, useState } from "react";
-import { Box, Switch, TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
+import Switch from "@mui/joy/Switch";
+import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
 
-const CheckBoxElementSettings = () => {
-  const { handleSubmit, watch, control, setValue } = useForm<QuestionSetting>({
+const CheckBoxElementSettings = ({
+  qID,
+  qText,
+  qRequired,
+}: ElementSettingsProps) => {
+  const [updateElementSettings] = useUpdateElementSettingsMutation();
+
+  const { handleSubmit, control } = useForm<QuestionSetting>({
     resolver: zodResolver(checkboxSettingsSchema),
     defaultValues: {
-      required: false,
-      multipleSelection: false,
-      questionText: "",
+      required: qRequired,
+      questionText: qText,
     },
   });
 
   const [formState, setFormState] = useState<QuestionSetting>({
-    required: false,
-    multipleSelection: false,
-    questionText: "",
+    required: qRequired,
+    questionText: qText,
   });
 
+  const previousFormState = useRef<QuestionSetting>(formState);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const onSubmit = (data: QuestionSetting) => {
-    const { required, questionText, multipleSelection } = data;
-    console.log("Form Data:", required, questionText, multipleSelection);
+  const onSubmit = async (data: QuestionSetting) => {
+    try {
+      const { required, questionText } = data;
+      const settings = {};
+      await updateElementSettings({
+        questionID: qID,
+        text: questionText,
+        required,
+        settings,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
+    const hasChanged =
+      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+
+    if (!hasChanged) return;
+
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
@@ -132,37 +154,6 @@ const CheckBoxElementSettings = () => {
                         setFormState((prev) => ({
                           ...prev,
                           required: value,
-                        }));
-                      }}
-                    />
-                  )}
-                />
-              </Box>
-            </Box>
-            <Box
-              mt={1}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: "0%",
-              }}
-            >
-              <Box sx={{ fontWeight: 500 }}>Multiple selection</Box>
-              <Box mt={1}>
-                <Controller
-                  name="multipleSelection"
-                  control={control}
-                  render={({ field }) => (
-                    <Switch
-                      checked={field.value}
-                      onChange={(event) => {
-                        const value = event.target.checked;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          multipleSelection: value,
                         }));
                       }}
                     />

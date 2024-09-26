@@ -11,6 +11,9 @@ export interface AuthResponse {
 
 export interface AuthState {
   token?: string | null;
+  _id?: string | null;
+  email?: string | null;
+  isAdmin?: boolean | null;
   accessToken?: string | null;
   isLoggedIn?: boolean;
 }
@@ -56,11 +59,16 @@ export interface ElementProps {
   qType?: string;
   display?: string | null;
   qID?: string;
+  qOptions?: OptionType[];
+  qRequired?: boolean;
+  qSettings?: QuestionSetting;
 }
 
 export interface ElementDropDownMenuProps {
   questionID: string;
+  elements: Element[];
   refetch: () => void;
+  setQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export interface ElementType {
@@ -95,6 +103,17 @@ interface ElementResponse {
   questionType: string;
   surveyID: string;
   response: QuestionResponse;
+}
+
+export interface ElementSettingsProps {
+  qID: string;
+  qNO?: string;
+  qText: string;
+  qDescription?: string;
+  qType?: string;
+  qOptions?: OptionType[];
+  qRequired?: boolean;
+  qSettings?: QuestionSetting;
 }
 
 export interface ErrorData {
@@ -177,16 +196,18 @@ export interface Questions {
 }
 
 export interface QuestionSetting {
-  required?: boolean;
-  questionText?: string;
   buttonText?: string;
   button1Text?: string;
   button2Text?: string;
+  instructionsTitle?: string;
   minValue?: number;
   minSwitch?: boolean;
   maxValue?: number;
   maxSwitch?: boolean;
   multipleSelection?: boolean;
+  questionText?: string;
+  required?: boolean;
+  superSize?: boolean;
   welcomeText?: string;
 }
 

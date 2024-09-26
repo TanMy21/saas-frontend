@@ -101,7 +101,7 @@ const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
               sx={{
                 whiteSpace: "wrap",
                 width: "100%",
-                textAlign: "justify",
+                textAlign: "center",
                 lineHeight: "1",
                 fontSize: fontSizeXL,
                 wordSpacing: "1px",

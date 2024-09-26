@@ -11,12 +11,14 @@ export const settingsUpdateSchema = z.object({
     .string()
     .refine((date) => dayjs(date, "DD/MM/YYYY").isSameOrAfter(dayjs(), "day"), {
       message: "Start date cannot be older than today",
-    }),
+    })
+    .optional(),
   endDate: z
     .string()
     .refine((date) => dayjs(date, "DD/MM/YYYY").isSameOrAfter(dayjs(), "day"), {
       message: "Start date cannot be older than today",
-    }),
+    })
+    .optional(),
   responseLimit: z.number().optional(),
   language: z.string(),
   isTemplate: z.boolean(),
@@ -115,6 +117,9 @@ export const binarySettingsSchema = z.object({
 });
 
 export const instructionsSettingsSchema = z.object({
+  instructionsTitle: z
+    .string()
+    .min(1, "Title must be at least 1 character long"),
   buttonText: z
     .string()
     .min(1, "Button text must be at least 1 character long")
@@ -136,6 +141,24 @@ export const checkboxSettingsSchema = z.object({
     .min(1, "Question text must be at least 1 character long"),
 });
 
-export const emailContactSettingsSchema = z.object({
+export const mediaSettingsSchema = z.object({
   required: z.boolean(),
+  multipleSelection: z.boolean(),
+  superSize: z.boolean(),
+  questionText: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
+});
+
+export const emailContactSettingsSchema = z.object({
+  questionTex: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
+  required: z.boolean(),
+});
+
+export const endScreenContactSettingsSchema = z.object({
+  questionTex: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
 });

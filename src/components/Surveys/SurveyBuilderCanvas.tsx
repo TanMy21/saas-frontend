@@ -45,6 +45,7 @@ const SurveyBuilderCanvas = ({
               qText={questions?.text}
               qDescription={questions?.description}
               qType={questions?.type}
+              qSettings={questions?.settings}
             />
           )}
         </Box>

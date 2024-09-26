@@ -58,7 +58,15 @@ const SurveyBuilder = () => {
         const sortedQuestions = [...Elements].sort(
           (a: Element, b: Element) => a.order! - b.order!
         );
-        setQuestionId(sortedQuestions[0].questionID);
+        // setQuestionId(sortedQuestions[0].questionID);
+
+        // Update logic to handle the case where questionId is null or deleted
+        if (
+          !questionId ||
+          !sortedQuestions.find((q) => q.questionID === questionId)
+        ) {
+          setQuestionId(sortedQuestions[0].questionID);
+        }
       }
     } else {
       setLoading(true);
@@ -262,7 +270,7 @@ const SurveyBuilder = () => {
                     marginTop: "0%",
                     padding: "1%",
                     height: "92%",
-                    border: "1px solid black",
+                    // border: "1px solid black",
                   }}
                 >
                   <ElementSettingsContainer

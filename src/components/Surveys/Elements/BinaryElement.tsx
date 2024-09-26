@@ -8,9 +8,15 @@ const BinaryElement = ({
   qText,
   qDescription,
   display,
+  qSettings,
 }: ElementProps) => {
   const widthBtn = display === "mobile" ? "80px" : "100px";
   const heightBtn = display === "mobile" ? "80px" : "100px";
+
+  const { button1Text, button2Text } = qSettings || {
+    button1Text: "Yes",
+    button2Text: "No",
+  };
 
   return (
     <Box
@@ -23,7 +29,11 @@ const BinaryElement = ({
       height={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ width: "98%", marginTop: "12%" }}>
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        sx={{ width: "98%", marginTop: "12%" }}
+      >
         <ElementQuestionText
           qID={qID}
           qNO={qNO}
@@ -55,7 +65,7 @@ const BinaryElement = ({
               borderRadius: "50%",
             }}
           >
-            Yes
+            {button1Text}
           </Button>
         </Box>
         <Box
@@ -75,7 +85,7 @@ const BinaryElement = ({
               borderRadius: "50%",
             }}
           >
-            No
+            {button2Text}
           </Button>
         </Box>
       </Box>

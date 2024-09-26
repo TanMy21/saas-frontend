@@ -1,46 +1,63 @@
 import { Controller, useForm } from "react-hook-form";
-import { QuestionSetting } from "../../../utils/types";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { textSettingsSchema } from "../../../utils/schema";
 import { useEffect, useRef, useState } from "react";
 import { Box, TextField } from "@mui/material";
 import Switch from "@mui/joy/Switch";
+import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
 
-const TextElementSettings = () => {
-  const {
-    handleSubmit,
-    watch,
-    control,
-    setValue,
-    // formState: { errors },
-  } = useForm<QuestionSetting>({
+const TextElementSettings = ({
+  qID,
+  qText,
+  qRequired,
+}: ElementSettingsProps) => {
+  const [updateElementSettings] = useUpdateElementSettingsMutation();
+
+  const { handleSubmit, control } = useForm<QuestionSetting>({
     resolver: zodResolver(textSettingsSchema),
     defaultValues: {
-      required: false,
-      questionText: "",
+      required: qRequired,
+      questionText: qText,
     },
   });
 
   const [formState, setFormState] = useState<QuestionSetting>({
-    required: false,
-    questionText: "",
+    required: qRequired,
+    questionText: qText,
   });
 
+  const previousFormState = useRef<QuestionSetting>(formState);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const onSubmit = (data: QuestionSetting) => {
-    const { required, questionText } = data;
-    console.log("Form Data:", required, questionText);
+  const onSubmit = async (data: QuestionSetting) => {
+    try {
+      const { required, questionText } = data;
+      const settings = {};
+      await updateElementSettings({
+        questionID: qID,
+        text: questionText,
+        required,
+        settings,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
+    const hasChanged =
+      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+
+    if (!hasChanged) return;
+
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
 
     debounceTimeout.current = setTimeout(() => {
       handleSubmit(onSubmit)();
-    }, 1000);
+    }, 2000);
 
     return () => {
       if (debounceTimeout.current) {
@@ -121,6 +138,7 @@ const TextElementSettings = () => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 marginTop: "0%",
+                width: "98%",
               }}
             >
               <Box sx={{ fontWeight: 500 }}>Required</Box>

@@ -5,6 +5,7 @@ import {
   QuestionTypeKey,
   SurveyBuilderCanvasProps,
 } from "../../../utils/types";
+import { useGetOptionsOfQuestionQuery } from "../../../app/slices/optionApiSlice";
 
 const ElementSettingsContainer = ({
   questionId,
@@ -14,6 +15,12 @@ const ElementSettingsContainer = ({
   const { data: questions } = useGetElementByIDQuery(questionId ?? "", {
     skip: !questionId,
   });
+
+  const { data: options } = useGetOptionsOfQuestionQuery(questionId ?? "", {
+    skip: !questionId,
+  });
+
+  // console.log("Container: ",options);
 
   const ElementSettingsComponent =
     // firstQuestion
@@ -28,6 +35,7 @@ const ElementSettingsContainer = ({
         }}
       >
         {/* Element view */}
+
         {questions?.type && (
           <ElementSettingsComponent
             qID={questions?.questionID}
@@ -35,6 +43,9 @@ const ElementSettingsContainer = ({
             qText={questions?.text}
             qDescription={questions?.description}
             qType={questions?.type}
+            qOptions={options}
+            qRequired={questions?.required}
+            qSettings = {questions?.settings}
           />
         )}
       </Box>

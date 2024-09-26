@@ -2,10 +2,12 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { AuthState } from "../../utils/types";
 
-
 const initialState: AuthState = {
   token: null,
-  // accessToken: null,
+  _id: null,
+  email: null,
+  isAdmin: false,
+  accessToken: null,
   // isLoggedIn: false,
 };
 
@@ -16,6 +18,9 @@ const authSlice = createSlice({
     setCredentials: (state, { payload }: PayloadAction<AuthState>) => {
       const { accessToken } = payload;
       state.token = accessToken;
+      state._id = payload._id;
+      state.email = payload.email;
+      state.isAdmin = payload.isAdmin;
       // state.isLoggedIn = true;
       localStorage.setItem("persist", "true");
     },

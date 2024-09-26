@@ -51,7 +51,14 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
-
+    updateElementSettings: builder.mutation({
+      query: ({ questionID, text, required, settings }) => ({
+        url: `/q/settings/${questionID}`,
+        method: "PUT",
+        body: { text, required, settings },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
     duplicateElement: builder.mutation({
       query: (questionID) => ({
         url: `/q/duplicate/${questionID}`,
@@ -76,6 +83,7 @@ export const {
   useCreateScreenElementMutation,
   useUpdateElementTextMutation,
   useUpdateElementOrderMutation,
+  useUpdateElementSettingsMutation,
   useUpdateElementDescriptionMutation,
   useDuplicateElementMutation,
   useDeleteElementMutation,

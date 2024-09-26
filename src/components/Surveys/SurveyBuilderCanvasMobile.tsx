@@ -3,7 +3,6 @@ import { useGetElementByIDQuery } from "../../app/slices/elementApiSlice";
 import { elementComponents } from "../../utils/elementsConfig";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 
-
 const SurveyBuilderCanvasMobile = ({
   questionId,
   display,
@@ -49,6 +48,7 @@ const SurveyBuilderCanvasMobile = ({
             qDescription={questions?.description}
             qType={questions?.type}
             display={display}
+            qSettings={questions?.settings}
           />
         )}
       </Box>

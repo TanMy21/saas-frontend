@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -14,19 +14,34 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useLoginMutation } from "../app/slices/authApiSlice";
+import {
+  useLazyGoogleAuthQuery,
+  useLoginMutation,
+} from "../app/slices/authApiSlice";
 import { setCredentials } from "../app/slices/authSlice";
+import { FcGoogle } from "react-icons/fc";
 import { ErrorData, FetchBaseQueryError, LoginFormData } from "../utils/types";
 import FormErrors from "../components/FormErrors";
 import { loginSchema } from "../utils/schema";
 import usePersist from "../hooks/persist";
 
 const Signin = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [persist, setPersist] = usePersist();
 
+  // const [googleAuthClicked, setGoogleAuthClicked] = useState(false);
+
   const [login, { isLoading, isError, error }] = useLoginMutation();
+  const [
+    googleAuth,
+    {
+      data: googleAuthData,
+      isError: isGoogleAuthError,
+      error: googleAuthError,
+    },
+  ] = useLazyGoogleAuthQuery();
 
   const {
     register,
@@ -79,6 +94,62 @@ const Signin = () => {
       }
     }
   }, [isError, error]);
+
+  useEffect(() => {
+    console.log("Error: ", isGoogleAuthError);
+    console.log("Google Auth Error: ", googleAuthError);
+
+    if (isGoogleAuthError) {
+      const errorData = googleAuthError as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isGoogleAuthError, googleAuthError]);
+
+  const handleGoogleAuth = () => {
+    try {
+      window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google`;
+    } catch (err: any) {
+      toast.error(err?.data?.message, {
+        position: "top-right",
+      });
+    }
+  };
+
+  useEffect(() => {
+    console.log("Location Pathname: ", location.pathname);
+    console.log("Google Auth Data: ", googleAuthData);
+    const queryParams = new URLSearchParams(location.search);
+    const isGoogleAuth = queryParams.get("auth") === "g";
+
+    if (isGoogleAuth && location.pathname === "/login") {
+      googleAuth({});
+    }
+
+    if (googleAuthData) {
+      const { accessToken } = googleAuthData;
+
+      console.log("Access Token: ", accessToken);
+
+      dispatch(setCredentials({ accessToken }));
+
+      navigate("/dash");
+    }
+
+    if (error) {
+      console.error("Failed to fetch access token:", error);
+      navigate("/login");
+    }
+  }, [location, googleAuthData, dispatch, navigate, googleAuth]);
 
   if (isLoading) return <CircularProgress />;
 
@@ -156,6 +227,40 @@ const Signin = () => {
                 }}
               >
                 Sign In
+              </Button>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleGoogleAuth}
+                sx={{
+                  mt: 1,
+                  mb: 2,
+                  fontWeight: 700,
+                  backgroundColor: "#E3F3FB",
+                  textTransform: "capitalize",
+                  color: "#424242",
+                  borderRadius: "4px",
+                  "&:hover": {
+                    backgroundColor: "#E3F3FB",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  <Box sx={{ marginTop: "4%" }}>
+                    <FcGoogle size={20} />
+                  </Box>
+                  <Box sx={{ fontWeight: 700, fontSize: "12px" }}>
+                    Log In with Google
+                  </Box>
+                </Box>
               </Button>
               <Grid container>
                 <Grid item xs>

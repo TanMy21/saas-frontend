@@ -117,7 +117,7 @@ const ChoiceElement = ({
       justifyContent={"start"}
       alignItems={"center"}
       margin={"auto"}
-      width={"96%"}
+      width={"98%"}
       height={"100%"}
       zIndex={20}
     >
@@ -139,17 +139,15 @@ const ChoiceElement = ({
         flexDirection={"column"}
         mt={4}
         sx={{
-          width: "fit-content",
-          maxWidth: "96%",
+          width: "100%",
+          maxWidth: "240px",
+          padding: "1%",
         }}
       >
         <FormControl>
           <RadioGroup
             value={selectedOptionID}
             onChange={(event) => setSelectedOptionID(event.target.value)}
-            aria-label="Your plan"
-            name="people"
-            defaultValue="Individual"
           >
             <List
               sx={{
@@ -168,6 +166,12 @@ const ChoiceElement = ({
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "12px",
+                    minHeight: "36px",
+                    padding: "4px 8px",
+                    borderRadius: "4px",
+                    border: "1px solid #003DAC",
                     color: "black",
                     width: "100%",
                     fontWeight: "bold",
@@ -195,7 +199,7 @@ const ChoiceElement = ({
                       justifyContent={"center"}
                       alignItems={"center"}
                       mr={2}
-                      ml={1}
+                      ml={2}
                       sx={{
                         height: "100%",
                       }}

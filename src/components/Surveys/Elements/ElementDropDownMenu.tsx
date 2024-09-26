@@ -6,7 +6,9 @@ import { useDeleteElementMutation } from "../../../app/slices/elementApiSlice";
 
 const ElementDropDownMenu = ({
   questionID,
+  elements,
   refetch,
+  setQuestionId,
 }: ElementDropDownMenuProps) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
@@ -29,6 +31,20 @@ const ElementDropDownMenu = ({
       await deleteElement(questionID).unwrap();
       setMenuAnchor(null);
       refetch();
+
+      const index = elements.findIndex((e) => e.questionID === questionID);
+
+      if (index === 0 && elements.length > 1) {
+        // If the deleted element is the first one, select the next element
+        setQuestionId(elements[index + 1].questionID);
+      } else if (index > 0) {
+        // Select the previous element
+        setQuestionId(elements[index - 1].questionID);
+      } else {
+        // No more elements left
+        setQuestionId(null);
+      }
+
     } catch (error) {
       console.error(error);
     }

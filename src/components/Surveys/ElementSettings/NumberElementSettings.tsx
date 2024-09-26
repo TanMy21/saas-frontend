@@ -1,54 +1,87 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm, useWatch } from "react-hook-form";
-import { QuestionSetting } from "../../../utils/types";
+import { Controller, useForm } from "react-hook-form";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 import { Box, TextField } from "@mui/material";
 import { numberSettingsSchema } from "../../../utils/schema";
 import Switch from "@mui/joy/Switch";
 import { useEffect, useRef, useState } from "react";
+import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
 
-const NumberElementSettings = () => {
-  const {
-    handleSubmit,
-    watch,
-    control,
-    setValue,
-    // formState: { errors },
-  } = useForm<QuestionSetting>({
+const NumberElementSettings = ({
+  qID,
+  qText,
+  qRequired,
+  qSettings,
+}: ElementSettingsProps) => {
+  const [updateElementSettings] = useUpdateElementSettingsMutation();
+
+  const { minValue, maxValue, minSwitch, maxSwitch } = qSettings || {
+    minValue: 0,
+    maxValue: 0,
+    minSwitch: false,
+    maxSwitch: false,
+  };
+
+  const { handleSubmit, control } = useForm<QuestionSetting>({
     resolver: zodResolver(numberSettingsSchema),
     defaultValues: {
-      questionText: "",
-      required: false,
-      minSwitch: false,
-      maxSwitch: false,
-      minValue: 0,
-      maxValue: 10,
+      questionText: qText,
+      required: qRequired,
+      minSwitch,
+      maxSwitch,
+      minValue,
+      maxValue,
     },
   });
 
   const [formState, setFormState] = useState<QuestionSetting>({
-    questionText: "",
-    required: false,
-    minSwitch: false,
-    maxSwitch: false,
-    minValue: 0,
-    maxValue: 10,
+    questionText: qText,
+    required: qRequired,
+    minSwitch,
+    maxSwitch,
+    minValue,
+    maxValue,
   });
 
+  const previousFormState = useRef<QuestionSetting>(formState);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const onSubmit = (data: QuestionSetting) => {
-    const { questionText, required, minValue, maxValue } = data;
-    console.log("Form Data:", questionText, required, minValue, maxValue);
+  const onSubmit = async (data: QuestionSetting) => {
+    try {
+      const {
+        questionText,
+        required,
+        minValue,
+        maxValue,
+        minSwitch,
+        
+        maxSwitch,
+      } = data;
+      const settings = { minValue, maxValue, minSwitch, maxSwitch };
+      await updateElementSettings({
+        questionID: qID,
+        text: questionText,
+        required,
+        settings,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
+    const hasChanged =
+      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+
+    if (!hasChanged) return;
+
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
 
     debounceTimeout.current = setTimeout(() => {
       handleSubmit(onSubmit)();
-    }, 1000);
+    }, 2000);
 
     return () => {
       if (debounceTimeout.current) {
@@ -129,6 +162,7 @@ const NumberElementSettings = () => {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
+                  width: "98%",
                 }}
               >
                 <Box sx={{ fontWeight: 500 }}>Required</Box>
@@ -159,6 +193,7 @@ const NumberElementSettings = () => {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
+                  width: "98%",
                 }}
               >
                 <Box sx={{ fontWeight: 500 }}>Min number</Box>
@@ -218,6 +253,7 @@ const NumberElementSettings = () => {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
+                  width: "98%",
                 }}
               >
                 <Box sx={{ fontWeight: 500 }}>Max number</Box>

@@ -1,11 +1,20 @@
 import { Controller, useForm } from "react-hook-form";
-import { QuestionSetting } from "../../../utils/types";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 import { instructionsSettingsSchema } from "../../../utils/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
 import { Box, TextField } from "@mui/material";
+import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
 
-const InstructionsElementSettings = () => {
+const InstructionsElementSettings = ({
+  qID,
+  qText,
+  qSettings,
+}: ElementSettingsProps) => {
+  const [updateElementSettings] = useUpdateElementSettingsMutation();
+
+  const { buttonText } = qSettings || { buttonText: "" };
+
   const {
     handleSubmit,
     control,
@@ -13,24 +22,40 @@ const InstructionsElementSettings = () => {
   } = useForm<QuestionSetting>({
     resolver: zodResolver(instructionsSettingsSchema),
     defaultValues: {
-      buttonText: "",
+      instructionsTitle: qText,
+      buttonText,
     },
   });
 
-  const [inputLength, setInputLength] = useState(0);
-
   const [formState, setFormState] = useState<QuestionSetting>({
-    buttonText: "",
+    instructionsTitle: qText,
+    buttonText,
   });
 
+  const previousFormState = useRef<QuestionSetting>(formState);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const onSubmit = (data: QuestionSetting) => {
-    const { buttonText } = data;
-    console.log("Form Data:", buttonText);
+  const onSubmit = async (data: QuestionSetting) => {
+    try {
+      const { instructionsTitle, buttonText } = data;
+
+      const settings = { buttonText };
+      await updateElementSettings({
+        questionID: qID,
+        text: instructionsTitle,
+        settings,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
+    const hasChanged =
+      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+
+    if (!hasChanged) return;
+
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
@@ -82,10 +107,10 @@ const InstructionsElementSettings = () => {
                 // border: "2px solid orange",
               }}
             >
-              <Box sx={{ fontWeight: 500 }}>Button</Box>
+              <Box sx={{ fontWeight: 500 }}>Title</Box>
               <Box mt={1}>
                 <Controller
-                  name="buttonText"
+                  name="instructionsTitle"
                   control={control}
                   render={({ field }) => (
                     <TextField
@@ -97,17 +122,14 @@ const InstructionsElementSettings = () => {
                         },
                       }}
                       {...field}
-                      value={formState.buttonText}
                       onChange={(event) => {
                         const value = event.target.value;
                         field.onChange(value);
                         setFormState((prev) => ({
                           ...prev,
-                          buttonText: value,
+                          instructionsTitle: value,
                         }));
-                        setInputLength(value.length);
                       }}
-                      helperText={`${inputLength}/24`}
                     />
                   )}
                 />

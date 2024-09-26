@@ -1,37 +1,61 @@
 import { Controller, useForm } from "react-hook-form";
-import { QuestionSetting } from "../../../utils/types";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
 import { welcomeSettingsSchema } from "../../../utils/schema";
 import { Box, TextField } from "@mui/material";
+import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
 
-const WelcomeScreenElementSettings = () => {
-  const {
-    handleSubmit,
-    control,
-    // formState: { errors },
-  } = useForm<QuestionSetting>({
+const WelcomeScreenElementSettings = ({
+  qID,
+  qText,
+  qSettings,
+}: ElementSettingsProps) => {
+  const [updateElementSettings] = useUpdateElementSettingsMutation();
+
+  const { buttonText } = qSettings || { buttonText: "Let's Start" };
+
+  const { handleSubmit, control } = useForm<QuestionSetting>({
     resolver: zodResolver(welcomeSettingsSchema),
     defaultValues: {
-      welcomeText: "",
-      buttonText: "",
+      welcomeText: qText,
+      buttonText,
     },
   });
 
-  const [inputLength, setInputLength] = useState(0);
   const [formState, setFormState] = useState<QuestionSetting>({
-    welcomeText: "",
-    buttonText: "",
+    welcomeText: qText,
+    buttonText,
   });
 
+  const [inputLength, setInputLength] = useState(
+    formState?.buttonText?.length || 0
+  );
+
+  const previousFormState = useRef<QuestionSetting>(formState);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const onSubmit = (data: QuestionSetting) => {
-    const { welcomeText, buttonText } = data;
-    console.log("Form Data:", welcomeText, buttonText);
+  const onSubmit = async (data: QuestionSetting) => {
+    try {
+      const { welcomeText, buttonText } = data;
+
+      const settings = { buttonText };
+      await updateElementSettings({
+        questionID: qID,
+        text: welcomeText,
+        settings,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
+    const hasChanged =
+      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+
+    if (!hasChanged) return;
+
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
@@ -141,12 +165,14 @@ const WelcomeScreenElementSettings = () => {
                       value={formState.buttonText}
                       onChange={(event) => {
                         const value = event.target.value;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          buttonText: value,
-                        }));
-                        setInputLength(value.length);
+                        if (value.length <= 24) {
+                          field.onChange(value);
+                          setFormState((prev) => ({
+                            ...prev,
+                            button1Text: value,
+                          }));
+                          setInputLength(value.length);
+                        }
                       }}
                       helperText={`${inputLength}/24`}
                     />

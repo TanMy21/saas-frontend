@@ -7,6 +7,7 @@ import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
 import DashBoardHeader from "../components/DashBoardHeader";
 import Workspaces from "../components/Workspaces/Workspaces";
 import { useGetMeQuery } from "../app/slices/userApiSlice";
+import WorkspacesNotFound from "../components/Workspaces/WorkspacesNotFound";
 
 const Dashboard = () => {
   const {
@@ -133,9 +134,14 @@ const Dashboard = () => {
                       background: "#555", // Scrollbar thumb hover color
                     },
                   },
+                  border: "2px solid red",
                 }}
               >
-                <Outlet context={{ workspaces }} />
+                {workspaces?.length === 0 ? (
+                  <WorkspacesNotFound />
+                ) : (
+                  <Outlet context={{ workspaces }} />
+                )}
               </Grid>
             </Grid>
           </Grid>

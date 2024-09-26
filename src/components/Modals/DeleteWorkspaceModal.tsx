@@ -12,6 +12,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useDeleteWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
 import { ErrorData, WorkspaceDeleteModalProps } from "../../utils/types";
+import { useNavigate } from "react-router-dom";
 
 const DeleteWorkspaceModal = ({
   open,
@@ -19,6 +20,8 @@ const DeleteWorkspaceModal = ({
   wsID,
   wsName,
 }: WorkspaceDeleteModalProps) => {
+  const navigate = useNavigate();
+
   const { register, handleSubmit } = useForm<WorkspaceDeleteModalProps>();
   const [deleteWorkspace, { isSuccess, isLoading, isError, error }] =
     useDeleteWorkspaceMutation();
@@ -27,7 +30,8 @@ const DeleteWorkspaceModal = ({
     const { workspaceName } = data;
 
     if (workspaceName === wsName) {
-      deleteWorkspace(wsID);
+      await deleteWorkspace(wsID);
+      navigate("/dash");
     } else {
       toast.error("Workspace name does not match", { position: "top-right" });
     }

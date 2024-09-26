@@ -11,6 +11,12 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body: { ...credentials },
       }),
     }),
+    googleAuth: builder.query({
+      query: () => ({
+        url: "/auth/token",
+        method: "GET",
+      }),
+    }),
     forgotPassword: builder.mutation({
       query: (email) => ({
         url: "/password/forgot",
@@ -74,6 +80,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
       },
     }),
   }),
+  // overrideExisting: false,
 });
 
 export const {
@@ -82,5 +89,6 @@ export const {
   useRefreshMutation,
   useForgotPasswordMutation,
   useVerifyEmailQuery,
+  useLazyGoogleAuthQuery,
   useResetPasswordMutation,
 } = authApiSlice;

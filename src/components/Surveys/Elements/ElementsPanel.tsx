@@ -158,8 +158,8 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                             width: { md: "92%", lg: "96%", xl: "100%" },
                             height: "44px",
                             marginLeft: "1%",
-                            border: "2px dotted blue",
-                            borderRadius: "8px",
+                            border: "2px dotted #673AB7",
+                            borderRadius: "10px",
                             position: "relative",
                             "&:hover .close-button": {
                               cursor: "pointer",
@@ -214,7 +214,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                                     height: "100%",
 
                                     marginTop: "1%",
-                                    marginLeft: "4%", 
+                                    marginLeft: "4%",
                                     "&:hover": {
                                       cursor: "pointer",
                                     },
@@ -280,7 +280,9 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                             >
                               <ElementDropDownMenu
                                 refetch={refetch}
+                                elements={elements}
                                 questionID={element.questionID!}
+                                setQuestionId={setQuestionId!}
                               />
                             </Box>
                           </Box>

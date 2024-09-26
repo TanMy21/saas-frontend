@@ -3,44 +3,62 @@ import { Box, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { rankSettingsSchema } from "../../../utils/schema";
-import { QuestionSetting } from "../../../utils/types";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
 
-const RankElementSettings = () => {
-  const {
-    handleSubmit,
-    watch,
-    control,
-    setValue,
-    // formState: { errors },
-  } = useForm<QuestionSetting>({
+const RankElementSettings = ({
+  qID,
+  qText,
+  qRequired,
+}: ElementSettingsProps) => {
+  const [updateElementSettings] = useUpdateElementSettingsMutation();
+
+  const { handleSubmit, control } = useForm<QuestionSetting>({
     resolver: zodResolver(rankSettingsSchema),
     defaultValues: {
-      required: false,
-      questionText: "",
+      required: qRequired,
+      questionText: qText,
     },
   });
 
   const [formState, setFormState] = useState<QuestionSetting>({
-    required: false,
-    questionText: "",
+    required: qRequired,
+    questionText: qText,
   });
 
+  const previousFormState = useRef<QuestionSetting>(formState);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const onSubmit = (data: QuestionSetting) => {
-    const { required, questionText } = data;
-    console.log("Form Data:", required, questionText);
+  const onSubmit = async (data: QuestionSetting) => {
+    try {
+      const { required, questionText } = data;
+      const settings = {};
+
+      await updateElementSettings({
+        questionID: qID,
+        text: questionText,
+        required,
+        settings,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
+    const hasChanged =
+      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+
+    if (!hasChanged) return;
+
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
 
     debounceTimeout.current = setTimeout(() => {
       handleSubmit(onSubmit)();
-    }, 1000);
+    }, 2000);
 
     return () => {
       if (debounceTimeout.current) {
@@ -123,7 +141,7 @@ const RankElementSettings = () => {
                 marginTop: "0%",
               }}
             >
-              <Box sx={{ fontWeight: 500 }}>Required</Box>
+              <Box sx={{ fontWeight: 500, width: "98%" }}>Required</Box>
               <Box mt={1}>
                 <Controller
                   name="required"

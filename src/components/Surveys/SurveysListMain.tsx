@@ -99,6 +99,7 @@ const SurveysListMain = () => {
   //   setLayout(location.state?.layout);
   // }, [location?.state]);
 
+
   return (
     <>
       <Grid container direction={"column"} sx={{ padding: "0% 2%" }}>

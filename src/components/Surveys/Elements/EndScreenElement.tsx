@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { ElementProps } from "../../../utils/types";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { useUpdateElementTextMutation } from "../../../app/slices/elementApiSlice";
 
-const EndScreenElement = ({ qText, display }: ElementProps) => {
+const EndScreenElement = ({ qID, qText, display }: ElementProps) => {
   const [text, setText] = useState("Say Bye!");
   const [isEditing, setIsEditing] = useState(false);
+
+  const [updateElementText] = useUpdateElementTextMutation();
 
   const marginTopText = display === "mobile" ? "80%" : "28%";
   const fontSizeXL = display === "mobile" ? "1.6rem" : "2.8rem";
@@ -18,9 +21,10 @@ const EndScreenElement = ({ qText, display }: ElementProps) => {
   };
 
   const handleBlur = () => {
-    // updateElementText({ questionID: qID, text });
+    updateElementText({ questionID: qID, text });
     setIsEditing(false);
   };
+
   return (
     <Box
       display={"flex"}
@@ -36,6 +40,7 @@ const EndScreenElement = ({ qText, display }: ElementProps) => {
         display={"flex"}
         flexDirection={"row"}
         justifyContent={"center"}
+        alignItems={"center"}
         width={"100%"}
         sx={{
           marginTop: marginTopText,
@@ -58,9 +63,13 @@ const EndScreenElement = ({ qText, display }: ElementProps) => {
               onChange={handleChange}
               onBlur={handleBlur}
               sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
                 backgroundColor: "transparent",
                 fontStyle: "italic",
                 fontSize: "3.75rem",
+
                 width: "100%",
                 "& .MuiInputBase-input": {
                   fontSize: "2rem",
@@ -89,7 +98,7 @@ const EndScreenElement = ({ qText, display }: ElementProps) => {
               sx={{
                 whiteSpace: "wrap",
                 width: "100%",
-                textAlign: "justify",
+                textAlign: "center",
                 lineHeight: "1",
                 fontSize: fontSizeXL,
                 wordSpacing: "1px",

@@ -1,46 +1,73 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { scaleSettingsSchema } from "../../../utils/schema";
-import { QuestionSetting } from "../../../utils/types";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Box, MenuItem, Select, Switch, TextField } from "@mui/material";
+import { Box, MenuItem, Select, TextField } from "@mui/material";
+import Switch from "@mui/joy/Switch";
+import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
 
-const ScaleElementSettings = () => {
+const ScaleElementSettings = ({
+  qID,
+  qText,
+  qRequired,
+  qSettings,
+}: ElementSettingsProps) => {
+  const [updateElementSettings] = useUpdateElementSettingsMutation();
   const minOptions = [0, 1];
   const maxOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-  const { handleSubmit, watch, control, setValue } = useForm<QuestionSetting>({
+  const { minValue, maxValue } = qSettings || { minValue: 0, maxValue: 10 };
+
+  const { handleSubmit, control } = useForm<QuestionSetting>({
     resolver: zodResolver(scaleSettingsSchema),
     defaultValues: {
-      required: false,
-      questionText: "",
-      minValue: 0,
-      maxValue: 10,
+      required: qRequired,
+      questionText: qText,
+      minValue,
+      maxValue,
     },
   });
 
   const [formState, setFormState] = useState<QuestionSetting>({
-    required: false,
-    questionText: "",
-    minValue: 0,
-    maxValue: 10,
+    required: qRequired,
+    questionText: qText,
+    minValue,
+    maxValue,
   });
 
+  const previousFormState = useRef<QuestionSetting>(formState);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const onSubmit = (data: QuestionSetting) => {
-    const { required, questionText, minValue, maxValue } = data;
-    console.log("Form Data:", required, questionText, minValue, maxValue);
+  const onSubmit = async (data: QuestionSetting) => {
+    try {
+      const { required, questionText, minValue, maxValue } = data;
+
+      const settings = { minValue, maxValue };
+      await updateElementSettings({
+        questionID: qID,
+        text: questionText,
+        required,
+        settings,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
+    const hasChanged =
+      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+
+    if (!hasChanged) return;
+
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
 
     debounceTimeout.current = setTimeout(() => {
       handleSubmit(onSubmit)();
-    }, 1000);
+    }, 2000);
 
     return () => {
       if (debounceTimeout.current) {
@@ -123,7 +150,7 @@ const ScaleElementSettings = () => {
                 marginTop: "0%",
               }}
             >
-              <Box sx={{ fontWeight: 500 }}>Required</Box>
+              <Box sx={{ fontWeight: 500, width: "98%" }}>Required</Box>
               <Box mt={1}>
                 <Controller
                   name="required"
@@ -145,13 +172,12 @@ const ScaleElementSettings = () => {
               </Box>
             </Box>
             <Box
-              mt={1}
               sx={{
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginTop: "0%",
+                marginTop: "8%",
               }}
             >
               <Box>

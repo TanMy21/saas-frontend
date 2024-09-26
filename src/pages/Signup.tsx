@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { FaSignInAlt } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { useAddNewUserMutation } from "../app/slices/userApiSlice";
 import { ErrorData, RegisterFormData } from "../utils/types";
 import FormErrors from "../components/FormErrors";
@@ -61,6 +62,16 @@ const Signup = () => {
   const submitRegisterData = async (data: RegisterFormData) => {
     const { confirmPassword, ...newData } = data;
     await addNewUser(newData);
+  };
+
+  const handleGoogleAuth = () => {
+    try {
+      window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google/callback`;
+    } catch (err: any) {
+      toast.error(err?.data?.message, {
+        position: "top-right",
+      });
+    }
   };
 
   return (
@@ -201,6 +212,40 @@ const Signup = () => {
                   }}
                 >
                   Sign Up
+                </Button>
+                <Button
+                  onClick={handleGoogleAuth}
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: 1,
+                    mb: 2,
+                    fontWeight: 700,
+                    backgroundColor: "#E0EFFE",
+                    textTransform: "capitalize",
+                    color: "#007DFA",
+                    borderRadius: "4px",
+                    "&:hover": {
+                      backgroundColor: "#E0EFFE",
+                    },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
+                  >
+                    <Box sx={{ marginTop: "2%" }}>
+                      <FcGoogle size={24} />
+                    </Box>
+                    <Box sx={{ fontWeight: 700, fontSize: "16px" }}>
+                      Continue with Google
+                    </Box>
+                  </Box>
                 </Button>
                 <Grid container justifyContent="flex-end">
                   <Grid item>

@@ -1,44 +1,73 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { QuestionSetting } from "../../../utils/types";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import { Box, TextField } from "@mui/material";
 import { binarySettingsSchema } from "../../../utils/schema";
 import Switch from "@mui/joy/Switch";
+import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
 
-const BinaryElementSettings = () => {
-  const {
-    handleSubmit,
-    control,
-    // formState: { errors },
-  } = useForm<QuestionSetting>({
+const BinaryElementSettings = ({
+  qID,
+  qText,
+  qRequired,
+  qSettings,
+}: ElementSettingsProps) => {
+  const [updateElementSettings] = useUpdateElementSettingsMutation();
+
+  const { button1Text, button2Text } = qSettings || {
+    button1Text: "Yes",
+    button2Text: "No",
+  };
+
+  const { handleSubmit, control } = useForm<QuestionSetting>({
     resolver: zodResolver(binarySettingsSchema),
     defaultValues: {
-      questionText: "",
-      required: false,
-      button1Text: "",
-      button2Text: "",
+      questionText: qText,
+      required: qRequired,
+      button1Text,
+      button2Text,
     },
   });
 
-  const [inputLength1, setInputLength1] = useState(0);
-  const [inputLength2, setInputLength2] = useState(0);
-
   const [formState, setFormState] = useState<QuestionSetting>({
-    questionText: "",
-    required: false,
-    button1Text: "",
-    button2Text: "",
+    questionText: qText,
+    required: qRequired,
+    button1Text,
+    button2Text,
   });
 
+  const [inputLength1, setInputLength1] = useState(
+    formState?.button1Text?.length
+  );
+  const [inputLength2, setInputLength2] = useState(
+    formState?.button2Text?.length
+  );
+
+  const previousFormState = useRef<QuestionSetting>(formState);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const onSubmit = (data: QuestionSetting) => {
-    const { required, questionText, button1Text, button2Text } = data;
-    console.log("Form Data:", required, questionText, button1Text, button2Text);
+  const onSubmit = async (data: QuestionSetting) => {
+    try {
+      const { required, questionText, button1Text, button2Text } = data;
+      const settings = { button1Text, button2Text };
+      await updateElementSettings({
+        questionID: qID,
+        text: questionText,
+        required,
+        settings,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
+    const hasChanged =
+      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+
+    if (!hasChanged) return;
+
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
@@ -126,6 +155,7 @@ const BinaryElementSettings = () => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 marginTop: "0%",
+                width: "98%",
               }}
             >
               <Box sx={{ fontWeight: 500 }}>Required</Box>
@@ -179,12 +209,14 @@ const BinaryElementSettings = () => {
                       value={formState.button1Text}
                       onChange={(event) => {
                         const value = event.target.value;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          button1Text: value,
-                        }));
-                        setInputLength1(value.length);
+                        if (value.length <= 24) {
+                          field.onChange(value);
+                          setFormState((prev) => ({
+                            ...prev,
+                            button1Text: value,
+                          }));
+                          setInputLength1(value.length);
+                        }
                       }}
                       helperText={`${inputLength1}/24`}
                     />
@@ -222,12 +254,14 @@ const BinaryElementSettings = () => {
                       value={formState.button2Text}
                       onChange={(event) => {
                         const value = event.target.value;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          button2Text: value,
-                        }));
-                        setInputLength2(value.length);
+                        if (value.length <= 24) {
+                          field.onChange(value);
+                          setFormState((prev) => ({
+                            ...prev,
+                            button2Text: value,
+                          }));
+                          setInputLength2(value.length);
+                        }
                       }}
                       helperText={`${inputLength2}/24`}
                     />
