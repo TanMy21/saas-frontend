@@ -96,9 +96,6 @@ const Signin = () => {
   }, [isError, error]);
 
   useEffect(() => {
-    console.log("Error: ", isGoogleAuthError);
-    console.log("Google Auth Error: ", googleAuthError);
-
     if (isGoogleAuthError) {
       const errorData = googleAuthError as ErrorData;
       if (Array.isArray(errorData.data.error)) {
@@ -126,8 +123,6 @@ const Signin = () => {
   };
 
   useEffect(() => {
-    console.log("Location Pathname: ", location.pathname);
-    console.log("Google Auth Data: ", googleAuthData);
     const queryParams = new URLSearchParams(location.search);
     const isGoogleAuth = queryParams.get("auth") === "g";
 
@@ -137,8 +132,6 @@ const Signin = () => {
 
     if (googleAuthData) {
       const { accessToken } = googleAuthData;
-
-      console.log("Access Token: ", accessToken);
 
       dispatch(setCredentials({ accessToken }));
 

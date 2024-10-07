@@ -11,9 +11,11 @@ import {
 } from "@mui/material";
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
 import { useGetMeQuery } from "../app/slices/userApiSlice";
+import usePersist from "../hooks/persist";
 
 const HeaderIconMenu = () => {
   const navigate = useNavigate();
+  const [persist, setPersist] = usePersist();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { data: user } = useGetMeQuery("User");
@@ -36,6 +38,7 @@ const HeaderIconMenu = () => {
 
   const onLogoutClicked = () => {
     handleClose();
+    setPersist(false);
     sendLogout();
     navigate("/");
   };

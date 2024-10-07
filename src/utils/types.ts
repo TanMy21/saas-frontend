@@ -385,7 +385,8 @@ export interface Workspace {
 }
 
 export interface WorkspacesProp {
-  workspaces: Workspace[];
+  workspaces?: Workspace[];
+  handleOpen: () => void;
 }
 
 export interface WorkspaceRenameModalProps {
@@ -416,4 +417,9 @@ export interface WorkspaceLayoutProps {
 
 export interface WorkspaceSurveysListCountProps {
   workspaceId?: string;
+}
+
+export interface NewWorkspaceModalProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }

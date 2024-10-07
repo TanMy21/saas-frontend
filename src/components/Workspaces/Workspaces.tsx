@@ -7,19 +7,18 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemText,
 } from "@mui/material";
 import { WorkspacesProp } from "../../utils/types";
 import WorkspaceSurveysListCount from "./WorkspaceSurveysListCount";
-import NewWorkspaceModal from "../Modals/NewWorkspaceModal";
+import NewWorkspaceIconButton from "./NewWorkspaceIconButton";
 
-const Workspaces = ({ workspaces }: WorkspacesProp) => {
+const Workspaces = ({ workspaces, handleOpen }: WorkspacesProp) => {
   const navigate = useNavigate();
 
   const { workspaceId } = useParams();
 
   useEffect(() => {
-    if (workspaces?.length > 0) {
+    if (workspaces && workspaces?.length! > 0) {
       const defaultWorkspaceId = workspaces[0].workspaceId;
       const targetWorkspaceId = workspaceId || defaultWorkspaceId;
 
@@ -42,7 +41,7 @@ const Workspaces = ({ workspaces }: WorkspacesProp) => {
             height: "50px",
           }}
         >
-          <NewWorkspaceModal />
+          <NewWorkspaceIconButton handleOpen={handleOpen} />
         </Grid>
 
         <Box sx={{ width: "100%", minHeight: "200px", marginTop: "8%" }}>

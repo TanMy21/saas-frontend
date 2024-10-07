@@ -12,6 +12,7 @@ import RequireAuth from "../components/RequireAuth";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import VerifyUser from "../pages/VerifyUser";
+import EmailNotVerified from "../pages/EmailNotVerified";
 
 const router = createBrowserRouter([
   { path: "/", element: <Homepage />, errorElement: <ErrorPage /> },
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
   { path: "/forgot", element: <ForgotPassword /> },
   { path: "/reset", element: <ResetPassword /> },
   { path: "/verify/:verificationCode", element: <VerifyUser /> },
+  { path: "/not-verified", element: <EmailNotVerified /> },
   {
     element: <PersistLogin />,
     children: [

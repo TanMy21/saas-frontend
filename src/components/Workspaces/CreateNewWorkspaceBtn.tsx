@@ -1,13 +1,8 @@
-import { useState } from "react";
 import { Box, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-// import NewSurveyModal from "../Modals/NewSurveyModal";
-// import { NewSurveyProps } from "../../utils/types";
+import { WorkspacesProp } from "../../utils/types";
 
-const CreateNewWorkspaceBtn = () => {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-
+const CreateNewWorkspaceBtn = ({ handleOpen }: WorkspacesProp) => {
   return (
     <>
       <Box sx={{ mt: 1 }}>
@@ -28,12 +23,6 @@ const CreateNewWorkspaceBtn = () => {
           <AddIcon />
           Create New Workspace
         </Button>
-        {/* <NewSurveyModal
-          open={open}
-          setOpen={setOpen}
-          workspaceId={workspaceId!}
-          workspaceName={workspaceName!}
-        /> */}
       </Box>
     </>
   );

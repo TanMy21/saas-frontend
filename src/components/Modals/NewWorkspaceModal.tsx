@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import {
@@ -9,13 +9,17 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+
 import CloseIcon from "@mui/icons-material/Close";
 import { useCreateNewWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
-import { ErrorData, WorkspaceData } from "../../utils/types";
+import {
+  ErrorData,
+  NewWorkspaceModalProps,
+  WorkspaceData,
+} from "../../utils/types";
 
-const NewWorkspaceModal = () => {
-  const [open, setOpen] = useState(false);
+const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
+  // const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -62,7 +66,7 @@ const NewWorkspaceModal = () => {
 
   return (
     <>
-      <IconButton
+      {/* <IconButton
         onClick={handleOpen}
         sx={{
           background: "#4F46E5",
@@ -78,7 +82,7 @@ const NewWorkspaceModal = () => {
         }}
       >
         <AddOutlinedIcon fontSize="medium" />
-      </IconButton>
+      </IconButton> */}
       <Modal
         open={open}
         onClose={handleClose}

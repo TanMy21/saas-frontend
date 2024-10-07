@@ -1,9 +1,9 @@
 import { Box, Grid, Typography } from "@mui/material";
-// import CreateNewSurveyBtn from "./CreateNewSurveyBtn";
 import empty from "../../assets/empty.svg";
 import CreateNewWorkspaceBtn from "./CreateNewWorkspaceBtn";
+import { WorkspacesProp } from "../../utils/types";
 
-const WorkspacesNotFound = () => {
+const WorkspacesNotFound = ({ handleOpen }: WorkspacesProp) => {
   return (
     <>
       <Grid
@@ -12,7 +12,6 @@ const WorkspacesNotFound = () => {
           marginTop: "8%",
           width: "400",
           height: "400",
-          border: "2px solid blue",
         }}
       >
         <Box
@@ -50,17 +49,16 @@ const WorkspacesNotFound = () => {
               justifyItems={"center"}
               alignItems={"center"}
               mt={2}
-              mb={2}
+              mb={4}
             >
-              <CreateNewWorkspaceBtn />
+              <CreateNewWorkspaceBtn handleOpen={handleOpen} />
             </Box>
             <Box
               display={"flex"}
               flexDirection={"column"}
               justifyItems={"center"}
               alignItems={"center"}
-              border={"2px solid red"}
-              mt={2}
+              mt={8}
             >
               <Box
                 component={"img"}
