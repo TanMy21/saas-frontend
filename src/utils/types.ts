@@ -1,3 +1,4 @@
+import { JwtPayload } from "jwt-decode";
 import { MRT_ColumnDef } from "material-react-table";
 
 export type AuthInitialState = {
@@ -154,6 +155,15 @@ export interface ILogoutResponse {
 
 export interface IconMapping {
   [key: string]: JSX.Element;
+}
+
+export interface ICustomePayload extends JwtPayload {
+  UserInfo?: {
+    email?: string;
+    admin?: boolean;
+    verified?: boolean;
+  };
+  exp?: number;
 }
 
 export interface NewSurveyModalProps {

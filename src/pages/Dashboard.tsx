@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Alert, Box, CircularProgress, Grid } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 import { ErrorData } from "../utils/types";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
 import DashBoardHeader from "../components/DashBoardHeader";
@@ -12,11 +12,9 @@ import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";
 import useAuth from "../hooks/useAuth";
 
 const Dashboard = () => {
-  const [verified, setVerified] = useState(false);
   const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const {
     data: user,
@@ -25,9 +23,6 @@ const Dashboard = () => {
   } = useGetMeQuery("User", {
     refetchOnMountOrArgChange: true,
   });
-
-  // const { verified } = user || {};
-  // const verified = user?.verified ?? false;
 
   const {
     data: workspaces,

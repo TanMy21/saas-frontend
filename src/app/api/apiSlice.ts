@@ -49,7 +49,6 @@ const baseQueryWithReauth: BaseQueryFn<
         refreshResult?.error?.status === 401 ||
         refreshResult?.error?.status === 500
       ) {
-        console.log("Logging out...");
         localStorage.removeItem("persist");
         api.dispatch(logOut());
         (refreshResult.error.data as { message: string }).message =

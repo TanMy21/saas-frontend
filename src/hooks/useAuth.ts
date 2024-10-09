@@ -1,36 +1,21 @@
-import { JwtPayload, jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
 import { selectCurrentToken } from "../app/slices/authSlice";
-import { useSendLogoutMutation } from "../app/slices/authApiSlice";
-
-interface ICustomePayload extends JwtPayload {
-  UserInfo?: {
-    email?: string;
-    admin?: boolean;
-    verified?: boolean;
-  };
-  exp?: number;
-}
+import { ICustomePayload } from "../utils/types";
 
 const useAuth = () => {
   const token = useSelector(selectCurrentToken);
-  const [sendLogout, { isSuccess: isSuccessLogout }] = useSendLogoutMutation();
   let isAdmin = false;
   let isAuthenticated = false;
   let isVerified = false;
   let tokenExpired = false;
 
-  console.log("Token: ", token);
-
   if (token) {
     const decoded = jwtDecode<ICustomePayload>(token);
     const { email, admin, verified } = decoded.UserInfo || {};
-    // isAuthenticated = localStorage.getItem("persist") === "true" ? true : false;
-    // isAuthenticated = true;
+    const { exp } = decoded;
 
-    const tokenExpired = decoded.exp ? decoded.exp * 1000 < Date.now() : false;
-
-    
+    tokenExpired = exp! * 1000 < Date.now();
 
     if (!tokenExpired) {
       isAuthenticated = true;
@@ -39,7 +24,6 @@ const useAuth = () => {
     if (verified) {
       isVerified = true;
     }
-    // isVerified = !!verified;
 
     if (admin) {
       isAdmin = true;
