@@ -8,10 +8,7 @@ const usePersist = (): [
     false || JSON.parse(localStorage.getItem("persist") as string)
   );
 
-  // console.log("Initial Persist: ", persist);
-
   useEffect(() => {
-    // console.log("Persist: ", persist);
     localStorage.setItem("persist", JSON.stringify(persist));
   }, [persist]);
 

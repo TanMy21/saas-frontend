@@ -5,8 +5,6 @@ const RequireAuth = () => {
   const { isAuthenticated, isVerified, tokenExpired } = useAuth();
   const location = useLocation();
 
- 
-
   if (isAuthenticated) {
     if (tokenExpired) {
       return <Navigate to="/login" />;
