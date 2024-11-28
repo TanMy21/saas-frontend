@@ -1,3 +1,5 @@
+import CloseIcon from "@mui/icons-material/Close";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import {
   Box,
   Button,
@@ -7,9 +9,8 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useParams } from "react-router-dom";
+
 import { ShareSurveyProps } from "../../utils/types";
 
 const ShareSurveyModal = ({

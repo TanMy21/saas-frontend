@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react";
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
-import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
-import { MdAdd } from "react-icons/md";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
+
 import ClearIcon from "@mui/icons-material/Clear";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import ElementQuestionText from "./ElementQuestionText";
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import type { DropResult } from "react-beautiful-dnd";
+import { MdAdd } from "react-icons/md";
+import { toast } from "react-toastify";
+
 import {
   useCreateNewOptionMutation,
   useDeleteOptionMutation,
   useGetOptionsOfQuestionQuery,
   useUpdateOptionTextandValueMutation,
 } from "../../../app/slices/optionApiSlice";
-import { toast } from "react-toastify";
+import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
+
+import ElementQuestionText from "./ElementQuestionText";
 
 const RankElement = ({
   qID,
@@ -135,7 +134,11 @@ const RankElement = ({
       height={"100%"}
       zIndex={20}
     >
-      <Box display={"flex"} flexDirection={"row"} sx={{ width: "98%", marginTop: "8%" }}>
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        sx={{ width: "98%", marginTop: "8%" }}
+      >
         <ElementQuestionText
           qID={qID}
           qNO={qNO}

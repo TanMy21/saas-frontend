@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+
 import ResponsesTable from "./ResponsesTable";
 
 const ResultResponses = () => {

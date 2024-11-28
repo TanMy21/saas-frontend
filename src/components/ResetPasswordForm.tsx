@@ -1,13 +1,15 @@
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
-import FormErrors from "./FormErrors";
-import { useResetPasswordMutation } from "../app/slices/authApiSlice";
-import { ResetPassword, ResetPasswordFormData } from "../utils/types";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { resetPasswordSchema } from "../utils/schema";
+import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import { useForm } from "react-hook-form";
 import { FaLock, FaRegCircleCheck } from "react-icons/fa6";
-import { Link } from "react-router-dom";
 import { IoArrowBackOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
+
+import { useResetPasswordMutation } from "../app/slices/authApiSlice";
+import { resetPasswordSchema } from "../utils/schema";
+import { ResetPassword, ResetPasswordFormData } from "../utils/types";
+
+import FormErrors from "./FormErrors";
 
 const ResetPasswordForm = ({ code }: ResetPassword) => {
   const [resetPassword, { isSuccess }] = useResetPasswordMutation();

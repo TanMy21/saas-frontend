@@ -1,13 +1,15 @@
 import { Box, Grid } from "@mui/material";
-import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import { useLocation } from "react-router-dom";
+
 import Results from "../components/Surveys/Results";
+import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
+import { LocationStateProps, Survey } from "../utils/types";
 
 const SurveyResults = () => {
   const location = useLocation();
-  const { headerProps } = location.state || {};
+  const { headerProps } = (location.state as LocationStateProps) || {};
   const { tabValue, survey, workspaceId, workspaceName } = headerProps || {};
-  const { title } = survey || "";
+  const { title } = (survey as Survey) || "";
 
   return (
     <>

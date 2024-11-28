@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
+
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
@@ -9,7 +9,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+
 import { useRetitleSurveyMutation } from "../../app/slices/surveysApiSlice";
 import { ErrorData, SurveyRenameProps } from "../../utils/types";
 

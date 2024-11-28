@@ -1,3 +1,9 @@
+import { useEffect, useRef, useState } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import CloseIcon from "@mui/icons-material/Close";
+import Input from "@mui/joy/Input";
+import Switch from "@mui/joy/Switch";
 import {
   Box,
   Button,
@@ -8,28 +14,24 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Switch from "@mui/joy/Switch";
-import Input from "@mui/joy/Input";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
+import { Controller, useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import {
+  useGetSurveyByIdQuery,
+  useUpdateSurveyMutation,
+} from "../../app/slices/surveysApiSlice";
+import { settingsUpdateSchema } from "../../utils/schema";
 import {
   ErrorData,
   SettingsFormData,
   SurveySettingsProps,
 } from "../../utils/types";
-import CloseIcon from "@mui/icons-material/Close";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { settingsUpdateSchema } from "../../utils/schema";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useEffect, useRef, useState } from "react";
-import dayjs from "dayjs";
-import {
-  useGetSurveyByIdQuery,
-  useUpdateSurveyMutation,
-} from "../../app/slices/surveysApiSlice";
-import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 const SurveySettingsModal = ({
   openSettings,
@@ -220,16 +222,16 @@ const SurveySettingsModal = ({
                     borderRadius: "12px",
                     overflowY: "auto",
                     "&::-webkit-scrollbar": {
-                      width: "8px", // Scrollbar width
+                      width: "8px",
                     },
                     "&::-webkit-scrollbar-track": {
-                      background: "#f1f1f1", // Scrollbar track color
+                      background: "#f1f1f1",
                     },
                     "&::-webkit-scrollbar-thumb": {
-                      background: "#61A5D2", // Scrollbar thumb color
-                      borderRadius: "10px", // Rounded corners on the scrollbar thumb
+                      background: "#61A5D2",
+                      borderRadius: "10px",
                       "&:hover": {
-                        background: "#555", // Scrollbar thumb hover color
+                        background: "#555",
                       },
                     },
                   }}
@@ -399,9 +401,7 @@ const SurveySettingsModal = ({
                           <Controller
                             name="startDate"
                             control={control}
-                            defaultValue={
-                              startDate ? startDate.toString() : now.toString()
-                            }
+                            defaultValue={startDate ? startDate.toString() : ""}
                             render={({
                               field: { onChange, value },
                               fieldState: { error },
@@ -415,10 +415,10 @@ const SurveySettingsModal = ({
                                   // control={control}
                                   onChange={(date) =>
                                     onChange(
-                                      date ? date.format("DD/MM/YYYY") : null
+                                      date ? date.format("DD/MM/YYYY") : ""
                                     )
                                   }
-                                  defaultValue={startDate || now}
+                                  defaultValue={startDate ? startDate : now}
                                   slotProps={{
                                     textField: {
                                       error: !!error,
@@ -464,9 +464,7 @@ const SurveySettingsModal = ({
                           <Controller
                             name="endDate"
                             control={control}
-                            defaultValue={
-                              endDate ? endDate.toString() : now.toString()
-                            }
+                            defaultValue={endDate ? endDate.toString() : ""}
                             render={({
                               field: { onChange, value },
                               fieldState: { error },
@@ -479,10 +477,10 @@ const SurveySettingsModal = ({
                                   }
                                   onChange={(date) =>
                                     onChange(
-                                      date ? date.format("DD/MM/YYYY") : null
+                                      date ? date.format("DD/MM/YYYY") : ""
                                     )
                                   }
-                                  defaultValue={endDate || now}
+                                  defaultValue={endDate ? endDate : now}
                                   slotProps={{
                                     textField: {
                                       error: !!error,

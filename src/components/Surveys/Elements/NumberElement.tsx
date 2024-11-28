@@ -1,6 +1,8 @@
 import { Box, Button, TextField } from "@mui/material";
-import { ElementProps } from "../../../utils/types";
 import { BiCheck } from "react-icons/bi";
+
+import { ElementProps } from "../../../utils/types";
+
 import ElementQuestionText from "./ElementQuestionText";
 
 const NumberElement = ({

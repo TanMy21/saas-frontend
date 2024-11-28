@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
+
+import { Box, CircularProgress, Grid } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Box, CircularProgress, Grid } from "@mui/material";
-import { ErrorData } from "../utils/types";
+
+import { useGetMeQuery } from "../app/slices/userApiSlice";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
 import DashBoardHeader from "../components/DashBoardHeader";
-import Workspaces from "../components/Workspaces/Workspaces";
-import { useGetMeQuery } from "../app/slices/userApiSlice";
-import WorkspacesNotFound from "../components/Workspaces/WorkspacesNotFound";
 import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";
+import Workspaces from "../components/Workspaces/Workspaces";
+import WorkspacesNotFound from "../components/Workspaces/WorkspacesNotFound";
 import useAuth from "../hooks/useAuth";
+import { ErrorData } from "../utils/types";
 
 const Dashboard = () => {
   const { isAuthenticated } = useAuth();
@@ -38,6 +40,16 @@ const Dashboard = () => {
   useEffect(() => {
     if (isErrorWorkspaces) {
       const errorData = workspaceError as ErrorData;
+
+      if (errorData?.data.status === 429) {
+        toast.error(
+          "Too many requests. Please wait for a minute and try again.",
+          {
+            position: "top-right",
+          }
+        );
+      }
+
       if (Array.isArray(errorData.data.error)) {
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {

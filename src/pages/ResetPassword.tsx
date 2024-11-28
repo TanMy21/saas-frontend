@@ -1,5 +1,6 @@
 import { Alert, Box, Container } from "@mui/material";
 import { Link, useSearchParams } from "react-router-dom";
+
 import ResetPasswordForm from "../components/ResetPasswordForm";
 
 const ResetPassword = () => {
@@ -30,7 +31,7 @@ const ResetPassword = () => {
         >
           <Box sx={{ width: "100%" }}>
             {linkIsValid ? (
-              <ResetPasswordForm code={code!} />
+              <ResetPasswordForm code={code} />
             ) : (
               <Box>
                 <Box

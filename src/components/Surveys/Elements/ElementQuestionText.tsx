@@ -1,11 +1,13 @@
 import { useState } from "react";
+
 import { Box, TextField, Typography } from "@mui/material";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { ElementProps } from "../../../utils/types";
+
 import {
   useUpdateElementDescriptionMutation,
   useUpdateElementTextMutation,
 } from "../../../app/slices/elementApiSlice";
+import { ElementProps } from "../../../utils/types";
 
 const ElementQuestionText = ({
   qID,
@@ -192,6 +194,18 @@ const ElementQuestionText = ({
                 onBlur={handleBlurDescription}
                 sx={{
                   backgroundColor: "transparent",
+                  "& .MuiInputBase-input": {
+                    fontSize: "1.6rem",
+                  },
+                  "& fieldset": {
+                    border: "none",
+                  },
+                  "&:hover fieldset": {
+                    border: "none",
+                  },
+                  "&.Mui-focused fieldset": {
+                    border: "none",
+                  },
                 }}
               />
             ) : (

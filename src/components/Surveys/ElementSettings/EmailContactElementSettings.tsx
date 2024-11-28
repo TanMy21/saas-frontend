@@ -1,11 +1,24 @@
-import { Controller, useForm } from "react-hook-form";
-import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { emailContactSettingsSchema } from "../../../utils/schema";
 import { useEffect, useRef, useState } from "react";
-import { Box, TextField } from "@mui/material";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Switch from "@mui/joy/Switch";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  TextField,
+} from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+
 import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
+import { emailContactSettingsSchema } from "../../../utils/schema";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
+
+
+
+
 
 const EmailContactElementSettings = ({
   qID,
@@ -23,19 +36,14 @@ const EmailContactElementSettings = ({
   });
 
   const [formState, setFormState] = useState<QuestionSetting>({
-    required: qRequired,
     questionText: qText,
+    required: qRequired,
   });
 
   const previousFormState = useRef<QuestionSetting>(formState);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionSetting) => {
-    const hasChanged =
-      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
-
-    if (!hasChanged) return;
-
     try {
       const { questionText, required } = data;
 
@@ -52,6 +60,11 @@ const EmailContactElementSettings = ({
   };
 
   useEffect(() => {
+    const hasChanged =
+      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+
+    if (!hasChanged) return;
+
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
@@ -88,9 +101,6 @@ const EmailContactElementSettings = ({
               minHeight: "200px",
             }}
           >
-            <Box mt={1} sx={{ fontSize: "16px", fontWeight: 700 }}>
-              Settings
-            </Box>
             <Box
               sx={{
                 display: "flex",
@@ -103,64 +113,103 @@ const EmailContactElementSettings = ({
                 // border: "2px solid orange",
               }}
             >
-              <Box sx={{ fontWeight: 500 }}>Text</Box>
-              <Box mt={1}>
-                <Controller
-                  name="questionText"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      type="text"
-                      sx={{
-                        "& .MuiInputBase-root": {
-                          height: "36px",
-                          fontSize: "16px",
-                        },
-                      }}
-                      {...field}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          questionText: value,
-                        }));
-                      }}
+              <Accordion
+                sx={{ width: "100%", backgroundColor: "#F7F7F7" }}
+                defaultExpanded
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                >
+                  <Box sx={{ fontWeight: 500, color: "#453F46" }}>
+                    Title Text
+                  </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box mt={1}>
+                    <Controller
+                      name="questionText"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          type="text"
+                          sx={{
+                            "& .MuiInputBase-root": {
+                              height: "36px",
+                              fontSize: "16px",
+                              backgroundColor: "#FFFFFF",
+                            },
+                          }}
+                          {...field}
+                          onChange={(event) => {
+                            const value = event.target.value;
+                            field.onChange(value);
+                            setFormState((prev) => ({
+                              ...prev,
+                              questionText: value,
+                            }));
+                          }}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Box>
-            </Box>
-            <Box
-              mt={1}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: "0%",
-              }}
-            >
-              <Box sx={{ fontWeight: 500 }}>Required</Box>
-              <Box mt={1}>
-                <Controller
-                  name="required"
-                  control={control}
-                  render={({ field }) => (
-                    <Switch
-                      checked={field.value}
-                      onChange={(event) => {
-                        const value = event.target.checked;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          required: value,
-                        }));
-                      }}
-                    />
-                  )}
-                />
-              </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion
+                sx={{
+                  marginTop: "6%",
+                  width: "100%",
+                  backgroundColor: "#F7F7F7",
+                }}
+                defaultExpanded
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                >
+                  <Box sx={{ fontWeight: 500, color: "#453F46" }}>
+                    Validation
+                  </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box
+                    mt={1}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginTop: "0%",
+                      width: "98%",
+                    }}
+                  >
+                    <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>
+                      Required
+                    </Box>
+                    <Box mt={1}>
+                      <Controller
+                        name="required"
+                        control={control}
+                        render={({ field }) => (
+                          <Switch
+                            checked={field.value}
+                            onChange={(event) => {
+                              const value = event.target.checked;
+                              field.onChange(value);
+                              setFormState((prev) => ({
+                                ...prev,
+                                required: value,
+                              }));
+                            }}
+                          />
+                        )}
+                      />
+                    </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
             </Box>
           </Box>
         </form>

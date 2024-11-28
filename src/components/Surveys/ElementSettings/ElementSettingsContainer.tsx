@@ -1,11 +1,12 @@
 import { Box } from "@mui/material";
+
 import { useGetElementByIDQuery } from "../../../app/slices/elementApiSlice";
+import { useGetOptionsOfQuestionQuery } from "../../../app/slices/optionApiSlice";
 import { elementSettingsComponents } from "../../../utils/elementsConfig";
 import {
   QuestionTypeKey,
   SurveyBuilderCanvasProps,
 } from "../../../utils/types";
-import { useGetOptionsOfQuestionQuery } from "../../../app/slices/optionApiSlice";
 
 const ElementSettingsContainer = ({
   questionId,

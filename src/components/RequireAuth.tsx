@@ -1,5 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+
 import useAuth from "../hooks/useAuth";
+
 
 const RequireAuth = () => {
   const { isAuthenticated, isVerified, tokenExpired } = useAuth();

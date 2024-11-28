@@ -1,10 +1,12 @@
-import { Controller, useForm } from "react-hook-form";
-import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
-import { instructionsSettingsSchema } from "../../../utils/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, TextField } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+
 import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
+import { instructionsSettingsSchema } from "../../../utils/schema";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
 const InstructionsElementSettings = ({
   qID,

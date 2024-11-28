@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
+
+import AssessmentIcon from "@mui/icons-material/Assessment";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { Box, Tab, Tabs, Toolbar, Tooltip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import HeaderIconMenu from "../HeaderIconMenu";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import { SurveyBuilderHeaderProps } from "../../utils/types";
-import { NavLink, useNavigate } from "react-router-dom";
 import { FaAngleRight } from "react-icons/fa6";
+import { NavLink, useNavigate } from "react-router-dom";
+
+import { SurveyBuilderHeaderProps } from "../../utils/types";
+import HeaderIconMenu from "../HeaderIconMenu";
+
+
 
 const SurveyBuilderHeader = ({
   // display,
@@ -94,14 +98,25 @@ const SurveyBuilderHeader = ({
               // border: "2px solid red",
             }}
           >
-            <Box sx={{ width: "fit-content" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                width: "fit-content",
+                marginTop: { lg: "4%", xl: "0%" },
+                // border: "2px solid blue",
+              }}
+            >
               <NavLink
                 to={`/dash/w/${workspaceId}`}
                 style={({ isActive /*isPending, isTransitioning*/ }) => {
                   return {
                     display: "block",
                     color: isActive ? "#262626" : "#262666",
-                    lineHeight: "20px",
+                    lineHeight: "16px",
                     textDecoration: "none",
                   };
                 }}

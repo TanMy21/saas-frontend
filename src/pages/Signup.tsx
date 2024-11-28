@@ -1,8 +1,5 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { registerSchema } from "../utils/signupSchema";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
@@ -13,14 +10,20 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
 import { FaSignInAlt } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import { useAddNewUserMutation } from "../app/slices/userApiSlice";
-import { ErrorData, RegisterFormData } from "../utils/types";
 import FormErrors from "../components/FormErrors";
+import { registerSchema } from "../utils/signupSchema";
+import { ErrorData, RegisterFormData } from "../utils/types";
 
 const Signup = () => {
-  const [addNewUser, { isSuccess, isError, error }] = useAddNewUserMutation();
+  const [addNewUser, { isLoading, isSuccess, isError, error }] =
+    useAddNewUserMutation();
 
   const navigate = useNavigate();
 
@@ -60,6 +63,7 @@ const Signup = () => {
   });
 
   const submitRegisterData = async (data: RegisterFormData) => {
+    // eslint-disable-next-line
     const { confirmPassword, ...newData } = data;
     await addNewUser(newData);
   };
@@ -96,11 +100,11 @@ const Signup = () => {
               borderRadius: "16px",
             }}
           >
-            <Link to="/" style={{ textDecoration: "none" }}>
+            {/* <Link to="/" style={{ textDecoration: "none" }}>
               <Typography variant="h1" component="h2">
                 Logo
               </Typography>
-            </Link>
+            </Link> */}
 
             <Typography
               component="h1"
@@ -199,6 +203,7 @@ const Signup = () => {
                   type="submit"
                   fullWidth
                   variant="contained"
+                  disabled={isLoading}
                   sx={{
                     mt: 2,
                     mb: 2,
@@ -211,7 +216,7 @@ const Signup = () => {
                     },
                   }}
                 >
-                  Sign Up
+                  {isLoading ? "Registering..." : "Sign Up"}
                 </Button>
                 <Button
                   onClick={handleGoogleAuth}

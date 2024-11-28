@@ -1,5 +1,7 @@
-import { AppBar, Box, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
+
+import { AppBar, Box, Tab, Tabs } from "@mui/material";
+
 import ResultInsights from "./ResultInsights";
 import ResultResponses from "./ResultResponses";
 

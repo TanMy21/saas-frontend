@@ -1,7 +1,9 @@
 import { Box, Button, Slider } from "@mui/material";
-import { ElementProps } from "../../../utils/types";
-import ElementQuestionText from "./ElementQuestionText";
 import { BiCheck } from "react-icons/bi";
+
+import { ElementProps } from "../../../utils/types";
+
+import ElementQuestionText from "./ElementQuestionText";
 
 const marks = [
   {
@@ -55,11 +57,14 @@ const ScaleElement = ({
   qNO,
   qText,
   qDescription,
+  qSettings,
   display,
 }: ElementProps) => {
   const marginTop = display === "mobile" ? "4%" : "8%";
   const sliderWidth = display === "mobile" ? "88%" : "80%";
   const sliderPadding = display === "mobile" ? "4%" : "2%";
+
+  const { minValue, maxValue } = qSettings || { minValue: 0, maxValue: 10 };
 
   return (
     <Box
@@ -110,8 +115,8 @@ const ScaleElement = ({
             aria-label="Always visible"
             defaultValue={2}
             //   getAriaValueText={valuetext}
-            min={0}
-            max={10}
+            min={minValue}
+            max={maxValue}
             step={1}
             marks={marks}
             valueLabelDisplay="on"

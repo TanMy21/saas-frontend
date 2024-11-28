@@ -1,27 +1,24 @@
+import { useMemo, useState } from "react";
+
+import { Box, IconButton, Tooltip } from "@mui/material";
 import {
   MRT_Icons,
   MRT_ShowHideColumnsButton,
-  MRT_TableInstance,
   MRT_ToggleDensePaddingButton,
   MRT_ToggleFiltersButton,
   MRT_ToggleFullScreenButton,
   MRT_ToggleGlobalFilterButton,
   MaterialReactTable,
-
-  //   type MRT_Row,
-  // createMRTColumnHelper,
 } from "material-react-table";
-import { Box, IconButton, Tooltip } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { useGetResultsQuery } from "../../app/slices/resultsApiSlice";
-import { FaFilter } from "react-icons/fa6";
-import { FaFilterCircleXmark } from "react-icons/fa6";
-import { BiShow } from "react-icons/bi";
-import { BiSolidHide } from "react-icons/bi";
+import type { MRT_TableInstance } from "material-react-table";
+import { BiShow, BiSolidHide } from "react-icons/bi";
+import { FaFilter, FaFilterCircleXmark } from "react-icons/fa6";
 import { HiDownload } from "react-icons/hi";
-import { useMemo, useState } from "react";
-import DownloadResponsesModal from "../Modals/DownloadResponsesModal";
+import { useParams } from "react-router-dom";
+
+import { useGetResultsQuery } from "../../app/slices/resultsApiSlice";
 import { RowData } from "../../utils/types";
+import DownloadResponsesModal from "../Modals/DownloadResponsesModal";
 
 //   import { mkConfig, generateCsv, download } from 'export-to-csv'; //or use your library of choice here
 
@@ -53,7 +50,7 @@ const ResponsesTable = () => {
   const handleClose = () => setOpenDownloadModal(false);
 
   const { data: results, isLoading: isDataLoading } = useGetResultsQuery(
-    surveyID!,
+    surveyID!
     // {
     //   skip: !surveyID,
     //   pollingInterval: 30000,

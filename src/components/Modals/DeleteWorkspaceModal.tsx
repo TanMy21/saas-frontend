@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
@@ -9,10 +9,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+
 import { useDeleteWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
 import { ErrorData, WorkspaceDeleteModalProps } from "../../utils/types";
-import { useNavigate } from "react-router-dom";
 
 const DeleteWorkspaceModal = ({
   open,

@@ -1,4 +1,5 @@
 import { ZodType, z } from "zod";
+
 import { RegisterFormData } from "./types";
 
 export const registerSchema: ZodType<RegisterFormData> = z

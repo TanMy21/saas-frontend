@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
-import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
-import { MdAdd } from "react-icons/md";
+
 import ClearIcon from "@mui/icons-material/Clear";
 import Checkbox from "@mui/joy/Checkbox";
-import ElementQuestionText from "./ElementQuestionText";
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import { MdAdd } from "react-icons/md";
+import { toast } from "react-toastify";
+
 import {
   useCreateNewOptionMutation,
   useDeleteOptionMutation,
   useGetOptionsOfQuestionQuery,
   useUpdateOptionTextandValueMutation,
 } from "../../../app/slices/optionApiSlice";
-import { toast } from "react-toastify";
+import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
+
+import ElementQuestionText from "./ElementQuestionText";
 
 const CheckBoxElement = ({
   qID,
@@ -200,7 +203,7 @@ const CheckBoxElement = ({
                 flexGrow: 1,
                 width: "calc(100% - 48px)",
                 "@media (max-width: 600px)": {
-                  width: "calc(100% - 30px)", 
+                  width: "calc(100% - 30px)",
                 },
               }}
             >
@@ -261,10 +264,10 @@ const CheckBoxElement = ({
                       // ml={1}
                       sx={{
                         fontSize: "16px",
-                        whiteSpace: "normal",  
-                        wordBreak: "break-word",  
-                        width: "100%",  
-                        padding: "4px 0", 
+                        whiteSpace: "normal",
+                        wordBreak: "break-word",
+                        width: "100%",
+                        padding: "4px 0",
                       }}
                       onClick={handleClick}
                     >

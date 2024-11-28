@@ -1,10 +1,12 @@
-import { Avatar, Box, ButtonBase, Grid, Typography } from "@mui/material";
-import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
-import { formatDate } from "../../utils/formatDate";
-import { useNavigate } from "react-router-dom";
 import FeedIcon from "@mui/icons-material/Feed";
-import { SurveyListCardProps } from "../../utils/types";
+import { Avatar, Box, ButtonBase, Grid, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
+import { formatDate } from "../../utils/formatDate";
+import { SurveyListCardProps } from "../../utils/types";
+
+import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
 
 const SurveyListCard = ({
   survey,

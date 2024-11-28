@@ -6,6 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
+
 import { useVerifyEmailQuery } from "../app/slices/authApiSlice";
 
 const VerifyUser = () => {

@@ -1,4 +1,11 @@
 import { useEffect, useState } from "react";
+
+import ClearIcon from "@mui/icons-material/Clear";
+import CloseIcon from "@mui/icons-material/Close";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import ImageIcon from "@mui/icons-material/Image";
+import SaveIcon from "@mui/icons-material/Save";
 import {
   Box,
   Button,
@@ -10,17 +17,11 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
 import { BiImageAdd } from "react-icons/bi";
-import { MdAdd } from "react-icons/md";
-import ClearIcon from "@mui/icons-material/Clear";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import SaveIcon from "@mui/icons-material/Save";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import ImageIcon from "@mui/icons-material/Image";
 import { FiUpload } from "react-icons/fi";
-import ElementQuestionText from "./ElementQuestionText";
+import { MdAdd } from "react-icons/md";
+import { toast } from "react-toastify";
+
 import {
   useCreateNewOptionMutation,
   useDeleteOptionMutation,
@@ -29,7 +30,9 @@ import {
   useUpdateOptionTextandValueMutation,
   useUploadImageMutation,
 } from "../../../app/slices/optionApiSlice";
-import { toast } from "react-toastify";
+import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
+
+import ElementQuestionText from "./ElementQuestionText";
 
 const MediaElement = ({
   qID,
@@ -118,7 +121,7 @@ const MediaElement = ({
     }
   };
 
-  const handleFileChange = async (
+  const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
     // optionID: string
   ) => {
@@ -136,12 +139,8 @@ const MediaElement = ({
 
   const handleUpload = async () => {
     if (selectedFile) {
-      console.log("selectedFile: ", selectedFile);
-
       const formData = new FormData();
       formData.append("imgFile", selectedFile);
-
-      console.log("formData: ", formData);
 
       await uploadImage({ formData, optionID: selectedOptionID });
     }
@@ -212,7 +211,14 @@ const MediaElement = ({
         });
       }
     }
-  }, [isError, isErrorUploadImage, error, errorUploadImage, options]);
+  }, [
+    isError,
+    isErrorUploadImage,
+    error,
+    errorUploadImage,
+    options,
+    isSuccess,
+  ]);
 
   return (
     <Box
@@ -312,7 +318,12 @@ const MediaElement = ({
                       <>
                         <img
                           src={option.image}
-                          style={{ width: "100%", height: "100%" }}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            maxHeight: "100%",
+                            objectFit: "cover",
+                          }}
                         />
                         <Box
                           className="control-buttons"
@@ -460,7 +471,7 @@ const MediaElement = ({
                                 <Box
                                   sx={{
                                     width: "92%",
-                                    height: "90%",
+                                    height: "280px",
                                     margin: "auto",
                                     marginTop: "4%",
                                     border: "2px dashed #7866E3",
@@ -473,7 +484,8 @@ const MediaElement = ({
                                         src={preview}
                                         style={{
                                           width: "100%",
-                                          height: "100%",
+                                          height: "98%",
+                                          maxHeight: "98%",
                                           objectFit: "contain",
                                         }}
                                       />
@@ -717,6 +729,8 @@ const MediaElement = ({
                           height: "24px",
                           bgcolor: "white",
                           borderRadius: "2px",
+                          textOverflow: "clip",
+                          border: "2px solid black",
                         }}
                       >
                         <Typography variant="subtitle2">
@@ -758,13 +772,27 @@ const MediaElement = ({
                             }}
                           />
                         ) : (
-                          <Typography
-                            ml={4}
-                            sx={{ fontSize: "16px" }}
-                            onClick={handleClick}
+                          <Box
+                            sx={{
+                              marginLeft: "8%",
+                              width: "68%",
+                              border: "2px solid red",
+                              overflow: "hidden",
+                            }}
                           >
-                            {option.value}
-                          </Typography>
+                            <Typography
+                              ml={2}
+                              sx={{
+                                fontSize: "16px",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                textOverflow: "clip",
+                              }}
+                              onClick={handleClick}
+                            >
+                              {option.value}
+                            </Typography>
+                          </Box>
                         )}
                       </Box>
                     </Box>

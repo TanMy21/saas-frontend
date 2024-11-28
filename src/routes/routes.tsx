@@ -1,18 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
-import Dashboard from "../pages/Dashboard";
-import ErrorPage from "../pages/ErrorPage";
-import Homepage from "../pages/Homepage";
+
 import PersistLogin from "../app/slices/PersistLogin";
+import RequireAuth from "../components/RequireAuth";
+import SurveysListMain from "../components/Surveys/SurveysListMain";
+import Dashboard from "../pages/Dashboard";
+import EmailNotVerified from "../pages/EmailNotVerified";
+import ErrorPage from "../pages/ErrorPage";
+import ForgotPassword from "../pages/ForgotPassword";
+import Homepage from "../pages/Homepage";
+import ResetPassword from "../pages/ResetPassword";
+import Settings from "../pages/Settings";
 import Signin from "../pages/Signin";
 import Signup from "../pages/Signup";
-import SurveysListMain from "../components/Surveys/SurveysListMain";
 import SurveyBuilder from "../pages/SurveyBuilder";
 import SurveyResults from "../pages/SurveyResults";
-import RequireAuth from "../components/RequireAuth";
-import ForgotPassword from "../pages/ForgotPassword";
-import ResetPassword from "../pages/ResetPassword";
 import VerifyUser from "../pages/VerifyUser";
-import EmailNotVerified from "../pages/EmailNotVerified";
 
 const router = createBrowserRouter([
   { path: "/", element: <Homepage />, errorElement: <ErrorPage /> },
@@ -42,6 +44,10 @@ const router = createBrowserRouter([
           {
             path: "/s/results/:surveyID",
             element: <SurveyResults />,
+          },
+          {
+            path: "/a/settings",
+            element: <Settings />,
           },
         ],
       },

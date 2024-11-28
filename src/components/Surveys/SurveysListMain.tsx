@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+
+import GridViewIcon from "@mui/icons-material/GridView";
+import ListIcon from "@mui/icons-material/List";
 import {
   Box,
   Divider,
@@ -11,21 +13,21 @@ import {
   FormControl,
   Select,
   MenuItem,
-  SelectChangeEvent,
-  CircularProgress,
 } from "@mui/material";
-import GridViewIcon from "@mui/icons-material/GridView";
-import ListIcon from "@mui/icons-material/List";
+import type { SelectChangeEvent } from "@mui/material";
+import { useOutletContext, useParams } from "react-router-dom";
+
 import {
   useGetWorkspaceSurveysQuery,
   useUpdateWorkspaceNameMutation,
 } from "../../app/slices/workspaceApiSlice";
+import { WorkspacesProp } from "../../utils/types";
+import WorkspaceDropDown from "../Workspaces/WorkspaceDropDownMenu";
+
 import CreateNewSurveyBtn from "./CreateNewSurveyBtn";
 import GridLayout from "./GridLayout";
 import ListLayout from "./ListLayout";
 import SurveysNotFound from "./SurveysNotFound";
-import WorkspaceDropDown from "../Workspaces/WorkspaceDropDownMenu";
-import { WorkspacesProp } from "../../utils/types";
 
 const SurveysListMain = () => {
   const { workspaceId } = useParams();
@@ -93,12 +95,6 @@ const SurveysListMain = () => {
   useEffect(() => {
     setText(workspace?.name);
   }, [workspace?.name]);
-
-  // useEffect(() => {
-  //   console.log("Survey Main: ", location.state?.layout);
-  //   setLayout(location.state?.layout);
-  // }, [location?.state]);
-
 
   return (
     <>
@@ -245,49 +241,52 @@ const SurveysListMain = () => {
             spacing={{ xs: 2, md: 3 }}
             columns={{ lg: 8, md: 6, sm: 4, xs: 2 }}
           >
-            {isLoading ? (
-              <CircularProgress />
-            ) : surveys?.length === 0 ? (
-              <SurveysNotFound />
-            ) : layout === "grid" ? (
-              <Box
-                display={"flex"}
-                flexDirection={"row"}
-                ml={2}
-                pl={4}
-                pt={4}
-                sx={{
-                  width: "100%",
-                  minHeight: 600,
-                  // border: "2px solid black",
-                }}
-              >
-                <GridLayout
-                  surveys={sortedSurveys}
-                  workspaceId={workspaceId!}
-                  workspaceName={workspace?.name!}
-                  layout={layout}
-                />
-              </Box>
-            ) : (
-              <Grid
-                container
-                display={"flex"}
-                flexDirection={"column"}
-                p={4}
-                sx={{
-                  width: "100%",
-                  minHeight: "72vh",
-                }}
-              >
-                <ListLayout
-                  surveys={sortedSurveys}
-                  workspaceId={workspaceId!}
-                  workspaceName={workspace?.name!}
-                  layout={layout || "list"}
-                />
-              </Grid>
-            )}
+            {
+              // isLoading ? (
+              //   <CircularProgress />
+              // ) :
+              surveys?.length === 0 ? (
+                <SurveysNotFound />
+              ) : layout === "grid" ? (
+                <Box
+                  display={"flex"}
+                  flexDirection={"row"}
+                  ml={2}
+                  pl={4}
+                  pt={4}
+                  sx={{
+                    width: "100%",
+                    minHeight: 600,
+                    // border: "2px solid black",
+                  }}
+                >
+                  <GridLayout
+                    surveys={sortedSurveys}
+                    workspaceId={workspaceId!}
+                    workspaceName={workspace?.name!}
+                    layout={layout}
+                  />
+                </Box>
+              ) : (
+                <Grid
+                  container
+                  display={"flex"}
+                  flexDirection={"column"}
+                  p={4}
+                  sx={{
+                    width: "100%",
+                    minHeight: "72vh",
+                  }}
+                >
+                  <ListLayout
+                    surveys={sortedSurveys}
+                    workspaceId={workspaceId!}
+                    workspaceName={workspace?.name!}
+                    layout={layout || "list"}
+                  />
+                </Grid>
+              )
+            }
           </Grid>
         </Grid>
       </Grid>

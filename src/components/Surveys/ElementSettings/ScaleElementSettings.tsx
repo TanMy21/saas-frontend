@@ -1,16 +1,28 @@
+import { useEffect, useRef, useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Switch from "@mui/joy/Switch";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+
+import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
 import { scaleSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
-import { useEffect, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Box, MenuItem, Select, TextField } from "@mui/material";
-import Switch from "@mui/joy/Switch";
-import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
 
 const ScaleElementSettings = ({
   qID,
   qText,
   qRequired,
+  qDescription,
   qSettings,
 }: ElementSettingsProps) => {
   const [updateElementSettings] = useUpdateElementSettingsMutation();
@@ -24,6 +36,7 @@ const ScaleElementSettings = ({
     defaultValues: {
       required: qRequired,
       questionText: qText,
+      description: qDescription,
       minValue,
       maxValue,
     },
@@ -32,6 +45,7 @@ const ScaleElementSettings = ({
   const [formState, setFormState] = useState<QuestionSetting>({
     required: qRequired,
     questionText: qText,
+    description: qDescription,
     minValue,
     maxValue,
   });
@@ -41,12 +55,13 @@ const ScaleElementSettings = ({
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
-      const { required, questionText, minValue, maxValue } = data;
+      const { required, questionText, description, minValue, maxValue } = data;
 
       const settings = { minValue, maxValue };
       await updateElementSettings({
         questionID: qID,
         text: questionText,
+        description,
         required,
         settings,
       });
@@ -97,141 +112,232 @@ const ScaleElementSettings = ({
               minHeight: "200px",
             }}
           >
-            <Box mt={1} sx={{ fontSize: "16px", fontWeight: 700 }}>
-              Settings
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1%",
-                margin: "auto",
-                marginTop: "4%",
-                marginBottom: "8%",
-                width: "98%",
-                // border: "2px solid orange",
-              }}
+            <Accordion
+              sx={{ width: "100%", backgroundColor: "#F7F7F7" }}
+              defaultExpanded
             >
-              <Box sx={{ fontWeight: 500 }}>Question</Box>
-              <Box mt={1}>
-                <Controller
-                  name="questionText"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      type="text"
-                      sx={{
-                        "& .MuiInputBase-root": {
-                          height: "36px",
-                          fontSize: "16px",
-                        },
-                      }}
-                      {...field}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          questionText: value,
-                        }));
-                      }}
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+              >
+                <Box sx={{ fontWeight: 500, color: "#453F46" }}>Question</Box>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1%",
+                    margin: "auto",
+                    marginTop: "4%",
+                    marginBottom: "8%",
+                    width: "98%",
+                    // border: "2px solid orange",
+                  }}
+                >
+                  <Box sx={{ fontWeight: 500 }}>Question Text</Box>
+                  <Box mt={1}>
+                    <Controller
+                      name="questionText"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          type="text"
+                          fullWidth
+                          sx={{
+                            "& .MuiInputBase-root": {
+                              height: "36px",
+                              fontSize: "16px",
+                              backgroundColor: "#FFFFFF",
+                            },
+                          }}
+                          {...field}
+                          onChange={(event) => {
+                            const value = event.target.value;
+                            field.onChange(value);
+                            setFormState((prev) => ({
+                              ...prev,
+                              questionText: value,
+                            }));
+                          }}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Box>
-            </Box>
-            <Box
-              mt={1}
+                  </Box>
+                </Box>
+                <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>
+                  Description
+                </Box>
+                <Box mt={1}>
+                  <Controller
+                    name="description"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        type="text"
+                        multiline
+                        maxRows={4}
+                        fullWidth
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            width: "100%",
+                            height: "36px",
+                            fontSize: "16px",
+                            backgroundColor: "#FFFFFF",
+                          },
+                        }}
+                        {...field}
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          field.onChange(value);
+                          setFormState((prev) => ({
+                            ...prev,
+                            questionText: value,
+                          }));
+                        }}
+                      />
+                    )}
+                  />
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: "0%",
+                marginTop: "6%",
+                width: "100%",
+                backgroundColor: "#F7F7F7",
               }}
+              defaultExpanded
             >
-              <Box sx={{ fontWeight: 500, width: "98%" }}>Required</Box>
-              <Box mt={1}>
-                <Controller
-                  name="required"
-                  control={control}
-                  render={({ field }) => (
-                    <Switch
-                      checked={field.value}
-                      onChange={(event) => {
-                        const value = event.target.checked;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          required: value,
-                        }));
-                      }}
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+              >
+                <Box sx={{ fontWeight: 500, color: "#453F46" }}>Validation</Box>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  mt={1}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: "0%",
+                    width: "98%",
+                  }}
+                >
+                  <Box sx={{ fontWeight: 500 }}>Required</Box>
+                  <Box mt={1}>
+                    <Controller
+                      name="required"
+                      control={control}
+                      render={({ field }) => (
+                        <Switch
+                          checked={field.value}
+                          onChange={(event) => {
+                            const value = event.target.checked;
+                            field.onChange(value);
+                            setFormState((prev) => ({
+                              ...prev,
+                              required: value,
+                            }));
+                          }}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: "8%",
-              }}
+                  </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion
+              sx={{ width: "100%", backgroundColor: "#F7F7F7" }}
+              defaultExpanded
             >
-              <Box>
-                <Controller
-                  name="minValue"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      value={field.value}
-                      onChange={(event) => {
-                        const value = Number(event.target.value);
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          minValue: value,
-                        }));
-                      }}
-                    >
-                      {minOptions.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  )}
-                />
-              </Box>
-              <Box> to </Box>
-              <Box>
-                <Controller
-                  name="maxValue"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      value={field.value}
-                      onChange={(event) => {
-                        const value = Number(event.target.value);
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          maxValue: value,
-                        }));
-                      }}
-                    >
-                      {maxOptions.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  )}
-                />
-              </Box>
-            </Box>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+              >
+                <Box sx={{ fontWeight: 500, color: "#453F46" }}>Range</Box>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: "8%",
+                  }}
+                >
+                  <Box>
+                    <Controller
+                      name="minValue"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          value={field.value}
+                          sx={{
+                            "& .MuiInputBase-root": {
+                              backgroundColor: "#FFFFFF",
+                            },
+                          }}
+                          onChange={(event) => {
+                            const value = Number(event.target.value);
+                            field.onChange(value);
+                            setFormState((prev) => ({
+                              ...prev,
+                              minValue: value,
+                            }));
+                          }}
+                        >
+                          {minOptions.map((option) => (
+                            <MenuItem key={option} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      )}
+                    />
+                  </Box>
+                  <Box> to </Box>
+                  <Box>
+                    <Controller
+                      name="maxValue"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          value={field.value}
+                          sx={{
+                            "& .MuiInputBase-root": {
+                              backgroundColor: "#FFFFFF",
+                            },
+                          }}
+                          onChange={(event) => {
+                            const value = Number(event.target.value);
+                            field.onChange(value);
+                            setFormState((prev) => ({
+                              ...prev,
+                              maxValue: value,
+                            }));
+                          }}
+                        >
+                          {maxOptions.map((option) => (
+                            <MenuItem key={option} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      )}
+                    />
+                  </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
           </Box>
         </form>
       </Box>

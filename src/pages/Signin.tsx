@@ -1,8 +1,5 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
@@ -14,21 +11,27 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { FcGoogle } from "react-icons/fc";
+import { useDispatch } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import {
   useLazyGoogleAuthQuery,
   useLoginMutation,
 } from "../app/slices/authApiSlice";
 import { setCredentials } from "../app/slices/authSlice";
-import { FcGoogle } from "react-icons/fc";
-import { ErrorData, FetchBaseQueryError, LoginFormData } from "../utils/types";
 import FormErrors from "../components/FormErrors";
-import { loginSchema } from "../utils/schema";
 import usePersist from "../hooks/persist";
+import { loginSchema } from "../utils/schema";
+import { ErrorData, FetchBaseQueryError, LoginFormData } from "../utils/types";
 
 const Signin = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  //eslint-disable-next-line
   const [persist, setPersist] = usePersist();
 
   // const [googleAuthClicked, setGoogleAuthClicked] = useState(false);
@@ -142,7 +145,7 @@ const Signin = () => {
       console.error("Failed to fetch access token:", error);
       navigate("/login");
     }
-  }, [location, googleAuthData, dispatch, navigate, googleAuth]);
+  }, [location, googleAuthData, dispatch, navigate, googleAuth, error]);
 
   if (isLoading) return <CircularProgress />;
 
@@ -167,11 +170,11 @@ const Signin = () => {
             borderRadius: "16px",
           }}
         >
-          <Link to="/" style={{ textDecoration: "none" }}>
+          {/* <Link to="/" style={{ textDecoration: "none" }}>
             <Typography variant="h1" component="h2">
               Logo
             </Typography>
-          </Link>
+          </Link> */}
           <Typography
             component="h1"
             variant="h5"

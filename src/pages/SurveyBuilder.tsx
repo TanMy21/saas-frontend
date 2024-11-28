@@ -1,25 +1,30 @@
 import { useEffect, useState } from "react";
+
 import { Box, CircularProgress, Divider, Grid } from "@mui/material";
-import { useGetSurveyByIdQuery } from "../app/slices/surveysApiSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
+
+import { useGetElementsForSurveyQuery } from "../app/slices/elementApiSlice";
+import { useGetSurveyByIdQuery } from "../app/slices/surveysApiSlice";
 import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
-import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
+import ImportQuestionsModal from "../components/Modals/ImportQuestionsModal";
+import ScrollbarStyle from "../components/ScrollbarStyle";
+import SurveyWelcomeElement from "../components/Surveys/Elements/SurveyWelcomeElement";
+import ElementSettingsContainer from "../components/Surveys/ElementSettings/ElementSettingsContainer";
 import SurveyBuilderCanvas from "../components/Surveys/SurveyBuilderCanvas";
 import SurveyBuilderCanvasMobile from "../components/Surveys/SurveyBuilderCanvasMobile";
+import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderIsland from "../components/Surveys/SurveyBuilderIsland";
-import { useGetElementsForSurveyQuery } from "../app/slices/elementApiSlice";
-import SurveyWelcomeElement from "../components/Surveys/Elements/SurveyWelcomeElement";
-import { Element } from "../utils/types";
-import ScrollbarStyle from "../components/ScrollbarStyle";
-import ElementSettingsContainer from "../components/Surveys/ElementSettings/ElementSettingsContainer";
+import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
+import { Element, LocationStateProps } from "../utils/types";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { workspaceId, workspaceName } = location.state || {};
+  const { workspaceId, workspaceName } =
+    (location.state as LocationStateProps) || {};
   const isOpen = location.state?.openModal || false;
+  const isOpenImport = location.state?.openModalImport || false;
   const [surveyTitle, setSurveyTitle] = useState<string>("");
   const [questionId, setQuestionId] = useState<string | null>(null);
   const [display, setDisplay] = useState<string | null>("desktop");
@@ -47,7 +52,7 @@ const SurveyBuilder = () => {
     if (isError) {
       navigate("/login");
     }
-  }, [isError, error]);
+  }, [isError, error, navigate]);
 
   useEffect(() => {
     if (!isLoading && !isFetching) {
@@ -124,8 +129,8 @@ const SurveyBuilder = () => {
             <SurveyBuilderHeader
               // tabValue={tabValue}
               survey={survey}
-              workspaceId={workspaceId}
-              workspaceName={workspaceName}
+              workspaceId={workspaceId!}
+              workspaceName={workspaceName!}
               title={surveyTitle}
               // handleScreenChange={handleScreenChange}
             />
@@ -135,6 +140,7 @@ const SurveyBuilder = () => {
             surveyID={surveyID}
             setSurveyTitle={setSurveyTitle}
           />
+          <ImportQuestionsModal isOpen={isOpenImport} surveyID={surveyID} />
           <Grid
             item
             xl={12}
@@ -145,7 +151,7 @@ const SurveyBuilder = () => {
             flexDirection={"row"}
             sx={{
               width: "100%",
-              minHeight: "100vh",
+              minHeight: "96vh",
             }}
           >
             {/* content area */}
@@ -219,7 +225,12 @@ const SurveyBuilder = () => {
               md={2}
               xs={2}
               sx={{
+                background: "#FFFEFE",
+                position: "sticky",
                 width: "14%",
+                top: "5vh",
+                right: "0",
+                zIndex: "5",
                 minHeight: "92%",
                 overflowX: "hidden",
                 overflowY: "hidden",
@@ -229,12 +240,9 @@ const SurveyBuilder = () => {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  background: "white",
                   width: "100%",
                   height: "100%",
                   gap: "1%",
-                  position: "sticky",
-                  top: "5vh",
                   left: "0",
                   right: "0",
                 }}
@@ -242,18 +250,19 @@ const SurveyBuilder = () => {
                 <Box
                   sx={{
                     display: "flex",
-                    justifyContent: "flex-start",
+                    justifyContent: "center",
                     alignItems: "end",
                     width: "92%",
                     margin: "auto",
-                    marginTop: "4%",
-                    height: { lg: "4%", xl: "2%" },
+                    marginTop: "8%",
+                    height: { lg: "24px", xl: "16px" },
                     fontSize: "20px",
                     fontWeight: 600,
+                    color: "#3F3F46",
                     // border: "1px solid red",
                   }}
                 >
-                  Customization
+                  Settings
                 </Box>
                 <Divider
                   sx={{
@@ -268,7 +277,7 @@ const SurveyBuilder = () => {
                     width: "92%",
                     margin: "auto",
                     marginTop: "0%",
-                    padding: "1%",
+                    // padding: "2px",
                     height: "92%",
                     // border: "1px solid black",
                   }}

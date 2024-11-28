@@ -1,4 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import UploadIcon from "@mui/icons-material/Upload";
 import {
   Avatar,
   Box,
@@ -8,13 +12,12 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from "@mui/icons-material/Close";
-import UploadIcon from "@mui/icons-material/Upload";
-import { ErrorData, NewSurveyModalProps } from "../../utils/types";
-import { useCreateSurveyMutation } from "../../app/slices/surveysApiSlice";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
+import { useCreateSurveyMutation } from "../../app/slices/surveysApiSlice";
+import { ErrorData, NewSurveyModalProps } from "../../utils/types";
+
 
 const NewSurveyModal = ({
   open,
@@ -26,6 +29,7 @@ const NewSurveyModal = ({
 
   const handleClose = () => setOpen(false);
   const openModal = true;
+  const openModalImport = true;
 
   const [createSurvey, { isError, error }] = useCreateSurveyMutation();
 
@@ -38,6 +42,22 @@ const NewSurveyModal = ({
       if (surveyCreated) {
         navigate(`/survey/${surveyCreated.surveyID}`, {
           state: { workspaceId, workspaceName, openModal },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleImportQuestions = async () => {
+    try {
+      const surveyCreated = await createSurvey({
+        workspaceId,
+      }).unwrap();
+
+      if (surveyCreated) {
+        navigate(`/survey/${surveyCreated.surveyID}`, {
+          state: { workspaceId, workspaceName, openModalImport },
         });
       }
     } catch (error) {
@@ -201,6 +221,7 @@ const NewSurveyModal = ({
               }}
             >
               <Button
+                onClick={handleImportQuestions}
                 sx={{
                   width: "100%",
                   height: "100%",
@@ -251,7 +272,7 @@ const NewSurveyModal = ({
                       variant="h6"
                       color={"black"}
                     >
-                      Upload Questions
+                      Import Questions
                     </Typography>
                   </Box>
                 </Box>

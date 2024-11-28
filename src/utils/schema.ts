@@ -1,6 +1,7 @@
-import { ZodType, z } from "zod";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import { ZodType, z } from "zod";
+
 import { LoginFormData } from "./types";
 
 dayjs.extend(isSameOrAfter);
@@ -9,16 +10,53 @@ export const settingsUpdateSchema = z.object({
   description: z.string(),
   startDate: z
     .string()
-    .refine((date) => dayjs(date, "DD/MM/YYYY").isSameOrAfter(dayjs(), "day"), {
-      message: "Start date cannot be older than today",
-    })
-    .optional(),
+    .optional()
+    .refine(
+      (date) => {
+        if (!date) return true; // Allow if empty
+        const parsedDate = dayjs(date, "DD/MM/YYYY");
+        return parsedDate.isValid();
+      },
+      {
+        message: "Invalid start date format",
+      }
+    )
+    .refine(
+      (date) => {
+        if (!date) return true; // Allow if empty
+        const parsedDate = dayjs(date, "DD/MM/YYYY");
+        return parsedDate.isSameOrAfter(dayjs(), "day");
+      },
+      {
+        message: "Start date cannot be older than today",
+      }
+    ),
   endDate: z
     .string()
-    .refine((date) => dayjs(date, "DD/MM/YYYY").isSameOrAfter(dayjs(), "day"), {
-      message: "Start date cannot be older than today",
+    .optional()
+    .refine((date) => !date || dayjs(date, "DD/MM/YYYY").isValid(), {
+      message: "Invalid end date format",
     })
-    .optional(),
+    .refine(
+      (date) => {
+        if (!date) return true; // Allow if empty
+        const parsedDate = dayjs(date, "DD/MM/YYYY");
+        return parsedDate.isValid();
+      },
+      {
+        message: "Invalid end date format",
+      }
+    )
+    .refine(
+      (date) => {
+        if (!date) return true; // Allow if empty
+        const parsedDate = dayjs(date, "DD/MM/YYYY");
+        return parsedDate.isSameOrAfter(dayjs(), "day");
+      },
+      {
+        message: "End date cannot be older than today",
+      }
+    ),
   responseLimit: z.number().optional(),
   language: z.string(),
   isTemplate: z.boolean(),
@@ -105,6 +143,7 @@ export const binarySettingsSchema = z.object({
   questionText: z
     .string()
     .min(1, "Question text must be at least 1 character long"),
+  description: z.string(),
   required: z.boolean(),
   button1Text: z
     .string()
@@ -151,14 +190,23 @@ export const mediaSettingsSchema = z.object({
 });
 
 export const emailContactSettingsSchema = z.object({
-  questionTex: z
+  questionText: z
     .string()
     .min(1, "Question text must be at least 1 character long"),
   required: z.boolean(),
 });
 
 export const endScreenContactSettingsSchema = z.object({
-  questionTex: z
+  questionText: z
     .string()
     .min(1, "Question text must be at least 1 character long"),
+});
+
+export const updateUserInfoSchema = z.object({
+  email: z.string().email(),
+  firstname: z.string().min(1, "First name must be at least 1 character long"),
+  lastname: z
+    .string()
+    .min(1, "Last name must be at least 1 character long")
+    .optional(),
 });

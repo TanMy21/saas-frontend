@@ -19,6 +19,14 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
+    importQuestions: builder.mutation({
+      query: ({ surveyID, value }) => ({
+        url: "/q/generate",
+        method: "POST",
+        body: { surveyID, value },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
     createScreenElement: builder.mutation({
       query: (data) => ({
         url: "/q/screen/create",
@@ -52,10 +60,10 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Elements"],
     }),
     updateElementSettings: builder.mutation({
-      query: ({ questionID, text, required, settings }) => ({
+      query: ({ questionID, text, description, required, settings }) => ({
         url: `/q/settings/${questionID}`,
         method: "PUT",
-        body: { text, required, settings },
+        body: { text, description, required, settings },
       }),
       invalidatesTags: ["Elements"],
     }),
@@ -87,4 +95,5 @@ export const {
   useUpdateElementDescriptionMutation,
   useDuplicateElementMutation,
   useDeleteElementMutation,
+  useImportQuestionsMutation,
 } = elementApiSlice;

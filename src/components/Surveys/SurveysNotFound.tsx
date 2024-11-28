@@ -1,6 +1,8 @@
 import { Box, Grid, Typography } from "@mui/material";
-import CreateNewSurveyBtn from "./CreateNewSurveyBtn";
+
 import notFound from "../../assets/notFound2.svg";
+
+import CreateNewSurveyBtn from "./CreateNewSurveyBtn";
 
 const SurveysNotFound = () => {
   return (

@@ -1,9 +1,12 @@
-import { Box, Typography } from "@mui/material";
-import { useGetInsightsQuery } from "../../app/slices/insightsApiSlice";
-import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { ErrorData } from "../../utils/types";
+
+import { Box, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+
+import { useGetInsightsQuery } from "../../app/slices/insightsApiSlice";
+import { ErrorData } from "../../utils/types";
+
 
 const ResultInsights = () => {
   const { surveyID } = useParams();

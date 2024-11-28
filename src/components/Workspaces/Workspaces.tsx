@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+
 import {
   Box,
   Divider,
@@ -8,9 +8,12 @@ import {
   ListItem,
   ListItemButton,
 } from "@mui/material";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
+
 import { WorkspacesProp } from "../../utils/types";
-import WorkspaceSurveysListCount from "./WorkspaceSurveysListCount";
+
 import NewWorkspaceIconButton from "./NewWorkspaceIconButton";
+import WorkspaceSurveysListCount from "./WorkspaceSurveysListCount";
 
 const Workspaces = ({ workspaces, handleOpen }: WorkspacesProp) => {
   const navigate = useNavigate();
@@ -18,7 +21,7 @@ const Workspaces = ({ workspaces, handleOpen }: WorkspacesProp) => {
   const { workspaceId } = useParams();
 
   useEffect(() => {
-    if (workspaces && workspaces?.length! > 0) {
+    if (workspaces && workspaces?.length > 0) {
       const defaultWorkspaceId = workspaces[0].workspaceId;
       const targetWorkspaceId = workspaceId || defaultWorkspaceId;
 
@@ -71,6 +74,9 @@ const Workspaces = ({ workspaces, handleOpen }: WorkspacesProp) => {
                           textOverflow: "ellipsis",
                           // backgroundColor: isActive ? "#E4E2E2" : "",
                           borderLeft: isActive ? "5px solid #4C6FFF" : "",
+                          borderTopLeftRadius: isActive ? "8px" : "",
+                          borderBottomLeftRadius: isActive ? "8px" : "",
+                          
                         };
                       }}
                     >

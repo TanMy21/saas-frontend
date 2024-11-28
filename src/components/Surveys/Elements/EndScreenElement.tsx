@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { ElementProps } from "../../../utils/types";
+
 import { Box, Button, TextField, Typography } from "@mui/material";
+
 import { useUpdateElementTextMutation } from "../../../app/slices/elementApiSlice";
+import { ElementProps } from "../../../utils/types";
 
 const EndScreenElement = ({ qID, qText, display }: ElementProps) => {
   const [text, setText] = useState("Say Bye!");

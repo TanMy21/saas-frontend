@@ -1,5 +1,6 @@
-import { Box, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { Box, Button } from "@mui/material";
+
 import { WorkspacesProp } from "../../utils/types";
 
 const CreateNewWorkspaceBtn = ({ handleOpen }: WorkspacesProp) => {

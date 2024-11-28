@@ -12,6 +12,8 @@ module.exports = {
     "plugin:import/typescript",
     "plugin:import/errors",
     "plugin:import/warnings",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
   ],
   ignorePatterns: ["dist", ".eslintrc.cjs"],
   parser: "@typescript-eslint/parser",
@@ -20,10 +22,24 @@ module.exports = {
     project: "./tsconfig.json",
   },
   rules: {
+    "warning": "off",
+    "react/no-unescaped-entities": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-return": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-base-to-string": "off",
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },
     ],
+    "react-hooks/exhaustive-deps": "off",
     "import/order": [
       "error",
       {

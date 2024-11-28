@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
+
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
@@ -9,7 +9,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+
 import { useUpdateWorkspaceNameMutation } from "../../app/slices/workspaceApiSlice";
 import { ErrorData, WorkspaceRenameModalProps } from "../../utils/types";
 
@@ -26,7 +28,7 @@ const RenameWorkspaceModal = ({
 
   const renameWorkspace = async (data: WorkspaceRenameModalProps) => {
     const { workspaceName } = data;
-    updateWorkspaceName({ workspaceId, name: workspaceName });
+    await updateWorkspaceName({ workspaceId, name: workspaceName });
     onClose();
   };
 

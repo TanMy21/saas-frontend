@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
@@ -9,8 +9,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
-import CloseIcon from "@mui/icons-material/Close";
+
 import { useCreateNewWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
 import {
   ErrorData,

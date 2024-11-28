@@ -1,7 +1,9 @@
 import { Box, Grid, Typography } from "@mui/material";
+
 import empty from "../../assets/empty.svg";
-import CreateNewWorkspaceBtn from "./CreateNewWorkspaceBtn";
 import { WorkspacesProp } from "../../utils/types";
+
+import CreateNewWorkspaceBtn from "./CreateNewWorkspaceBtn";
 
 const WorkspacesNotFound = ({ handleOpen }: WorkspacesProp) => {
   return (

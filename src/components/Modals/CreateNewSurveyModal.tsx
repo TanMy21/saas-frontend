@@ -1,5 +1,6 @@
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
@@ -8,10 +9,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { ErrorData, SurveyNameProps } from "../../utils/types";
-import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+
 import { useUpdateSurveyTitleandDescriptionMutation } from "../../app/slices/surveysApiSlice";
+import { ErrorData, SurveyNameProps } from "../../utils/types";
+
 
 const CreateNewSurveyModal = ({
   isOpen,

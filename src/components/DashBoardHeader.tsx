@@ -1,8 +1,10 @@
 import { Avatar, Box, Grid, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import HeaderIconMenu from "./HeaderIconMenu";
 
 import { useGetMeQuery } from "../app/slices/userApiSlice";
+
+import HeaderIconMenu from "./HeaderIconMenu";
+
 
 const DashBoardHeader = () => {
   const { data: user } = useGetMeQuery("User");

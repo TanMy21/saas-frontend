@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+
+import ClearIcon from "@mui/icons-material/Clear";
+import { List, ListItem, RadioGroup, Radio } from "@mui/joy";
 import {
   Box,
   Button,
@@ -7,18 +10,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { List, ListItem, RadioGroup, Radio } from "@mui/joy";
-import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
 import { MdAdd } from "react-icons/md";
-import ClearIcon from "@mui/icons-material/Clear";
-import ElementQuestionText from "./ElementQuestionText";
+import { toast } from "react-toastify";
+
 import {
   useCreateNewOptionMutation,
   useDeleteOptionMutation,
   useGetOptionsOfQuestionQuery,
   useUpdateOptionTextandValueMutation,
 } from "../../../app/slices/optionApiSlice";
-import { toast } from "react-toastify";
+import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
+
+import ElementQuestionText from "./ElementQuestionText";
 
 const ChoiceElement = ({
   qID,

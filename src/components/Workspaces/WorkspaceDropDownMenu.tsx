@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { Box, Divider, IconButton, Menu, MenuItem } from "@mui/material";
+
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { Box, Divider, IconButton, Menu, MenuItem } from "@mui/material";
+import { useParams } from "react-router-dom";
+
 import { WorkspaceData } from "../../utils/types";
-import RenameWorkspaceModal from "../Modals/RenameWorkspaceModal";
 import DeleteWorkspaceModal from "../Modals/DeleteWorkspaceModal";
+import RenameWorkspaceModal from "../Modals/RenameWorkspaceModal";
 
 const WorkspaceDropDown = ({ workspaceName: wsName }: WorkspaceData) => {
   const { workspaceId: wsID } = useParams();

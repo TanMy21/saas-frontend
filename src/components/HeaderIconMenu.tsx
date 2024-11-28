@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import {
   Avatar,
   Box,
@@ -9,6 +9,8 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
 import { useGetMeQuery } from "../app/slices/userApiSlice";
 import usePersist from "../hooks/persist";
@@ -41,6 +43,16 @@ const HeaderIconMenu = () => {
     setPersist(false);
     sendLogout();
     navigate("/");
+  };
+
+  const onSettingsClicked = () => {
+    handleClose();
+    navigate("/a/settings");
+  };
+
+  const onDashboardClicked = () => {
+    handleClose();
+    navigate("/dash");
   };
 
   return (
@@ -136,14 +148,14 @@ const HeaderIconMenu = () => {
             ACCOUNT
           </Typography>
         </Box>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={onSettingsClicked}>
           <Box>
             <Box sx={{ fontSize: "12px" }}>Your Settings</Box>
           </Box>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose} sx={{ fontSize: "12px" }}>
-          Homepage
+        <MenuItem onClick={onDashboardClicked} sx={{ fontSize: "12px" }}>
+          Dashboard
         </MenuItem>
         <MenuItem
           onClick={onLogoutClicked}

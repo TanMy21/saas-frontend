@@ -1,5 +1,5 @@
-import { JwtPayload } from "jwt-decode";
-import { MRT_ColumnDef } from "material-react-table";
+import type { JwtPayload } from "jwt-decode";
+import type { MRT_ColumnDef } from "material-react-table";
 
 export type AuthInitialState = {
   token: string | null;
@@ -121,6 +121,7 @@ export interface ErrorData {
   data: {
     error?: ErrorMessage[];
     message?: string;
+    status?: number;
   };
 }
 
@@ -133,6 +134,14 @@ export interface FetchBaseQueryError {
   data?: {
     message?: string;
   };
+}
+
+export interface LocationStateProps {
+  tabValue?: string;
+  workspaceId?: string;
+  workspaceName?: string;
+  survey?: Survey;
+  state?: { openModal: boolean; openModalImport: boolean };
 }
 
 export interface LoginFormData {
@@ -164,6 +173,13 @@ export interface ICustomePayload extends JwtPayload {
     verified?: boolean;
   };
   exp?: number;
+}
+
+export interface ImportQuestionProps {
+  isOpen?: boolean;
+  openImport?: boolean;
+  setOpenImport?: React.Dispatch<React.SetStateAction<boolean>>;
+  surveyID?: string;
 }
 
 export interface NewSurveyModalProps {
@@ -216,6 +232,7 @@ export interface QuestionSetting {
   maxSwitch?: boolean;
   multipleSelection?: boolean;
   questionText?: string;
+  description?: string;
   required?: boolean;
   superSize?: boolean;
   welcomeText?: string;
@@ -380,6 +397,13 @@ export interface SurveyBuilderHeaderProps {
 
 export interface UserInfo {
   accessToken: string;
+}
+
+export interface UpdateUserInfoFormData {
+  firstname: string;
+  lastname: string;
+  email: string;
+  // organization: string;
 }
 
 export interface Workspace {

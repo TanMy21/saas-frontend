@@ -1,8 +1,9 @@
 import { Box } from "@mui/material";
-import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
+
 // import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
 import { useGetElementByIDQuery } from "../../app/slices/elementApiSlice";
 import { elementComponents } from "../../utils/elementsConfig";
+import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 
 const SurveyBuilderCanvas = ({
   questionId,

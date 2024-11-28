@@ -1,9 +1,10 @@
-import { MRT_ColumnDef } from "material-react-table";
-import { RowData } from "./types";
 import { writeToString } from "fast-csv";
 import { saveAs } from "file-saver";
+import type { MRT_ColumnDef } from "material-react-table";
 import XLSX from "node-xlsx";
 import pdfMake from "pdfmake/build/pdfmake";
+
+import { RowData } from "./types";
 
 export const exportToCsv = (
   selectedRows: RowData[],
@@ -57,7 +58,7 @@ export const exportToPdf = (
   columns: MRT_ColumnDef<RowData>[]
 ) => {
   // Create headers from the columns
-  const headers = columns.map((col) => col.header as string);
+  const headers = columns.map((col) => col.header);
 
   // Map rows to match headers
   const data = selectedRows.map((row) =>

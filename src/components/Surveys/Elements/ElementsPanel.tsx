@@ -1,19 +1,18 @@
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { useCallback } from "react";
+
 import { Box, Tooltip, Typography } from "@mui/material";
-import { Element, ElementsPanelProps, IconMapping } from "../../../utils/types";
-import { elementIcons } from "../../../utils/elementsConfig";
-import ElementDropDownMenu from "./ElementDropDownMenu";
+import debounce from "lodash/debounce";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import type { DropResult } from "react-beautiful-dnd";
+
 import {
   useGetElementsForSurveyQuery,
   useUpdateElementOrderMutation,
 } from "../../../app/slices/elementApiSlice";
-import debounce from "lodash/debounce";
-import { useCallback } from "react";
+import { elementIcons } from "../../../utils/elementsConfig";
+import { Element, ElementsPanelProps, IconMapping } from "../../../utils/types";
+
+import ElementDropDownMenu from "./ElementDropDownMenu";
 
 const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
   const { data: elements = [] as Element[], refetch } =
@@ -137,7 +136,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                   {displayedQuestions.map((element, index) => (
                     <Draggable
                       key={element.questionID}
-                      draggableId={element?.questionID as string}
+                      draggableId={element?.questionID}
                       index={index}
                     >
                       {(provided) => (
@@ -145,7 +144,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                           key={element.questionID}
                           onClick={() =>
                             element?.questionID &&
-                            setQuestionId?.(element?.questionID as string)
+                            setQuestionId?.(element?.questionID)
                           }
                           ref={provided.innerRef}
                           {...provided.draggableProps}
@@ -201,7 +200,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
 
                             {
                               (isNonOrderableType = nonOrderableTypes.includes(
-                                element.type!
+                                element.type
                               ) ? null : (
                                 <Box
                                   display={"flex"}
@@ -281,7 +280,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                               <ElementDropDownMenu
                                 refetch={refetch}
                                 elements={elements}
-                                questionID={element.questionID!}
+                                questionID={element.questionID}
                                 setQuestionId={setQuestionId!}
                               />
                             </Box>

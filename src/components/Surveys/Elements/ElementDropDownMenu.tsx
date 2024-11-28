@@ -1,8 +1,10 @@
-import { IconButton, Menu, MenuItem } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
-import { ElementDropDownMenuProps } from "../../../utils/types";
+
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { IconButton, Menu, MenuItem } from "@mui/material";
+
 import { useDeleteElementMutation } from "../../../app/slices/elementApiSlice";
+import { ElementDropDownMenuProps } from "../../../utils/types";
 
 const ElementDropDownMenu = ({
   questionID,
@@ -44,7 +46,6 @@ const ElementDropDownMenu = ({
         // No more elements left
         setQuestionId(null);
       }
-
     } catch (error) {
       console.error(error);
     }

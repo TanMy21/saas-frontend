@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { GoArrowUpLeft } from "react-icons/go";
+
 import { ElementProps } from "../../../utils/types";
 
 const SurveyWelcomeElement = ({ display }: ElementProps) => {

@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
+
+import { CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
+
+import usePersist from "../../hooks/persist";
+import { isTokenExpired } from "../../utils/tokenUtils";
+
 import { useRefreshMutation, useSendLogoutMutation } from "./authApiSlice";
 import { selectCurrentToken, logOut } from "./authSlice";
-import usePersist from "../../hooks/persist";
-import { CircularProgress } from "@mui/material";
-import { isTokenExpired } from "../../utils/tokenUtils";
 
 const PersistLogin = () => {
   const [persist] = usePersist();
@@ -41,7 +44,7 @@ const PersistLogin = () => {
         setTrueSuccess(true);
       } catch (err) {
         console.error(err);
-        logoutUser();
+        await logoutUser();
       }
     };
 
@@ -53,7 +56,7 @@ const PersistLogin = () => {
       }
     };
 
-    const intervalId = setInterval(checkTokenExpiration, 10000);
+    const intervalId = setInterval(checkTokenExpiration, 120000);
 
     // Check once immediately on component mount
     checkTokenExpiration();
@@ -67,6 +70,7 @@ const PersistLogin = () => {
     if (isError) {
       logoutUser();
     }
+    // eslint-disable-next-line
   }, [isError]);
 
   let content;

@@ -1,5 +1,6 @@
-import IconButton from "@mui/material/IconButton";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import IconButton from "@mui/material/IconButton";
+
 import { WorkspacesProp } from "../../utils/types";
 
 const NewWorkspaceIconButton = ({ handleOpen }: WorkspacesProp) => {

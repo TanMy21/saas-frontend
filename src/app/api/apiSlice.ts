@@ -1,10 +1,10 @@
-import {
+import type {
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
-  createApi,
-  fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
+import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
+
 import { setCredentials, logOut } from "../slices/authSlice";
 import { RootState } from "../store";
 
@@ -26,7 +26,7 @@ const baseQueryWithReauth: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  //console.log("Args: ", args); // request url, method, body
+  // console.log("Args: ", args); // request url, method, body
   // console.log("Api: ", api); // signal, dispatch, getState()
   // console.log("extraOptions: ", extraOptions); //custom like {shout: true}
 
@@ -45,17 +45,22 @@ const baseQueryWithReauth: BaseQueryFn<
       result = await baseQuery(args, api, extraOptions);
     } else {
       if (
-        refreshResult?.error?.status === 403 ||
-        refreshResult?.error?.status === 401 ||
-        refreshResult?.error?.status === 500
+        typeof refreshResult?.error?.status === "number" &&
+        [403, 401, 500].includes(refreshResult?.error?.status)
       ) {
         localStorage.removeItem("persist");
         api.dispatch(logOut());
-        (refreshResult.error.data as { message: string }).message =
+        (refreshResult?.error?.data as { message: string }).message =
           "Your login has expired. Please Login again ";
       }
       return refreshResult;
     }
+  }
+
+  if (result?.error?.status === 429) {
+    // Display a notification or alert to the user
+    (result.error.data as { message: string }).message =
+      "Too many requests. Please wait for a minute and try again.";
   }
 
   return result;

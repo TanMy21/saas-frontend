@@ -1,5 +1,7 @@
 import { Box, Button } from "@mui/material";
+
 import { ElementProps } from "../../../utils/types";
+
 import ElementQuestionText from "./ElementQuestionText";
 
 const BinaryElement = ({

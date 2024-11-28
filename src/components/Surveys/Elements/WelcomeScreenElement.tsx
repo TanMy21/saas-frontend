@@ -1,8 +1,10 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { ElementProps } from "../../../utils/types";
 import { useState } from "react";
+
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { FaArrowRightLong } from "react-icons/fa6";
+
 import { useUpdateElementTextMutation } from "../../../app/slices/elementApiSlice";
+import { ElementProps } from "../../../utils/types";
 
 const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
   const [text, setText] = useState("Welcome to the Survey!");

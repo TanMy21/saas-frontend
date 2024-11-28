@@ -11,6 +11,13 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: ["User"],
     }),
+    resendVerificationEmail: builder.mutation({
+      query: (email) => ({
+        url: "/u/verify",
+        method: "POST",
+        body: { email },
+      }),
+    }),
     addNewUser: builder.mutation({
       query: (data) => ({
         url: "/register",
@@ -18,6 +25,14 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: [{ type: "User", id: "LIST" }],
+    }),
+    updateUserInfo: builder.mutation({
+      query: ({ firstname, lastname, email }) => ({
+        url: `/u/update`,
+        method: "PATCH",
+        body: { firstname, lastname, email },
+      }),
+      invalidatesTags: ["User"],
     }),
   }),
 });
@@ -27,6 +42,8 @@ export const {
   useAddNewUserMutation,
   // useUpdateUserMutation,
   // useDeleteUserMutation,
+  useResendVerificationEmailMutation,
+  useUpdateUserInfoMutation,
 } = usersApiSlice;
 
 // returns the query result object

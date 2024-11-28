@@ -1,10 +1,23 @@
-import { Controller, useForm } from "react-hook-form";
-import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
-import { welcomeSettingsSchema } from "../../../utils/schema";
-import { Box, TextField } from "@mui/material";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  TextField,
+} from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+
 import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
+import { welcomeSettingsSchema } from "../../../utils/schema";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
+
+
+
+
 
 const WelcomeScreenElementSettings = ({
   qID,
@@ -92,94 +105,125 @@ const WelcomeScreenElementSettings = ({
               minHeight: "200px",
             }}
           >
-            <Box mt={1} sx={{ fontSize: "16px", fontWeight: 700 }}>
-              Settings
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1%",
-                margin: "auto",
-                marginTop: "4%",
-                marginBottom: "8%",
-                width: "98%",
-                // border: "2px solid orange",
-              }}
+            <Accordion
+              sx={{ width: "100%", backgroundColor: "#F7F7F7" }}
+              defaultExpanded
             >
-              <Box sx={{ fontWeight: 500 }}>Welcome Message</Box>
-              <Box mt={1}>
-                <Controller
-                  name="welcomeText"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      type="text"
-                      sx={{
-                        "& .MuiInputBase-root": {
-                          height: "36px",
-                          fontSize: "16px",
-                        },
-                      }}
-                      {...field}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          welcomeText: value,
-                        }));
-                      }}
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+              >
+                <Box sx={{ fontWeight: 500, color: "#453F46" }}>Title Text</Box>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1%",
+                    margin: "auto",
+                    marginTop: "4%",
+                    marginBottom: "8%",
+                    width: "98%",
+                    // border: "2px solid orange",
+                  }}
+                >
+                  <Box sx={{ fontWeight: 500 }}>Welcome Message</Box>
+                  <Box mt={1}>
+                    <Controller
+                      name="welcomeText"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          type="text"
+                          sx={{
+                            "& .MuiInputBase-root": {
+                              height: "36px",
+                              fontSize: "16px",
+                              backgroundColor: "#FFFFFF",
+                            },
+                          }}
+                          {...field}
+                          onChange={(event) => {
+                            const value = event.target.value;
+                            field.onChange(value);
+                            setFormState((prev) => ({
+                              ...prev,
+                              welcomeText: value,
+                            }));
+                          }}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Box>
-            </Box>
-            <Box
+                  </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1%",
-                margin: "auto",
-                marginTop: "4%",
-                marginBottom: "8%",
-                width: "98%",
-                // border: "2px solid orange",
+                marginTop: "6%",
+                width: "100%",
+                backgroundColor: "#F7F7F7",
               }}
+              defaultExpanded
             >
-              <Box sx={{ fontWeight: 500 }}>Button</Box>
-              <Box mt={1}>
-                <Controller
-                  name="buttonText"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      type="text"
-                      sx={{
-                        "& .MuiInputBase-root": {
-                          height: "36px",
-                          fontSize: "16px",
-                        },
-                      }}
-                      {...field}
-                      value={formState.buttonText}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        if (value.length <= 24) {
-                          field.onChange(value);
-                          setFormState((prev) => ({
-                            ...prev,
-                            button1Text: value,
-                          }));
-                          setInputLength(value.length);
-                        }
-                      }}
-                      helperText={`${inputLength}/24`}
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+              >
+                <Box sx={{ fontWeight: 500, color: "#453F46" }}>Button</Box>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1%",
+                    margin: "auto",
+                    marginTop: "4%",
+                    marginBottom: "8%",
+                    width: "98%",
+                    // border: "2px solid orange",
+                  }}
+                >
+                  <Box mt={1}>
+                    <Controller
+                      name="buttonText"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          type="text"
+                          sx={{
+                            "& .MuiInputBase-root": {
+                              height: "36px",
+                              fontSize: "16px",
+                              backgroundColor: "#FFFFFF",
+                            },
+                          }}
+                          {...field}
+                          value={formState.buttonText}
+                          onChange={(event) => {
+                            const value = event.target.value;
+                            if (value.length <= 24) {
+                              field.onChange(value);
+                              setFormState((prev) => ({
+                                ...prev,
+                                button1Text: value,
+                              }));
+                              setInputLength(value.length);
+                            }
+                          }}
+                          helperText={`${inputLength}/24`}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Box>
-            </Box>
+                  </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
           </Box>
         </form>
       </Box>

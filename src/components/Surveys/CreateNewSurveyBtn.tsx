@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Box, Button } from "@mui/material";
+
 import AddIcon from "@mui/icons-material/Add";
-import NewSurveyModal from "../Modals/NewSurveyModal";
+import { Box, Button } from "@mui/material";
+
 import { NewSurveyProps } from "../../utils/types";
+import NewSurveyModal from "../Modals/NewSurveyModal";
 
 const CreateNewSurveyBtn = ({ workspaceId, workspaceName }: NewSurveyProps) => {
   const [open, setOpen] = useState(false);

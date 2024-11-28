@@ -1,15 +1,17 @@
-import { Box, Button, Container, Paper, TextField } from "@mui/material";
-import { useForgotPasswordMutation } from "../app/slices/authApiSlice";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Box, Button, Container, Paper, TextField } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { HiOutlineMail } from "react-icons/hi";
+import { IoArrowBackOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import { useForgotPasswordMutation } from "../app/slices/authApiSlice";
+import FormErrors from "../components/FormErrors";
 import { forgetPasswordSchema } from "../utils/schema";
 import { ErrorData, ForgotPasswordRequest } from "../utils/types";
-import { useEffect } from "react";
-import { IoArrowBackOutline } from "react-icons/io5";
-import FormErrors from "../components/FormErrors";
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import { HiOutlineMail } from "react-icons/hi";
 
 const ForgotPassword = () => {
   const [forgotPassword, { isSuccess, isError, error }] =

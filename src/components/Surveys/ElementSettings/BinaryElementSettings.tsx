@@ -1,15 +1,25 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
-import { Controller, useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
-import { Box, TextField } from "@mui/material";
-import { binarySettingsSchema } from "../../../utils/schema";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Switch from "@mui/joy/Switch";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  TextField,
+} from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+
 import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
+import { binarySettingsSchema } from "../../../utils/schema";
+import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
 const BinaryElementSettings = ({
   qID,
   qText,
+  qDescription,
   qRequired,
   qSettings,
 }: ElementSettingsProps) => {
@@ -24,6 +34,7 @@ const BinaryElementSettings = ({
     resolver: zodResolver(binarySettingsSchema),
     defaultValues: {
       questionText: qText,
+      description: qDescription,
       required: qRequired,
       button1Text,
       button2Text,
@@ -32,6 +43,7 @@ const BinaryElementSettings = ({
 
   const [formState, setFormState] = useState<QuestionSetting>({
     questionText: qText,
+    description: qDescription,
     required: qRequired,
     button1Text,
     button2Text,
@@ -49,11 +61,14 @@ const BinaryElementSettings = ({
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
-      const { required, questionText, button1Text, button2Text } = data;
+      // console.log(data);
+      const { required, questionText, button1Text, button2Text, description } =
+        data;
       const settings = { button1Text, button2Text };
       await updateElementSettings({
         questionID: qID,
         text: questionText,
+        description,
         required,
         settings,
       });
@@ -84,12 +99,12 @@ const BinaryElementSettings = ({
   }, [formState, handleSubmit]);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          width: "98%",
+          width: "100%",
           minHeight: "100px",
         }}
       >
@@ -100,13 +115,10 @@ const BinaryElementSettings = ({
               flexDirection: "column",
               marginRight: "auto",
               marginLeft: "auto",
-              width: "92%",
+              width: "100%",
               minHeight: "200px",
             }}
           >
-            <Box mt={1} sx={{ fontSize: "16px", fontWeight: 700 }}>
-              Settings
-            </Box>
             <Box
               sx={{
                 display: "flex",
@@ -119,155 +131,260 @@ const BinaryElementSettings = ({
                 // border: "2px solid orange",
               }}
             >
-              <Box sx={{ fontWeight: 500 }}>Question</Box>
-              <Box mt={1}>
-                <Controller
-                  name="questionText"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      type="text"
-                      sx={{
-                        "& .MuiInputBase-root": {
-                          height: "36px",
-                          fontSize: "16px",
-                        },
-                      }}
-                      {...field}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          questionText: value,
-                        }));
-                      }}
+              <Accordion
+                sx={{ width: "100%", backgroundColor: "#F7F7F7" }}
+                defaultExpanded
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                >
+                  <Box sx={{ fontWeight: 500, color: "#453F46" }}>Question</Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>
+                    Question Text
+                  </Box>
+                  <Box mt={1}>
+                    <Controller
+                      name="questionText"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          type="text"
+                          fullWidth
+                          sx={{
+                            "& .MuiInputBase-root": {
+                              height: "36px",
+                              fontSize: "16px",
+                              backgroundColor: "#FFFFFF",
+                            },
+                          }}
+                          {...field}
+                          onChange={(event) => {
+                            const value = event.target.value;
+                            field.onChange(value);
+                            setFormState((prev) => ({
+                              ...prev,
+                              questionText: value,
+                            }));
+                          }}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Box>
-            </Box>
-            <Box
-              mt={1}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: "0%",
-                width: "98%",
-              }}
-            >
-              <Box sx={{ fontWeight: 500 }}>Required</Box>
-              <Box mt={1}>
-                <Controller
-                  name="required"
-                  control={control}
-                  render={({ field }) => (
-                    <Switch
-                      checked={field.value}
-                      onChange={(event) => {
-                        const value = event.target.checked;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          required: value,
-                        }));
-                      }}
+                  </Box>
+                  <Box
+                    sx={{ marginTop: "2%", fontWeight: 500, color: "#3F3F46" }}
+                  >
+                    Description
+                  </Box>
+                  <Box mt={1}>
+                    <Controller
+                      name="description"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          type="text"
+                          multiline
+                          fullWidth
+                          maxRows={4}
+                          sx={{
+                            "& .MuiInputBase-root": {
+                              width: "100%",
+                              height: "36px",
+                              fontSize: "16px",
+                              backgroundColor: "#FFFFFF",
+                              minHeight: "40px",
+                              boxSizing: "border-box",
+                            },
+                            "& .MuiInputBase-input": {
+                              lineHeight: "1.5",
+                            },
+                          }}
+                          {...field}
+                          onChange={(event) => {
+                            const value = event.target.value;
+                            field.onChange(value);
+                            setFormState((prev) => ({
+                              ...prev,
+                              questionText: value,
+                            }));
+                          }}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1%",
-                margin: "auto",
-                marginTop: "4%",
-                marginBottom: "8%",
-                width: "98%",
-                // border: "2px solid orange",
-              }}
-            >
-              <Box sx={{ fontWeight: 500 }}>Button 1</Box>
-              <Box mt={1}>
-                <Controller
-                  name="button1Text"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      type="text"
-                      sx={{
-                        "& .MuiInputBase-root": {
-                          height: "36px",
-                          fontSize: "16px",
-                        },
-                      }}
-                      {...field}
-                      value={formState.button1Text}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        if (value.length <= 24) {
-                          field.onChange(value);
-                          setFormState((prev) => ({
-                            ...prev,
-                            button1Text: value,
-                          }));
-                          setInputLength1(value.length);
-                        }
-                      }}
-                      helperText={`${inputLength1}/24`}
-                    />
-                  )}
-                />
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1%",
-                margin: "auto",
-                marginTop: "4%",
-                marginBottom: "8%",
-                width: "98%",
-                // border: "2px solid orange",
-              }}
-            >
-              <Box sx={{ fontWeight: 500 }}>Button 2</Box>
-              <Box mt={1}>
-                <Controller
-                  name="button2Text"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      type="text"
-                      sx={{
-                        "& .MuiInputBase-root": {
-                          height: "36px",
-                          fontSize: "16px",
-                        },
-                      }}
-                      {...field}
-                      value={formState.button2Text}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        if (value.length <= 24) {
-                          field.onChange(value);
-                          setFormState((prev) => ({
-                            ...prev,
-                            button2Text: value,
-                          }));
-                          setInputLength2(value.length);
-                        }
-                      }}
-                      helperText={`${inputLength2}/24`}
-                    />
-                  )}
-                />
-              </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion
+                sx={{
+                  marginTop: "6%",
+                  width: "100%",
+                  backgroundColor: "#F7F7F7",
+                }}
+                defaultExpanded
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                >
+                  <Box sx={{ fontWeight: 500, color: "#453F46" }}>
+                    Validation
+                  </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box
+                    mt={1}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginTop: "0%",
+                      width: "98%",
+                    }}
+                  >
+                    <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>
+                      Required
+                    </Box>
+                    <Box mt={1}>
+                      <Controller
+                        name="required"
+                        control={control}
+                        render={({ field }) => (
+                          <Switch
+                            checked={field.value}
+                            onChange={(event) => {
+                              const value = event.target.checked;
+                              field.onChange(value);
+                              setFormState((prev) => ({
+                                ...prev,
+                                required: value,
+                              }));
+                            }}
+                          />
+                        )}
+                      />
+                    </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion
+                sx={{
+                  marginTop: "6%",
+                  width: "100%",
+                  backgroundColor: "#F7F7F7",
+                }}
+                defaultExpanded
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                >
+                  <Box sx={{ fontWeight: 500, color: "#453F46" }}>Options</Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1%",
+                      margin: "auto",
+                      marginTop: "4%",
+                      marginBottom: "8%",
+                      width: "98%",
+                      // border: "2px solid orange",
+                    }}
+                  >
+                    <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>
+                      Button 1
+                    </Box>
+                    <Box mt={1}>
+                      <Controller
+                        name="button1Text"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            type="text"
+                            sx={{
+                              "& .MuiInputBase-root": {
+                                height: "36px",
+                                fontSize: "16px",
+                                backgroundColor: "#FFFFFF",
+                              },
+                            }}
+                            {...field}
+                            value={formState.button1Text}
+                            onChange={(event) => {
+                              const value = event.target.value;
+                              if (value.length <= 24) {
+                                field.onChange(value);
+                                setFormState((prev) => ({
+                                  ...prev,
+                                  button1Text: value,
+                                }));
+                                setInputLength1(value.length);
+                              }
+                            }}
+                            helperText={`${inputLength1}/24`}
+                          />
+                        )}
+                      />
+                    </Box>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1%",
+                      margin: "auto",
+                      marginTop: "4%",
+                      marginBottom: "8%",
+                      width: "98%",
+                      // border: "2px solid orange",
+                    }}
+                  >
+                    <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>
+                      Button 2
+                    </Box>
+                    <Box mt={1}>
+                      <Controller
+                        name="button2Text"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            type="text"
+                            sx={{
+                              "& .MuiInputBase-root": {
+                                height: "36px",
+                                fontSize: "16px",
+                                backgroundColor: "#FFFFFF",
+                              },
+                            }}
+                            {...field}
+                            value={formState.button2Text}
+                            onChange={(event) => {
+                              const value = event.target.value;
+                              if (value.length <= 24) {
+                                field.onChange(value);
+                                setFormState((prev) => ({
+                                  ...prev,
+                                  button2Text: value,
+                                }));
+                                setInputLength2(value.length);
+                              }
+                            }}
+                            helperText={`${inputLength2}/24`}
+                          />
+                        )}
+                      />
+                    </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
             </Box>
           </Box>
         </form>

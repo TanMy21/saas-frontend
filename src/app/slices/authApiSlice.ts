@@ -1,6 +1,10 @@
-import { setCredentials, logOut } from "./authSlice";
+import { update } from "lodash";
+
 import { AuthResponse, ILogoutResponse } from "../../utils/types";
 import { apiSlice } from "../api/apiSlice";
+
+import { setCredentials, logOut } from "./authSlice";
+import { useUpdateOptionTextandValueMutation } from "./optionApiSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -29,6 +33,13 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: "/password/reset",
         method: "POST",
         body: { password, code },
+      }),
+    }),
+    updatePassword: builder.mutation({
+      query: ({ email, newPassword }) => ({
+        url: "/update/pwd",
+        method: "PATCH",
+        body: { email, newPassword },
       }),
     }),
     verifyEmail: builder.query({
@@ -91,4 +102,5 @@ export const {
   useVerifyEmailQuery,
   useLazyGoogleAuthQuery,
   useResetPasswordMutation,
+  useUpdatePasswordMutation,
 } = authApiSlice;
