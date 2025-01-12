@@ -1,11 +1,10 @@
 import { Box, Grid } from "@mui/material";
 import { useLocation } from "react-router-dom";
 
-import Results from "../components/Surveys/Results";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import { LocationStateProps, Survey } from "../utils/types";
 
-const SurveyResults = () => {
+const QuestionFlow = () => {
   const location = useLocation();
   const { headerProps } = (location.state as LocationStateProps) || {};
   const { tabValue, survey, workspaceId, workspaceName } = headerProps || {};
@@ -55,11 +54,10 @@ const SurveyResults = () => {
               minHeight: "90%",
               overflowX: "hidden",
               overflowY: "auto",
-              // border: "2px solid green",
+              border: "2px solid green",
             }}
           >
             {/* Main content area */}
-            <Results />
           </Grid>
         </Grid>
       </Box>
@@ -67,4 +65,4 @@ const SurveyResults = () => {
   );
 };
 
-export default SurveyResults;
+export default QuestionFlow;

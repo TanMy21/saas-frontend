@@ -5,6 +5,7 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { Box, Tab, Tabs, Toolbar, Tooltip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import { FaAngleRight } from "react-icons/fa6";
+import { PiFlowArrowBold } from "react-icons/pi";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { SurveyBuilderHeaderProps } from "../../utils/types";
@@ -42,6 +43,8 @@ const SurveyBuilderHeader = ({
 
     if (newValue === "results") {
       navigate(`/s/results/${surveyID}`, { state: { headerProps } });
+    } else if (newValue === "flow") {
+      navigate(`/s/flow/${surveyID}`, { state: { headerProps } });
     } else if (newValue === "create") {
       navigate(`/survey/${surveyID}`, { state: { headerProps } });
     }
@@ -50,11 +53,15 @@ const SurveyBuilderHeader = ({
   useEffect(() => {
     if (location.pathname.includes("/results")) {
       setTabValue("results");
+    } else if (location.pathname.includes("/flow")) {
+      setTabValue("flow");
     } else if (location.pathname.includes("/survey")) {
       setTabValue("create");
     }
     setSurveyTitle(title);
   }, [title, location.pathname]);
+
+ 
 
   return (
     <AppBar
@@ -199,6 +206,18 @@ const SurveyBuilderHeader = ({
                 value="create"
                 sx={{
                   fontWeight: 600,
+                }}
+              />
+              <Tab
+                icon={<PiFlowArrowBold size={26} />}
+                label="Flow"
+                value="flow"
+                sx={{
+                  fontWeight: 600,
+                  color: "#1ABEBE",
+                  "& .MuiTab-iconWrapper": {
+                    color: "#1ABEBE",
+                  },
                 }}
               />
               <Tab

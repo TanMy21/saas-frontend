@@ -148,10 +148,15 @@ export interface FetchBaseQueryError {
 }
 
 export interface LocationStateProps {
-  tabValue?: string;
+  headerProps?: {
+    tabValue?: string;
+    workspaceId?: string;
+    workspaceName?: string;
+    survey?: Survey;
+  };
   workspaceId?: string;
   workspaceName?: string;
-  survey?: Survey;
+  layout?: string;
   state?: { openModal: boolean; openModalImport: boolean };
 }
 

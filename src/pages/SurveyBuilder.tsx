@@ -27,8 +27,10 @@ const SurveyBuilder = () => {
   const user = useSelector(selectUser);
   const navigate = useNavigate();
   const location = useLocation();
+
   const { workspaceId, workspaceName } =
     (location.state as LocationStateProps) || {};
+
   const isOpen = location.state?.openModal || false;
   const isOpenImport = location.state?.openModalImport || false;
   const [stepIndex, setStepIndex] = useState(0);
@@ -116,6 +118,8 @@ const SurveyBuilder = () => {
   if (import.meta.env.VITE_ENABLE_TOUR === "true") {
     isTourEnabled = !hasCompletedBuilderTour && !hasSkippedBuilderTour;
   }
+
+   
 
   return (
     <>

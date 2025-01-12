@@ -8,6 +8,7 @@ import EmailNotVerified from "../pages/EmailNotVerified";
 import ErrorPage from "../pages/ErrorPage";
 import ForgotPassword from "../pages/ForgotPassword";
 import Homepage from "../pages/Homepage";
+import QuestionFlow from "../pages/QuestionFlow";
 import ResetPassword from "../pages/ResetPassword";
 import Settings from "../pages/Settings";
 import Signin from "../pages/Signin";
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
           {
             path: "/survey/:surveyID",
             element: <SurveyBuilder />,
+          },
+          {
+            path: "/s/flow/:surveyID",
+            element: <QuestionFlow />,
           },
           {
             path: "/s/results/:surveyID",
