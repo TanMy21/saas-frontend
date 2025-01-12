@@ -16,9 +16,6 @@ import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApi
 import { numberSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
-
-
-
 const NumberElementSettings = ({
   qID,
   qText,
@@ -208,7 +205,7 @@ const NumberElementSettings = ({
                           field.onChange(value);
                           setFormState((prev) => ({
                             ...prev,
-                            questionText: value,
+                            description: value,
                           }));
                         }}
                       />

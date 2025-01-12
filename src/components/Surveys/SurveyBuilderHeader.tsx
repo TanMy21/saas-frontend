@@ -10,8 +10,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { SurveyBuilderHeaderProps } from "../../utils/types";
 import HeaderIconMenu from "../HeaderIconMenu";
 
-
-
 const SurveyBuilderHeader = ({
   // display,
   // tabValue,
@@ -106,8 +104,9 @@ const SurveyBuilderHeader = ({
                 alignContent: "center",
                 alignItems: "center",
                 width: "fit-content",
-                marginTop: { lg: "4%", xl: "0%" },
+                marginTop: { lg: "1%", xl: "0%" },
                 // border: "2px solid blue",
+                textOverflow: "clip",
               }}
             >
               <NavLink
@@ -118,6 +117,8 @@ const SurveyBuilderHeader = ({
                     color: isActive ? "#262626" : "#262666",
                     lineHeight: "16px",
                     textDecoration: "none",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
                   };
                 }}
               >
@@ -151,6 +152,7 @@ const SurveyBuilderHeader = ({
           </Box>
           {/* ------------------- Tabs ----------------------------------------------- */}
           <Box
+            id="survey-builder-tabs"
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -197,10 +199,6 @@ const SurveyBuilderHeader = ({
                 value="create"
                 sx={{
                   fontWeight: 600,
-                  // color: "#4F46E5",
-                  // "& .MuiTab-iconWrapper": {
-                  //   color: "#4F46E5",
-                  // },
                 }}
               />
               <Tab

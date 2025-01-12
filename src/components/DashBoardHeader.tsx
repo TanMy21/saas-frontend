@@ -5,7 +5,6 @@ import { useGetMeQuery } from "../app/slices/userApiSlice";
 
 import HeaderIconMenu from "./HeaderIconMenu";
 
-
 const DashBoardHeader = () => {
   const { data: user } = useGetMeQuery("User");
 
@@ -73,12 +72,22 @@ const DashBoardHeader = () => {
               </Box>
             </Box>
           </Grid>
-          <Grid item xs={6} sx={{ width: "100%", height: "100%" }}>
+          <Grid
+            item
+            xs={6}
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              width: "100%",
+              height: "100%",
+            }}
+          >
             <Box
+              id="header-icon-menu"
               display={"flex"}
-              justifyContent={"end"}
+              justifyContent={"center"}
               alignContent={"center"}
-              sx={{ width: "100%", height: "100%" }}
+              sx={{ width: "8%", height: "100%" }}
             >
               <HeaderIconMenu />
             </Box>

@@ -5,7 +5,7 @@ import { WorkspacesProp } from "../../utils/types";
 
 import CreateNewWorkspaceBtn from "./CreateNewWorkspaceBtn";
 
-const WorkspacesNotFound = ({ handleOpen }: WorkspacesProp) => {
+const WorkspacesNotFound = ({ handleOpen, setStepIndex }: WorkspacesProp) => {
   return (
     <>
       <Grid
@@ -53,7 +53,10 @@ const WorkspacesNotFound = ({ handleOpen }: WorkspacesProp) => {
               mt={2}
               mb={4}
             >
-              <CreateNewWorkspaceBtn handleOpen={handleOpen} />
+              <CreateNewWorkspaceBtn
+                handleOpen={handleOpen}
+                setStepIndex={setStepIndex}
+              />
             </Box>
             <Box
               display={"flex"}

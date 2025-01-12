@@ -115,6 +115,7 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
               }}
             >
               <Box
+                id="mobile-view"
                 sx={{
                   width: "40%",
                   height: "100%",
@@ -145,6 +146,7 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
                 </IconButton>
               </Box>
               <Box
+                id="desktop-view"
                 sx={{
                   width: "40%",
                   height: "100%",
@@ -176,17 +178,6 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
               </Box>
             </Box>
 
-            {/* <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "16%",
-                height: "100%",
-                // border: "2px solid black",
-              }}
-            > */}
             <Divider
               orientation="vertical"
               sx={{
@@ -196,7 +187,6 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
                 backgroundColor: "#ADADAD",
               }}
             />
-            {/* </Box> */}
 
             <Box
               sx={{
@@ -209,6 +199,7 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
               }}
             >
               <Box
+                id="share-survey"
                 sx={{
                   width: "40%",
                   height: "100%",
@@ -250,6 +241,7 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
                 />
               </Box>
               <Box
+                id="survey-settings"
                 sx={{
                   width: "40%",
                   height: "100%",
@@ -294,6 +286,7 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
               }}
             />
             <Box
+              id="upload-questions"
               sx={{
                 width: "40%",
                 height: "100%",

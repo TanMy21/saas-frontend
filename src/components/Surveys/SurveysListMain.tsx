@@ -33,7 +33,7 @@ const SurveysListMain = () => {
   const { workspaceId } = useParams();
   const { workspaces } = useOutletContext<WorkspacesProp>();
 
-  const { data: surveys, isLoading } = useGetWorkspaceSurveysQuery(workspaceId);
+  const { data: surveys } = useGetWorkspaceSurveysQuery(workspaceId);
 
   const [updateWorkspaceName] = useUpdateWorkspaceNameMutation();
 
@@ -156,7 +156,7 @@ const SurveysListMain = () => {
             display={"flex"}
             justifyContent={"space-between"}
           >
-            <Box>
+            <Box id="new-survey-btn">
               <CreateNewSurveyBtn
                 workspaceId={workspaceId}
                 workspaceName={workspace?.name}
@@ -167,7 +167,7 @@ const SurveysListMain = () => {
               display={"flex"}
               sx={{ width: "400px", height: "50px" }}
             >
-              <Box sx={{ width: 150 }}>
+              <Box id="sort-surveys" sx={{ width: 150 }}>
                 <FormControl fullWidth size="small">
                   <Select
                     labelId="demo-simple-select-label"
@@ -181,7 +181,7 @@ const SurveysListMain = () => {
                   </Select>
                 </FormControl>
               </Box>
-              <Box ml={2}>
+              <Box id="survey-view-layout" ml={2}>
                 <ToggleButtonGroup
                   color="primary"
                   value={layout}
@@ -197,7 +197,7 @@ const SurveysListMain = () => {
                       color: "black",
                       bgcolor: "#E3E3E3",
                       "&.Mui-selected": {
-                        bgcolor: "#737373", // color when button is selected (clicked)
+                        bgcolor: "#5240ED", // color when button is selected (clicked)
                         color: "white",
                         "&:hover": {
                           bgcolor: "#868383", // color when button is selected and hovered over
@@ -207,7 +207,6 @@ const SurveysListMain = () => {
                     }}
                   >
                     <ListIcon />
-                    <span>List</span>
                   </ToggleButton>
                   <ToggleButton
                     size="small"
@@ -217,7 +216,7 @@ const SurveysListMain = () => {
                       color: "black",
                       bgcolor: "#E3E3E3",
                       "&.Mui-selected": {
-                        bgcolor: "#737373", // color when button is selected (clicked)
+                        bgcolor: "#5240ED", // color when button is selected (clicked)
                         color: "white",
                         "&:hover": {
                           bgcolor: "#868383", // color when button is selected and hovered over
@@ -227,7 +226,6 @@ const SurveysListMain = () => {
                     }}
                   >
                     <GridViewIcon />
-                    Grid
                   </ToggleButton>
                 </ToggleButtonGroup>
               </Box>
@@ -237,6 +235,7 @@ const SurveysListMain = () => {
         <Divider sx={{ mt: 2, mb: 2 }} />
         <Grid item sx={{ width: "98%", height: "72vh" }} p={1}>
           <Grid
+            id="survey-list"
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ lg: 8, md: 6, sm: 4, xs: 2 }}

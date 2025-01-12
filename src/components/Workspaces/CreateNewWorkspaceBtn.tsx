@@ -9,12 +9,12 @@ const CreateNewWorkspaceBtn = ({ handleOpen }: WorkspacesProp) => {
       <Box sx={{ mt: 1 }}>
         <Button
           sx={{
-            backgroundColor: "#494454",
+            backgroundColor: "##6152EF",
             mr: 2,
             fontWeight: 600,
             textTransform: "capitalize",
             "&:hover": {
-              backgroundColor: "#494454",
+              backgroundColor: "##6152EF",
             },
           }}
           variant="contained"

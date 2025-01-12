@@ -77,7 +77,6 @@ const HeaderIconMenu = () => {
           {email?.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
-
       <Menu
         anchorEl={anchorEl}
         id="account-menu"

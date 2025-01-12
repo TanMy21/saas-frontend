@@ -20,15 +20,15 @@ const CheckBoxElement = ({
   qID,
   qNO,
   qText,
+  qType,
   qDescription,
   display,
 }: ElementProps) => {
   const [editingID, setEditingID] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
 
-  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
-    qID!
-  );
+  const { data: options = [] as OptionType[] } =
+    useGetOptionsOfQuestionQuery(qID);
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
@@ -123,6 +123,7 @@ const CheckBoxElement = ({
           qID={qID}
           qNO={qNO}
           qText={qText}
+          qType={qType}
           qDescription={qDescription}
           display={display}
         />

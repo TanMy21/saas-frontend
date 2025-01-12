@@ -15,7 +15,11 @@ import { WorkspacesProp } from "../../utils/types";
 import NewWorkspaceIconButton from "./NewWorkspaceIconButton";
 import WorkspaceSurveysListCount from "./WorkspaceSurveysListCount";
 
-const Workspaces = ({ workspaces, handleOpen }: WorkspacesProp) => {
+const Workspaces = ({
+  workspaces,
+  handleOpen,
+  setStepIndex,
+}: WorkspacesProp) => {
   const navigate = useNavigate();
 
   const { workspaceId } = useParams();
@@ -32,8 +36,7 @@ const Workspaces = ({ workspaces, handleOpen }: WorkspacesProp) => {
   return (
     <>
       <Grid container display={"flex"} flexDirection={"column"}>
-        <Grid
-          item
+        <Box
           display={"flex"}
           flexDirection={"row"}
           justifyContent={"end"}
@@ -44,11 +47,31 @@ const Workspaces = ({ workspaces, handleOpen }: WorkspacesProp) => {
             height: "50px",
           }}
         >
-          <NewWorkspaceIconButton handleOpen={handleOpen} />
-        </Grid>
+          <Box
+            id="add-workspace"
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              paddingRight: "2%",
+              width: "12%",
+              height: "90%",
+            }}
+          >
+            <NewWorkspaceIconButton
+              handleOpen={handleOpen}
+              setStepIndex={setStepIndex}
+            />
+          </Box>
+        </Box>
 
-        <Box sx={{ width: "100%", minHeight: "200px", marginTop: "8%" }}>
-          <List>
+        <Box
+          sx={{
+            width: "100%",
+            minHeight: "200px",
+            marginTop: "8%",
+          }}
+        >
+          <List id="workspace-list">
             {workspaces?.map((workspace) => {
               const match =
                 location.pathname === `/dash/w/${workspace?.workspaceId}`;
@@ -76,7 +99,6 @@ const Workspaces = ({ workspaces, handleOpen }: WorkspacesProp) => {
                           borderLeft: isActive ? "5px solid #4C6FFF" : "",
                           borderTopLeftRadius: isActive ? "8px" : "",
                           borderBottomLeftRadius: isActive ? "8px" : "",
-                          
                         };
                       }}
                     >

@@ -16,8 +16,6 @@ import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApi
 import { choiceSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
-
-
 const ChoiceElementSettings = ({
   qID,
   qText,
@@ -47,6 +45,7 @@ const ChoiceElementSettings = ({
   const onSubmit = async (data: QuestionSetting) => {
     try {
       const { required, questionText, description } = data;
+      console.log("data:", data);
       const settings = {};
       await updateElementSettings({
         questionID: qID,
@@ -169,10 +168,11 @@ const ChoiceElementSettings = ({
                         {...field}
                         onChange={(event) => {
                           const value = event.target.value;
+
                           field.onChange(value);
                           setFormState((prev) => ({
                             ...prev,
-                            questionText: value,
+                            description: value,
                           }));
                         }}
                       />

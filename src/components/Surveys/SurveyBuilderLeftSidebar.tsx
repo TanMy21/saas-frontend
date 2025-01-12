@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Divider, Grid } from "@mui/material";
+import { Box, Divider, Grid } from "@mui/material";
 
 import { SurveyBuilderLeftSidebarProps } from "../../utils/types";
 
@@ -37,13 +37,24 @@ const SurveyBuilderLeftSidebar = ({
         }}
       >
         {/* Menu */}
-        <AddElementMenu
-          surveyID={surveyID!}
-          anchorEl={anchorEl}
-          open={open}
-          handleClick={handleClick}
-          handleClose={handleClose}
-        />
+        <Box
+          id="add-element-menu"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "15%",
+            height: "38px",
+          }}
+        >
+          <AddElementMenu
+            surveyID={surveyID!}
+            anchorEl={anchorEl}
+            open={open}
+            handleClick={handleClick}
+            handleClose={handleClose}
+          />
+        </Box>
       </Grid>
       <ElementsPanel surveyID={surveyID!} setQuestionId={setQuestionId} />
       <Divider sx={{ marginTop: "4px" }} />

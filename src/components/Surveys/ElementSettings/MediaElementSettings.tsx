@@ -16,13 +16,11 @@ import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApi
 import { mediaSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
-
-
-
 const MediaElementSettings = ({
   qID,
   qText,
   qRequired,
+  qDescription,
   qSettings,
 }: ElementSettingsProps) => {
   const [updateElementSettings] = useUpdateElementSettingsMutation();
@@ -38,6 +36,7 @@ const MediaElementSettings = ({
       required: qRequired,
       multipleSelection,
       superSize,
+      description: qDescription,
       questionText: qText,
     },
   });
@@ -47,6 +46,7 @@ const MediaElementSettings = ({
     multipleSelection,
     superSize,
     questionText: qText,
+    description: qDescription,
   });
 
   const previousFormState = useRef<QuestionSetting>(formState);
@@ -54,11 +54,18 @@ const MediaElementSettings = ({
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
-      const { required, questionText, multipleSelection, superSize } = data;
+      const {
+        required,
+        questionText,
+        description,
+        multipleSelection,
+        superSize,
+      } = data;
       const settings = { multipleSelection, superSize };
       await updateElementSettings({
         questionID: qID,
         text: questionText,
+        description,
         required,
         settings,
       });
@@ -181,7 +188,7 @@ const MediaElementSettings = ({
                           field.onChange(value);
                           setFormState((prev) => ({
                             ...prev,
-                            questionText: value,
+                            description: value,
                           }));
                         }}
                       />

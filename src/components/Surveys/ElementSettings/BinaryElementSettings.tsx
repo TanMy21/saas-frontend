@@ -208,7 +208,7 @@ const BinaryElementSettings = ({
                             field.onChange(value);
                             setFormState((prev) => ({
                               ...prev,
-                              questionText: value,
+                              description: value,
                             }));
                           }}
                         />

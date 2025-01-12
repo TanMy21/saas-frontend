@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import { GoArrowUpLeft } from "react-icons/go";
 
-import { ElementProps } from "../../../utils/types";
+import { SurveyWelcomeElementProps } from "../../../utils/types";
 
-const SurveyWelcomeElement = ({ display }: ElementProps) => {
+const SurveyWelcomeElement = ({ display }: SurveyWelcomeElementProps) => {
   const marginTop = display === "mobile" ? "-80%" : "10%";
   const arrowFontSize = display === "mobile" ? "1rem" : "4rem";
   const welcomeFontSize = display === "mobile" ? "24px" : "40px";

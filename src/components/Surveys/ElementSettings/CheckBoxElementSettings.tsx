@@ -16,10 +16,6 @@ import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApi
 import { checkboxSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
-
-
-
-
 const CheckBoxElementSettings = ({
   qID,
   qText,
@@ -49,6 +45,7 @@ const CheckBoxElementSettings = ({
   const onSubmit = async (data: QuestionSetting) => {
     try {
       const { required, questionText, description } = data;
+
       const settings = {};
       await updateElementSettings({
         questionID: qID,
@@ -56,7 +53,7 @@ const CheckBoxElementSettings = ({
         description,
         required,
         settings,
-      });
+      }).unwrap();
     } catch (error) {
       console.error(error);
     }
@@ -74,7 +71,7 @@ const CheckBoxElementSettings = ({
 
     debounceTimeout.current = setTimeout(() => {
       handleSubmit(onSubmit)();
-    }, 1000);
+    }, 2000);
 
     return () => {
       if (debounceTimeout.current) {
@@ -116,47 +113,36 @@ const CheckBoxElementSettings = ({
                 <Box sx={{ fontWeight: 500, color: "#453F46" }}>Question</Box>
               </AccordionSummary>
               <AccordionDetails>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1%",
-                    margin: "auto",
-                    marginTop: "4%",
-                    marginBottom: "8%",
-                    width: "98%",
-                    // border: "2px solid orange",
-                  }}
-                >
-                  <Box sx={{ fontWeight: 500 }}>Question Text</Box>
-                  <Box mt={1}>
-                    <Controller
-                      name="questionText"
-                      control={control}
-                      render={({ field }) => (
-                        <TextField
-                          type="text"
-                          fullWidth
-                          sx={{
-                            "& .MuiInputBase-root": {
-                              height: "36px",
-                              fontSize: "16px",
-                              backgroundColor: "#FFFFFF",
-                            },
-                          }}
-                          {...field}
-                          onChange={(event) => {
-                            const value = event.target.value;
-                            field.onChange(value);
-                            setFormState((prev) => ({
-                              ...prev,
-                              questionText: value,
-                            }));
-                          }}
-                        />
-                      )}
-                    />
-                  </Box>
+                <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>
+                  Question Text
+                </Box>
+                <Box mt={1}>
+                  <Controller
+                    name="questionText"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        type="text"
+                        fullWidth
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            height: "36px",
+                            fontSize: "16px",
+                            backgroundColor: "#FFFFFF",
+                          },
+                        }}
+                        {...field}
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          field.onChange(value);
+                          setFormState((prev) => ({
+                            ...prev,
+                            questionText: value,
+                          }));
+                        }}
+                      />
+                    )}
+                  />
                 </Box>
                 <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>
                   Description
@@ -185,7 +171,7 @@ const CheckBoxElementSettings = ({
                           field.onChange(value);
                           setFormState((prev) => ({
                             ...prev,
-                            questionText: value,
+                            description: value,
                           }));
                         }}
                       />
@@ -221,7 +207,7 @@ const CheckBoxElementSettings = ({
                     width: "98%",
                   }}
                 >
-                  <Box sx={{ fontWeight: 500 }}>Required</Box>
+                  <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>Required</Box>
                   <Box mt={1}>
                     <Controller
                       name="required"

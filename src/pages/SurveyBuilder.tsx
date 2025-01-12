@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 
 import { Box, CircularProgress, Divider, Grid } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useGetElementsForSurveyQuery } from "../app/slices/elementApiSlice";
 import { useGetSurveyByIdQuery } from "../app/slices/surveysApiSlice";
+import { fetchUser, selectUser } from "../app/slices/userSlice";
+import { AppDispatch } from "../app/store";
 import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
 import ImportQuestionsModal from "../components/Modals/ImportQuestionsModal";
 import ScrollbarStyle from "../components/ScrollbarStyle";
@@ -15,16 +18,21 @@ import SurveyBuilderCanvasMobile from "../components/Surveys/SurveyBuilderCanvas
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderIsland from "../components/Surveys/SurveyBuilderIsland";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
+import SurveyBuilderTour from "../components/tour/SurveyBuilderTour";
 import { Element, LocationStateProps } from "../utils/types";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector(selectUser);
   const navigate = useNavigate();
   const location = useLocation();
   const { workspaceId, workspaceName } =
     (location.state as LocationStateProps) || {};
   const isOpen = location.state?.openModal || false;
   const isOpenImport = location.state?.openModalImport || false;
+  const [stepIndex, setStepIndex] = useState(0);
+  const [runTour, setRunTour] = useState(false);
   const [surveyTitle, setSurveyTitle] = useState<string>("");
   const [questionId, setQuestionId] = useState<string | null>(null);
   const [display, setDisplay] = useState<string | null>("desktop");
@@ -63,9 +71,7 @@ const SurveyBuilder = () => {
         const sortedQuestions = [...Elements].sort(
           (a: Element, b: Element) => a.order! - b.order!
         );
-        // setQuestionId(sortedQuestions[0].questionID);
 
-        // Update logic to handle the case where questionId is null or deleted
         if (
           !questionId ||
           !sortedQuestions.find((q) => q.questionID === questionId)
@@ -78,6 +84,16 @@ const SurveyBuilder = () => {
     }
   }, [isLoading, isFetching, Elements, questionId]);
 
+  useEffect(() => {
+    if (!user) {
+      dispatch(fetchUser());
+    }
+  }, [dispatch, user]);
+
+  useEffect(() => {
+    setRunTour(true);
+  }, []);
+
   let content;
 
   if (loading) {
@@ -85,7 +101,20 @@ const SurveyBuilder = () => {
   }
 
   if (noElements) {
-    content = <SurveyWelcomeElement />;
+    content = <SurveyWelcomeElement display={display} />;
+  }
+
+  if (!user) {
+    return null;
+  }
+
+  const { tours } = user;
+  const { hasCompletedBuilderTour, hasSkippedBuilderTour } = tours;
+
+  let isTourEnabled = false;
+
+  if (import.meta.env.VITE_ENABLE_TOUR === "true") {
+    isTourEnabled = !hasCompletedBuilderTour && !hasSkippedBuilderTour;
   }
 
   return (
@@ -113,6 +142,14 @@ const SurveyBuilder = () => {
         }}
       >
         <Grid container>
+          {isTourEnabled && (
+            <SurveyBuilderTour
+              stepIndex={stepIndex}
+              runTour={runTour}
+              setStepIndex={setStepIndex}
+              setRunTour={setRunTour}
+            />
+          )}
           <Grid
             item
             display={"flex"}
@@ -237,6 +274,7 @@ const SurveyBuilder = () => {
               }}
             >
               <Box
+                id="question-settings"
                 sx={{
                   display: "flex",
                   flexDirection: "column",
@@ -256,6 +294,7 @@ const SurveyBuilder = () => {
                     margin: "auto",
                     marginTop: "8%",
                     height: { lg: "24px", xl: "16px" },
+                    maxHeight: { lg: "24px", xl: "16px" },
                     fontSize: "20px",
                     fontWeight: 600,
                     color: "#3F3F46",
@@ -266,6 +305,7 @@ const SurveyBuilder = () => {
                 </Box>
                 <Divider
                   sx={{
+                    borderWidth: "1px",
                     marginTop: { lg: "0%", xl: "0%" },
                     marginBottom: { lg: "0%", xl: "0%" },
                   }}

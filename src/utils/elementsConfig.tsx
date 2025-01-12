@@ -36,6 +36,7 @@ import {
   IconMapping,
   ElementProps,
   QuestionTypeKey,
+  ElementSettingsProps,
 } from "../utils/types";
 
 export const elementIcons: IconMapping = {
