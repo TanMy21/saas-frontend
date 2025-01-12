@@ -39,6 +39,17 @@ export interface DownloadResponsesModalProps {
   columns: MRT_ColumnDef<RowData>[];
 }
 
+export interface DashBoardHeaderProps {
+  setStepIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export type DashboardTourProps = {
+  stepIndex: number;
+  setStepIndex: React.Dispatch<React.SetStateAction<number>>;
+  runTour: boolean;
+  setRunTour: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 export interface Element {
   questionID: string;
   relatedSurveyId: string;
@@ -53,13 +64,13 @@ export interface Element {
 }
 
 export interface ElementProps {
-  qNO?: string;
+  qNO: string;
   type?: string;
-  qText?: string;
-  qDescription?: string;
-  qType?: string;
+  qText: string;
+  qDescription: string;
+  qType: string;
   display?: string | null;
-  qID?: string;
+  qID: string;
   qOptions?: OptionType[];
   qRequired?: boolean;
   qSettings?: QuestionSetting;
@@ -182,6 +193,38 @@ export interface ImportQuestionProps {
   surveyID?: string;
 }
 
+export interface MediaElementCardProps {
+  text: string;
+  option: OptionType;
+}
+
+export interface MediaElementCardIconBtnProps {
+  optionID: string;
+  handleOpen: (optionID: string) => void;
+  isHovered: string | null;
+}
+
+export interface MediaElementImageUploadModalProps {
+  open: boolean;
+  handleClose: () => void;
+  selectedFile: File | null;
+  setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>;
+  preview: string | null;
+  setPreview: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedOptionID: string | null;
+  uploadImage: (params: {
+    formData: FormData;
+    optionID: string | null;
+  }) => void;
+  isLoading: boolean;
+}
+
+export interface MediaElementMediaProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  optionID: string;
+  image: string;
+}
 export interface NewSurveyModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -395,8 +438,29 @@ export interface SurveyBuilderHeaderProps {
   ) => void;
 }
 
+export interface SurveyWelcomeElementProps {
+  display: string | null;
+}
+
 export interface UserInfo {
   accessToken: string;
+}
+
+type UserTours = {
+  hasCompletedDashboardTour: boolean;
+  hasSkippedDashboardTour: boolean;
+  hasCompletedBuilderTour: boolean;
+  hasSkippedBuilderTour: boolean;
+};
+
+export interface User {
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  organization: string | null;
+  verified: boolean | null;
+  isAdmin: boolean | null;
+  tours: UserTours;
 }
 
 export interface UpdateUserInfoFormData {
@@ -421,6 +485,7 @@ export interface Workspace {
 export interface WorkspacesProp {
   workspaces?: Workspace[];
   handleOpen: () => void;
+  setStepIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export interface WorkspaceRenameModalProps {
@@ -441,6 +506,10 @@ export interface WorkspaceDeleteModalProps {
 export interface WorkspaceData {
   workspaceName?: string;
 }
+
+export type WorkspaceDropdownOutletContextType = {
+  setStepIndex: React.Dispatch<React.SetStateAction<number>>;
+};
 
 export interface WorkspaceLayoutProps {
   surveys: Survey[];

@@ -59,7 +59,7 @@ const ImportQuestionsModal = ({
 
   return (
     <Modal
-      open={open! || openImport!}
+      open={Boolean(open) || Boolean(openImport)}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"

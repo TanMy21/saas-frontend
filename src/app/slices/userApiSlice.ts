@@ -34,6 +34,13 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    updateUserTourStatus: builder.mutation({
+      query: (updates) => ({
+        url: "/u/tour",
+        method: "PATCH",
+        body: updates,
+      }),
+    }),
   }),
 });
 
@@ -44,6 +51,7 @@ export const {
   // useDeleteUserMutation,
   useResendVerificationEmailMutation,
   useUpdateUserInfoMutation,
+  useUpdateUserTourStatusMutation,
 } = usersApiSlice;
 
 // returns the query result object

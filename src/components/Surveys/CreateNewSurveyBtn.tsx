@@ -15,20 +15,24 @@ const CreateNewSurveyBtn = ({ workspaceId, workspaceName }: NewSurveyProps) => {
       <Box sx={{ mt: 1 }}>
         <Button
           sx={{
-            backgroundColor: "#494454",
+            display: "flex",
+            flexDirection: "row",
+            backgroundColor: "#6152EF",
             mr: 2,
             fontWeight: 600,
             textTransform: "capitalize",
             "&:hover": {
-              backgroundColor: "#494454",
+              backgroundColor: "#6152EF",
             },
           }}
           variant="contained"
           size="small"
           onClick={handleOpen}
         >
-          <AddIcon />
-          Create New Survey
+          <Box mt={0.5} mr={1}>
+            <AddIcon />
+          </Box>
+          <Box sx={{ fontWeight: 700 }}>Create New Survey</Box>
         </Button>
         <NewSurveyModal
           open={open}

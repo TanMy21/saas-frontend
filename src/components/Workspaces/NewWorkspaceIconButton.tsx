@@ -3,10 +3,16 @@ import IconButton from "@mui/material/IconButton";
 
 import { WorkspacesProp } from "../../utils/types";
 
-const NewWorkspaceIconButton = ({ handleOpen }: WorkspacesProp) => {
+const NewWorkspaceIconButton = ({
+  handleOpen,
+  setStepIndex,
+}: WorkspacesProp) => {
   return (
     <IconButton
-      onClick={handleOpen}
+      onClick={() => {
+        setStepIndex((prev) => prev + 1);
+        handleOpen();
+      }}
       sx={{
         background: "#4F46E5",
         maxWidth: "32px",

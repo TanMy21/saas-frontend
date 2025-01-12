@@ -100,6 +100,7 @@ export const rankSettingsSchema = z.object({
   questionText: z
     .string()
     .min(1, "Question text must be at least 1 character long"),
+  description: z.string(),
 });
 
 export const textSettingsSchema = z.object({
@@ -107,6 +108,7 @@ export const textSettingsSchema = z.object({
   questionText: z
     .string()
     .min(1, "Question text must be at least 1 character long"),
+  description: z.string(),
 });
 
 export const numberSettingsSchema = z.object({
@@ -118,6 +120,7 @@ export const numberSettingsSchema = z.object({
   maxSwitch: z.boolean(),
   minValue: z.number().optional(),
   maxValue: z.number().optional(),
+  description: z.string(),
 });
 
 export const scaleSettingsSchema = z.object({
@@ -127,6 +130,7 @@ export const scaleSettingsSchema = z.object({
   required: z.boolean(),
   minValue: z.number().optional(),
   maxValue: z.number().optional(),
+  description: z.string(),
 });
 
 export const welcomeSettingsSchema = z.object({
@@ -170,14 +174,15 @@ export const choiceSettingsSchema = z.object({
   questionText: z
     .string()
     .min(1, "Question text must be at least 1 character long"),
+  description: z.string(),
 });
 
 export const checkboxSettingsSchema = z.object({
   required: z.boolean(),
-  multipleSelection: z.boolean(),
   questionText: z
     .string()
     .min(1, "Question text must be at least 1 character long"),
+  description: z.string(),
 });
 
 export const mediaSettingsSchema = z.object({
@@ -187,6 +192,7 @@ export const mediaSettingsSchema = z.object({
   questionText: z
     .string()
     .min(1, "Question text must be at least 1 character long"),
+  description: z.string(),
 });
 
 export const emailContactSettingsSchema = z.object({
@@ -194,6 +200,7 @@ export const emailContactSettingsSchema = z.object({
     .string()
     .min(1, "Question text must be at least 1 character long"),
   required: z.boolean(),
+  description: z.string(),
 });
 
 export const endScreenContactSettingsSchema = z.object({

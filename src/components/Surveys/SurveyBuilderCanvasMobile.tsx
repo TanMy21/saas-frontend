@@ -31,6 +31,7 @@ const SurveyBuilderCanvasMobile = ({
         borderRadius={"12px"}
         bgcolor={"#FFFFFF"}
         mt={"2%"}
+        mb={"2%"}
         pt={"8%"}
         pl={"1%"}
         pr={"1%"}

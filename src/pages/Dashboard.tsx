@@ -1,30 +1,29 @@
 import { useEffect, useState } from "react";
 
 import { Box, CircularProgress, Grid } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { useGetMeQuery } from "../app/slices/userApiSlice";
+import { fetchUser, selectUser } from "../app/slices/userSlice";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
+import { AppDispatch } from "../app/store";
 import DashBoardHeader from "../components/DashBoardHeader";
 import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";
+import DashboardTour from "../components/tour/DashboardTour";
 import Workspaces from "../components/Workspaces/Workspaces";
 import WorkspacesNotFound from "../components/Workspaces/WorkspacesNotFound";
 import useAuth from "../hooks/useAuth";
 import { ErrorData } from "../utils/types";
 
 const Dashboard = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector(selectUser);
   const { isAuthenticated } = useAuth();
+  const [stepIndex, setStepIndex] = useState(0);
+  const [runTour, setRunTour] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-
-  const {
-    data: user,
-    isLoading: isLoadingUser,
-    refetch: refetchUser,
-  } = useGetMeQuery("User", {
-    refetchOnMountOrArgChange: true,
-  });
 
   const {
     data: workspaces,
@@ -65,10 +64,27 @@ const Dashboard = () => {
   }, [isErrorWorkspaces, workspaceError]);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      refetchUser();
+    if (!user && isAuthenticated) {
+      dispatch(fetchUser());
     }
-  }, [isAuthenticated, user]);
+  }, [dispatch, isAuthenticated, user]);
+
+  useEffect(() => {
+    setRunTour(true);
+  }, []);
+
+  if (!user) {
+    return null;
+  }
+
+  const { tours } = user;
+  const { hasCompletedDashboardTour, hasSkippedDashboardTour } = tours;
+
+  let isTourEnabled = false;
+
+  if (import.meta.env.VITE_ENABLE_TOUR === "true") {
+    isTourEnabled = !hasCompletedDashboardTour && !hasSkippedDashboardTour;
+  }
 
   return (
     <>
@@ -81,6 +97,15 @@ const Dashboard = () => {
         }}
       >
         <Grid container>
+          {isTourEnabled && (
+            <DashboardTour
+              stepIndex={stepIndex}
+              runTour={runTour}
+              setStepIndex={setStepIndex}
+              setRunTour={setRunTour}
+            />
+          )}
+
           <Grid
             item
             display={"flex"}
@@ -131,7 +156,11 @@ const Dashboard = () => {
               {isLoadingWorkspaces ? (
                 <CircularProgress />
               ) : (
-                <Workspaces workspaces={workspaces} handleOpen={handleOpen} />
+                <Workspaces
+                  workspaces={workspaces}
+                  handleOpen={handleOpen}
+                  setStepIndex={setStepIndex}
+                />
               )}
             </Grid>
             {/* Main content area */}
@@ -165,9 +194,12 @@ const Dashboard = () => {
               }}
             >
               {workspaces?.length === 0 ? (
-                <WorkspacesNotFound handleOpen={handleOpen} />
+                <WorkspacesNotFound
+                  handleOpen={handleOpen}
+                  setStepIndex={setStepIndex}
+                />
               ) : (
-                <Outlet context={{ workspaces }} />
+                <Outlet context={{ workspaces, setStepIndex }} />
               )}
             </Grid>
           </Grid>
