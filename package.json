@@ -21,6 +21,7 @@
     "@mui/x-date-pickers": "^7.5.0",
     "@reduxjs/toolkit": "^2.1.0",
     "@sentry/react": "^8.35.0",
+    "@xyflow/react": "^12.3.6",
     "dayjs": "^1.11.11",
     "dotenv": "^16.4.1",
     "fast-csv": "^5.0.1",

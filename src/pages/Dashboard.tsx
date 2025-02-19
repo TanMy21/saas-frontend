@@ -10,7 +10,7 @@ import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
 import { AppDispatch } from "../app/store";
 import DashBoardHeader from "../components/DashBoardHeader";
 import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";
-import DashboardTour from "../components/tour/DashboardTour";
+import DashboardTour from "../components/Tour/DashboardTour";
 import Workspaces from "../components/Workspaces/Workspaces";
 import WorkspacesNotFound from "../components/Workspaces/WorkspacesNotFound";
 import useAuth from "../hooks/useAuth";

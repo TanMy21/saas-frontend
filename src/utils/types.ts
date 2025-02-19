@@ -1,5 +1,7 @@
+import { type Edge, type Node } from "@xyflow/react";
 import type { JwtPayload } from "jwt-decode";
 import type { MRT_ColumnDef } from "material-react-table";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 
 export type AuthInitialState = {
   token: string | null;
@@ -43,12 +45,32 @@ export interface DashBoardHeaderProps {
   setStepIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
+export interface Condition {
+  relatedQuestionID: string;
+  goto_questionID: string;
+  conditionType: string;
+  conditionValue?: string | null;
+}
+
+export interface ICustomEdge extends Edge {
+  immutable?: boolean;
+}
+
 export type DashboardTourProps = {
   stepIndex: number;
   setStepIndex: React.Dispatch<React.SetStateAction<number>>;
   runTour: boolean;
   setRunTour: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+export interface EdgeFormData {
+  sourceQuestionID: string;
+  sourceQuestionOrder: number;
+  sourceQuestionText: string;
+  sourceQuestionIcon: string;
+  source: number;
+  target: number;
+}
 
 export interface Element {
   questionID: string;
@@ -145,6 +167,87 @@ export interface FetchBaseQueryError {
   data?: {
     message?: string;
   };
+}
+
+export interface FlowFormConditionBlockProps {
+  condition: Condition;
+  blockIndex: number;
+  selectedNode: Node | null;
+  questionID: string;
+  edgeFormData: {
+    sourceQuestionID: string;
+    sourceQuestionOrder: number;
+    sourceQuestionText: string;
+    sourceQuestionIcon: string;
+    source: number;
+    target: number;
+  };
+  Elements: Element[];
+  register: UseFormRegister<any>;
+  setConditions: React.Dispatch<React.SetStateAction<Condition[]>>;
+  // setTouchedConditions: React.Dispatch<
+  //   React.SetStateAction<Record<number, boolean>>
+  // >;
+  errors: any;
+  formErrors: FieldErrors<{
+    conditions: {
+      conditionValue?: {
+        type: string;
+        message: string;
+        ref?: any;
+      };
+    }[];
+  }>;
+  isValid: boolean;
+  hasSubmitted?: boolean;
+  onAccordionClick: () => void;
+}
+
+export interface FlowConditionModalProps {
+  nodes: Node[];
+  edges: ICustomEdge[];
+  openConditions: boolean;
+  setOpenConditions: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedNode: React.Dispatch<React.SetStateAction<Node | null>>;
+  selectedNode: Node | null;
+  // conditionBlocks: number[];
+  // addConditionBlock: () => void;
+  conditions: Condition[];
+  errors: Record<number, string[]>;
+  setErrors: React.Dispatch<React.SetStateAction<Record<number, string[]>>>;
+  isValidArray: boolean[];
+  setIsValidArray: React.Dispatch<React.SetStateAction<boolean[]>>;
+  setConditions: React.Dispatch<React.SetStateAction<Condition[]>>;
+  edgeFormData: {
+    sourceQuestionID: string;
+    sourceQuestionOrder: number;
+    sourceQuestionText: string;
+    sourceQuestionIcon: string;
+    source: number;
+    target: number;
+  };
+
+  Elements: Element[];
+}
+
+export interface FlowFormProps {
+  condition: Condition;
+  questionID: string;
+  questionType?: string;
+  type?: string;
+  setConditions: React.Dispatch<React.SetStateAction<Condition[]>>;
+  register: UseFormRegister<any>;
+  formErrors?: FieldErrors<{
+    conditions: {
+      conditionValue?: {
+        type: string;
+        message: string;
+        ref?: any;
+      };
+    }[];
+  }>;
+  blockIndex?: number;
+  handleInteraction?: () => void;
 }
 
 export interface LocationStateProps {
@@ -256,6 +359,15 @@ export interface QuestionDetail {
   type: QuestionTypeKey;
   text: string;
   order: number;
+}
+
+export interface QuestionFlowProps {
+  Elements: Element[];
+}
+
+export interface QuestionFlowCondition {
+  questionID: string;
+  conditions: Condition[];
 }
 
 export interface Questions {
