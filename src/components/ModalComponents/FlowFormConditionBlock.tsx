@@ -8,12 +8,14 @@ import {
   AccordionSummary,
   Box,
   Chip,
+  IconButton,
   MenuItem,
   Select,
   Typography,
 } from "@mui/material";
 import { MdError } from "react-icons/md";
 
+import { useDeleteConditionMutation } from "../../app/slices/flowApiSlice";
 import { elementIcons } from "../../utils/elementsConfig";
 import {
   FlowFormConditionBlockProps,
@@ -34,8 +36,9 @@ const FlowFormConditionBlock = ({
   Elements,
   edgeFormData,
   register,
+  watch,
+  setValue,
   setConditions,
-  // setTouchedConditions,
   errors,
   formErrors,
   isValid,
@@ -48,9 +51,11 @@ const FlowFormConditionBlock = ({
     RADIO: FlowFormOptions,
     TEXT: FlowFormInput,
     NUMBER: FlowFormInput,
-    RANGE: FlowFormNoCondition,
+    RANGE: FlowFormInput,
     RANK: FlowFormNoCondition,
   };
+
+  const [deleteCondition] = useDeleteConditionMutation();
 
   const ConditionComponent =
     FormConditionComponent[
@@ -67,6 +72,14 @@ const FlowFormConditionBlock = ({
   ) {
     noCondition = true;
   }
+
+  const handleDeleteCondition = async () => {
+    try {
+      await deleteCondition(condition.flowConditionID).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -140,7 +153,9 @@ const FlowFormConditionBlock = ({
                     height: "100%",
                   }}
                 >
-                  <DeleteIcon />
+                  <IconButton onClick={handleDeleteCondition}>
+                    <DeleteIcon />
+                  </IconButton>
                 </Box>
               </Box>
             </Box>
@@ -255,6 +270,8 @@ const FlowFormConditionBlock = ({
                         (selectedNode?.data.element as string)
                       }
                       register={register}
+                      watch={watch}
+                      setValue={setValue}
                       formErrors={formErrors}
                       blockIndex={blockIndex}
                     />

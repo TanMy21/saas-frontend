@@ -1,4 +1,4 @@
-import { Box, MenuItem, Select } from "@mui/material";
+import { Box, MenuItem, Select, TextField } from "@mui/material";
 
 import { useGetOptionsOfQuestionQuery } from "../../app/slices/optionApiSlice";
 import { FlowFormProps } from "../../utils/types";
@@ -30,6 +30,11 @@ const FlowFormOptions = ({
           <MenuItem value={"is"}>Is</MenuItem>
           <MenuItem value={"is-not"}>Is Not</MenuItem>
         </Select>
+        <TextField
+          {...register(`conditions.${blockIndex}.flowConditionID`)}
+          defaultValue={condition.flowConditionID || ""}
+          type="hidden"
+        />
       </Box>
       <Box sx={{ width: "80%", height: "96%" }}>
         <Select

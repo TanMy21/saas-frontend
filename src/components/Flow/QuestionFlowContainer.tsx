@@ -17,6 +17,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
+import { useGetAllConditionsForSurveyQuery } from "../../app/slices/flowApiSlice";
 import {
   ICustomEdge,
   Condition,
@@ -36,10 +37,9 @@ const edgeTypes = {
   "bypass-edge": BypassEdge,
 };
 
-const QuestionFlowContainer = ({ Elements }: QuestionFlowProps) => {
+const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<ICustomEdge>([]);
-  // const [conditionBlocks, setConditionBlocks] = useState<number[]>([1]);
+  const [edges, setEdges, _onEdgesChange] = useEdgesState<ICustomEdge>([]);
   const [conditions, setConditions] = useState<Condition[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [openConditions, setOpenConditions] = useState(false);
@@ -54,9 +54,11 @@ const QuestionFlowContainer = ({ Elements }: QuestionFlowProps) => {
     target: 0,
   });
 
-  // const addConditionBlock = () => {
-  //   setConditionBlocks([...conditionBlocks, conditionBlocks.length + 1]);
-  // };
+  const {
+    data: questionConditions,
+    isLoading,
+    error,
+  } = useGetAllConditionsForSurveyQuery(surveyID);
 
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
     setSelectedNode(node);
@@ -77,6 +79,7 @@ const QuestionFlowContainer = ({ Elements }: QuestionFlowProps) => {
   const onConnect: OnConnect = (connection) => {
     setEdges((eds) => {
       const sourceNode = nodes.find((node) => node.id === connection.source);
+      const targetNode = nodes.find((node) => node.id === connection.target);
       const sourceIndex = nodes.findIndex(
         (node) => node.id === connection.source
       );
@@ -86,6 +89,17 @@ const QuestionFlowContainer = ({ Elements }: QuestionFlowProps) => {
       );
 
       const isBypass = targetIndex - sourceIndex > 1;
+
+      setConditions((prevConditions) => [
+        ...prevConditions,
+        {
+          flowConditionID: "",
+          relatedQuestionID: sourceNode?.id as string,
+          goto_questionID: targetNode?.id as string,
+          conditionType: "",
+          conditionValue: null,
+        },
+      ]);
 
       if (sourceIndex !== -1 && targetIndex !== -1) {
         setEdgeFormData({
@@ -148,7 +162,10 @@ const QuestionFlowContainer = ({ Elements }: QuestionFlowProps) => {
 
     const filteredQuestions = Elements.filter(
       (question: any) =>
-        question.type !== "WELCOME_SCREEN" && question.type !== "END_SCREEN"
+        question.type !== "WELCOME_SCREEN" &&
+        question.type !== "END_SCREEN" &&
+        question.type !== "EMAIL_CONTACT" &&
+        question.type !== "INSTRUCTIONS"
     );
 
     const sortedQuestions = filteredQuestions.sort(
@@ -181,9 +198,32 @@ const QuestionFlowContainer = ({ Elements }: QuestionFlowProps) => {
         data: { bypass: false },
       }));
 
+    const bypassEdges: Edge[] = (questionConditions || []).map(
+      (condition: any) => {
+        const sourceNode = generatedNodes.find(
+          (node) => node.id === condition.relatedQuestionID
+        );
+        const targetNode = generatedNodes.find(
+          (node) => node.id === condition.goto_questionID
+        );
+
+        return {
+          id: `bypass-${condition.relatedQuestionID}-${condition.goto_questionID}`,
+          source: condition.relatedQuestionID,
+          target: condition.goto_questionID,
+          type: "bypass-edge",
+          data: {
+            bypass: true,
+            sourceOrder: Number(sourceNode?.data?.order) - 1,
+            targetOrder: Number(targetNode?.data?.order) - 1,
+          },
+        };
+      }
+    );
+
     setNodes(generatedNodes);
-    setEdges(generatedEdges);
-  }, [Elements]);
+    setEdges([...generatedEdges, ...bypassEdges]);
+  }, [Elements, questionConditions]);
 
   return (
     <Box
@@ -222,8 +262,6 @@ const QuestionFlowContainer = ({ Elements }: QuestionFlowProps) => {
         setErrors={setErrors}
         isValidArray={isValidArray}
         setIsValidArray={setIsValidArray}
-        // conditionBlocks={conditionBlocks}
-        // addConditionBlock={addConditionBlock}
         conditions={conditions}
         setConditions={setConditions}
         Elements={Elements}

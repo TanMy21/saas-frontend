@@ -25,20 +25,20 @@ export const validateConditions = (conditions: Condition[]) => {
     const conditionErrors: string[] = [];
     let isValid = true;
 
-    // ✅ Prevent Empty/Incompletes
+    // Rule: Prevent empty condition
     if (!goto_questionID || !conditionType || !conditionValue) {
       conditionErrors.push("All fields are required.");
       isValid = false;
     }
 
-    // ✅ Prevent Self-Referencing Conditions
+    // Rule: Prevent self-referencing condition
     if (goto_questionID === relatedQuestionID) {
       conditionErrors.push("A question cannot conditionally link to itself.");
       selfReferencingSet.add(goto_questionID);
       isValid = false;
     }
 
-    // ✅ Prevent Duplicates
+    // Rule: Prevent duplicate conditions
     const conditionKey = `${goto_questionID}-${conditionType}-${conditionValue}`;
     if (conditionSet.has(conditionKey)) {
       conditionErrors.push("This condition already exists.");
@@ -47,7 +47,7 @@ export const validateConditions = (conditions: Condition[]) => {
       conditionSet.add(conditionKey);
     }
 
-    // prevent duplicated with different destinations
+    // Rule: prevent duplicate conditions with different destinations
     const conditionValueKey = `${relatedQuestionID}-${conditionType}-${conditionValue}`;
     if (conditionValueMap.has(conditionValueKey)) {
       if (conditionValueMap.get(conditionValueKey) !== goto_questionID) {
@@ -60,22 +60,22 @@ export const validateConditions = (conditions: Condition[]) => {
       conditionValueMap.set(conditionValueKey, goto_questionID);
     }
 
-    // ✅ Prevent Overlapping Numeric Conditions
+    // Rule: Prevent overlapping numeric conditions with different destinations
     const numericValue = Number(conditionValue);
     if (!isNaN(numericValue)) {
-      console.log(
-        `\nProcessing Condition: ${conditionType} ${numericValue} → ${goto_questionID}`
-      );
-      console.log("Less Than Map:", [...lessThanMap.entries()]);
-      console.log("Less Than Equal Map:", [...lessThanEqualMap.entries()]);
-      console.log("Less Than Map:", [...greaterThanMap.entries()]);
-      console.log("Greater Than Map:", [...greaterThanMap.entries()]);
-      console.log("Greater Than Equal Map:", [
-        ...greaterThanEqualMap.entries(),
-      ]);
-      console.log("Equal Map:", [...equalToMap.entries()]);
+      // console.log(
+      //   `\nProcessing Condition: ${conditionType} ${numericValue} → ${goto_questionID}`
+      // );
+      // console.log("Less Than Map:", [...lessThanMap.entries()]);
+      // console.log("Less Than Equal Map:", [...lessThanEqualMap.entries()]);
+      // console.log("Less Than Map:", [...greaterThanMap.entries()]);
+      // console.log("Greater Than Map:", [...greaterThanMap.entries()]);
+      // console.log("Greater Than Equal Map:", [
+      //   ...greaterThanEqualMap.entries(),
+      // ]);
+      // console.log("Equal Map:", [...equalToMap.entries()]);
 
-      // ✅ Handle "Less Than" ↔ "Less Than or Equal To" (Both Directions)
+      // Rule: Handle "Less Than" condition overlaps with other conditions having different destinations
       if (conditionType === "is-less-than") {
         for (const [existingValue, existingTarget] of lessThanMap) {
           if (
@@ -141,6 +141,7 @@ export const validateConditions = (conditions: Condition[]) => {
         lessThanMap.set(numericValue, goto_questionID);
       }
 
+      // Rule: Handle "Less Than equal to" condition overlaps with other conditions having different destinations
       if (conditionType === "is-less-than-equal-to") {
         for (const [existingValue, existingTarget] of lessThanMap) {
           if (
@@ -215,21 +216,57 @@ export const validateConditions = (conditions: Condition[]) => {
         lessThanEqualMap.set(numericValue, goto_questionID);
       }
 
-      // ✅ Handle "Less Than" ↔ "Greater Than or Equal To" (Both Directions)
-      if (conditionType === "is-less-than") {
-        for (const [existingValue, existingTarget] of greaterThanEqualMap) {
+      // Rule: Handle "Greater Than" condition overlaps with other conditions having different destinations
+      if (conditionType === "is-greater-than") {
+        for (const [existingValue, existingTarget] of lessThanMap) {
           if (
-            numericValue >= existingValue &&
+            (numericValue >= existingValue || numericValue <= existingValue) &&
             goto_questionID !== existingTarget
           ) {
             conditionErrors.push(
-              `"Less than ${numericValue}" conflicts with "Greater than or equal to ${existingValue}" leading to a different target.`
+              `"Greater than ${numericValue}" conflicts with "Less than ${existingValue}" leading to a different target.`
             );
             isValid = false;
           }
         }
+        for (const [existingValue, existingTarget] of greaterThanMap) {
+          if (
+            (numericValue >= existingValue || numericValue <= existingValue) &&
+            goto_questionID !== existingTarget
+          ) {
+            conditionErrors.push(
+              `"Greater than ${numericValue}" conflicts with "Greater than ${existingValue}" leading to a different target.`
+            );
+            isValid = false;
+          }
+        }
+        for (const [existingValue, existingTarget] of greaterThanEqualMap) {
+          if (
+            (numericValue >= existingValue || numericValue <= existingValue) &&
+            goto_questionID !== existingTarget
+          ) {
+            conditionErrors.push(
+              `"Greater than ${numericValue}" conflicts with "Greater than or equal to ${existingValue}" leading to a different target.`
+            );
+            isValid = false;
+          }
+        }
+
+        for (const [existingValue, existingTarget] of equalToMap) {
+          if (
+            numericValue <= existingValue &&
+            goto_questionID !== existingTarget
+          ) {
+            conditionErrors.push(
+              `"Greater than ${numericValue}" conflicts with "Equal to ${existingValue}" leading to a different target.`
+            );
+            isValid = false;
+          }
+        }
+        greaterThanMap.set(numericValue, goto_questionID);
       }
 
+      // Rule: Handle "Greater than or equal to" condition overlaps with other conditions having different destinations
       if (conditionType === "is-greater-than-equal-to") {
         for (const [existingValue, existingTarget] of lessThanMap) {
           if (
@@ -290,57 +327,7 @@ export const validateConditions = (conditions: Condition[]) => {
         greaterThanEqualMap.set(numericValue, goto_questionID);
       }
 
-      // ✅ Handle "Less Than" → "Greater Than" (One Direction)
-      if (conditionType === "is-greater-than") {
-        for (const [existingValue, existingTarget] of lessThanMap) {
-          if (
-            (numericValue >= existingValue || numericValue <= existingValue) &&
-            goto_questionID !== existingTarget
-          ) {
-            conditionErrors.push(
-              `"Greater than ${numericValue}" conflicts with "Less than ${existingValue}" leading to a different target.`
-            );
-            isValid = false;
-          }
-        }
-        for (const [existingValue, existingTarget] of greaterThanMap) {
-          if (
-            (numericValue >= existingValue || numericValue <= existingValue) &&
-            goto_questionID !== existingTarget
-          ) {
-            conditionErrors.push(
-              `"Greater than ${numericValue}" conflicts with "Greater than ${existingValue}" leading to a different target.`
-            );
-            isValid = false;
-          }
-        }
-        for (const [existingValue, existingTarget] of greaterThanEqualMap) {
-          if (
-            (numericValue >= existingValue || numericValue <= existingValue) &&
-            goto_questionID !== existingTarget
-          ) {
-            conditionErrors.push(
-              `"Greater than ${numericValue}" conflicts with "Greater than or equal to ${existingValue}" leading to a different target.`
-            );
-            isValid = false;
-          }
-        }
-
-        for (const [existingValue, existingTarget] of equalToMap) {
-          if (
-            numericValue <= existingValue &&
-            goto_questionID !== existingTarget
-          ) {
-            conditionErrors.push(
-              `"Greater than ${numericValue}" conflicts with "Equal to ${existingValue}" leading to a different target.`
-            );
-            isValid = false;
-          }
-        }
-        greaterThanMap.set(numericValue, goto_questionID);
-      }
-
-      // ✅ Handle "Equal To" (One Direction)
+      // Rule: Handle "Equal to" condition overlaps with other conditions having different destinations
       if (conditionType == "is-equal-to") {
         for (const [existingValue, existingTarget] of lessThanMap) {
           if (
@@ -402,10 +389,10 @@ export const validateConditions = (conditions: Condition[]) => {
     }
   });
 
-  console.log("Final Validation Results:", {
-    isValidArray,
-    globalIsValid,
-    errorMap,
-  });
+  // console.log("Final Validation Results:", {
+  //   isValidArray,
+  //   globalIsValid,
+  //   errorMap,
+  // });
   return { isValidArray, globalIsValid, errorMap };
 };

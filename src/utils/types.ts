@@ -46,6 +46,7 @@ export interface DashBoardHeaderProps {
 }
 
 export interface Condition {
+  flowConditionID: string;
   relatedQuestionID: string;
   goto_questionID: string;
   conditionType: string;
@@ -184,6 +185,8 @@ export interface FlowFormConditionBlockProps {
   };
   Elements: Element[];
   register: UseFormRegister<any>;
+  watch: any;
+  setValue: any;
   setConditions: React.Dispatch<React.SetStateAction<Condition[]>>;
   // setTouchedConditions: React.Dispatch<
   //   React.SetStateAction<Record<number, boolean>>
@@ -237,6 +240,8 @@ export interface FlowFormProps {
   type?: string;
   setConditions: React.Dispatch<React.SetStateAction<Condition[]>>;
   register: UseFormRegister<any>;
+  watch: any;
+  setValue: any;
   formErrors?: FieldErrors<{
     conditions: {
       conditionValue?: {
@@ -362,6 +367,7 @@ export interface QuestionDetail {
 }
 
 export interface QuestionFlowProps {
+  surveyID: string; 
   Elements: Element[];
 }
 

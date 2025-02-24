@@ -12,8 +12,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
-import { useGetConditionsForQuestionQuery } from "../../app/slices/flowApiSlice";
+import {
+  useCreateConditionMutation,
+  useGetConditionsForQuestionQuery,
+} from "../../app/slices/flowApiSlice";
 import { validateConditions } from "../../utils/conditionValidation";
 import { elementIcons } from "../../utils/elementsConfig";
 import {
@@ -28,8 +32,6 @@ export interface QuestionFlowCondition {
 }
 
 const FlowConditionModal = ({
-  // nodes,
-  // edges,
   openConditions,
   setOpenConditions,
   selectedNode,
@@ -39,18 +41,18 @@ const FlowConditionModal = ({
   setConditions,
   errors,
   setErrors,
-  // isValidArray,
   setIsValidArray,
-  // conditionBlocks,
-  // addConditionBlock,
   Elements,
 }: FlowConditionModalProps) => {
   const questionID = selectedNode?.data?.questionID as string;
+  const { surveyID } = useParams();
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors: formErrors },
+    watch,
+    setValue,
   } = useForm();
 
   const filteredElements = useMemo(
@@ -70,6 +72,9 @@ const FlowConditionModal = ({
     isLoading,
     isFetching,
   } = useGetConditionsForQuestionQuery(questionID);
+
+  const [createCondition, { isLoading: isCreatingCondition, isError, error }] =
+    useCreateConditionMutation();
 
   const handleClose = () => {
     setOpenConditions(false);
@@ -104,26 +109,26 @@ const FlowConditionModal = ({
   const submitConditionData = (data: any) => {
     try {
       setHasSubmitted(true);
+
       let formattedData = (data.conditions || []).filter(
         (condition: any) => condition.goto_questionID
       );
 
-      formattedData = formattedData.map((condition: any) => ({
-        ...condition,
-        flowConditionID: condition.flowConditionID || "",
-        relatedQuestionID: questionID,
-      }));
+      formattedData = formattedData.map((condition: any) => {
+        return {
+          ...condition,
+          flowConditionID: condition.flowConditionID || "",
+          relatedQuestionID: questionID,
+          surveyID,
+        };
+      });
 
-      console.log("Formatted Data:", formattedData);
+      let newConditions = formattedData.filter(
+        (condition: any) => condition.flowConditionID === ""
+      );
 
       const { isValidArray, globalIsValid, errorMap } =
         validateConditions(formattedData);
-
-      // console.log("Validation Results:", {
-      //   isValidArray,
-      //   globalIsValid,
-      //   errorMap,
-      // });
 
       if (!globalIsValid) {
         const resetTouched = { ...touchedAccordions };
@@ -138,7 +143,11 @@ const FlowConditionModal = ({
         return;
       }
 
-      console.log("✅ Sending Valid Data:", formattedData);
+      newConditions = newConditions.map(
+        ({ flowConditionID, ...rest }: { flowConditionID: string }) => rest
+      );
+
+      createCondition(newConditions);
 
       setErrors(() => ({}));
       setIsValidArray(() => []);
@@ -155,9 +164,6 @@ const FlowConditionModal = ({
         [questionID]: {},
       });
     }
-    // console.log("Updated Errors State:", errors);
-    // console.log("Fetched Conditions: ", fetchConditions);
-    // console.log("Conditions: ", conditions);
   }, [questionID, reset, fetchConditions]);
 
   return (
@@ -324,6 +330,8 @@ const FlowConditionModal = ({
                             edgeFormData={edgeFormData}
                             Elements={filteredElements}
                             register={register}
+                            watch={watch}
+                            setValue={setValue}
                             setConditions={setConditions}
                             // setTouchedConditions={setTouchedConditions}
                             errors={errors[index] || []}
@@ -427,13 +435,14 @@ const FlowConditionModal = ({
                       type="submit"
                       fullWidth
                       variant="contained"
+                      disabled={isCreatingCondition}
                       sx={{
                         textTransform: "capitalize",
                         backgroundColor: "#6366F1",
                         color: "#FFFFFF",
                       }}
                     >
-                      Save condition
+                      {isCreatingCondition ? "Saving..." : "Save condition"}
                     </Button>
                   </Box>
                 </Box>

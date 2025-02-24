@@ -1,5 +1,6 @@
+import ClearIcon from "@mui/icons-material/Clear";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { type EdgeProps, useReactFlow } from "@xyflow/react";
-import { MdDeleteForever } from "react-icons/md";
 
 const BypassEdge = ({
   id,
@@ -75,26 +76,26 @@ const BypassEdge = ({
 
       <foreignObject
         x={labelX - 25}
-        y={labelY - 12}
-        width={20}
-        height={20}
+        y={labelY - 18}
+        width={36}
+        height={36}
         style={{ cursor: "pointer" }}
       >
         <div
           onClick={handleDeleteEdge}
           style={{
             width: "100%",
-            height: "110%",
+            height: "100%",
             backgroundColor: "#E7E5E5",
             color: "#f00",
             borderRadius: "50%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            fontSize: "32px",
+            fontSize: "30px",
           }}
         >
-          <MdDeleteForever />
+          <HighlightOffIcon />
         </div>
       </foreignObject>
     </>

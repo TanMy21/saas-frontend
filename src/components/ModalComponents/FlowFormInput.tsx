@@ -3,8 +3,11 @@ import { Box, MenuItem, Select, TextField } from "@mui/material";
 import { FlowFormProps } from "../../utils/types";
 
 const FlowFormInput = ({
+  condition,
   questionType,
   register,
+  watch,
+  setValue,
   blockIndex,
   formErrors,
   handleInteraction,
@@ -12,6 +15,20 @@ const FlowFormInput = ({
   const conditionLabel = {
     "is-equal-to": "Is Equal To",
   };
+
+  // console.log("Flow Form Input, Condition: ", condition);
+
+  const conditions = watch("conditions");
+  if (
+    typeof blockIndex === "number" &&
+    conditions[blockIndex] &&
+    conditions?.[blockIndex]?.flowConditionID === undefined
+  ) {
+    setValue(
+      `conditions.${blockIndex}.flowConditionID`,
+      condition.flowConditionID || ""
+    );
+  }
 
   return (
     <Box
@@ -53,6 +70,11 @@ const FlowFormInput = ({
               type="text"
               size="small"
               sx={{ width: "100%", height: "100%" }}
+            />
+            <TextField
+              {...register(`conditions.${blockIndex}.flowConditionID`)}
+              defaultValue={condition.flowConditionID || ""}
+              type="hidden"
             />
           </Box>
         )}
