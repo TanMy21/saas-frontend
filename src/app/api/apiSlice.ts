@@ -74,6 +74,7 @@ export const apiSlice = createApi({
     "Surveys",
     "Workspaces",
     "Elements",
+    "Flow",
     "Options",
     "Results",
     "Insights",

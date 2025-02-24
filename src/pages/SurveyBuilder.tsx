@@ -18,7 +18,7 @@ import SurveyBuilderCanvasMobile from "../components/Surveys/SurveyBuilderCanvas
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderIsland from "../components/Surveys/SurveyBuilderIsland";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
-import SurveyBuilderTour from "../components/tour/SurveyBuilderTour";
+import SurveyBuilderTour from "../components/Tour/SurveyBuilderTour";
 import { Element, LocationStateProps } from "../utils/types";
 
 const SurveyBuilder = () => {
@@ -118,8 +118,6 @@ const SurveyBuilder = () => {
   if (import.meta.env.VITE_ENABLE_TOUR === "true") {
     isTourEnabled = !hasCompletedBuilderTour && !hasSkippedBuilderTour;
   }
-
-   
 
   return (
     <>

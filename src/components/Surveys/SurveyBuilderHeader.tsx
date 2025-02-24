@@ -61,8 +61,6 @@ const SurveyBuilderHeader = ({
     setSurveyTitle(title);
   }, [title, location.pathname]);
 
- 
-
   return (
     <AppBar
       position="static"

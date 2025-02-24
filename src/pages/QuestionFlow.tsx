@@ -1,14 +1,19 @@
 import { Box, Grid } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
+import { useGetElementsForSurveyQuery } from "../app/slices/elementApiSlice";
+import QuestionFlowContainer from "../components/Flow/QuestionFlowContainer";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import { LocationStateProps, Survey } from "../utils/types";
 
 const QuestionFlow = () => {
+  const { surveyID } = useParams();
   const location = useLocation();
   const { headerProps } = (location.state as LocationStateProps) || {};
   const { tabValue, survey, workspaceId, workspaceName } = headerProps || {};
   const { title } = (survey as Survey) || "";
+
+  const { data: Elements } = useGetElementsForSurveyQuery(surveyID!);
 
   return (
     <>
@@ -49,15 +54,17 @@ const QuestionFlow = () => {
             xs={12}
             display={"flex"}
             flexDirection={"row"}
+            justifyContent={"center"}
             sx={{
               width: "100%",
-              minHeight: "90%",
+              minHeight: "90vh",
               overflowX: "hidden",
               overflowY: "auto",
               border: "2px solid green",
             }}
           >
             {/* Main content area */}
+            <QuestionFlowContainer Elements={Elements!} surveyID={surveyID!} />
           </Grid>
         </Grid>
       </Box>
