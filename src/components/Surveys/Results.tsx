@@ -26,7 +26,7 @@ const Results = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          gap: "1%",
+          // gap: "1%",
           width: "100%",
           height: "100%",
           // border: "2px solid black",
@@ -43,6 +43,7 @@ const Results = () => {
               borderColor: "#EDEDED",
               width: "100%",
               height: "48px",
+              // border: "2px solid red",
             }}
           >
             <Box
@@ -110,7 +111,12 @@ const Results = () => {
           </AppBar>
         </Box>
         <Box
-          sx={{ width: "100%", height: "84vh" /* border: "2px solid red"*/ }}
+          sx={{
+            top: "8%",
+            width: "100%",
+            height: "96vh",
+            backgroundColor: "#FBFBFB" /* border: "2px solid red"*/,
+          }}
         >
           {content}
         </Box>

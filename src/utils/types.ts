@@ -2,6 +2,8 @@ import { type Edge, type Node } from "@xyflow/react";
 import type { JwtPayload } from "jwt-decode";
 import type { MRT_ColumnDef } from "material-react-table";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { IconType } from "react-icons/lib";
+
 
 export type AuthInitialState = {
   token: string | null;
@@ -304,6 +306,15 @@ export interface ImportQuestionProps {
   openImport?: boolean;
   setOpenImport?: React.Dispatch<React.SetStateAction<boolean>>;
   surveyID?: string;
+}
+
+export interface InsightCardProps {
+  type: string;
+  title: string;
+  value: string | number;
+  description: string;
+  icon: IconType;
+  iconColor: string;
 }
 
 export interface MediaElementCardProps {
