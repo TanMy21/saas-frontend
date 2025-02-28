@@ -15,7 +15,6 @@ import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApi
 import { endScreenContactSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
-
 const EndScreenElementSettings = ({ qID, qText }: ElementSettingsProps) => {
   const [updateElementSettings] = useUpdateElementSettingsMutation();
 
@@ -112,7 +111,6 @@ const EndScreenElementSettings = ({ qID, qText }: ElementSettingsProps) => {
                     marginTop: "4%",
                     marginBottom: "8%",
                     width: "98%",
-                    // border: "2px solid orange",
                   }}
                 >
                   <Box mt={1}>

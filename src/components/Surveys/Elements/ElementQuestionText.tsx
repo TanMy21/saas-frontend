@@ -27,7 +27,7 @@ const ElementQuestionText = ({
 
   const nonOrderableTypes = ["INSTRUCTIONS", "EMAIL_CONTACT"];
 
-  const isNonOrderableType = nonOrderableTypes.includes(qType!);
+  const isNonOrderableType = nonOrderableTypes.includes(qType ?? "");
 
   const [updateElementText] = useUpdateElementTextMutation();
   const [updateElementDescription] = useUpdateElementDescriptionMutation();
@@ -66,7 +66,6 @@ const ElementQuestionText = ({
           margin: "auto",
           width: "96%",
           padding: "1%",
-          // border: "2px solid red",
         }}
       >
         <Box
@@ -79,7 +78,6 @@ const ElementQuestionText = ({
             margin: "auto",
             width: "96%",
             padding: "2%",
-            // border: "2px solid green",
           }}
         >
           <Box
@@ -108,7 +106,6 @@ const ElementQuestionText = ({
             justifyContent={"center"}
             alignItems={"center"}
             mr={2}
-            // sx={{ border: "2px solid green" }}
           >
             {isNonOrderableType ? null : (
               <Typography variant="h6" mt={1}>
@@ -122,7 +119,6 @@ const ElementQuestionText = ({
             justifyContent={"center"}
             alignItems={"center"}
             onDoubleClick={handleDoubleClick}
-            // sx={{ border: "2px solid red" }}
           >
             {isEditing ? (
               <TextField
@@ -180,7 +176,6 @@ const ElementQuestionText = ({
             alignItems: "center",
             width: "100%",
             margin: "auto",
-            // border: "2px solid black",
           }}
         >
           <Box onDoubleClick={handleDoubleClick}>

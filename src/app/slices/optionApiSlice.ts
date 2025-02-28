@@ -28,7 +28,6 @@ export const optionApiSlice = apiSlice.injectEndpoints({
         url: `/op/img/${optionID}`,
         method: "PATCH",
         body: formData,
-        // headers: { "Content-Type": "multipart/form-data" },
       }),
       invalidatesTags: ["Options"],
     }),

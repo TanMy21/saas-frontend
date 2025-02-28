@@ -16,8 +16,6 @@ const FlowFormInput = ({
     "is-equal-to": "Is Equal To",
   };
 
-  // console.log("Flow Form Input, Condition: ", condition);
-
   const conditions = watch("conditions");
   if (
     typeof blockIndex === "number" &&

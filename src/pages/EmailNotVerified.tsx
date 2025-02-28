@@ -15,7 +15,7 @@ const EmailNotVerified = () => {
 
   const email = user?.email || "";
 
-  console.log(email);
+
 
   const handleResendCode = async () => {
     try {

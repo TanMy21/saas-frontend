@@ -17,11 +17,7 @@ const InstructionsElementSettings = ({
 
   const { buttonText } = qSettings || { buttonText: "" };
 
-  const {
-    handleSubmit,
-    control,
-    // formState: { errors },
-  } = useForm<QuestionSetting>({
+  const { handleSubmit, control } = useForm<QuestionSetting>({
     resolver: zodResolver(instructionsSettingsSchema),
     defaultValues: {
       instructionsTitle: qText,
@@ -106,7 +102,6 @@ const InstructionsElementSettings = ({
                 marginTop: "4%",
                 marginBottom: "8%",
                 width: "98%",
-                // border: "2px solid orange",
               }}
             >
               <Box sx={{ fontWeight: 500 }}>Title</Box>

@@ -36,7 +36,6 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
           padding: "2%",
           width: "92%",
           height: "32px",
-          // border: "2px solid black",
         }}
       >
         <Box
@@ -86,7 +85,6 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
           width: "92%",
           height: "64px",
           fontSize: "8px",
-          // border: "2px solid red",
         }}
       >
         <Typography fontSize={"12px"} textAlign={"left"}>

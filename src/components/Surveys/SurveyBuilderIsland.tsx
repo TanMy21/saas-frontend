@@ -76,7 +76,6 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
           marginTop: "2%",
           width: { md: "100%", lg: "100%", xl: "68%" },
           height: "40px",
-          // border: "2px solid black",
         }}
       >
         <Box
@@ -101,7 +100,6 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
               margin: "auto",
               width: "80%",
               height: "100%",
-              // border: "2px solid red",
             }}
           >
             <Box
@@ -111,7 +109,6 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
                 gap: "12px",
                 width: "48%",
                 height: "92%",
-                // border: "2px solid black",
               }}
             >
               <Box
@@ -119,7 +116,6 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
                 sx={{
                   width: "40%",
                   height: "100%",
-                  // border: "2px solid black",
                 }}
               >
                 <IconButton
@@ -150,7 +146,6 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
                 sx={{
                   width: "40%",
                   height: "100%",
-                  // border: "2px solid black",
                 }}
               >
                 <IconButton
@@ -195,7 +190,6 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
                 gap: "12px",
                 width: "48%",
                 height: "92%",
-                // border: "2px solid black",
               }}
             >
               <Box
@@ -203,7 +197,6 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
                 sx={{
                   width: "40%",
                   height: "100%",
-                  // border: "2px solid black",
                 }}
               >
                 <IconButton
@@ -245,7 +238,6 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
                 sx={{
                   width: "40%",
                   height: "100%",
-                  // border: "2px solid black",
                 }}
               >
                 <IconButton
@@ -290,7 +282,6 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
               sx={{
                 width: "40%",
                 height: "100%",
-                // border: "2px solid black",
               }}
             >
               <IconButton

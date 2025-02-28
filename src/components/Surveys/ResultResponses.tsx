@@ -13,19 +13,18 @@ const ResultResponses = () => {
           marginTop: "24px",
           width: "96%",
           maxHeight: "96%",
-          // border: "2px solid black",
           borderRadius: "8px",
           "&::-webkit-scrollbar": {
-            width: "10px", // Scrollbar width
+            width: "10px",
           },
           "&::-webkit-scrollbar-track": {
-            background: "#f1f1f1", // Scrollbar track color
+            background: "#f1f1f1", 
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "#61A5D2", // Scrollbar thumb color
-            borderRadius: "10px", // Rounded corners on the scrollbar thumb
+            background: "#61A5D2", 
+            borderRadius: "10px", 
             "&:hover": {
-              background: "#555", // Scrollbar thumb hover color
+              background: "#555", 
             },
           },
         }}

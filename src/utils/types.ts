@@ -4,7 +4,6 @@ import type { MRT_ColumnDef } from "material-react-table";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { IconType } from "react-icons/lib";
 
-
 export type AuthInitialState = {
   token: string | null;
 };
@@ -92,8 +91,8 @@ export interface ElementProps {
   qNO: string;
   type?: string;
   qText: string;
-  qDescription: string;
-  qType: string;
+  qDescription?: string;
+  qType?: string;
   display?: string | null;
   qID: string;
   qOptions?: OptionType[];
@@ -190,9 +189,7 @@ export interface FlowFormConditionBlockProps {
   watch: any;
   setValue: any;
   setConditions: React.Dispatch<React.SetStateAction<Condition[]>>;
-  // setTouchedConditions: React.Dispatch<
-  //   React.SetStateAction<Record<number, boolean>>
-  // >;
+
   errors: any;
   formErrors: FieldErrors<{
     conditions: {
@@ -215,8 +212,7 @@ export interface FlowConditionModalProps {
   setOpenConditions: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedNode: React.Dispatch<React.SetStateAction<Node | null>>;
   selectedNode: Node | null;
-  // conditionBlocks: number[];
-  // addConditionBlock: () => void;
+
   conditions: Condition[];
   errors: Record<number, string[]>;
   setErrors: React.Dispatch<React.SetStateAction<Record<number, string[]>>>;
@@ -611,7 +607,6 @@ export interface UpdateUserInfoFormData {
   firstname: string;
   lastname: string;
   email: string;
-  // organization: string;
 }
 
 export interface Workspace {

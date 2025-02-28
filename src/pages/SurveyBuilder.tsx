@@ -129,16 +129,16 @@ const SurveyBuilder = () => {
           width: "100%",
           height: "100%",
           "&::-webkit-scrollbar": {
-            width: "10px", // Scrollbar width
+            width: "10px",
           },
           "&::-webkit-scrollbar-track": {
-            background: "#f1f1f1", // Scrollbar track color
+            background: "#f1f1f1",
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "#61A5D2", // Scrollbar thumb color
-            borderRadius: "10px", // Rounded corners on the scrollbar thumb
+            background: "#61A5D2",
+            borderRadius: "10px",
             "&:hover": {
-              background: "#555", // Scrollbar thumb hover color
+              background: "#555",
             },
           },
         }}
@@ -166,12 +166,10 @@ const SurveyBuilder = () => {
             }}
           >
             <SurveyBuilderHeader
-              // tabValue={tabValue}
               survey={survey}
               workspaceId={workspaceId!}
               workspaceName={workspaceName!}
               title={surveyTitle}
-              // handleScreenChange={handleScreenChange}
             />
           </Grid>
           <CreateNewSurveyModal
@@ -245,14 +243,14 @@ const SurveyBuilder = () => {
                     survey={survey}
                     questionId={questionId}
                     display={display}
-                    // handleLayoutChange={handleLayoutChange}
+                   
                   />
                 ) : (
                   <SurveyBuilderCanvas
                     survey={survey}
                     questionId={questionId}
                     display={display}
-                    // handleLayoutChange={handleLayoutChange}
+                    
                   />
                 )}
               </Box>
@@ -300,7 +298,6 @@ const SurveyBuilder = () => {
                     fontSize: "20px",
                     fontWeight: 600,
                     color: "#3F3F46",
-                    // border: "1px solid red",
                   }}
                 >
                   Settings
@@ -319,9 +316,7 @@ const SurveyBuilder = () => {
                     width: "92%",
                     margin: "auto",
                     marginTop: "0%",
-                    // padding: "2px",
                     height: "92%",
-                    // border: "1px solid black",
                   }}
                 >
                   <ElementSettingsContainer

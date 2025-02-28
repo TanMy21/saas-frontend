@@ -31,9 +31,8 @@ const RankElement = ({
 
   const iconRight = display === "mobile" ? "-12%" : "-8%";
 
-  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
-    qID!
-  );
+  const { data: options = [] as OptionType[] } =
+    useGetOptionsOfQuestionQuery(qID);
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
@@ -198,7 +197,6 @@ const RankElement = ({
                         backgroundColor: snapshot.isDragging
                           ? "action.hover"
                           : "white",
-                        // boxShadow: snapshot.isDragging ? 3 : 1,
                       }}
                     >
                       <Box

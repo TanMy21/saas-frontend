@@ -20,6 +20,7 @@ module.exports = {
   plugins: ["react-refresh"],
   parserOptions: {
     project: "./tsconfig.json",
+    exclude: ["vite.config.ts"],
   },
   rules: {
     "warning": "off",

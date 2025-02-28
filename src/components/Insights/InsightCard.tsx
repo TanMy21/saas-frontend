@@ -43,7 +43,6 @@ const InsightCard = ({
           width: "96%",
           height: "68%",
           gap: "1%",
-          // border: "2px solid blue",
         }}
       >
         <Box
@@ -52,7 +51,6 @@ const InsightCard = ({
             flexDirection: "column",
             width: "72%",
             height: "96%",
-            // border: "2px solid yellow",
           }}
         >
           <Box
@@ -67,7 +65,6 @@ const InsightCard = ({
               color: "#5F6876",
               fontSize: "16px",
               fontWeight: "bold",
-              // border: "2px solid orange",
             }}
           >
             {title}
@@ -83,7 +80,6 @@ const InsightCard = ({
               color: "black",
               fontWeight: "bold",
               fontSize: "40px",
-              // border: "2px solid yellow",
             }}
           >
             {formatValue()}
@@ -95,7 +91,6 @@ const InsightCard = ({
             justifyContent: "end",
             width: "24%",
             height: "96%",
-            // border: "2px solid purple",
           }}
         >
           <Box
@@ -126,7 +121,6 @@ const InsightCard = ({
           width: "96%",
           height: "28%",
           color: "#6A717F",
-          // border: "2px solid green",
         }}
       >
         {description}

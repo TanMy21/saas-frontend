@@ -23,7 +23,6 @@ import { ImportQuestionProps } from "../../utils/types";
 
 const ImportQuestionsModal = ({
   isOpen,
-  // surveyID,
   openImport,
   setOpenImport,
 }: ImportQuestionProps) => {
@@ -45,7 +44,6 @@ const ImportQuestionsModal = ({
 
   const handleImport = async () => {
     try {
-      // const questionsGenerated =
       await importQuestions({
         surveyID,
         value,

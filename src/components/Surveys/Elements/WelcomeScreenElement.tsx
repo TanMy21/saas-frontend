@@ -39,7 +39,6 @@ const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
       width={"84%"}
       height={"68vh"}
       zIndex={20}
-      // border={"2px solid red"}
     >
       <Box
         display={"flex"}
@@ -52,7 +51,6 @@ const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
             xl: marginTopTextLg,
           },
         }}
-        // border={"2px solid blue"}
       >
         <Box
           display={"flex"}
@@ -62,7 +60,7 @@ const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
           width={"98%"}
           margin={"auto"}
           onDoubleClick={handleDoubleClick}
-          // border={"2px solid black"}
+          
         >
           {isEditing ? (
             <TextField

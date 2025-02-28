@@ -26,8 +26,6 @@ const MediaElement = ({
 }: ElementProps) => {
   const [open, setOpen] = useState(false);
 
-  // const [editingID, setEditingID] = useState<string | null>(null);
-
   const { data: options = [] as OptionType[] } =
     useGetOptionsOfQuestionQuery(qID);
 
@@ -107,12 +105,7 @@ const MediaElement = ({
           display={display}
         />
       </Box>
-      <Box
-        width={"96%"}
-        minHeight={"60vh"}
-        p={2}
-        // sx={{ border: "3px solid red" }}
-      >
+      <Box width={"96%"} minHeight={"60vh"} p={2}>
         <Grid
           container
           margin={"auto"}
@@ -122,7 +115,6 @@ const MediaElement = ({
           display={"flex"}
           flexDirection={"row"}
           justifyContent={"center"}
-          // border={"2px solid green"}
           sx={{ minHeight: "100%" }}
         >
           {options.map((option) => (
@@ -143,7 +135,6 @@ const MediaElement = ({
                 width: "160px",
                 minHeight: "180px",
                 marginBottom: "4%",
-                // border: "2px solid black",
               }}
             >
               <Box
@@ -158,20 +149,17 @@ const MediaElement = ({
                   margin: "auto",
                   padding: "1%",
                   gap: "4px",
-                  // border: "1px solid #DFCF94",
                   borderRadius: "8px",
                   bgcolor: "#DFCF94",
                 }}
               >
                 <Box
                   sx={{
-                    // position: "absolute",
                     top: "12px",
                     margin: "auto",
                     width: "96%",
                     height: "120px",
                     maxHeight: "120px",
-                    // border: "2px solid green",
                     marginBottom: "4px",
                   }}
                 >
@@ -186,11 +174,9 @@ const MediaElement = ({
                   sx={{
                     display: "flex",
                     flexGrow: 1,
-                    // top: "126px",
                     margin: "auto",
                     width: "96%",
                     minHeight: "50px",
-                    // border: "2px solid red",
                   }}
                 >
                   <MediaElementCardContent text={option.text} option={option} />

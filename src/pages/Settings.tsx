@@ -32,16 +32,16 @@ const Settings = () => {
           width: "100%",
           height: "100%",
           "&::-webkit-scrollbar": {
-            width: "10px", // Scrollbar width
+            width: "10px",
           },
           "&::-webkit-scrollbar-track": {
-            background: "#f1f1f1", // Scrollbar track color
+            background: "#f1f1f1",
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "#61A5D2", // Scrollbar thumb color
-            borderRadius: "10px", // Rounded corners on the scrollbar thumb
+            background: "#61A5D2",
+            borderRadius: "10px",
             "&:hover": {
-              background: "#555", // Scrollbar thumb hover color
+              background: "#555",
             },
           },
         }}
@@ -53,6 +53,7 @@ const Settings = () => {
             flexDirection={"row"}
             xs={12}
             sx={{
+              overflowX: "hidden",
               overflowY: "hidden",
               position: "sticky",
               top: "0",
@@ -69,7 +70,6 @@ const Settings = () => {
               flexDirection: "row",
               width: "96%",
               height: "92vh",
-              // border: "2px solid red",
             }}
           >
             {/* content area */}
@@ -94,7 +94,6 @@ const Settings = () => {
                   width: "96%",
                   height: "96%",
                   flexDirection: "row",
-                  // border: "2px solid black",
                 }}
               >
                 {/* sidebar */}
@@ -105,7 +104,6 @@ const Settings = () => {
                     width: "20%",
                     height: "100%",
                     backgroundColor: "#FFFFFF",
-                    // border: "2px solid green",
                   }}
                 >
                   <Tabs
@@ -125,10 +123,10 @@ const Settings = () => {
                         borderRadius: "0 16px 16px 0",
                       },
                       ".MuiTabs-indicator": {
-                        left: 0, // Move indicator to the left side
-                        right: "auto", // Remove indicator from the right
-                        width: "4px", // Width of the indicator
-                        backgroundColor: "blue", // Blue color for the indicator
+                        left: 0,
+                        right: "auto",
+                        width: "4px",
+                        backgroundColor: "blue",
                         borderRadius: "0 16px 16px 0",
                       },
                     }}
@@ -147,7 +145,6 @@ const Settings = () => {
                     width: "80%",
                     height: "92%",
                     padding: 3,
-                    // border: "4px solid green",
                     backgroundColor: "#FFFFFF",
                   }}
                 >

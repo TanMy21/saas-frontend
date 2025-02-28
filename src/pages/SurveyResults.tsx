@@ -55,7 +55,6 @@ const SurveyResults = () => {
               minHeight: "90%",
               overflowX: "hidden",
               overflowY: "auto",
-              // border: "2px solid green",
             }}
           >
             {/* Main content area */}

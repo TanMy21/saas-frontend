@@ -1,4 +1,3 @@
-// import React from "react";
 import { PostHogProvider } from "posthog-js/react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
@@ -17,7 +16,6 @@ const options = {
 };
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  // <React.StrictMode>
   <>
     <Provider store={store}>
       <PostHogProvider
@@ -29,5 +27,4 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </Provider>
     <ToastContainer />
   </>
-  // </React.StrictMode>
 );

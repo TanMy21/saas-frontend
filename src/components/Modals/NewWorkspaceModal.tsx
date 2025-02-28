@@ -12,7 +12,6 @@ import {
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-
 import { useCreateNewWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
 import {
   ErrorData,
@@ -21,8 +20,6 @@ import {
 } from "../../utils/types";
 
 const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
-  // const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const [createNewWorkspace, { isSuccess, isError, error }] =

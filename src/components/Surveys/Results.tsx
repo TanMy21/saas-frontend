@@ -26,10 +26,8 @@ const Results = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          // gap: "1%",
           width: "100%",
           height: "100%",
-          // border: "2px solid black",
         }}
       >
         <Box sx={{ width: "100%", height: "48px" }}>
@@ -43,7 +41,6 @@ const Results = () => {
               borderColor: "#EDEDED",
               width: "100%",
               height: "48px",
-              // border: "2px solid red",
             }}
           >
             <Box
@@ -52,10 +49,8 @@ const Results = () => {
                 flexDirection: "row",
                 justifyContent: "flex-start",
                 alignItems: "center",
-                // margin: "auto",
                 width: "60%",
                 height: "100%",
-                // border: "2px solid red",
               }}
             >
               <Tabs
@@ -81,7 +76,6 @@ const Results = () => {
                   "& .MuiTab-root": {
                     textTransform: "capitalize",
                   },
-                  // border: "2px solid blue",
                 }}
               >
                 <Tab
@@ -115,7 +109,7 @@ const Results = () => {
             top: "8%",
             width: "100%",
             height: "96vh",
-            backgroundColor: "#FBFBFB" /* border: "2px solid red"*/,
+            backgroundColor: "#FBFBFB",
           }}
         >
           {content}

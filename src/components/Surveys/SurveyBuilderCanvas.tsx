@@ -1,23 +1,16 @@
 import { Box } from "@mui/material";
 
-// import SurveyWelcomeElement from "./Elements/SurveyWelcomeElement";
 import { useGetElementByIDQuery } from "../../app/slices/elementApiSlice";
 import { elementComponents } from "../../utils/elementsConfig";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 
-const SurveyBuilderCanvas = ({
-  questionId,
-  //display,
-  // handleLayoutChange,
-}: SurveyBuilderCanvasProps) => {
+const SurveyBuilderCanvas = ({ questionId }: SurveyBuilderCanvasProps) => {
   const { data: questions } = useGetElementByIDQuery(questionId ?? "", {
     skip: !questionId,
   });
 
   const QuestionComponent =
-    // firstQuestion
     elementComponents[questions?.type as QuestionTypeKey];
-  // : null;
 
   return (
     <Box display={"flex"} flexDirection={"column"}>

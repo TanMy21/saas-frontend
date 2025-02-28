@@ -19,22 +19,7 @@ const RequireAuth = () => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // if (isAuthenticated && !isVerified) {
-  //   console.log(
-  //     `if isAuthenticated: ${isAuthenticated} and isVerified: ${isVerified}`
-  //   );
-  //   return <Navigate to="/not-verified" state={{ from: location }} replace />;
-  // } else if (isAuthenticated && isVerified) {
-  //   console.log(
-  //     `else if isAuthenticated: ${isAuthenticated} and isVerified: ${isVerified}`
-  //   );
-  //   return <Outlet />;
-  // } else {
-  //   console.log(
-  //     `else isAuthenticated: ${isAuthenticated} and isVerified: ${isVerified}`
-  //   );
-  //   return <Navigate to="/login" state={{ from: location }} replace />;
-  // }
+
 };
 
 export default RequireAuth;

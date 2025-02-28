@@ -74,18 +74,18 @@ const CustomizeElement = () => {
                   sx={{
                     width: "96%",
                     "& .MuiOutlinedInput-root": {
-                      height: 40, // Adjusts the height of the TextField container
+                      height: 40, 
                       "& input": {
                         height: "100%",
-                        padding: "0 14px", // Adjusts padding to keep text vertically centered
+                        padding: "0 14px",
                       },
                       "& fieldset": {
-                        borderWidth: 1, // Optional: Adjust border width if necessary
+                        borderWidth: 1, 
                       },
                     },
                     "& .MuiInputLabel-root": {
-                      lineHeight: 1, // Reduces space above the label text
-                      top: -4, // Adjusts label position to better fit the smaller TextField
+                      lineHeight: 1, 
+                      top: -4, 
                     },
                   }}
                 />

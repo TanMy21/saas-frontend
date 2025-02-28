@@ -17,7 +17,7 @@ import usePersist from "../hooks/persist";
 
 const HeaderIconMenu = () => {
   const navigate = useNavigate();
-  const [persist, setPersist] = usePersist();
+  const [_persist, setPersist] = usePersist();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { data: user } = useGetMeQuery("User");

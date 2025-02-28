@@ -42,7 +42,6 @@ const MediaElementCardContent = ({ text, option }: MediaElementCardProps) => {
         width: "84%",
         minHeight: "16%",
         overflow: "hidden",
-        // border: "2px solid blue",
         marginBottom: "4px",
       }}
     >
@@ -65,7 +64,6 @@ const MediaElementCardContent = ({ text, option }: MediaElementCardProps) => {
         sx={{
           width: "76%",
           minHeight: "96%",
-          // border: "2px solid red",
         }}
       >
         <Box

@@ -73,7 +73,7 @@ const FlowConditionModal = ({
     isFetching,
   } = useGetConditionsForQuestionQuery(questionID);
 
-  const [createCondition, { isLoading: isCreatingCondition, isError, error }] =
+  const [createCondition, { isLoading: isCreatingCondition }] =
     useCreateConditionMutation();
 
   const handleClose = () => {
@@ -193,7 +193,6 @@ const FlowConditionModal = ({
               width: "100%",
               gap: "1%",
               height: 600,
-              // border: "2px solid black",
             }}
           >
             <Box
@@ -202,7 +201,6 @@ const FlowConditionModal = ({
                 flexDirection: "row",
                 width: "100%",
                 flex: 1,
-                // border: "2px solid red",
                 borderBottom: "1px solid #FFFFFF",
               }}
             >
@@ -213,7 +211,6 @@ const FlowConditionModal = ({
                   alignItems: "center",
                   height: "98%",
                   flex: 1,
-                  // border: "2px solid red",
                 }}
               >
                 <Chip
@@ -246,7 +243,6 @@ const FlowConditionModal = ({
                   alignItems: "center",
                   height: "98%",
                   flex: 6,
-                  // border: "2px solid green",
                 }}
               >
                 <Typography
@@ -262,7 +258,6 @@ const FlowConditionModal = ({
                   alignItems: "center",
                   height: "98%",
                   flex: 1,
-                  // border: "2px solid blue",
                 }}
               >
                 <IconButton
@@ -275,7 +270,7 @@ const FlowConditionModal = ({
                 </IconButton>
               </Box>
             </Box>
-            <Box sx={{ width: "100%", flex: 8 /*border: "2px solid green"*/ }}>
+            <Box sx={{ width: "100%", flex: 8 }}>
               <form onSubmit={handleSubmit(submitConditionData)}>
                 <Box
                   sx={{
@@ -300,7 +295,6 @@ const FlowConditionModal = ({
                         background: "#555",
                       },
                     },
-                    // border: "2px solid black",
                     boxSizing: "border-box",
                   }}
                 >
@@ -313,7 +307,6 @@ const FlowConditionModal = ({
                       margin: "auto",
                       width: "96%",
                       height: "auto",
-                      // border: "2px solid orange",
                     }}
                   >
                     {isLoading || isFetching ? (
@@ -333,7 +326,6 @@ const FlowConditionModal = ({
                             watch={watch}
                             setValue={setValue}
                             setConditions={setConditions}
-                            // setTouchedConditions={setTouchedConditions}
                             errors={errors[index] || []}
                             formErrors={formErrors}
                             isValid={
@@ -357,7 +349,6 @@ const FlowConditionModal = ({
                     width: "100%",
                     flex: 1,
                     gap: "1%",
-                    // border: "2px solid blue",
                     borderTop: "1px solid #FFFFFF",
                   }}
                 >
@@ -370,7 +361,6 @@ const FlowConditionModal = ({
                       paddingLeft: "2%",
                       height: "98%",
                       width: "50%",
-                      // border: "2px solid red",
                     }}
                   >
                     <Button
@@ -417,7 +407,6 @@ const FlowConditionModal = ({
                       gap: "12px",
                       height: "98%",
                       width: "60%",
-                      // border: "2px solid red",
                     }}
                   >
                     <Button

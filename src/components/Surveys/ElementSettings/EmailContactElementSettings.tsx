@@ -110,7 +110,6 @@ const EmailContactElementSettings = ({
                 marginTop: "4%",
                 marginBottom: "8%",
                 width: "98%",
-                // border: "2px solid orange",
               }}
             >
               <Accordion

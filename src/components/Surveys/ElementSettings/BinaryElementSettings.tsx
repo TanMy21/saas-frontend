@@ -61,7 +61,6 @@ const BinaryElementSettings = ({
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
-      // console.log(data);
       const { required, questionText, button1Text, button2Text, description } =
         data;
       const settings = { button1Text, button2Text };
@@ -128,7 +127,6 @@ const BinaryElementSettings = ({
                 marginTop: "4%",
                 marginBottom: "8%",
                 width: "98%",
-                // border: "2px solid orange",
               }}
             >
               <Accordion
@@ -296,7 +294,6 @@ const BinaryElementSettings = ({
                       marginTop: "4%",
                       marginBottom: "8%",
                       width: "98%",
-                      // border: "2px solid orange",
                     }}
                   >
                     <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>
@@ -344,7 +341,6 @@ const BinaryElementSettings = ({
                       marginTop: "4%",
                       marginBottom: "8%",
                       width: "98%",
-                      // border: "2px solid orange",
                     }}
                   >
                     <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>

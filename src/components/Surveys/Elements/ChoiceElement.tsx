@@ -35,9 +35,8 @@ const ChoiceElement = ({
   const [editText, setEditText] = useState<string>("");
   const [selectedOptionID, setSelectedOptionID] = useState<string | null>(null);
 
-  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
-    qID!
-  );
+  const { data: options = [] as OptionType[] } =
+    useGetOptionsOfQuestionQuery(qID);
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
@@ -156,7 +155,6 @@ const ChoiceElement = ({
               sx={{
                 margin: "auto",
                 width: "100%",
-                // border: "2px solid blue",
                 "--List-gap": "0.5rem",
                 "--ListItem-radius": "4px",
                 "--ListItemDecorator-size": "32px",
@@ -219,7 +217,6 @@ const ChoiceElement = ({
                             sx: () => ({
                               ...(checked && {
                                 inset: -1,
-                                // border: "1px solid blue",
                               }),
                             }),
                           }),

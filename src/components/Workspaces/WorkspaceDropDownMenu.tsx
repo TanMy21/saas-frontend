@@ -48,7 +48,6 @@ const WorkspaceDropDown = ({ workspaceName: wsName }: WorkspaceData) => {
           aria-controls="long-menu"
           aria-haspopup="true"
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-            console.log("dropdown clicked");
             setStepIndex((prev) => prev + 1);
             handleClick(e);
           }}

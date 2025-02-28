@@ -7,22 +7,13 @@ import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 const SurveyBuilderCanvasMobile = ({
   questionId,
   display,
-  // handleLayoutChange,
 }: SurveyBuilderCanvasProps) => {
   const { data: questions } = useGetElementByIDQuery(questionId, {
     skip: !questionId,
   });
 
-  // useEffect(() => {
-  //   if (questions && questions.length > 0) {
-  //     setSelectedQuestion(questions[0]);
-  //   }
-  // }, [questions]);
-
   const QuestionComponent =
-    /*selectedQuestion*/
-    /*?*/ elementComponents[questions?.type as QuestionTypeKey];
-  // : SurveyWelcomeElement;
+    elementComponents[questions?.type as QuestionTypeKey];
 
   return (
     <Box display={"flex"} flexDirection={"column"}>

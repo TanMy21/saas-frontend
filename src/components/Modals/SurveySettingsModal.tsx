@@ -40,7 +40,6 @@ const SurveySettingsModal = ({
   const { surveyID } = useParams();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const now = dayjs();
-  // const [selectedDate, setSelectedDate] = useState(now);
   const [response, setResponse] = useState(false);
 
   const { data: survey } = useGetSurveyByIdQuery(surveyID, {
@@ -63,18 +62,13 @@ const SurveySettingsModal = ({
     isTemplate,
   } = survey || {};
 
-  const [template, setTemplate] = useState(isTemplate);
+  const [template, _setTemplate] = useState(isTemplate);
 
   const handleClose = () => {
     setOpenSettings(false);
   };
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    // formState: { errors },
-  } = useForm<SettingsFormData>({
+  const { control, register, handleSubmit } = useForm<SettingsFormData>({
     resolver: zodResolver(settingsUpdateSchema),
   });
 
@@ -159,7 +153,6 @@ const SurveySettingsModal = ({
               margin: "auto",
               width: "98%",
               height: 600,
-              // border: "2px solid black",
             }}
           >
             <Box
@@ -168,7 +161,6 @@ const SurveySettingsModal = ({
                 flexDirection: "row",
                 width: "100%",
                 height: "12%",
-                // border: "2px solid green",
               }}
             >
               <Box
@@ -179,7 +171,6 @@ const SurveySettingsModal = ({
                   alignItems: "center",
                   width: "80%",
                   height: "96%",
-                  // border: "2px solid black",
                 }}
               >
                 <Typography sx={{ fontSize: "24px", fontStyle: "bold" }}>
@@ -194,7 +185,6 @@ const SurveySettingsModal = ({
                   alignItems: "center",
                   width: "20%",
                   height: "96%",
-                  // border: "2px solid blue",
                 }}
               >
                 <IconButton
@@ -244,7 +234,6 @@ const SurveySettingsModal = ({
                       margin: "auto",
                       width: "98%",
                       minHeight: "100%",
-                      // border: "2px solid red",
                     }}
                   >
                     {/* --------------------- Title -------------------- */}
@@ -257,14 +246,12 @@ const SurveySettingsModal = ({
                         marginTop: "1%",
                         width: "98%",
                         height: "16%",
-                        // border: "2px solid orange",
                       }}
                     >
                       <Box
                         sx={{
                           width: "98%",
                           height: "32%",
-                          // border: "2px solid black",
                         }}
                       >
                         <Typography
@@ -279,7 +266,6 @@ const SurveySettingsModal = ({
                           flexDirection: "row",
                           width: "98%",
                           height: "60%",
-                          // border: "2px solid black",
                         }}
                       >
                         <TextField
@@ -307,7 +293,6 @@ const SurveySettingsModal = ({
                         margin: "auto",
                         width: "98%",
                         height: "16%",
-                        // border: "2px solid orange",
                       }}
                     >
                       <Box
@@ -317,7 +302,6 @@ const SurveySettingsModal = ({
                           margin: "auto",
                           width: "98%",
                           height: "32%",
-                          // border: "2px solid black",
                         }}
                       >
                         <Typography
@@ -332,7 +316,6 @@ const SurveySettingsModal = ({
                           flexDirection: "row",
                           width: "98%",
                           height: "60%",
-                          // border: "2px solid black",
                         }}
                       >
                         <TextField
@@ -365,7 +348,6 @@ const SurveySettingsModal = ({
                         margin: "auto",
                         width: "98%",
                         height: "24%",
-                        // border: "2px solid red",
                       }}
                     >
                       <Box
@@ -375,14 +357,12 @@ const SurveySettingsModal = ({
                           gap: "8%",
                           width: "48%",
                           height: "96%",
-                          // border: "2px solid black",
                         }}
                       >
                         <Box
                           sx={{
                             width: "98%",
                             height: "36%",
-                            // border: "2px solid blue",
                           }}
                         >
                           <Typography
@@ -395,7 +375,6 @@ const SurveySettingsModal = ({
                           sx={{
                             width: "98%",
                             height: "64%",
-                            // border: "2px solid blue",
                           }}
                         >
                           <Controller
@@ -412,7 +391,6 @@ const SurveySettingsModal = ({
                                   value={
                                     value ? dayjs(value, "DD/MM/YYYY") : null
                                   }
-                                  // control={control}
                                   onChange={(date) =>
                                     onChange(
                                       date ? date.format("DD/MM/YYYY") : ""
@@ -438,14 +416,12 @@ const SurveySettingsModal = ({
                           gap: "8%",
                           width: "48%",
                           height: "96%",
-                          // border: "2px solid black",
                         }}
                       >
                         <Box
                           sx={{
                             width: "98%",
                             height: "36%",
-                            // border: "2px solid blue",
                           }}
                         >
                           <Typography
@@ -458,7 +434,6 @@ const SurveySettingsModal = ({
                           sx={{
                             width: "98%",
                             height: "64%",
-                            // border: "2px solid blue",
                           }}
                         >
                           <Controller
@@ -502,7 +477,6 @@ const SurveySettingsModal = ({
                         margin: "auto",
                         width: "98%",
                         height: "24%",
-                        // border: "2px solid green",
                       }}
                     >
                       <Box
@@ -513,7 +487,6 @@ const SurveySettingsModal = ({
                           margin: "auto",
                           width: "100%",
                           height: "96%",
-                          // border: "2px solid red",
                         }}
                       >
                         <Box
@@ -531,7 +504,6 @@ const SurveySettingsModal = ({
                               alignItems: "center",
                               width: "90%",
                               height: "92%",
-                              // border: "2px solid red",
                             }}
                           >
                             <Typography
@@ -547,7 +519,6 @@ const SurveySettingsModal = ({
                               alignItems: "center",
                               width: "10%",
                               height: "92%",
-                              // border: "2px solid red",
                             }}
                           >
                             <Switch
@@ -597,7 +568,6 @@ const SurveySettingsModal = ({
                         margin: "auto",
                         width: "98%",
                         height: "16%",
-                        // border: "2px solid blue",
                       }}
                     >
                       <Box
@@ -605,7 +575,6 @@ const SurveySettingsModal = ({
                           margin: "auto",
                           width: "100%",
                           height: "32%",
-                          // border: "2px solid black",
                         }}
                       >
                         <Typography
@@ -619,7 +588,6 @@ const SurveySettingsModal = ({
                           margin: "auto",
                           width: "100%",
                           height: "60%",
-                          // border: "2px solid black",
                         }}
                       >
                         <Controller
@@ -629,7 +597,6 @@ const SurveySettingsModal = ({
                           render={({ field }) => (
                             <Select
                               {...field}
-                              // onChange={handleChange}
                               displayEmpty
                               inputProps={{ "aria-label": "Without label" }}
                               sx={{ width: "100%", height: "92%" }}
@@ -657,7 +624,6 @@ const SurveySettingsModal = ({
                         marginBottom: "20%",
                         width: "98%",
                         height: "20%",
-                        // border: "2px solid orange",
                       }}
                     >
                       <Box
@@ -667,7 +633,6 @@ const SurveySettingsModal = ({
                           alignItems: "flex-start",
                           width: "90%",
                           height: "60px",
-                          // border: "2px solid black",
                         }}
                       >
                         <Typography
@@ -683,7 +648,6 @@ const SurveySettingsModal = ({
                           alignItems: "flex-start",
                           width: "10%",
                           height: "48%",
-                          // border: "2px solid black",
                         }}
                       >
                         <Controller
@@ -714,7 +678,6 @@ const SurveySettingsModal = ({
                     width: "98%",
                     height: "20%",
                     marginTop: "2%",
-                    // border: "2px solid red",
                   }}
                 >
                   <Box
@@ -726,7 +689,6 @@ const SurveySettingsModal = ({
                       gap: "12px",
                       width: "36%",
                       height: "100%",
-                      // border: "2px solid black",
                     }}
                   >
                     <Button

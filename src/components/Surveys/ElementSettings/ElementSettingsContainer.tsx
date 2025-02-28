@@ -8,11 +8,7 @@ import {
   SurveyBuilderCanvasProps,
 } from "../../../utils/types";
 
-const ElementSettingsContainer = ({
-  questionId,
-  //display,
-  // handleLayoutChange,
-}: SurveyBuilderCanvasProps) => {
+const ElementSettingsContainer = ({ questionId }: SurveyBuilderCanvasProps) => {
   const { data: questions } = useGetElementByIDQuery(questionId ?? "", {
     skip: !questionId,
   });
@@ -21,10 +17,7 @@ const ElementSettingsContainer = ({
     skip: !questionId,
   });
 
-  // console.log("Container: ",options);
-
   const ElementSettingsComponent =
-    // firstQuestion
     elementSettingsComponents[questions?.type as QuestionTypeKey];
   return (
     <Box display={"flex"} flexDirection={"column"}>
@@ -46,7 +39,7 @@ const ElementSettingsContainer = ({
             qType={questions?.type}
             qOptions={options}
             qRequired={questions?.required}
-            qSettings = {questions?.settings}
+            qSettings={questions?.settings}
           />
         )}
       </Box>

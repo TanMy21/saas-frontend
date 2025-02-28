@@ -114,7 +114,6 @@ const ScaleElement = ({
           <Slider
             aria-label="Always visible"
             defaultValue={2}
-            //   getAriaValueText={valuetext}
             min={minValue}
             max={maxValue}
             step={1}
@@ -136,7 +135,6 @@ const ScaleElement = ({
             marginTop: "4%",
             width: "98%",
             height: "60%",
-            // border: "2px solid blue",
           }}
         >
           <Button

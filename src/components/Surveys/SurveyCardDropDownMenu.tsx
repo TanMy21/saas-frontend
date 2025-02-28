@@ -38,7 +38,6 @@ const SurveyCardDropDownMenu = ({
 
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [currentMenu, setCurrentMenu] = useState<string | null>("parent");
-  // const [tabValue, setTabValue] = useState<string | null>("create");
   const [openRenameModel, setOpenRenameModel] = useState(false);
   const [openDeleteModel, setOpenDeleteModel] = useState(false);
 
@@ -65,7 +64,6 @@ const SurveyCardDropDownMenu = ({
   };
 
   const headerProps = {
-    // tabValue,
     survey,
     workspaceId,
     workspaceName,

@@ -55,11 +55,8 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
     target: 0,
   });
 
-  const {
-    data: questionConditions,
-    isLoading,
-    error,
-  } = useGetAllConditionsForSurveyQuery(surveyID);
+  const { data: questionConditions } =
+    useGetAllConditionsForSurveyQuery(surveyID);
 
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
     setSelectedNode(node);

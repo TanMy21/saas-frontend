@@ -15,10 +15,6 @@ import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApi
 import { welcomeSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
-
-
-
-
 const WelcomeScreenElementSettings = ({
   qID,
   qText,
@@ -126,7 +122,6 @@ const WelcomeScreenElementSettings = ({
                     marginTop: "4%",
                     marginBottom: "8%",
                     width: "98%",
-                    // border: "2px solid orange",
                   }}
                 >
                   <Box sx={{ fontWeight: 500 }}>Welcome Message</Box>
@@ -186,7 +181,6 @@ const WelcomeScreenElementSettings = ({
                     marginTop: "4%",
                     marginBottom: "8%",
                     width: "98%",
-                    // border: "2px solid orange",
                   }}
                 >
                   <Box mt={1}>

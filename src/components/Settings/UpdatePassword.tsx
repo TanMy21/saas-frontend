@@ -12,7 +12,7 @@ import { ErrorData, ResetPasswordFormData } from "../../utils/types";
 import FormErrors from "../FormErrors";
 
 const UpdatePassword = () => {
-  const { data: user, isLoading: isLoadingUser } = useGetMeQuery("User", {
+  const { data: user } = useGetMeQuery("User", {
     refetchOnMountOrArgChange: true,
   });
 

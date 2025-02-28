@@ -1,4 +1,3 @@
-import ClearIcon from "@mui/icons-material/Clear";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { type EdgeProps, useReactFlow } from "@xyflow/react";
 

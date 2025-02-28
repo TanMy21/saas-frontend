@@ -67,7 +67,6 @@ const CheckBoxElement = ({
           value: `Choice ${nextChoiceLetter}`,
           order,
         });
-        // refetch();
       }
     } catch (error) {
       console.error(error);
@@ -137,7 +136,7 @@ const CheckBoxElement = ({
           width: "100%",
           maxWidth: "240px",
           padding: "2%",
-          border: "2px solid red",
+
           "@media (max-width: 600px)": {
             width: "95%",
             padding: "0",
@@ -258,11 +257,9 @@ const CheckBoxElement = ({
                       height: "auto",
                       padding: "4%",
                       overflow: "hidden",
-                      // border: "2px solid black",
                     }}
                   >
                     <Typography
-                      // ml={1}
                       sx={{
                         fontSize: "16px",
                         whiteSpace: "normal",

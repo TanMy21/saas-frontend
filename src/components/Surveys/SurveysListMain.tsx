@@ -197,10 +197,10 @@ const SurveysListMain = () => {
                       color: "black",
                       bgcolor: "#E3E3E3",
                       "&.Mui-selected": {
-                        bgcolor: "#5240ED", // color when button is selected (clicked)
+                        bgcolor: "#5240ED", 
                         color: "white",
                         "&:hover": {
-                          bgcolor: "#868383", // color when button is selected and hovered over
+                          bgcolor: "#868383", 
                           color: "white",
                         },
                       },
@@ -216,10 +216,10 @@ const SurveysListMain = () => {
                       color: "black",
                       bgcolor: "#E3E3E3",
                       "&.Mui-selected": {
-                        bgcolor: "#5240ED", // color when button is selected (clicked)
+                        bgcolor: "#5240ED",  
                         color: "white",
                         "&:hover": {
-                          bgcolor: "#868383", // color when button is selected and hovered over
+                          bgcolor: "#868383", 
                           color: "white",
                         },
                       },
@@ -241,9 +241,7 @@ const SurveysListMain = () => {
             columns={{ lg: 8, md: 6, sm: 4, xs: 2 }}
           >
             {
-              // isLoading ? (
-              //   <CircularProgress />
-              // ) :
+             
               surveys?.length === 0 ? (
                 <SurveysNotFound />
               ) : layout === "grid" ? (
@@ -256,7 +254,6 @@ const SurveysListMain = () => {
                   sx={{
                     width: "100%",
                     minHeight: 600,
-                    // border: "2px solid black",
                   }}
                 >
                   <GridLayout

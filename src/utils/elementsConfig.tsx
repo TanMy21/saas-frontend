@@ -1,10 +1,15 @@
 import { AiOutlineFieldBinary } from "react-icons/ai";
 import { CiViewList } from "react-icons/ci";
-import { FaRankingStar , FaRegImage } from "react-icons/fa6";
+import { FaRankingStar, FaRegImage } from "react-icons/fa6";
 import { GiChoice } from "react-icons/gi";
 import { IoText } from "react-icons/io5";
 import { LuGalleryVerticalEnd } from "react-icons/lu";
-import { MdNumbers , MdOutlineLinearScale , MdCheckBox , MdEmail } from "react-icons/md";
+import {
+  MdNumbers,
+  MdOutlineLinearScale,
+  MdCheckBox,
+  MdEmail,
+} from "react-icons/md";
 import { RxCardStack } from "react-icons/rx";
 
 import BinaryElement from "../components/Surveys/Elements/BinaryElement";
@@ -36,7 +41,6 @@ import {
   IconMapping,
   ElementProps,
   QuestionTypeKey,
-  ElementSettingsProps,
 } from "../utils/types";
 
 export const elementIcons: IconMapping = {

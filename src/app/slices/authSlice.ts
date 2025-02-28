@@ -10,7 +10,6 @@ const initialState: AuthState = {
   email: null,
   isAdmin: false,
   accessToken: null,
-  // isLoggedIn: false,
 };
 
 const authSlice = createSlice({
@@ -23,12 +22,10 @@ const authSlice = createSlice({
       state._id = payload._id;
       state.email = payload.email;
       state.isAdmin = payload.isAdmin;
-      // state.isLoggedIn = true;
       localStorage.setItem("persist", "true");
     },
     logOut: (state) => {
       state.token = null;
-      // state.isLoggedIn = false;
       localStorage.removeItem("persist");
     },
   },
@@ -39,4 +36,3 @@ export const { setCredentials, logOut } = authSlice.actions;
 export default authSlice.reducer;
 
 export const selectCurrentToken = (state: RootState) => state.auth.token;
-// export const selectLoggedInState = (state: RootState) => state.auth.isLoggedIn;

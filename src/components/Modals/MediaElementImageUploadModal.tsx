@@ -32,10 +32,7 @@ const MediaElementImageUploadModal = ({
     }
   };
 
-  const handleFileChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-    // optionID: string
-  ) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
 
@@ -101,7 +98,6 @@ const MediaElementImageUploadModal = ({
                 width: "90%",
                 height: "90%",
                 margin: "auto",
-                // border: "2px solid black",
               }}
             >
               <Box>
@@ -161,7 +157,6 @@ const MediaElementImageUploadModal = ({
                       width: "24px",
                       height: "24px",
                       top: {
-                        // md: "24%",
                         lg: "28%",
                         xl: "27%",
                       },
@@ -318,7 +313,6 @@ const MediaElementImageUploadModal = ({
                 justifyContent: "flex-end",
                 alignItems: "center",
                 marginTop: "4%",
-                // border: "2px solid black",
               }}
             >
               <Box>

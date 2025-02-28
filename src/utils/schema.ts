@@ -13,7 +13,7 @@ export const settingsUpdateSchema = z.object({
     .optional()
     .refine(
       (date) => {
-        if (!date) return true; // Allow if empty
+        if (!date) return true;  
         const parsedDate = dayjs(date, "DD/MM/YYYY");
         return parsedDate.isValid();
       },
@@ -23,7 +23,7 @@ export const settingsUpdateSchema = z.object({
     )
     .refine(
       (date) => {
-        if (!date) return true; // Allow if empty
+        if (!date) return true;  
         const parsedDate = dayjs(date, "DD/MM/YYYY");
         return parsedDate.isSameOrAfter(dayjs(), "day");
       },
@@ -39,7 +39,7 @@ export const settingsUpdateSchema = z.object({
     })
     .refine(
       (date) => {
-        if (!date) return true; // Allow if empty
+        if (!date) return true;  
         const parsedDate = dayjs(date, "DD/MM/YYYY");
         return parsedDate.isValid();
       },
@@ -49,7 +49,7 @@ export const settingsUpdateSchema = z.object({
     )
     .refine(
       (date) => {
-        if (!date) return true; // Allow if empty
+        if (!date) return true;  
         const parsedDate = dayjs(date, "DD/MM/YYYY");
         return parsedDate.isSameOrAfter(dayjs(), "day");
       },

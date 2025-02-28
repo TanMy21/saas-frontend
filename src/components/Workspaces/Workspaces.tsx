@@ -81,7 +81,7 @@ const Workspaces = ({
                     <NavLink
                       to={`/dash/w/${workspace?.workspaceId}`}
                       className={({ isActive }) => (isActive ? "active" : "")}
-                      style={({ isActive /*isPending, isTransitioning*/ }) => {
+                      style={({ isActive }) => {
                         return {
                           display: "block",
                           width: "100%",
@@ -95,7 +95,6 @@ const Workspaces = ({
                           lineHeight: "20px",
                           textDecoration: "none",
                           textOverflow: "ellipsis",
-                          // backgroundColor: isActive ? "#E4E2E2" : "",
                           borderLeft: isActive ? "5px solid #4C6FFF" : "",
                           borderTopLeftRadius: isActive ? "8px" : "",
                           borderBottomLeftRadius: isActive ? "8px" : "",

@@ -12,15 +12,10 @@ import { SurveyBuilderHeaderProps } from "../../utils/types";
 import HeaderIconMenu from "../HeaderIconMenu";
 
 const SurveyBuilderHeader = ({
-  // display,
-  // tabValue,
   survey,
-  // surveyID,
   workspaceId,
   workspaceName,
   title,
-  // handleScreenChange,
-  // handleLayoutChange,
 }: SurveyBuilderHeaderProps) => {
   const [surveyTitle, setSurveyTitle] = useState<string | undefined>("");
   const [tabValue, setTabValue] = useState<string | null>("create");
@@ -84,7 +79,6 @@ const SurveyBuilderHeader = ({
             margin: "auto",
             width: "96%",
             height: "92%",
-            // border: "2px solid black",
           }}
         >
           {/* ------------------- workspace name and survey title -------------------- */}
@@ -98,7 +92,6 @@ const SurveyBuilderHeader = ({
               marginTop: "0px",
               width: "32%",
               height: "100%",
-              // border: "2px solid red",
             }}
           >
             <Box
@@ -110,13 +103,12 @@ const SurveyBuilderHeader = ({
                 alignItems: "center",
                 width: "fit-content",
                 marginTop: { lg: "1%", xl: "0%" },
-                // border: "2px solid blue",
                 textOverflow: "clip",
               }}
             >
               <NavLink
                 to={`/dash/w/${workspaceId}`}
-                style={({ isActive /*isPending, isTransitioning*/ }) => {
+                style={({ isActive }) => {
                   return {
                     display: "block",
                     color: isActive ? "#262626" : "#262666",
@@ -167,7 +159,6 @@ const SurveyBuilderHeader = ({
               marginTop: "0px",
               width: "36%",
               height: "100%",
-              // border: "2px solid green",
             }}
           >
             <Tabs
@@ -190,7 +181,7 @@ const SurveyBuilderHeader = ({
                 "& .Mui-selected": {
                   color: "#4F46E5",
                   "& .MuiTab-iconWrapper": {
-                    color: "#4F46E5", // Changes the icon color when selected
+                    color: "#4F46E5", 
                   },
                 },
                 "& .MuiTab-root": {
@@ -243,7 +234,6 @@ const SurveyBuilderHeader = ({
               marginTop: "0px",
               width: "32%",
               height: "100%",
-              // border: "2px solid orange",
             }}
           >
             <HeaderIconMenu />

@@ -16,13 +16,9 @@ import ElementDropDownMenu from "./ElementDropDownMenu";
 
 const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
   const { data: elements = [] as Element[], refetch } =
-    useGetElementsForSurveyQuery(
-      surveyID
-      //{ pollingInterval: 1000 }
-    );
+    useGetElementsForSurveyQuery(surveyID);
 
-  const [updateElementOrder /*{ isError, error }*/] =
-    useUpdateElementOrderMutation();
+  const [updateElementOrder] = useUpdateElementOrderMutation();
 
   const nonOrderableTypes = [
     "WELCOME_SCREEN",
@@ -91,9 +87,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
     const newElements = Array.from(displayedQuestions);
     const [moved] = newElements.splice(source.index, 1);
     newElements.splice(destination.index, 0, moved);
-    // setElements(newElements);
 
-    // Reorder elements
     const reorderedElements = newElements.map((el, index) => {
       if (orderedElementTypes.includes(el.type)) {
         return { ...el, order: index + 1 };
@@ -114,16 +108,16 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
           maxWidth: { md: "82%", lg: "92%", xl: "95%" },
           maxHeight: "400px",
           "&::-webkit-scrollbar": {
-            width: "10px", // Scrollbar width
+            width: "10px",
           },
           "&::-webkit-scrollbar-track": {
-            background: "#f1f1f1", // Scrollbar track color
+            background: "#f1f1f1", 
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "#61A5D2", // Scrollbar thumb color
-            borderRadius: "10px", // Rounded corners on the scrollbar thumb
+            background: "#61A5D2", 
+            borderRadius: "10px", 
             "&:hover": {
-              background: "#555", // Scrollbar thumb hover color
+              background: "#555", 
             },
           },
         }}

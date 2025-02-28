@@ -31,10 +31,8 @@ const Signin = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //eslint-disable-next-line
-  const [persist, setPersist] = usePersist();
 
-  // const [googleAuthClicked, setGoogleAuthClicked] = useState(false);
+  const [persist, setPersist] = usePersist();
 
   const [login, { isLoading, isError, error }] = useLoginMutation();
   const [
@@ -64,6 +62,7 @@ const Signin = () => {
       handlePersist();
       navigate("/dash");
     } catch (error) {
+      console.error("Failed:", error);
       const errorData = error as FetchBaseQueryError;
       if (!errorData.status) {
         toast.error("No Server Response", { position: "top-right" });
@@ -82,7 +81,7 @@ const Signin = () => {
   };
 
   useEffect(() => {
-    if (isError) {
+    if (isError && error !== undefined) {
       const errorData = error as ErrorData;
       if (Array.isArray(errorData.data.error)) {
         errorData.data.error.forEach((el) =>

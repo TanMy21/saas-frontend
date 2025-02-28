@@ -27,22 +27,17 @@ export const exportToXlsx = (
   selectedRows: RowData[],
   columns: MRT_ColumnDef<RowData>[]
 ) => {
-  // Create headers from the columns
   const headers = columns.map((col) => col.header);
 
-  // Map rows to match headers
   const data = selectedRows.map((row) =>
     columns.map((col) => row[col.accessorKey as string] || "")
   );
 
-  // Combine headers and data
   const worksheetData = [headers, ...data];
 
   const sheetOptions = {
-    "!cols": columns.map(() => ({ wch: 10 })), // setting column width
+    "!cols": columns.map(() => ({ wch: 10 })),
   };
-
-  // Create worksheet
 
   const buffer = XLSX.build([
     { name: "mySheetName", data: worksheetData, options: sheetOptions },
@@ -57,15 +52,12 @@ export const exportToPdf = (
   selectedRows: RowData[],
   columns: MRT_ColumnDef<RowData>[]
 ) => {
-  // Create headers from the columns
   const headers = columns.map((col) => col.header);
 
-  // Map rows to match headers
   const data = selectedRows.map((row) =>
     columns.map((col) => row[col.accessorKey as string] || "")
   );
 
-  // Create document definition
   const docDefinition = {
     content: [
       {
@@ -78,6 +70,5 @@ export const exportToPdf = (
     ],
   };
 
-  // Generate PDF and trigger download
   pdfMake.createPdf(docDefinition).download("export.pdf");
 };

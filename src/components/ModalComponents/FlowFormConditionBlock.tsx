@@ -93,7 +93,6 @@ const FlowFormConditionBlock = ({
           marginBottom: "2%",
           width: "96%",
           height: "fit-content",
-          // border: isValid ? "3px solid red" : "none",
         }}
       >
         <Accordion
@@ -127,7 +126,6 @@ const FlowFormConditionBlock = ({
                 alignItems: "center",
                 width: "100%",
                 height: "32px",
-                // border: "2px solid blue",
               }}
             >
               <Chip
@@ -141,7 +139,6 @@ const FlowFormConditionBlock = ({
                   justifyContent: "end",
                   width: "80%",
                   height: "98%",
-                  // border: "2px solid black",
                 }}
               >
                 <Box
@@ -163,7 +160,6 @@ const FlowFormConditionBlock = ({
           <AccordionDetails
             sx={{
               marginTop: "-4%",
-              // border: "2px solid red",
             }}
           >
             <Box
@@ -173,8 +169,6 @@ const FlowFormConditionBlock = ({
                 marginTop: "-1%",
                 padding: "1%",
                 width: "98%",
-                // height: "100px",
-                // border: "2px solid red",
               }}
             >
               <Box
@@ -187,7 +181,6 @@ const FlowFormConditionBlock = ({
                   margin: "auto",
                   fontSize: "16px",
                   fontWeight: "bold",
-                  // border: "2px solid orange",
                 }}
               >
                 If
@@ -199,7 +192,6 @@ const FlowFormConditionBlock = ({
                   alignItems: "center",
                   width: "96%",
                   margin: "auto",
-                  // border: "2px solid orange",
                 }}
               >
                 <Box
@@ -210,7 +202,6 @@ const FlowFormConditionBlock = ({
                     width: "8%",
                     height: "96%",
                     fontSize: "28px",
-                    // border: "2px solid red",
                   }}
                 >
                   {
@@ -230,7 +221,6 @@ const FlowFormConditionBlock = ({
                     width: "90%",
                     fontSize: "18px",
                     fontWeight: 600,
-                    // border: "2px solid red",
                     overflowWrap: "break-word",
                     wordWrap: "break-word",
                     whiteSpace: "normal",
@@ -247,7 +237,6 @@ const FlowFormConditionBlock = ({
                   width: "96%",
                   height: "33%",
                   margin: "auto",
-                  // border: "2px solid orange",
                 }}
               >
                 <Box
@@ -256,8 +245,6 @@ const FlowFormConditionBlock = ({
                     flexDirection: "row",
                     padding: "1%",
                     width: "100%",
-                    // height: "98%",
-                    // border: "2px solid red",
                   }}
                 >
                   {ConditionComponent ? (
@@ -289,7 +276,6 @@ const FlowFormConditionBlock = ({
                   padding: "1%",
                   width: "98%",
                   height: "80px",
-                  // border: "2px solid green",
                 }}
               >
                 <Box
@@ -302,7 +288,6 @@ const FlowFormConditionBlock = ({
                     margin: "auto",
                     fontSize: "16px",
                     fontWeight: "bold",
-                    // border: "2px solid orange",
                   }}
                 >
                   Then
@@ -316,7 +301,6 @@ const FlowFormConditionBlock = ({
                     width: "96%",
                     height: "48%",
                     margin: "auto",
-                    // border: "2px solid orange",
                   }}
                 >
                   <Box

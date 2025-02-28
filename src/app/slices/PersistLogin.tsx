@@ -36,11 +36,9 @@ const PersistLogin = () => {
 
   useEffect(() => {
     const verifyRefreshToken = async () => {
-      // console.log("verifying refresh token");
       try {
-        //const response =
         await refresh();
-        //const { accessToken } = response.data
+
         setTrueSuccess(true);
       } catch (err) {
         console.error(err);
@@ -51,14 +49,12 @@ const PersistLogin = () => {
     const checkTokenExpiration = () => {
       const isExpired = isTokenExpired(token!);
       if (isExpired) {
-        // console.log("Token expired, attempting to refresh...");
         verifyRefreshToken();
       }
     };
 
     const intervalId = setInterval(checkTokenExpiration, 120000);
 
-    // Check once immediately on component mount
     checkTokenExpiration();
 
     return () => clearInterval(intervalId);
@@ -75,8 +71,6 @@ const PersistLogin = () => {
 
   let content;
   if (!persist) {
-    // persist: no
-    // console.log("no persist");
     content = <Outlet />;
   } else if (isLoading) {
     //persist: yes, token: no

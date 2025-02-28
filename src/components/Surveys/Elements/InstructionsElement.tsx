@@ -24,7 +24,6 @@ import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-
 const InstructionsElement = ({
   qID,
   qNO,
@@ -36,11 +35,8 @@ const InstructionsElement = ({
   const [editingID, setEditingID] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
 
-  // const marginLeftListItem = display === "mobile" ? "10%" : "10%";
-
-  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
-    qID!
-  );
+  const { data: options = [] as OptionType[] } =
+    useGetOptionsOfQuestionQuery(qID);
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
@@ -122,7 +118,6 @@ const InstructionsElement = ({
       maxWidth={"100%"}
       height={"100%"}
       zIndex={20}
-      // sx={{ border: "2px solid orange" }}
     >
       <Box
         display={"flex"}
@@ -152,7 +147,6 @@ const InstructionsElement = ({
               "--ListItem-radius": "4px",
               "--ListItemDecorator-size": "32px",
               margin: "auto",
-              // border: "2px solid red",
             }}
           >
             {options.map((option, index) => (
@@ -180,7 +174,6 @@ const InstructionsElement = ({
                   alignItems={"center"}
                   width={"96%"}
                   height={"96%"}
-                  // border={"2px solid darkred"}
                   margin={"auto"}
                 >
                   <Box
@@ -192,7 +185,6 @@ const InstructionsElement = ({
                     sx={{
                       width: "4%",
                       height: "100%",
-                      // border: "2px solid yellow",
                     }}
                   >
                     <Typography
@@ -226,7 +218,6 @@ const InstructionsElement = ({
                       width: "96%",
                       height: "100%",
                       padding: "4px",
-                      // border: "2px solid darkblue",
                     }}
                   >
                     {editingID === option.optionID ? (
@@ -267,7 +258,6 @@ const InstructionsElement = ({
                           textAlign: "justify",
                           lineHeight: "1",
                         }}
-                        // onClick={handleClick}
                       >
                         {option.text}
                       </Typography>

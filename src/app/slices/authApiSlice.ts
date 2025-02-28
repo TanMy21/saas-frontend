@@ -1,10 +1,7 @@
-import { update } from "lodash";
-
 import { AuthResponse, ILogoutResponse } from "../../utils/types";
 import { apiSlice } from "../api/apiSlice";
 
 import { setCredentials, logOut } from "./authSlice";
-import { useUpdateOptionTextandValueMutation } from "./optionApiSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -56,7 +53,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
-          // const { data } =
           await queryFulfilled;
 
           dispatch(logOut());
@@ -80,9 +76,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
           const { accessToken } = data;
           dispatch(
             setCredentials({
-              // token: accessToken,
               accessToken,
-              // isLoggedIn: true,
             })
           );
         } catch (err) {
@@ -91,7 +85,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
       },
     }),
   }),
-  // overrideExisting: false,
 });
 
 export const {

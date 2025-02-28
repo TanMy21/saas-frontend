@@ -59,7 +59,6 @@ const ResultInsights = () => {
           marginTop: "2%",
           width: "60%",
           height: "80%",
-          // border: "2px solid green",
         }}
       >
         {isLoading ? (
@@ -75,7 +74,6 @@ const ResultInsights = () => {
                 paddingLeft: "1%",
                 width: "96%",
                 height: "16%",
-                // border: "2px solid red",
               }}
             >
               <Typography sx={{ fontSize: "32px", fontStyle: "bold" }}>
@@ -97,7 +95,6 @@ const ResultInsights = () => {
                 marginTop: "0%",
                 gap: "2%",
                 padding: "2%",
-                // border: "2px solid blue",
               }}
             >
               <Box
@@ -106,7 +103,6 @@ const ResultInsights = () => {
                   width: "98%",
                   height: "48%",
                   gap: "2%",
-                  // border: "2px solid orange",
                 }}
               >
                 <InsightCard
@@ -140,7 +136,6 @@ const ResultInsights = () => {
                   width: "98%",
                   height: "48%",
                   gap: "2%",
-                  // border: "2px solid purple",
                 }}
               >
                 <InsightCard

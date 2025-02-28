@@ -13,7 +13,7 @@ import { updateUserInfoSchema } from "../../utils/schema";
 import { ErrorData, UpdateUserInfoFormData } from "../../utils/types";
 
 const UpdateInfo = () => {
-  const { data: user, isLoading: isLoadingUser } = useGetMeQuery("User", {
+  const { data: user } = useGetMeQuery("User", {
     refetchOnMountOrArgChange: true,
   });
   const [updateUserInfo, { isSuccess, isError, error }] =
@@ -21,11 +21,7 @@ const UpdateInfo = () => {
 
   const { firstname: firstName, lastname: lastName, email: userEmail } = user;
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<UpdateUserInfoFormData>({
+  const { register, handleSubmit } = useForm<UpdateUserInfoFormData>({
     resolver: zodResolver(updateUserInfoSchema),
     defaultValues: {
       firstname: firstName || "",

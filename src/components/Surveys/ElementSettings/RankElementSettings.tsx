@@ -122,7 +122,6 @@ const RankElementSettings = ({
                     marginTop: "4%",
                     marginBottom: "8%",
                     width: "98%",
-                    // border: "2px solid orange",
                   }}
                 >
                   <Box sx={{ fontWeight: 500 }}>Question Text</Box>

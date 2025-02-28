@@ -26,7 +26,6 @@ const BinaryElement = ({
       flexDirection={"column"}
       justifyContent={"start"}
       alignItems={"center"}
-      // margin={"auto"}
       width={"98%"}
       height={"100%"}
       zIndex={20}

@@ -45,7 +45,6 @@ const ChoiceElementSettings = ({
   const onSubmit = async (data: QuestionSetting) => {
     try {
       const { required, questionText, description } = data;
-      console.log("data:", data);
       const settings = {};
       await updateElementSettings({
         questionID: qID,
