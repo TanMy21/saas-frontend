@@ -23,6 +23,7 @@ import {
   Condition,
   EdgeFormData,
   QuestionFlowProps,
+  QuestionNodeData,
 } from "../../utils/types";
 import FlowConditionModal from "../Modals/FlowConditionModal";
 
@@ -100,6 +101,26 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
           conditionValue: null,
         },
       ]);
+
+      if (isBypass) {
+        setNodes((prevNodes) =>
+          prevNodes.map((node) => {
+            const nodeData = node.data as QuestionNodeData;
+            const sourceData = sourceNode?.data as QuestionNodeData;
+            const targetData = targetNode?.data as QuestionNodeData;
+            if (
+              nodeData.order > sourceData.order &&
+              nodeData.order <= targetData.order
+            ) {
+              return {
+                ...node,
+                position: { x: node.position.x, y: node.position.y + 200 },
+              };
+            }
+            return node;
+          })
+        );
+      }
 
       if (sourceIndex !== -1 && targetIndex !== -1) {
         setEdgeFormData({
