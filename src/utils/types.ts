@@ -367,7 +367,7 @@ export interface QuestionDetail {
 }
 
 export interface QuestionFlowProps {
-  surveyID: string; 
+  surveyID: string;
   Elements: Element[];
 }
 
@@ -403,6 +403,16 @@ export interface QuestionSetting {
   superSize?: boolean;
   welcomeText?: string;
 }
+
+export interface QuestionNodeData extends Record<string, unknown> {
+  label: number;
+  questionID: string;
+  question: string;
+  order: number;
+  element: string;
+}
+
+export type QuestionNode = Node<QuestionNodeData>;
 
 export interface QuestionResponse {
   responseID: string;
