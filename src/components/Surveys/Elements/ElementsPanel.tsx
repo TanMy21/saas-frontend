@@ -26,7 +26,7 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
     "INSTRUCTIONS",
     "EMAIL_CONTACT",
   ];
-  let isNonOrderableType;
+  //let isNonOrderableType = false;
 
   const elementStartTypes = ["WELCOME_SCREEN", "INSTRUCTIONS", "EMAIL_CONTACT"];
   const orderedElementTypes = [
@@ -111,13 +111,13 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
             width: "10px",
           },
           "&::-webkit-scrollbar-track": {
-            background: "#f1f1f1", 
+            background: "#f1f1f1",
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "#61A5D2", 
-            borderRadius: "10px", 
+            background: "#61A5D2",
+            borderRadius: "10px",
             "&:hover": {
-              background: "#555", 
+              background: "#555",
             },
           },
         }}
@@ -192,37 +192,33 @@ const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
                               </Typography>
                             </Box>
 
-                            {
-                              (isNonOrderableType = nonOrderableTypes.includes(
-                                element.type
-                              ) ? null : (
-                                <Box
-                                  display={"flex"}
-                                  justifyContent={"center"}
-                                  alignItems={"center"}
-                                  flexBasis={"auto"}
-                                  flexGrow={1}
-                                  sx={{
-                                    width: "10%",
-                                    height: "100%",
+                            {!nonOrderableTypes.includes(element.type) && (
+                              <Box
+                                display={"flex"}
+                                justifyContent={"center"}
+                                alignItems={"center"}
+                                flexBasis={"auto"}
+                                flexGrow={1}
+                                sx={{
+                                  width: "10%",
+                                  height: "100%",
 
-                                    marginTop: "1%",
-                                    marginLeft: "4%",
-                                    "&:hover": {
-                                      cursor: "pointer",
-                                    },
-                                  }}
+                                  marginTop: "1%",
+                                  marginLeft: "4%",
+                                  "&:hover": {
+                                    cursor: "pointer",
+                                  },
+                                }}
+                              >
+                                <Typography
+                                  color={"black"}
+                                  fontSize={"1.4rem"}
+                                  fontWeight={"bold"}
                                 >
-                                  <Typography
-                                    color={"black"}
-                                    fontSize={"1.4rem"}
-                                    fontWeight={"bold"}
-                                  >
-                                    {element.order}
-                                  </Typography>
-                                </Box>
-                              ))
-                            }
+                                  {element.order}
+                                </Typography>
+                              </Box>
+                            )}
                             <Box
                               display={"flex"}
                               justifyContent={"flex-start"}

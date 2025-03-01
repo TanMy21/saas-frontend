@@ -32,7 +32,7 @@ const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [persist, setPersist] = usePersist();
+  const [_persist, setPersist] = usePersist();
 
   const [login, { isLoading, isError, error }] = useLoginMutation();
   const [

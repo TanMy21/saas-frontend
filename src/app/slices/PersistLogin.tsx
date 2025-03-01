@@ -53,7 +53,7 @@ const PersistLogin = () => {
       }
     };
 
-    const intervalId = setInterval(checkTokenExpiration, 120000);
+    const intervalId = setInterval(checkTokenExpiration, 900000);
 
     checkTokenExpiration();
 

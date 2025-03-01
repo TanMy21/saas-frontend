@@ -21,12 +21,10 @@ const DashboardTour = ({
     dashboardTourSkipped: boolean
   ) => {
     try {
-     
-      const response = await updateUserTourStatus({
+      await updateUserTourStatus({
         hasCompletedDashboardTour: dashboardTourCompleted,
         hasSkippedDashboardTour: dashboardTourSkipped,
       }).unwrap();
-      
     } catch (error) {
       console.error(error);
     }
