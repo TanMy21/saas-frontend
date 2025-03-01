@@ -9,7 +9,6 @@ lerna-debug.log*
 
 .VSCodeCounter
 node_modules
-dist
 dist-ssr
 *.local
 .env
