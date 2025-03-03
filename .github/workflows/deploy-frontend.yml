@@ -1,0 +1,25 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Connect to VPS & Deploy Frontend
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/frontend
+            git pull origin deploy
+            sudo rsync -av --delete /var/www/frontend/dist/ /var/www/frontend/dist/
+            sudo mv /var/www/frontend/dist/* /var/www/frontend/dist/
+            sudo systemctl restart nginx
+            echo "Frontend Deployment Completed! 🚀"
