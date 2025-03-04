@@ -22,7 +22,7 @@ jobs:
             sudo docker-compose down
             
             echo "📦 Pulling latest frontend code..."
-            git pull origin deploy
+            git pull origin deploy-fe
             
             echo "🔧 Building frontend container..."
             sudo docker-compose build --no-cache
