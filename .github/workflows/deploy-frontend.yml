@@ -16,21 +16,23 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |                 
+          script: |
             echo "Stopping existing frontend container..."
             cd /var/www/frontend
             sudo docker-compose down
-            
+
             echo "📦 Pulling latest frontend code..."
+            git fetch --all
+            git reset --hard origin/deploy-fe
             git pull origin deploy-fe
-            
+
             echo "🔧 Building frontend container..."
             sudo docker-compose build --no-cache
-            
+
             echo "🚀 Starting frontend container..."
             sudo docker-compose up -d
-            
+
             echo "🔄 Restarting Nginx..."
             sudo systemctl restart nginx
-            
+
             echo "✔️ Frontend Deployment Completed Successfully! "
