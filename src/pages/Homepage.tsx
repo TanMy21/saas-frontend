@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const Homepage = () => {
@@ -10,9 +10,6 @@ const Homepage = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Box sx={{ marginTop: "16%" }}>
-          <Typography variant="h1">Landing Page</Typography>
-        </Box>
         <Box sx={{ m: 4 }}>
           <Stack
             direction="row"

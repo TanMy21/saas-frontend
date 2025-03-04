@@ -117,6 +117,7 @@ const Signin = () => {
   const handleGoogleAuth = () => {
     try {
       window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google`;
+      console.log("Google Auth: ", window.location.href);
     } catch (err: any) {
       toast.error(err?.data?.message, {
         position: "top-right",
