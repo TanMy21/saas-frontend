@@ -16,9 +16,21 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
+          script: |                 
+            echo "Stopping existing frontend container..."
             cd /var/www/frontend
-            git pull origin deploy-fe
-            sudo rsync -av --exclude='.env' /var/www/frontend/dist/ /var/www/frontend/dist/
+            sudo docker-compose down
+            
+            echo "📦 Pulling latest frontend code..."
+            git pull origin deploy
+            
+            echo "🔧 Building frontend container..."
+            sudo docker-compose build --no-cache
+            
+            echo "🚀 Starting frontend container..."
+            sudo docker-compose up -d
+            
+            echo "🔄 Restarting Nginx..."
             sudo systemctl restart nginx
-            echo "Frontend Deployment Completed! 🚀"
+            
+            echo "✔️ Frontend Deployment Completed Successfully! "
