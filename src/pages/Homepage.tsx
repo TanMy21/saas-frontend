@@ -5,12 +5,25 @@ const Homepage = () => {
   return (
     <>
       <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: "100vh",
+        }}
       >
-        <Box sx={{ m: 4 }}>
+        <Box
+          sx={{
+            display: "flex",
+            width: "60%",
+            height: "50vh",
+            margin: "auto",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Stack
             direction="row"
             justifyContent="center"

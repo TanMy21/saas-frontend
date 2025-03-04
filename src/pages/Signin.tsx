@@ -117,7 +117,10 @@ const Signin = () => {
   const handleGoogleAuth = () => {
     try {
       window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google`;
-      console.log("Google Auth: ", window.location.href);
+      console.log(
+        "Google Auth: ",
+        `${import.meta.env.VITE_BASE_URL}/auth/google`
+      );
     } catch (err: any) {
       toast.error(err?.data?.message, {
         position: "top-right",
@@ -153,7 +156,7 @@ const Signin = () => {
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: "48%",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -170,11 +173,6 @@ const Signin = () => {
             borderRadius: "16px",
           }}
         >
-          {/* <Link to="/" style={{ textDecoration: "none" }}>
-            <Typography variant="h1" component="h2">
-              Logo
-            </Typography>
-          </Link> */}
           <Typography
             component="h1"
             variant="h5"
