@@ -3,7 +3,7 @@ name: Deploy Frontend
 on:
   push:
     branches:
-      - deploy
+      - deploy-fe
 
 jobs:
   deploy:
@@ -18,8 +18,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /var/www/frontend
-            git pull origin deploy
-            sudo rsync -av --delete /var/www/frontend/dist/ /var/www/frontend/dist/
-            sudo mv /var/www/frontend/dist/* /var/www/frontend/dist/
+            git pull origin deploy-fe
+            sudo rsync -av --exclude='.env' /var/www/frontend/dist/ /var/www/frontend/dist/
             sudo systemctl restart nginx
             echo "Frontend Deployment Completed! 🚀"
