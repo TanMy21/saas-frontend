@@ -70,10 +70,10 @@ const Signup = () => {
 
   const handleGoogleAuth = () => {
     try {
-      window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google/callback`;
+      window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google`;
       console.log(
         "Google Auth: ",
-        `${import.meta.env.VITE_BASE_URL}/auth/google/callback`
+        `${import.meta.env.VITE_BASE_URL}/auth/google`
       );
     } catch (err: any) {
       toast.error(err?.data?.message, {
