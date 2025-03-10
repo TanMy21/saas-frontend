@@ -15,10 +15,6 @@ import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApi
 import { welcomeSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
-
-
-
-
 const WelcomeScreenElementSettings = ({
   qID,
   qText,

@@ -27,7 +27,7 @@ const ElementQuestionText = ({
 
   const nonOrderableTypes = ["INSTRUCTIONS", "EMAIL_CONTACT"];
 
-  const isNonOrderableType = nonOrderableTypes.includes(qType!);
+  const isNonOrderableType = nonOrderableTypes.includes(qType);
 
   const [updateElementText] = useUpdateElementTextMutation();
   const [updateElementDescription] = useUpdateElementDescriptionMutation();
@@ -221,7 +221,7 @@ const ElementQuestionText = ({
                   color: "#888888",
                 }}
               >
-                {description}
+                {description === "" ? "Description (optional)" : description}
               </Typography>
             )}
           </Box>

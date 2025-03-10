@@ -16,10 +16,6 @@ import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApi
 import { textSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
-
-
-
-
 const TextElementSettings = ({
   qID,
   qText,
@@ -177,9 +173,22 @@ const TextElementSettings = ({
                             height: "36px",
                             fontSize: "16px",
                             backgroundColor: "#FFFFFF",
+                            minHeight: "40px",
+                            boxSizing: "border-box",
+                          },
+                          "& .MuiInputBase-input": {
+                            lineHeight: "1.5",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
                           },
                         }}
                         {...field}
+                        value={
+                          field.value === ""
+                            ? "Description (optional)"
+                            : field.value
+                        }
                         onChange={(event) => {
                           const value = event.target.value;
                           field.onChange(value);

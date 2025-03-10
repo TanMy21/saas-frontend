@@ -8,6 +8,7 @@ const BinaryElement = ({
   qID,
   qNO,
   qText,
+  qType,
   qDescription,
   display,
   qSettings,
@@ -40,6 +41,7 @@ const BinaryElement = ({
           qID={qID}
           qNO={qNO}
           qText={qText}
+          qType={qType}
           qDescription={qDescription}
           display={display}
         />

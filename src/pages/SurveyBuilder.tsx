@@ -115,7 +115,7 @@ const SurveyBuilder = () => {
 
   let isTourEnabled = false;
 
-  if (import.meta.env.VITE_ENABLE_TOUR === "true") {
+  if (import.meta.env.VITE_ENABLE_BUILDER_TOUR === "true") {
     isTourEnabled = !hasCompletedBuilderTour && !hasSkippedBuilderTour;
   }
 
