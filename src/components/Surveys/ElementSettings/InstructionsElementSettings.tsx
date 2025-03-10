@@ -1,62 +1,52 @@
 import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, TextField } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  TextField,
+} from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 
 import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
 import { instructionsSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
-const InstructionsElementSettings = ({
-  qID,
-  qText,
-  qSettings,
-}: ElementSettingsProps) => {
+const InstructionsElementSettings = ({ qID, qText }: ElementSettingsProps) => {
   const [updateElementSettings] = useUpdateElementSettingsMutation();
-
-  const { buttonText } = qSettings || { buttonText: "" };
 
   const {
     handleSubmit,
     control,
+    setValue,
     // formState: { errors },
   } = useForm<QuestionSetting>({
     resolver: zodResolver(instructionsSettingsSchema),
     defaultValues: {
       instructionsTitle: qText,
-      buttonText,
     },
   });
 
-  const [formState, setFormState] = useState<QuestionSetting>({
-    instructionsTitle: qText,
-    buttonText,
-  });
-
-  const previousFormState = useRef<QuestionSetting>(formState);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
-      const { instructionsTitle, buttonText } = data;
+      const { instructionsTitle } = data;
 
-      const settings = { buttonText };
       await updateElementSettings({
         questionID: qID,
         text: instructionsTitle,
-        settings,
       });
     } catch (error) {
       console.error(error);
     }
   };
 
-  useEffect(() => {
-    const hasChanged =
-      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
-
-    if (!hasChanged) return;
+  const handleInputChange = (field: any, value: string) => {
+    setValue(field, value, { shouldValidate: true, shouldDirty: true });
 
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
@@ -65,13 +55,7 @@ const InstructionsElementSettings = ({
     debounceTimeout.current = setTimeout(() => {
       handleSubmit(onSubmit)();
     }, 1000);
-
-    return () => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-    };
-  }, [formState, handleSubmit]);
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -109,33 +93,59 @@ const InstructionsElementSettings = ({
                 // border: "2px solid orange",
               }}
             >
-              <Box sx={{ fontWeight: 500 }}>Title</Box>
-              <Box mt={1}>
-                <Controller
-                  name="instructionsTitle"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      type="text"
-                      sx={{
-                        "& .MuiInputBase-root": {
-                          height: "36px",
-                          fontSize: "16px",
-                        },
-                      }}
-                      {...field}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          instructionsTitle: value,
-                        }));
-                      }}
-                    />
-                  )}
-                />
-              </Box>
+              <Accordion
+                sx={{ width: "100%", backgroundColor: "#F7F7F7" }}
+                defaultExpanded
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                >
+                  <Box sx={{ fontWeight: 500, color: "#453F46" }}>
+                    Title Text
+                  </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1%",
+                      margin: "auto",
+                      marginTop: "4%",
+                      marginBottom: "8%",
+                      width: "98%",
+                      // border: "2px solid orange",
+                    }}
+                  >
+                    <Box sx={{ fontWeight: 500 }}>Text</Box>
+                    <Box mt={1}>
+                      <Controller
+                        name="instructionsTitle"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            type="text"
+                            sx={{
+                              "& .MuiInputBase-root": {
+                                height: "36px",
+                                fontSize: "16px",
+                                backgroundColor: "#FFFFFF",
+                              },
+                            }}
+                            {...field}
+                            value={field.value}
+                            onChange={(event) =>
+                              handleInputChange(field.name, event.target.value)
+                            }
+                          />
+                        )}
+                      />
+                    </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
             </Box>
           </Box>
         </form>

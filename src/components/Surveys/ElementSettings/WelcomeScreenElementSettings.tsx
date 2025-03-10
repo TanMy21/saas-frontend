@@ -141,6 +141,7 @@ const WelcomeScreenElementSettings = ({
                             },
                           }}
                           {...field}
+                          value={field.value}
                           onChange={(event) => {
                             const value = event.target.value;
                             field.onChange(value);
@@ -200,7 +201,7 @@ const WelcomeScreenElementSettings = ({
                             },
                           }}
                           {...field}
-                          value={formState.buttonText}
+                          value={field.value}
                           onChange={(event) => {
                             const value = event.target.value;
                             if (value.length <= 24) {

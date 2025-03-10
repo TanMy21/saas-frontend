@@ -24,11 +24,11 @@ import { ElementProps, ErrorData, OptionType } from "../../../utils/types";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-
 const InstructionsElement = ({
   qID,
   qNO,
   qText,
+  qDescription,
   qType,
   display,
 }: ElementProps) => {
@@ -38,9 +38,8 @@ const InstructionsElement = ({
 
   // const marginLeftListItem = display === "mobile" ? "10%" : "10%";
 
-  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
-    qID!
-  );
+  const { data: options = [] as OptionType[] } =
+    useGetOptionsOfQuestionQuery(qID);
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
@@ -134,6 +133,7 @@ const InstructionsElement = ({
           qNO={qNO}
           qText={qText}
           qType={qType}
+          qDescription={qDescription}
           display={display}
         />
       </Box>

@@ -11,6 +11,7 @@ import {
 } from "../../app/slices/userApiSlice";
 import { updateUserInfoSchema } from "../../utils/schema";
 import { ErrorData, UpdateUserInfoFormData } from "../../utils/types";
+import FormErrors from "../FormErrors";
 
 const UpdateInfo = () => {
   const { data: user, isLoading: isLoadingUser } = useGetMeQuery("User", {
@@ -81,20 +82,32 @@ const UpdateInfo = () => {
         </Typography>
         <Box>
           <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-            <TextField
-              label="First Name"
-              variant="outlined"
-              fullWidth
-              error={!!errors.firstname}
-              {...register("firstname")}
-            />
-            <TextField
-              label="Last Name"
-              variant="outlined"
-              fullWidth
-              error={!!errors.lastname}
-              {...register("lastname")}
-            />
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              {" "}
+              <TextField
+                label="First Name"
+                variant="outlined"
+                fullWidth
+                error={!!errors.firstname}
+                {...register("firstname")}
+              />
+              {errors.firstname && (
+                <FormErrors errors={errors.firstname.message} />
+              )}
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              {" "}
+              <TextField
+                label="Last Name"
+                variant="outlined"
+                fullWidth
+                error={!!errors.lastname}
+                {...register("lastname")}
+              />{" "}
+              {errors.lastname && (
+                <FormErrors errors={errors.lastname.message} />
+              )}
+            </Box>
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
             <TextField

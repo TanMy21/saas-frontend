@@ -6,7 +6,12 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { useUpdateElementTextMutation } from "../../../app/slices/elementApiSlice";
 import { ElementProps } from "../../../utils/types";
 
-const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
+const WelcomeScreenElement = ({
+  qID,
+  qText,
+  display,
+  qSettings,
+}: ElementProps) => {
   const [text, setText] = useState("Welcome to the Survey!");
   const [isEditing, setIsEditing] = useState(false);
 
@@ -23,6 +28,8 @@ const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
   const marginTopTextXl = display === "mobile" ? "52%" : "28%";
   const marginTopTextLg = display === "mobile" ? "64%" : "28%";
   const fontSizeXL = display === "mobile" ? "1.6rem" : "2.8rem";
+
+  const { buttonText } = qSettings || { buttonText: "Let's Start" };
 
   const handleBlur = () => {
     updateElementText({ questionID: qID, text });
@@ -129,7 +136,7 @@ const WelcomeScreenElement = ({ qID, qText, display }: ElementProps) => {
           size="large"
           endIcon={<FaArrowRightLong fontSize={"24px"} />}
         >
-          Let's Start &nbsp;
+          {buttonText} &nbsp;
         </Button>
       </Box>
     </Box>

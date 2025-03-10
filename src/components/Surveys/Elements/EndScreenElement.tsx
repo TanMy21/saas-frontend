@@ -46,6 +46,7 @@ const EndScreenElement = ({ qID, qText, display }: ElementProps) => {
         width={"100%"}
         sx={{
           marginTop: marginTopText,
+          border: "2px solid red",
         }}
       >
         <Box
@@ -53,9 +54,10 @@ const EndScreenElement = ({ qID, qText, display }: ElementProps) => {
           flexDirection={"column"}
           justifyContent={"center"}
           alignItems={"center"}
-          width={"72%"}
+          width={"80%"}
           margin={"auto"}
           onDoubleClick={handleDoubleClick}
+          sx={{ border: "2px solid green" }}
         >
           {isEditing ? (
             <TextField
@@ -71,7 +73,6 @@ const EndScreenElement = ({ qID, qText, display }: ElementProps) => {
                 backgroundColor: "transparent",
                 fontStyle: "italic",
                 fontSize: "3.75rem",
-
                 width: "100%",
                 "& .MuiInputBase-input": {
                   fontSize: "2rem",
