@@ -211,9 +211,9 @@ export const endScreenContactSettingsSchema = z.object({
 
 export const updateUserInfoSchema = z.object({
   email: z.string().email(),
-  firstname: z.string().min(1, "First name must be at least 1 character long"),
+  firstname: z.string().min(2, "First name must be at least 2 character long"),
   lastname: z
     .string()
-    .min(1, "Last name must be at least 1 character long")
+    .min(2, "Last name must be at least 2 character long")
     .optional(),
 });

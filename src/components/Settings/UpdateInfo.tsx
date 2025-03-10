@@ -85,12 +85,14 @@ const UpdateInfo = () => {
               label="First Name"
               variant="outlined"
               fullWidth
+              error={!!errors.firstname}
               {...register("firstname")}
             />
             <TextField
               label="Last Name"
               variant="outlined"
               fullWidth
+              error={!!errors.lastname}
               {...register("lastname")}
             />
           </Box>
