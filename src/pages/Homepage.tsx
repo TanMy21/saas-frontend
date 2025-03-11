@@ -41,7 +41,7 @@ const Homepage = () => {
               width: "12rem",
               height: "12rem",
               opacity: 0.1,
-              animation: "pulse 1.5s infinite",
+              animation: "pulse 4s infinite",
               color: "#4f46e5",
             }}
           />
@@ -55,10 +55,10 @@ const Homepage = () => {
               position: "absolute",
               top: "10rem",
               right: "10rem",
-              width: "4rem",
-              height: "4rem",
+              width: "8rem",
+              height: "8rem",
               opacity: 0.1,
-              animation: "pulse 1.5s infinite",
+              animation: "pulse 3s infinite",
               animationDelay: "0.5s",
               color: "#9333ea",
             }}
@@ -73,10 +73,10 @@ const Homepage = () => {
               position: "absolute",
               bottom: "5rem",
               left: "25%",
-              width: "5rem",
-              height: "5rem",
+              width: "6rem",
+              height: "6rem",
               opacity: 0.1,
-              animation: "pulse 1.5s infinite",
+              animation: "pulse 2s infinite",
               animationDelay: "1s",
               color: "#818cf8",
             }}
@@ -94,7 +94,7 @@ const Homepage = () => {
               width: "3rem",
               height: "3rem",
               opacity: 0.1,
-              animation: "pulse 1.5s infinite",
+              animation: "pulse 1s infinite",
               animationDelay: "1.5s",
               color: "#c084fc",
             }}
@@ -152,6 +152,7 @@ const Homepage = () => {
                   maxWidth: "100%",
                   maxHeight: "100%",
                   objectFit: "contain",
+                  animation: "logoPulse 3s infinite",
                 }}
               />
             </Box>

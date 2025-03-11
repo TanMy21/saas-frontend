@@ -6,7 +6,7 @@ import { useUpdateElementTextMutation } from "../../../app/slices/elementApiSlic
 import { ElementProps } from "../../../utils/types";
 
 const EndScreenElement = ({ qID, qText, display }: ElementProps) => {
-  const [text, setText] = useState("Say Bye!");
+  const [text, setText] = useState(qText);
   const [isEditing, setIsEditing] = useState(false);
 
   const [updateElementText] = useUpdateElementTextMutation();
@@ -46,7 +46,6 @@ const EndScreenElement = ({ qID, qText, display }: ElementProps) => {
         width={"100%"}
         sx={{
           marginTop: marginTopText,
-          border: "2px solid red",
         }}
       >
         <Box
@@ -57,13 +56,13 @@ const EndScreenElement = ({ qID, qText, display }: ElementProps) => {
           width={"80%"}
           margin={"auto"}
           onDoubleClick={handleDoubleClick}
-          sx={{ border: "2px solid green" }}
         >
           {isEditing ? (
             <TextField
               id="outlined-basic"
               type="text"
-              value={qText ? qText : text}
+              value={text}
+              autoFocus
               onChange={handleChange}
               onBlur={handleBlur}
               sx={{
@@ -107,7 +106,7 @@ const EndScreenElement = ({ qID, qText, display }: ElementProps) => {
                 wordSpacing: "1px",
               }}
             >
-              {qText ? qText : text}
+              {text}
             </Typography>
           )}
         </Box>
