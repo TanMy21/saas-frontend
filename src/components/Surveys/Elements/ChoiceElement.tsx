@@ -27,6 +27,7 @@ const ChoiceElement = ({
   qID,
   qNO,
   qText,
+  qType,
   qDescription,
   display,
 }: ElementProps) => {
@@ -35,9 +36,8 @@ const ChoiceElement = ({
   const [editText, setEditText] = useState<string>("");
   const [selectedOptionID, setSelectedOptionID] = useState<string | null>(null);
 
-  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
-    qID!
-  );
+  const { data: options = [] as OptionType[] } =
+    useGetOptionsOfQuestionQuery(qID);
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
@@ -133,6 +133,7 @@ const ChoiceElement = ({
           qID={qID}
           qNO={qNO}
           qText={qText}
+          qType={qType}
           qDescription={qDescription}
           display={display}
         />
@@ -143,7 +144,7 @@ const ChoiceElement = ({
         mt={4}
         sx={{
           width: "100%",
-          maxWidth: "240px",
+          maxWidth: "300px",
           padding: "1%",
         }}
       >
@@ -156,7 +157,6 @@ const ChoiceElement = ({
               sx={{
                 margin: "auto",
                 width: "100%",
-                // border: "2px solid blue",
                 "--List-gap": "0.5rem",
                 "--ListItem-radius": "4px",
                 "--ListItemDecorator-size": "32px",

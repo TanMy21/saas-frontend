@@ -135,9 +135,8 @@ const CheckBoxElement = ({
         mt={2}
         sx={{
           width: "100%",
-          maxWidth: "240px",
+          maxWidth: "300px",
           padding: "2%",
-          border: "2px solid red",
           "@media (max-width: 600px)": {
             width: "95%",
             padding: "0",

@@ -45,6 +45,7 @@ const ChoiceElementSettings = ({
   const onSubmit = async (data: QuestionSetting) => {
     try {
       const { required, questionText, description } = data;
+
       const settings = {};
       await updateElementSettings({
         questionID: qID,
@@ -180,7 +181,6 @@ const ChoiceElementSettings = ({
                         }
                         onChange={(event) => {
                           const value = event.target.value;
-
                           field.onChange(value);
                           setFormState((prev) => ({
                             ...prev,

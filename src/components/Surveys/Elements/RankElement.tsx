@@ -22,6 +22,7 @@ const RankElement = ({
   qID,
   qNO,
   qText,
+  qType,
   qDescription,
   display,
 }: ElementProps) => {
@@ -29,11 +30,10 @@ const RankElement = ({
   const [editText, setEditText] = useState<string>("");
   const [rankNumber, setRankNumber] = useState<number[]>([]);
 
-  const iconRight = display === "mobile" ? "-12%" : "-8%";
+  const iconRight = display === "mobile" ? "-8%" : "-6%";
 
-  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
-    qID!
-  );
+  const { data: options = [] as OptionType[] } =
+    useGetOptionsOfQuestionQuery(qID);
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
 
@@ -143,6 +143,7 @@ const RankElement = ({
           qID={qID}
           qNO={qNO}
           qText={qText}
+          qType={qType}
           qDescription={qDescription}
           display={display}
         />
@@ -206,7 +207,7 @@ const RankElement = ({
                         sx={{
                           display: "flex",
                           marginBottom: "2%",
-                          width: "clamp(100px, 80%, 200px)",
+                          width: "clamp(200px, 80%, 300px)",
                           height: "100%",
                           border: "2px solid #4880DE",
                           borderRadius: "4px",
