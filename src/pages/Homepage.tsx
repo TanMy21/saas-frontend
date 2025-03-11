@@ -1,4 +1,6 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import LoginIcon from "@mui/icons-material/Login";
+import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const Homepage = () => {
@@ -9,16 +11,206 @@ const Homepage = () => {
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          overflow: "hidden",
+          backgroundColor: "#FFFFFF",
+          // border: "2px solid green",
+        }}
       >
-        <Box sx={{ marginTop: "16%" }}>
-          <Typography variant="h1">Landing Page</Typography>
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            overflow: "hidden",
+          }}
+        >
+          {/* Logo 1 */}
+          <Box
+            component="img"
+            src="/logo_hp.png"
+            alt="Logo"
+            sx={{
+              position: "absolute",
+              top: "5rem",
+              left: "5rem",
+              width: "12rem",
+              height: "12rem",
+              opacity: 0.1,
+              animation: "pulse 1.5s infinite",
+              color: "#4f46e5",
+            }}
+          />
+
+          {/* Logo 2 */}
+          <Box
+            component="img"
+            src="/logo_hp.png"
+            alt="Logo"
+            sx={{
+              position: "absolute",
+              top: "10rem",
+              right: "10rem",
+              width: "4rem",
+              height: "4rem",
+              opacity: 0.1,
+              animation: "pulse 1.5s infinite",
+              animationDelay: "0.5s",
+              color: "#9333ea",
+            }}
+          />
+
+          {/* Logo 3 */}
+          <Box
+            component="img"
+            src="/logo_hp.png"
+            alt="Logo"
+            sx={{
+              position: "absolute",
+              bottom: "5rem",
+              left: "25%",
+              width: "5rem",
+              height: "5rem",
+              opacity: 0.1,
+              animation: "pulse 1.5s infinite",
+              animationDelay: "1s",
+              color: "#818cf8",
+            }}
+          />
+
+          {/* Logo 4 */}
+          <Box
+            component="img"
+            src="/logo_hp.png"
+            alt="Logo"
+            sx={{
+              position: "absolute",
+              bottom: "10rem",
+              right: "33.333%",
+              width: "3rem",
+              height: "3rem",
+              opacity: 0.1,
+              animation: "pulse 1.5s infinite",
+              animationDelay: "1.5s",
+              color: "#c084fc",
+            }}
+          />
         </Box>
-        <Box sx={{ m: 4 }}>
-          <Stack
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            spacing={2}
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "60%",
+            height: "80%",
+            margin: "auto",
+            // border: "1px solid none",
+          }}
+        >
+          <Box
+            sx={{
+              width: "92%",
+              height: "20%",
+              margin: "auto auto 0 auto",
+              top: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              // border: "2px solid blue",
+            }}
+          >
+            <Box
+              sx={{
+                width: "15%",
+                height: "90%",
+                backgroundColor: "white",
+                p: 1,
+                borderRadius: "24px",
+                boxShadow:
+                  "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                transition: "all 0.3s ease-in-out",
+                // border: "2px solid red",
+                boxSizing: "border-box",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                "&:hover": {
+                  boxShadow:
+                    "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1)",
+                  transform: "translateY(-4px)",
+                },
+              }}
+            >
+              <img
+                src="/favicon.png"
+                alt="Your Image"
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  objectFit: "contain",
+                }}
+              />
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "2%",
+              width: "92%",
+              height: "30%",
+              margin: "0 auto 0 auto",
+              // border: "2px solid orange",
+            }}
+          >
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: { xs: "3.75rem", md: "4.5rem" },
+                fontWeight: "bold",
+                background:
+                  "linear-gradient(to right, #4f46e5, #9333ea, #4f46e5)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundSize: "200% 200%",
+                animation: "gradientAnimation 3s ease infinite",
+                letterSpacing: "-0.015em",
+                display: "inline-block",
+              }}
+            >
+              Welcome to Feedflo
+            </Typography>{" "}
+            <Typography
+              sx={{
+                fontSize: { xs: "1.20rem", md: "1.5rem" },
+                color: "#404968",
+                maxWidth: "42rem",
+                marginX: "auto",
+                lineHeight: "1.625",
+                textAlign: "center",
+              }}
+            >
+              Your gateway to valuable insights. Join us and be part of
+              something extraordinary.
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "start",
+              gap: "4%",
+              width: "92%",
+              height: "20%",
+              margin: "auto",
+              // border: "1px solid yellow",
+            }}
           >
             <Link
               to="/register"
@@ -28,21 +220,36 @@ const Homepage = () => {
               }}
             >
               <Button
+                variant="contained"
                 sx={{
-                  backgroundColor: "#4F46E5",
+                  px: 4,
+                  py: 2,
+                  background:
+                    "linear-gradient(to right, #4f46e5, #9333ea, #4f46e5)",
+                  color: "white",
+                  borderRadius: "12px",
+                  fontWeight: "600",
+                  transition: "all 0.3s ease-in-out",
+                  boxShadow:
+                    "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                  width: "260px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 2,
+                  backgroundSize: "200% 200%",
                   textTransform: "capitalize",
-                  borderRadius: "8px",
-                  fontWeight: 600,
+                  animation: "gradientAnimation 3s ease infinite",
                   "&:hover": {
-                    backgroundColor: "#4F46E5",
+                    boxShadow:
+                      "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1)",
+                    transform: "scale(1.05)",
                   },
                 }}
-                variant="contained"
-                size="large"
               >
-                Sign up
+                Get started <ArrowForwardIcon />
               </Button>
-            </Link>
+            </Link>{" "}
             <Link
               to="/login"
               style={{
@@ -51,22 +258,50 @@ const Homepage = () => {
               }}
             >
               <Button
+                variant="contained"
                 sx={{
-                  backgroundColor: "#494454",
+                  px: 4,
+                  py: 2,
+                  backgroundColor: "white",
+                  color: "#182331",
+                  borderRadius: "12px",
+                  fontWeight: "600",
+                  transition: "all 0.3s ease-in-out",
+                  gap: 2,
+                  boxShadow:
+                    "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)",
+                  border: "1px solid #e5e7eb",
+                  width: "260px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   textTransform: "capitalize",
-                  borderRadius: "8px",
-                  fontWeight: 600,
                   "&:hover": {
-                    backgroundColor: "#494454",
+                    backgroundColor: "#f9fafb",
+                    boxShadow:
+                      "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                    transform: "scale(1.05)",
                   },
                 }}
-                variant="contained"
-                size="large"
               >
-                Sign in
+                Sign in <LoginIcon />
               </Button>
             </Link>
-          </Stack>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "5%",
+            // border: "4px solid black",
+          }}
+        >
+          <Typography sx={{ color: "#969EAE" }}>
+            &copy; 2025 Feedflo. All rights reserved.
+          </Typography>
         </Box>
       </Box>
     </>
