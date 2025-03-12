@@ -157,11 +157,6 @@ const MediaElementSettings = ({
                           },
                         }}
                         {...field}
-                        value={
-                          field.value === ""
-                            ? "Description (optional)"
-                            : field.value
-                        }
                         onChange={(event) => {
                           const value = event.target.value;
                           field.onChange(value);

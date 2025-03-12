@@ -16,10 +16,6 @@ import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApi
 import { emailContactSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
-
-
-
-
 const EmailContactElementSettings = ({
   qID,
   qText,
@@ -36,8 +32,8 @@ const EmailContactElementSettings = ({
   });
 
   const [formState, setFormState] = useState<QuestionSetting>({
-    questionText: qText,
     required: qRequired,
+    questionText: qText,
   });
 
   const previousFormState = useRef<QuestionSetting>(formState);

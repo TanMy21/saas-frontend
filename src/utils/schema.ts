@@ -163,10 +163,6 @@ export const instructionsSettingsSchema = z.object({
   instructionsTitle: z
     .string()
     .min(1, "Title must be at least 1 character long"),
-  buttonText: z
-    .string()
-    .min(1, "Button text must be at least 1 character long")
-    .max(24, "Button text must be at most 24 characters long"),
 });
 
 export const choiceSettingsSchema = z.object({
@@ -200,7 +196,6 @@ export const emailContactSettingsSchema = z.object({
     .string()
     .min(1, "Question text must be at least 1 character long"),
   required: z.boolean(),
-  description: z.string(),
 });
 
 export const endScreenContactSettingsSchema = z.object({

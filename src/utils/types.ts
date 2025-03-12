@@ -78,6 +78,7 @@ export interface EdgeFormData {
 export interface Element {
   questionID: string;
   relatedSurveyId: string;
+  description: string;
   creatorId: string;
   text: string;
   type: string;

@@ -11,32 +11,32 @@ import {
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 
-import { useUpdateElementSettingsMutation } from "../../../app/slices/elementApiSlice";
+import { useUpdateElementTextMutation } from "../../../app/slices/elementApiSlice";
 import { instructionsSettingsSchema } from "../../../utils/schema";
 import { ElementSettingsProps, QuestionSetting } from "../../../utils/types";
 
 const InstructionsElementSettings = ({ qID, qText }: ElementSettingsProps) => {
-  const [updateElementSettings] = useUpdateElementSettingsMutation();
+  const [updateElementText] = useUpdateElementTextMutation();
 
-  const {
-    handleSubmit,
-    control,
-    setValue,
-    // formState: { errors },
-  } = useForm<QuestionSetting>({
+  const { handleSubmit, control } = useForm<QuestionSetting>({
     resolver: zodResolver(instructionsSettingsSchema),
     defaultValues: {
       instructionsTitle: qText,
     },
   });
 
+  const [formState, setFormState] = useState<QuestionSetting>({
+    instructionsTitle: qText,
+  });
+
+  const previousFormState = useRef<QuestionSetting>(formState);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
       const { instructionsTitle } = data;
 
-      await updateElementSettings({
+      await updateElementText({
         questionID: qID,
         text: instructionsTitle,
       });
@@ -45,8 +45,11 @@ const InstructionsElementSettings = ({ qID, qText }: ElementSettingsProps) => {
     }
   };
 
-  const handleInputChange = (field: any, value: string) => {
-    setValue(field, value, { shouldValidate: true, shouldDirty: true });
+  useEffect(() => {
+    const hasChanged =
+      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+
+    if (!hasChanged) return;
 
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
@@ -55,7 +58,13 @@ const InstructionsElementSettings = ({ qID, qText }: ElementSettingsProps) => {
     debounceTimeout.current = setTimeout(() => {
       handleSubmit(onSubmit)();
     }, 1000);
-  };
+
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, [formState, handleSubmit]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -78,9 +87,6 @@ const InstructionsElementSettings = ({ qID, qText }: ElementSettingsProps) => {
               minHeight: "200px",
             }}
           >
-            <Box mt={1} sx={{ fontSize: "16px", fontWeight: 700 }}>
-              Settings
-            </Box>
             <Box
               sx={{
                 display: "flex",
@@ -132,13 +138,25 @@ const InstructionsElementSettings = ({ qID, qText }: ElementSettingsProps) => {
                                 height: "36px",
                                 fontSize: "16px",
                                 backgroundColor: "#FFFFFF",
+                                minHeight: "40px",
+                                boxSizing: "border-box",
+                              },
+                              "& .MuiInputBase-input": {
+                                lineHeight: "1.5",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
                               },
                             }}
                             {...field}
-                            value={field.value}
-                            onChange={(event) =>
-                              handleInputChange(field.name, event.target.value)
-                            }
+                            onChange={(event) => {
+                              const value = event.target.value;
+                              field.onChange(value);
+                              setFormState((prev) => ({
+                                ...prev,
+                                instructionsTitle: value,
+                              }));
+                            }}
                           />
                         )}
                       />

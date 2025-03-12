@@ -57,6 +57,30 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { description },
       }),
+      async onQueryStarted(
+        { questionID, description },
+        { dispatch, queryFulfilled }
+      ) {
+        const patchResult = dispatch(
+          elementApiSlice.util.updateQueryData(
+            "getElementByID",
+            questionID,
+            (draft) => {
+              const element = draft.find(
+                (e: Element) => e.questionID === questionID
+              );
+              if (element) {
+                element.description = description;
+              }
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags: ["Elements"],
     }),
     updateElementSettings: builder.mutation({
