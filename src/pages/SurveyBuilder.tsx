@@ -15,6 +15,7 @@ import SurveyWelcomeElement from "../components/Surveys/Elements/SurveyWelcomeEl
 import ElementSettingsContainer from "../components/Surveys/ElementSettings/ElementSettingsContainer";
 import SurveyBuilderCanvas from "../components/Surveys/SurveyBuilderCanvas";
 import SurveyBuilderCanvasMobile from "../components/Surveys/SurveyBuilderCanvasMobile";
+import SurveyBuilderDock from "../components/Surveys/SurveyBuilderDock";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderIsland from "../components/Surveys/SurveyBuilderIsland";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
@@ -230,9 +231,11 @@ const SurveyBuilder = () => {
                 overflowY: "auto",
               }}
             >
-              <SurveyBuilderIsland setDisplay={setDisplay} />
+              <SurveyBuilderDock setDisplay={setDisplay} />
+              {/* <SurveyBuilderIsland setDisplay={setDisplay} /> */}
               <Box
                 sx={{
+                  marginTop: "2%",
                   marginLeft: "1%",
                   maxWidth: "98%",
                   minHeight: "84%",

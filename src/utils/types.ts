@@ -4,7 +4,6 @@ import type { MRT_ColumnDef } from "material-react-table";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { IconType } from "react-icons/lib";
 
-
 export type AuthInitialState = {
   token: string | null;
 };
@@ -45,6 +44,15 @@ export interface DownloadResponsesModalProps {
 
 export interface DashBoardHeaderProps {
   setStepIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export interface DockItemProps {
+  icon: JSX.Element;
+  action: () => void;
+  label: string;
+  isHovered: boolean;
+  setHovered: React.Dispatch<React.SetStateAction<string | null>>;
+  id: string;
 }
 
 export interface Condition {
