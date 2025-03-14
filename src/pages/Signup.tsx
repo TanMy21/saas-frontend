@@ -1,17 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import BusinessIcon from "@mui/icons-material/Business";
+import LockIcon from "@mui/icons-material/Lock";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   Box,
   Button,
   Container,
-  Grid,
+  Divider,
+  IconButton,
+  InputAdornment,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { FaSignInAlt } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -24,12 +30,14 @@ import { ErrorData, RegisterFormData } from "../utils/types";
 const Signup = () => {
   const [addNewUser, { isLoading, isSuccess, isError, error }] =
     useAddNewUserMutation();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Registration Successful !", {
+      toast.success("Registration Successful!, check email", {
         position: "top-right",
         autoClose: 3000,
         closeOnClick: true,
@@ -83,156 +91,298 @@ const Signup = () => {
       <Container component="main" sx={{ width: "100%", minHeight: "900px" }}>
         <Box
           sx={{
-            marginTop: 12,
+            minHeight: "100vh",
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
+            justifyContent: "center",
+            p: 3,
+            // backgroundColor: "#F8F9FF",
           }}
         >
-          <Paper
-            elevation={2}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "50%",
-              p: 4,
-              borderRadius: "16px",
-            }}
-          >
-            {/* <Link to="/" style={{ textDecoration: "none" }}>
-              <Typography variant="h1" component="h2">
-                Logo
+          <Box sx={{ width: "100%", maxWidth: 480, mt: "-8%" }}>
+            <Box sx={{ textAlign: "center", mb: 2 }}>
+              <Link to="/" style={{ textDecoration: "none" }}>
+                <img
+                  src="/favicon.png"
+                  alt="Your Image"
+                  style={{
+                    maxWidth: "20%",
+                    maxHeight: "20%",
+                    objectFit: "contain",
+                  }}
+                />
+              </Link>
+              <Typography
+                variant="body1"
+                sx={{ fontSize: "20px", color: "gray", mt: "-4%" }}
+              >
+                Create your account
               </Typography>
-            </Link> */}
-
-            <Typography
-              component="h1"
-              variant="h4"
-              sx={{ fontWeight: 800, color: "#101828" }}
+            </Box>
+            <Paper
+              sx={{
+                p: 4,
+                borderRadius: "20px",
+                boxShadow: "0px 4px 20px rgba(0,0,0,0.05)",
+              }}
             >
-              Sign up
-            </Typography>
-            <form onSubmit={handleSubmit(submitRegisterData)}>
-              <Box sx={{ mt: 3 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
+              <form onSubmit={handleSubmit(submitRegisterData)}>
+                <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: "2%" }}
+                  >
                     <TextField
-                      autoComplete="given-name"
                       required
                       fullWidth
                       id="firstName"
                       label="First Name"
+                      variant="filled"
+                      InputLabelProps={{ style: { color: "gray" } }}
                       autoFocus
                       {...register("firstname")}
+                      sx={{
+                        borderRadius: "12px",
+                        backgroundColor: "#E9EDF6",
+                        "& .MuiFilledInput-root": {
+                          borderRadius: "12px",
+                          backgroundColor: "#E9EDF6",
+                          borderBottom: "none !important",
+                          "&:before, &:after": {
+                            display: "none",
+                            backgroundColor: "#E9EDF6",
+                          },
+                        },
+                      }}
                     />
                     {errors.firstname && (
                       <FormErrors errors={errors.firstname.message} />
                     )}
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
+                  </Box>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: "2%" }}
+                  >
                     <TextField
                       required
                       fullWidth
                       id="lastName"
                       label="Last Name"
-                      autoComplete="family-name"
+                      InputLabelProps={{ style: { color: "gray" } }}
+                      variant="filled"
                       {...register("lastname")}
-                    />
+                      sx={{
+                        borderRadius: "12px",
+                        backgroundColor: "#E9EDF6",
+                        "& .MuiFilledInput-root": {
+                          borderRadius: "12px",
+                          backgroundColor: "#E9EDF6",
+                          borderBottom: "none !important",
+                          "&:before, &:after": {
+                            display: "none",
+                            backgroundColor: "#E9EDF6",
+                          },
+                        },
+                      }}
+                    />{" "}
                     {errors.lastname && (
                       <FormErrors errors={errors.lastname.message} />
                     )}
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="email"
-                      label="Email Address"
-                      autoComplete="email"
-                      {...register("email")}
-                    />
-                    {errors.email && (
-                      <FormErrors errors={errors.email.message} />
-                    )}
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      label="Password"
-                      type="password"
-                      id="password"
-                      autoComplete="new-password"
-                      {...register("password")}
-                    />
-                    {errors.password && (
-                      <FormErrors errors={errors.password.message} />
-                    )}
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      label="Confirm password"
-                      type="password"
-                      id="confirmPassword"
-                      autoComplete="confirm-password"
-                      {...register("confirmPassword")}
-                    />
-                    {errors.confirmPassword && (
-                      <FormErrors errors={errors.confirmPassword.message} />
-                    )}
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      label="Organization"
-                      type="organization"
-                      id="organization"
-                      autoComplete="organization"
-                      {...register("organization")}
-                    />
-                    {errors.organization && (
-                      <FormErrors errors={errors.organization.message} />
-                    )}
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Box>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  InputLabelProps={{ style: { color: "gray" } }}
+                  variant="filled"
+                  {...register("email")}
+                  sx={{
+                    mb: 2,
+                    borderRadius: "12px",
+                    backgroundColor: "#E9EDF6",
+                    "& .MuiFilledInput-root": {
+                      borderRadius: "12px",
+                      backgroundColor: "#E9EDF6",
+                      borderBottom: "none !important",
+                      "&:before, &:after": {
+                        display: "none",
+                        backgroundColor: "#E9EDF6",
+                      },
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <MailOutlineIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                {errors.email && <FormErrors errors={errors.email.message} />}
+                <TextField
+                  required
+                  fullWidth
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  variant="filled"
+                  InputLabelProps={{ style: { color: "gray" } }}
+                  autoComplete="new-password"
+                  {...register("password")}
+                  sx={{
+                    mb: 2,
+                    borderRadius: "12px",
+                    backgroundColor: "#E9EDF6",
+                    "& .MuiFilledInput-root": {
+                      borderRadius: "12px",
+                      backgroundColor: "#E9EDF6",
+                      borderBottom: "none !important",
+                      "&:before, &:after": {
+                        display: "none",
+                        backgroundColor: "#E9EDF6",
+                      },
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <VisibilityOffIcon />
+                          ) : (
+                            <VisibilityIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />{" "}
+                {errors.password && (
+                  <FormErrors errors={errors.password.message} />
+                )}
+                <TextField
+                  required
+                  fullWidth
+                  label="Confirm password"
+                  InputLabelProps={{ style: { color: "gray" } }}
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  variant="filled"
+                  autoComplete="confirm-password"
+                  {...register("confirmPassword")}
+                  sx={{
+                    mb: 2,
+                    borderRadius: "12px",
+                    backgroundColor: "#E9EDF6",
+                    "& .MuiFilledInput-root": {
+                      borderRadius: "12px",
+                      backgroundColor: "#E9EDF6",
+                      borderBottom: "none !important",
+                      "&:before, &:after": {
+                        display: "none",
+                        backgroundColor: "#E9EDF6",
+                      },
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                        >
+                          {showConfirmPassword ? (
+                            <VisibilityOffIcon />
+                          ) : (
+                            <VisibilityIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />{" "}
+                {errors.confirmPassword && (
+                  <FormErrors errors={errors.confirmPassword.message} />
+                )}
+                <TextField
+                  required
+                  fullWidth
+                  label="Organization"
+                  type="organization"
+                  id="organization"
+                  variant="filled"
+                  InputLabelProps={{ style: { color: "gray" } }}
+                  autoComplete="organization"
+                  {...register("organization")}
+                  sx={{
+                    mb: 2,
+                    borderRadius: "12px",
+                    backgroundColor: "#E9EDF6",
+                    "& .MuiFilledInput-root": {
+                      borderRadius: "12px",
+                      backgroundColor: "#E9EDF6",
+                      borderBottom: "none !important",
+                      "&:before, &:after": {
+                        display: "none",
+                        backgroundColor: "#E9EDF6",
+                      },
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <BusinessIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />{" "}
+                {errors.organization && (
+                  <FormErrors errors={errors.organization.message} />
+                )}
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
                   disabled={isLoading}
                   sx={{
-                    mt: 2,
-                    mb: 2,
-                    fontWeight: 700,
-                    backgroundColor: "#4C6FFF",
+                    py: 1.5,
+                    borderRadius: "12px",
+                    fontWeight: "medium",
+                    background: "linear-gradient(to right, #7C3AED, #EC4899)",
+                    color: "white",
                     textTransform: "capitalize",
-                    borderRadius: "4px",
-                    "&:hover": {
-                      backgroundColor: "#4C6FFF",
-                    },
+                    "&:hover": { opacity: 0.9 },
                   }}
                 >
-                  {isLoading ? "Registering..." : "Sign Up"}
+                  {isLoading ? "Creating Account..." : "Create Account →"}
                 </Button>
+                <Divider sx={{ my: 3, color: "#747B88" }}>
+                  or continue with
+                </Divider>
                 <Button
                   onClick={handleGoogleAuth}
                   fullWidth
                   variant="contained"
                   sx={{
-                    mt: 1,
-                    mb: 2,
-                    fontWeight: 700,
-                    backgroundColor: "#E0EFFE",
-                    textTransform: "capitalize",
-                    color: "#007DFA",
-                    borderRadius: "4px",
-                    "&:hover": {
-                      backgroundColor: "#E0EFFE",
-                    },
+                    py: 1.5,
+                    borderRadius: "12px",
+                    color: "#495362",
+                    borderColor: "#F2F3F5",
+                    backgroundColor: "#FFFFFF",
+                    "&:hover": { backgroundColor: "#FFFFFF" },
                   }}
                 >
                   <Box
@@ -241,41 +391,33 @@ const Signup = () => {
                       flexDirection: "row",
                       justifyContent: "center",
                       alignItems: "center",
+                      textTransform: "capitalize",
                       gap: 1,
                     }}
                   >
-                    <Box sx={{ marginTop: "2%" }}>
-                      <FcGoogle size={24} />
-                    </Box>
-                    <Box sx={{ fontWeight: 700, fontSize: "16px" }}>
-                      Continue with Google
-                    </Box>
+                    <FcGoogle size={24} />
+                    Continue with Google
                   </Box>
                 </Button>
-                <Grid container justifyContent="flex-end">
-                  <Grid item>
-                    <Link to="/login" style={{ textDecoration: "none" }}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: 1,
-                          fontWeight: 600,
-                          color: "#494454",
-                        }}
-                      >
-                        <Box>Already have an account?&nbsp; Sign in</Box>
-                        <Box sx={{ fontSize: "24px", marginTop: "2%" }}>
-                          <FaSignInAlt />
-                        </Box>
-                      </Box>
-                    </Link>
-                  </Grid>
-                </Grid>
-              </Box>
-            </form>
-          </Paper>
+                <Typography
+                  variant="body2"
+                  sx={{ textAlign: "center", mt: 2, color: "gray" }}
+                >
+                  Already have an account? &nbsp;
+                  <Link
+                    to="/login"
+                    style={{
+                      textDecoration: "none",
+                      color: "#5047E5",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Sign in
+                  </Link>
+                </Typography>
+              </form>
+            </Paper>
+          </Box>
         </Box>
       </Container>
     </>

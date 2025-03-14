@@ -5,11 +5,7 @@ import { errorsProp } from "../utils/types";
 const FormErrors = ({ errors }: errorsProp) => {
   return (
     <span>
-      <Typography
-        variant="h6"
-        sx={{ fontSize: 12, color: "red", marginTop: "8px" }}
-        gutterBottom
-      >
+      <Typography variant="h6" sx={{ fontSize: 12, color: "red" }} gutterBottom>
         {errors}
       </Typography>
     </span>

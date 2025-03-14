@@ -1,12 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import LockIcon from "@mui/icons-material/Lock";
+import LoginIcon from "@mui/icons-material/Login";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   Box,
   Button,
   CircularProgress,
   Container,
-  Grid,
+  Divider,
+  IconButton,
+  InputAdornment,
   Paper,
   TextField,
   Typography,
@@ -33,7 +40,7 @@ const Signin = () => {
   const dispatch = useDispatch();
   //eslint-disable-next-line
   const [persist, setPersist] = usePersist();
-
+  const [showPassword, setShowPassword] = useState(false);
   // const [googleAuthClicked, setGoogleAuthClicked] = useState(false);
 
   const [login, { isLoading, isError, error }] = useLoginMutation();
@@ -149,41 +156,71 @@ const Signin = () => {
 
   if (isLoading) return <CircularProgress />;
 
+  document.body.style.overflowY = "hidden";
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xl" sx={{ overflowY: "hidden" }}>
       <Box
         sx={{
-          marginTop: "48%",
+          minHeight: "100vh",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
+          justifyContent: "center",
+          p: 3,
+          backgroundColor: "#F8F9FF",
         }}
       >
-        <Paper
-          elevation={8}
+        <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "80%",
-            p: 4,
-            borderRadius: "16px",
+            width: "100%",
+            maxWidth: 480,
+            marginTop: "-4%",
           }}
         >
-          {/* <Link to="/" style={{ textDecoration: "none" }}>
-            <Typography variant="h1" component="h2">
-              Logo
-            </Typography>
-          </Link> */}
-          <Typography
-            component="h1"
-            variant="h5"
-            sx={{ fontWeight: 800, color: "#101828" }}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              textAlign: "center",
+              mb: 3,
+            }}
           >
-            Sign in
-          </Typography>
-          <form onSubmit={handleSubmit(submitLoginData)}>
-            <Box sx={{ mt: 1 }}>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <img
+                src="/favicon.png"
+                alt="Your Image"
+                style={{
+                  maxWidth: "25%",
+                  maxHeight: "25%",
+                  objectFit: "contain",
+                }}
+              />
+            </Link>
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: "bold",
+                background: "linear-gradient(to right, #7C3AED, #EC4899)",
+                WebkitBackgroundClip: "text",
+                color: "transparent",
+                display: "inline-block",
+              }}
+            >
+              Welcome back
+            </Typography>
+            <Typography variant="body1" sx={{ color: "gray" }}>
+              Sign in to your account
+            </Typography>
+          </Box>
+
+          <Paper
+            sx={{
+              p: 4,
+              borderRadius: "20px",
+              boxShadow: "0px 4px 20px rgba(0,0,0,0.05)",
+            }}
+          >
+            <form onSubmit={handleSubmit(submitLoginData)}>
               <TextField
                 margin="normal"
                 required
@@ -193,6 +230,27 @@ const Signin = () => {
                 autoComplete="email"
                 autoFocus
                 {...register("email")}
+                variant="filled"
+                sx={{
+                  mb: 2,
+                  borderRadius: "12px",
+                  backgroundColor: "#F8F9FF",
+                  "& .MuiFilledInput-root": {
+                    borderRadius: "12px",
+                    backgroundColor: "#F8F9FF",
+                    borderBottom: "none !important",
+                    "&:before, &:after": {
+                      display: "none",
+                    },
+                  },
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MailOutlineIcon />
+                    </InputAdornment>
+                  ),
+                }}
               />
               {errors.email && <FormErrors errors={errors.email.message} />}
               <TextField
@@ -200,95 +258,125 @@ const Signin = () => {
                 required
                 fullWidth
                 label="Password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
-                autoComplete="current-password"
+                variant="filled"
                 {...register("password")}
+                sx={{
+                  mb: 2,
+                  borderRadius: "12px",
+                  backgroundColor: "#F8F9FF",
+                  "& .MuiFilledInput-root": {
+                    borderRadius: "12px",
+                    backgroundColor: "#F8F9FF",
+                    borderBottom: "none !important",
+                    "&:before, &:after": {
+                      display: "none",
+                    },
+                  },
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockIcon />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <VisibilityOffIcon />
+                        ) : (
+                          <VisibilityIcon />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
+
+              <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+                <Link
+                  to="/forgot"
+                  style={{
+                    color: "#6760E9",
+                    fontSize: "14px",
+                    textDecoration: "none",
+                  }}
+                >
+                  Forgot password?
+                </Link>
+              </Box>
 
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{
-                  mt: 2,
-                  mb: 2,
-                  fontWeight: 700,
-                  backgroundColor: "#4C6FFF",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 1,
+                  py: 1.5,
+                  borderRadius: "12px",
+                  fontWeight: "medium",
+                  background: "linear-gradient(to right, #7C3AED, #EC4899)",
+                  color: "white",
                   textTransform: "capitalize",
-                  borderRadius: "4px",
-                  "&:hover": {
-                    backgroundColor: "#4C6FFF",
-                  },
+                  "&:hover": { opacity: 0.9 },
                 }}
               >
-                Sign In
+                Sign in <LoginIcon />
               </Button>
+
+              <Divider sx={{ color: "#6B7280", my: 3 }}>
+                or continue with
+              </Divider>
+
               <Button
-                fullWidth
-                variant="contained"
                 onClick={handleGoogleAuth}
+                fullWidth
+                variant="outlined"
                 sx={{
-                  mt: 1,
-                  mb: 2,
-                  fontWeight: 700,
-                  backgroundColor: "#E3F3FB",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 1,
+                  py: 1.5,
+                  borderRadius: "12px",
+                  color: "gray.700",
+                  borderColor: "#F1F3F5",
                   textTransform: "capitalize",
-                  color: "#424242",
-                  borderRadius: "4px",
                   "&:hover": {
-                    backgroundColor: "#E3F3FB",
+                    borderColor: "#F1F3F5",
                   },
                 }}
               >
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 1,
+                <FcGoogle />
+                Continue with Google
+              </Button>
+
+              <Typography
+                variant="body2"
+                sx={{ textAlign: "center", mt: 2, color: "gray" }}
+              >
+                Don't have an account?{" "}
+                <Link
+                  to="/register"
+                  style={{
+                    color: "#7C3AED",
+                    fontWeight: "medium",
+                    textDecoration: "none",
                   }}
                 >
-                  <Box sx={{ marginTop: "4%" }}>
-                    <FcGoogle size={20} />
-                  </Box>
-                  <Box sx={{ fontWeight: 700, fontSize: "12px" }}>
-                    Log In with Google
-                  </Box>
-                </Box>
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link
-                    to="/forgot"
-                    style={{
-                      padding: 5,
-                      textDecoration: "none",
-                      fontWeight: 600,
-                      color: "#494454",
-                    }}
-                  >
-                    Forgot Password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link
-                    to="/register"
-                    style={{
-                      padding: 5,
-                      textDecoration: "none",
-                      fontWeight: 600,
-                      color: "#494454",
-                    }}
-                  >
-                    Register
-                  </Link>
-                </Grid>
-              </Grid>
-            </Box>
-          </form>
-        </Paper>
+                  Sign up
+                </Link>
+              </Typography>
+            </form>
+          </Paper>
+        </Box>
       </Box>
     </Container>
   );
