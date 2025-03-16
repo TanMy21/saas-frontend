@@ -7,6 +7,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { Box, Button, Container, Paper, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
 import {
@@ -14,11 +15,12 @@ import {
   useResendVerificationEmailMutation,
 } from "../app/slices/userApiSlice";
 import usePersist from "../hooks/persist";
+import { ErrorData } from "../utils/types";
 
 const EmailNotVerified = () => {
   const navigate = useNavigate();
   const [persist, setPersist] = usePersist();
-  const [resendVerificationEmail, { isLoading, isSuccess }] =
+  const [resendVerificationEmail, { isLoading, isSuccess, isError, error }] =
     useResendVerificationEmailMutation();
 
   const [sendLogout, { isSuccess: isSuccessLogout }] = useSendLogoutMutation();
@@ -44,6 +46,24 @@ const EmailNotVerified = () => {
     sendLogout();
     navigate("/");
   };
+
+  useEffect(() => {
+    if (isError) {
+      const errorData = error as ErrorData;
+
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isError, error]);
 
   return (
     <Container component="main" maxWidth="xl">
@@ -123,7 +143,9 @@ const EmailNotVerified = () => {
                       mb: 2,
                     }}
                   >
-                    <MailOutlineIcon sx={{ color: "#7C3AED" }} />
+                    <MailOutlineIcon
+                      sx={{ color: "#7C3AED", fontSize: "32px" }}
+                    />
                   </Box>
                   <Box
                     sx={{
@@ -259,6 +281,7 @@ const EmailNotVerified = () => {
                     sx={{
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "center",
                       gap: 1,
                       p: 2,
                       bgcolor: "#FEF2F2",

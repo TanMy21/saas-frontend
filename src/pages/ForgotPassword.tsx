@@ -28,7 +28,6 @@ const ForgotPassword = () => {
   const [forgotPassword, { isSuccess, isError, error, isLoading, reset }] =
     useForgotPasswordMutation();
   const [submittedEmail, setSubmittedEmail] = useState("");
-  const [showSuccessScreen, setShowSuccessScreen] = useState(false);
 
   const {
     register,
@@ -156,7 +155,9 @@ const ForgotPassword = () => {
                           justifyContent: "center",
                         }}
                       >
-                        <MailOutlineIcon style={{ color: "#7630EC" }} />
+                        <MailOutlineIcon
+                          style={{ color: "#7630EC", fontSize: "32px" }}
+                        />
                       </Box>
                     </Box>
 

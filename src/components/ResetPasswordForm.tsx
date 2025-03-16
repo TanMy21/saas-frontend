@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -17,15 +17,21 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { useResetPasswordMutation } from "../app/slices/authApiSlice";
 import { resetPasswordSchema } from "../utils/schema";
-import { ResetPassword, ResetPasswordFormData } from "../utils/types";
+import {
+  ErrorData,
+  ResetPassword,
+  ResetPasswordFormData,
+} from "../utils/types";
 
 import FormErrors from "./FormErrors";
 
 const ResetPasswordForm = ({ code }: ResetPassword) => {
-  const [resetPassword, { isSuccess }] = useResetPasswordMutation();
+  const [resetPassword, { isSuccess, isError, error }] =
+    useResetPasswordMutation();
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -39,13 +45,30 @@ const ResetPasswordForm = ({ code }: ResetPassword) => {
 
   const submitResetPassword = async (data: ResetPasswordFormData) => {
     const { password } = data;
-    console.log(password);
     try {
       await resetPassword({ password, code }).unwrap();
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (isError) {
+      const errorData = error as ErrorData;
+
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isError, error]);
 
   return (
     <>

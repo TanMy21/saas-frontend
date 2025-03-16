@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
@@ -10,14 +12,34 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { useVerifyEmailQuery } from "../app/slices/authApiSlice";
+import { ErrorData } from "../utils/types";
 
 const VerifyUser = () => {
   const { verificationCode } = useParams();
 
-  const { isLoading, isSuccess, isError } =
+  const { isLoading, isSuccess, isError, error } =
     useVerifyEmailQuery(verificationCode);
+
+  useEffect(() => {
+    if (isError) {
+      const errorData = error as ErrorData;
+
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isError, error]);
 
   return (
     <Container component="main" maxWidth="xl" sx={{ marginTop: "4%" }}>
@@ -93,8 +115,11 @@ const VerifyUser = () => {
                     {/* Error Message or Success Message */}
                     <Box
                       sx={{
-                        bgcolor: "#FEF2F2",
-                        borderRadius: 2,
+                        width: isSuccess ? 48 : "80%",
+                        height: isSuccess ? 48 : "auto",
+                        margin: "0 auto",
+                        bgcolor: isSuccess ? "#EDF7ED" : "#FEF2F2",
+                        borderRadius: isSuccess ? "50%" : 2,
                         p: 2,
                         display: "flex",
                         justifyContent: "center",
@@ -104,7 +129,9 @@ const VerifyUser = () => {
                     >
                       {isSuccess ? (
                         <>
-                          <TaskAltIcon sx={{ color: "green" }} />
+                          <TaskAltIcon
+                            sx={{ color: "green", fontSize: "32px" }}
+                          />
                         </>
                       ) : (
                         <>
@@ -149,7 +176,7 @@ const VerifyUser = () => {
 
                     {/* Back Link */}
                     <Link
-                      to={isSuccess ? "/login" : "/"}
+                      to={"/"}
                       style={{
                         display: "flex",
                         justifyContent: "center",
@@ -163,7 +190,7 @@ const VerifyUser = () => {
                       }}
                     >
                       <ArrowBackIcon />
-                      {isSuccess ? "Back to login" : "Back to home"}
+                      Back to home
                     </Link>
                   </Box>
                 </Paper>
