@@ -1,10 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, Container, Paper, TextField } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import {
+  Box,
+  Button,
+  Container,
+  InputAdornment,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { ArrowLeftIcon } from "@mui/x-date-pickers";
 import { useForm } from "react-hook-form";
-import { HiOutlineMail } from "react-icons/hi";
-import { IoArrowBackOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -14,8 +25,10 @@ import { forgetPasswordSchema } from "../utils/schema";
 import { ErrorData, ForgotPasswordRequest } from "../utils/types";
 
 const ForgotPassword = () => {
-  const [forgotPassword, { isSuccess, isError, error }] =
+  const [forgotPassword, { isSuccess, isError, error, isLoading, reset }] =
     useForgotPasswordMutation();
+  const [submittedEmail, setSubmittedEmail] = useState("");
+  const [showSuccessScreen, setShowSuccessScreen] = useState(false);
 
   const {
     register,
@@ -27,6 +40,7 @@ const ForgotPassword = () => {
 
   const submitForgotPasswordRequest = async (data: ForgotPasswordRequest) => {
     const { email } = data;
+    setSubmittedEmail(email);
     try {
       await forgotPassword(email).unwrap();
     } catch (error) {
@@ -56,10 +70,10 @@ const ForgotPassword = () => {
   }, [isError, error]);
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ marginTop: "12%" }}>
+    <Container component="main" maxWidth="xl" sx={{ marginTop: "8%" }}>
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 1,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -75,70 +89,130 @@ const ForgotPassword = () => {
           }}
         >
           <Box>
-            <Paper
-              elevation={8}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: "92%",
-                p: 4,
-                borderRadius: "16px",
-              }}
-            >
-              {isSuccess ? (
+            {isSuccess ? (
+              <Box
+                sx={{
+                  minHeight: "60%",
+                  bgcolor: "#F8F9FF",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  p: 3,
+                }}
+              >
                 <Box
                   sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    width: "100%",
+                    maxWidth: 480,
                   }}
                 >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "48px",
-                      height: "48px",
-                      fontSize: "32px",
-                      color: "#344054",
-                      border: "2px solid #E4E7EC",
-                      borderRadius: "16%",
-                    }}
-                  >
-                    <HiOutlineMail />
-                  </Box>
-                  <Box
-                    sx={{
-                      marginTop: "2%",
-                      fontSize: "40px",
-                      fontWeight: 600,
-                      color: "#101828",
-                    }}
-                  >
-                    Check your email
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginTop: "2%",
-                      gap: 1,
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "#475467",
-                    }}
-                  >
-                    <Box>Didn't recevie the email?</Box>
-                    <Box>
-                      <Link to="/forgot" style={{ textDecoration: "none" }}>
-                        click to resend
-                      </Link>
+                  {/* Header */}
+                  <Box sx={{ textAlign: "center", mb: 4 }}>
+                    <Box
+                      sx={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 1,
+                      }}
+                    >
+                      <Typography
+                        variant="h4"
+                        fontWeight="bold"
+                        sx={{
+                          backgroundClip: "text",
+                          textFillColor: "transparent",
+                          backgroundImage:
+                            "linear-gradient(to right, #7C3AED, #EC4899)",
+                        }}
+                      >
+                        Check your email
+                      </Typography>
                     </Box>
                   </Box>
-                  <Box>
+
+                  {/* Main Card */}
+                  <Paper
+                    sx={{
+                      p: 4,
+                      borderRadius: 3,
+                      boxShadow: "0px 4px 20px rgba(0,0,0,0.05)",
+                      textAlign: "center",
+                    }}
+                  >
+                    {/* Email Icon */}
+                    <Box
+                      sx={{ mb: 3, display: "flex", justifyContent: "center" }}
+                    >
+                      <Box
+                        sx={{
+                          width: 64,
+                          height: 64,
+                          background: "#F8F9FF",
+                          color: "#7630EC",
+                          borderRadius: "50%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <MailOutlineIcon style={{ color: "#7630EC" }} />
+                      </Box>
+                    </Box>
+
+                    {/* Content */}
+                    <Box sx={{ mb: 5 }}>
+                      <Typography
+                        variant="h6"
+                        fontWeight="bold"
+                        color="#080F1F"
+                      >
+                        Verification email sent
+                      </Typography>
+                      <Box sx={{ mt: 1, color: "#59626F" }}>
+                        <Typography>
+                          We've sent a verification email to:
+                        </Typography>
+                        <Typography fontWeight="bold" color="#080F1F">
+                          {submittedEmail}
+                        </Typography>
+                        <Typography>
+                          Click the link in the email to verify your account.
+                        </Typography>
+                      </Box>
+                    </Box>
+                    {/* Resend Button */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography
+                        color={"#7E3DED"}
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        Didn't receive the email?
+                        <Button
+                          onClick={() => reset()}
+                          sx={{
+                            textTransform: "unset",
+                            color: "#7E3DED",
+                            fontWeight: "bold",
+                            fontSize: "16px",
+                            textDecoration: "none",
+                            background: "none",
+                            "&:hover": {
+                              textDecoration: "none",
+                              background: "none",
+                            },
+                          }}
+                        >
+                          Click to resend
+                        </Button>
+                      </Typography>
+                    </Box>
+
+                    {/* Back to Login */}
                     <Link
                       to="/login"
                       style={{ textDecoration: "none", color: "#6941C6" }}
@@ -146,90 +220,199 @@ const ForgotPassword = () => {
                       <Box
                         sx={{
                           display: "flex",
-                          flexDirection: "row",
                           alignItems: "center",
-                          marginTop: "4%",
+                          justifyContent: "center",
                           gap: 1,
-                          fontWeight: 600,
-                          width: "100%",
-                          color: "black",
+                          color: "#7C3AED",
+                          fontWeight: "medium",
+                          "&:hover": { textDecoration: "underline" },
                         }}
                       >
-                        <Box sx={{ fontSize: "20px", marginTop: "6%" }}>
-                          <IoArrowBackOutline />
-                        </Box>
-                        <Box>Back to login</Box>
+                        <ArrowLeftIcon />
+                        Back to login
                       </Box>
                     </Link>
-                  </Box>
+                  </Paper>
+
+                  {/* Footer Note */}
+                  <Typography
+                    sx={{
+                      color: "#69707F",
+                      fontSize: "0.875rem",
+                      textAlign: "center",
+                      mt: 3,
+                    }}
+                  >
+                    Make sure to check your spam folder if you don't see the
+                    email in your inbox.
+                  </Typography>
                 </Box>
-              ) : (
-                <Box>
-                  <Box>
-                    <Box sx={{ fontSize: "32px", fontStyle: "bold" }}>
-                      Forgot Password?
-                    </Box>
-                    <Box sx={{ color: "#434343" }}>
-                      No worries, we'll send you reset instructions.
-                    </Box>
-                  </Box>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <Box sx={{ mt: 1 }}>
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        autoComplete="email"
-                        autoFocus
-                        {...register("email")}
-                      />
-                      {errors.email && (
-                        <FormErrors errors={errors.email.message} />
-                      )}
-                      <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{
-                          mt: 2,
-                          mb: 2,
-                          textTransform: "capitalize",
-                          backgroundColor: "#7F56D9",
-                          fontWeight: 600,
-                          borderRadius: "4px",
-                          "&:hover": {
-                            backgroundColor: "#7F56D9",
-                          },
-                        }}
-                      >
-                        Reset Password
-                      </Button>
-                    </Box>
-                  </form>
-                  <Link to="/login" style={{ textDecoration: "none" }}>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  width: "100%",
+                  minHeight: "60%",
+                  bgcolor: "#F8F9FF",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  p: 3,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "100%",
+                    maxWidth: 600,
+                  }}
+                >
+                  {/* Header */}
+                  <Box sx={{ textAlign: "center", mb: 4 }}>
                     <Box
                       sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
+                        display: "inline-flex",
                         alignItems: "center",
                         gap: 1,
-                        fontWeight: 600,
-                        width: "100%",
-                        color: "black",
+                        mb: 1,
                       }}
                     >
-                      <Box sx={{ fontSize: "20px", marginTop: "2%" }}>
-                        <IoArrowBackOutline />
-                      </Box>
-                      <Box>Back to login</Box>
+                      <Typography
+                        variant="h3"
+                        fontWeight="bold"
+                        sx={{
+                          backgroundClip: "text",
+                          textFillColor: "transparent",
+                          backgroundImage:
+                            "linear-gradient(to right, #7C3AED, #EC4899)",
+                        }}
+                      >
+                        Reset password
+                      </Typography>
                     </Box>
-                  </Link>
+                    <Typography sx={{ color: "#606875" }}>
+                      We'll send you instructions via email
+                    </Typography>
+                  </Box>
+
+                  {/* Main Card */}
+                  <Paper
+                    sx={{
+                      p: 4,
+                      borderRadius: 3,
+                      boxShadow: "0px 4px 20px rgba(0,0,0,0.05)",
+                    }}
+                  >
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1.5rem",
+                      }}
+                    >
+                      {/* Email Input */}
+                      <Box>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="email"
+                          label="Email Address"
+                          InputLabelProps={{ style: { color: "gray" } }}
+                          {...register("email")}
+                          variant="filled"
+                          sx={{
+                            mb: 2,
+                            "& .MuiFilledInput-root": {
+                              borderRadius: "12px",
+                              backgroundColor: "#F8F9FF",
+                              borderBottom: "none !important",
+                              boxShadow: "none",
+                              "&:hover": {
+                                backgroundColor: "#F8F9FF",
+                              },
+                              "&.Mui-focused": {
+                                backgroundColor: "#F8F9FF",
+                                boxShadow: "none",
+                              },
+                              "&:before, &:after": {
+                                display: "none",
+                              },
+                            },
+                            "& .MuiInputAdornment-root": {
+                              backgroundColor: "#F8F9FF",
+                              borderRadius: "12px 0 0 12px",
+                              paddingLeft: "8px",
+                            },
+                          }}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <MailOutlineIcon sx={{ color: "gray" }} />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                        {errors.email && (
+                          <FormErrors errors={errors.email?.message} />
+                        )}
+                      </Box>
+
+                      {/* Submit Button */}
+                      <Button
+                        type="submit"
+                        disabled={isLoading || isSuccess}
+                        fullWidth
+                        sx={{
+                          py: 1.5,
+                          background:
+                            "linear-gradient(to right, #7C3AED, #EC4899)",
+                          color: "white",
+                          borderRadius: 2,
+                          fontWeight: "bold",
+                          transition: "opacity 0.2s",
+                          textTransform: "unset",
+                          "&:hover": { opacity: 0.9 },
+                          "&:disabled": { opacity: 0.7 },
+                        }}
+                      >
+                        {isLoading ? (
+                          "Sending..."
+                        ) : isSuccess ? (
+                          <>
+                            <CheckCircleIcon style={{ marginRight: 8 }} />
+                            Instructions sent
+                          </>
+                        ) : (
+                          <>
+                            Send reset instructions
+                            <ArrowForwardIcon style={{ marginLeft: 8 }} />
+                          </>
+                        )}
+                      </Button>
+
+                      {/* Back to Sign In */}
+                      <Link to="/login" style={{ textDecoration: "none" }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: 1,
+                            color: "#7C3AED",
+                            fontWeight: "medium",
+                            "&:hover": { textDecoration: "none" },
+                          }}
+                        >
+                          <ArrowBackIcon />
+                          Back to sign in
+                        </Box>
+                      </Link>
+                    </form>
+                  </Paper>
                 </Box>
-              )}
-            </Paper>
+              </Box>
+            )}
           </Box>
         </Box>
       </Box>

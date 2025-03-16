@@ -227,6 +227,7 @@ const Signin = () => {
                 fullWidth
                 id="email"
                 label="Email Address"
+                InputLabelProps={{ style: { color: "gray" } }}
                 autoComplete="email"
                 autoFocus
                 {...register("email")}
@@ -259,7 +260,9 @@ const Signin = () => {
                 fullWidth
                 label="Password"
                 type={showPassword ? "text" : "password"}
+                InputLabelProps={{ style: { color: "gray" } }}
                 id="password"
+                autoComplete="password"
                 variant="filled"
                 {...register("password")}
                 sx={{
@@ -354,7 +357,7 @@ const Signin = () => {
                   },
                 }}
               >
-                <FcGoogle />
+                <FcGoogle size={24} />
                 Continue with Google
               </Button>
 

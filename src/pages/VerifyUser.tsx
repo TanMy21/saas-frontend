@@ -1,8 +1,12 @@
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import {
-  Alert,
   Box,
+  Button,
   CircularProgress,
   Container,
+  Paper,
   Typography,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
@@ -16,7 +20,7 @@ const VerifyUser = () => {
     useVerifyEmailQuery(verificationCode);
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ marginTop: "12%" }}>
+    <Container component="main" maxWidth="xl" sx={{ marginTop: "4%" }}>
       <Box
         sx={{
           marginTop: 8,
@@ -30,7 +34,7 @@ const VerifyUser = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            width: "80%",
+            width: "100%",
             p: 4,
           }}
         >
@@ -40,68 +44,129 @@ const VerifyUser = () => {
             ) : (
               <Box
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  width: "400px",
+                  maxWidth: 400,
+                  textAlign: "center",
                 }}
               >
-                <Box>
-                  <Alert
-                    severity={isSuccess ? "success" : "error"}
+                {/* Header */}
+                <Box sx={{ mb: 4 }}>
+                  <Box
                     sx={{
-                      fontSize: "24px",
-                      "& .MuiAlert-icon": {
-                        fontSize: "32px",
-                        marginTop: isSuccess ? "12%" : "2%",
-                      },
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 1,
+                      mb: 1,
                     }}
                   >
-                    {isSuccess
-                      ? "Your account has been verified. You can now login."
-                      : "Invalid Link."}
-                  </Alert>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {isError && (
-                    <Box
+                    <Typography
+                      variant="h4"
+                      fontWeight="bold"
                       sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        marginTop: "4%",
+                        backgroundClip: "text",
+                        textFillColor: "transparent",
+                        backgroundImage:
+                          "linear-gradient(to right, #7C3AED, #EC4899)",
                       }}
                     >
-                      <Typography
-                        mt={2}
-                        color={"darkred"}
-                        fontStyle={"bold"}
-                        fontSize={"16px"}
-                      >
-                        The link is either invalid or expired.{" "}
-                      </Typography>
-                      <Link
-                        to="/forgot"
-                        style={{ padding: 5, marginTop: "4%" }}
-                      >
-                        Get a new link
-                      </Link>
+                      {isSuccess ? "Welcome Aboard!" : "Invalid Link"}
+                    </Typography>
+                  </Box>
+                  <Typography color="#4B5563">
+                    {isSuccess
+                      ? "Your gateway to valuable insights starts here"
+                      : "This verification link is no longer valid"}
+                  </Typography>
+                </Box>
+
+                {/* Main Card */}
+                <Paper
+                  sx={{
+                    p: 4,
+                    borderRadius: 3,
+                    boxShadow: "0px 4px 20px rgba(0,0,0,0.05)",
+                  }}
+                >
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+                  >
+                    {/* Error Message or Success Message */}
+                    <Box
+                      sx={{
+                        bgcolor: "#FEF2F2",
+                        borderRadius: 2,
+                        p: 2,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: 2,
+                      }}
+                    >
+                      {isSuccess ? (
+                        <>
+                          <TaskAltIcon sx={{ color: "green" }} />
+                        </>
+                      ) : (
+                        <>
+                          {" "}
+                          <ErrorOutlineIcon
+                            sx={{
+                              color: isSuccess ? "green" : "#DC2626",
+                            }}
+                          />
+                          <Typography
+                            variant="body2"
+                            fontWeight="bold"
+                            color="#991B1B"
+                          >
+                            Link expired or invalid
+                          </Typography>
+                        </>
+                      )}
                     </Box>
-                  )}
-                </Box>
-                <Box mt={2}>
-                  <Link to="/" style={{ padding: 5 }}>
-                    Back to home
-                  </Link>
-                </Box>
+
+                    {/* Action Button */}
+                    <Button
+                      component={Link}
+                      to={isSuccess ? "/login" : "/forgot"}
+                      fullWidth
+                      sx={{
+                        py: 1.5,
+                        background:
+                          "linear-gradient(to right, #7C3AED, #EC4899)",
+                        color: "white",
+                        borderRadius: 2,
+                        fontWeight: "bold",
+                        transition: "opacity 0.2s",
+                        textTransform: "unset",
+                        "&:hover": { opacity: 0.9 },
+                      }}
+                    >
+                      {isSuccess
+                        ? "Continue to Login"
+                        : "Request new verification link"}
+                    </Button>
+
+                    {/* Back Link */}
+                    <Link
+                      to={isSuccess ? "/login" : "/"}
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        textDecoration: "none",
+                        marginTop: "4%",
+                        gap: 4,
+                        color: "#7A37ED",
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                      }}
+                    >
+                      <ArrowBackIcon />
+                      {isSuccess ? "Back to login" : "Back to home"}
+                    </Link>
+                  </Box>
+                </Paper>
               </Box>
             )}
           </Box>

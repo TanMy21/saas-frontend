@@ -1,8 +1,21 @@
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import LockIcon from "@mui/icons-material/Lock";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import {
+  Box,
+  Button,
+  IconButton,
+  InputAdornment,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
-import { FaLock, FaRegCircleCheck } from "react-icons/fa6";
-import { IoArrowBackOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
 import { useResetPasswordMutation } from "../app/slices/authApiSlice";
@@ -13,6 +26,8 @@ import FormErrors from "./FormErrors";
 
 const ResetPasswordForm = ({ code }: ResetPassword) => {
   const [resetPassword, { isSuccess }] = useResetPasswordMutation();
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -24,6 +39,7 @@ const ResetPasswordForm = ({ code }: ResetPassword) => {
 
   const submitResetPassword = async (data: ResetPasswordFormData) => {
     const { password } = data;
+    console.log(password);
     try {
       await resetPassword({ password, code }).unwrap();
     } catch (error) {
@@ -33,216 +49,404 @@ const ResetPasswordForm = ({ code }: ResetPassword) => {
 
   return (
     <>
-      <Paper
-        elevation={8}
+      <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
+          height: "60%",
           borderRadius: "12px",
         }}
       >
-        {" "}
         {isSuccess ? (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: "4%",
-                width: "48px",
-                height: "48px",
-                fontSize: "32px",
-                color: "#4F8074",
-                border: "2px solid #4F8074",
-                borderRadius: "16%",
-              }}
-            >
-              <FaRegCircleCheck />
-            </Box>
-            <Box
-              sx={{
-                marginTop: "2%",
-                fontSize: "24px",
-                fontWeight: 600,
-                color: "#007B52",
-              }}
-            >
-              Password Reset Successfully
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                marginTop: "2%",
-                width: "92%",
-                gap: 1,
-                fontSize: "16px",
-                fontWeight: 600,
-                color: "#475467",
-              }}
-            >
+          <Box sx={{ width: "100%", maxWidth: 480, textAlign: "center" }}>
+            {/* Header */}
+            <Box sx={{ mb: 4 }}>
               <Box
                 sx={{
-                  fontWeight: 600,
-                  color: "#475467",
-                  textAlign: "center",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 1,
+                  mb: 1,
                 }}
               >
-                Your password has been Successfully reset. You can now log in
-              </Box>
-            </Box>
-            <Box sx={{ marginBottom: "4%" }}>
-              <Link
-                to="/login"
-                style={{ textDecoration: "none", color: "#6941C6" }}
-              >
-                <Box
+                <Typography
+                  variant="h4"
+                  fontWeight="bold"
                   sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginTop: "4%",
-
-                    gap: 1,
-                    fontWeight: 600,
-                    width: "100%",
-                    color: "black",
+                    backgroundClip: "text",
+                    textFillColor: "transparent",
+                    backgroundImage:
+                      "linear-gradient(to right, #7C3AED, #EC4899)",
                   }}
                 >
-                  <Box sx={{ fontSize: "20px", marginTop: "6%" }}>
-                    <IoArrowBackOutline />
-                  </Box>
-                  <Box>Back to login</Box>
-                </Box>
-              </Link>
+                  Password reset
+                </Typography>
+              </Box>
+              <Typography color="#4B5563">
+                Your password has been updated successfully
+              </Typography>
             </Box>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Box
+
+            {/* Main Card */}
+            <Paper
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: "4%",
-                width: "48px",
-                height: "48px",
-                fontSize: "24px",
-                color: "#344054",
-                border: "2px solid #E4E7EC",
-                borderRadius: "16%",
+                p: 4,
+                borderRadius: 3,
+                boxShadow: "0px 4px 20px rgba(0,0,0,0.05)",
               }}
             >
-              <FaLock />
-            </Box>
-            <Box>
-              <Typography
-                sx={{
-                  marginTop: "2%",
-                  fontSize: "32px",
-                  fontWeight: 600,
-                  color: "#101828",
-                }}
-              >
-                Set new password
-              </Typography>
-            </Box>
-            <Box sx={{ width: "80%" }}>
-              <Typography
-                sx={{
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  color: "#475467",
-                  textAlign: "center",
-                }}
-              >
-                Your new password must be different from previously used
-                passwords.
-              </Typography>
-            </Box>
-            <Box sx={{ width: "100%" }}>
-              <form onSubmit={handleSubmit(submitResetPassword)}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                {/* Success Message */}
                 <Box
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    margin: "auto",
-                    width: "92%",
-                    mt: 2,
+                    alignItems: "center",
+                    textAlign: "center",
                   }}
                 >
-                  <Box mt={2}>
-                    <TextField
-                      required
-                      fullWidth
-                      label="Password"
-                      type="password"
-                      id="password"
-                      autoComplete="new-password"
-                      {...register("password")}
-                    />
-                    {errors.password && (
-                      <FormErrors errors={errors.password.message} />
-                    )}
+                  <Box
+                    sx={{
+                      width: 64,
+                      height: 64,
+                      background: "#F0FDF4",
+                      borderRadius: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      mb: 2,
+                    }}
+                  >
+                    <TaskAltIcon sx={{ color: "#22C55E", fontSize: "32px" }} />
                   </Box>
-                  <Box mt={2}>
-                    <TextField
-                      required
-                      fullWidth
-                      label="Confirm password"
-                      type="password"
-                      id="confirmPassword"
-                      autoComplete="confirm-password"
-                      {...register("confirmPassword")}
-                    />
-                    {errors.confirmPassword && (
-                      <FormErrors errors={errors.confirmPassword.message} />
-                    )}
-                  </Box>
-                  <Box mt={1}>
+                  <Typography variant="h6" fontWeight="bold" color="gray.900">
+                    Reset successful
+                  </Typography>
+                  <Typography color="#4B5563" mt={1}>
+                    Your password has been reset successfully. You can now log
+                    in with your new password.
+                  </Typography>
+                </Box>
+
+                {/* Login Button */}
+                <Button
+                  fullWidth
+                  component={Link}
+                  to="/login"
+                  sx={{
+                    py: 1.5,
+                    background: "linear-gradient(to right, #7C3AED, #EC4899)",
+                    color: "white",
+                    borderRadius: 2,
+                    fontWeight: "bold",
+                    transition: "opacity 0.2s",
+                    textTransform: "none",
+                    "&:hover": { opacity: 0.9 },
+                  }}
+                >
+                  Continue to login
+                </Button>
+
+                {/* Back Link */}
+                <Button
+                  component={Link}
+                  to="/"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                    color: "#7C3AED",
+                    fontWeight: "medium",
+                    textTransform: "none",
+                    textDecoration: "none",
+                    background: "none",
+                    "&:hover": { textDecoration: "none", background: "none" },
+                  }}
+                >
+                  <ArrowBackIcon />
+                  Back to home
+                </Button>
+              </Box>
+            </Paper>
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              minHeight: "60%",
+              width: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              p: 3,
+            }}
+          >
+            <Box sx={{ width: "100%", maxWidth: 480 }}>
+              {/* Header */}
+              <Box sx={{ textAlign: "center", mb: 4 }}>
+                <Box
+                  sx={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 1,
+                    mb: 1,
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    fontWeight="bold"
+                    sx={{
+                      backgroundClip: "text",
+                      textFillColor: "transparent",
+                      backgroundImage:
+                        "linear-gradient(to right, #7C3AED, #EC4899)",
+                    }}
+                  >
+                    Set new password
+                  </Typography>
+                </Box>
+                <Typography sx={{ color: "#4D5764" }}>
+                  Choose a strong password to protect your account
+                </Typography>
+              </Box>
+
+              {/* Main Card */}
+              <Paper
+                sx={{
+                  p: 4,
+                  borderRadius: 3,
+                  boxShadow: "0px 4px 20px rgba(0,0,0,0.05)",
+                }}
+              >
+                <form onSubmit={handleSubmit(submitResetPassword)}>
+                  {/* Password Fields */}
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+                  >
+                    {/* New Password */}
+                    <Box>
+                      <Typography
+                        variant="body2"
+                        fontWeight="bold"
+                        color="#57606D"
+                        mb={1}
+                      >
+                        New Password
+                      </Typography>
+                      <Box sx={{ position: "relative" }}>
+                        <TextField
+                          required
+                          fullWidth
+                          type={showNewPassword ? "text" : "password"}
+                          id="password"
+                          variant="filled"
+                          InputLabelProps={{ style: { color: "gray" } }}
+                          autoComplete="password"
+                          {...register("password")}
+                          sx={{
+                            mb: 2,
+                            borderRadius: "12px",
+                            backgroundColor: "#E9EDF6",
+                            "& .MuiFilledInput-root": {
+                              borderRadius: "12px",
+                              backgroundColor: "#E9EDF6",
+                              borderBottom: "none !important",
+                              display: "flex",
+                              alignItems: "center",
+
+                              "&:before, &:after": {
+                                display: "none",
+                                backgroundColor: "#E9EDF6",
+                              },
+                            },
+                            "& .MuiFilledInput-input": {
+                              paddingY: "10px",
+                            },
+                          }}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment
+                                position="start"
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  paddingBottom: "20px",
+                                }}
+                              >
+                                <LockIcon />
+                              </InputAdornment>
+                            ),
+                            endAdornment: (
+                              <InputAdornment
+                                position="end"
+                                sx={{ display: "flex", alignItems: "center" }}
+                              >
+                                <IconButton
+                                  onClick={() =>
+                                    setShowNewPassword(!showNewPassword)
+                                  }
+                                >
+                                  {showNewPassword ? (
+                                    <VisibilityOffIcon />
+                                  ) : (
+                                    <VisibilityIcon />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Box>
+                      {errors.password && (
+                        <FormErrors errors={errors.password.message} />
+                      )}
+                    </Box>
+
+                    {/* Confirm Password */}
+                    <Box>
+                      <Typography
+                        variant="body2"
+                        fontWeight="bold"
+                        color="#57606D"
+                        mb={1}
+                      >
+                        Confirm Password
+                      </Typography>
+                      <Box sx={{ position: "relative" }}>
+                        <TextField
+                          required
+                          fullWidth
+                          type={showConfirmPassword ? "text" : "password"}
+                          id="confirmPassword"
+                          variant="filled"
+                          InputLabelProps={{ style: { color: "gray" } }}
+                          autoComplete="confirm-password"
+                          {...register("confirmPassword")}
+                          sx={{
+                            mb: 2,
+                            borderRadius: "12px",
+                            backgroundColor: "#E9EDF6",
+                            "& .MuiFilledInput-root": {
+                              borderRadius: "12px",
+                              backgroundColor: "#E9EDF6",
+                              borderBottom: "none !important",
+                              "&:before, &:after": {
+                                display: "none",
+                                backgroundColor: "#E9EDF6",
+                              },
+                            },
+                            "& .MuiFilledInput-input": {
+                              paddingY: "10px",
+                            },
+                          }}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment
+                                position="start"
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  paddingBottom: "20px",
+                                }}
+                              >
+                                <LockIcon />
+                              </InputAdornment>
+                            ),
+                            endAdornment: (
+                              <InputAdornment
+                                position="end"
+                                sx={{ display: "flex", alignItems: "center" }}
+                              >
+                                <IconButton
+                                  onClick={() =>
+                                    setShowConfirmPassword(!showConfirmPassword)
+                                  }
+                                >
+                                  {showConfirmPassword ? (
+                                    <VisibilityOffIcon />
+                                  ) : (
+                                    <VisibilityIcon />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Box>
+                      {errors.confirmPassword && (
+                        <FormErrors errors={errors.confirmPassword.message} />
+                      )}
+                    </Box>
+
+                    {/* Password Requirements */}
+                    {/* Submit Button */}
                     <Button
                       type="submit"
                       fullWidth
-                      variant="contained"
                       sx={{
-                        mt: 2,
-                        mb: 2,
-                        textTransform: "capitalize",
-                        backgroundColor: "#7F56D9",
-                        fontWeight: 600,
-                        borderRadius: "4px",
-                        "&:hover": {
-                          backgroundColor: "#7F56D9",
-                        },
+                        py: 1.5,
+                        background:
+                          "linear-gradient(to right, #7C3AED, #EC4899)",
+                        color: "white",
+                        borderRadius: 2,
+                        fontWeight: "bold",
+                        transition: "opacity 0.2s",
+                        textTransform: "unset",
+                        "&:hover": { opacity: 0.9 },
+                        "&:disabled": { cursor: "not-allowed", opacity: 0.7 },
                       }}
                     >
-                      Reset Password
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textTransform: "unset",
+                        }}
+                      >
+                        <LockIcon style={{ marginRight: 8 }} />
+                        <Typography
+                          sx={{
+                            textTransform: "unset",
+                            marginTop: "2%",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Set new password
+                        </Typography>
+                      </Box>
                     </Button>
+
+                    {/* Back to Login */}
+                    <Link
+                      to="/login"
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        textDecoration: "none",
+                        marginTop: "4%",
+                        gap: 4,
+                        color: "#7A37ED",
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                      }}
+                    >
+                      <ArrowBackIcon />
+                      Back to login
+                    </Link>
                   </Box>
-                </Box>
-              </form>
+                </form>
+              </Paper>
             </Box>
           </Box>
         )}
-      </Paper>
+      </Box>
     </>
   );
 };
