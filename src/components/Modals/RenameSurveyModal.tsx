@@ -1,14 +1,6 @@
 import { useEffect } from "react";
 
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  IconButton,
-  Modal,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -73,8 +65,9 @@ const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 400,
+            height: 128,
             bgcolor: "background.paper",
-            borderRadius: 1,
+            borderRadius: 3,
             p: 4,
           }}
         >
@@ -89,21 +82,11 @@ const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
                   Rename Survey
                 </Typography>
               </Box>
-              <Box>
-                <IconButton
-                  aria-label="more"
-                  aria-controls="long-menu"
-                  aria-haspopup="true"
-                  onClick={onClose}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Box>
             </Box>
           </Box>
           <Box>
             <form onSubmit={handleSubmit(renameSurvey)}>
-              <Box sx={{ mt: 1 }}>
+              <Box>
                 <TextField
                   margin="normal"
                   required
@@ -116,49 +99,57 @@ const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
                   {...register("surveyTitle")}
                 />
                 <Box
-                  display={"flex"}
-                  flexDirection={"row"}
-                  justifyContent={"flex-end"}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                    gap: 4,
+                    mt: 1,
+                    // border: "2px solid red",
+                  }}
                 >
-                  <Box mr={2}>
-                    <Button
-                      type="button"
-                      onClick={onClose}
-                      variant="text"
-                      size="small"
-                      sx={{
-                        mt: 3,
-                        mb: 2,
-                        backgroundColor: "#E4E2E2",
-                        color: "black",
-                        "&.MuiButton-root:hover": {
-                          bgcolor: "#E4E2E2",
-                        },
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </Box>
-                  <Box>
-                    <Button
-                      type="submit"
-                      variant="text"
-                      size="small"
-                      sx={{
-                        mt: 3,
-                        mb: 2,
-                        backgroundColor: "#E4E2E2",
-                        color: "black",
-                        "&.MuiButton-root:hover": {
-                          bgcolor: "#E4E2E2",
-                        },
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      Rename
-                    </Button>
-                  </Box>
+                  <Button
+                    type="button"
+                    onClick={onClose}
+                    variant="text"
+                    size="small"
+                    sx={{
+                      width: "16%",
+                      height: "80%",
+                      p: 1,
+                      backgroundColor: "#E4E2E2",
+                      color: "black",
+                      fontWeight: "bold",
+                      "&.MuiButton-root:hover": {
+                        bgcolor: "#E4E2E2",
+                      },
+                      textTransform: "capitalize",
+                      borderRadius: 2,
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="text"
+                    size="small"
+                    sx={{
+                      width: "28%",
+                      height: "80%",
+                      p: 1,
+                      backgroundColor: "#752FEC",
+                      color: "white",
+                      fontWeight: "bold",
+                      "&.MuiButton-root:hover": {
+                        bgcolor: "#752FEC",
+                      },
+                      textTransform: "capitalize",
+                      borderRadius: 2,
+                    }}
+                  >
+                    Rename
+                  </Button>
                 </Box>
               </Box>
             </form>

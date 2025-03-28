@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 
-import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
+import { Box, Button, Modal, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 
 import { useDeleteSurveyMutation } from "../../app/slices/surveysApiSlice";
@@ -64,8 +63,9 @@ const DeleteSurveyModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 400,
+          height: 104,
           bgcolor: "background.paper",
-          borderRadius: 1,
+          borderRadius: 3,
           p: 4,
         }}
       >
@@ -80,76 +80,69 @@ const DeleteSurveyModal = ({
                 Delete this Survey?
               </Typography>
             </Box>
-            <Box>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={onClose}
-                sx={{ marginTop: -2 }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
           </Box>
           <Box>
-            <Typography sx={{ fontSize: "0.9rem" }}>
+            <Typography sx={{ fontSize: "0.9rem", color: "red" }}>
               You will lose all the data associated with this survey:
             </Typography>
           </Box>
           <Box>
             <Typography sx={{ fontWeight: "bold" }} mt={1} mb={1}>
-              {sTitle} will be permanently deleted.
+              {sTitle} will be permanently deleted
             </Typography>
           </Box>
         </Box>
         <Box>
           <Box
-            display={"flex"}
-            flexDirection={"row"}
-            justifyContent={"flex-end"}
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              height: "40px",
+              gap: 2,
+              mt: 1,
+              mb: 2,
+            }}
           >
-            <Box mr={2}>
-              <Button
-                type="button"
-                onClick={onClose}
-                variant="text"
-                size="small"
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: "#E4E2E2",
-                  color: "black",
-                  "&.MuiButton-root:hover": {
-                    bgcolor: "#E4E2E2",
-                  },
-                  textTransform: "capitalize",
-                }}
-              >
-                Cancel
-              </Button>
-            </Box>
-            <Box>
-              <Button
-                type="submit"
-                variant="text"
-                size="small"
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: "#B31212",
-                  color: "white",
-                  "&.MuiButton-root:hover": {
-                    bgcolor: "#B31212",
-                  },
-                  textTransform: "capitalize",
-                }}
-                color="error"
-                onClick={handleDeleteSurvey}
-              >
-                {isLoading ? "Deleting..." : "Yes, Delete it"}
-              </Button>
-            </Box>
+            <Button
+              type="button"
+              onClick={onClose}
+              variant="text"
+              size="small"
+              sx={{
+                backgroundColor: "#E4E2E2",
+                color: "black",
+                height: "80%",
+                "&.MuiButton-root:hover": {
+                  bgcolor: "#E4E2E2",
+                },
+                textTransform: "capitalize",
+                borderRadius: 2,
+              }}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              variant="text"
+              size="small"
+              sx={{
+                backgroundColor: "#B31212",
+                color: "white",
+                width: "28%",
+                height: "80%",
+                "&.MuiButton-root:hover": {
+                  bgcolor: "#B31212",
+                },
+                textTransform: "capitalize",
+                borderRadius: 2,
+                fontWeight: "bold",
+              }}
+              color="error"
+              onClick={handleDeleteSurvey}
+            >
+              {isLoading ? "Deleting..." : "Yes, Delete it"}
+            </Button>
           </Box>
         </Box>
       </Box>

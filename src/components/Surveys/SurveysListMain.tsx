@@ -15,13 +15,13 @@ import {
   MenuItem,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 import {
   useGetWorkspaceSurveysQuery,
   useUpdateWorkspaceNameMutation,
 } from "../../app/slices/workspaceApiSlice";
-import { WorkspacesProp } from "../../utils/types";
+import { Workspace } from "../../utils/types";
 import WorkspaceDropDown from "../Workspaces/WorkspaceDropDownMenu";
 
 import CreateNewSurveyBtn from "./CreateNewSurveyBtn";
@@ -30,10 +30,15 @@ import ListLayout from "./ListLayout";
 import SurveysNotFound from "./SurveysNotFound";
 
 const SurveysListMain = () => {
-  const { workspaceId } = useParams();
-  const { workspaces } = useOutletContext<WorkspacesProp>();
+  // const { workspaces } = useOutletContext<WorkspacesProp>();
+  const { selectedWorkspace } = useOutletContext<{
+    selectedWorkspace: Workspace;
+  }>();
 
-  const { data: surveys } = useGetWorkspaceSurveysQuery(workspaceId);
+  const { workspaceId } = selectedWorkspace;
+  const { data: surveys } = useGetWorkspaceSurveysQuery(
+    selectedWorkspace?.workspaceId
+  );
 
   const [updateWorkspaceName] = useUpdateWorkspaceNameMutation();
 
@@ -45,9 +50,9 @@ const SurveysListMain = () => {
     setIsEditing(true);
   };
 
-  const workspace = workspaces?.find(
-    (item) => item.workspaceId?.toString() === workspaceId
-  );
+  // const workspace = workspaces?.find(
+  //   (item) => item.workspaceId?.toString() === workspaceId
+  // );
 
   const sortedSurveys = useMemo(() => {
     if (!Array.isArray(surveys)) return [];
@@ -81,7 +86,7 @@ const SurveysListMain = () => {
     setLayout(newLayout);
   };
 
-  const [text, setText] = useState(workspace?.name);
+  const [text, setText] = useState(selectedWorkspace?.name);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
@@ -93,8 +98,8 @@ const SurveysListMain = () => {
   };
 
   useEffect(() => {
-    setText(workspace?.name);
-  }, [workspace?.name]);
+    setText(selectedWorkspace?.name);
+  }, [selectedWorkspace?.name]);
 
   return (
     <>
@@ -142,13 +147,13 @@ const SurveysListMain = () => {
                       },
                     }}
                   >
-                    {workspace?.name}
+                    {selectedWorkspace?.name}
                   </Typography>
                 )}
               </Box>
             </Box>
             <Box>
-              <WorkspaceDropDown workspaceName={workspace?.name} />
+              <WorkspaceDropDown workspaceName={selectedWorkspace?.name} />
             </Box>
           </Box>
           <Box
@@ -158,8 +163,8 @@ const SurveysListMain = () => {
           >
             <Box id="new-survey-btn">
               <CreateNewSurveyBtn
-                workspaceId={workspaceId}
-                workspaceName={workspace?.name}
+                workspaceId={selectedWorkspace?.workspaceId}
+                workspaceName={selectedWorkspace?.name}
               />
             </Box>
             <Box
@@ -167,20 +172,7 @@ const SurveysListMain = () => {
               display={"flex"}
               sx={{ width: "400px", height: "50px" }}
             >
-              <Box id="sort-surveys" sx={{ width: 150 }}>
-                <FormControl fullWidth size="small">
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    onChange={handleSortChange}
-                    value={sortBy}
-                  >
-                    <MenuItem value={"Date created"}>Date created</MenuItem>
-                    <MenuItem value={"Date updated"}>Date updated</MenuItem>
-                    <MenuItem value={"Alphabetically"}>Alphabetical</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
+             
               <Box id="survey-view-layout" ml={2}>
                 <ToggleButtonGroup
                   color="primary"
@@ -258,14 +250,7 @@ const SurveysListMain = () => {
                     minHeight: 600,
                     // border: "2px solid black",
                   }}
-                >
-                  <GridLayout
-                    surveys={sortedSurveys}
-                    workspaceId={workspaceId!}
-                    workspaceName={workspace?.name!}
-                    layout={layout}
-                  />
-                </Box>
+                ></Box>
               ) : (
                 <Grid
                   container
@@ -277,12 +262,12 @@ const SurveysListMain = () => {
                     minHeight: "72vh",
                   }}
                 >
-                  <ListLayout
+                  {/* <ListLayout
                     surveys={sortedSurveys}
                     workspaceId={workspaceId!}
-                    workspaceName={workspace?.name!}
+                    workspaceName={selectedWorkspace?.name}
                     layout={layout || "list"}
-                  />
+                  /> */}
                 </Grid>
               )
             }

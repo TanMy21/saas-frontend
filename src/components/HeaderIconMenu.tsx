@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+import LogoutIcon from "@mui/icons-material/Logout";
+import SettingsIcon from "@mui/icons-material/Settings";
+import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import {
   Avatar,
   Box,
@@ -60,7 +63,18 @@ const HeaderIconMenu = () => {
       <IconButton
         onClick={handleClick}
         size="small"
-        sx={{ ml: 2 }}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: 40,
+          height: 40,
+          borderRadius: "50%",
+          border: "6px solid rgba(232, 231, 231, 0.5)",
+          "&:hover": {
+            border: "6px solid rgba(232, 231, 231, 1)",
+          },
+        }}
         aria-controls={open ? "account-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
@@ -69,7 +83,6 @@ const HeaderIconMenu = () => {
           sx={{
             width: 32,
             height: 32,
-            marginRight: "8px",
             backgroundColor: "#ADEBE4",
             color: "#13137F",
           }}
@@ -148,18 +161,50 @@ const HeaderIconMenu = () => {
           </Typography>
         </Box>
         <MenuItem onClick={onSettingsClicked}>
-          <Box>
-            <Box sx={{ fontSize: "12px" }}>Your Settings</Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 1,
+              fontSize: "12px",
+              fontWeight: "bold",
+              color: "#333B70",
+            }}
+          >
+            <SettingsIcon sx={{ color: "#A0A7B2" }} />
+            Your Settings
           </Box>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={onDashboardClicked} sx={{ fontSize: "12px" }}>
+        <MenuItem
+          onClick={onDashboardClicked}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            gap: 1,
+            fontSize: "12px",
+            fontWeight: "bold",
+            color: "#333B70",
+          }}
+        >
+          <SpaceDashboardIcon sx={{ color: "#A0A7B2" }} />
           Dashboard
         </MenuItem>
         <MenuItem
           onClick={onLogoutClicked}
-          sx={{ color: "red", fontSize: "12px" }}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            gap: 1,
+            fontSize: "12px",
+            fontWeight: "bold",
+            color: "red",
+          }}
         >
+          <LogoutIcon sx={{ color: "red", ml: 0.2 }} />
           Logout
         </MenuItem>
       </Menu>

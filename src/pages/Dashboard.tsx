@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 
-import { Box, CircularProgress, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { fetchUser, selectUser } from "../app/slices/userSlice";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
 import { AppDispatch } from "../app/store";
 import DashBoardHeader from "../components/DashBoardHeader";
+import DeleteWorkspaceModal from "../components/Modals/DeleteWorkspaceModal";
 import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";
+import RenameWorkspaceModal from "../components/Modals/RenameWorkspaceModal";
 import DashboardTour from "../components/Tour/DashboardTour";
-import Workspaces from "../components/Workspaces/Workspaces";
-import WorkspacesNotFound from "../components/Workspaces/WorkspacesNotFound";
+import WorkspaceConsole from "../components/Workspaces/WorkspaceConsole";
 import useAuth from "../hooks/useAuth";
-import { ErrorData } from "../utils/types";
+import { ErrorData, Workspace } from "../utils/types";
 
 const Dashboard = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,19 +22,24 @@ const Dashboard = () => {
   const { isAuthenticated } = useAuth();
   const [stepIndex, setStepIndex] = useState(0);
   const [runTour, setRunTour] = useState(false);
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-
+  const [newWorkspaceModalOpen, setNewWorkspaceModalOpen] = useState(false);
+  const [renameWorkspaceModalOpen, setRenameWorkspaceModalOpen] =
+    useState(false);
+  const [deleteWorkspaceModalOpen, setDeleteWorkspaceModalOpen] =
+    useState(false);
   const {
     data: workspaces,
     isLoading: isLoadingWorkspaces,
     isError: isErrorWorkspaces,
     error: workspaceError,
+    isSuccess,
   } = useGetWorkspacesQuery("workspacesList", {
     pollingInterval: 15000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+
+  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace>();
 
   useEffect(() => {
     if (isErrorWorkspaces) {
@@ -64,6 +69,12 @@ const Dashboard = () => {
   }, [isErrorWorkspaces, workspaceError]);
 
   useEffect(() => {
+    if (isSuccess && workspaces?.length && !selectedWorkspace) {
+      setSelectedWorkspace(workspaces[0]);
+    }
+  }, [isSuccess, workspaces, selectedWorkspace]);
+
+  useEffect(() => {
     if (!user && isAuthenticated) {
       dispatch(fetchUser());
     }
@@ -90,123 +101,110 @@ const Dashboard = () => {
     <>
       <Box
         sx={{
+          display: "flex",
+          flexDirection: "column",
           overflowX: "hidden",
           overflowY: "hidden",
           width: "100%",
           height: "100%",
+          // border: "2px solid black",
         }}
       >
-        <Grid container>
-          {isTourEnabled && (
-            <DashboardTour
-              stepIndex={stepIndex}
-              runTour={runTour}
-              setStepIndex={setStepIndex}
-              setRunTour={setRunTour}
-            />
-          )}
+        {isTourEnabled && (
+          <DashboardTour
+            stepIndex={stepIndex}
+            runTour={runTour}
+            setStepIndex={setStepIndex}
+            setRunTour={setRunTour}
+          />
+        )}
 
-          <Grid
-            item
-            display={"flex"}
-            flexDirection={"row"}
-            xs={12}
+        <Box
+          display={"flex"}
+          flexDirection={"row"}
+          sx={{
+            position: "sticky",
+            top: "0",
+            width: "100%",
+            zIndex: "5",
+          }}
+        >
+          <DashBoardHeader
+            selectedWorkspace={selectedWorkspace!}
+            setSelectedWorkspace={setSelectedWorkspace}
+            setNewWorkspaceModalOpen={setNewWorkspaceModalOpen}
+            setRenameWorkspaceModalOpen={setRenameWorkspaceModalOpen}
+            setDeleteWorkspaceModalOpen={setDeleteWorkspaceModalOpen}
+          />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            zIndex: 1,
+            width: "100%",
+            minHeight: "95vh",
+            overflowX: "hidden",
+            overflowY: "hidden",
+          }}
+        >
+          {/* content area */}
+          {/* Main content area */}
+          <Box
             sx={{
-              position: "sticky",
-              top: "0",
-              width: "100%",
-              // height: "5vh",
-              zIndex: "5",
-            }}
-          >
-            <DashBoardHeader />
-          </Grid>
-          <Grid
-            item
-            xl={12}
-            lg={12}
-            md={12}
-            xs={12}
-            display={"flex"}
-            flexDirection={"row"}
-            zIndex={1}
-            sx={{
+              background: "#F9FAFB",
+              flexGrow: 1,
               width: "100%",
               minHeight: "95vh",
+              overflowY: "auto",
               overflowX: "hidden",
-              overflowY: "hidden",
+              "&::-webkit-scrollbar": {
+                width: "10px", // Scrollbar width
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "#f1f1f1", // Scrollbar track color
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background: "#61A5D2", // Scrollbar thumb color
+                borderRadius: "10px", // Rounded corners on the scrollbar thumb
+                "&:hover": {
+                  background: "#555", // Scrollbar thumb hover color
+                },
+              },
+              // border: "2px solid red",
             }}
           >
-            {/* content area */}
-            {/* Left Sidebar Workspaces*/}
-            <Grid
-              item
-              xl={2}
-              lg={2}
-              md={2}
-              xs={2}
+            <Box
               sx={{
-                background: "white",
-                position: "sticky",
-                top: "5vh",
-                left: "0",
-                zIndex: "5",
-              }}
-            >
-              {isLoadingWorkspaces ? (
-                <CircularProgress />
-              ) : (
-                <Workspaces
-                  workspaces={workspaces}
-                  handleOpen={handleOpen}
-                  setStepIndex={setStepIndex}
-                />
-              )}
-            </Grid>
-            {/* Main content area */}
-            <Grid
-              item
-              xl={10}
-              lg={10}
-              md={10}
-              xs={10}
-              sx={{
-                background: "#EBEBEB",
-                flexGrow: 1,
+                display: "flex",
+                margin: "auto",
+                marginTop: "1%",
                 width: "80%",
-                minHeight: "95vh",
-                overflowY: "auto",
-                overflowX: "hidden",
-                "&::-webkit-scrollbar": {
-                  width: "10px", // Scrollbar width
-                },
-                "&::-webkit-scrollbar-track": {
-                  background: "#f1f1f1", // Scrollbar track color
-                },
-                "&::-webkit-scrollbar-thumb": {
-                  background: "#61A5D2", // Scrollbar thumb color
-                  borderRadius: "10px", // Rounded corners on the scrollbar thumb
-                  "&:hover": {
-                    background: "#555", // Scrollbar thumb hover color
-                  },
-                },
-                // border: "2px solid red",
+                height: "96%",
+                // border: "2px solid green",
               }}
             >
-              {workspaces?.length === 0 ? (
-                <WorkspacesNotFound
-                  handleOpen={handleOpen}
-                  setStepIndex={setStepIndex}
-                />
-              ) : (
-                <Outlet context={{ workspaces, setStepIndex }} />
-              )}
-            </Grid>
-          </Grid>
-        </Grid>
+              <WorkspaceConsole selectedWorkspace={selectedWorkspace!} />
+            </Box>
+          </Box>
+        </Box>
       </Box>
-
-      <NewWorkspaceModal open={open} setOpen={setOpen} />
+      <NewWorkspaceModal
+        open={newWorkspaceModalOpen}
+        setOpen={setNewWorkspaceModalOpen}
+      />
+      {/* {workspaceId && workspaceName && ( */}
+      <RenameWorkspaceModal
+        open={renameWorkspaceModalOpen}
+        onClose={() => setRenameWorkspaceModalOpen(false)}
+        selectedWorkspace={selectedWorkspace!}
+      />
+      {/* )} */}
+      <DeleteWorkspaceModal
+        open={deleteWorkspaceModalOpen}
+        onClose={() => setDeleteWorkspaceModalOpen(false)}
+        selectedWorkspace={selectedWorkspace!}
+      />
     </>
   );
 };

@@ -1,39 +1,34 @@
 import { useEffect } from "react";
 
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  IconButton,
-  Modal,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-
 import { useDeleteWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
-import { ErrorData, WorkspaceDeleteModalProps } from "../../utils/types";
+import {
+  ErrorData,
+  WorkspaceDelete,
+  WorkspaceDeleteModalProps,
+} from "../../utils/types";
 
 const DeleteWorkspaceModal = ({
   open,
   onClose,
-  wsID,
-  wsName,
+  selectedWorkspace,
 }: WorkspaceDeleteModalProps) => {
   const navigate = useNavigate();
 
-  const { register, handleSubmit } = useForm<WorkspaceDeleteModalProps>();
+  const { register, handleSubmit } = useForm<WorkspaceDelete>();
   const [deleteWorkspace, { isSuccess, isLoading, isError, error }] =
     useDeleteWorkspaceMutation();
 
-  const handleDeleteWorkspace = async (data: WorkspaceDeleteModalProps) => {
+  const { workspaceId, name } = selectedWorkspace ?? {};
+  const handleDeleteWorkspace = async (data: WorkspaceDelete) => {
     const { workspaceName } = data;
 
-    if (workspaceName === wsName) {
-      await deleteWorkspace(wsID);
+    if (workspaceName === name) {
+      await deleteWorkspace(workspaceId);
       navigate("/dash");
     } else {
       toast.error("Workspace name does not match", { position: "top-right" });
@@ -81,9 +76,10 @@ const DeleteWorkspaceModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 400,
+          height: 220,
           bgcolor: "background.paper",
-          borderRadius: 1,
-          p: 4,
+          borderRadius: 3,
+          p: 2,
         }}
       >
         <Box>
@@ -97,91 +93,83 @@ const DeleteWorkspaceModal = ({
                 Delete this Workspace?
               </Typography>
             </Box>
-            <Box>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={onClose}
-                sx={{ marginTop: -2 }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
           </Box>
           <Box>
-            <Typography sx={{ fontSize: "0.9rem" }}>
+            <Typography sx={{ fontSize: "0.9rem", color: "red" }}>
               You will lose all the data associated with this workspace:
             </Typography>
           </Box>
           <Box>
             <Typography sx={{ fontWeight: "bold" }} mt={1} mb={1}>
-              {wsName} will be permanently deleted.
+              {name} will be permanently deleted
             </Typography>
           </Box>
           <Box>
-            <Typography>Enter the workspace name to confirm.</Typography>
+            <Typography>Enter the workspace name to confirm</Typography>
           </Box>
         </Box>
         <Box>
           <form onSubmit={handleSubmit(handleDeleteWorkspace)}>
-            <Box sx={{ mt: 1 }}>
+            <Box>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 size="small"
-                defaultValue={"Workspace name"}
+                placeholder={"Enter workspace name to delete"}
                 id="workspaceName"
                 autoComplete="Name of Workspace"
                 autoFocus
                 {...register("workspaceName")}
               />
               <Box
-                display={"flex"}
-                flexDirection={"row"}
-                justifyContent={"flex-end"}
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  height: "40px",
+                  gap: 2,
+                  mt: 1,
+                  mb: 2,
+                }}
               >
-                <Box mr={2}>
-                  <Button
-                    type="button"
-                    onClick={onClose}
-                    variant="text"
-                    size="small"
-                    sx={{
-                      mt: 3,
-                      mb: 2,
-                      backgroundColor: "#E4E2E2",
-                      color: "black",
-                      "&.MuiButton-root:hover": {
-                        bgcolor: "#E4E2E2",
-                      },
-                      textTransform: "capitalize",
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-                <Box>
-                  <Button
-                    type="submit"
-                    variant="text"
-                    size="small"
-                    sx={{
-                      mt: 3,
-                      mb: 2,
-                      backgroundColor: "#B31212",
-                      color: "white",
-                      "&.MuiButton-root:hover": {
-                        bgcolor: "#B31212",
-                      },
-                      textTransform: "capitalize",
-                    }}
-                    color="error"
-                  >
-                    {isLoading ? "Deleting..." : "Yes, Delete it"}
-                  </Button>
-                </Box>
+                <Button
+                  type="button"
+                  onClick={onClose}
+                  variant="text"
+                  size="small"
+                  sx={{
+                    backgroundColor: "#E4E2E2",
+                    color: "black",
+                    height: "80%",
+                    "&.MuiButton-root:hover": {
+                      bgcolor: "#E4E2E2",
+                    },
+                    textTransform: "capitalize",
+                    borderRadius: 2,
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="text"
+                  size="small"
+                  sx={{
+                    backgroundColor: "#B31212",
+                    color: "white",
+                    width: "28%",
+                    height: "80%",
+                    "&.MuiButton-root:hover": {
+                      bgcolor: "#B31212",
+                    },
+                    textTransform: "capitalize",
+                    borderRadius: 2,
+                    fontWeight: "bold",
+                  }}
+                  color="error"
+                >
+                  {isLoading ? "Deleting..." : "Yes, Delete it"}
+                </Button>
               </Box>
             </Box>
           </form>

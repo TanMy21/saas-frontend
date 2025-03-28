@@ -1,135 +1,218 @@
-import { Suspense } from "react";
-
-import {
-  Box,
-  ButtonBase,
-  Divider,
-  Grid,
-  Skeleton,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, ButtonBase, Tooltip, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+import { formatDate } from "../../utils/formatDate";
 import { WorkspaceLayoutProps } from "../../utils/types";
 
+import CreateNewSurveyCard from "./CreateNewSurveyCard";
 import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
-
 
 const GridLayout = ({
   surveys,
   workspaceId,
   workspaceName,
-  layout,
+  viewMode,
 }: WorkspaceLayoutProps) => {
   const navigate = useNavigate();
 
   const goToSurvey = (surveyID: string) => {
     navigate(`/survey/${surveyID}`, {
-      state: { workspaceId, workspaceName, layout },
+      state: { workspaceId, workspaceName, viewMode },
     });
   };
 
   return (
     <>
-      <Grid
-        container
-        display={"flex"}
-        flexDirection={"row"}
-        width={"100%"}
-        height={"100%"}
-        spacing={0}
-        columns={12}
-        sx={{ marginBottom: "50px" }}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(2, 1fr)",
+            lg: "repeat(3, 1fr)",
+          },
+          gap: 2,
+          width: "100%",
+          p: 2,
+          gridAutoRows: "200px",
+          minHeight: "60vh",
+          mb: 2,
+          maxHeight: {
+            lg: "640px",
+          },
+          overflowY: "auto",
+          overflowX: "hidden",
+          "&::-webkit-scrollbar": {
+            width: "10px", // Scrollbar width
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "#f1f1f1", // Scrollbar track color
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#61A5D2", // Scrollbar thumb color
+            borderRadius: "10px", // Rounded corners on the scrollbar thumb
+            "&:hover": {
+              background: "#555", // Scrollbar thumb hover color
+            },
+          },
+        }}
       >
+        <CreateNewSurveyCard
+          workspaceId={workspaceId}
+          workspaceName={workspaceName}
+          viewMode={"grid"}
+        />
         {surveys?.map((survey) => (
           <Box
             key={survey.surveyID}
             sx={{
-              p: 1,
               display: "flex",
               flexDirection: "column",
-              maxWidth: 180,
-              maxHeight: 210,
-              marginRight: "20px",
+              backgroundColor: "white",
+              borderRadius: 2,
+              border: "2px solid",
+              borderColor: "grey.300",
+              p: 1,
+              transition: "box-shadow 0.3s",
+              "&:hover": {
+                boxShadow: 3,
+              },
             }}
           >
-            <Suspense
-              fallback={
-                <Skeleton
-                  variant="rectangular"
-                  width={180}
-                  height={210}
-                  animation="wave"
-                />
-              }
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                margin: "auto",
+                width: "96%",
+                height: "96%",
+                // border: "2px solid red",
+              }}
             >
               <Box
                 sx={{
                   display: "flex",
-                  flexDirection: "column",
-                  width: "180px",
-                  height: "210px",
-                  borderRadius: "8px",
-                  bgcolor: "white",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  margin: "auto",
+                  width: "98%",
+                  height: "44%",
+                  // border: "2px solid green",
                 }}
               >
-                <Box
+                <ButtonBase
+                  onClick={() => goToSurvey(survey.surveyID)}
                   sx={{
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    width: "90%",
-                    height: "70%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                    rowGap: 1,
+                    width: "88%",
+                    height: "98%",
+                    gap: 1,
+                    textTransform: "none",
+                    // border: "2px solid blue",
                   }}
                 >
-                  <ButtonBase
-                    onClick={() => goToSurvey(survey.surveyID)}
+                  <Tooltip title={survey.title} placement="top" arrow>
+                    <Typography
+                      variant="h6"
+                      fontWeight="bold"
+                      color="grey.900"
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {survey.title}
+                    </Typography>
+                  </Tooltip>
+                  <Typography
+                    fontWeight="bold"
+                    color="#6D7584"
                     sx={{
-                      width: "100%",
-                      height: "100%",
-                      display: "block",
-                      textTransform: "none",
+                      fontSize: "16px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
                     }}
                   >
-                    <Tooltip title={survey.title} placement="top" arrow>
-                      <Typography
-                        sx={{
-                          padding: "1px",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          fontSize: "16px",
-                          lineHeight: "24px",
-                          overflow: "hidden",
-                          textOverflow: "clip",
-                          minHeight: "88px",
-                          maxHeight: "92px",
-                          fontFamily:
-                            " BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                          color: "black",
-                        }}
-                      >
-                        {survey.title}
-                      </Typography>
-                    </Tooltip>
-                  </ButtonBase>
-                </Box>
-                <Divider />
+                    created: {formatDate(survey.createdAt)}
+                  </Typography>
+                </ButtonBase>
                 <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    margin: "auto",
+                    width: "12%",
+                    height: "96%",
+                    // border: "2px solid red",
+                  }}
+                >
+                  <SurveyCardDropDownMenu
+                    survey={survey}
+                    workspaceId={workspaceId}
+                    workspaceName={workspaceName}
+                  />
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  margin: "auto",
+                  width: "98%",
+                  height: "40%",
+                  // border: "2px solid blue",
+                }}
+              >
+                <ButtonBase
+                  onClick={() => goToSurvey(survey.surveyID)}
                   sx={{
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between",
-                    alignItems: "center",
-                    margin: "auto",
-                    width: "98%",
-                    height: "20%",
+                    gap: 1,
+                    width: "100%",
+                    height: "98%",
+                    border: "none",
                   }}
                 >
-                  <Box p={"6px"} pl={1}>
-                    <Typography sx={{ fontSize: "12px", color: "#C1C1D3" }}>
-                      No Responses
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "48%",
+                      height: "96%",
+                      border: "none",
+                      backgroundColor: "#EFEFEF",
+                      borderRadius: 3,
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontSize: "32px",
+                        color: "#022B67",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      0
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "16px",
+                        color: "#737783",
+                        fontWeight: "bold",
+                        mt: "-8px",
+                      }}
+                    >
+                      Questions
                     </Typography>
                   </Box>
                   <Box
@@ -138,21 +221,39 @@ const GridLayout = ({
                       flexDirection: "column",
                       justifyContent: "center",
                       alignItems: "center",
-                      marginTop: "1%",
+                      width: "48%",
+                      height: "96%",
+                      border: "none",
+                      backgroundColor: "#EFEFEF",
+                      borderRadius: 3,
                     }}
                   >
-                    <SurveyCardDropDownMenu
-                      survey={survey}
-                      workspaceId={workspaceId}
-                      workspaceName={workspaceName}
-                    />
+                    <Typography
+                      sx={{
+                        fontSize: "33px",
+                        color: "#022B67",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      0
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "16px",
+                        color: "#737783",
+                        fontWeight: "bold",
+                        mt: "-8px",
+                      }}
+                    >
+                      Responses
+                    </Typography>
                   </Box>
-                </Box>
+                </ButtonBase>
               </Box>
-            </Suspense>
+            </Box>
           </Box>
         ))}
-      </Grid>
+      </Box>
     </>
   );
 };

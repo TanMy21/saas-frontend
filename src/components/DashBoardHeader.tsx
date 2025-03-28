@@ -1,14 +1,34 @@
-import { Avatar, Box, Grid, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+
+import { Box, Divider, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 
 import { useGetMeQuery } from "../app/slices/userApiSlice";
+import { getGreeting } from "../utils/formatDate";
+import { DashBoardHeaderProps } from "../utils/types";
 
 import HeaderIconMenu from "./HeaderIconMenu";
+import WorkspacesDropDownMenu from "./Workspaces/WorkspacesDropDownMenu";
 
-const DashBoardHeader = () => {
+const DashBoardHeader = ({
+  selectedWorkspace,
+  setSelectedWorkspace,
+  setNewWorkspaceModalOpen,
+  setRenameWorkspaceModalOpen,
+  setDeleteWorkspaceModalOpen,
+}: DashBoardHeaderProps) => {
+  const [greeting, setGreeting] = useState(getGreeting());
+
   const { data: user } = useGetMeQuery("User");
 
-  const { email } = user || {};
+  const { firstname } = user || {};
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGreeting(getGreeting());
+    }, 600000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <AppBar
@@ -23,77 +43,72 @@ const DashBoardHeader = () => {
         height: "48px",
       }}
     >
-      <Grid container>
-        <Grid
-          item
-          xs={12}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          margin: "auto",
+          width: "80%",
+          height: "98%",
+        }}
+      >
+        <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
+            justifyContent: "flex-start",
             alignItems: "center",
-            width: "100%",
-            height: "100%",
+            gap: 1,
+            width: { lg: "64%", xl: "36%" },
+            height: "96%",
+            // border: "2px solid blue",
           }}
         >
-          <Grid item xs={6} sx={{ width: "100%", height: "100%" }}>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"start"}
-              alignContent={"center"}
-              sx={{ width: "20%", height: "100%" }}
-            >
-              <Box ml={2}>
-                <Avatar
-                  sx={{
-                    bgcolor: "#656DFF",
-                    color: "white",
-                    width: 32,
-                    height: 32,
-                    marginTop: "5px",
-                  }}
-                  variant="rounded"
-                >
-                  {email?.charAt(0).toUpperCase()}
-                </Avatar>
-              </Box>
-              <Box>
-                <Typography
-                  variant="subtitle1"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#332C49",
-                    padding: "8px",
-                  }}
-                  ml={2}
-                >
-                  {email}
-                </Typography>
-              </Box>
-            </Box>
-          </Grid>
-          <Grid
-            item
-            xs={6}
+          <Typography
+            variant="subtitle1"
+            sx={{
+              fontWeight: "bold",
+              color: "#332C49",
+              padding: "8px",
+            }}
+            ml={2}
+          >
+            {`${greeting}, ${firstname}`}
+          </Typography>
+          <Divider
+            orientation="vertical"
+            variant="middle"
+            flexItem
+            sx={{ backgroundColor: "#A1A1A1" }}
+          />
+          <WorkspacesDropDownMenu
+            selectedWorkspace={selectedWorkspace}
+            setSelectedWorkspace={setSelectedWorkspace}
+            setNewWorkspaceModalOpen={setNewWorkspaceModalOpen}
+            setRenameWorkspaceModalOpen={setRenameWorkspaceModalOpen}
+            setDeleteWorkspaceModalOpen={setDeleteWorkspaceModalOpen}
+          />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            width: "10%",
+            height: "96%",
+          }}
+        >
+          <Box
             sx={{
               display: "flex",
               justifyContent: "flex-end",
-              width: "100%",
+              alignItems: "center",
+              width: "40%",
               height: "100%",
             }}
           >
-            <Box
-              id="header-icon-menu"
-              display={"flex"}
-              justifyContent={"center"}
-              alignContent={"center"}
-              sx={{ width: "8%", height: "100%" }}
-            >
-              <HeaderIconMenu />
-            </Box>
-          </Grid>
-        </Grid>
-      </Grid>
+            <HeaderIconMenu />
+          </Box>
+        </Box>
+      </Box>
     </AppBar>
   );
 };

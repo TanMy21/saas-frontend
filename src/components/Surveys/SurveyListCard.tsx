@@ -1,5 +1,5 @@
 import FeedIcon from "@mui/icons-material/Feed";
-import { Avatar, Box, ButtonBase, Grid, Typography } from "@mui/material";
+import { Avatar, Box, ButtonBase, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
@@ -12,113 +12,162 @@ const SurveyListCard = ({
   survey,
   workspaceId,
   workspaceName,
-  layout,
 }: SurveyListCardProps) => {
   const navigate = useNavigate();
   const { data: elements = [] } = useGetElementsForSurveyQuery(survey.surveyID);
 
   const goToSurvey = (surveyID: string) => {
     navigate(`/survey/${surveyID}`, {
-      state: { workspaceId, workspaceName, layout },
+      state: { workspaceId, workspaceName },
     });
   };
 
   return (
     <>
-      <Grid
-        item
-        container
+      <Box
         key={survey.surveyID}
-        mt={"12px"}
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyItems: "center",
+          width: "100%",
+          height: "64px",
+          margin: "auto",
           backgroundColor: "#FFFFFF",
           borderRadius: "8px",
-          boxShadow: "0 6px 9px -9px rgba(0,0,0,0.4)",
+          border: "2px solid #E5E7EB",
+          mt: "12px",
+          // boxShadow: "0 6px 9px -9px rgba(0,0,0,0.4)",
         }}
       >
-        <Grid
-          item
+        <Box
           sx={{
             display: "flex",
             flexDirection: "row",
+            alignItems: "center",
             width: "100%",
-            height: "56px",
-            marginTop: "-1%",
+            height: "52px",
+            gap: 2,
             padding: "8px",
+            // border: "2px solid black",
           }}
         >
-          <Grid item xs={4}>
-            <Box display={"flex"} flexDirection={"row"} pb={1}>
-              <ButtonBase
-                onClick={() => goToSurvey(survey.surveyID)}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              width: "64%",
+              height: "100%",
+              // border: "2px solid green",
+            }}
+          >
+            <ButtonBase
+              onClick={() => goToSurvey(survey.surveyID)}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                width: "98%",
+                height: "98%",
+                margin: "auto",
+                gap: 2,
+                pl: 1,
+                textTransform: "none",
+                // border: "2px solid blue",
+              }}
+            >
+              <Avatar
+                sx={{ bgcolor: "#EDE9FE", width: 40, height: 40 }}
+                variant="rounded"
+              >
+                <FeedIcon sx={{ color: "#6E25EB" }} />
+              </Avatar>
+              <Box
                 sx={{
-                  textTransform: "none",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "flex-start",
+                  width: "96%",
+                  // border: "2px solid purple",
                 }}
               >
-                <Box>
-                  <Avatar
-                    sx={{ bgcolor: "#168578", width: 32, height: 32 }}
-                    variant="rounded"
-                  >
-                    <FeedIcon />
-                  </Avatar>
-                </Box>
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  ml={1}
-                  width={"100%"}
-                  maxWidth={"220px"}
+                <Typography
+                  sx={{ fontSize: "16px", textOverflow: "clip" }}
+                  noWrap
                 >
-                  <Box
-                    display={"flex"}
-                    flexDirection={"row"}
-                    justifyContent={"start"}
-                  >
-                    <Typography
-                      sx={{ fontSize: "12px", textOverflow: "clip" }}
-                      noWrap
-                    >
-                      {survey.title}
-                    </Typography>
-                  </Box>
-                  <Box display={"flex"} justifyContent={"start"}>
-                    <Typography sx={{ fontSize: "12px", color: "#7E7571" }}>
-                      created: {formatDate(survey.createdAt)}
-                    </Typography>
-                  </Box>
-                </Box>
-              </ButtonBase>
-            </Box>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography sx={{ fontSize: "14px" }} mt={1} ml={3}>
+                  {survey.title}
+                </Typography>
+                <Typography sx={{ fontSize: "12px", color: "#7E7571" }}>
+                  created: {formatDate(survey.createdAt)}
+                </Typography>
+              </Box>
+            </ButtonBase>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "20%",
+              height: "96%",
+              // border: "2px solid red",
+            }}
+          >
+            <Typography
+              sx={{ fontSize: "24px", fontWeight: "bold", color: "#0F1828" }}
+            >
               {elements.length}
             </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography sx={{ fontSize: "14px" }} mt={1} ml={3}>
+            <Typography sx={{ fontSize: "16px", color: "#6B727F" }}>
+              Questions
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "20%",
+              height: "96%",
+              // border: "2px solid red",
+            }}
+          >
+            <Typography
+              sx={{ fontSize: "24px", fontWeight: "bold", color: "#0F1828" }}
+            >
               0
             </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography sx={{ fontSize: "14px" }} mt={1}>
-              {formatDate(survey.updatedAt)}
+            <Typography sx={{ fontSize: "16px", color: "#6B727F" }}>
+              Responses
             </Typography>
-          </Grid>
-          <Grid item xs={2}>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "end",
+              alignItems: "center",
+              width: "20%",
+              height: "96%",
+              pr: 1,
+              // border: "2px solid red",
+            }}
+          >
             <SurveyCardDropDownMenu
               survey={survey}
               workspaceId={workspaceId}
               workspaceName={workspaceName}
             />
-          </Grid>
-        </Grid>
-      </Grid>
+          </Box>
+        </Box>
+      </Box>
     </>
   );
 };

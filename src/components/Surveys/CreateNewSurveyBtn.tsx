@@ -12,14 +12,18 @@ const CreateNewSurveyBtn = ({ workspaceId, workspaceName }: NewSurveyProps) => {
 
   return (
     <>
-      <Box sx={{ mt: 1 }}>
+      <Box>
         <Button
           sx={{
             display: "flex",
             flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 1,
             backgroundColor: "#6152EF",
-            mr: 2,
-            fontWeight: 600,
+            borderRadius: "12px",
+            fontWeight: "bold",
+            padding: "10px",
             textTransform: "capitalize",
             "&:hover": {
               backgroundColor: "#6152EF",
@@ -29,10 +33,8 @@ const CreateNewSurveyBtn = ({ workspaceId, workspaceName }: NewSurveyProps) => {
           size="small"
           onClick={handleOpen}
         >
-          <Box mt={0.5} mr={1}>
-            <AddIcon />
-          </Box>
-          <Box sx={{ fontWeight: 700 }}>Create New Survey</Box>
+          <AddIcon />
+          Create new survey
         </Button>
         <NewSurveyModal
           open={open}

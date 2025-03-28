@@ -1,36 +1,23 @@
 import { useEffect } from "react";
 
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  IconButton,
-  Modal,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-
 
 import { useCreateNewWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
 import {
   ErrorData,
   NewWorkspaceModalProps,
-  WorkspaceData,
+  WorkspaceDropDownMenu,
 } from "../../utils/types";
 
 const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
-  // const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   const [createNewWorkspace, { isSuccess, isError, error }] =
     useCreateNewWorkspaceMutation();
 
-  const { register, handleSubmit } = useForm<WorkspaceData>();
+  const { register, handleSubmit } = useForm<WorkspaceDropDownMenu>();
 
-  const createWorkspace = async (data: WorkspaceData) => {
+  const createWorkspace = async (data: WorkspaceDropDownMenu) => {
     const { workspaceName } = data;
     try {
       await createNewWorkspace({ workspaceName });
@@ -47,7 +34,7 @@ const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
         closeOnClick: true,
         theme: "colored",
       });
-      handleClose();
+      setOpen(false);
     }
 
     if (isError) {
@@ -68,26 +55,11 @@ const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
 
   return (
     <>
-      {/* <IconButton
-        onClick={handleOpen}
-        sx={{
-          background: "#4F46E5",
-          maxWidth: "32px",
-          maxHeight: "32px",
-          marginRight: "2%",
-          marginTop: "8%",
-          borderRadius: 1,
-          color: "white",
-          "&:hover": {
-            backgroundColor: "#4F46E5",
-          },
-        }}
-      >
-        <AddOutlinedIcon fontSize="medium" />
-      </IconButton> */}
       <Modal
         open={open}
-        onClose={handleClose}
+        disableEnforceFocus
+        disableAutoFocus
+        keepMounted
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -98,8 +70,9 @@ const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 400,
+            height: 128,
             bgcolor: "background.paper",
-            borderRadius: 1,
+            borderRadius: 3,
             p: 4,
           }}
         >
@@ -114,76 +87,72 @@ const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
                   Create a new workspace
                 </Typography>
               </Box>
-              <Box>
-                <IconButton
-                  aria-label="more"
-                  aria-controls="long-menu"
-                  aria-haspopup="true"
-                  onClick={handleClose}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Box>
             </Box>
           </Box>
           <Box>
             <form onSubmit={handleSubmit(createWorkspace)}>
-              <Box sx={{ mt: 1 }}>
+              <Box>
                 <TextField
                   margin="normal"
                   required
                   fullWidth
                   size="small"
-                  defaultValue={"Name your workspace"}
-                  id="workspaceName"
-                  autoComplete="Name of Workspace"
+                  placeholder="Name your workspace"
                   autoFocus
                   {...register("workspaceName")}
+                  inputProps={{ autoComplete: "off" }}
                 />
                 <Box
-                  display={"flex"}
-                  flexDirection={"row"}
-                  justifyContent={"flex-end"}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                    gap: 4,
+                    mt: 1,
+                  }}
                 >
-                  <Box mr={2}>
-                    <Button
-                      type="button"
-                      onClick={handleClose}
-                      variant="text"
-                      size="small"
-                      sx={{
-                        mt: 3,
-                        mb: 2,
-                        backgroundColor: "#E4E2E2",
-                        color: "black",
-                        "&.MuiButton-root:hover": {
-                          bgcolor: "#E4E2E2",
-                        },
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </Box>
-                  <Box>
-                    <Button
-                      type="submit"
-                      variant="text"
-                      size="small"
-                      sx={{
-                        mt: 3,
-                        mb: 2,
-                        backgroundColor: "#E4E2E2",
-                        color: "black",
-                        "&.MuiButton-root:hover": {
-                          bgcolor: "#E4E2E2",
-                        },
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      Create Workspace
-                    </Button>
-                  </Box>
+                  <Button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    variant="text"
+                    size="small"
+                    sx={{
+                      width: "16%",
+                      height: "80%",
+                      p: 1,
+                      backgroundColor: "#E4E2E2",
+                      color: "black",
+                      fontWeight: "bold",
+                      "&.MuiButton-root:hover": {
+                        bgcolor: "#E4E2E2",
+                      },
+                      textTransform: "capitalize",
+                      borderRadius: 2,
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="text"
+                    size="small"
+                    sx={{
+                      width: "48%",
+                      height: "80%",
+                      p: 1,
+                      backgroundColor: "#752FEC",
+                      color: "white",
+                      fontWeight: "bold",
+                      "&.MuiButton-root:hover": {
+                        bgcolor: "#752FEC",
+                      },
+                      textTransform: "unset",
+                      borderRadius: 2,
+                    }}
+                  >
+                    Create workspace
+                  </Button>
                 </Box>
               </Box>
             </form>

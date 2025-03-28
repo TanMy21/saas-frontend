@@ -224,21 +224,28 @@ const SurveyCardDropDownMenu = ({
             <MenuItem onClick={() => handleDuplicateSurvey(surveyID)}>
               Duplicate
             </MenuItem>
-            <MenuItem onClick={() => handleNestedOpen("copy to")}>
-              <Box display={"flex"}>
-                <Box>Copy To</Box>
-                <Box ml={12}>
-                  <ChevronRightIcon />
-                </Box>
-              </Box>
+            <MenuItem
+              onClick={() => handleNestedOpen("copy to")}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",  
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              Copy To
+              <ChevronRightIcon />
             </MenuItem>
-            <MenuItem onClick={() => handleNestedOpen("move to")}>
-              <Box display={"flex"}>
-                <Box>Move To</Box>
-                <Box ml={12}>
-                  <ChevronRightIcon />
-                </Box>
-              </Box>
+            <MenuItem
+              onClick={() => handleNestedOpen("move to")}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              Move To
+              <ChevronRightIcon />
             </MenuItem>
             <Divider />
             <MenuItem onClick={handleOpenModalDelete} sx={{ color: "red" }}>
@@ -251,14 +258,16 @@ const SurveyCardDropDownMenu = ({
           <Box>
             <MenuItem
               onClick={() => setCurrentMenu("parent")}
-              sx={{ width: 200 }}
+              sx={{
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                width: 200,
+                gap: 2,
+              }}
             >
-              <Box display={"flex"} p={0}>
-                <Box mr={1}>
-                  <ChevronLeftIcon />
-                </Box>
-                <Box>Copy To</Box>
-              </Box>
+              <ChevronLeftIcon />
+              Copy To
             </MenuItem>
             <Divider />
             {workspaces?.map((workspace: Workspace) => (
@@ -277,14 +286,16 @@ const SurveyCardDropDownMenu = ({
           <Box>
             <MenuItem
               onClick={() => setCurrentMenu("parent")}
-              sx={{ width: 200 }}
+              sx={{
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                width: 200,
+                gap: 2,
+              }}
             >
-              <Box display={"flex"} p={0}>
-                <Box mr={1}>
-                  <ChevronLeftIcon />
-                </Box>
-                <Box>Move To</Box>
-              </Box>
+              <ChevronLeftIcon />
+              Move To
             </MenuItem>
             <Divider />
             {workspaces?.map((workspace: Workspace) => (

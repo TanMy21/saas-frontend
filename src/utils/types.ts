@@ -1,8 +1,8 @@
 import { type Edge, type Node } from "@xyflow/react";
 import type { JwtPayload } from "jwt-decode";
 import type { MRT_ColumnDef } from "material-react-table";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { IconType } from "react-icons/lib";
+import { type FieldErrors, type UseFormRegister } from "react-hook-form";
+import { type IconType } from "react-icons/lib";
 
 export type AuthInitialState = {
   token: string | null;
@@ -43,7 +43,14 @@ export interface DownloadResponsesModalProps {
 }
 
 export interface DashBoardHeaderProps {
-  setStepIndex: React.Dispatch<React.SetStateAction<number>>;
+  selectedWorkspace: Workspace;
+  setSelectedWorkspace: React.Dispatch<
+    React.SetStateAction<Workspace | undefined>
+  >;
+  setStepIndex?: React.Dispatch<React.SetStateAction<number>>;
+  setNewWorkspaceModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setRenameWorkspaceModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setDeleteWorkspaceModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface DockItemProps {
@@ -365,6 +372,12 @@ export interface NewSurveyModalProps {
   workspaceName: string;
 }
 
+export interface NewWorkspaceMenuOptionProps {
+  setAnchorEl: React.Dispatch<React.SetStateAction<null | HTMLElement>>;
+  openModal?: boolean;
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export type QuestionTypeKey =
   | "BINARY"
   | "EMAIL_CONTACT"
@@ -442,6 +455,14 @@ export interface QuestionResponse {
   response: Record<string, string>;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface WorkspaceMenuOptionsProps {
+  workspaceId?: string;
+  workspaceName?: string;
+  setAnchorEl: React.Dispatch<React.SetStateAction<null | HTMLElement>>;
+  openModal?: boolean;
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface RegisterFormData {
@@ -533,6 +554,7 @@ export interface SurveyNameProps {
 export interface NewSurveyProps {
   workspaceId?: string;
   workspaceName?: string;
+  viewMode?: "list" | "grid";
 }
 
 export interface OptionType {
@@ -544,6 +566,13 @@ export interface OptionType {
   value: string;
   image: string;
   order: number;
+}
+
+export interface SurveysCollectionProps {
+  surveys: Survey[];
+  workspaceId?: string;
+  workspaceName?: string;
+  viewMode?: "list" | "grid" | undefined;
 }
 
 export interface SurveyRenameProps {
@@ -591,6 +620,23 @@ export interface SurveyBuilderHeaderProps {
   ) => void;
 }
 
+export interface SurveySearchBarProps {
+  search: string;
+  setSearch: (query: string) => void;
+}
+
+export interface SurveySorterProps {
+  sortBy: "Date created" | "Date updated" | "Alphabetically";
+  setSortBy: React.Dispatch<
+    React.SetStateAction<"Date created" | "Date updated" | "Alphabetically">
+  >;
+}
+
+export interface SurveyViewModeProps {
+  viewMode: "grid" | "list";
+  setViewMode: React.Dispatch<React.SetStateAction<"grid" | "list">>;
+}
+
 export interface SurveyWelcomeElementProps {
   display: string | null;
 }
@@ -628,47 +674,98 @@ export interface Workspace {
   description: string;
   isActive: boolean;
   name: string;
-  workspaceName: string;
+  workspaceName?: string;
   ownerId: string;
   updatedAt: string;
   visibility: string;
   workspaceId?: string;
 }
 
+export interface WorkspaceDelete {
+  workspaceId: string;
+  workspaceName: string;
+}
+
+export type WorkspaceConsoleProps = {
+  selectedWorkspace: Workspace;
+  workspaceId?: string;
+  workspaceName?: string;
+  viewMode?: "list" | "grid";
+  setViewMode?: React.Dispatch<React.SetStateAction<"list" | "grid">>;
+  sortBy?: "Date created" | "Date updated" | "Alphabetically";
+  setSortBy?: React.Dispatch<
+    React.SetStateAction<"Date created" | "Date updated" | "Alphabetically">
+  >;
+};
+
 export interface WorkspacesProp {
   workspaces?: Workspace[];
   handleOpen: () => void;
-  setStepIndex: React.Dispatch<React.SetStateAction<number>>;
+  setStepIndex?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export interface WorkspaceRenameModalProps {
   open: boolean;
   onClose: () => void;
-  workspaceId?: string;
-  workspaceName?: string;
+  selectedWorkspace: Workspace;
+}
+
+export interface WorkspaceRename {
+  workspaceId: string;
+  name: string;
+}
+
+export interface WorkspaceSurveysPaginationProps {
+  page: number;
+  limit: number;
+  total: number;
+  onPageChange: (newPage: number) => void;
+  viewMode: "list" | "grid";
+}
+
+export interface WorkspaceToolbarProps {
+  workspaceId: string;
+  workspaceName: string;
+  viewMode: "list" | "grid";
+  setViewMode: React.Dispatch<React.SetStateAction<"list" | "grid">>;
+  sortBy: "Date created" | "Date updated" | "Alphabetically";
+  setSortBy: React.Dispatch<
+    React.SetStateAction<"Date created" | "Date updated" | "Alphabetically">
+  >;
+  search: string;
+  setSearch: (query: string) => void;
+  selectedWorkspace: Workspace;
 }
 
 export interface WorkspaceDeleteModalProps {
   open: boolean;
   onClose: () => void;
-  wsID?: string;
-  wsName?: string;
-  workspaceName?: string;
+  selectedWorkspace: Workspace;
 }
 
-export interface WorkspaceData {
-  workspaceName?: string;
+export interface WorkspaceDropDownMenu {
+  selectedWorkspace: Workspace;
 }
 
 export type WorkspaceDropdownOutletContextType = {
   setStepIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
+export type WorkspaceDropDownMenuProps = {
+  selectedWorkspace: Workspace;
+  setSelectedWorkspace: React.Dispatch<
+    React.SetStateAction<Workspace | undefined>
+  >;
+  setNewWorkspaceModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setRenameWorkspaceModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setDeleteWorkspaceModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 export interface WorkspaceLayoutProps {
   surveys: Survey[];
   workspaceId: string;
   workspaceName: string;
-  layout?: string;
+  viewMode: "list" | "grid";
 }
 
 export interface WorkspaceSurveysListCountProps {

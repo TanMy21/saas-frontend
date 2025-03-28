@@ -7,8 +7,11 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Workspaces"],
     }),
     getWorkspaceSurveys: builder.query({
-      query: (workspaceId) => `/w/${workspaceId}/surveys`,
-      providesTags: ["Workspaces", "Surveys"],
+      query: ({ workspaceId, page = 1, limit = 8, search = "" }) =>
+        `/w/${workspaceId}/surveys?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`,
+      providesTags: (result, error, { workspaceId }) => [
+        { type: "Surveys", id: workspaceId },
+      ],
     }),
     createNewWorkspace: builder.mutation({
       query: (data) => ({

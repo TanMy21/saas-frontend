@@ -1,47 +1,45 @@
-import { Grid, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { WorkspaceLayoutProps } from "../../utils/types";
 
+import CreateNewSurveyCard from "./CreateNewSurveyCard";
 import SurveyListCard from "./SurveyListCard";
 
 const ListLayout = ({
   surveys,
   workspaceId,
   workspaceName,
-  layout,
 }: WorkspaceLayoutProps) => {
   return (
     <>
-      <Grid
-        container
-        direction="column"
-        spacing={2}
-        sx={{ width: "98%", minHeight: "100%", paddingLeft: "2%" }}
+      <Box
+        sx={{
+          marginTop: "1%",
+          width: "98%",
+          height: { lg: "96%", xl: "96%" },
+          overflowY: "auto",
+          overflowX: "hidden",
+          "&::-webkit-scrollbar": {
+            width: "10px", // Scrollbar width
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "#f1f1f1", // Scrollbar track color
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#61A5D2", // Scrollbar thumb color
+            borderRadius: "10px", // Rounded corners on the scrollbar thumb
+            "&:hover": {
+              background: "#555", // Scrollbar thumb hover color
+            },
+          },
+          // border: "2px solid green",
+        }}
       >
-        {/* Header */}
-        <Grid
-          item
-          container
-          spacing={2}
-          sx={{ padding: 2, backgroundColor: "transparent", borderRadius: 2 }}
-        >
-          <Grid item xs={4}>
-            <Typography sx={{ fontSize: "14px" }}>Surveys</Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography sx={{ fontSize: "14px" }}>Questions</Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography sx={{ fontSize: "14px" }}>Responses</Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography sx={{ fontSize: "14px" }}>Updated</Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography sx={{ fontSize: "14px" }}>Actions</Typography>
-          </Grid>
-        </Grid>
-
+        <CreateNewSurveyCard
+          workspaceId={workspaceId}
+          workspaceName={workspaceName}
+          viewMode={"list"}
+        />
         {/* Rows */}
         {surveys.map((survey) => (
           <SurveyListCard
@@ -49,10 +47,9 @@ const ListLayout = ({
             survey={survey}
             workspaceId={workspaceId}
             workspaceName={workspaceName}
-            layout={layout}
           />
         ))}
-      </Grid>
+      </Box>
     </>
   );
 };
