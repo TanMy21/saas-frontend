@@ -78,7 +78,7 @@ const DashBoardHeader = ({
             orientation="vertical"
             variant="middle"
             flexItem
-            sx={{ backgroundColor: "#A1A1A1" }}
+            sx={{ backgroundColor: "#E2E5E9" }}
           />
           <WorkspacesDropDownMenu
             selectedWorkspace={selectedWorkspace}

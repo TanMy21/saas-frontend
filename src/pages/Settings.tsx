@@ -80,7 +80,7 @@ const Settings = () => {
                 margin: "auto",
                 flexDirection: "column",
                 alignItems: "center",
-                width: "48%",
+                width: "64%",
                 height: "72%",
                 maxHeight: "80%",
                 p: 1,
@@ -135,7 +135,6 @@ const Settings = () => {
                   >
                     <Tab label="General" />
                     <Tab label="Security" />
-                    <Tab label="Logout" onClick={onLogoutClicked} />
                   </Tabs>
                 </Box>
 

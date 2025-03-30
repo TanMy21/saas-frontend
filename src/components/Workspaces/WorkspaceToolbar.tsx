@@ -70,12 +70,14 @@ const WorkspaceToolbar = ({
             value={text}
             onChange={handleChange}
             onBlur={handleBlur}
+            autoFocus
             sx={{
               backgroundColor: "transparent",
             }}
           />
         ) : (
           <Typography
+            onClick={() => setIsEditing(true)}
             variant="h4"
             component="h2"
             sx={{

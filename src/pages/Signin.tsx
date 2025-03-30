@@ -327,7 +327,7 @@ const Signin = () => {
                   fontWeight: "medium",
                   background: "linear-gradient(to right, #7C3AED, #EC4899)",
                   color: "white",
-                  textTransform: "capitalize",
+                  textTransform: "unset",
                   "&:hover": { opacity: 0.9 },
                 }}
               >

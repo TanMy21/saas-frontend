@@ -273,6 +273,13 @@ export interface FlowFormProps {
   handleInteraction?: () => void;
 }
 
+export interface GridSurveyCardProps {
+  survey: Survey;
+  workspaceId: string;
+  workspaceName: string;
+  viewMode: "list" | "grid";
+}
+
 export interface LocationStateProps {
   headerProps?: {
     tabValue?: string;

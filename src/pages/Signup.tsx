@@ -135,7 +135,7 @@ const Signup = () => {
                       required
                       fullWidth
                       id="firstName"
-                      label="First Name"
+                      label="First name"
                       variant="filled"
                       InputLabelProps={{ style: { color: "gray" } }}
                       autoFocus
@@ -165,7 +165,7 @@ const Signup = () => {
                       required
                       fullWidth
                       id="lastName"
-                      label="Last Name"
+                      label="Last name"
                       InputLabelProps={{ style: { color: "gray" } }}
                       variant="filled"
                       {...register("lastname")}
@@ -363,11 +363,11 @@ const Signup = () => {
                     fontWeight: "medium",
                     background: "linear-gradient(to right, #7C3AED, #EC4899)",
                     color: "white",
-                    textTransform: "capitalize",
+                    textTransform: "unset",
                     "&:hover": { opacity: 0.9 },
                   }}
                 >
-                  {isLoading ? "Creating Account..." : "Create Account →"}
+                  {isLoading ? "Creating account..." : "Create account →"}
                 </Button>
                 <Divider sx={{ my: 3, color: "#747B88" }}>
                   or continue with

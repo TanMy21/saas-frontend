@@ -31,7 +31,7 @@ const SurveyListCard = ({
           flexDirection: "column",
           alignItems: "center",
           justifyItems: "center",
-          width: "100%",
+          width: "98%",
           height: "64px",
           margin: "auto",
           backgroundColor: "#FFFFFF",

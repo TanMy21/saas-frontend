@@ -15,7 +15,7 @@ const ListLayout = ({
       <Box
         sx={{
           marginTop: "1%",
-          width: "98%",
+          width: "100%",
           height: { lg: "96%", xl: "96%" },
           overflowY: "auto",
           overflowX: "hidden",
