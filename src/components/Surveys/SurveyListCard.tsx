@@ -32,7 +32,7 @@ const SurveyListCard = ({
           alignItems: "center",
           justifyItems: "center",
           width: "98%",
-          height: "64px",
+          height: { lg: "56px", xl: "64px" },
           margin: "auto",
           backgroundColor: "#FFFFFF",
           borderRadius: "8px",
@@ -81,7 +81,12 @@ const SurveyListCard = ({
               }}
             >
               <Avatar
-                sx={{ bgcolor: "#EDE9FE", width: 40, height: 40 }}
+                sx={{
+                  bgcolor: "#EDE9FE",
+                  width: 40,
+                  height: 40,
+                  mb: { lg: "12px", xl: "0px" },
+                }}
                 variant="rounded"
               >
                 <FeedIcon sx={{ color: "#6E25EB" }} />
@@ -120,11 +125,15 @@ const SurveyListCard = ({
             }}
           >
             <Typography
-              sx={{ fontSize: "24px", fontWeight: "bold", color: "#0F1828" }}
+              sx={{
+                fontSize: "24px",
+                fontWeight: "bold",
+                color: "#0F1828",
+              }}
             >
               {elements.length}
             </Typography>
-            <Typography sx={{ fontSize: "16px", color: "#6B727F" }}>
+            <Typography sx={{ fontSize: "16px", color: "#6B727F", mb: "8px" }}>
               Questions
             </Typography>
           </Box>
@@ -144,7 +153,7 @@ const SurveyListCard = ({
             >
               0
             </Typography>
-            <Typography sx={{ fontSize: "16px", color: "#6B727F" }}>
+            <Typography sx={{ fontSize: "16px", color: "#6B727F", mb: "8px" }}>
               Responses
             </Typography>
           </Box>

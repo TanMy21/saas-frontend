@@ -1,83 +1,164 @@
-import { useRef, useState } from "react";
-
-import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
-import { Box, IconButton, InputBase } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Tooltip,
+} from "@mui/material";
+import { FaTag } from "react-icons/fa";
 
 import { SurveySearchBarProps } from "../../utils/types";
 
-const SurveySearchBar = ({ search, setSearch }: SurveySearchBarProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [isFocused, setIsFocused] = useState(false);
+const SurveySearchBar = ({
+  search,
+  matchMode,
+  setMatchMode,
+  tagOnly,
+  setTagOnly,
+  setSearch,
+}: SurveySearchBarProps) => {
+  // const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleClear = () => {
-    setSearch("");
-    inputRef.current?.focus();
-  };
+  // const handleClear = () => {
+  //   setSearch("");
+  //   inputRef.current?.focus();
+  // };
 
   return (
     <>
-      <Box position="relative">
-        <Box
-          sx={{
-            display: "flex",
+      <TextField
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder={
+          tagOnly
+            ? matchMode === "OR"
+              ? "Search surveys by tag(s) only..."
+              : "Search surveys by all matching tag(s)..."
+            : matchMode === "OR"
+              ? "Search surveys by title or tag(s)..."
+              : "Search surveys by title and tag(s)..."
+        }
+        variant="filled"
+        InputLabelProps={{ style: { color: "gray" } }}
+        sx={{
+          mb: 1,
+          margin: "auto",
+          width: "98%",
+          height: "96%",
+          backgroundColor: "white",
+          borderRadius: 3,
+          border: "1px solid",
+          borderColor: "grey.200",
+          // boxShadow: 1,
+          transition: "all 0.2s",
+          boxShadow: "0 0 0 2px rgba(124, 58, 237, 0.2)",
+          "& .MuiFilledInput-root": {
+            height: "100%",
+            borderRadius: 3,
+            backgroundColor: "#F8F9FF",
+            borderBottom: "none !important",
             alignItems: "center",
-            backgroundColor: "white",
-            borderRadius: 2,
-            border: "1px solid",
-            borderColor: isFocused ? "purple.500" : "grey.200",
-            boxShadow: 1,
-            transition: "all 0.2s",
-            ...(isFocused && {
-              boxShadow: "0 0 0 2px rgba(124, 58, 237, 0.2)",
-            }),
-          }}
-        >
-          <Box
-            sx={{
-              pl: 1.5,
-              color: "grey.500",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <SearchIcon sx={{ fontSize: "20px" }} />
-          </Box>
-          <InputBase
-            inputRef={inputRef}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            placeholder="Search surveys..."
-            sx={{
-              flex: 1,
-              px: 1.5,
-              py: 1,
-              color: "text.primary",
-              "&::placeholder": {
-                color: "grey.400",
-              },
-            }}
-          />
-          {search && (
-            <IconButton
-              onClick={handleClear}
-              size="small"
-              sx={{
-                pr: 1.5,
-                color: "grey.400",
-                "&:hover": {
-                  color: "grey.600",
-                },
-                transition: "color 0.2s",
-              }}
-            >
-              <ClearIcon sx={{ fontSize: "20px" }} />
-            </IconButton>
-          )}
-        </Box>
-      </Box>
+            paddingTop: "0px",
+            paddingBottom: "0px",
+            "& input": {
+              padding: "12px 0px",
+            },
+            "&:before, &:after": {
+              display: "none",
+            },
+          },
+        }}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon sx={{ color: "grey.600", mb: "56%" }} />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              {/* AND/OR Toggle Group */}
+              <Box
+                sx={{
+                  display: "flex",
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  height: "24px",
+                  padding: "4px",
+                  boxShadow: 1,
+
+                  border: "1px solid #E6E8EC",
+                  mr: 1,
+                }}
+              >
+                <Tooltip title="Match Any (AND)">
+                  <IconButton
+                    onClick={() => setMatchMode("AND")}
+                    sx={{
+                      padding: "6px",
+                      borderRadius: "6px",
+                      backgroundColor:
+                        matchMode === "AND" ? "#EDE9FE" : "transparent",
+                      color: matchMode === "AND" ? "#7C39ED" : "#777E8B",
+                      fontSize: "12px",
+                      fontWeight: "bold",
+                      "&:hover": {
+                        backgroundColor:
+                          matchMode === "AND" ? "#EDE9FE" : "transparent",
+                        color: "#7B39ED",
+                      },
+                    }}
+                  >
+                    AND
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Match All (OR)">
+                  <IconButton
+                    onClick={() => setMatchMode("OR")}
+                    sx={{
+                      padding: "6px",
+                      borderRadius: "6px",
+                      backgroundColor:
+                        matchMode === "OR" ? "#EDE9FE" : "transparent",
+                      color: matchMode === "OR" ? "#7C39ED" : "#777E8B",
+                      fontSize: "12px",
+                      fontWeight: "bold",
+                      "&:hover": {
+                        backgroundColor:
+                          matchMode === "OR" ? "#EDE9FE" : "transparent",
+                        color: "#7B39ED",
+                      },
+                    }}
+                  >
+                    OR
+                  </IconButton>
+                </Tooltip>
+              </Box>
+
+              {/* Tag-only toggle */}
+              <Tooltip
+                title={tagOnly ? "Tag-only search" : "Title + Tag search"}
+              >
+                <IconButton
+                  onClick={() => setTagOnly((prev) => !prev)}
+                  sx={{
+                    padding: "6px",
+                    borderRadius: "6px",
+                    backgroundColor: tagOnly ? "#EDE9FE" : "transparent",
+                    color: tagOnly ? "#7C39ED" : "#777E8B",
+                    "&:hover": {
+                      backgroundColor: tagOnly ? "#EDE9FE" : "transparent",
+                      color: "#7B39ED",
+                    },
+                  }}
+                >
+                  <FaTag size={18} />
+                </IconButton>
+              </Tooltip>
+            </InputAdornment>
+          ),
+        }}
+      />
     </>
   );
 };

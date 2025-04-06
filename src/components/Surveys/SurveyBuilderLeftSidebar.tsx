@@ -1,16 +1,24 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-import { Box, Divider, Grid } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
-import { SurveyBuilderLeftSidebarProps } from "../../utils/types";
+import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
+import { SurveyBuilderLeftSidebarProps, Element } from "../../utils/types";
 
 import AddElementMenu from "./Elements/AddElementMenu";
-import ElementsPanel from "./Elements/ElementsPanel";
+// import ElementsPanel from "./Elements/ElementsPanel";
+import ElementsPanel from "./Elements/ElementsPanelNew";
 
 const SurveyBuilderLeftSidebar = ({
   surveyID,
   setQuestionId,
 }: SurveyBuilderLeftSidebarProps) => {
+  const { data: elements = [] as Element[], refetch } =
+    useGetElementsForSurveyQuery(
+      surveyID!
+      //{ pollingInterval: 1000 }
+    );
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
 
@@ -22,21 +30,42 @@ const SurveyBuilderLeftSidebar = ({
     setAnchorEl(null);
   };
 
+  const questionCount = useMemo(() => {
+    return elements.filter(
+      (el) =>
+        el.type !== "WELCOME_SCREEN" &&
+        el.type !== "END_SCREEN" &&
+        el.type !== "INSTRUCTIONS" &&
+        el.type !== "EMAIL_CONTACT"
+    ).length;
+  }, [elements]);
+
   return (
-    <Grid container display={"flex"} flexDirection={"column"}>
-      <Grid
-        item
-        display={"flex"}
-        flexDirection={"row"}
-        justifyContent={"end"}
-        mt={2}
-        mb={2}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "68vh",
+        // border: "2px solid green",
+      }}
+    >
+      <Box
         sx={{
-          width: "98%",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "92%",
+          p: 1,
           height: "40px",
+          borderBottom: "1px solid #F3F4F6",
+          // border: "2px solid blue",
         }}
       >
         {/* Menu */}
+        <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
+          {`Questions (${questionCount})`}
+        </Typography>
         <Box
           id="add-element-menu"
           sx={{
@@ -45,6 +74,7 @@ const SurveyBuilderLeftSidebar = ({
             alignItems: "center",
             width: "15%",
             height: "38px",
+            // border: "2px solid red",
           }}
         >
           <AddElementMenu
@@ -55,10 +85,14 @@ const SurveyBuilderLeftSidebar = ({
             handleClose={handleClose}
           />
         </Box>
-      </Grid>
-      <ElementsPanel surveyID={surveyID!} setQuestionId={setQuestionId} />
-      <Divider sx={{ marginTop: "4px" }} />
-    </Grid>
+      </Box>
+      <ElementsPanel
+        elements={elements}
+        setQuestionId={setQuestionId}
+        refetch={refetch}
+      />
+      {/* <Divider sx={{ marginTop: "4px" }} /> */}
+    </Box>
   );
 };
 

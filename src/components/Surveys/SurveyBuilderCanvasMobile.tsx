@@ -27,15 +27,18 @@ const SurveyBuilderCanvasMobile = ({
   return (
     <Box display={"flex"} flexDirection={"column"}>
       <Box
-        margin={"auto"}
-        borderRadius={"12px"}
-        bgcolor={"#FFFFFF"}
-        mt={"2%"}
-        mb={"2%"}
-        pt={"8%"}
-        pl={"1%"}
-        pr={"1%"}
         sx={{
+          display: "flex",
+          flexDirection: "column",
+          margin: "auto",
+          border: "3px solid #E0E0E0",
+          borderRadius: "12px",
+          mt: "2%",
+          mb: "2%",
+          pt: "8%",
+          pl: "1%",
+          pr: "1%",
+          bgcolor: "#FAF9F5",
           width: "300px",
           minHeight: { lg: "480px", xl: "600px" },
           transition: "minWidth 1s ease-in-out, opacity 1s ease-in-out",

@@ -1,6 +1,7 @@
 import { type Edge, type Node } from "@xyflow/react";
 import type { JwtPayload } from "jwt-decode";
 import type { MRT_ColumnDef } from "material-react-table";
+import { type DroppableProvided } from "react-beautiful-dnd";
 import { type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { type IconType } from "react-icons/lib";
 
@@ -104,6 +105,15 @@ export interface Element {
   required: boolean;
 }
 
+export interface ElementListItemProps {
+  elements: Element[];
+  displayedQuestions: Element[];
+  provided: DroppableProvided;
+  nonOrderableTypes: string[];
+  setQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
+  refetch: () => void;
+}
+
 export interface ElementProps {
   qNO: string;
   type?: string;
@@ -143,9 +153,10 @@ export interface ElementsResponse {
 }
 
 export interface ElementsPanelProps {
-  elements?: ElementType[];
-  surveyID: string;
+  elements: Element[];
+  surveyID?: string;
   setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
+  refetch: () => void;
 }
 
 interface ElementResponse {
@@ -627,8 +638,18 @@ export interface SurveyBuilderHeaderProps {
   ) => void;
 }
 
+export interface SurveyPreferencesPanelProps {
+  survey: Survey;
+  questionId: string | null;
+  display: string | null;
+}
+
 export interface SurveySearchBarProps {
   search: string;
+  matchMode: "AND" | "OR";
+  setMatchMode: React.Dispatch<React.SetStateAction<"AND" | "OR">>;
+  tagOnly: boolean;
+  setTagOnly: React.Dispatch<React.SetStateAction<boolean>>;
   setSearch: (query: string) => void;
 }
 
@@ -637,6 +658,12 @@ export interface SurveySorterProps {
   setSortBy: React.Dispatch<
     React.SetStateAction<"Date created" | "Date updated" | "Alphabetically">
   >;
+}
+
+export interface SurveyTagsModalProps {
+  open: boolean;
+  onClose: () => void;
+  survey: Survey;
 }
 
 export interface SurveyViewModeProps {
@@ -695,6 +722,9 @@ export interface WorkspaceDelete {
 
 export type WorkspaceConsoleProps = {
   selectedWorkspace: Workspace;
+  setSelectedWorkspace: React.Dispatch<
+    React.SetStateAction<Workspace | undefined>
+  >;
   workspaceId?: string;
   workspaceName?: string;
   viewMode?: "list" | "grid";
@@ -740,8 +770,16 @@ export interface WorkspaceToolbarProps {
     React.SetStateAction<"Date created" | "Date updated" | "Alphabetically">
   >;
   search: string;
+  matchMode: "AND" | "OR";
+  setMatchMode: React.Dispatch<React.SetStateAction<"AND" | "OR">>;
+  tagOnly: boolean;
+  total: number;
+  setTagOnly: React.Dispatch<React.SetStateAction<boolean>>;
   setSearch: (query: string) => void;
   selectedWorkspace: Workspace;
+  setSelectedWorkspace: React.Dispatch<
+    React.SetStateAction<Workspace | undefined>
+  >;
 }
 
 export interface WorkspaceDeleteModalProps {

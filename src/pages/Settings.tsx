@@ -1,25 +1,20 @@
 import { useState } from "react";
 
 import { Box, Grid, Paper, Tab, Tabs } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 
-import { useSendLogoutMutation } from "../app/slices/authApiSlice";
-import DashBoardHeader from "../components/DashBoardHeader";
+import {
+  DashBoardHeader,
+  SettingsPageHeader,
+} from "../components/DashBoardHeader";
 import ScrollbarStyle from "../components/ScrollbarStyle";
 import UpdateInfo from "../components/Settings/UpdateInfo";
 import UpdatePassword from "../components/Settings/UpdatePassword";
 
 const Settings = () => {
   const [tabIndex, setTabIndex] = useState(0);
-  const navigate = useNavigate();
+
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
-  };
-  const [sendLogout] = useSendLogoutMutation();
-
-  const onLogoutClicked = () => {
-    sendLogout();
-    navigate("/");
   };
 
   return (
@@ -60,7 +55,7 @@ const Settings = () => {
               zIndex: "10",
             }}
           >
-            <DashBoardHeader />
+            <SettingsPageHeader />
           </Grid>
           <Box
             sx={{
@@ -83,17 +78,17 @@ const Settings = () => {
                 width: "64%",
                 height: "72%",
                 maxHeight: "80%",
-                p: 1,
                 borderRadius: "8px",
               }}
             >
               <Box
                 sx={{
                   display: "flex",
+                  flexDirection: "row",
+                  gap: 2,
                   margin: "auto",
                   width: "96%",
-                  height: "96%",
-                  flexDirection: "row",
+                  height: "100%",
                   // border: "2px solid black",
                 }}
               >
@@ -103,9 +98,10 @@ const Settings = () => {
                     display: "flex",
                     flexDirection: "column",
                     width: "20%",
-                    height: "100%",
+                    height: "96%",
+                    p: 1,
                     backgroundColor: "#FFFFFF",
-                    // border: "2px solid green",
+                    // border: "2px solid red",
                   }}
                 >
                   <Tabs
@@ -118,17 +114,19 @@ const Settings = () => {
                         height: "24px",
                         textTransform: "capitalize",
                         borderRight: "none",
+                        color:"#34375D",
                       },
                       ".Mui-selected": {
-                        backgroundColor: "#f0f0f0",
+                        backgroundColor: "#FBF3FA",
                         fontWeight: "bold",
+                        color: "#8A36D2",
                         borderRadius: "0 16px 16px 0",
                       },
                       ".MuiTabs-indicator": {
                         left: 0, // Move indicator to the left side
                         right: "auto", // Remove indicator from the right
                         width: "4px", // Width of the indicator
-                        backgroundColor: "blue", // Blue color for the indicator
+                        backgroundColor: "#8020CE", // Blue color for the indicator
                         borderRadius: "0 16px 16px 0",
                       },
                     }}
@@ -137,21 +135,18 @@ const Settings = () => {
                     <Tab label="Security" />
                   </Tabs>
                 </Box>
-
                 {/* settings */}
                 <Box
                   sx={{
                     display: "flex",
                     flexDirection: "column",
                     width: "80%",
-                    height: "92%",
-                    padding: 3,
-                    // border: "4px solid green",
+                    height: "100%",
+                    borderLeft: "2px solid #E5E7EB",
                     backgroundColor: "#FFFFFF",
                   }}
                 >
                   {tabIndex === 0 && <UpdateInfo />}
-
                   {tabIndex === 1 && <UpdatePassword />}
                 </Box>
               </Box>

@@ -239,7 +239,7 @@ const Homepage = () => {
                   justifyContent: "center",
                   gap: 2,
                   backgroundSize: "200% 200%",
-                  textTransform: "capitalize",
+                  textTransform: "unset",
                   animation: "gradientAnimation 3s ease infinite",
                   "&:hover": {
                     boxShadow:
@@ -276,7 +276,7 @@ const Homepage = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  textTransform: "capitalize",
+                  textTransform: "unset",
                   "&:hover": {
                     backgroundColor: "#f9fafb",
                     boxShadow:

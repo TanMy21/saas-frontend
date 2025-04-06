@@ -19,6 +19,7 @@ import SurveyBuilderDock from "../components/Surveys/SurveyBuilderDock";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderIsland from "../components/Surveys/SurveyBuilderIsland";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
+import SurveyPreferencesPanel from "../components/Surveys/SurveyPreferencesPanel";
 import SurveyBuilderTour from "../components/Tour/SurveyBuilderTour";
 import { Element, LocationStateProps } from "../utils/types";
 
@@ -125,10 +126,13 @@ const SurveyBuilder = () => {
       <ScrollbarStyle />
       <Box
         sx={{
+          display: "flex",
+          flexDirection: "column",
           overflowX: "hidden",
-          overflowY: "hidden",
+          overflowY: "scroll",
           width: "100%",
           height: "100%",
+          // border: "2px solid black",
           "&::-webkit-scrollbar": {
             width: "10px", // Scrollbar width
           },
@@ -144,199 +148,108 @@ const SurveyBuilder = () => {
           },
         }}
       >
-        <Grid container>
-          {isTourEnabled && (
-            <SurveyBuilderTour
-              stepIndex={stepIndex}
-              runTour={runTour}
-              setStepIndex={setStepIndex}
-              setRunTour={setRunTour}
-            />
-          )}
-          <Grid
-            item
-            display={"flex"}
-            flexDirection={"row"}
-            xs={12}
-            sx={{
-              overflowY: "hidden",
-              position: "sticky",
-              top: "0",
-              width: "100%",
-              zIndex: "10",
-            }}
-          >
-            <SurveyBuilderHeader
-              // tabValue={tabValue}
-              survey={survey}
-              workspaceId={workspaceId!}
-              workspaceName={workspaceName!}
-              title={surveyTitle}
-              // handleScreenChange={handleScreenChange}
-            />
-          </Grid>
-          <CreateNewSurveyModal
-            isOpen={isOpen}
-            surveyID={surveyID}
-            setSurveyTitle={setSurveyTitle}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            height: "6vh",
+            // border: "2px solid red",
+          }}
+        >
+          <SurveyBuilderHeader
+            // tabValue={tabValue}
+            survey={survey}
+            workspaceId={workspaceId!}
+            workspaceName={workspaceName!}
+            title={surveyTitle}
+            // handleScreenChange={handleScreenChange}
           />
-          <ImportQuestionsModal isOpen={isOpenImport} surveyID={surveyID} />
-          <Grid
-            item
-            xl={12}
-            lg={12}
-            md={12}
-            xs={12}
-            display={"flex"}
-            flexDirection={"row"}
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            height: "94vh",
+            backgroundColor: "#FFFFFF",
+            // border: "2px solid green",
+          }}
+        >
+          <Box
             sx={{
-              width: "100%",
-              minHeight: "96vh",
+              display: "flex",
+              flexDirection: "column",
+              width: "16%",
+              height: "100%",
+              border: "2px solid blue",
             }}
           >
-            {/* content area */}
-            {/* Left Sidebar */}
-            <Grid
-              item
-              xl={2}
-              lg={2}
-              md={2}
-              xs={2}
+            <SurveyBuilderLeftSidebar
+              surveyID={surveyID}
+              setQuestionId={setQuestionId}
+            />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "68%",
+              height: "100%",
+              // border: "2px solid orange",
+            }}
+          >
+            <SurveyBuilderDock setDisplay={setDisplay} />
+            {/* <SurveyBuilderIsland setDisplay={setDisplay} /> */}
+            <Box
               sx={{
-                background: "white",
-                position: "sticky",
-                top: "5vh",
-                left: "0",
-                zIndex: "5",
-                overflowY: "hidden",
+                marginTop: "2%",
+                marginLeft: "1%",
+                maxWidth: "98%",
+                minHeight: "84%",
               }}
             >
-              <SurveyBuilderLeftSidebar
-                surveyID={surveyID}
-                setQuestionId={setQuestionId}
-              />
-            </Grid>
-
-            {/* Main content area */}
-            <Grid
-              item
-              xl={8}
-              lg={8}
-              md={8}
-              xs={8}
-              sx={{
-                flexGrow: 1,
-                width: "80%",
-                minHeight: "90%",
-                overflowY: "auto",
-              }}
-            >
-              <SurveyBuilderDock setDisplay={setDisplay} />
-              {/* <SurveyBuilderIsland setDisplay={setDisplay} /> */}
-              <Box
-                sx={{
-                  marginTop: "2%",
-                  marginLeft: "1%",
-                  maxWidth: "98%",
-                  minHeight: "84%",
-                }}
-              >
-                {noElements ? (
-                  content
-                ) : display === "mobile" ? (
-                  <SurveyBuilderCanvasMobile
-                    survey={survey}
-                    questionId={questionId}
-                    display={display}
-                    // handleLayoutChange={handleLayoutChange}
-                  />
-                ) : (
-                  <SurveyBuilderCanvas
-                    survey={survey}
-                    questionId={questionId}
-                    display={display}
-                    // handleLayoutChange={handleLayoutChange}
-                  />
-                )}
-              </Box>
-            </Grid>
-            {/* Right Sidebar */}
-            <Grid
-              item
-              xl={2}
-              md={2}
-              xs={2}
-              sx={{
-                background: "#FFFEFE",
-                position: "sticky",
-                width: "14%",
-                top: "5vh",
-                right: "0",
-                zIndex: "5",
-                minHeight: "92%",
-                overflowX: "hidden",
-                overflowY: "hidden",
-              }}
-            >
-              <Box
-                id="question-settings"
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "100%",
-                  height: "100%",
-                  gap: "1%",
-                  left: "0",
-                  right: "0",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "end",
-                    width: "92%",
-                    margin: "auto",
-                    marginTop: "8%",
-                    height: { lg: "24px", xl: "16px" },
-                    maxHeight: { lg: "24px", xl: "16px" },
-                    fontSize: "20px",
-                    fontWeight: 600,
-                    color: "#3F3F46",
-                    // border: "1px solid red",
-                  }}
-                >
-                  Settings
-                </Box>
-                <Divider
-                  sx={{
-                    borderWidth: "1px",
-                    marginTop: { lg: "0%", xl: "0%" },
-                    marginBottom: { lg: "0%", xl: "0%" },
-                  }}
+              {noElements ? (
+                content
+              ) : display === "mobile" ? (
+                <SurveyBuilderCanvasMobile
+                  survey={survey}
+                  questionId={questionId}
+                  display={display}
+                  // handleLayoutChange={handleLayoutChange}
                 />
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "92%",
-                    margin: "auto",
-                    marginTop: "0%",
-                    // padding: "2px",
-                    height: "92%",
-                    // border: "1px solid black",
-                  }}
-                >
-                  <ElementSettingsContainer
-                    survey={survey}
-                    questionId={questionId}
-                    display={display}
-                  />
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
-        </Grid>
+              ) : (
+                <SurveyBuilderCanvas
+                  survey={survey}
+                  questionId={questionId}
+                  display={display}
+                  // handleLayoutChange={handleLayoutChange}
+                />
+              )}
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "16%",
+              height: "100%",
+              // border: "2px solid green",
+            }}
+          >
+            <SurveyPreferencesPanel
+              survey={survey}
+              questionId={questionId}
+              display={display}
+            />
+          </Box>
+        </Box>
+        <CreateNewSurveyModal
+          isOpen={isOpen}
+          surveyID={surveyID}
+          setSurveyTitle={setSurveyTitle}
+        />
+        <ImportQuestionsModal isOpen={isOpenImport} surveyID={surveyID} />
       </Box>
     </>
   );

@@ -77,6 +77,7 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
           width: { md: "100%", lg: "100%", xl: "68%" },
           height: "40px",
           // border: "2px solid black",
+          border: "3px solid red",
         }}
       >
         <Box
@@ -89,7 +90,7 @@ const SurveyBuilderIsland = ({ setDisplay }: SurveyIslandProps) => {
             height: "100%",
             backgroundColor: "#FFFFFF",
             borderRadius: "8px",
-            boxShadow: "32px, 32px, 52px, #818080, -32px, -32px, 52px, #ffffff",
+            // boxShadow: "32px, 32px, 52px, #818080, -32px, -32px, 52px, #ffffff",
           }}
         >
           <Box

@@ -28,8 +28,9 @@ const WorkspaceSurveysPagination = ({
         height: "48px",
         marginTop:
           viewMode === "list"
-            ? { lg: "-12%", xl: "-2%" }
-            : { lg: "-8%", xl: "-4%" },
+            ? { lg: "0%", xl: "0%" }
+            : { lg: "0%", xl: "0%" },
+        // border: "2px solid blue",
       }}
     >
       <Box
@@ -44,8 +45,12 @@ const WorkspaceSurveysPagination = ({
           // border: "2px solid green",
         }}
       >
-        <Typography>{`${start}-${end}`}</Typography>
-        <Typography>{`of ${total}`}</Typography>
+        <Typography
+          sx={{ fontSize: 16, fontWeight: "bold" }}
+        >{`${start}-${end}`}</Typography>
+        <Typography
+          sx={{ fontSize: 16, fontWeight: "bold" }}
+        >{`of ${total}`}</Typography>
       </Box>
       <Button
         disabled={page <= 1}
@@ -59,6 +64,8 @@ const WorkspaceSurveysPagination = ({
           width: 32,
           height: 32,
           color: "#022B67",
+          fontSize: 20,
+          fontWeight: "bold",
           "&:hover": {
             backgroundColor: "transparent",
             border: "none",
@@ -67,7 +74,7 @@ const WorkspaceSurveysPagination = ({
           // border: "2px solid green",
         }}
       >
-        <ChevronLeftIcon />
+        <ChevronLeftIcon sx={{ fontSize: 32, fontWeight: "bold" }} />
       </Button>
       <Button
         disabled={page >= totalPages}
@@ -81,6 +88,7 @@ const WorkspaceSurveysPagination = ({
           width: 32,
           height: 32,
           color: "#022B67",
+
           "&:hover": {
             backgroundColor: "transparent",
             border: "none",
@@ -89,7 +97,7 @@ const WorkspaceSurveysPagination = ({
           // border: "2px solid green",
         }}
       >
-        <ChevronRightIcon />
+        <ChevronRightIcon sx={{ fontSize: 32, fontWeight: "bold" }} />
       </Button>
     </Box>
   );

@@ -132,13 +132,13 @@ const AddElementMenu = ({
       <IconButton
         onClick={handleClick}
         sx={{
-          background: "#4F46E5",
+          background: "#752FEC",
           width: "32px",
           height: "32px",
-          borderRadius: 1,
+          borderRadius: 4,
           color: "white",
           "&:hover": {
-            backgroundColor: "#4F46E5",
+            backgroundColor: "#752FEC",
           },
         }}
       >

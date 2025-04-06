@@ -7,8 +7,15 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Workspaces"],
     }),
     getWorkspaceSurveys: builder.query({
-      query: ({ workspaceId, page = 1, limit = 8, search = "" }) =>
-        `/w/${workspaceId}/surveys?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`,
+      query: ({
+        workspaceId,
+        page = 1,
+        limit = 8,
+        search = "",
+        matchMode = "OR",
+        tagOnly = false,
+      }) =>
+        `/w/${workspaceId}/surveys?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}&matchMode=${matchMode}&tagOnly=${tagOnly}`,
       providesTags: (result, error, { workspaceId }) => [
         { type: "Surveys", id: workspaceId },
       ],

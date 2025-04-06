@@ -20,6 +20,7 @@ import {
 } from "../../utils/types";
 import DeleteSurveyModal from "../Modals/DeleteSurveyModal";
 import RenameSurveyModal from "../Modals/RenameSurveyModal";
+import SurveyTagsModal from "../Modals/SurveyTagsModal";
 import SnackbarAlert from "../SnackbarAlert";
 
 const SurveyCardDropDownMenu = ({
@@ -39,8 +40,9 @@ const SurveyCardDropDownMenu = ({
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [currentMenu, setCurrentMenu] = useState<string | null>("parent");
   // const [tabValue, setTabValue] = useState<string | null>("create");
-  const [openRenameModel, setOpenRenameModel] = useState(false);
-  const [openDeleteModel, setOpenDeleteModel] = useState(false);
+  const [openTagsModal, setOpenTagsModal] = useState(false);
+  const [openRenameModal, setOpenRenameModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const open = Boolean(menuAnchor);
 
@@ -95,13 +97,18 @@ const SurveyCardDropDownMenu = ({
     setCurrentMenu("parent");
   };
 
+  const handleOpenTagsModal = () => {
+    setOpenTagsModal(true);
+    handleClose();
+  };
+
   const handleOpenModalRename = () => {
-    setOpenRenameModel(true);
+    setOpenRenameModal(true);
     handleClose();
   };
 
   const handleOpenModalDelete = () => {
-    setOpenDeleteModel(true);
+    setOpenDeleteModal(true);
     handleClose();
   };
 
@@ -193,6 +200,7 @@ const SurveyCardDropDownMenu = ({
         aria-controls="long-menu"
         aria-haspopup="true"
         onClick={handleClick}
+        sx={{ mb: { lg: "12px", xl: "0px" } }}
       >
         <MoreHorizIcon />
       </IconButton>
@@ -214,6 +222,7 @@ const SurveyCardDropDownMenu = ({
             <MenuItem onClick={() => handleOpenSurvey(surveyID)}>Open</MenuItem>
             <Divider />
             <MenuItem onClick={handleShareSurvey}>Share</MenuItem>
+            <MenuItem onClick={handleOpenTagsModal}>Tags</MenuItem>
             <SnackbarAlert
               openSnackbar={openSnackbar}
               handleCloseSnackbar={handleCloseSnackbar}
@@ -228,7 +237,7 @@ const SurveyCardDropDownMenu = ({
               onClick={() => handleNestedOpen("copy to")}
               sx={{
                 display: "flex",
-                justifyContent: "space-between",  
+                justifyContent: "space-between",
                 alignItems: "center",
                 gap: 6,
               }}
@@ -311,16 +320,21 @@ const SurveyCardDropDownMenu = ({
       </Menu>
       {/* Remame Modal */}
       <RenameSurveyModal
-        open={openRenameModel}
-        onClose={() => setOpenRenameModel(false)}
+        open={openRenameModal}
+        onClose={() => setOpenRenameModal(false)}
         survey={survey}
       />
       {/* Delete Modal */}
       <DeleteSurveyModal
-        open={openDeleteModel}
-        onClose={() => setOpenDeleteModel(false)}
+        open={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
         sID={survey.surveyID}
         sTitle={survey.title}
+      />
+      <SurveyTagsModal
+        open={openTagsModal}
+        onClose={() => setOpenTagsModal(false)}
+        survey={survey}
       />
     </>
   );

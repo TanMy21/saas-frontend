@@ -14,7 +14,7 @@ import SurveySettingsModal from "../Modals/SurveySettingsModal";
 import SnackbarAlert from "../SnackbarAlert";
 
 const DOCK_HEIGHT = 36;
-const DEFAULT_ICON_SIZE = 32;
+const DEFAULT_ICON_SIZE = 36;
 const HOVER_ICON_SIZE = 64;
 
 const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
@@ -68,9 +68,10 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
         right: 0,
         margin: "auto",
         backgroundColor: "#FFF",
-        borderRadius: 2,
+        borderRadius: 3,
+        border: "2px solid #E0E0E0",
         padding: "8px 16px",
-        boxShadow: 3,
+        boxShadow: 0.2,
         display: "flex",
         gap: 2,
         width: "fit-content",
@@ -140,6 +141,7 @@ const DockItem = ({
         onMouseEnter={() => setHovered(id)}
         onMouseLeave={() => setHovered(null)}
         sx={{
+          fontSize: isHovered ? HOVER_ICON_SIZE : DEFAULT_ICON_SIZE,
           width: isHovered ? HOVER_ICON_SIZE : DEFAULT_ICON_SIZE,
           height: isHovered ? HOVER_ICON_SIZE : DEFAULT_ICON_SIZE,
           transition: "width 0.2s ease-in-out, height 0.2s ease-in-out",

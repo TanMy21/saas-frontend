@@ -24,7 +24,7 @@ const CreateNewSurveyCard = ({
           display: "flex",
           flexDirection: viewMode === "grid" ? "column" : "row",
           width: viewMode === "list" ? "98%" : null,
-          height: viewMode === "list" ? "60px" : null,
+          height: viewMode === "list" ? { lg: "56px", xl: "60px" } : null,
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
@@ -61,9 +61,6 @@ const CreateNewSurveyCard = ({
                 justifyContent: "center",
                 mb: 2,
                 transition: "background-color 0.3s",
-                "&:hover": {
-                  backgroundColor: "purple.200",
-                },
               }}
             >
               <AddIcon sx={{ fontSize: 24, color: "#6E25EB" }} />

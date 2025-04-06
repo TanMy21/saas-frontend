@@ -22,15 +22,20 @@ const SurveyBuilderCanvas = ({
   return (
     <Box display={"flex"} flexDirection={"column"}>
       <Box
-        margin={"auto"}
-        width={"96%"}
-        minHeight={"72vh"}
-        borderRadius={"12px"}
-        bgcolor={"#FFFFFF"}
-        mt={"2%"}
-        mb={"2%"}
-        p={2}
-        sx={{ transition: "minWidth 1s ease-in-out , opacity 1s ease-in-out" }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          margin: "auto",
+          width: "96%",
+          minHeight: "72vh",
+          borderRadius: "12px",
+          bgcolor: "#FAF9F5",
+          border: "3px solid #E0E0E0",
+          mt: "2%",
+          mb: "2%",
+          p: 2,
+          transition: "minWidth 1s ease-in-out , opacity 1s ease-in-out",
+        }}
       >
         <Box
           sx={{

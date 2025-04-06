@@ -1,7 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, TextField } from "@mui/material";
+import LockIcon from "@mui/icons-material/Lock";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import {
+  Box,
+  Button,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -12,6 +21,8 @@ import { ErrorData, ResetPasswordFormData } from "../../utils/types";
 import FormErrors from "../FormErrors";
 
 const UpdatePassword = () => {
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { data: user, isLoading: isLoadingUser } = useGetMeQuery("User", {
     refetchOnMountOrArgChange: true,
   });
@@ -88,11 +99,61 @@ const UpdatePassword = () => {
             <TextField
               required
               fullWidth
+              type={showNewPassword ? "text" : "password"}
               label="Password"
-              type="password"
               id="password"
-              autoComplete="new-password"
+              variant="filled"
+              InputLabelProps={{ style: { color: "gray" } }}
               {...register("password")}
+              sx={{
+                mb: 2,
+                borderRadius: "12px",
+                backgroundColor: "#E9EDF6",
+                "& .MuiFilledInput-root": {
+                  height: "52px",
+                  borderRadius: "12px",
+                  backgroundColor: "#E9EDF6",
+                  borderBottom: "none !important",
+                  display: "flex",
+                  alignItems: "center",
+
+                  "&:before, &:after": {
+                    display: "none",
+                    backgroundColor: "#E9EDF6",
+                  },
+                },
+                "& .MuiFilledInput-input": {
+                  paddingTop: "24px",
+                },
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment
+                    position="start"
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      paddingBottom: "1px",
+                    }}
+                  >
+                    <LockIcon sx={{ fontSize: "20px" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                    >
+                      {showNewPassword ? (
+                        <VisibilityOffIcon />
+                      ) : (
+                        <VisibilityIcon />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             {errors.password && <FormErrors errors={errors.password.message} />}
           </Box>
@@ -101,10 +162,62 @@ const UpdatePassword = () => {
               required
               fullWidth
               label="Confirm password"
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               id="confirmPassword"
-              autoComplete="confirm-password"
+              variant="filled"
+              InputLabelProps={{ style: { color: "gray" } }}
               {...register("confirmPassword")}
+              sx={{
+                mb: 2,
+                borderRadius: "12px",
+                backgroundColor: "#E9EDF6",
+                "& .MuiFilledInput-root": {
+                  height: "52px",
+                  borderRadius: "12px",
+                  backgroundColor: "#E9EDF6",
+                  borderBottom: "none !important",
+                  "&:before, &:after": {
+                    display: "none",
+                    backgroundColor: "#E9EDF6",
+                  },
+                },
+                "& .MuiFilledInput-input": {
+                  paddingTop: "24px",
+                },
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment
+                    position="start"
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      paddingBottom: "1px",
+                    }}
+                  >
+                    <LockIcon sx={{ fontSize: "20px" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment
+                    position="end"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <IconButton
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? (
+                        <VisibilityOffIcon />
+                      ) : (
+                        <VisibilityIcon />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             {errors.confirmPassword && (
               <FormErrors errors={errors.confirmPassword.message} />

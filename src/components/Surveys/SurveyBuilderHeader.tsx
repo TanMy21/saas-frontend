@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import { Box, Tab, Tabs, Toolbar, Tooltip } from "@mui/material";
+import { Box, IconButton, Tab, Tabs, Toolbar, Tooltip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import { FaAngleRight } from "react-icons/fa6";
 import { PiFlowArrowBold } from "react-icons/pi";
@@ -61,6 +62,10 @@ const SurveyBuilderHeader = ({
     setSurveyTitle(title);
   }, [title, location.pathname]);
 
+  const handleNavigationBack = () => {
+    navigate(-1);
+  };
+
   return (
     <AppBar
       position="static"
@@ -96,7 +101,8 @@ const SurveyBuilderHeader = ({
               alignItems: "center",
               top: "0px",
               marginTop: "0px",
-              width: "32%",
+              marginLeft: "-2%",
+              width: "36%",
               height: "100%",
               // border: "2px solid red",
             }}
@@ -114,13 +120,30 @@ const SurveyBuilderHeader = ({
                 textOverflow: "clip",
               }}
             >
+              <IconButton
+                onClick={handleNavigationBack}
+                sx={{
+                  background: "#F7F7F7",
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: 2,
+                  color: "#757575",
+                  mr: 4,
+                  "&:hover": {
+                    backgroundColor: "#F7F7F7",
+                  },
+                }}
+              >
+                <ArrowBackIcon fontSize="medium" />
+              </IconButton>
               <NavLink
                 to={`/dash/w/${workspaceId}`}
                 style={({ isActive /*isPending, isTransitioning*/ }) => {
                   return {
                     display: "block",
-                    color: isActive ? "#262626" : "#262666",
+                    color: isActive ? "#022B67" : "#022B67",
                     lineHeight: "16px",
+                    fontWeight: "bold",
                     textDecoration: "none",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
@@ -133,7 +156,7 @@ const SurveyBuilderHeader = ({
             <Box
               sx={{
                 marginTop: { md: "2%", lg: "2%", xl: "1%" },
-                color: "#727272",
+                color: "#6D7584",
               }}
             >
               <FaAngleRight />
@@ -144,7 +167,7 @@ const SurveyBuilderHeader = ({
                   sx={{
                     fontSize: "16px",
                     textDecoration: "none",
-                    color: "#262626",
+                    color: "#6D7584",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
                     textOverflow: "clip",
@@ -204,6 +227,12 @@ const SurveyBuilderHeader = ({
                 value="create"
                 sx={{
                   fontWeight: 600,
+                  "&.Mui-selected": {
+                    color: "#4F46E5",
+                    "& .MuiTab-iconWrapper": {
+                      color: "#4F46E5",
+                    },
+                  },
                 }}
               />
               <Tab
@@ -213,8 +242,11 @@ const SurveyBuilderHeader = ({
                 sx={{
                   fontWeight: 600,
                   color: "#1ABEBE",
-                  "& .MuiTab-iconWrapper": {
+                  "&.Mui-selected": {
                     color: "#1ABEBE",
+                    "& .MuiTab-iconWrapper": {
+                      color: "#1ABEBE",
+                    },
                   },
                 }}
               />
@@ -225,8 +257,11 @@ const SurveyBuilderHeader = ({
                 sx={{
                   fontWeight: 600,
                   color: "#B9A90B",
-                  "& .MuiTab-iconWrapper": {
+                  "&.Mui-selected": {
                     color: "#B9A90B",
+                    "& .MuiTab-iconWrapper": {
+                      color: "#B9A90B",
+                    },
                   },
                 }}
               />

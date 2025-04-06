@@ -1,7 +1,14 @@
 import { useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import {
+  Box,
+  Button,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -73,68 +80,170 @@ const UpdateInfo = () => {
 
   return (
     <form onSubmit={handleSubmit(handleUpdateUserInfo)}>
-      <Box>
-        <Typography variant="h5" gutterBottom>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          margin: "auto",
+          gap: 1,
+          p: 2,
+          width: "98%",
+          height: "96%",
+          // border: "2px solid red",
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
           General Info
         </Typography>
-        <Typography variant="body1" gutterBottom>
-          Use the form below to update your profile.
+        <Typography variant="body1" gutterBottom sx={{ color: "#808792" }}>
+          Use the form below to update your profile
         </Typography>
-        <Box>
-          <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-              {" "}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+            width: "98%",
+            height: "80%",
+            // border: "2px solid green",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              width: "100%",
+              // border: "2px solid blue",
+              gap: 2,
+              mb: 3,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                width: "49%",
+                height: "100%",
+                flexDirection: "column",
+              }}
+            >
               <TextField
-                label="First Name"
-                variant="outlined"
+                label="First name"
+                variant="filled"
                 fullWidth
+                autoFocus
                 error={!!errors.firstname}
+                InputLabelProps={{ style: { color: "gray" } }}
                 {...register("firstname")}
+                sx={{
+                  borderRadius: "12px",
+                  backgroundColor: "#E9EDF6",
+                  "& .MuiFilledInput-root": {
+                    borderRadius: "12px",
+                    backgroundColor: "#E9EDF6",
+                    borderBottom: "none !important",
+                    "&:before, &:after": {
+                      display: "none",
+                      backgroundColor: "#E9EDF6",
+                    },
+                  },
+                }}
               />
               {errors.firstname && (
                 <FormErrors errors={errors.firstname.message} />
               )}
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-              {" "}
+            <Box
+              sx={{
+                display: "flex",
+                width: "49%",
+                height: "100%",
+                flexDirection: "column",
+              }}
+            >
               <TextField
-                label="Last Name"
-                variant="outlined"
+                label="Last name"
+                InputLabelProps={{ style: { color: "gray" } }}
+                variant="filled"
                 fullWidth
                 error={!!errors.lastname}
                 {...register("lastname")}
-              />{" "}
+                sx={{
+                  borderRadius: "12px",
+                  backgroundColor: "#E9EDF6",
+                  "& .MuiFilledInput-root": {
+                    borderRadius: "12px",
+                    backgroundColor: "#E9EDF6",
+                    borderBottom: "none !important",
+                    "&:before, &:after": {
+                      display: "none",
+                      backgroundColor: "#E9EDF6",
+                    },
+                  },
+                }}
+              />
               {errors.lastname && (
                 <FormErrors errors={errors.lastname.message} />
               )}
             </Box>
           </Box>
-          <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+          <Box sx={{ display: "flex", gap: 2, mb: 1 }}>
             <TextField
               label="Email"
-              variant="outlined"
+              InputLabelProps={{ style: { color: "gray" } }}
+              variant="filled"
               disabled
               fullWidth
               {...register("email")}
+              sx={{
+                mb: 2,
+                borderRadius: "12px",
+                backgroundColor: "#E9EDF6",
+                "& .MuiFilledInput-root": {
+                  borderRadius: "12px",
+                  backgroundColor: "#E9EDF6",
+                  borderBottom: "none !important",
+                  "&:before, &:after": {
+                    display: "none",
+                    backgroundColor: "#E9EDF6",
+                  },
+                },
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MailOutlineIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
           </Box>
-          <Button
-            type="submit"
-            variant="contained"
+          <Box
             sx={{
-              mt: 2,
-              mb: 2,
-              textTransform: "capitalize",
-              backgroundColor: "#7F56D9",
-              fontWeight: 600,
-              borderRadius: "4px",
-              "&:hover": {
-                backgroundColor: "#7F56D9",
-              },
+              display: "flex",
+              width: "100%",
+              height: "48px",
+              justifyContent: "flex-end",
+              alignItems: "center",
             }}
           >
-            Update
-          </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                width: "16%",
+                mb: 2,
+                textTransform: "capitalize",
+                backgroundColor: "#8020CE",
+                fontWeight: 600,
+                borderRadius: 4,
+                "&:hover": {
+                  backgroundColor: "#8020CE",
+                },
+              }}
+            >
+              Update
+            </Button>
+          </Box>
         </Box>
       </Box>
     </form>

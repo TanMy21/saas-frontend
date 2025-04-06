@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { fetchUser, selectUser } from "../app/slices/userSlice";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
 import { AppDispatch } from "../app/store";
-import DashBoardHeader from "../components/DashBoardHeader";
+import { DashBoardHeader } from "../components/DashBoardHeader";
 import DeleteWorkspaceModal from "../components/Modals/DeleteWorkspaceModal";
 import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";
 import RenameWorkspaceModal from "../components/Modals/RenameWorkspaceModal";
@@ -179,12 +179,15 @@ const Dashboard = () => {
                 display: "flex",
                 margin: "auto",
                 marginTop: "1%",
-                width: "80%",
+                width: { md: "92%", lg: "80%", xl: "80%" },
                 height: "96%",
                 // border: "2px solid green",
               }}
             >
-              <WorkspaceConsole selectedWorkspace={selectedWorkspace!} />
+              <WorkspaceConsole
+                selectedWorkspace={selectedWorkspace!}
+                setSelectedWorkspace={setSelectedWorkspace}
+              />
             </Box>
           </Box>
         </Box>

@@ -11,8 +11,8 @@ const SurveysCollection = ({
   workspaceName,
   viewMode,
 }: SurveysCollectionProps) => {
-  const layoutContainerMarginTopLG = viewMode === "list" ? "-10%" : "-4%";
-  const layoutContainerHeightLG = viewMode === "list" ? "72vh" : "-72%";
+  const layoutContainerMarginTopLG = viewMode === "list" ? "0%" : "0%";
+  const layoutContainerHeightLG = viewMode === "list" ? "72vh" : "72%";
 
   return (
     <Box
@@ -20,9 +20,9 @@ const SurveysCollection = ({
         display: "flex",
         flexDirection: "row",
         margin: "auto",
-        marginTop: { lg: layoutContainerMarginTopLG, xl: "0%" },
+        marginTop: { md: "0%", lg: layoutContainerMarginTopLG, xl: "0%" },
         width: "98%",
-        height: { lg: layoutContainerHeightLG, xl: "84%" },
+        height: { md: "84%", lg: layoutContainerHeightLG, xl: "84%" },
         // border: "2px solid red",
       }}
     >

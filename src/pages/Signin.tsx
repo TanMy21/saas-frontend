@@ -103,7 +103,7 @@ const Signin = () => {
         });
       }
     }
-  }, [isError, error]);
+  }, [error]);
 
   useEffect(() => {
     if (isGoogleAuthError) {
@@ -148,11 +148,19 @@ const Signin = () => {
       navigate("/dash");
     }
 
-    if (error) {
+    if (isGoogleAuth && googleAuthError) {
       console.error("Failed to fetch access token:", error);
       navigate("/login");
     }
-  }, [location, googleAuthData, dispatch, navigate, googleAuth, error]);
+  }, [
+    location,
+    googleAuthData,
+    dispatch,
+    navigate,
+    googleAuth,
+    isGoogleAuthError,
+    googleAuthError,
+  ]);
 
   if (isLoading) return <CircularProgress />;
 
@@ -226,7 +234,7 @@ const Signin = () => {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Email address"
                 InputLabelProps={{ style: { color: "gray" } }}
                 autoComplete="email"
                 autoFocus
@@ -349,9 +357,9 @@ const Signin = () => {
                   gap: 1,
                   py: 1.5,
                   borderRadius: "12px",
-                  color: "gray.700",
+                  color: "#6760EA",
                   borderColor: "#F1F3F5",
-                  textTransform: "capitalize",
+                  textTransform: "unset",
                   "&:hover": {
                     borderColor: "#F1F3F5",
                   },

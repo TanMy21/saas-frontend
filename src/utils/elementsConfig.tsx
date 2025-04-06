@@ -1,10 +1,15 @@
 import { AiOutlineFieldBinary } from "react-icons/ai";
 import { CiViewList } from "react-icons/ci";
-import { FaRankingStar , FaRegImage } from "react-icons/fa6";
+import { FaRankingStar, FaRegImage } from "react-icons/fa6";
 import { GiChoice } from "react-icons/gi";
 import { IoText } from "react-icons/io5";
 import { LuGalleryVerticalEnd } from "react-icons/lu";
-import { MdNumbers , MdOutlineLinearScale , MdCheckBox , MdEmail } from "react-icons/md";
+import {
+  MdNumbers,
+  MdOutlineLinearScale,
+  MdCheckBox,
+  MdEmail,
+} from "react-icons/md";
 import { RxCardStack } from "react-icons/rx";
 
 import BinaryElement from "../components/Surveys/Elements/BinaryElement";
@@ -52,6 +57,21 @@ export const elementIcons: IconMapping = {
   RANGE: <MdOutlineLinearScale color="#036b82" />,
   TEXT: <IoText color="#c45161" />,
   WELCOME_SCREEN: <RxCardStack color="#3C3737" />,
+};
+
+export const chipTypeColors: Record<string, string> = {
+  WELCOME_SCREEN: "#3C3737",
+  INSTRUCTIONS: "#0D4C86",
+  EMAIL_CONTACT: "#5CD6C8",
+  END_SCREEN: "#3C3737",
+  BINARY: "#033A67",
+  MULTIPLE_CHOICE: "#369acc",
+  RADIO: "#016023",
+  TEXT: "#c45161",
+  NUMBER: "#d69e49",
+  RANGE: "#036b82",
+  RANK: "#ffa600",
+  MEDIA: "#f2b6c0",
 };
 
 export const elementComponents: {

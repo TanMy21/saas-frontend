@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Fade, Grow, TextField, Typography } from "@mui/material";
 
-import { useUpdateWorkspaceNameMutation } from "../../app/slices/workspaceApiSlice";
+import {
+  useGetWorkspacesQuery,
+  useUpdateWorkspaceNameMutation,
+} from "../../app/slices/workspaceApiSlice";
 import { WorkspaceToolbarProps } from "../../utils/types";
 import SurveySearchBar from "../Surveys/SurveySearchBar";
 import SurveySorter from "../Surveys/SurveySorter";
@@ -18,20 +21,37 @@ const WorkspaceToolbar = ({
   sortBy,
   setSortBy,
   search,
+  matchMode,
+  setMatchMode,
+  tagOnly,
+  total,
+  setTagOnly,
   setSearch,
   selectedWorkspace,
+  setSelectedWorkspace,
 }: WorkspaceToolbarProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(workspaceName);
+  const { refetch } = useGetWorkspacesQuery("workspacesList");
   const [updateWorkspaceName] = useUpdateWorkspaceNameMutation();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value);
   };
 
-  const handleBlur = () => {
-    updateWorkspaceName({ workspaceId, name: text });
+  const handleBlur = async () => {
+    const updated = await updateWorkspaceName({
+      workspaceId,
+      name: text,
+    }).unwrap();
+    refetch();
     setIsEditing(false);
+
+    if (selectedWorkspace?.workspaceId === updated.workspaceId) {
+      setSelectedWorkspace((prev) =>
+        prev ? { ...prev, name: updated.name } : prev
+      );
+    }
   };
 
   useEffect(() => {
@@ -45,9 +65,9 @@ const WorkspaceToolbar = ({
         flexDirection: "row",
         justifyContent: "space-between",
         margin: "auto",
-        marginTop: { lg: "0%" },
+        // marginTop: { lg: "0%" },
         width: "100%",
-        height: "10%",
+        height: "96%",
         // border: "2px solid green",
       }}
     >
@@ -102,7 +122,7 @@ const WorkspaceToolbar = ({
           display: "flex",
           alignItems: "center",
           gap: 2,
-          width: "48%",
+          width: "56%",
           height: "98%",
           // border: "2px solid green",
         }}
@@ -115,9 +135,25 @@ const WorkspaceToolbar = ({
             height: "48px",
             margin: "auto",
             gap: 2,
+            // border: "2px solid red",
           }}
         >
-          <SurveySearchBar search={search} setSearch={setSearch} />
+          <Grow
+            in={total > 8 || search.trim().length > 0}
+            timeout={300}
+            unmountOnExit
+          >
+            <Box sx={{ width: "64%", height: "100%" }}>
+              <SurveySearchBar
+                search={search}
+                setSearch={setSearch}
+                matchMode={matchMode}
+                setMatchMode={setMatchMode}
+                tagOnly={tagOnly}
+                setTagOnly={setTagOnly}
+              />
+            </Box>
+          </Grow>
           <SurveysViewModeToggle
             viewMode={viewMode}
             setViewMode={setViewMode}
@@ -126,7 +162,6 @@ const WorkspaceToolbar = ({
             <SurveySorter sortBy={sortBy} setSortBy={setSortBy} />
           )}
         </Box>
-        {/* <CreateNewSurveyBtn /> */}
       </Box>
     </Box>
   );

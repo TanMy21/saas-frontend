@@ -5,22 +5,17 @@ import debounce from "lodash/debounce";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import type { DropResult } from "react-beautiful-dnd";
 
-import {
-  useGetElementsForSurveyQuery,
-  useUpdateElementOrderMutation,
-} from "../../../app/slices/elementApiSlice";
+import { useUpdateElementOrderMutation } from "../../../app/slices/elementApiSlice";
 import { elementIcons } from "../../../utils/elementsConfig";
 import { Element, ElementsPanelProps, IconMapping } from "../../../utils/types";
 
 import ElementDropDownMenu from "./ElementDropDownMenu";
 
-const ElementsPanel = ({ surveyID, setQuestionId }: ElementsPanelProps) => {
-  const { data: elements = [] as Element[], refetch } =
-    useGetElementsForSurveyQuery(
-      surveyID
-      //{ pollingInterval: 1000 }
-    );
-
+const ElementsPanel = ({
+  elements,
+  setQuestionId,
+  refetch,
+}: ElementsPanelProps) => {
   const [updateElementOrder /*{ isError, error }*/] =
     useUpdateElementOrderMutation();
 

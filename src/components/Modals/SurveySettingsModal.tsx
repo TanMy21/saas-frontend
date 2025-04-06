@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import CloseIcon from "@mui/icons-material/Close";
 import Input from "@mui/joy/Input";
 import Switch from "@mui/joy/Switch";
 import {
   Box,
   Button,
-  IconButton,
   MenuItem,
   Modal,
   Select,
@@ -147,17 +145,17 @@ const SurveySettingsModal = ({
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 500,
-            bgcolor: "#E7E5E5",
-            borderRadius: "8px",
-            p: 2,
+            bgcolor: "#FFFFFF",
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 3,
           }}
         >
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-              margin: "auto",
-              width: "98%",
+              width: "100%",
               height: 600,
               // border: "2px solid black",
             }}
@@ -186,26 +184,6 @@ const SurveySettingsModal = ({
                   Survey settings
                 </Typography>
               </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  width: "20%",
-                  height: "96%",
-                  // border: "2px solid blue",
-                }}
-              >
-                <IconButton
-                  aria-label="more"
-                  aria-controls="long-menu"
-                  aria-haspopup="true"
-                  onClick={handleClose}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Box>
             </Box>
 
             <Box sx={{ width: "100%", height: "88%" }}>
@@ -228,7 +206,7 @@ const SurveySettingsModal = ({
                       background: "#f1f1f1",
                     },
                     "&::-webkit-scrollbar-thumb": {
-                      background: "#61A5D2",
+                      background: "#752FEC",
                       borderRadius: "10px",
                       "&:hover": {
                         background: "#555",
@@ -256,47 +234,39 @@ const SurveySettingsModal = ({
                         margin: "auto",
                         marginTop: "1%",
                         width: "98%",
-                        height: "16%",
+                        height: "20%",
                         // border: "2px solid orange",
                       }}
                     >
-                      <Box
+                      <Typography
                         sx={{
-                          width: "98%",
-                          height: "32%",
-                          // border: "2px solid black",
+                          fontSize: "16px",
+                          fontStyle: "bold",
+                          color: "#37416D",
                         }}
                       >
-                        <Typography
-                          sx={{ fontSize: "20px", fontStyle: "bold" }}
-                        >
-                          Title
-                        </Typography>
-                      </Box>
-                      <Box
+                        Title
+                      </Typography>
+                      <TextField
+                        id="title"
+                        defaultValue={title}
+                        {...register("title")}
                         sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          width: "98%",
-                          height: "60%",
-                          // border: "2px solid black",
-                        }}
-                      >
-                        <TextField
-                          id="title"
-                          autoFocus
-                          defaultValue={title}
-                          {...register("title")}
-                          sx={{
-                            margin: "auto",
-                            width: "100%",
-                            height: "92%",
-                            "& .MuiInputBase-root": {
-                              height: "100%",
+                          margin: "auto",
+                          width: "100%",
+                          "& .MuiInputBase-root": {
+                            height: "48px",
+                            borderRadius: 2,
+                            border: "1px solid #e5e7eb",
+                            px: 0.5,
+                            py: 0.5,
+                            "&:hover": { borderColor: "#a3a3a3" },
+                            "&.Mui-focused": {
+                              borderColor: "transparent",
                             },
-                          }}
-                        />
-                      </Box>
+                          },
+                        }}
+                      />
                     </Box>
                     {/* --------------------- Description ----------------------- */}
                     <Box
@@ -306,50 +276,40 @@ const SurveySettingsModal = ({
                         gap: "8%",
                         margin: "auto",
                         width: "98%",
-                        height: "16%",
+                        height: "20%",
                         // border: "2px solid orange",
                       }}
                     >
-                      <Box
+                      <Typography
                         sx={{
-                          display: "flex",
-                          flexDirection: "column",
+                          fontSize: "16px",
+                          fontStyle: "bold",
+                          color: "#37416D",
+                        }}
+                      >
+                        Description
+                      </Typography>
+                      <TextField
+                        id="description"
+                        autoFocus
+                        defaultValue={description}
+                        {...register("description")}
+                        sx={{
                           margin: "auto",
-                          width: "98%",
-                          height: "32%",
-                          // border: "2px solid black",
-                        }}
-                      >
-                        <Typography
-                          sx={{ fontSize: "20px", fontStyle: "bold" }}
-                        >
-                          Description
-                        </Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          width: "98%",
-                          height: "60%",
-                          // border: "2px solid black",
-                        }}
-                      >
-                        <TextField
-                          id="description"
-                          autoFocus
-                          defaultValue={description}
-                          {...register("description")}
-                          sx={{
-                            margin: "auto",
-                            width: "100%",
-                            height: "92%",
-                            "& .MuiInputBase-root": {
-                              height: "100%",
+                          width: "100%",
+                          "& .MuiInputBase-root": {
+                            height: "48px",
+                            borderRadius: 2,
+                            border: "1px solid #e5e7eb",
+                            px: 2,
+                            py: 1,
+                            "&:hover": { borderColor: "#a3a3a3" },
+                            "&.Mui-focused": {
+                              borderColor: "transparent",
                             },
-                          }}
-                        />
-                      </Box>
+                          },
+                        }}
+                      />
                     </Box>
                     {/* --------------------- Date ------------------------------ */}
                     {/* --------------------- Date Localization required
@@ -386,9 +346,13 @@ const SurveySettingsModal = ({
                           }}
                         >
                           <Typography
-                            sx={{ fontSize: "20px", fontStyle: "bold" }}
+                            sx={{
+                              fontSize: "16px",
+                              fontStyle: "bold",
+                              color: "#37416D",
+                            }}
                           >
-                            Start Date
+                            Start date
                           </Typography>
                         </Box>
                         <Box
@@ -425,6 +389,7 @@ const SurveySettingsModal = ({
                                       helperText: error?.message,
                                     },
                                   }}
+                                  sx={{ height: "48px" }}
                                 />
                               </LocalizationProvider>
                             )}
@@ -449,9 +414,13 @@ const SurveySettingsModal = ({
                           }}
                         >
                           <Typography
-                            sx={{ fontSize: "20px", fontStyle: "bold" }}
+                            sx={{
+                              fontSize: "16px",
+                              fontStyle: "bold",
+                              color: "#37416D",
+                            }}
                           >
-                            End Date
+                            End date
                           </Typography>
                         </Box>
                         <Box
@@ -520,43 +489,26 @@ const SurveySettingsModal = ({
                           sx={{
                             display: "flex",
                             flexDirection: "row",
+                            justifyContent: "space-between",
                             width: "100%",
                             height: "40%",
                           }}
                         >
-                          <Box
+                          <Typography
                             sx={{
-                              display: "flex",
-                              justifyContent: "flex-start",
-                              alignItems: "center",
-                              width: "90%",
-                              height: "92%",
-                              // border: "2px solid red",
+                              fontSize: "16px",
+                              fontStyle: "bold",
+                              color: "#37416D",
                             }}
                           >
-                            <Typography
-                              sx={{ fontSize: "20px", fontStyle: "bold" }}
-                            >
-                              Response limit
-                            </Typography>
-                          </Box>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              width: "10%",
-                              height: "92%",
-                              // border: "2px solid red",
-                            }}
-                          >
-                            <Switch
-                              checked={response}
-                              onChange={(event) =>
-                                setResponse(event.target.checked)
-                              }
-                            />
-                          </Box>
+                            Response limit
+                          </Typography>
+                          <Switch
+                            checked={response}
+                            onChange={(event) =>
+                              setResponse(event.target.checked)
+                            }
+                          />
                         </Box>
                         <Box
                           sx={{
@@ -583,7 +535,13 @@ const SurveySettingsModal = ({
                                 step: 1,
                               },
                             }}
-                            sx={{ width: "48%" }}
+                            sx={{
+                              width: "48%",
+                              borderRadius: 3,
+                              border: "1px solid #e5e7eb",
+                              px: 2,
+                              py: 1,
+                            }}
                           />
                         </Box>
                       </Box>
@@ -609,7 +567,11 @@ const SurveySettingsModal = ({
                         }}
                       >
                         <Typography
-                          sx={{ fontSize: "20px", fontStyle: "bold" }}
+                          sx={{
+                            fontSize: "16px",
+                            fontStyle: "bold",
+                            color: "#37416D",
+                          }}
                         >
                           Language
                         </Typography>
@@ -671,7 +633,11 @@ const SurveySettingsModal = ({
                         }}
                       >
                         <Typography
-                          sx={{ fontSize: "20px", fontStyle: "bold" }}
+                          sx={{
+                            fontSize: "16px",
+                            fontStyle: "bold",
+                            color: "#37416D",
+                          }}
                         >
                           Template
                         </Typography>
@@ -713,7 +679,7 @@ const SurveySettingsModal = ({
                     alignItems: "center",
                     width: "98%",
                     height: "20%",
-                    marginTop: "2%",
+                    marginTop: "4%",
                     // border: "2px solid red",
                   }}
                 >
@@ -733,7 +699,16 @@ const SurveySettingsModal = ({
                       onClick={handleClose}
                       fullWidth
                       variant="outlined"
-                      sx={{ textTransform: "capitalize" }}
+                      sx={{
+                        textTransform: "capitalize",
+                        borderRadius: 2,
+                        color: "#374151",
+                        borderColor: "#E5E7EB",
+                        fontWeight: "bold",
+                        "&.MuiButton-root:hover": {
+                          bgcolor: "transparent",
+                        },
+                      }}
                     >
                       Cancel
                     </Button>
@@ -741,7 +716,16 @@ const SurveySettingsModal = ({
                       type="submit"
                       fullWidth
                       variant="outlined"
-                      sx={{ textTransform: "capitalize" }}
+                      sx={{
+                        textTransform: "capitalize",
+                        backgroundColor: "#752FEC",
+                        color: "white",
+                        fontWeight: "bold",
+                        "&.MuiButton-root:hover": {
+                          bgcolor: "#752FEC",
+                        },
+                        borderRadius: 2,
+                      }}
                     >
                       {isLoading ? "Saving..." : "Save"}
                     </Button>

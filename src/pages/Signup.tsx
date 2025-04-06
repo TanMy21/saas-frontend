@@ -192,7 +192,7 @@ const Signup = () => {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Email address"
                   InputLabelProps={{ style: { color: "gray" } }}
                   variant="filled"
                   {...register("email")}
@@ -375,29 +375,24 @@ const Signup = () => {
                 <Button
                   onClick={handleGoogleAuth}
                   fullWidth
-                  variant="contained"
+                  variant="outlined"
                   sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 1,
                     py: 1.5,
                     borderRadius: "12px",
-                    color: "#495362",
-                    borderColor: "#F2F3F5",
-                    backgroundColor: "#FFFFFF",
-                    "&:hover": { backgroundColor: "#FFFFFF" },
+                    color: "#6760EA",
+                    borderColor: "#F1F3F5",
+                    textTransform: "unset",
+                    "&:hover": {
+                      borderColor: "#F1F3F5",
+                    },
                   }}
                 >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textTransform: "capitalize",
-                      gap: 1,
-                    }}
-                  >
-                    <FcGoogle size={24} />
-                    Continue with Google
-                  </Box>
+                  <FcGoogle size={24} />
+                  Continue with Google
                 </Button>
                 <Typography
                   variant="body2"
