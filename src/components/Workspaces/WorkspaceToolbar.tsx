@@ -62,13 +62,13 @@ const WorkspaceToolbar = ({
     <Box
       sx={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         justifyContent: "space-between",
         margin: "auto",
         // marginTop: { lg: "0%" },
-        width: "100%",
+        width: "96%",
         height: "96%",
-        // border: "2px solid green",
+        // border: "2px solid yellow",
       }}
     >
       <Box
@@ -120,22 +120,39 @@ const WorkspaceToolbar = ({
       <Box
         sx={{
           display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
           alignItems: "center",
+          mt: 2,
           gap: 2,
-          width: "56%",
+          width: "100%",
           height: "98%",
-          // border: "2px solid green",
+          // border: "2px solid orange",
         }}
       >
         <Box
           sx={{
             display: "flex",
-            justifyContent: "flex-end",
-            width: "98%",
-            height: "48px",
-            margin: "auto",
-            gap: 2,
-            // border: "2px solid red",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            width: "16%",
+            height: "60%",
+            // border: "2px solid blue",
+          }}
+        >
+          <SurveysViewModeToggle
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+          />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "64%",
+            height: "72%",
+            // border: "2px solid blue",
           }}
         >
           <Grow
@@ -143,7 +160,7 @@ const WorkspaceToolbar = ({
             timeout={300}
             unmountOnExit
           >
-            <Box sx={{ width: "64%", height: "100%" }}>
+            <Box sx={{width: "80%", height: "100%"}}>
               <SurveySearchBar
                 search={search}
                 setSearch={setSearch}
@@ -154,10 +171,17 @@ const WorkspaceToolbar = ({
               />
             </Box>
           </Grow>
-          <SurveysViewModeToggle
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-          />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            width: "16%",
+            height: "92%",
+            // border: "2px solid blue",
+          }}
+        >
           {sortBy && setSortBy && (
             <SurveySorter sortBy={sortBy} setSortBy={setSortBy} />
           )}

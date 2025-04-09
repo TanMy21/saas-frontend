@@ -17,51 +17,53 @@ const SurveyPreferencesPanel = ({
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        height: "100%",
-        gap: "1%",
+        minHeight: "100%",
         left: "0",
         right: "0",
+        border:"2px solid green",
       }}
     >
       <Box
         sx={{
           display: "flex",
+          flexDirection: "row",
           justifyContent: "flex-start",
           alignItems: "center",
-          width: "92%",
-          margin: "auto",
-          marginTop: "0%",
-          gap: 2,
-          height: { lg: "24px", xl: "24px" },
-          maxHeight: { lg: "24px", xl: "24px" },
-          fontSize: "20px",
-          fontWeight: 600,
-          color: "#3F3F46",
-          // border: "1px solid red",
-          borderBottom: "1px solid #F3F4F6",
+          gap: "2%",
+          marginTop: "2%",
+          width: "100%",
+          height: "48px",
+          //   border: "2px solid red",
         }}
       >
-        <SettingsIcon sx={{ color: "#752FEC" }} />
-        Settings
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+            pl: "4%",
+            gap: 2,
+            fontSize: "20px",
+            fontWeight: 600,
+            color: "#3F3F46",
+            // border: "1px solid red",
+            borderBottom: "2px solid #F3F4F6",
+          }}
+        >
+          <SettingsIcon sx={{ color: "#752FEC", mt: 0.3 }} />
+          Settings
+        </Box>
       </Box>
-      {/* <Divider
-                  sx={{
-                    borderWidth: "1px",
-                    backgroundColor: "#F3F4F6",
-                    marginTop: { lg: "0%", xl: "0%" },
-                    marginBottom: { lg: "0%", xl: "0%" },
-                  }}
-                /> */}
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          width: "92%",
-          margin: "auto",
-          marginTop: "0%",
-          // padding: "2px",
-          height: "92%",
-          // border: "1px solid black",
+          width: "100%",
+          minHeight: "92%",
+          // pt: "2%",
+          // border: "2px solid green",
         }}
       >
         <ElementSettingsContainer

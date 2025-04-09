@@ -12,6 +12,7 @@ const SurveysViewModeToggle = ({
     <Box
       sx={{
         display: "flex",
+        height: "28px",
         backgroundColor: "white",
         borderRadius: "8px",
         padding: "4px",

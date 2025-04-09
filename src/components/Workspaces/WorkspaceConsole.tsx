@@ -103,7 +103,7 @@ const WorkspaceConsole = ({
           alignItems: "center",
           gap: 2,
           width: "100%",
-          height: { md: "16%", lg: "16%", xl: "12%" },
+          height: { md: "16%", lg: "16%", xl: "20%" },
           // border: "2px solid green",
         }}
       >

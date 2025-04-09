@@ -25,7 +25,7 @@ const GridLayout = ({
           gap: 2,
           width: "100%",
           p: 2,
-          gridAutoRows: "200px",
+          gridAutoRows: "180px",
           minHeight: "60vh",
           mb: 2,
           maxHeight: {

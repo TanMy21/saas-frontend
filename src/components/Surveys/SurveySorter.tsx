@@ -14,13 +14,28 @@ const SurveySorter = ({ sortBy, setSortBy }: SurveySorterProps) => {
     );
   };
   return (
-    <FormControl sx={{ width: "28%", height: "100%" }}>
+    <FormControl sx={{ width: "80%", height: "80%" }}>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         onChange={handleSortChange}
         value={sortBy}
-        sx={{ width: "100%", height: "100%", mt: "1%" }}
+        sx={{
+          width: "100%",
+          height: "100%",
+          mt: "1%",
+          borderRadius: 3,
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#E0D4F8", // default border color
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#E0D4F8", // border on hover
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#E0D4F8", // border on focus/click
+            boxShadow: "0 0 0 2px rgba(117, 47, 236, 0.1)", // optional glow
+          },
+        }}
       >
         <MenuItem value={"Date created"}>Date created</MenuItem>
         <MenuItem value={"Date updated"}>Date updated</MenuItem>

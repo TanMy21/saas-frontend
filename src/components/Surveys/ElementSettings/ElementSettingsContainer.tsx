@@ -31,7 +31,7 @@ const ElementSettingsContainer = ({
       <Box
         sx={{
           margin: "auto",
-          width: "96%",
+          width: "100%",
           height: "100%",
         }}
       >

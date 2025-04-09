@@ -5,6 +5,9 @@ import { ZodType, z } from "zod";
 import { LoginFormData } from "./types";
 
 dayjs.extend(isSameOrAfter);
+
+const hexColorRegex = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
+
 export const settingsUpdateSchema = z.object({
   title: z.string().min(1, "Title must be at least 1 character long"),
   description: z.string(),
@@ -134,13 +137,25 @@ export const scaleSettingsSchema = z.object({
 });
 
 export const welcomeSettingsSchema = z.object({
-  welcomeText: z
+  questionText: z
     .string()
     .min(1, "Question text must be at least 1 character long"),
+  description: z.string().optional(),
   buttonText: z
     .string()
     .min(1, "Button text must be at least 1 character long")
     .max(24, "Button text must be at most 24 characters long"),
+});
+
+export const TypographySettingsFormSchema = z.object({
+  textFontSize: z.number().min(1),
+  textColor: z.string().regex(hexColorRegex, {
+    message: "Invalid hex color (expected format: #RRGGBB or #RGB)",
+  }),
+  descriptionFontSize: z.number().min(1),
+  descriptionColor: z.string().regex(hexColorRegex, {
+    message: "Invalid hex color (expected format: #RRGGBB or #RGB)",
+  }),
 });
 
 export const binarySettingsSchema = z.object({

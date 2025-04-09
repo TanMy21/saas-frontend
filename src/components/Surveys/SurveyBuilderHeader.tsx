@@ -73,10 +73,10 @@ const SurveyBuilderHeader = ({
       sx={{
         m: "0px",
         bgcolor: "white",
-        borderBottom: 1,
-        borderColor: "#EDEDED",
+        borderBottom: "2px solid #EDEDED",
         width: "100%",
         height: "60px",
+        zIndex: 1000,
       }}
     >
       <Toolbar disableGutters>

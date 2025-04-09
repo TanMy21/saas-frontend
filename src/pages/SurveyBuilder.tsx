@@ -171,9 +171,9 @@ const SurveyBuilder = () => {
             display: "flex",
             flexDirection: "row",
             width: "100%",
-            height: "94vh",
+            minHeight: "94vh",
             backgroundColor: "#FFFFFF",
-            // border: "2px solid green",
+            border: "2px solid green",
           }}
         >
           <Box
@@ -182,7 +182,8 @@ const SurveyBuilder = () => {
               flexDirection: "column",
               width: "16%",
               height: "100%",
-              border: "2px solid blue",
+              // border: "2px solid blue",
+              borderRight: "2px solid #E5E7EB",
             }}
           >
             <SurveyBuilderLeftSidebar
@@ -195,8 +196,8 @@ const SurveyBuilder = () => {
               display: "flex",
               flexDirection: "column",
               width: "68%",
-              height: "100%",
-              // border: "2px solid orange",
+              minHeight: "100%",
+              border: "2px solid orange",
             }}
           >
             <SurveyBuilderDock setDisplay={setDisplay} />
@@ -235,6 +236,7 @@ const SurveyBuilder = () => {
               width: "16%",
               height: "100%",
               // border: "2px solid green",
+              borderLeft: "2px solid #E5E7EB",
             }}
           >
             <SurveyPreferencesPanel

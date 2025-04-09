@@ -34,6 +34,12 @@ export interface AddElementMenuProps {
 export interface RowData {
   [key: string]: string;
 }
+
+export interface ColorPickerProps {
+  color: string;
+  setColor: React.Dispatch<React.SetStateAction<string>>;
+}
+
 export interface DownloadResponsesModalProps {
   setResponsesData: React.Dispatch<React.SetStateAction<string>>;
   setDownloadFileFormat: React.Dispatch<React.SetStateAction<string>>;
@@ -586,6 +592,13 @@ export interface OptionType {
   order: number;
 }
 
+export interface ScreenSettingsProps {
+  qID: string;
+  qText: string;
+  qDescription: string;
+  qSettings: QuestionSetting;
+}
+
 export interface SurveysCollectionProps {
   surveys: Survey[];
   workspaceId?: string;
@@ -674,6 +687,15 @@ export interface SurveyViewModeProps {
 export interface SurveyWelcomeElementProps {
   display: string | null;
 }
+
+
+export interface TypographySettingsForm {
+  textFontSize: number;
+  textColor: string;
+  descriptionFontSize: number;
+  descriptionColor: string;
+}
+
 
 export interface UserInfo {
   accessToken: string;
