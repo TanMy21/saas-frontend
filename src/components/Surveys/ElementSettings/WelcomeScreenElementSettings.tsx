@@ -27,7 +27,7 @@ const WelcomeScreenElementSettings = ({
         qDescription={qDescription!}
         qSettings={qSettings!}
       />
-      <ScreenTypographySettings />
+      <ScreenTypographySettings qID={qID}/>
     </Box>
   );
 };

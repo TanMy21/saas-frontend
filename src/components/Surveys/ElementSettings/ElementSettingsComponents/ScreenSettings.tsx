@@ -50,8 +50,6 @@ const ScreenSettings = ({
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
-      console.log("data: ", data);
-
       const { questionText, description, buttonText } = data;
 
       const settings = { buttonText };

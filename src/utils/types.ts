@@ -37,7 +37,7 @@ export interface RowData {
 
 export interface ColorPickerProps {
   color: string;
-  setColor: React.Dispatch<React.SetStateAction<string>>;
+  setColor: (color: string) => void;
 }
 
 export interface DownloadResponsesModalProps {
@@ -599,6 +599,10 @@ export interface ScreenSettingsProps {
   qSettings: QuestionSetting;
 }
 
+export interface ScreenTypographySettingsProps {
+  qID: string;
+}
+
 export interface SurveysCollectionProps {
   surveys: Survey[];
   workspaceId?: string;
@@ -688,14 +692,12 @@ export interface SurveyWelcomeElementProps {
   display: string | null;
 }
 
-
 export interface TypographySettingsForm {
-  textFontSize: number;
-  textColor: string;
+  titleFontSize: number;
+  titleFontColor: string;
   descriptionFontSize: number;
-  descriptionColor: string;
+  descriptionFontColor: string;
 }
-
 
 export interface UserInfo {
   accessToken: string;

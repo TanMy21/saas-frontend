@@ -11,63 +11,75 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { FiType } from "react-icons/fi";
 
+import { useUpdateElementSettingsMutation } from "../../../../app/slices/elementApiSlice";
 import { TypographySettingsFormSchema } from "../../../../utils/schema";
-import { TypographySettingsForm } from "../../../../utils/types";
+import {
+  ScreenTypographySettingsProps,
+  TypographySettingsForm,
+} from "../../../../utils/types";
 
 import ColorPicker from "./ColorPicker";
 
-const ScreenTypographySettings = () => {
+const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
+  const [updateElementSettings] = useUpdateElementSettingsMutation();
+
   const { handleSubmit, control } = useForm<TypographySettingsForm>({
     resolver: zodResolver(TypographySettingsFormSchema),
     defaultValues: {
-      textFontSize: 12,
-      textColor: "#000000",
+      titleFontSize: 12,
+      titleFontColor: "#000000",
       descriptionFontSize: 12,
-      descriptionColor: "#000000",
+      descriptionFontColor: "#000000",
     },
   });
 
-  const [formState, setFormState] = useState<TypographySettingsForm>({
-    textFontSize: 12,
-    textColor: "#000000",
-    descriptionFontSize: 12,
-    descriptionColor: "#000000",
-  });
+  const watchedValues = useWatch({ control });
+  const [formTouched, setFormTouched] = useState(false);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const previousFormState = useRef<TypographySettingsForm>(formState);
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
-
-  const onSubmit = (data: TypographySettingsForm) => {
+  const onSubmit = async (data: TypographySettingsForm) => {
     try {
-      console.log("data: ", data);
+      console.log("Autosaved: ", data);
+
+      const {
+        titleFontSize,
+        titleFontColor,
+        descriptionFontColor,
+        descriptionFontSize,
+      } = data;
+
+      await updateElementSettings({
+        questionID: qID,
+        titleFontSize,
+        titleFontColor,
+        descriptionFontColor,
+        descriptionFontSize,
+      }).unwrap();
+      setFormTouched(false);
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    const hasChanged =
-      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+    if (!formTouched) return;
 
-    if (!hasChanged) return;
-
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
 
-    debounceTimeout.current = setTimeout(() => {
+    debounceTimeoutRef.current = setTimeout(() => {
       handleSubmit(onSubmit)();
-    }, 1000);
+      setFormTouched(false);
+    }, 2500);
+  }, [watchedValues, formTouched, handleSubmit]);
 
-    return () => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-    };
-  }, [formState, handleSubmit]);
+  const markFormTouched = () => {
+    if (!formTouched) setFormTouched(true);
+  };
 
   return (
     <>
@@ -141,7 +153,7 @@ const ScreenTypographySettings = () => {
                     }}
                   >
                     <Controller
-                      name="textFontSize"
+                      name="titleFontSize"
                       control={control}
                       render={({ field }) => (
                         <>
@@ -149,15 +161,20 @@ const ScreenTypographySettings = () => {
                             min={8}
                             max={72}
                             value={field.value}
-                            onChange={(_, val) => field.onChange(val)}
+                            onChange={(_, val) => {
+                              field.onChange(val);
+                              markFormTouched();
+                            }}
                             sx={{ flex: 1 }}
                           />
                           <TextField
                             type="number"
                             value={field.value}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
+                            onChange={(e) => {
+                              const value = Number(e.target.value);
+                              field.onChange(value);
+                              markFormTouched(); // 🟢
+                            }}
                             inputProps={{ min: 8, max: 72 }}
                             sx={{
                               width: 60,
@@ -196,18 +213,24 @@ const ScreenTypographySettings = () => {
                     }}
                   >
                     <Controller
-                      name="textColor"
+                      name="titleFontColor"
                       control={control}
                       render={({ field }) => (
                         <>
                           <ColorPicker
                             color={field.value}
-                            setColor={field.onChange}
+                            setColor={(color: string) => {
+                              field.onChange(color);
+                              markFormTouched();
+                            }}
                           />
                           <TextField
                             type="text"
-                            value={field.value.toUpperCase()}
-                            onChange={(e) => field.onChange(e.target.value)}
+                            value={field.value}
+                            onChange={(e) => {
+                              field.onChange(e.target.value);
+                              markFormTouched();
+                            }}
                             placeholder={field.value.toUpperCase()}
                             sx={{
                               flex: 1,
@@ -265,15 +288,20 @@ const ScreenTypographySettings = () => {
                             min={8}
                             max={72}
                             value={field.value}
-                            onChange={(_, val) => field.onChange(val)}
+                            onChange={(_, val) => {
+                              field.onChange(val);
+                              markFormTouched();
+                            }}
                             sx={{ flex: 1 }}
                           />
                           <TextField
                             type="number"
                             value={field.value}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
+                            onChange={(e) => {
+                              const value = Number(e.target.value);
+                              field.onChange(value);
+                              markFormTouched();
+                            }}
                             inputProps={{ min: 8, max: 72 }}
                             sx={{
                               width: 60,
@@ -314,19 +342,24 @@ const ScreenTypographySettings = () => {
                     }}
                   >
                     <Controller
-                      name="descriptionColor"
+                      name="descriptionFontColor"
                       control={control}
                       render={({ field }) => (
                         <>
-                          {" "}
                           <ColorPicker
                             color={field.value}
-                            setColor={field.onChange}
+                            setColor={(color: string) => {
+                              field.onChange(color);
+                              markFormTouched();
+                            }}
                           />
                           <TextField
                             type="text"
-                            value={field.value.toUpperCase()}
-                            onChange={(e) => field.onChange(e.target.value)}
+                            value={field.value}
+                            onChange={(e) => {
+                              field.onChange(e.target.value);
+                              markFormTouched();
+                            }}
                             placeholder={field.value.toUpperCase()}
                             sx={{
                               flex: 1,

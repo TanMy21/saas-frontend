@@ -84,10 +84,22 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Elements"],
     }),
     updateElementSettings: builder.mutation({
-      query: ({ questionID, text, description, required, settings }) => ({
-        url: `/q/settings/${questionID}`,
-        method: "PUT",
-        body: { text, description, required, settings },
+      query: ({
+        questionID,
+        titleFontSize,
+        titleFontColor,
+        descriptionFontColor,
+        descriptionFontSize,
+      }) => ({
+        url: `/q/settings`,
+        method: "PATCH",
+        body: {
+          questionID,
+          titleFontSize,
+          titleFontColor,
+          descriptionFontColor,
+          descriptionFontSize,
+        },
       }),
       invalidatesTags: ["Elements"],
     }),
