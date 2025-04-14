@@ -6,9 +6,8 @@ import { SurveyPreferencesPanelProps } from "../../utils/types";
 import ElementSettingsContainer from "./ElementSettings/ElementSettingsContainer";
 
 const SurveyPreferencesPanel = ({
-  survey,
   questionId,
-  display,
+  question,
 }: SurveyPreferencesPanelProps) => {
   return (
     <Box
@@ -20,7 +19,7 @@ const SurveyPreferencesPanel = ({
         minHeight: "100%",
         left: "0",
         right: "0",
-        border:"2px solid green",
+        border: "2px solid green",
       }}
     >
       <Box
@@ -62,15 +61,10 @@ const SurveyPreferencesPanel = ({
           flexDirection: "column",
           width: "100%",
           minHeight: "92%",
-          // pt: "2%",
           // border: "2px solid green",
         }}
       >
-        <ElementSettingsContainer
-          survey={survey}
-          questionId={questionId}
-          display={display}
-        />
+        <ElementSettingsContainer questionId={questionId} question={question} />
       </Box>
     </Box>
   );

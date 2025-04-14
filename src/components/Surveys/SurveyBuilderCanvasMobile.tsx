@@ -1,28 +1,14 @@
 import { Box } from "@mui/material";
 
-import { useGetElementByIDQuery } from "../../app/slices/elementApiSlice";
 import { elementComponents } from "../../utils/elementsConfig";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 
 const SurveyBuilderCanvasMobile = ({
-  questionId,
   display,
-  // handleLayoutChange,
+  question,
 }: SurveyBuilderCanvasProps) => {
-  const { data: questions } = useGetElementByIDQuery(questionId, {
-    skip: !questionId,
-  });
-
-  // useEffect(() => {
-  //   if (questions && questions.length > 0) {
-  //     setSelectedQuestion(questions[0]);
-  //   }
-  // }, [questions]);
-
   const QuestionComponent =
-    /*selectedQuestion*/
-    /*?*/ elementComponents[questions?.type as QuestionTypeKey];
-  // : SurveyWelcomeElement;
+    elementComponents[question?.type as QuestionTypeKey];
 
   return (
     <Box display={"flex"} flexDirection={"column"}>
@@ -45,15 +31,15 @@ const SurveyBuilderCanvasMobile = ({
         }}
       >
         {/* Element view */}
-        {questions?.type && (
+        {question?.type && (
           <QuestionComponent
-            qID={questions?.questionID}
-            qNO={questions?.order?.toString()}
-            qText={questions?.text}
-            qDescription={questions?.description}
-            qType={questions?.type}
+            qID={question?.questionID}
+            qNO={question?.order?.toString()}
+            qText={question?.text}
+            qDescription={question?.description}
+            qType={question?.type}
             display={display}
-            qSettings={questions?.settings}
+            qSettings={question?.config}
           />
         )}
       </Box>

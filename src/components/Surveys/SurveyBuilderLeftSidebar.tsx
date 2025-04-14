@@ -6,7 +6,6 @@ import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
 import { SurveyBuilderLeftSidebarProps, Element } from "../../utils/types";
 
 import AddElementMenu from "./Elements/AddElementMenu";
-// import ElementsPanel from "./Elements/ElementsPanel";
 import ElementsPanel from "./Elements/ElementsPanelNew";
 
 const SurveyBuilderLeftSidebar = ({
@@ -91,7 +90,6 @@ const SurveyBuilderLeftSidebar = ({
         setQuestionId={setQuestionId}
         refetch={refetch}
       />
-      {/* <Divider sx={{ marginTop: "4px" }} /> */}
     </Box>
   );
 };

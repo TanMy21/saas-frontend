@@ -83,7 +83,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: ["Elements"],
     }),
-    updateElementSettings: builder.mutation({
+    updateElementTypography: builder.mutation({
       query: ({
         questionID,
         titleFontSize,
@@ -104,10 +104,26 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Elements"],
     }),
     updateScreenElements: builder.mutation({
-      query: ({ questionID, text, description, settings }) => ({
+      query: ({ questionID, text, description }) => ({
         url: `/q/screen/elements`,
         method: "PATCH",
-        body: { questionID, text, description, settings },
+        body: { questionID, text, description },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    updateQuestionRequiredPreference: builder.mutation({
+      query: ({ questionID, required }) => ({
+        url: `/q/pref/required`,
+        method: "PATCH",
+        body: { questionID, required },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    updateQuestionPreferenceUIConfig: builder.mutation({
+      query: ({ questionID, config }) => ({
+        url: `/q/pref/config`,
+        method: "PATCH",
+        body: { questionID, config },
       }),
       invalidatesTags: ["Elements"],
     }),
@@ -135,7 +151,9 @@ export const {
   useCreateScreenElementMutation,
   useUpdateElementTextMutation,
   useUpdateElementOrderMutation,
-  useUpdateElementSettingsMutation,
+  useUpdateElementTypographyMutation,
+  useUpdateQuestionRequiredPreferenceMutation,
+  useUpdateQuestionPreferenceUIConfigMutation,
   useUpdateScreenElementsMutation,
   useUpdateElementDescriptionMutation,
   useDuplicateElementMutation,

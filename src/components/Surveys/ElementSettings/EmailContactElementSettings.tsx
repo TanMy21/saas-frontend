@@ -1,10 +1,17 @@
 import { Box } from "@mui/material";
 
-import ScreenSettings from "./ElementSettingsComponents/ScreenSettings";
+import { ElementSettingsProps } from "../../../utils/types";
+
+import InstructionScreenSettings from "./ElementSettingsComponents/InstructionScreenSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
-const EmailContactElementSettings = () => {
+const EmailContactElementSettings = ({
+  qID,
+  question,
+}: ElementSettingsProps) => {
+  const { text, description, questionPreferences } = question || {};
+
   return (
     <Box
       sx={{
@@ -14,9 +21,13 @@ const EmailContactElementSettings = () => {
         heigh: "100%",
       }}
     >
-      <ScreenSettings />
-      <ScreenTypographySettings />
-      <ValidationSettings />
+      <InstructionScreenSettings
+        qID={qID}
+        qText={text}
+        qDescription={description}
+      />
+      <ScreenTypographySettings key={qID} qID={qID} />
+      <ValidationSettings qID={qID} questionPreferences={questionPreferences}/>
     </Box>
   );
 };

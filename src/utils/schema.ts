@@ -174,10 +174,27 @@ export const binarySettingsSchema = z.object({
     .max(24, "Button text must be at most 24 characters long"),
 });
 
+export const textAndDescriptionSettingsSchema = z.object({
+  questionText: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
+  description: z.string(),
+});
+
+export const uiConfigPreferenceSchema = z.object({
+  buttonText: z
+    .string()
+    .min(1, "Button text must be at least 1 character long")
+    .max(24, "Button text must be at most 24 characters long")
+    .optional(),
+  required: z.boolean().optional(),
+});
+
 export const instructionsSettingsSchema = z.object({
   instructionsTitle: z
     .string()
     .min(1, "Title must be at least 1 character long"),
+  description: z.string().optional(),
 });
 
 export const choiceSettingsSchema = z.object({

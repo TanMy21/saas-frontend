@@ -13,15 +13,10 @@ import { SurveyBuilderHeaderProps } from "../../utils/types";
 import HeaderIconMenu from "../HeaderIconMenu";
 
 const SurveyBuilderHeader = ({
-  // display,
-  // tabValue,
   survey,
-  // surveyID,
   workspaceId,
   workspaceName,
   title,
-  // handleScreenChange,
-  // handleLayoutChange,
 }: SurveyBuilderHeaderProps) => {
   const [surveyTitle, setSurveyTitle] = useState<string | undefined>("");
   const [tabValue, setTabValue] = useState<string | null>("create");

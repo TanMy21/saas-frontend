@@ -2,15 +2,16 @@ import { Box } from "@mui/material";
 
 import { ElementSettingsProps } from "../../../utils/types";
 
-import ScreenSettings from "./ElementSettingsComponents/ScreenSettings";
+import NavigationButtonTextSettings from "./ElementSettingsComponents/NavigationButtonTextSettings";
+import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 
 const WelcomeScreenElementSettings = ({
   qID,
-  qText,
-  qDescription,
-  qSettings,
+  question,
 }: ElementSettingsProps) => {
+  const { text, description, questionPreferences } = question || {};
+
   return (
     <Box
       sx={{
@@ -21,13 +22,16 @@ const WelcomeScreenElementSettings = ({
         // border: "2px solid red",
       }}
     >
-      <ScreenSettings
+      <QuestionTextandDescriptionSettings
         qID={qID}
-        qText={qText}
-        qDescription={qDescription!}
-        qSettings={qSettings!}
+        qText={text}
+        qDescription={description}
       />
-      <ScreenTypographySettings qID={qID}/>
+      <NavigationButtonTextSettings
+        qID={qID}
+        questionPreferences={questionPreferences}
+      />
+      <ScreenTypographySettings key={qID} qID={qID} />
     </Box>
   );
 };

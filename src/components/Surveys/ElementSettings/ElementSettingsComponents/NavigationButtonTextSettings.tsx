@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import NavigationIcon from "@mui/icons-material/Navigation";
 import {
   Accordion,
   AccordionDetails,
@@ -11,33 +11,34 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
-import { useUpdateScreenElementsMutation } from "../../../../app/slices/elementApiSlice";
-import { welcomeSettingsSchema } from "../../../../utils/schema";
-import { QuestionSetting, ScreenSettingsProps } from "../../../../utils/types";
+import { useUpdateQuestionPreferenceUIConfigMutation } from "../../../../app/slices/elementApiSlice";
+import { uiConfigPreferenceSchema } from "../../../../utils/schema";
+import {
+  QuestionSetting,
+  ScreenTypographySettingsProps,
+} from "../../../../utils/types";
 
-const ScreenSettings = ({
+const NavigationButtonTextSettings = ({
   qID,
-  qText,
-  qDescription,
-  qSettings,
-}: ScreenSettingsProps) => {
-  const [updateScreenElements] = useUpdateScreenElementsMutation();
+  questionPreferences,
+}: ScreenTypographySettingsProps) => {
+  const [updateQuestionPreferenceUIConfig] =
+    useUpdateQuestionPreferenceUIConfigMutation();
 
-  const { buttonText } = qSettings || { buttonText: "Let's Start" };
+  const { buttonText } = questionPreferences?.uiConfig || {
+    buttonText: "Next",
+  };
 
   const { handleSubmit, control } = useForm<QuestionSetting>({
-    resolver: zodResolver(welcomeSettingsSchema),
+    resolver: zodResolver(uiConfigPreferenceSchema),
     defaultValues: {
-      questionText: qText,
-      description: qDescription,
       buttonText,
     },
   });
 
   const [formState, setFormState] = useState<QuestionSetting>({
-    welcomeText: qText,
     buttonText,
   });
 
@@ -50,13 +51,11 @@ const ScreenSettings = ({
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
-      const { questionText, description, buttonText } = data;
+      const { buttonText } = data;
 
       const config = { buttonText };
-      await updateScreenElements({
+      await updateQuestionPreferenceUIConfig({
         questionID: qID,
-        text: questionText,
-        description,
         config,
       });
     } catch (error) {
@@ -95,7 +94,7 @@ const ScreenSettings = ({
           borderRadius: 0,
           boxShadow: "none",
         }}
-        defaultExpanded
+        defaultExpanded={false}
       >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -114,8 +113,8 @@ const ScreenSettings = ({
               color: "#453F46",
             }}
           >
-            <HelpOutlineIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
-            Question
+            <NavigationIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
+            Navigation Button Text
           </Box>
         </AccordionSummary>
         <AccordionDetails>
@@ -129,84 +128,6 @@ const ScreenSettings = ({
               // border: "2px solid red",
             }}
           >
-            <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>Question Text</Box>
-            <Box mt={1}>
-              <Controller
-                name="questionText"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    type="text"
-                    fullWidth
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        borderRadius: 2,
-                        backgroundColor: "#F9FAFB",
-                        height: "40px",
-                        fontSize: "16px",
-                      },
-                    }}
-                    {...field}
-                    onChange={(event) => {
-                      const value = event.target.value;
-                      field.onChange(value);
-                      setFormState((prev) => ({
-                        ...prev,
-                        questionText: value,
-                      }));
-                    }}
-                  />
-                )}
-              />
-            </Box>
-            <Box sx={{ marginTop: "2%", fontWeight: 500, color: "#3F3F46" }}>
-              Description
-            </Box>
-            <Box mt={1}>
-              <Controller
-                name="description"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    type="text"
-                    multiline
-                    fullWidth
-                    maxRows={4}
-                    sx={{
-                      "& .MuiInputBase-root": {
-                        width: "100%",
-                        height: "40px",
-                        fontSize: "16px",
-                        borderRadius: 2,
-                        backgroundColor: "#F9FAFB",
-                        minHeight: "40px",
-                        boxSizing: "border-box",
-                      },
-                      "& .MuiInputBase-input": {
-                        lineHeight: "1.5",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      },
-                    }}
-                    {...field}
-                    value={
-                      field.value === ""
-                        ? "Description (optional)"
-                        : field.value
-                    }
-                    onChange={(event) => {
-                      const value = event.target.value;
-                      field.onChange(value);
-                      setFormState((prev) => ({
-                        ...prev,
-                        description: value,
-                      }));
-                    }}
-                  />
-                )}
-              />
-            </Box>
             <Box sx={{ marginTop: "2%", fontWeight: 500, color: "#3F3F46" }}>
               Button
             </Box>
@@ -261,4 +182,4 @@ const ScreenSettings = ({
   );
 };
 
-export default ScreenSettings;
+export default NavigationButtonTextSettings;

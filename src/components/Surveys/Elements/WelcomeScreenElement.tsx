@@ -2,8 +2,10 @@ import { useState } from "react";
 
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 import { useUpdateElementTextMutation } from "../../../app/slices/elementApiSlice";
+import { RootState } from "../../../app/store";
 import { ElementProps } from "../../../utils/types";
 
 const WelcomeScreenElement = ({
@@ -12,6 +14,10 @@ const WelcomeScreenElement = ({
   display,
   qSettings,
 }: ElementProps) => {
+  const typographySettings = useSelector(
+    (state: RootState) => state.elementTypography
+  );
+
   const [text, setText] = useState("Welcome to the Survey!");
   const [isEditing, setIsEditing] = useState(false);
 
@@ -30,6 +36,13 @@ const WelcomeScreenElement = ({
   const fontSizeXL = display === "mobile" ? "1.6rem" : "2.8rem";
 
   const { buttonText } = qSettings || { buttonText: "Let's Start" };
+
+  const {
+    titleFontColor,
+    titleFontSize,
+    descriptionFontColor,
+    descriptionFontSize,
+  } = typographySettings || {};
 
   const handleBlur = () => {
     updateElementText({ questionID: qID, text });
@@ -112,8 +125,9 @@ const WelcomeScreenElement = ({
                 width: "100%",
                 textAlign: "center",
                 lineHeight: "1",
-                fontSize: fontSizeXL,
+                fontSize: `${titleFontSize}px`,
                 wordSpacing: "1px",
+                color: titleFontColor,
               }}
             >
               {qText ? qText : text}

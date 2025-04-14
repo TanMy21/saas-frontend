@@ -13,8 +13,11 @@ import {
 } from "@mui/material";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { FiType } from "react-icons/fi";
+import { useSelector, useDispatch } from "react-redux";
 
-import { useUpdateElementSettingsMutation } from "../../../../app/slices/elementApiSlice";
+import { useUpdateElementTypographyMutation } from "../../../../app/slices/elementApiSlice";
+import { updateTypographyField } from "../../../../app/slices/elementTypographySlice";
+import { RootState } from "../../../../app/store";
 import { TypographySettingsFormSchema } from "../../../../utils/schema";
 import {
   ScreenTypographySettingsProps,
@@ -24,15 +27,27 @@ import {
 import ColorPicker from "./ColorPicker";
 
 const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
-  const [updateElementSettings] = useUpdateElementSettingsMutation();
+  const typographySettings = useSelector(
+    (state: RootState) => state.elementTypography
+  );
+  const dispatch = useDispatch();
 
-  const { handleSubmit, control } = useForm<TypographySettingsForm>({
+  const [updateElementTypography] = useUpdateElementTypographyMutation();
+
+  const {
+    titleFontColor,
+    titleFontSize,
+    descriptionFontColor,
+    descriptionFontSize,
+  } = typographySettings || {};
+
+  const { handleSubmit, control, reset } = useForm<TypographySettingsForm>({
     resolver: zodResolver(TypographySettingsFormSchema),
     defaultValues: {
-      titleFontSize: 12,
-      titleFontColor: "#000000",
-      descriptionFontSize: 12,
-      descriptionFontColor: "#000000",
+      titleFontSize,
+      titleFontColor,
+      descriptionFontSize,
+      descriptionFontColor,
     },
   });
 
@@ -42,8 +57,6 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
 
   const onSubmit = async (data: TypographySettingsForm) => {
     try {
-      console.log("Autosaved: ", data);
-
       const {
         titleFontSize,
         titleFontColor,
@@ -51,7 +64,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
         descriptionFontSize,
       } = data;
 
-      await updateElementSettings({
+      await updateElementTypography({
         questionID: qID,
         titleFontSize,
         titleFontColor,
@@ -62,6 +75,10 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const markFormTouched = () => {
+    if (!formTouched) setFormTouched(true);
   };
 
   useEffect(() => {
@@ -77,15 +94,26 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
     }, 2500);
   }, [watchedValues, formTouched, handleSubmit]);
 
-  const markFormTouched = () => {
-    if (!formTouched) setFormTouched(true);
-  };
+  useEffect(() => {
+    reset({
+      titleFontSize,
+      titleFontColor,
+      descriptionFontSize,
+      descriptionFontColor,
+    });
+  }, [
+    titleFontSize,
+    titleFontColor,
+    descriptionFontSize,
+    descriptionFontColor,
+    reset,
+  ]);
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Accordion
-          defaultExpanded
+          defaultExpanded={false}
           sx={{
             width: "100%",
             backgroundColor: "#FFFFFF",
@@ -162,8 +190,19 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                             max={72}
                             value={field.value}
                             onChange={(_, val) => {
-                              field.onChange(val);
+                              const numericValue = Array.isArray(val)
+                                ? val[0]
+                                : val;
+
+                              field.onChange(numericValue);
                               markFormTouched();
+
+                              dispatch(
+                                updateTypographyField({
+                                  key: "titleFontSize",
+                                  value: numericValue,
+                                })
+                              );
                             }}
                             sx={{ flex: 1 }}
                           />
@@ -173,12 +212,19 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                             onChange={(e) => {
                               const value = Number(e.target.value);
                               field.onChange(value);
-                              markFormTouched(); // 🟢
+                              markFormTouched();
+                              dispatch(
+                                updateTypographyField({
+                                  key: "titleFontSize",
+                                  value: value,
+                                })
+                              );
                             }}
                             inputProps={{ min: 8, max: 72 }}
                             sx={{
-                              width: 60,
+                              width: 64,
                               "& .MuiInputBase-root": {
+                                width: "100%",
                                 borderRadius: 2,
                                 backgroundColor: "#F9FAFB",
                                 height: "40px",
@@ -222,16 +268,33 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                             setColor={(color: string) => {
                               field.onChange(color);
                               markFormTouched();
+                              dispatch(
+                                updateTypographyField({
+                                  key: "titleFontColor",
+                                  value: color,
+                                })
+                              );
                             }}
                           />
                           <TextField
                             type="text"
                             value={field.value}
                             onChange={(e) => {
-                              field.onChange(e.target.value);
+                              let input = e.target.value;
+
+                              if (!input.startsWith("#")) {
+                                input = `#${input.replace(/^#*/, "")}`;
+                              }
+                              field.onChange(input);
                               markFormTouched();
+                              dispatch(
+                                updateTypographyField({
+                                  key: "titleFontColor",
+                                  value: input,
+                                })
+                              );
                             }}
-                            placeholder={field.value.toUpperCase()}
+                            placeholder={field.value?.toUpperCase()}
                             sx={{
                               flex: 1,
                               "& .MuiInputBase-root": {
@@ -289,8 +352,19 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                             max={72}
                             value={field.value}
                             onChange={(_, val) => {
-                              field.onChange(val);
+                              const numericValue = Array.isArray(val)
+                                ? val[0]
+                                : val;
+
+                              field.onChange(numericValue);
                               markFormTouched();
+
+                              dispatch(
+                                updateTypographyField({
+                                  key: "descriptionFontSize",
+                                  value: numericValue,
+                                })
+                              );
                             }}
                             sx={{ flex: 1 }}
                           />
@@ -301,10 +375,16 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                               const value = Number(e.target.value);
                               field.onChange(value);
                               markFormTouched();
+                              dispatch(
+                                updateTypographyField({
+                                  key: "descriptionFontSize",
+                                  value,
+                                })
+                              );
                             }}
                             inputProps={{ min: 8, max: 72 }}
                             sx={{
-                              width: 60,
+                              width: 64,
                               "& .MuiInputBase-root": {
                                 borderRadius: 2,
                                 backgroundColor: "#F9FAFB",
@@ -351,16 +431,33 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                             setColor={(color: string) => {
                               field.onChange(color);
                               markFormTouched();
+                              dispatch(
+                                updateTypographyField({
+                                  key: "descriptionFontColor",
+                                  value: color,
+                                })
+                              );
                             }}
                           />
                           <TextField
                             type="text"
                             value={field.value}
                             onChange={(e) => {
-                              field.onChange(e.target.value);
+                              let input = e.target.value;
+
+                              if (!input.startsWith("#")) {
+                                input = `#${input.replace(/^#*/, "")}`;
+                              }
+                              field.onChange(input);
                               markFormTouched();
+                              dispatch(
+                                updateTypographyField({
+                                  key: "descriptionFontColor",
+                                  value: input,
+                                })
+                              );
                             }}
-                            placeholder={field.value.toUpperCase()}
+                            placeholder={field.value?.toUpperCase()}
                             sx={{
                               flex: 1,
                               "& .MuiInputBase-root": {

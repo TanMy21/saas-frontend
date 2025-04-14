@@ -165,7 +165,7 @@ const GridSurveyCard = ({
                   fontSize: "16px",
                   color: "#737783",
                   fontWeight: "bold",
-                  mt: "-8px",
+                  mt: "-12px",
                 }}
               >
                 Questions
@@ -198,7 +198,7 @@ const GridSurveyCard = ({
                   fontSize: "16px",
                   color: "#737783",
                   fontWeight: "bold",
-                  mt: "-8px",
+                  mt: "-16px",
                 }}
               >
                 Responses

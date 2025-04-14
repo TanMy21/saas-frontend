@@ -1,11 +1,15 @@
 import { Box } from "@mui/material";
 
+import { ElementSettingsProps } from "../../../utils/types";
+
 import MediaOptionSettings from "./ElementSettingsComponents/MediaOptionSettings";
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
-const MediaElementSettings = () => {
+const MediaElementSettings = ({ qID, question }: ElementSettingsProps) => {
+  const { text, description, questionPreferences } = question || {};
+
   return (
     <Box
       sx={{
@@ -15,9 +19,13 @@ const MediaElementSettings = () => {
         heigh: "100%",
       }}
     >
-      <QuestionTextandDescriptionSettings />
-      <ValidationSettings />
-      <ScreenTypographySettings />
+      <QuestionTextandDescriptionSettings
+        qID={qID}
+        qText={text}
+        qDescription={description}
+      />
+      <ScreenTypographySettings key={qID} qID={qID} />
+      <ValidationSettings qID={qID} questionPreferences={questionPreferences}/>
       <MediaOptionSettings />
     </Box>
   );

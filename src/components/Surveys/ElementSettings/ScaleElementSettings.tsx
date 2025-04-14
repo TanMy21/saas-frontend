@@ -1,11 +1,15 @@
 import { Box } from "@mui/material";
 
+import { ElementSettingsProps } from "../../../utils/types";
+
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
 import ScaleRangeSettings from "./ElementSettingsComponents/ScaleRangeSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
-const ScaleElementSettings = () => {
+const ScaleElementSettings = ({ qID, question }: ElementSettingsProps) => {
+  const { text, description, questionPreferences } = question || {};
+
   return (
     <Box
       sx={{
@@ -15,10 +19,14 @@ const ScaleElementSettings = () => {
         heigh: "100%",
       }}
     >
-      <QuestionTextandDescriptionSettings />
-      <ValidationSettings />
+      <QuestionTextandDescriptionSettings
+        qID={qID}
+        qText={text}
+        qDescription={description}
+      />
+      <ScreenTypographySettings key={qID} qID={qID} />
       <ScaleRangeSettings />
-      <ScreenTypographySettings />
+      <ValidationSettings qID={qID} questionPreferences={questionPreferences}/>
     </Box>
   );
 };

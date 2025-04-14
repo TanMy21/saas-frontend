@@ -35,9 +35,24 @@ export interface RowData {
   [key: string]: string;
 }
 
+export interface BuilderSpaceProps {
+  questionId: string | null;
+  Elements: Element[];
+  display: string | null;
+  setDisplay: React.Dispatch<React.SetStateAction<string | null>>;
+  noElements: boolean;
+}
+
 export interface ColorPickerProps {
   color: string;
   setColor: (color: string) => void;
+}
+
+export interface CanvasConsoleProps {
+  display: string | null;
+  setDisplay: React.Dispatch<React.SetStateAction<string | null>>;
+  question: Element | null;
+  noElements: boolean;
 }
 
 export interface DownloadResponsesModalProps {
@@ -105,9 +120,11 @@ export interface Element {
   text: string;
   type: string;
   order?: number;
+  questionPreferences: SurveyCanvasQuestionSettings;
   response: ElementResponse[];
   minOptions: number;
   maxOptions: number;
+  options?: OptionType[];
   required: boolean;
 }
 
@@ -121,16 +138,18 @@ export interface ElementListItemProps {
 }
 
 export interface ElementProps {
-  qNO: string;
+  qNO?: string;
   type?: string;
-  qText: string;
-  qDescription: string;
-  qType: string;
+  qText?: string;
+  qDescription?: string;
+  qType?: string;
   display?: string | null;
   qID: string;
+  question?: Element | null;
   qOptions?: OptionType[];
   qRequired?: boolean;
   qSettings?: QuestionSetting;
+  qPreferences?: SurveyCanvasQuestionSettings;
 }
 
 export interface ElementDropDownMenuProps {
@@ -177,13 +196,20 @@ interface ElementResponse {
 
 export interface ElementSettingsProps {
   qID: string;
+  question?: Element | null;
   qNO?: string;
-  qText: string;
+  qText?: string;
   qDescription?: string;
   qType?: string;
   qOptions?: OptionType[];
   qRequired?: boolean;
   qSettings?: QuestionSetting;
+  qPreferences?: SurveyCanvasQuestionSettings;
+}
+
+export interface ElementSettingsContainerProps {
+  questionId: string | null;
+  question: Element | null;
 }
 
 export interface ErrorData {
@@ -433,15 +459,50 @@ export interface QuestionFlowCondition {
   conditions: Condition[];
 }
 
-export interface Questions {
+export interface Question {
   questionID: string;
   relatedSurveyId: string;
+  // QuestionSettings: SurveyQuestionSettings;
   text: string;
   description: string;
   type: string;
   order: number;
   required: boolean;
   response: QuestionResponse[];
+}
+
+export interface SurveyCanvasQuestion {
+  questionID: string;
+  relatedSurveyId: string;
+  questionPreferences: SurveyCanvasQuestionSettings;
+  text: string;
+  description: string;
+  type: string;
+  order: number;
+  required: boolean;
+  response: QuestionResponse[];
+  options: OptionType[];
+}
+
+export interface QuestionUIConfig {
+  buttonText?: string;
+  minRange?: number;
+  maxRange?: number;
+  multipleSelection?: boolean;
+  superSize?: boolean;
+}
+
+export interface SurveyCanvasQuestionSettings {
+  preferencesID: string;
+  relatedQuestionID: string;
+  creatorId: string;
+  updaterId?: string;
+  titleFontSize?: number;
+  titleFontColor?: string;
+  descriptionFontSize?: number;
+  descriptionFontColor?: string;
+  required?: boolean;
+  uiConfig?: QuestionUIConfig;
 }
 
 export interface QuestionSetting {
@@ -500,7 +561,7 @@ export interface RegisterFormData {
 
 export interface ResultsResponse {
   surveyID: string;
-  questions: Questions[];
+  questions: Question[];
 }
 
 export interface ResetPassword {
@@ -543,13 +604,8 @@ export interface Survey {
 }
 
 export interface SurveyBuilderCanvasProps {
-  display: string | null;
-  survey?: Survey;
-  questionId: string | null;
-  handleLayoutChange?: (
-    _event: React.MouseEvent<HTMLElement>,
-    display: string | null
-  ) => void;
+  display?: string | null;
+  question?: Element | null;
 }
 
 export interface SurveyBuilderLeftSidebarProps {
@@ -594,13 +650,14 @@ export interface OptionType {
 
 export interface ScreenSettingsProps {
   qID: string;
-  qText: string;
-  qDescription: string;
-  qSettings: QuestionSetting;
+  qText?: string;
+  qDescription?: string;
+  qSettings?: QuestionSetting;
 }
 
 export interface ScreenTypographySettingsProps {
   qID: string;
+  questionPreferences?: SurveyCanvasQuestionSettings;
 }
 
 export interface SurveysCollectionProps {
@@ -648,17 +705,11 @@ export interface SurveyBuilderHeaderProps {
   workspaceId: string;
   workspaceName: string;
   title: string;
-  tabValue?: string | null;
-  handleScreenChange?: (
-    _event: React.SyntheticEvent,
-    display: string | null
-  ) => void;
 }
 
 export interface SurveyPreferencesPanelProps {
-  survey: Survey;
   questionId: string | null;
-  display: string | null;
+  question: Element | null;
 }
 
 export interface SurveySearchBarProps {

@@ -18,7 +18,7 @@ const ScaleRangeSettings = () => {
         borderRadius: 0,
         boxShadow: "none",
       }}
-      defaultExpanded
+      defaultExpanded={false}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
