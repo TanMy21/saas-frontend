@@ -144,6 +144,7 @@ const Dashboard = () => {
             zIndex: 1,
             width: "100%",
             minHeight: "95vh",
+            background: "#FFFFFF",
             overflowX: "hidden",
             overflowY: "hidden",
           }}
@@ -152,7 +153,6 @@ const Dashboard = () => {
           {/* Main content area */}
           <Box
             sx={{
-              background: "#F9FAFB",
               flexGrow: 1,
               width: "100%",
               minHeight: "95vh",

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Box } from "@mui/material";
 import { useDispatch } from "react-redux";
 
+import { resetQuestion, setQuestion } from "../app/slices/elementSlice";
 import {
   initializeTypography,
   resetTypography,
@@ -24,12 +25,14 @@ const BuilderSpace = ({
     Elements?.find((q: Element) => q.questionID === questionId) || null;
 
   useEffect(() => {
-    if (selectedQuestion?.questionPreferences) {
-      dispatch(initializeTypography(selectedQuestion.questionPreferences));
+    if (selectedQuestion) {
+      dispatch(setQuestion(selectedQuestion));
+      dispatch(initializeTypography(selectedQuestion?.questionPreferences));
     } else {
+      dispatch(resetQuestion());
       dispatch(resetTypography());
     }
-  }, [selectedQuestion?.questionID]);
+  }, [selectedQuestion?.questionID, dispatch]);
 
   return (
     <Box
@@ -37,17 +40,20 @@ const BuilderSpace = ({
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        height: "100%",
+        minHeight: "94vh",
         backgroundColor: "#FFFFFF",
+        overflowY: "auto",
+        overflowX: "hidden",
       }}
     >
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
+          flexGrow: 1,
           width: "80%",
           height: "100%",
-          border: "4px solid black",
+          // border: "4px solid black",
         }}
       >
         <CanvasConsole
@@ -63,7 +69,7 @@ const BuilderSpace = ({
           flexDirection: "column",
           width: "20%",
           height: "100%",
-          border: "4px solid red",
+          // border: "4px solid red",
         }}
       >
         <SurveyPreferencesPanel

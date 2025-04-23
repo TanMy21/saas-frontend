@@ -6,9 +6,7 @@ import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/Ques
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
-const TextElementSettings = ({ qID, question }: ElementSettingsProps) => {
-  const { text, description, questionPreferences } = question || {};
-
+const TextElementSettings = ({ qID }: ElementSettingsProps) => {
   return (
     <Box
       sx={{
@@ -18,13 +16,9 @@ const TextElementSettings = ({ qID, question }: ElementSettingsProps) => {
         heigh: "100%",
       }}
     >
-      <QuestionTextandDescriptionSettings
-        qID={qID}
-        qText={text}
-        qDescription={description}
-      />
-      <ValidationSettings qID={qID} questionPreferences={questionPreferences}/>
+      <QuestionTextandDescriptionSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
+      <ValidationSettings />
     </Box>
   );
 };

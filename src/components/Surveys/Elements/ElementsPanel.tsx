@@ -69,7 +69,7 @@ const ElementsPanel = ({
         .map((e: Element, index: number) => ({ ...e, order: index + 1 }));
       updateElementOrder({ questions: orderedElements })
         .unwrap()
-        .then((response) => console.log("Order update response:", response))
+        .then()
         .catch((error) => console.error("Order update error:", error));
     }, 500),
     [updateElementOrder]
@@ -77,26 +77,23 @@ const ElementsPanel = ({
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
-    if (!destination) {
+    if (!destination || source.index === destination.index) {
       return;
     }
-    if (source.index === destination.index) {
-      return;
-    }
-    const newElements = Array.from(displayedQuestions);
-    const [moved] = newElements.splice(source.index, 1);
-    newElements.splice(destination.index, 0, moved);
-    // setElements(newElements);
+
+    // const newElements = Array.from(displayedQuestions);
+    const orderUpdatedElements = Array.from(orderedElements);
+    const [moved] = orderUpdatedElements.splice(source.index, 1);
+    orderUpdatedElements.splice(destination.index, 0, moved);
+    // setElements(orderUpdatedElements);
 
     // Reorder elements
-    const reorderedElements = newElements.map((el, index) => {
-      if (orderedElementTypes.includes(el.type)) {
-        return { ...el, order: index + 1 };
-      }
-      return el;
-    });
+    const reorderedWithOrder = orderUpdatedElements.map((el, index) => ({
+      ...el,
+      order: index + 1,
+    }));
 
-    debounceUpdateOrder(reorderedElements);
+    debounceUpdateOrder(reorderedWithOrder);
   };
 
   return (
@@ -193,37 +190,33 @@ const ElementsPanel = ({
                               </Typography>
                             </Box>
 
-                            {
-                              (isNonOrderableType = nonOrderableTypes.includes(
-                                element.type
-                              ) ? null : (
-                                <Box
-                                  display={"flex"}
-                                  justifyContent={"center"}
-                                  alignItems={"center"}
-                                  flexBasis={"auto"}
-                                  flexGrow={1}
-                                  sx={{
-                                    width: "10%",
-                                    height: "100%",
+                            {!nonOrderableTypes.includes(element.type) && (
+                              <Box
+                                display={"flex"}
+                                justifyContent={"center"}
+                                alignItems={"center"}
+                                flexBasis={"auto"}
+                                flexGrow={1}
+                                sx={{
+                                  width: "10%",
+                                  height: "100%",
 
-                                    marginTop: "1%",
-                                    marginLeft: "4%",
-                                    "&:hover": {
-                                      cursor: "pointer",
-                                    },
-                                  }}
+                                  marginTop: "1%",
+                                  marginLeft: "4%",
+                                  "&:hover": {
+                                    cursor: "pointer",
+                                  },
+                                }}
+                              >
+                                <Typography
+                                  color={"black"}
+                                  fontSize={"1.4rem"}
+                                  fontWeight={"bold"}
                                 >
-                                  <Typography
-                                    color={"black"}
-                                    fontSize={"1.4rem"}
-                                    fontWeight={"bold"}
-                                  >
-                                    {element.order}
-                                  </Typography>
-                                </Box>
-                              ))
-                            }
+                                  {element.order}
+                                </Typography>
+                              </Box>
+                            )}
                             <Box
                               display={"flex"}
                               justifyContent={"flex-start"}

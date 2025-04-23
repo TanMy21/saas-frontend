@@ -1,97 +1,49 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { ElementProps } from "../../../utils/types";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const BinaryElement = ({
-  qID,
-  qNO,
-  qText,
-  qType,
-  qDescription,
-  display,
-  qSettings,
-}: ElementProps) => {
-  const widthBtn = display === "mobile" ? "80px" : "100px";
-  const heightBtn = display === "mobile" ? "80px" : "100px";
-
-  const { button1Text, button2Text } = qSettings || {
-    button1Text: "Yes",
-    button2Text: "No",
-  };
-
+const BinaryElement = ({ display }: ElementProps) => {
   return (
     <Box
-      display={"flex"}
-      flexDirection={"column"}
-      justifyContent={"start"}
-      alignItems={"center"}
-      // margin={"auto"}
-      width={"98%"}
-      height={"100%"}
-      zIndex={20}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        margin: "auto",
+        width: "98%",
+        height: "68vh",
+        zIndex: 20,
+        // border: "2px solid red",
+      }}
     >
       <Box
-        display={"flex"}
-        flexDirection={"row"}
-        sx={{ width: "98%", marginTop: "12%" }}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "flex-end",
+          width: "100%",
+          height: "48%",
+          margin: "auto",
+          // border: "2px solid blue",
+        }}
       >
-        <ElementQuestionText
-          qID={qID}
-          qNO={qNO}
-          qText={qText}
-          qType={qType}
-          qDescription={qDescription}
-          display={display}
-        />
+        <ElementQuestionText display={display} />
       </Box>
       <Box
-        display={"flex"}
-        flexDirection={"row"}
-        justifyContent={"center"}
-        width={"90%"}
-        mt={8}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "start",
+          alignItems: "center",
+          width: "100%",
+          height: "48%",
+          margin: "auto",
+          // border: "2px solid blue",
+        }}
       >
-        <Box
-          sx={{
-            width: widthBtn,
-            height: heightBtn,
-          }}
-        >
-          <Button
-            variant="outlined"
-            size="large"
-            sx={{
-              marginRight: "12%",
-              width: "100%",
-              height: "100%",
-              borderRadius: "50%",
-            }}
-          >
-            {button1Text}
-          </Button>
-        </Box>
-        <Box
-          ml={4}
-          sx={{
-            width: widthBtn,
-            height: heightBtn,
-          }}
-        >
-          <Button
-            variant="outlined"
-            size="large"
-            sx={{
-              marginRight: "12%",
-              width: "100%",
-              height: "100%",
-              borderRadius: "50%",
-            }}
-          >
-            {button2Text}
-          </Button>
-        </Box>
+        {/* Choices */}
       </Box>
     </Box>
   );

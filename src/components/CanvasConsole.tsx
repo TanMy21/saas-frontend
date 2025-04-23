@@ -23,15 +23,15 @@ const CanvasConsole = ({
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        minHeight: "100%",
-        border: "2px solid orange",
+        flexGrow: 1,
+        // border: "2px solid orange",
       }}
     >
       <SurveyBuilderDock setDisplay={setDisplay} />
       <Box
         sx={{
-          marginTop: "2%",
           marginLeft: "1%",
+          marginTop: "2%",
           maxWidth: "98%",
           minHeight: "84%",
         }}

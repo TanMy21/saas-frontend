@@ -44,7 +44,7 @@ const SurveyBuilderLeftSidebar = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "68vh",
+        height: "94vh",
         // border: "2px solid green",
       }}
     >

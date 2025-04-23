@@ -178,7 +178,7 @@ export const textAndDescriptionSettingsSchema = z.object({
   questionText: z
     .string()
     .min(1, "Question text must be at least 1 character long"),
-  description: z.string(),
+  questionDescription: z.string(),
 });
 
 export const uiConfigPreferenceSchema = z.object({

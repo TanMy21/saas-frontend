@@ -10,71 +10,77 @@ import {
   Box,
   TextField,
 } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useUpdateScreenElementsMutation } from "../../../../app/slices/elementApiSlice";
+import { updateQuestionField } from "../../../../app/slices/elementSlice";
+import { RootState } from "../../../../app/store";
 import { textAndDescriptionSettingsSchema } from "../../../../utils/schema";
-import { QuestionSetting, ScreenSettingsProps } from "../../../../utils/types";
+import { QuestionSetting } from "../../../../utils/types";
 
-const QuestionTextandDescriptionSettings = ({
-  qID,
-  qText,
-  qDescription,
-}: ScreenSettingsProps) => {
+const QuestionTextandDescriptionSettings = () => {
+  const dispatch = useDispatch();
+  const question = useSelector(
+    (state: RootState) => state.question.selectedQuestion
+  );
+  const { questionID, text, description } = question || {};
   const [updateScreenElements] = useUpdateScreenElementsMutation();
 
-  const { handleSubmit, control } = useForm<QuestionSetting>({
+  const { handleSubmit, control, reset } = useForm<QuestionSetting>({
     resolver: zodResolver(textAndDescriptionSettingsSchema),
     defaultValues: {
-      questionText: qText,
-      description: qDescription,
+      questionText: text,
+      questionDescription: description,
     },
   });
 
-  const [formState, setFormState] = useState<QuestionSetting>({
-    questionText: qText,
-    description: qDescription,
-  });
-
-  const previousFormState = useRef<QuestionSetting>(formState);
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const watchedValues = useWatch({ control });
+  const [formTouched, setFormTouched] = useState(false);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
-      const { questionText, description } = data;
+      const { questionText, questionDescription } = data;
 
       const config = {};
       await updateScreenElements({
-        questionID: qID,
+        questionID,
         text: questionText,
-        description,
+        description: questionDescription,
         config,
-      });
+      }).unwrap();
+      setFormTouched(false);
     } catch (error) {
       console.error(error);
     }
   };
 
+  const markFormTouched = () => {
+    if (!formTouched) setFormTouched(true);
+  };
+
   useEffect(() => {
-    const hasChanged =
-      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+    if (!formTouched) return;
 
-    if (!hasChanged) return;
-
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
 
-    debounceTimeout.current = setTimeout(() => {
+    debounceTimeoutRef.current = setTimeout(() => {
       handleSubmit(onSubmit)();
+      setFormTouched(false);
     }, 2500);
+  }, [watchedValues, formTouched, handleSubmit]);
 
-    return () => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-    };
-  }, [formState, handleSubmit]);
+  useEffect(() => {
+    if (text !== undefined && description !== undefined) {
+      reset({
+        questionText: text,
+        questionDescription: description,
+      });
+    }
+  }, [text, description, reset]);
 
   return (
     <Accordion
@@ -140,10 +146,10 @@ const QuestionTextandDescriptionSettings = ({
                   onChange={(event) => {
                     const value = event.target.value;
                     field.onChange(value);
-                    setFormState((prev) => ({
-                      ...prev,
-                      questionText: value,
-                    }));
+                    markFormTouched();
+                    dispatch(
+                      updateQuestionField({ key: "text", value: value })
+                    );
                   }}
                 />
               )}
@@ -154,7 +160,7 @@ const QuestionTextandDescriptionSettings = ({
           </Box>
           <Box mt={1}>
             <Controller
-              name="description"
+              name="questionDescription"
               control={control}
               render={({ field }) => (
                 <TextField
@@ -186,10 +192,10 @@ const QuestionTextandDescriptionSettings = ({
                   onChange={(event) => {
                     const value = event.target.value;
                     field.onChange(value);
-                    setFormState((prev) => ({
-                      ...prev,
-                      description: value,
-                    }));
+                    markFormTouched();
+                    dispatch(
+                      updateQuestionField({ key: "description", value: value })
+                    );
                   }}
                 />
               )}

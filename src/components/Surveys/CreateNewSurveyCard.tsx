@@ -18,7 +18,7 @@ const CreateNewSurveyCard = ({
       <Box
         sx={{
           border: "2px dashed #E2E5E9",
-          borderRadius: 2,
+          borderRadius: 5,
           backgroundColor: "white",
           p: viewMode === "grid" ? 2 : 0,
           display: "flex",

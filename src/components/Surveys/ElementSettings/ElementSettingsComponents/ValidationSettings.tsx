@@ -10,42 +10,47 @@ import {
   AccordionSummary,
   Box,
 } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useUpdateQuestionRequiredPreferenceMutation } from "../../../../app/slices/elementApiSlice";
+import { toggleElementRequired } from "../../../../app/slices/elementSlice";
+import { RootState } from "../../../../app/store";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
-import {
-  QuestionSetting,
-  ScreenTypographySettingsProps,
-} from "../../../../utils/types";
+import { QuestionSetting } from "../../../../utils/types";
 
-const ValidationSettings = ({
-  qID,
-  questionPreferences,
-}: ScreenTypographySettingsProps) => {
+const ValidationSettings = () => {
+  const dispatch = useDispatch();
+  const question = useSelector(
+    (state: RootState) => state.question.selectedQuestion
+  );
+
+  const { questionID, questionPreferences } = question || {};
+
   const [updateQuestionRequiredPreference] =
     useUpdateQuestionRequiredPreferenceMutation();
 
-  const { handleSubmit, control } = useForm<QuestionSetting>({
+  const { required } = questionPreferences || {
+    required: false,
+  };
+
+  const { handleSubmit, control, reset } = useForm<QuestionSetting>({
     resolver: zodResolver(uiConfigPreferenceSchema),
     defaultValues: {
-      required: questionPreferences?.required || false,
+      required,
     },
   });
 
-  const [formState, setFormState] = useState<QuestionSetting>({
-    required: questionPreferences?.required || false,
-  });
-
-  const previousFormState = useRef<QuestionSetting>(formState);
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const watchedValues = useWatch({ control });
+  const [formTouched, setFormTouched] = useState(false);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
       const { required } = data;
 
       await updateQuestionRequiredPreference({
-        questionID: qID,
+        questionID,
         required,
       });
     } catch (error) {
@@ -53,26 +58,26 @@ const ValidationSettings = ({
     }
   };
 
+  const markFormTouched = () => {
+    if (!formTouched) setFormTouched(true);
+  };
+
   useEffect(() => {
-    const hasChanged =
-      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+    if (!formTouched) setFormTouched(true);
 
-    if (!hasChanged) return;
-
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
 
-    debounceTimeout.current = setTimeout(() => {
-      handleSubmit(onSubmit)();
-    }, 1000);
+    if (required !== undefined) {
+      reset({ required });
+    }
 
-    return () => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-    };
-  }, [formState, handleSubmit]);
+    debounceTimeoutRef.current = setTimeout(() => {
+      handleSubmit(onSubmit)();
+      setFormTouched(false);
+    }, 1000);
+  }, [watchedValues, formTouched, handleSubmit]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -142,10 +147,8 @@ const ValidationSettings = ({
                       onChange={(event) => {
                         const value = event.target.checked;
                         field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          required: value,
-                        }));
+                        markFormTouched();
+                        dispatch(toggleElementRequired(value));
                       }}
                     />
                   )}

@@ -161,6 +161,7 @@ const SurveyBuilderHeader = ({
                 <Box
                   sx={{
                     fontSize: "16px",
+                    fontWeight: 600,
                     textDecoration: "none",
                     color: "#6D7584",
                     overflow: "hidden",

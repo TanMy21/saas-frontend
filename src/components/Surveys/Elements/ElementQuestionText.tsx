@@ -2,32 +2,48 @@ import { useState } from "react";
 
 import { Box, TextField, Typography } from "@mui/material";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { useSelector, useDispatch } from "react-redux";
 
 import {
   useUpdateElementDescriptionMutation,
   useUpdateElementTextMutation,
 } from "../../../app/slices/elementApiSlice";
+import { updateQuestionField } from "../../../app/slices/elementSlice";
+import { RootState } from "../../../app/store";
 import { ElementProps } from "../../../utils/types";
 
-const ElementQuestionText = ({
-  qID,
-  qNO,
-  qText,
-  qDescription,
-  qType,
-  display,
-}: ElementProps) => {
-  const [text, setText] = useState(qText);
-  const [description, setDescription] = useState(qDescription);
+const ElementQuestionText = ({ display }: ElementProps) => {
+  const dispatch = useDispatch();
+  const typographySettings = useSelector(
+    (state: RootState) => state.elementTypography
+  );
+
+  const question = useSelector(
+    (state: RootState) => state.question.selectedQuestion
+  );
+  const { questionID, order, text, description, type } = question || {};
+
   const [isEditing, setIsEditing] = useState(false);
 
   const qFontSize = display === "mobile" ? "28px" : "32px";
   const descritptionFontSize = display === "mobile" ? "16px" : "20px";
   const qWhiteSpace = display === "mobile" ? "0.1em" : "normal";
 
-  const nonOrderableTypes = ["INSTRUCTIONS", "EMAIL_CONTACT"];
+  const {
+    titleFontColor,
+    titleFontSize,
+    descriptionFontColor,
+    descriptionFontSize,
+  } = typographySettings || {};
 
-  const isNonOrderableType = nonOrderableTypes.includes(qType);
+  const nonOrderableTypes = [
+    "WELCOME_SCREEN",
+    "INSTRUCTIONS",
+    "EMAIL_CONTACT",
+    "END_SCREEN",
+  ];
+
+  const isNonOrderableType = nonOrderableTypes.includes(type!);
 
   const [updateElementText] = useUpdateElementTextMutation();
   const [updateElementDescription] = useUpdateElementDescriptionMutation();
@@ -36,100 +52,108 @@ const ElementQuestionText = ({
     setIsEditing(true);
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setText(event.target.value);
+  const handleChangeText = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(updateQuestionField({ key: "text", value: event.target.value }));
   };
 
   const handleChangeDescription = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setDescription(event.target.value);
+    dispatch(
+      updateQuestionField({ key: "description", value: event.target.value })
+    );
   };
 
   const handleBlur = () => {
-    updateElementText({ questionID: qID, text });
+    updateElementText({ questionID, text });
     setIsEditing(false);
   };
 
   const handleBlurDescription = () => {
-    updateElementDescription({ questionID: qID, description });
+    updateElementDescription({ questionID, description });
     setIsEditing(false);
   };
+
+ 
 
   return (
     <>
       <Box
-        display={"flex"}
-        flexDirection={"column"}
-        justifyContent={"center"}
         sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "flex-end",
           margin: "auto",
-          width: "96%",
-          padding: "1%",
+          marginTop: "12%",
+          width: "98%",
           // border: "2px solid red",
         }}
       >
         <Box
-          display={"flex"}
-          flexDirection={"row"}
-          justifyContent={"center"}
-          alignContent={"center"}
-          alignItems={"center"}
           sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
             margin: "auto",
-            width: "96%",
-            padding: "2%",
+            width: "100%",
             // border: "2px solid green",
           }}
         >
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            justifyContent={"center"}
-            alignItems={"center"}
-            mr={1}
-            sx={{ width: "fit-content" }}
-          >
-            {isNonOrderableType ? null : (
+          {isNonOrderableType ? null : (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "fit-content",
+                marginRight: 1,
+              }}
+            >
               <Typography
-                variant="h4"
-                fontWeight={"bold"}
-                color={"black"}
-                mt={1}
-                sx={{ fontSize: "24px" }}
+                sx={{
+                  fontWeight: "bold",
+                  color: "black",
+                  fontSize: "24px",
+                }}
               >
-                {qNO}
+                {order}
               </Typography>
-            )}
-          </Box>
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            justifyContent={"center"}
-            alignItems={"center"}
-            mr={2}
-            // sx={{ border: "2px solid green" }}
-          >
-            {isNonOrderableType ? null : (
+            </Box>
+          )}
+          {isNonOrderableType ? null : (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                // border: "2px solid green",
+              }}
+            >
               <Typography variant="h6" mt={1}>
                 <FaArrowRightLong />
               </Typography>
-            )}
-          </Box>
+            </Box>
+          )}
           <Box
-            display={"flex"}
-            flexDirection={"column"}
-            justifyContent={"center"}
-            alignItems={"center"}
             onDoubleClick={handleDoubleClick}
-            // sx={{ border: "2px solid red" }}
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              // border: "2px solid orange",
+            }}
           >
             {isEditing ? (
               <TextField
                 id="outlined-basic"
                 type="text"
                 value={text}
-                onChange={handleChange}
+                onChange={handleChangeText}
                 onBlur={handleBlur}
                 sx={{
                   backgroundColor: "transparent",
@@ -156,18 +180,18 @@ const ElementQuestionText = ({
               />
             ) : (
               <Typography
-                fontStyle={"italic"}
-                fontFamily={
-                  "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
-                }
                 sx={{
                   whiteSpace: qWhiteSpace,
                   width: "100%",
-                  fontSize: qFontSize,
+                  fontStyle: "italic",
+                  fontFamily:
+                    "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                  fontSize: titleFontSize,
                   textAlign: "justify",
+                  color: titleFontColor,
                 }}
               >
-                {qText}
+                {text}
               </Typography>
             )}
           </Box>
@@ -210,15 +234,14 @@ const ElementQuestionText = ({
               />
             ) : (
               <Typography
-                fontStyle={"italic"}
-                fontFamily={
-                  "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif"
-                }
                 sx={{
+                  fontStyle: "italic",
+                  fontFamily:
+                    "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
                   whiteSpace: qWhiteSpace,
                   width: "fit-content",
-                  fontSize: descritptionFontSize,
-                  color: "#888888",
+                  fontSize: descriptionFontSize,
+                  color: descriptionFontColor,
                 }}
               >
                 {description === "" ? "Description (optional)" : description}

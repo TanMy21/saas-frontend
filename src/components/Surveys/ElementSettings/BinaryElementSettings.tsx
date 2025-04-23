@@ -7,9 +7,7 @@ import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/Ques
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
-const BinaryElementSettings = ({ qID, question }: ElementSettingsProps) => {
-  const { text, description, questionPreferences } = question || {};
-
+const BinaryElementSettings = ({ qID }: ElementSettingsProps) => {
   return (
     <Box
       sx={{
@@ -19,13 +17,9 @@ const BinaryElementSettings = ({ qID, question }: ElementSettingsProps) => {
         heigh: "100%",
       }}
     >
-      <QuestionTextandDescriptionSettings
-        qID={qID}
-        qText={text}
-        qDescription={description}
-      />
+      <QuestionTextandDescriptionSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
-      <ValidationSettings qID={qID} questionPreferences={questionPreferences} />
+      <ValidationSettings />
       <BinaryOptionsSettings />
     </Box>
   );

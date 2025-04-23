@@ -11,19 +11,23 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useUpdateQuestionPreferenceUIConfigMutation } from "../../../../app/slices/elementApiSlice";
+import { updateUIButtonText } from "../../../../app/slices/elementSlice";
+import { RootState } from "../../../../app/store";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
-import {
-  QuestionSetting,
-  ScreenTypographySettingsProps,
-} from "../../../../utils/types";
+import { QuestionSetting } from "../../../../utils/types";
 
-const NavigationButtonTextSettings = ({
-  qID,
-  questionPreferences,
-}: ScreenTypographySettingsProps) => {
+const NavigationButtonTextSettings = () => {
+  const dispatch = useDispatch();
+  const question = useSelector(
+    (state: RootState) => state.question.selectedQuestion
+  );
+
+  const { questionID, questionPreferences } = question || {};
+
   const [updateQuestionPreferenceUIConfig] =
     useUpdateQuestionPreferenceUIConfigMutation();
 
@@ -31,58 +35,59 @@ const NavigationButtonTextSettings = ({
     buttonText: "Next",
   };
 
-  const { handleSubmit, control } = useForm<QuestionSetting>({
+  const { handleSubmit, control, reset } = useForm<QuestionSetting>({
     resolver: zodResolver(uiConfigPreferenceSchema),
     defaultValues: {
       buttonText,
     },
   });
 
-  const [formState, setFormState] = useState<QuestionSetting>({
-    buttonText,
-  });
+  const watchedValues = useWatch({ control });
+  const [formTouched, setFormTouched] = useState(false);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [inputLength, setInputLength] = useState(
-    formState?.buttonText?.length || 0
+    questionPreferences?.uiConfig?.buttonText?.length || 0
   );
-
-  const previousFormState = useRef<QuestionSetting>(formState);
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
       const { buttonText } = data;
 
-      const config = { buttonText };
+      const uiConfig = { buttonText };
       await updateQuestionPreferenceUIConfig({
-        questionID: qID,
-        config,
+        questionID,
+        uiConfig,
       });
     } catch (error) {
       console.error(error);
     }
   };
 
+  const markFormTouched = () => {
+    if (!formTouched) setFormTouched(true);
+  };
+
   useEffect(() => {
-    const hasChanged =
-      JSON.stringify(formState) !== JSON.stringify(previousFormState.current);
+    if (!formTouched) setFormTouched(true);
 
-    if (!hasChanged) return;
-
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
 
-    debounceTimeout.current = setTimeout(() => {
+    debounceTimeoutRef.current = setTimeout(() => {
       handleSubmit(onSubmit)();
-    }, 1000);
+      setFormTouched(false);
+    }, 2500);
+  }, [watchedValues, formTouched, handleSubmit]);
 
-    return () => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-    };
-  }, [formState, handleSubmit]);
+  useEffect(() => {
+    if (buttonText !== undefined) {
+      reset({
+        buttonText,
+      });
+    }
+  }, [buttonText, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -153,10 +158,8 @@ const NavigationButtonTextSettings = ({
                       const value = event.target.value;
                       if (value.length <= 24) {
                         field.onChange(value);
-                        setFormState((prev) => ({
-                          ...prev,
-                          button1Text: value,
-                        }));
+                        markFormTouched();
+                        dispatch(updateUIButtonText(value));
                         setInputLength(value.length);
                       }
                     }}

@@ -15,11 +15,13 @@ const SurveyPreferencesPanel = ({
       sx={{
         display: "flex",
         flexDirection: "column",
+        flexGrow: 1,
         width: "100%",
         minHeight: "100%",
         left: "0",
         right: "0",
-        border: "2px solid green",
+        // border: "2px solid green",
+        borderLeft: "2px solid #E5E7EB",
       }}
     >
       <Box

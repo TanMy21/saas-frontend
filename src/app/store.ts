@@ -4,6 +4,7 @@ import type { TypedUseSelectorHook } from "react-redux";
 
 import { apiSlice } from "./api/apiSlice";
 import authReducer from "./slices/authSlice";
+import questionReducer from "./slices/elementSlice";
 import elementTypographyReducer from "./slices/elementTypographySlice";
 import userReducer from "./slices/userSlice";
 
@@ -12,6 +13,7 @@ const store = configureStore({
     auth: authReducer,
     user: userReducer,
     elementTypography: elementTypographyReducer,
+    question: questionReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

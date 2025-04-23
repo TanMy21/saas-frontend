@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Collapse, Grow } from "@mui/material";
 
 import { WorkspaceLayoutProps } from "../../utils/types";
 

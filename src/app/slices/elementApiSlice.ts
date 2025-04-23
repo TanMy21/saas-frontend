@@ -120,10 +120,10 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Elements"],
     }),
     updateQuestionPreferenceUIConfig: builder.mutation({
-      query: ({ questionID, config }) => ({
+      query: ({ questionID, uiConfig }) => ({
         url: `/q/pref/config`,
         method: "PATCH",
-        body: { questionID, config },
+        body: { questionID, uiConfig },
       }),
       invalidatesTags: ["Elements"],
     }),

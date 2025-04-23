@@ -35,7 +35,7 @@ const SurveyListCard = ({
           height: { lg: "56px", xl: "64px" },
           margin: "auto",
           backgroundColor: "#FFFFFF",
-          borderRadius: "8px",
+          borderRadius: 5,
           border: "2px solid #E5E7EB",
           mt: "12px",
           // boxShadow: "0 6px 9px -9px rgba(0,0,0,0.4)",

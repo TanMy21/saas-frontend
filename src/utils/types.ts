@@ -144,7 +144,7 @@ export interface ElementProps {
   qDescription?: string;
   qType?: string;
   display?: string | null;
-  qID: string;
+  qID?: string;
   question?: Element | null;
   qOptions?: OptionType[];
   qRequired?: boolean;
@@ -383,6 +383,11 @@ export interface InsightCardProps {
   iconColor: string;
 }
 
+export interface InputResponseProps {
+  inputPlaceholder: string;
+  submitButtonText: string;
+}
+
 export interface MediaElementCardProps {
   text: string;
   option: OptionType;
@@ -516,7 +521,7 @@ export interface QuestionSetting {
   maxSwitch?: boolean;
   multipleSelection?: boolean;
   questionText?: string;
-  description?: string;
+  questionDescription?: string;
   required?: boolean;
   superSize?: boolean;
   welcomeText?: string;
@@ -562,6 +567,15 @@ export interface RegisterFormData {
 export interface ResultsResponse {
   surveyID: string;
   questions: Question[];
+}
+
+export interface ResponseListProps {
+  qID: string;
+}
+
+export interface ResponseListItemProps {
+  response: OptionType;
+  index: number;
 }
 
 export interface ResetPassword {
@@ -649,7 +663,7 @@ export interface OptionType {
 }
 
 export interface ScreenSettingsProps {
-  qID: string;
+  qID?: string;
   qText?: string;
   qDescription?: string;
   qSettings?: QuestionSetting;

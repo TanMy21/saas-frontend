@@ -23,6 +23,13 @@ export const optionApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Options"],
     }),
+    updateOptionOrder: builder.mutation({
+      query: ({ options }) => ({
+        url: `/op/order`,
+        method: "PUT",
+        body: { options },
+      }),
+    }),
     uploadImage: builder.mutation({
       query: ({ formData, optionID }) => ({
         url: `/op/img/${optionID}`,
@@ -53,6 +60,7 @@ export const {
   useGetOptionsOfQuestionQuery,
   useCreateNewOptionMutation,
   useUpdateOptionTextandValueMutation,
+  useUpdateOptionOrderMutation,
   useUploadImageMutation,
   useDeleteOptionMutation,
   useRemoveImageMutation,

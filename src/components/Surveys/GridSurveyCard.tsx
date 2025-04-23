@@ -26,13 +26,18 @@ const GridSurveyCard = ({
         display: "flex",
         flexDirection: "column",
         backgroundColor: "white",
-        borderRadius: 2,
+        borderRadius: 5,
         border: "2px solid",
         borderColor: "grey.300",
         p: 1,
-        transition: "box-shadow 0.3s",
+        boxShadow:
+          "0px 20px 56px rgba(47, 45, 94, 0.06), 0px 6px 20px rgba(47, 45, 94, 0.06)",
+        transition: "all 0.1s ease-in-out",
+        cursor: "pointer",
         "&:hover": {
-          boxShadow: 3,
+          boxShadow:
+            "0px 20px 56px rgba(47, 45, 94, 0.12), 0px 6px 20px rgba(47, 45, 94, 0.24)",
+          transform: "translateY(-2px)",
         },
       }}
     >
@@ -77,7 +82,7 @@ const GridSurveyCard = ({
               <Typography
                 variant="h6"
                 fontWeight="bold"
-                color="#022B67"
+                color="#272F3F"
                 sx={{
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -88,7 +93,7 @@ const GridSurveyCard = ({
             </Tooltip>
             <Typography
               fontWeight="bold"
-              color="#6D7584"
+              color="#272F3F"
               sx={{
                 fontSize: "14px",
                 overflow: "hidden",
@@ -154,7 +159,7 @@ const GridSurveyCard = ({
               <Typography
                 sx={{
                   fontSize: "32px",
-                  color: "#022B67",
+                  color: "#3B3C3F",
                   fontWeight: "bold",
                 }}
               >
@@ -187,7 +192,7 @@ const GridSurveyCard = ({
               <Typography
                 sx={{
                   fontSize: "33px",
-                  color: "#022B67",
+                  color: "#3B3C3F",
                   fontWeight: "bold",
                 }}
               >

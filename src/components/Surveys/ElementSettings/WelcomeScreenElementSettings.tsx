@@ -6,12 +6,7 @@ import NavigationButtonTextSettings from "./ElementSettingsComponents/Navigation
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 
-const WelcomeScreenElementSettings = ({
-  qID,
-  question,
-}: ElementSettingsProps) => {
-  const { text, description, questionPreferences } = question || {};
-
+const WelcomeScreenElementSettings = ({ qID }: ElementSettingsProps) => {
   return (
     <Box
       sx={{
@@ -22,15 +17,8 @@ const WelcomeScreenElementSettings = ({
         // border: "2px solid red",
       }}
     >
-      <QuestionTextandDescriptionSettings
-        qID={qID}
-        qText={text}
-        qDescription={description}
-      />
-      <NavigationButtonTextSettings
-        qID={qID}
-        questionPreferences={questionPreferences}
-      />
+      <QuestionTextandDescriptionSettings />
+      <NavigationButtonTextSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
     </Box>
   );

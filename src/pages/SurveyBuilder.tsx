@@ -101,6 +101,9 @@ const SurveyBuilder = () => {
     isTourEnabled = !hasCompletedBuilderTour && !hasSkippedBuilderTour;
   }
 
+   
+
+
   return (
     <>
       <ScrollbarStyle />
@@ -150,8 +153,8 @@ const SurveyBuilder = () => {
             flexDirection: "row",
             width: "100%",
             height: "94vh",
-            backgroundColor: "#FFFFFF",
-            border: "4px solid green",
+            backgroundColor: "#F8F9FE",
+            // border: "4px solid green",
           }}
         >
           <Box
@@ -160,7 +163,7 @@ const SurveyBuilder = () => {
               flexDirection: "column",
               width: "16%",
               height: "100%",
-              border: "2px solid red",
+              // border: "2px solid red",
             }}
           >
             <Box
@@ -169,8 +172,10 @@ const SurveyBuilder = () => {
                 flexDirection: "column",
                 width: "100%",
                 height: "100%",
+                bgcolor: "#FFFFFF",
                 // border: "2px solid blue",
                 borderRight: "2px solid #E5E7EB",
+                zIndex: 10,
               }}
             >
               <SurveyBuilderLeftSidebar
@@ -185,7 +190,7 @@ const SurveyBuilder = () => {
               flexDirection: "column",
               width: "84%",
               height: "100%",
-              border: "2px solid blue",
+              // border: "2px solid blue",
             }}
           >
             <BuilderSpace

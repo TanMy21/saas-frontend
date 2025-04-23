@@ -62,13 +62,13 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
     <Box
       sx={{
         position: "sticky",
-        top: 28,
-        bottom: "64px",
         left: 0,
         right: 0,
         margin: "auto",
+        marginTop: { xl: "2%" },
+        marginBottom: "0%",
         backgroundColor: "#FFF",
-        borderRadius: 3,
+        borderRadius: 5,
         border: "2px solid #E0E0E0",
         padding: "8px 16px",
         boxShadow: 0.2,
