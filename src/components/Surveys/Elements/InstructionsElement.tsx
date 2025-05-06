@@ -13,7 +13,8 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        // height: "68vh",
+        minHeight: "72vh",
+        height: "auto",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -25,8 +26,9 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          // height: "48%",
-          margin: "auto",
+          height: "20%",
+          margin: "0 auto",
+          marginTop: "12%",
           // border: "2px solid blue",
         }}
       >
@@ -39,12 +41,17 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
           justifyContent: "start",
           alignItems: "center",
           width: "100%",
-          // height: "48%",
+          height: "60%",
           margin: "auto",
           // border: "2px solid blue",
         }}
       >
-        <ResponseList qID={qID!} />
+        <ResponseList
+          key={qID}
+          qID={qID!}
+          qType="INSTRUCTIONS"
+          optionText={"Instruction"}
+        />
       </Box>
     </Box>
   );

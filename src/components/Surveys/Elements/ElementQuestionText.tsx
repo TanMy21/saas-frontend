@@ -36,6 +36,9 @@ const ElementQuestionText = ({ display }: ElementProps) => {
     descriptionFontSize,
   } = typographySettings || {};
 
+  const orderFontSize = titleFontSize * 0.5;
+  const arrowFontSize = titleFontSize * 0.45;
+
   const nonOrderableTypes = [
     "WELCOME_SCREEN",
     "INSTRUCTIONS",
@@ -74,8 +77,6 @@ const ElementQuestionText = ({ display }: ElementProps) => {
     setIsEditing(false);
   };
 
- 
-
   return (
     <>
       <Box
@@ -85,7 +86,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           margin: "auto",
-          marginTop: "12%",
+          // marginTop: "12%",
           width: "98%",
           // border: "2px solid red",
         }}
@@ -114,9 +115,10 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             >
               <Typography
                 sx={{
+                  marginTop: 1,
                   fontWeight: "bold",
                   color: "black",
-                  fontSize: "24px",
+                  fontSize: orderFontSize,
                 }}
               >
                 {order}
@@ -133,7 +135,9 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                 // border: "2px solid green",
               }}
             >
-              <Typography variant="h6" mt={1}>
+              <Typography
+                sx={{ marginTop: 2, marginRight: 2, fontSize: arrowFontSize }}
+              >
                 <FaArrowRightLong />
               </Typography>
             </Box>

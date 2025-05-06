@@ -395,23 +395,12 @@ export interface MediaElementCardProps {
 
 export interface MediaElementCardIconBtnProps {
   optionID: string;
-  handleOpen: (optionID: string) => void;
-  isHovered: string | null;
 }
 
 export interface MediaElementImageUploadModalProps {
-  open: boolean;
-  handleClose: () => void;
-  selectedFile: File | null;
-  setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>;
-  preview: string | null;
-  setPreview: React.Dispatch<React.SetStateAction<string | null>>;
-  selectedOptionID: string | null;
-  uploadImage: (params: {
-    formData: FormData;
-    optionID: string | null;
-  }) => void;
-  isLoading: boolean;
+  uploadImageModalOpen: boolean;
+  setUploadImageModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  optionID: string;
 }
 
 export interface MediaElementMediaProps {
@@ -420,6 +409,15 @@ export interface MediaElementMediaProps {
   optionID: string;
   image: string;
 }
+
+export interface MediaOptionsContainerProps {
+  qID: string;
+}
+
+export interface MediaOptionProps {
+  option: OptionType;
+}
+
 export interface NewSurveyModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -571,9 +569,12 @@ export interface ResultsResponse {
 
 export interface ResponseListProps {
   qID: string;
+  qType?: string;
+  optionText: string;
 }
 
 export interface ResponseListItemProps {
+  qType?: string;
   response: OptionType;
   index: number;
 }

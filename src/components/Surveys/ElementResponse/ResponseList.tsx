@@ -16,12 +16,14 @@ import {
   useUpdateOptionOrderMutation,
 } from "../../../app/slices/optionApiSlice";
 import { ErrorData, OptionType, ResponseListProps } from "../../../utils/types";
+import { generateOptionLabel } from "../../../utils/utils";
 
 import ResponseListItem from "./ResponseListItem";
 
-const ResponseList = ({ qID }: ResponseListProps) => {
+const ResponseList = ({ qID, qType, optionText }: ResponseListProps) => {
   const { data: options = [] as OptionType[] } =
     useGetOptionsOfQuestionQuery(qID);
+
   const [localOptions, setLocalOptions] = useState<OptionType[]>(options);
 
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
@@ -31,22 +33,22 @@ const ResponseList = ({ qID }: ResponseListProps) => {
     const order = localOptions ? localOptions.length + 1 : 1;
 
     try {
-      if (localOptions.length < 10) {
-        const nextInstructionNumber = localOptions.length + 1;
+      if ((localOptions?.length ?? 0) < 10) {
+        const label = generateOptionLabel(localOptions?.length ?? 0, qType!);
 
         await createNewOption({
           questionID: qID,
-          text: `Instruction ${nextInstructionNumber}`,
-          value: `Instruction ${nextInstructionNumber}`,
+          text: `${optionText} ${label}`,
+          value: `${optionText} ${label}`,
           order,
-        });
+        }).unwrap();
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDragEnd = (result: DropResult) => {
+  const handleDragEnd = async (result: DropResult) => {
     const { source, destination } = result;
     if (!destination || source.index === destination.index) return;
 
@@ -62,7 +64,7 @@ const ResponseList = ({ qID }: ResponseListProps) => {
 
     setLocalOptions(reorderedWithOrder);
 
-    updateOptionOrder({ options: reorderedWithOrder })
+    await updateOptionOrder({ options: reorderedWithOrder })
       .unwrap()
       .then()
       .catch((err) => console.error("Order update error:", err));
@@ -119,7 +121,7 @@ const ResponseList = ({ qID }: ResponseListProps) => {
                 // border: "2px solid red",
               }}
             >
-              {localOptions.map((option, index) => (
+              {localOptions?.map((option, index) => (
                 <Draggable
                   key={option.optionID}
                   draggableId={option.optionID}
@@ -129,10 +131,11 @@ const ResponseList = ({ qID }: ResponseListProps) => {
                     <Box
                       ref={provided.innerRef}
                       {...provided.draggableProps}
-                      {...provided.dragHandleProps} // attach to full item or grip
+                      {...provided.dragHandleProps}
                     >
                       <ResponseListItem
                         key={option.optionID}
+                        qType={qType}
                         response={option}
                         index={index}
                       />
@@ -145,30 +148,46 @@ const ResponseList = ({ qID }: ResponseListProps) => {
           )}
         </Droppable>
       </DragDropContext>
-      <Button
-        onClick={addResponse}
-        variant="outlined"
-        disabled={options.length >= 10}
-        startIcon={<MdAdd fontSize={"24px"} />}
+      <Box
         sx={{
-          mt: 4,
-          py: 1.5,
-          borderStyle: "dashed",
-          borderColor: "grey.300",
-          borderRadius: 2,
-          width: "100%",
-          color: "grey.600",
-          justifyContent: "center",
-          textTransform: "none",
-          "&:hover": {
-            color: "primary.main",
-            borderColor: "primary.light",
-            backgroundColor: "primary.lighter",
-          },
+          display: "flex",
+          flexDirection: "column",
+          width: "83%",
+          height: "100%",
+          gap: 2,
+          // border: "2px solid red",
         }}
       >
-        Add New Instruction
-      </Button>
+        <Button
+          onClick={addResponse}
+          variant="outlined"
+          disabled={(options?.length ?? 0) >= 10}
+          startIcon={<MdAdd fontSize={"24px"} />}
+          sx={{
+            mt: 4,
+            py: 1.5,
+            borderRadius: 4,
+            border: "1px solid #E2E8F0",
+            width: "98%",
+            color: "#626B77",
+            fontWeight: "bold",
+            backgroundColor: "#f8f9fc",
+            justifyContent: "center",
+            textTransform: "none",
+            margin: "auto",
+            boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
+            ml: 2,
+            "&:hover": {
+              color: "#626B77",
+              border: "1px solid #E2E8F0",
+              backgroundColor: "#f8f9fc",
+              boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
+            },
+          }}
+        >
+          Add new {optionText}
+        </Button>
+      </Box>
     </Box>
   );
 };

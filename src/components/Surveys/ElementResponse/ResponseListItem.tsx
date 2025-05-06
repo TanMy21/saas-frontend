@@ -1,7 +1,14 @@
 import { useState } from "react";
 
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  ClickAwayListener,
+  Radio,
+  TextField,
+} from "@mui/material";
 import { FaGripVertical } from "react-icons/fa6";
 
 import {
@@ -10,9 +17,13 @@ import {
 } from "../../../app/slices/optionApiSlice";
 import { OptionType, ResponseListItemProps } from "../../../utils/types";
 
-const ResponseListItem = ({ response, index }: ResponseListItemProps) => {
+const ResponseListItem = ({
+  qType,
+  response,
+  index,
+}: ResponseListItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editingID, setEditingID] = useState<string | null>(null);
+  const [editingID, setEditingID] = useState<string | null>(response.optionID);
   const [editText, setEditText] = useState<string>("");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -28,12 +39,6 @@ const ResponseListItem = ({ response, index }: ResponseListItemProps) => {
     }
   };
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setEditText(event.target.value);
-  };
-
   const handleDoubleClick = (option: OptionType) => {
     setIsEditing(true);
     setEditingID(option.optionID);
@@ -41,8 +46,6 @@ const ResponseListItem = ({ response, index }: ResponseListItemProps) => {
   };
 
   const handleUpdateResponseText = async () => {
-    if (!editingID) return;
-
     if (editText.trim() !== response.text.trim()) {
       try {
         await updateOptionTextandValue({
@@ -59,6 +62,12 @@ const ResponseListItem = ({ response, index }: ResponseListItemProps) => {
     setEditingID(null);
   };
 
+  const handleClickAway = () => {
+    if (isEditing) {
+      handleUpdateResponseText();
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -69,12 +78,16 @@ const ResponseListItem = ({ response, index }: ResponseListItemProps) => {
         alignItems: "center",
         gap: 2,
         p: 1,
-        backgroundColor: "#E0E0E0",
-        borderRadius: 4,
+        backgroundColor: "#f8f9fc",
+        border: "1px solid #E2E8F0",
+        borderRadius: 6,
         mb: 1.5,
-        transition: "all 0.2s",
+        transition: "box-shadow 0.2s ease-in-out",
+        boxShadow:
+          "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
         "&:hover": {
-          backgroundColor: "grey.100",
+          backgroundColor: "#f5f7ff",
+          boxShadow: "0 4px 12px rgba(80, 84, 255, 0.12)",
         },
       }}
       onMouseEnter={() => setHoveredIndex(index)}
@@ -90,63 +103,94 @@ const ResponseListItem = ({ response, index }: ResponseListItemProps) => {
       >
         <FaGripVertical size={18} style={{ color: "#6D7584" }} />
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: 28,
-          width: 28,
-          backgroundColor: "primary.main",
-          color: "white",
-          borderRadius: "50%",
-          flexShrink: 0,
-        }}
-      >
-        <span style={{ fontWeight: 500 }}>{index + 1}</span>
-      </Box>
+      {qType === "RADIO" && (
+        <Box>
+          <Radio
+            checked={false}
+            sx={{
+              transform: "scale(1.2)",
+              padding: 0,
+              color: "#CFD3D9",
+              "&:hover": {
+                backgroundColor: "transparent",
+              },
+              "&.Mui-focusVisible": {
+                outline: "none",
+              },
+            }}
+          />
+        </Box>
+      )}
+      {qType === "MULTIPLE_CHOICE" && (
+        <Box>
+          <Checkbox
+            checked={false}
+            sx={{
+              transform: "scale(1.2)",
+              padding: 0,
+              color: "#CFD3D9",
+              borderRadius: 4,
+              "& .MuiSvgIcon-root": {
+                borderRadius: 4,
+              },
+              "&:hover": {
+                backgroundColor: "transparent",
+              },
+              "&.Mui-focusVisible": {
+                outline: "none",
+              },
+            }}
+          />
+        </Box>
+      )}
+      {(qType === "INSTRUCTIONS" || qType === "RANK") && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: 28,
+            width: 28,
+            backgroundColor: "primary.main",
+            color: "white",
+            borderRadius: "50%",
+            flexShrink: 0,
+          }}
+        >
+          <span style={{ fontWeight: 500 }}>{index + 1}</span>
+        </Box>
+      )}
 
       <Box
         onDoubleClick={() => handleDoubleClick(response)}
         sx={{ flexGrow: 1 }}
       >
         {isEditing ? (
-          <TextField
-            value={editText}
-            onChange={handleChange}
-            onBlur={handleUpdateResponseText}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleUpdateResponseText();
-              }
-
-              if (e.key === "Escape") {
-                setIsEditing(false);
-                setEditingID(null);
-                setEditText("");
-              }
-            }}
-            autoFocus
-            inputProps={{
-              maxLength: 60,
-            }}
-            sx={{
-              width: "100%",
-              // padding: 1,
-              // border: "1px solid #BFDBFE",
-              // borderRadius: 8,
-              outline: "none",
-            }}
-          />
+          <ClickAwayListener onClickAway={handleClickAway}>
+            <TextField
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              autoFocus
+              inputProps={{
+                maxLength: 60,
+              }}
+              sx={{
+                width: "100%",
+                outline: "none",
+              }}
+            />
+          </ClickAwayListener>
         ) : (
           <Box
             onClick={() => setIsEditing(true)}
             sx={{
-              py: 1.5,
+              py: 1,
               px: 1,
               cursor: "text",
               borderRadius: 1,
+              color: "#626B77",
+              fontSize: 16,
+              fontWeight: "bold",
               "&:hover": {
                 backgroundColor: "white",
               },
@@ -166,6 +210,7 @@ const ResponseListItem = ({ response, index }: ResponseListItemProps) => {
           transition: "background-color 0.2s",
           backgroundColor: "transparent",
           color: "darkred",
+          borderRadius: "50%",
           "&:hover": {
             backgroundColor: "transparent",
           },

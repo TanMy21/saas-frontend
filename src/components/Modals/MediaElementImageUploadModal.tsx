@@ -1,23 +1,37 @@
+import { useEffect, useState } from "react";
+
 import ClearIcon from "@mui/icons-material/Clear";
 import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import SaveIcon from "@mui/icons-material/Save";
 import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
 import { FiUpload } from "react-icons/fi";
+import { toast } from "react-toastify";
 
-import { MediaElementImageUploadModalProps } from "../../utils/types";
+import { useUploadImageMutation } from "../../app/slices/optionApiSlice";
+import {
+  ErrorData,
+  MediaElementImageUploadModalProps,
+} from "../../utils/types";
 
 const MediaElementImageUploadModal = ({
-  open,
-  handleClose,
-  selectedFile,
-  setSelectedFile,
-  preview,
-  setPreview,
-  selectedOptionID,
-  uploadImage,
-  isLoading,
+  uploadImageModalOpen,
+  setUploadImageModalOpen,
+  optionID,
 }: MediaElementImageUploadModalProps) => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+
+  const [
+    uploadImage,
+    {
+      isSuccess,
+      isLoading,
+      isError: isErrorUploadImage,
+      error: errorUploadImage,
+    },
+  ] = useUploadImageMutation();
+
   const handlePreviewImage = () => {
     setSelectedFile(null);
     setPreview(null);
@@ -28,7 +42,7 @@ const MediaElementImageUploadModal = ({
       const formData = new FormData();
       formData.append("imgFile", selectedFile);
 
-      uploadImage({ formData, optionID: selectedOptionID });
+      uploadImage({ formData, optionID: optionID });
     }
   };
 
@@ -48,10 +62,37 @@ const MediaElementImageUploadModal = ({
     }
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Image Saved !", {
+        position: "top-right",
+        autoClose: 2000,
+        closeOnClick: true,
+        theme: "colored",
+      });
+      setUploadImageModalOpen(false);
+    }
+
+    if (isErrorUploadImage) {
+      const errorData = errorUploadImage as ErrorData;
+      if (Array.isArray(errorData.data.error)) {
+        errorData.data.error.forEach((el) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error(errorData.data.message, {
+          position: "top-right",
+        });
+      }
+    }
+  }, [isErrorUploadImage, errorUploadImage, isSuccess]);
+
   return (
     <Modal
-      open={open}
-      onClose={handleClose}
+      open={uploadImageModalOpen}
+      onClose={() => setUploadImageModalOpen(false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       sx={{
@@ -119,7 +160,7 @@ const MediaElementImageUploadModal = ({
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
-                  onClick={handleClose}
+                  onClick={() => setUploadImageModalOpen(false)}
                 >
                   <CloseIcon />
                 </IconButton>
@@ -343,7 +384,7 @@ const MediaElementImageUploadModal = ({
                 <Button
                   size="small"
                   variant="outlined"
-                  onClick={handleClose}
+                  onClick={() => setUploadImageModalOpen(false)}
                   sx={{
                     textTransform: "capitalize",
                     color: "black",

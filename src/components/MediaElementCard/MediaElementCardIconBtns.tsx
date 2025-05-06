@@ -1,18 +1,21 @@
+import { useState } from "react";
+
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ImageIcon from "@mui/icons-material/Image";
 import { Box, IconButton, Tooltip } from "@mui/material";
 
 import { useRemoveImageMutation } from "../../app/slices/optionApiSlice";
 import { MediaElementCardIconBtnProps } from "../../utils/types";
+import MediaElementImageUploadModal from "../Modals/MediaElementImageUploadModal";
 
 const MediaElementCardIconBtns = ({
   optionID,
-  handleOpen,
-  isHovered
 }: MediaElementCardIconBtnProps) => {
+  const [replaceImageModalOpen, setReplaceImageModalOpen] =
+    useState<boolean>(false);
   const [removeImage] = useRemoveImageMutation();
 
-  const handleRemoveImage = async (optionID: string) => {
+  const handleRemoveImage = async () => {
     try {
       await removeImage(optionID).unwrap();
     } catch (error) {
@@ -24,50 +27,52 @@ const MediaElementCardIconBtns = ({
     <Box
       className="control-buttons"
       sx={{
-        position: "absolute",
-        top: "4%",
-        right: "4%",
         display: "flex",
         flexDirection: "row",
-        justifyContent: "flex-end",
+        justifyContent: "center",
+        alignItems: "center",
         backgroundColor: "transparent",
-        alignSelf: "end",
-        gap: 1,
-        visibility: isHovered ? "visible" : "hidden",
-        opacity: isHovered ? 1 : 0,
+        gap: 2,
         transition: "opacity 0.3s ease",
       }}
     >
-      <Tooltip title="Replace">
+      <Tooltip title="Replace Image">
         <IconButton
-          onClick={() => handleOpen(optionID)}
+          onClick={() => setReplaceImageModalOpen(true)}
           sx={{
-            backgroundColor: "#E3E3E3",
-            color: "#3A3A3A",
+            backgroundColor: "white",
+            color: "#848484",
             width: "28px",
             height: "28px",
             borderRadius: "8%",
+            fontWeight: "bold",
             "&:hover": {
-              backgroundColor: "#E3E3E3",
-              color: "#3A3A3A",
+              backgroundColor: "white",
+              color: "#848484",
             },
           }}
         >
           <ImageIcon fontSize="small" />
         </IconButton>
       </Tooltip>
-      <Tooltip title="Remove">
+      <MediaElementImageUploadModal
+        uploadImageModalOpen={replaceImageModalOpen}
+        setUploadImageModalOpen={setReplaceImageModalOpen}
+        optionID={optionID}
+      />
+      <Tooltip title="Remove Image">
         <IconButton
-          onClick={() => handleRemoveImage(optionID)}
+          onClick={handleRemoveImage}
           sx={{
             width: "28px",
             height: "28px",
             borderRadius: "8%",
-            backgroundColor: "#E3E3E3",
-            color: "#3A3A3A",
+            backgroundColor: "white",
+            color: "#848484",
+            fontWeight: 500,
             "&:hover": {
-              backgroundColor: "#E3E3E3",
-              color: "#3A3A3A",
+              backgroundColor: "white",
+              color: "#848484",
             },
           }}
         >

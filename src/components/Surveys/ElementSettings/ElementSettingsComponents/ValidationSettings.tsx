@@ -63,14 +63,16 @@ const ValidationSettings = () => {
   };
 
   useEffect(() => {
-    if (!formTouched) setFormTouched(true);
+    if (required !== undefined) {
+      reset({ required });
+    }
+  }, [required, reset]);
+
+  useEffect(() => {
+    if (!formTouched) return;
 
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
-    }
-
-    if (required !== undefined) {
-      reset({ required });
     }
 
     debounceTimeoutRef.current = setTimeout(() => {

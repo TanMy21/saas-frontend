@@ -1,10 +1,11 @@
 import { Box } from "@mui/material";
 
 import { ElementProps } from "../../../utils/types";
+import ResponseList from "../ElementResponse/ResponseList";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const RankElement = ({ display }: ElementProps) => {
+const RankElement = ({ qID, display }: ElementProps) => {
   return (
     <Box
       sx={{
@@ -12,7 +13,6 @@ const RankElement = ({ display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        height: "68vh",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -24,7 +24,6 @@ const RankElement = ({ display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          height: "48%",
           margin: "auto",
           // border: "2px solid blue",
         }}
@@ -38,12 +37,11 @@ const RankElement = ({ display }: ElementProps) => {
           justifyContent: "start",
           alignItems: "center",
           width: "100%",
-          height: "48%",
           margin: "auto",
           // border: "2px solid blue",
         }}
       >
-        {/* Rank Choices */}
+        <ResponseList qID={qID!} qType={"RANK"} optionText={"Rank"} />
       </Box>
     </Box>
   );

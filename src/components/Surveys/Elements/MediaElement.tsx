@@ -1,10 +1,11 @@
 import { Box } from "@mui/material";
 
 import { ElementProps } from "../../../utils/types";
+import MediaOptionsContainer from "../ElementResponse/MediaOptionsContainer";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const MediaElement = ({ display }: ElementProps) => {
+const MediaElement = ({ qID, display }: ElementProps) => {
   return (
     <Box
       sx={{
@@ -12,7 +13,7 @@ const MediaElement = ({ display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        height: "68vh",
+        paddingTop: "160px",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -24,8 +25,9 @@ const MediaElement = ({ display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          height: "48%",
           margin: "auto",
+          zIndex: 2,
+          mb: 5,
           // border: "2px solid blue",
         }}
       >
@@ -38,12 +40,12 @@ const MediaElement = ({ display }: ElementProps) => {
           justifyContent: "start",
           alignItems: "center",
           width: "100%",
-          height: "48%",
           margin: "auto",
-          // border: "2px solid blue",
+          border: "2px solid blue",
+          zIndex: 1,
         }}
       >
-        {/* Media Choices */}
+        <MediaOptionsContainer qID={qID!} />
       </Box>
     </Box>
   );

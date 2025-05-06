@@ -1,7 +1,7 @@
-import { Box, Button, Slider } from "@mui/material";
-import { BiCheck } from "react-icons/bi";
+import { Box } from "@mui/material";
 
 import { ElementProps } from "../../../utils/types";
+import ScaleResponse from "../ElementResponse/ScaleResponse";
 
 import ElementQuestionText from "./ElementQuestionText";
 
@@ -52,120 +52,49 @@ const marks = [
   },
 ];
 
-const ScaleElement = ({
-  qID,
-  qNO,
-  qText,
-  qDescription,
-  qSettings,
-  display,
-}: ElementProps) => {
+const ScaleElement = ({ qSettings, display }: ElementProps) => {
   const marginTop = display === "mobile" ? "4%" : "8%";
   const sliderWidth = display === "mobile" ? "88%" : "80%";
   const sliderPadding = display === "mobile" ? "4%" : "2%";
 
-  const { minValue, maxValue } = qSettings || { minValue: 0, maxValue: 10 };
+  // const { minValue, maxValue } = qSettings || { minValue: 0, maxValue: 10 };
 
   return (
     <Box
-      display={"flex"}
-      flexDirection={"column"}
-      justifyContent={"start"}
-      alignItems={"center"}
-      margin={"auto"}
-      width={"96%"}
-      height={"100%"}
-      zIndex={20}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        margin: "auto",
+        width: "98%",
+        zIndex: 20,
+        // border: "2px solid red",
+      }}
     >
       <Box
-        display={"flex"}
-        flexDirection={"row"}
         sx={{
-          width: "80%",
-          maxWidth: "92%",
-          marginTop: marginTop,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "flex-end",
+          width: "100%",
+          margin: "auto",
+          // border: "2px solid blue",
         }}
       >
-        <ElementQuestionText
-          qID={qID}
-          qNO={qNO}
-          qText={qText}
-          qDescription={qDescription}
-          display={display}
-        />
+        <ElementQuestionText display={display} />
       </Box>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          justifyContent: "start",
           alignItems: "center",
-          width: "98%",
+          width: "100%",
+          margin: "auto",
+          // border: "2px solid blue",
         }}
       >
-        <Box
-          display={"flex"}
-          mt={4}
-          sx={{
-            padding: sliderPadding,
-            width: sliderWidth,
-          }}
-        >
-          <Slider
-            aria-label="Always visible"
-            defaultValue={2}
-            //   getAriaValueText={valuetext}
-            min={minValue}
-            max={maxValue}
-            step={1}
-            marks={marks}
-            valueLabelDisplay="on"
-            sx={{
-              "& .MuiSlider-markLabel": {
-                fontSize: "1.25rem",
-              },
-            }}
-          />
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: "auto",
-            marginTop: "4%",
-            width: "98%",
-            height: "60%",
-            // border: "2px solid blue",
-          }}
-        >
-          <Button
-            variant="contained"
-            size="large"
-            endIcon={<BiCheck />}
-            sx={{
-              width: "8%",
-              height: "48px",
-              color: "white",
-              fontWeight: "bold",
-              fontSize: {
-                xs: "24px",
-                sm: "24px",
-                md: "32px",
-                lg: "24px",
-                xl: "24px",
-              },
-              backgroundColor: "#0445AF",
-              borderRadius: "6px",
-              textTransform: "capitalize",
-              "&:hover": {
-                backgroundColor: "#0445AF",
-              },
-            }}
-          >
-            Ok
-          </Button>
-        </Box>
+        <ScaleResponse />
       </Box>
     </Box>
   );

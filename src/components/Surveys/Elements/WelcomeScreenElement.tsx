@@ -25,7 +25,7 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        height: "68vh",
+        height: "72vh",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -37,8 +37,9 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          height: "48%",
-          margin: "auto",
+          height: "20%",
+          margin: "0 auto",
+          marginTop: "12%",
           // border: "2px solid blue",
         }}
       >
@@ -51,14 +52,14 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
           justifyContent: "start",
           alignItems: "center",
           width: "100%",
-          height: "48%",
+          height: "60%",
           margin: "auto",
           // border: "2px solid blue",
         }}
       >
         <Button
           sx={{
-            mt: 2,
+            mt: 8,
             borderRadius: 8,
             backgroundColor: "#434EE7",
             textTransform: "capitalize",
