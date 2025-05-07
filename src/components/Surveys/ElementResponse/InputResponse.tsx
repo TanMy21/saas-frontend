@@ -67,7 +67,7 @@ const InputResponse = ({
             fontWeight: "bold",
             width: "20%",
             "&:hover": {
-              backgroundColor: "#0445AF",
+              backgroundColor: "#434EE7",
             },
           }}
           variant="contained"

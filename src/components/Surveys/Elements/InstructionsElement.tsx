@@ -13,8 +13,7 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        minHeight: "72vh",
-        height: "auto",
+        minHeight: "700px",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -26,9 +25,10 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          height: "20%",
           margin: "0 auto",
-          marginTop: "12%",
+          marginTop: "8%",
+          zIndex: 2,
+          mb: 5,
           // border: "2px solid blue",
         }}
       >
@@ -41,7 +41,7 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
           justifyContent: "start",
           alignItems: "center",
           width: "100%",
-          height: "60%",
+          minHeight: "60%",
           margin: "auto",
           // border: "2px solid blue",
         }}

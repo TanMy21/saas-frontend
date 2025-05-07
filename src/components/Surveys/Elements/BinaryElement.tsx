@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 
 import { ElementProps } from "../../../utils/types";
+import BinaryResponseContainer from "../ElementResponse/BinaryResponseContainer";
 
 import ElementQuestionText from "./ElementQuestionText";
 
@@ -12,7 +13,7 @@ const BinaryElement = ({ display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        height: "68vh",
+        minHeight: "700px",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -24,8 +25,10 @@ const BinaryElement = ({ display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          height: "48%",
-          margin: "auto",
+          margin: "0 auto",
+          marginTop: "8%",
+          zIndex: 2,
+          mb: 5,
           // border: "2px solid blue",
         }}
       >
@@ -43,7 +46,7 @@ const BinaryElement = ({ display }: ElementProps) => {
           // border: "2px solid blue",
         }}
       >
-        {/* Choices */}
+        <BinaryResponseContainer />
       </Box>
     </Box>
   );

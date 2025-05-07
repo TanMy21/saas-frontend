@@ -197,8 +197,7 @@ const Homepage = () => {
                 textAlign: "center",
               }}
             >
-              Your gateway to valuable insights. Join us and be part of
-              something extraordinary.
+              Your gateway to valuable insights
             </Typography>
           </Box>
           <Box

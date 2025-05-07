@@ -122,7 +122,7 @@ const MediaOptionsContainer = ({ qID }: MediaOptionsContainerProps) => {
             height: "auto",
             margin: "0 auto",
             padding: 1,
-            border: "2px solid red",
+            // border: "2px solid red",
           }}
         >
           {options.map((option) => (

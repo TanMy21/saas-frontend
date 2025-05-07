@@ -25,7 +25,6 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        height: "72vh",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -37,9 +36,9 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          height: "20%",
           margin: "0 auto",
-          marginTop: "12%",
+          zIndex: 2,
+          mb: 5,
           // border: "2px solid blue",
         }}
       >
@@ -59,7 +58,6 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
       >
         <Button
           sx={{
-            mt: 8,
             borderRadius: 8,
             backgroundColor: "#434EE7",
             textTransform: "capitalize",
@@ -73,7 +71,7 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
           size="large"
           endIcon={<FaArrowRightLong fontSize={"24px"} />}
         >
-          {buttonText} &nbsp;
+          {buttonText}
         </Button>
       </Box>
     </Box>

@@ -16,7 +16,7 @@ const EmailContactELement = ({ display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        height: "68vh",
+        minHeight: "700px",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -28,8 +28,10 @@ const EmailContactELement = ({ display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          height: "48%",
-          margin: "auto",
+          margin: "0 auto",
+          marginTop: "16%",
+          marginBottom: 5,
+          zIndex: 2,
           // border: "2px solid blue",
         }}
       >
@@ -43,7 +45,7 @@ const EmailContactELement = ({ display }: ElementProps) => {
           alignItems: "center",
           width: "100%",
           height: "48%",
-          margin: "auto",
+          margin: "0 auto",
           // border: "2px solid blue",
         }}
       >

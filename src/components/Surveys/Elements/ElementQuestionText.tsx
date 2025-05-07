@@ -187,11 +187,17 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                 sx={{
                   whiteSpace: qWhiteSpace,
                   width: "100%",
+                  maxWidth: "80ch",
                   fontStyle: "italic",
                   fontFamily:
                     "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
                   fontSize: titleFontSize,
-                  textAlign: "justify",
+                  textAlign: {
+                    xs: "start",
+                    sm: "start",
+                    md: "start",
+                    xl: "justify",
+                  },
                   color: titleFontColor,
                 }}
               >

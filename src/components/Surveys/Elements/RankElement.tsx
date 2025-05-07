@@ -13,6 +13,7 @@ const RankElement = ({ qID, display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
+        minHeight: "700px",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -24,7 +25,10 @@ const RankElement = ({ qID, display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          margin: "auto",
+          margin: "0 auto",
+          marginTop: "8%",
+          zIndex: 2,
+          mb: 5,
           // border: "2px solid blue",
         }}
       >
@@ -37,6 +41,7 @@ const RankElement = ({ qID, display }: ElementProps) => {
           justifyContent: "start",
           alignItems: "center",
           width: "100%",
+          minHeight: "60%",
           margin: "auto",
           // border: "2px solid blue",
         }}

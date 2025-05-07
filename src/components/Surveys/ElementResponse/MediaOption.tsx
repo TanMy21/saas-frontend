@@ -58,8 +58,6 @@ const MediaOption = ({ option }: MediaOptionProps) => {
   return (
     <Box
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
       sx={{
         transform: CSS.Transform.toString(transform),
         touchAction: "none",
@@ -159,6 +157,8 @@ const MediaOption = ({ option }: MediaOptionProps) => {
               }}
             >
               <IconButton
+                {...attributes}
+                {...listeners}
                 sx={{
                   position: "absolute",
                   top: 4,

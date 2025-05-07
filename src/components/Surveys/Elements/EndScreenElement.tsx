@@ -18,9 +18,8 @@ const EndScreenElement = ({
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        height: "68vh",
         zIndex: 20,
-        border: "2px solid red",
+        // border: "2px solid red",
       }}
     >
       <Box
@@ -30,9 +29,10 @@ const EndScreenElement = ({
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          height: "48%",
-          margin: "auto",
-          border: "2px solid blue",
+          margin: "0 auto",
+          zIndex: 2,
+          mb: 5,
+          // border: "2px solid blue",
         }}
       >
         <ElementQuestionText
@@ -50,9 +50,9 @@ const EndScreenElement = ({
           justifyContent: "start",
           alignItems: "center",
           width: "100%",
-          height: "48%",
+          height: "60%",
           margin: "auto",
-          border: "2px solid blue",
+          // border: "2px solid blue",
         }}
       >
         <Button

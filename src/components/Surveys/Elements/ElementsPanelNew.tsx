@@ -106,10 +106,11 @@ const ElementsPanel = ({
       <Box
         sx={{
           // padding: "8px",
-          overflowY: "scroll",
+          overflowY: "auto",
           overflowX: "hidden",
           maxWidth: { md: "100%", lg: "100%", xl: "100%" },
           maxHeight: "98%",
+          scrollbarGutter: "stable both-edges",
           "&::-webkit-scrollbar": {
             width: "10px", // Scrollbar width
           },

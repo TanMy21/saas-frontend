@@ -25,7 +25,7 @@ const MediaElement = ({ qID, display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          margin: "auto",
+          margin: "0 auto",
           zIndex: 2,
           mb: 5,
           // border: "2px solid blue",
@@ -41,7 +41,7 @@ const MediaElement = ({ qID, display }: ElementProps) => {
           alignItems: "center",
           width: "100%",
           margin: "auto",
-          border: "2px solid blue",
+          // border: "2px solid blue",
           zIndex: 1,
         }}
       >

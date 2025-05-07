@@ -43,6 +43,13 @@ export interface BuilderSpaceProps {
   noElements: boolean;
 }
 
+export interface BinaryResposneProps {
+  questionID?: string;
+  buttonTextYes?: string;
+  buttonTextNo?: string;
+  index?: number;
+}
+
 export interface ColorPickerProps {
   color: string;
   setColor: (color: string) => void;
@@ -489,6 +496,8 @@ export interface SurveyCanvasQuestion {
 
 export interface QuestionUIConfig {
   buttonText?: string;
+  buttonTextYes?: string;
+  buttonTextNo?: string;
   minRange?: number;
   maxRange?: number;
   multipleSelection?: boolean;
