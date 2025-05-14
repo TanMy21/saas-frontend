@@ -58,6 +58,32 @@ export const elementIcons: IconMapping = {
   WELCOME_SCREEN: <RxCardStack color="#3C3737" />,
 };
 
+export const questionTypes: {
+  id: number;
+  label: string;
+  type: string;
+  icon: JSX.Element;
+}[] = [
+  {
+    id: 1,
+    label: "Binary",
+    type: "BINARY",
+    icon: elementIcons.BINARY,
+  },
+  {
+    id: 2,
+    label: "Multiple Choice",
+    type: "MULTIPLE_CHOICE",
+    icon: elementIcons.MULTIPLE_CHOICE,
+  },
+  { id: 3, label: "Choice", type: "RADIO", icon: elementIcons.RADIO },
+  { id: 4, label: "Text", type: "TEXT", icon: elementIcons.TEXT },
+  { id: 5, label: "Number", type: "NUMBER", icon: elementIcons.NUMBER },
+  { id: 6, label: "Scale", type: "RANGE", icon: elementIcons.RANGE },
+  { id: 7, label: "Rank", type: "RANK", icon: elementIcons.RANK },
+  { id: 8, label: "Media", type: "MEDIA", icon: elementIcons.MEDIA },
+];
+
 export const chipTypeColors: Record<string, string> = {
   WELCOME_SCREEN: "#3C3737",
   INSTRUCTIONS: "#0D4C86",

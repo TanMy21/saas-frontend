@@ -4,8 +4,11 @@ import type { MRT_ColumnDef } from "material-react-table";
 import { type DroppableProvided } from "react-beautiful-dnd";
 import { type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { type IconType } from "react-icons/lib";
+import { z } from "zod";
 
 import { useImportQuestionsMutation } from "../app/slices/elementApiSlice";
+
+import { generateSurveySchema } from "./schema";
 
 export type AuthInitialState = {
   token: string | null;
@@ -339,11 +342,15 @@ export interface GridSurveyCardProps {
   viewMode: "list" | "grid";
 }
 
-export interface GenerateQuestionsModalProps {
+export interface GenerateSurveyModalProps {
   openGenerate: boolean;
   setOpenGenerate: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export interface GenerateSurveyFormProps {
+  surveyID: string;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 export interface LocationStateProps {
   headerProps?: {
@@ -957,6 +964,7 @@ export interface WorkspaceDeleteModalProps {
 
 export interface WorkspaceDropDownMenu {
   selectedWorkspace: Workspace;
+  workspaceName?: string;
 }
 
 export type WorkspaceDropdownOutletContextType = {
@@ -988,3 +996,5 @@ export interface NewWorkspaceModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export type GenerateSurveyFormData = z.infer<typeof generateSurveySchema>;

@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 
-const ShimmerTextLoader = () => {
+const ImportQuestionsLoader = () => {
   return (
     <Box
       sx={{
@@ -70,4 +70,4 @@ const ShimmerTextLoader = () => {
   );
 };
 
-export default ShimmerTextLoader;
+export default ImportQuestionsLoader;

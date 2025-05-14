@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 
 import { useImportQuestionsMutation } from "../../app/slices/elementApiSlice";
 import { ImportQuestionProps } from "../../utils/types";
-import ShimmerTextLoader from "../Loaders/ShimmerTextLoader";
+import ImportQuestionsLoader from "../Loaders/ImportQuestionsLoader";
 
 import ImportQuestionModalInputField from "./ImportQuestionModalInputField";
 
@@ -111,7 +111,7 @@ const ImportQuestionsModal = ({
             }}
           >
             {isLoading ? (
-              <ShimmerTextLoader />
+              <ImportQuestionsLoader />
             ) : (
               <ImportQuestionModalInputField
                 importQuestions={importQuestions}

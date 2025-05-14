@@ -9,7 +9,7 @@ import { IoDesktop } from "react-icons/io5";
 import { RiAiGenerate } from "react-icons/ri";
 
 import { DockItemProps, SurveyIslandProps } from "../../utils/types";
-import GenerateQuestionsModal from "../Modals/GenerateQuestionsModal";
+import GenerateSurveyModal from "../Modals/GenerateSurveyModal";
 import ImportQuestionsModal from "../Modals/ImportQuestionsModal";
 import ShareSurveyModal from "../Modals/ShareSurveyModal";
 import SurveySettingsModal from "../Modals/SurveySettingsModal";
@@ -63,7 +63,7 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
       id: "generate",
       icon: <RiAiGenerate />,
       label: "Generate Questions",
-      action: () => setOpenImport(true),
+      action: () => setOpenGenerate(true),
     },
   ];
 
@@ -119,7 +119,7 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
         setOpenImport={setOpenImport}
       />
 
-      <GenerateQuestionsModal
+      <GenerateSurveyModal
         openGenerate={openGenerate}
         setOpenGenerate={setOpenGenerate}
       />

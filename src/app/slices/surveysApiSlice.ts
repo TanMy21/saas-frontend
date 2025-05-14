@@ -22,6 +22,14 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Surveys"],
     }),
+    generateSurvey: builder.mutation({
+      query: ({ surveyID, inputText, numberOfQuestions, questionTypes }) => ({
+        url: `/s/generate`,
+        method: "POST",
+        body: { surveyID, inputText, numberOfQuestions, questionTypes },
+      }),
+      invalidatesTags: ["Surveys"],
+    }),
     updateSurveyTitleandDescription: builder.mutation({
       query: ({ surveyID, title, description }) => ({
         url: `/s/utd/${surveyID}`,
@@ -108,6 +116,7 @@ export const {
   useGetSurveyByIdQuery,
   useGetSurveyCanvasByIdQuery,
   useCreateSurveyMutation,
+  useGenerateSurveyMutation,
   useUpdateSurveyTitleandDescriptionMutation,
   useUpdateSurveyTagsMutation,
   useUpdateSurveyMutation,

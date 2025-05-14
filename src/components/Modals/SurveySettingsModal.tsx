@@ -146,7 +146,7 @@ const SurveySettingsModal = ({
             transform: "translate(-50%, -50%)",
             width: 500,
             bgcolor: "#FFFFFF",
-            borderRadius: 2,
+            borderRadius: 5,
             boxShadow: 24,
             p: 3,
           }}

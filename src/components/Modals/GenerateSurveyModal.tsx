@@ -4,12 +4,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Box, IconButton, Modal, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 
-import { GenerateQuestionsModalProps } from "../../utils/types";
+import { GenerateSurveyModalProps } from "../../utils/types";
 
-const GenerateQuestionsModal = ({
+import GenerateSurveyForm from "./GenerateSurveyForm";
+
+const GenerateSurveyModal = ({
   openGenerate,
   setOpenGenerate,
-}: GenerateQuestionsModalProps) => {
+}: GenerateSurveyModalProps) => {
   const { surveyID } = useParams();
   const [open, setOpen] = useState(openGenerate);
 
@@ -31,8 +33,7 @@ const GenerateQuestionsModal = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 800,
-          height: 680,
+          width: 600,
           bgcolor: "#FAFAFA",
           borderRadius: 5,
           overflow: "hidden",
@@ -45,7 +46,7 @@ const GenerateQuestionsModal = ({
             gap: 1,
             margin: "auto",
             width: "100%",
-            height: "100%",
+            height: 720,
             // border: "2px solid blue",
           }}
         >
@@ -78,7 +79,7 @@ const GenerateQuestionsModal = ({
                 width: "8%",
                 height: "92%",
                 marginRight: "2%",
-                marginTop: "4px",
+                marginTop: "2px",
                 // border: "2px solid green",
               }}
             >
@@ -95,17 +96,18 @@ const GenerateQuestionsModal = ({
           <Box
             sx={{
               display: "flex",
-              width: "98%",
-              height: "88%",
-              justifyContent: "space-between",
-              p: 1,
+              flexDirection: "column",
+              width: "100%",
+              height: "80%",
               // border: "2px solid red",
             }}
-          ></Box>
+          >
+            <GenerateSurveyForm surveyID={surveyID!} setOpen={setOpen} />
+          </Box>
         </Box>
       </Box>
     </Modal>
   );
 };
 
-export default GenerateQuestionsModal;
+export default GenerateSurveyModal;

@@ -252,3 +252,14 @@ export const updateUserInfoSchema = z.object({
     .min(2, "Last name must be at least 2 character long")
     .optional(),
 });
+
+export const generateSurveySchema = z.object({
+  description: z.string().min(5, "Description must be at least 5 characters"),
+  numberOfQuestions: z
+    .number()
+    .min(4, "At least four questions are required")
+    .max(50, "Maximum 50 questions are allowed"),
+  selectedTypes: z
+    .array(z.string())
+    .min(1, "Select at least one question type"),
+});
