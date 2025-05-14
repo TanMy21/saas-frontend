@@ -105,7 +105,7 @@ const MediaOptionsContainer = ({ qID }: MediaOptionsContainerProps) => {
       onDragEnd={onDragEnd}
     >
       <SortableContext
-        items={options.map((o) => o.optionID)}
+        items={options.map((option) => option.optionID)}
         strategy={rectSortingStrategy}
       >
         <Box

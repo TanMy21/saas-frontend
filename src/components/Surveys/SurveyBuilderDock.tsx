@@ -6,8 +6,10 @@ import { BsFillShareFill } from "react-icons/bs";
 import { CiMobile3 } from "react-icons/ci";
 import { IoMdSettings } from "react-icons/io";
 import { IoDesktop } from "react-icons/io5";
+import { RiAiGenerate } from "react-icons/ri";
 
 import { DockItemProps, SurveyIslandProps } from "../../utils/types";
+import GenerateQuestionsModal from "../Modals/GenerateQuestionsModal";
 import ImportQuestionsModal from "../Modals/ImportQuestionsModal";
 import ShareSurveyModal from "../Modals/ShareSurveyModal";
 import SurveySettingsModal from "../Modals/SurveySettingsModal";
@@ -21,6 +23,7 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openShare, setOpenShare] = useState(false);
   const [openImport, setOpenImport] = useState(false);
+  const [openGenerate, setOpenGenerate] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
   const [shareBtnSelected, setShareBtnSelected] = useState(false);
@@ -54,6 +57,12 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
       id: "import",
       icon: <UploadIcon />,
       label: "Import Questions",
+      action: () => setOpenImport(true),
+    },
+    {
+      id: "generate",
+      icon: <RiAiGenerate />,
+      label: "Generate Questions",
       action: () => setOpenImport(true),
     },
   ];
@@ -108,6 +117,11 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
       <ImportQuestionsModal
         openImport={openImport}
         setOpenImport={setOpenImport}
+      />
+
+      <GenerateQuestionsModal
+        openGenerate={openGenerate}
+        setOpenGenerate={setOpenGenerate}
       />
 
       <SnackbarAlert

@@ -127,6 +127,54 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
+    updateQuestionImageDimensions: builder.mutation({
+      query: ({ questionID, questionImageWidth, questionImageHeight }) => ({
+        url: `/q/img/dimensions`,
+        method: "PATCH",
+        body: { questionID, questionImageWidth, questionImageHeight },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    updateQuestionImageAltTxt: builder.mutation({
+      query: ({ questionID, questionImageAltTxt }) => ({
+        url: `/q/img/alt`,
+        method: "PATCH",
+        body: { questionID, questionImageAltTxt },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    updateQuestionBackgroundColor: builder.mutation({
+      query: ({ questionID, questionBackgroundColor }) => ({
+        url: `/q/bg/color`,
+        method: "PATCH",
+        body: { questionID, questionBackgroundColor },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    uploadQuestionImage: builder.mutation({
+      query: ({ formData, questionID }) => ({
+        url: `/q/img/${questionID}`,
+        method: "PATCH",
+        body: formData,
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    uploadQuestionTemplateImage: builder.mutation({
+      query: ({ formData, questionID }) => ({
+        url: `/q/template/${questionID}`,
+        method: "PATCH",
+        body: formData,
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    toggleQuestionImageVisibility: builder.mutation({
+      query: ({ questionID, questionImage }) => ({
+        url: `/q/img/visibility`,
+        method: "PATCH",
+        body: { questionID, questionImage },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
     duplicateElement: builder.mutation({
       query: (questionID) => ({
         url: `/q/duplicate/${questionID}`,
@@ -138,6 +186,28 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       query: (questionID) => ({
         url: `/q/delete/${questionID}`,
         method: "DELETE",
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    removeQuestionImage: builder.mutation({
+      query: (questionID) => ({
+        url: `/q/remove/img/${questionID}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    removeQuestionTemplateImage: builder.mutation({
+      query: (questionID) => ({
+        url: `/q/remove/template/${questionID}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    removeQuestionBackgroundColor: builder.mutation({
+      query: (questionID) => ({
+        url: `/q/remove/bg/color`,
+        method: "POST",
+        body: { questionID },
       }),
       invalidatesTags: ["Elements"],
     }),
@@ -154,9 +224,18 @@ export const {
   useUpdateElementTypographyMutation,
   useUpdateQuestionRequiredPreferenceMutation,
   useUpdateQuestionPreferenceUIConfigMutation,
+  useUpdateQuestionImageDimensionsMutation,
+  useUpdateQuestionImageAltTxtMutation,
+  useUpdateQuestionBackgroundColorMutation,
   useUpdateScreenElementsMutation,
   useUpdateElementDescriptionMutation,
+  useUploadQuestionImageMutation,
+  useUploadQuestionTemplateImageMutation,
+  useRemoveQuestionImageMutation,
+  useRemoveQuestionTemplateImageMutation,
+  useRemoveQuestionBackgroundColorMutation,
   useDuplicateElementMutation,
   useDeleteElementMutation,
   useImportQuestionsMutation,
+  useToggleQuestionImageVisibilityMutation,
 } = elementApiSlice;

@@ -10,14 +10,14 @@ const defaultState: TypographySettingsForm = {
 };
 
 const elementTypographySlice = createSlice({
-  name: "elemntTypography",
+  name: "elementTypography",
   initialState: defaultState,
   reducers: {
     initializeTypography: (
       state,
       action: PayloadAction<Partial<TypographySettingsForm>>
     ) => {
-      return { ...defaultState, ...action.payload }; // override defaults with values from backend
+      return { ...defaultState, ...action.payload };
     },
     updateTypographyField: (
       state,

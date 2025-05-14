@@ -3,9 +3,10 @@ import { Box } from "@mui/material";
 import { ElementProps } from "../../../utils/types";
 import InputResponse from "../ElementResponse/InputResponse";
 
+import ElementImageContainer from "./ElementImageContainer";
 import ElementQuestionText from "./ElementQuestionText";
 
-const TextElement = ({ display }: ElementProps) => {
+const TextElement = ({ display, qImage }: ElementProps) => {
   return (
     <Box
       sx={{
@@ -13,7 +14,7 @@ const TextElement = ({ display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        minHeight: "700px",
+        minHeight: "800px",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -34,6 +35,7 @@ const TextElement = ({ display }: ElementProps) => {
       >
         <ElementQuestionText display={display} />
       </Box>
+      {qImage && <ElementImageContainer />}
       <Box
         sx={{
           display: "flex",

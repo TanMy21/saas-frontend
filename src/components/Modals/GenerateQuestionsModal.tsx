@@ -4,30 +4,23 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Box, IconButton, Modal, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 
-import { useImportQuestionsMutation } from "../../app/slices/elementApiSlice";
-import { ImportQuestionProps } from "../../utils/types";
-import ShimmerTextLoader from "../Loaders/ShimmerTextLoader";
+import { GenerateQuestionsModalProps } from "../../utils/types";
 
-import ImportQuestionModalInputField from "./ImportQuestionModalInputField";
-
-const ImportQuestionsModal = ({
-  isOpen,
-  openImport,
-  setOpenImport,
-}: ImportQuestionProps) => {
+const GenerateQuestionsModal = ({
+  openGenerate,
+  setOpenGenerate,
+}: GenerateQuestionsModalProps) => {
   const { surveyID } = useParams();
-  const [open, setOpen] = useState(isOpen);
-
-  const [importQuestions, { isLoading }] = useImportQuestionsMutation();
+  const [open, setOpen] = useState(openGenerate);
 
   const handleClose = () => {
     setOpen(false);
-    setOpenImport!(false);
+    setOpenGenerate(false);
   };
 
   return (
     <Modal
-      open={Boolean(open) || Boolean(openImport)}
+      open={Boolean(open) || Boolean(openGenerate)}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -67,7 +60,6 @@ const ImportQuestionsModal = ({
               borderBottom: "1px solid #E0E0E0",
             }}
           >
-            {" "}
             <Typography
               sx={{
                 fontSize: "20px",
@@ -76,7 +68,7 @@ const ImportQuestionsModal = ({
                 marginLeft: "2%",
               }}
             >
-              Upload Image
+              Generate Questions
             </Typography>
             <Box
               sx={{
@@ -109,22 +101,11 @@ const ImportQuestionsModal = ({
               p: 1,
               // border: "2px solid red",
             }}
-          >
-            {isLoading ? (
-              <ShimmerTextLoader />
-            ) : (
-              <ImportQuestionModalInputField
-                importQuestions={importQuestions}
-                surveyID={surveyID!}
-                isLoading={isLoading}
-                handleClose={handleClose}
-              />
-            )}
-          </Box>
+          ></Box>
         </Box>
       </Box>
     </Modal>
   );
 };
 
-export default ImportQuestionsModal;
+export default GenerateQuestionsModal;

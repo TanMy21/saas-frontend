@@ -24,7 +24,7 @@ const MediaOptionSettings = () => {
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        <Box sx={{ fontWeight: 500, color: "#453F46" }}>Option Settings</Box>
+        <Box sx={{ fontWeight: 500, color: "#453F46" }}>Option</Box>
       </AccordionSummary>
       <AccordionDetails>
         <Box

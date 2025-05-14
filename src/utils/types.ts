@@ -5,6 +5,8 @@ import { type DroppableProvided } from "react-beautiful-dnd";
 import { type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { type IconType } from "react-icons/lib";
 
+import { useImportQuestionsMutation } from "../app/slices/elementApiSlice";
+
 export type AuthInitialState = {
   token: string | null;
 };
@@ -128,6 +130,12 @@ export interface Element {
   type: string;
   order?: number;
   questionPreferences: SurveyCanvasQuestionSettings;
+  questionImage?: boolean;
+  questionImageUrl?: string;
+  questionImageAltTxt?: string;
+  questionImagePublicId?: string;
+  questionImageWidth?: number;
+  questionImageHeight?: number;
   response: ElementResponse[];
   minOptions: number;
   maxOptions: number;
@@ -150,6 +158,7 @@ export interface ElementProps {
   qText?: string;
   qDescription?: string;
   qType?: string;
+  qImage?: boolean;
   display?: string | null;
   qID?: string;
   question?: Element | null;
@@ -330,6 +339,12 @@ export interface GridSurveyCardProps {
   viewMode: "list" | "grid";
 }
 
+export interface GenerateQuestionsModalProps {
+  openGenerate: boolean;
+  setOpenGenerate: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+
 export interface LocationStateProps {
   headerProps?: {
     tabValue?: string;
@@ -379,6 +394,13 @@ export interface ImportQuestionProps {
   openImport?: boolean;
   setOpenImport?: React.Dispatch<React.SetStateAction<boolean>>;
   surveyID?: string;
+}
+
+export interface ImportQuestionModalInputFieldProps {
+  surveyID: string;
+  isLoading: boolean;
+  importQuestions: ReturnType<typeof useImportQuestionsMutation>[0];
+  handleClose: () => void;
 }
 
 export interface InsightCardProps {
@@ -481,6 +503,42 @@ export interface Question {
   response: QuestionResponse[];
 }
 
+export interface QuestionImage {
+  questionImage?: boolean;
+  questionImageUrl?: string;
+  questionImageAltTxt?: string;
+  questionImageWidth?: number;
+  questionImageHeight?: number;
+}
+
+export interface QuestionImageDimensionsFormProps {
+  questionID?: string;
+  questionImageWidth?: number;
+  questionImageHeight?: number;
+}
+
+export interface QuestionImageUploadProps {
+  questionID: string;
+}
+
+export interface ElementImageIconButtonsProps {
+  questionID: string;
+  colorAnchorEl: null | HTMLElement;
+  setColorAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
+}
+
+export interface ElementBackgroundPreferencesRemoveButtonsProps {
+  questionID: string;
+  templateImage: boolean;
+  questionBackgroundColor: string;
+}
+
+export interface QuestionImageUploadModalProps {
+  uploadImageModalOpen: boolean;
+  setUploadImageModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  questionID: string;
+}
+
 export interface SurveyCanvasQuestion {
   questionID: string;
   relatedSurveyId: string;
@@ -504,6 +562,12 @@ export interface QuestionUIConfig {
   superSize?: boolean;
 }
 
+export interface QuestionBackgroundColorProps {
+  questionID: string;
+  colorAnchorEl: null | HTMLElement;
+  setColorAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
+}
+
 export interface SurveyCanvasQuestionSettings {
   preferencesID: string;
   relatedQuestionID: string;
@@ -513,6 +577,10 @@ export interface SurveyCanvasQuestionSettings {
   titleFontColor?: string;
   descriptionFontSize?: number;
   descriptionFontColor?: string;
+  questionImageTemplate?: boolean;
+  questionImageTemplateUrl?: string;
+  questionImageTemplatePublicId?: string;
+  questionBackgroundColor?: string;
   required?: boolean;
   uiConfig?: QuestionUIConfig;
 }

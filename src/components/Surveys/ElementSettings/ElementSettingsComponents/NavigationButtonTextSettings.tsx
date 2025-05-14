@@ -119,7 +119,7 @@ const NavigationButtonTextSettings = () => {
             }}
           >
             <NavigationIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
-            Navigation Button Text
+            Navigation Button
           </Box>
         </AccordionSummary>
         <AccordionDetails>

@@ -181,6 +181,14 @@ export const textAndDescriptionSettingsSchema = z.object({
   questionDescription: z.string(),
 });
 
+export const questionImageSettingsSchema = z.object({
+  questionImage: z.boolean().optional(),
+  questionImageUrl: z.string().optional(),
+  questionImageWidth: z.number().optional(),
+  questionImageHeight: z.number().optional(),
+  questionImageAltTxt: z.string().optional(),
+});
+
 export const uiConfigPreferenceSchema = z.object({
   buttonText: z
     .string()

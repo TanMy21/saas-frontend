@@ -17,6 +17,69 @@ const questionSlice = createSlice({
     setQuestion: (state, action: PayloadAction<Element>) => {
       state.selectedQuestion = action.payload;
     },
+    setTemplateImage: (state, action: PayloadAction<{ url: string }>) => {
+      if (!state.selectedQuestion?.questionPreferences) return;
+
+      state.selectedQuestion.questionPreferences = {
+        ...state.selectedQuestion.questionPreferences,
+        questionImageTemplate: true,
+        questionImageTemplateUrl: action.payload.url,
+      };
+    },
+    setBackgroundColor: (state, action: PayloadAction<string>) => {
+      if (!state.selectedQuestion?.questionPreferences) return;
+
+      state.selectedQuestion.questionPreferences.questionBackgroundColor =
+        action.payload;
+    },
+
+    removeBackgroundColor: (state) => {
+      if (!state.selectedQuestion?.questionPreferences) return;
+
+      state.selectedQuestion = {
+        ...state.selectedQuestion,
+        questionPreferences: {
+          ...state.selectedQuestion.questionPreferences,
+          questionBackgroundColor: undefined,
+        },
+      };
+    },
+    removeTemplateImage: (state) => {
+      if (!state.selectedQuestion?.questionPreferences) return;
+
+      state.selectedQuestion.questionPreferences.questionImageTemplate = false;
+      state.selectedQuestion.questionPreferences.questionImageTemplateUrl =
+        undefined;
+    },
+    setImageWidth: (state, action: PayloadAction<number>) => {
+      if (state.selectedQuestion) {
+        state.selectedQuestion.questionImageWidth = action.payload;
+      }
+    },
+    setImageHeight: (state, action: PayloadAction<number>) => {
+      if (state.selectedQuestion) {
+        state.selectedQuestion.questionImageHeight = action.payload;
+      }
+    },
+    setImageAltText: (state, action: PayloadAction<string>) => {
+      if (state.selectedQuestion) {
+        state.selectedQuestion.questionImageAltTxt = action.payload;
+      }
+    },
+    toggleElementRequired: (state, action: PayloadAction<boolean>) => {
+      if (!state.selectedQuestion?.questionPreferences) return;
+
+      if (!state.selectedQuestion.questionPreferences.required) {
+        state.selectedQuestion.questionPreferences.required = false;
+      }
+
+      state.selectedQuestion.questionPreferences.required = action.payload;
+    },
+    toggleShowImage: (state, action: PayloadAction<boolean>) => {
+      if (state.selectedQuestion) {
+        state.selectedQuestion.questionImage = action.payload;
+      }
+    },
     updateQuestionField: <K extends keyof Element>(
       state: QuestionState,
       action: PayloadAction<{ key: K; value: Element[K] }>
@@ -35,24 +98,23 @@ const questionSlice = createSlice({
       state.selectedQuestion.questionPreferences.uiConfig.buttonText =
         action.payload;
     },
-    toggleElementRequired: (state, action: PayloadAction<boolean>) => {
-      if (!state.selectedQuestion?.questionPreferences) return;
-
-      if (!state.selectedQuestion.questionPreferences.required) {
-        state.selectedQuestion.questionPreferences.required = false;
-      }
-
-      state.selectedQuestion.questionPreferences.required = action.payload;
-    },
     resetQuestion: () => initialState,
   },
 });
 
 export const {
   setQuestion,
-  updateQuestionField,
-  updateUIButtonText,
+  setTemplateImage,
+  setBackgroundColor,
+  removeBackgroundColor,
+  removeTemplateImage,
+  setImageHeight,
+  setImageWidth,
+  setImageAltText,
   toggleElementRequired,
+  toggleShowImage,
+  updateUIButtonText,
+  updateQuestionField,
   resetQuestion,
 } = questionSlice.actions;
 

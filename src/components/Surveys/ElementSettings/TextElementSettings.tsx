@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 
 import { ElementSettingsProps } from "../../../utils/types";
 
+import QuestionImageSettings from "./ElementSettingsComponents/QuestionImageSettings";
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
@@ -19,6 +20,7 @@ const TextElementSettings = ({ qID }: ElementSettingsProps) => {
       <QuestionTextandDescriptionSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
       <ValidationSettings />
+      <QuestionImageSettings />
     </Box>
   );
 };

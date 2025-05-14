@@ -138,7 +138,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
               }}
             >
               <FiType style={{ color: "#752FEC" }} />
-              Typography Settings
+              Typography
             </Box>
           </AccordionSummary>
           <AccordionDetails>
