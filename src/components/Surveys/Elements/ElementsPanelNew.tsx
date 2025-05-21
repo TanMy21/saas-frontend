@@ -9,17 +9,19 @@ import {
 } from "react-beautiful-dnd";
 
 import { useUpdateElementOrderMutation } from "../../../app/slices/elementApiSlice";
+import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
 import { ElementsPanelProps, Element } from "../../../utils/types";
 
 import ElementsListItem from "./ElementsListItem";
 
-const ElementsPanel = ({
-  elements,
-  setQuestionId,
-  refetch,
-}: ElementsPanelProps) => {
+const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
   const [updateElementOrder /*{ isError, error }*/] =
     useUpdateElementOrderMutation();
+
+  const elements = useAppSelector(
+    (state: RootState) => state.surveyBuilder.elements
+  );
 
   const nonOrderableTypes = [
     "WELCOME_SCREEN",
@@ -133,10 +135,8 @@ const ElementsPanel = ({
                 <ElementsListItem
                   provided={provided}
                   setQuestionId={setQuestionId!}
-                  elements={elements}
                   displayedQuestions={displayedQuestions}
                   nonOrderableTypes={nonOrderableTypes}
-                  refetch={refetch}
                 />
               )}
             </Droppable>

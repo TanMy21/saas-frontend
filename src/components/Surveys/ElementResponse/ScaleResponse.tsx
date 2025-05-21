@@ -24,8 +24,11 @@ const ScaleResponse = () => {
         : -1 + (4 - 2 * progress) * progress;
     return minSize + (maxSize - minSize) * easedProgress;
   });
+
   const gapSize = 8;
   const paddingSize = 16 * 2;
+  const tickGapBuffer = 4;
+  const extraRightBuffer = 6;
 
   const totalTickWidth = tickSizes.reduce((sum, size) => sum + size, 0);
   const totalGapWidth = gapSize * 2 * (ticks.length - 1);
@@ -121,8 +124,8 @@ const ScaleResponse = () => {
                   width: `${segmentWidth}px`,
                   flexShrink: 0,
                   flexGrow: 0,
-                  marginLeft: `${gapSize}px`,
-                  marginRight: `${gapSize}px`,
+                  marginLeft: `${gapSize + tickGapBuffer}px`,
+                  marginRight: `${gapSize + tickGapBuffer + extraRightBuffer}px`,
                   height: `${4 + arrayIndex * 1.5}px`,
                   background: getSegmentColor(
                     arrayIndex,

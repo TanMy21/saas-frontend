@@ -18,13 +18,16 @@ const SurveyPreferencesPanel = ({
         flexGrow: 1,
         width: "100%",
         minHeight: "100%",
+        height: "auto",
+        overflowY: "scroll",
+        overflowX: "hidden",
+        scrollBehavior: "smooth",
         left: "0",
         right: "0",
         // border: "2px solid green",
         borderLeft: "2px solid #E5E7EB",
       }}
     >
- 
       <Box
         sx={{
           display: "flex",

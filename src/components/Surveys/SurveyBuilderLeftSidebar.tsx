@@ -2,8 +2,9 @@ import { useMemo, useState } from "react";
 
 import { Box, Typography } from "@mui/material";
 
-import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
-import { SurveyBuilderLeftSidebarProps, Element } from "../../utils/types";
+import { RootState } from "../../app/store";
+import { useAppSelector } from "../../app/typedReduxHooks";
+import { SurveyBuilderLeftSidebarProps } from "../../utils/types";
 
 import AddElementMenu from "./Elements/AddElementMenu";
 import ElementsPanel from "./Elements/ElementsPanelNew";
@@ -12,14 +13,12 @@ const SurveyBuilderLeftSidebar = ({
   surveyID,
   setQuestionId,
 }: SurveyBuilderLeftSidebarProps) => {
-  const { data: elements = [] as Element[], refetch } =
-    useGetElementsForSurveyQuery(
-      surveyID!
-      //{ pollingInterval: 1000 }
-    );
-
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
+
+  const elements = useAppSelector(
+    (state: RootState) => state.surveyBuilder.elements
+  );
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -44,7 +43,7 @@ const SurveyBuilderLeftSidebar = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "94vh",
+        height: "auto",
         // border: "2px solid green",
       }}
     >
@@ -85,11 +84,7 @@ const SurveyBuilderLeftSidebar = ({
           />
         </Box>
       </Box>
-      <ElementsPanel
-        elements={elements}
-        setQuestionId={setQuestionId}
-        refetch={refetch}
-      />
+      <ElementsPanel setQuestionId={setQuestionId} />
     </Box>
   );
 };

@@ -3,9 +3,9 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { TypographySettingsForm } from "../../utils/types";
 
 const defaultState: TypographySettingsForm = {
-  titleFontSize: 16,
+  titleFontSize: 36,
   titleFontColor: "#000000",
-  descriptionFontSize: 12,
+  descriptionFontSize: 16,
   descriptionFontColor: "#000000",
 };
 

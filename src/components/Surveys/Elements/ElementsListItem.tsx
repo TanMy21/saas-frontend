@@ -1,18 +1,22 @@
-import { Box, Chip, Tooltip, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import { Draggable } from "react-beautiful-dnd";
 
-import { chipTypeColors, elementIcons } from "../../../utils/elementsConfig";
+import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
+import { elementIcons } from "../../../utils/elementsConfig";
 import { ElementListItemProps, IconMapping } from "../../../utils/types";
 
 import ElementDropDownMenu from "./ElementDropDownMenu";
 
 const ElementsListItem = ({
-  elements,
   displayedQuestions,
   provided,
   setQuestionId,
-  refetch,
 }: ElementListItemProps) => {
+  const elements = useAppSelector(
+    (state: RootState) => state.surveyBuilder.elements
+  );
+
   return (
     <Box {...provided.droppableProps} ref={provided.innerRef}>
       {displayedQuestions.map((element, index) => {
@@ -159,8 +163,7 @@ const ElementsListItem = ({
                   }}
                 >
                   <ElementDropDownMenu
-                    refetch={refetch}
-                    elements={elements}
+                    
                     questionID={element.questionID}
                     setQuestionId={setQuestionId}
                   />

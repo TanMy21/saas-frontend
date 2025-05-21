@@ -32,7 +32,7 @@ const Homepage = () => {
           {/* Logo 1 */}
           <Box
             component="img"
-            src="/logo_hp.png"
+            src="/Logo.png"
             alt="Logo"
             sx={{
               position: "absolute",
@@ -49,7 +49,7 @@ const Homepage = () => {
           {/* Logo 2 */}
           <Box
             component="img"
-            src="/logo_hp.png"
+            src="/Logo.png"
             alt="Logo"
             sx={{
               position: "absolute",
@@ -67,7 +67,7 @@ const Homepage = () => {
           {/* Logo 3 */}
           <Box
             component="img"
-            src="/logo_hp.png"
+            src="/Logo.png"
             alt="Logo"
             sx={{
               position: "absolute",
@@ -85,7 +85,7 @@ const Homepage = () => {
           {/* Logo 4 */}
           <Box
             component="img"
-            src="/logo_hp.png"
+            src="/Logo.png"
             alt="Logo"
             sx={{
               position: "absolute",
@@ -132,7 +132,7 @@ const Homepage = () => {
                 borderRadius: "24px",
                 boxShadow:
                   "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
-                transition: "all 0.3s ease-in-out",
+                transition: "all 0.2s ease-in-out",
                 // border: "2px solid red",
                 boxSizing: "border-box",
                 display: "flex",
@@ -146,8 +146,8 @@ const Homepage = () => {
               }}
             >
               <img
-                src="/favicon.png"
-                alt="Your Image"
+                src="/Logo.png"
+                alt="logo"
                 style={{
                   maxWidth: "100%",
                   maxHeight: "100%",

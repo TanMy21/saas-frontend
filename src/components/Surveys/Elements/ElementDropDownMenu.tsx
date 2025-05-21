@@ -4,17 +4,23 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 
 import { useDeleteElementMutation } from "../../../app/slices/elementApiSlice";
+import { deleteElementRedux } from "../../../app/slices/surveySlice";
+import { RootState } from "../../../app/store";
+import { useAppSelector, useAppDispatch } from "../../../app/typedReduxHooks";
 import { ElementDropDownMenuProps } from "../../../utils/types";
 
 const ElementDropDownMenu = ({
   questionID,
-  elements,
-  refetch,
   setQuestionId,
 }: ElementDropDownMenuProps) => {
+  const dispatch = useAppDispatch();
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
   const [deleteElement] = useDeleteElementMutation();
+
+  const elements = useAppSelector(
+    (state: RootState) => state.surveyBuilder.elements
+  );
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setMenuAnchor(e.currentTarget);
@@ -31,8 +37,8 @@ const ElementDropDownMenu = ({
   const handleDeleteElement = async () => {
     try {
       await deleteElement(questionID).unwrap();
+      dispatch(deleteElementRedux(questionID));
       setMenuAnchor(null);
-      refetch();
 
       const index = elements.findIndex((e) => e.questionID === questionID);
 

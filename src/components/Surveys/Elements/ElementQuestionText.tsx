@@ -29,12 +29,22 @@ const ElementQuestionText = ({ display }: ElementProps) => {
   const descritptionFontSize = display === "mobile" ? "16px" : "20px";
   const qWhiteSpace = display === "mobile" ? "0.1em" : "normal";
 
-  const {
-    titleFontColor,
-    titleFontSize,
-    descriptionFontColor,
-    descriptionFontSize,
-  } = typographySettings || {};
+  const titleFontSize =
+    typographySettings.titleFontSize ??
+    question?.questionPreferences?.titleFontSize ??
+    36;
+  const titleFontColor =
+    typographySettings.titleFontColor ??
+    question?.questionPreferences?.titleFontColor ??
+    "#000000";
+  const descriptionFontSize =
+    typographySettings.descriptionFontSize ??
+    question?.questionPreferences?.descriptionFontSize ??
+    16;
+  const descriptionFontColor =
+    typographySettings.descriptionFontColor ??
+    question?.questionPreferences?.descriptionFontColor ??
+    "#000000";
 
   const orderFontSize = titleFontSize * 0.5;
   const arrowFontSize = titleFontSize * 0.45;
@@ -118,7 +128,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   marginTop: 1,
                   fontWeight: "bold",
                   color: "black",
-                  fontSize: orderFontSize,
+                  fontSize: orderFontSize || 20,
                 }}
               >
                 {order}
@@ -136,7 +146,11 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               }}
             >
               <Typography
-                sx={{ marginTop: 2, marginRight: 2, fontSize: arrowFontSize }}
+                sx={{
+                  marginTop: 2,
+                  marginRight: 2,
+                  fontSize: arrowFontSize || 16,
+                }}
               >
                 <FaArrowRightLong />
               </Typography>

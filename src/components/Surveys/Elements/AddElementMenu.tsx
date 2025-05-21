@@ -7,8 +7,10 @@ import { toast } from "react-toastify";
 import {
   useCreateElementMutation,
   useCreateScreenElementMutation,
-  useGetElementsForSurveyQuery,
 } from "../../../app/slices/elementApiSlice";
+import { addElement } from "../../../app/slices/surveySlice";
+import { RootState } from "../../../app/store";
+import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import { elementIcons } from "../../../utils/elementsConfig";
 import { AddElementMenuProps, Element, ErrorData } from "../../../utils/types";
 
@@ -19,12 +21,15 @@ const AddElementMenu = ({
   handleClose,
   handleClick,
 }: AddElementMenuProps) => {
+  const dispatch = useAppDispatch();
   const [createElement, { isError, error }] = useCreateElementMutation();
 
   const [createScreenElement, { isError: isErrorScreen, error: errorScreen }] =
     useCreateScreenElementMutation();
 
-  const { data: elements } = useGetElementsForSurveyQuery(surveyID);
+  const elements = useAppSelector(
+    (state: RootState) => state.surveyBuilder.elements
+  );
 
   const calculateOrder = (elements: Element[], type: string) => {
     const elementTypes = [
@@ -55,7 +60,12 @@ const AddElementMenu = ({
   const handleElementAdd = async (type: string) => {
     const order: number | null = calculateOrder(elements ?? [], type);
     try {
-      await createElement({ surveyID, type, order });
+      const newElement = await createElement({
+        surveyID,
+        type,
+        order,
+      }).unwrap();
+      dispatch(addElement(newElement));
     } catch (error) {
       console.error(error);
     }
@@ -81,7 +91,12 @@ const AddElementMenu = ({
         order = 9999;
       }
 
-      await createScreenElement({ surveyID, type, order });
+      const newScreenElement = await createScreenElement({
+        surveyID,
+        type,
+        order,
+      }).unwrap();
+      dispatch(addElement(newScreenElement));
     } catch (error) {
       console.error(error);
     }

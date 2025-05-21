@@ -42,7 +42,7 @@ export interface RowData {
 
 export interface BuilderSpaceProps {
   questionId: string | null;
-  Elements: Element[];
+  Elements?: Element[];
   display: string | null;
   setDisplay: React.Dispatch<React.SetStateAction<string | null>>;
   noElements: boolean;
@@ -147,12 +147,11 @@ export interface Element {
 }
 
 export interface ElementListItemProps {
-  elements: Element[];
+  elements?: Element[];
   displayedQuestions: Element[];
   provided: DroppableProvided;
   nonOrderableTypes: string[];
   setQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
-  refetch: () => void;
 }
 
 export interface ElementProps {
@@ -173,8 +172,8 @@ export interface ElementProps {
 
 export interface ElementDropDownMenuProps {
   questionID: string;
-  elements: Element[];
-  refetch: () => void;
+  elements?: Element[];
+
   setQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
@@ -197,10 +196,9 @@ export interface ElementsResponse {
 }
 
 export interface ElementsPanelProps {
-  elements: Element[];
+  elements?: Element[];
   surveyID?: string;
   setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
-  refetch: () => void;
 }
 
 interface ElementResponse {
@@ -710,6 +708,7 @@ export interface SurveyBuilderCanvasProps {
 export interface SurveyBuilderLeftSidebarProps {
   surveyID?: string;
   setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
+  elements: Element[];
 }
 
 export interface SurveyListCardProps {

@@ -6,6 +6,7 @@ import { apiSlice } from "./api/apiSlice";
 import authReducer from "./slices/authSlice";
 import questionReducer from "./slices/elementSlice";
 import elementTypographyReducer from "./slices/elementTypographySlice";
+import surveyBuilderReducer from "./slices/surveySlice";
 import userReducer from "./slices/userSlice";
 
 const store = configureStore({
@@ -14,6 +15,7 @@ const store = configureStore({
     user: userReducer,
     elementTypography: elementTypographyReducer,
     question: questionReducer,
+    surveyBuilder: surveyBuilderReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

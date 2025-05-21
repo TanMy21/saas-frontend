@@ -1,23 +1,31 @@
 import { useEffect, useState } from "react";
 
 import { Box } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
+import { resetQuestion, setQuestion } from "../app/slices/elementSlice";
+import {
+  initializeTypography,
+  resetTypography,
+} from "../app/slices/elementTypographySlice";
 import { useGetSurveyCanvasByIdQuery } from "../app/slices/surveysApiSlice";
+import { setElements } from "../app/slices/surveySlice";
 import { fetchUser, selectUser } from "../app/slices/userSlice";
-import { AppDispatch } from "../app/store";
-import BuilderSpace from "../components/BuilderSpace";
+import { RootState } from "../app/store";
+import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
+import CanvasConsole from "../components/CanvasConsole";
 import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
 import ImportQuestionsModal from "../components/Modals/ImportQuestionsModal";
 import ScrollbarStyle from "../components/ScrollbarStyle";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
+import SurveyPreferencesPanel from "../components/Surveys/SurveyPreferencesPanel";
 import { Element, LocationStateProps } from "../utils/types";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const user = useSelector(selectUser);
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,8 +41,15 @@ const SurveyBuilder = () => {
   const [questionId, setQuestionId] = useState<string | null>(null);
   const [display, setDisplay] = useState<string | null>("desktop");
   const [loading, setLoading] = useState(false);
-  const [noElements, setNoElements] = useState(false);
 
+  const elements = useAppSelector(
+    (state: RootState) => state.surveyBuilder.elements
+  );
+
+  const selectedQuestion =
+    elements?.find((q: Element) => q.questionID === questionId) || null;
+
+  const noElements = elements.length === 0;
   const {
     data: surveyCanvas,
     isError: isErrorCanvas,
@@ -48,7 +63,7 @@ const SurveyBuilder = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  const { questions: Elements, title } = surveyCanvas || {};
+  const { questions = [] as Element[], title } = surveyCanvas || {};
 
   useEffect(() => {
     if (isErrorCanvas) {
@@ -59,24 +74,31 @@ const SurveyBuilder = () => {
   useEffect(() => {
     if (!isLoadingCanvas && !isFetchingCanvas) {
       setLoading(false);
-      setNoElements(!Elements || Elements.length === 0);
-
-      if (Elements && Elements.length > 0 && !questionId) {
-        const sortedQuestions = [...Elements].sort(
-          (a: Element, b: Element) => a.order! - b.order!
-        );
-
-        if (
-          !questionId ||
-          !sortedQuestions.find((q) => q.questionID === questionId)
-        ) {
-          setQuestionId(sortedQuestions[0].questionID);
-        }
-      }
     } else {
       setLoading(true);
     }
-  }, [isLoadingCanvas, isFetchingCanvas, Elements, questionId]);
+  }, [isLoadingCanvas, isFetchingCanvas, questions]);
+
+  useEffect(() => {
+    if (questions && questions.length > 0) {
+      dispatch(setElements(questions));
+    }
+  }, [questions]);
+
+  useEffect(() => {
+    if (elements && elements.length > 0) {
+      const sortedQuestions = [...elements].sort(
+        (a: Element, b: Element) => a.order! - b.order!
+      );
+
+      if (
+        !questionId ||
+        !sortedQuestions.find((q) => q.questionID === questionId)
+      ) {
+        setQuestionId(sortedQuestions[0].questionID);
+      }
+    }
+  }, [elements]);
 
   useEffect(() => {
     if (!user) {
@@ -87,6 +109,16 @@ const SurveyBuilder = () => {
   useEffect(() => {
     setRunTour(true);
   }, []);
+
+  useEffect(() => {
+    if (selectedQuestion) {
+      dispatch(setQuestion(selectedQuestion));
+      dispatch(initializeTypography(selectedQuestion?.questionPreferences));
+    } else {
+      dispatch(resetQuestion());
+      dispatch(resetTypography());
+    }
+  }, [selectedQuestion?.questionID, dispatch]);
 
   if (!user) {
     return null;
@@ -101,9 +133,6 @@ const SurveyBuilder = () => {
     isTourEnabled = !hasCompletedBuilderTour && !hasSkippedBuilderTour;
   }
 
-   
-
-
   return (
     <>
       <ScrollbarStyle />
@@ -111,33 +140,18 @@ const SurveyBuilder = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          overflowX: "hidden",
-          overflowY: "scroll",
           width: "100%",
-          height: "100%",
-          // border: "2px solid black",
-          "&::-webkit-scrollbar": {
-            width: "10px", // Scrollbar width
-          },
-          "&::-webkit-scrollbar-track": {
-            background: "#f1f1f1", // Scrollbar track color
-          },
-          "&::-webkit-scrollbar-thumb": {
-            background: "#61A5D2", // Scrollbar thumb color
-            borderRadius: "10px", // Rounded corners on the scrollbar thumb
-            "&:hover": {
-              background: "#555", // Scrollbar thumb hover color
-            },
-          },
+          height: "100vh",
+          border: "2px solid black",
         }}
       >
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
             width: "100%",
             height: "6vh",
-            // border: "2px solid red",
+            border: "2px solid red",
+            flexShrink: 0,
           }}
         >
           <SurveyBuilderHeader
@@ -150,11 +164,26 @@ const SurveyBuilder = () => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
             width: "100%",
-            height: "94vh",
-            backgroundColor: "#F8F9FE",
-            // border: "4px solid green",
+            alignItems: "stretch",
+            overflowX: "hidden",
+            overflowY: "auto",
+            minHeight: "94vh",
+            height: "auto",
+            border: "2px solid green",
+            "&::-webkit-scrollbar": {
+              width: "10px", // Scrollbar width
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f1f1f1", // Scrollbar track color
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#61A5D2", // Scrollbar thumb color
+              borderRadius: "10px", // Rounded corners on the scrollbar thumb
+              "&:hover": {
+                background: "#555", // Scrollbar thumb hover color
+              },
+            },
           }}
         >
           <Box
@@ -162,43 +191,44 @@ const SurveyBuilder = () => {
               display: "flex",
               flexDirection: "column",
               width: "16%",
-              height: "100%",
-              // border: "2px solid red",
+              height: "auto",
+              border: "2px solid blue",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                height: "100%",
-                bgcolor: "#FFFFFF",
-                // border: "2px solid blue",
-                borderRight: "2px solid #E5E7EB",
-                zIndex: 10,
-              }}
-            >
-              <SurveyBuilderLeftSidebar
-                surveyID={surveyID}
-                setQuestionId={setQuestionId}
-              />
-            </Box>
+            <SurveyBuilderLeftSidebar
+              surveyID={surveyID}
+              setQuestionId={setQuestionId}
+              elements={elements}
+            />
           </Box>
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-              width: "84%",
-              height: "100%",
-              // border: "2px solid blue",
+              width: "68%",
+              height: "auto",
+              border: "2px solid blue",
             }}
           >
-            <BuilderSpace
-              questionId={questionId}
-              Elements={Elements}
+            <CanvasConsole
               display={display}
               setDisplay={setDisplay}
+              question={selectedQuestion}
               noElements={noElements}
+            />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "16%",
+              height: "auto",
+              border: "2px solid blue",
+            }}
+          >
+            <SurveyPreferencesPanel
+              questionId={questionId}
+              question={selectedQuestion}
             />
           </Box>
         </Box>
