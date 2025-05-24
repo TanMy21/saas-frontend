@@ -100,10 +100,18 @@ const Signup = () => {
           }}
         >
           <Box sx={{ width: "100%", maxWidth: 480, mt: "-8%" }}>
-            <Box sx={{ textAlign: "center", mb: 2 }}>
+            <Box
+              sx={{
+                width: "80%",
+                height: "60%",
+                margin: "auto",
+                textAlign: "center",
+                mb: 2,
+              }}
+            >
               <Link to="/" style={{ textDecoration: "none" }}>
                 <img
-                  src="/favicon.png"
+                  src="/Logo.png"
                   alt="Your Image"
                   style={{
                     maxWidth: "20%",
@@ -114,7 +122,7 @@ const Signup = () => {
               </Link>
               <Typography
                 variant="body1"
-                sx={{ fontSize: "20px", color: "gray", mt: "-4%" }}
+                sx={{ fontSize: "20px", color: "gray" }}
               >
                 Create your account
               </Typography>
@@ -359,9 +367,10 @@ const Signup = () => {
                   disabled={isLoading}
                   sx={{
                     py: 1.5,
-                    borderRadius: "12px",
+                    borderRadius: "16px",
                     fontWeight: "medium",
-                    background: "linear-gradient(to right, #7C3AED, #EC4899)",
+                    background:
+                      "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                     color: "white",
                     textTransform: "unset",
                     "&:hover": { opacity: 0.9 },

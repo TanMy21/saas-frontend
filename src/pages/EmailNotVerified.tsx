@@ -101,7 +101,7 @@ const EmailNotVerified = () => {
                     backgroundClip: "text",
                     textFillColor: "transparent",
                     backgroundImage:
-                      "linear-gradient(to right, #7C3AED, #EC4899)",
+                      "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                   }}
                 >
                   Check your email
@@ -178,9 +178,10 @@ const EmailNotVerified = () => {
                   fullWidth
                   sx={{
                     py: 1.5,
-                    background: "linear-gradient(to right, #7C3AED, #EC4899)",
+                    background:
+                      "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                     color: "white",
-                    borderRadius: 2,
+                    borderRadius: 4,
                     fontWeight: "bold",
                     transition: "opacity 0.2s",
                     textTransform: "none",
@@ -256,7 +257,7 @@ const EmailNotVerified = () => {
                       backgroundClip: "text",
                       textFillColor: "transparent",
                       backgroundImage:
-                        "linear-gradient(to right, #7C3AED, #EC4899)",
+                        "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                     }}
                   >
                     Verify your email
@@ -365,9 +366,10 @@ const EmailNotVerified = () => {
                     sx={{
                       py: 1.5,
                       px: 2,
-                      background: "linear-gradient(to right, #7C3AED, #EC4899)",
+                      background:
+                        "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                       color: "white",
-                      borderRadius: 2,
+                      borderRadius: 4,
                       fontWeight: "medium",
                       opacity: 1,
                       transition: "opacity 0.2s",

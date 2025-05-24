@@ -3,6 +3,9 @@ import LoginIcon from "@mui/icons-material/Login";
 import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
+import HomepageLogo from "../components/HomepageLogo";
+import LogoLoader from "../components/Loaders/LogoLoader";
+
 const Homepage = () => {
   return (
     <>
@@ -22,85 +25,6 @@ const Homepage = () => {
           // border: "2px solid green",
         }}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            overflow: "hidden",
-          }}
-        >
-          {/* Logo 1 */}
-          <Box
-            component="img"
-            src="/Logo.png"
-            alt="Logo"
-            sx={{
-              position: "absolute",
-              top: "5rem",
-              left: "5rem",
-              width: "12rem",
-              height: "12rem",
-              opacity: 0.1,
-              animation: "pulse 4s infinite",
-              color: "#4f46e5",
-            }}
-          />
-
-          {/* Logo 2 */}
-          <Box
-            component="img"
-            src="/Logo.png"
-            alt="Logo"
-            sx={{
-              position: "absolute",
-              top: "10rem",
-              right: "10rem",
-              width: "8rem",
-              height: "8rem",
-              opacity: 0.1,
-              animation: "pulse 3s infinite",
-              animationDelay: "0.5s",
-              color: "#9333ea",
-            }}
-          />
-
-          {/* Logo 3 */}
-          <Box
-            component="img"
-            src="/Logo.png"
-            alt="Logo"
-            sx={{
-              position: "absolute",
-              bottom: "5rem",
-              left: "25%",
-              width: "6rem",
-              height: "6rem",
-              opacity: 0.1,
-              animation: "pulse 2s infinite",
-              animationDelay: "1s",
-              color: "#818cf8",
-            }}
-          />
-
-          {/* Logo 4 */}
-          <Box
-            component="img"
-            src="/Logo.png"
-            alt="Logo"
-            sx={{
-              position: "absolute",
-              bottom: "10rem",
-              right: "33.333%",
-              width: "3rem",
-              height: "3rem",
-              opacity: 0.1,
-              animation: "pulse 1s infinite",
-              animationDelay: "1.5s",
-              color: "#c084fc",
-            }}
-          />
-        </Box>
-
         <Box
           sx={{
             display: "flex",
@@ -125,36 +49,14 @@ const Homepage = () => {
           >
             <Box
               sx={{
-                width: "15%",
-                height: "90%",
-                backgroundColor: "white",
-                p: 1,
-                borderRadius: "24px",
-                boxShadow:
-                  "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
-                transition: "all 0.2s ease-in-out",
-                // border: "2px solid red",
-                boxSizing: "border-box",
                 display: "flex",
-                alignItems: "center",
+                width: "80%",
+                height: "80%",
                 justifyContent: "center",
-                "&:hover": {
-                  boxShadow:
-                    "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1)",
-                  transform: "translateY(-4px)",
-                },
+                alignItems: "center",
               }}
             >
-              <img
-                src="/Logo.png"
-                alt="logo"
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "100%",
-                  objectFit: "contain",
-                  animation: "logoPulse 3s infinite",
-                }}
-              />
+              <HomepageLogo />
             </Box>
           </Box>
           <Box
@@ -176,7 +78,7 @@ const Homepage = () => {
                 fontSize: { xs: "3.75rem", md: "4.5rem" },
                 fontWeight: "bold",
                 background:
-                  "linear-gradient(to right, #4f46e5, #9333ea, #4f46e5)",
+                  "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundSize: "200% 200%",
@@ -225,9 +127,9 @@ const Homepage = () => {
                   px: 4,
                   py: 2,
                   background:
-                    "linear-gradient(to right, #4f46e5, #9333ea, #4f46e5)",
+                    "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                   color: "white",
-                  borderRadius: "12px",
+                  borderRadius: "24px",
                   fontWeight: "600",
                   transition: "all 0.3s ease-in-out",
                   boxShadow:
@@ -264,7 +166,7 @@ const Homepage = () => {
                   py: 2,
                   backgroundColor: "white",
                   color: "#182331",
-                  borderRadius: "12px",
+                  borderRadius: "24px",
                   fontWeight: "600",
                   transition: "all 0.3s ease-in-out",
                   gap: 2,

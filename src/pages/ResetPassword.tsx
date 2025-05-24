@@ -61,7 +61,7 @@ const ResetPassword = () => {
                         backgroundClip: "text",
                         textFillColor: "transparent",
                         backgroundImage:
-                          "linear-gradient(to right, #7C3AED, #EC4899)",
+                          "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                       }}
                     >
                       Invalid link
@@ -141,7 +141,7 @@ const ResetPassword = () => {
                         sx={{
                           py: 1.5,
                           background:
-                            "linear-gradient(to right, #7C3AED, #EC4899)",
+                            "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                           color: "white",
                           borderRadius: 2,
                           fontWeight: "bold",
@@ -166,7 +166,7 @@ const ResetPassword = () => {
                         fullWidth
                         sx={{
                           py: 1.5,
-                          borderRadius: 2,
+                          borderRadius: 4,
                           fontWeight: "medium",
                           color: "#7C3AED",
                           transition: "all 0.2s",

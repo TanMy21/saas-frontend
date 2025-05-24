@@ -122,7 +122,7 @@ const ForgotPassword = () => {
                           backgroundClip: "text",
                           textFillColor: "transparent",
                           backgroundImage:
-                            "linear-gradient(to right, #7C3AED, #EC4899)",
+                            "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                         }}
                       >
                         Check your email
@@ -284,7 +284,7 @@ const ForgotPassword = () => {
                           backgroundClip: "text",
                           textFillColor: "transparent",
                           backgroundImage:
-                            "linear-gradient(to right, #7C3AED, #EC4899)",
+                            "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                         }}
                       >
                         Reset password
@@ -367,9 +367,9 @@ const ForgotPassword = () => {
                         sx={{
                           py: 1.5,
                           background:
-                            "linear-gradient(to right, #7C3AED, #EC4899)",
+                            "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                           color: "white",
-                          borderRadius: 2,
+                          borderRadius: 4,
                           fontWeight: "bold",
                           transition: "opacity 0.2s",
                           textTransform: "unset",

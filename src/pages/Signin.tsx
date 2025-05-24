@@ -9,7 +9,6 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   Box,
   Button,
-  CircularProgress,
   Container,
   Divider,
   IconButton,
@@ -30,6 +29,7 @@ import {
 } from "../app/slices/authApiSlice";
 import { setCredentials } from "../app/slices/authSlice";
 import FormErrors from "../components/FormErrors";
+import LogoLoader from "../components/Loaders/LogoLoader";
 import usePersist from "../hooks/persist";
 import { loginSchema } from "../utils/schema";
 import { ErrorData, FetchBaseQueryError, LoginFormData } from "../utils/types";
@@ -162,7 +162,21 @@ const Signin = () => {
     googleAuthError,
   ]);
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+          height: "100%",
+          margin: "auto",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <LogoLoader />
+      </Box>
+    );
 
   document.body.style.overflowY = "hidden";
 
@@ -193,22 +207,25 @@ const Signin = () => {
               mb: 3,
             }}
           >
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <img
-                src="/favicon.png"
-                alt="Your Image"
-                style={{
-                  maxWidth: "25%",
-                  maxHeight: "25%",
-                  objectFit: "contain",
-                }}
-              />
-            </Link>
+            <Box sx={{ width: "60%", height: "60%", margin: "auto" }}>
+              <Link to="/" style={{ textDecoration: "none" }}>
+                <img
+                  src="/Logo.png"
+                  alt="Your Image"
+                  style={{
+                    maxWidth: "25%",
+                    maxHeight: "25%",
+                    objectFit: "contain",
+                  }}
+                />
+              </Link>
+            </Box>
             <Typography
               variant="h4"
               sx={{
                 fontWeight: "bold",
-                background: "linear-gradient(to right, #7C3AED, #EC4899)",
+                background:
+                  "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                 WebkitBackgroundClip: "text",
                 color: "transparent",
                 display: "inline-block",
@@ -331,9 +348,10 @@ const Signin = () => {
                   alignItems: "center",
                   gap: 1,
                   py: 1.5,
-                  borderRadius: "12px",
+                  borderRadius: "16px",
                   fontWeight: "medium",
-                  background: "linear-gradient(to right, #7C3AED, #EC4899)",
+                  background:
+                    "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
                   color: "white",
                   textTransform: "unset",
                   "&:hover": { opacity: 0.9 },
@@ -356,7 +374,7 @@ const Signin = () => {
                   alignItems: "center",
                   gap: 1,
                   py: 1.5,
-                  borderRadius: "12px",
+                  borderRadius: "16px",
                   color: "#6760EA",
                   borderColor: "#F1F3F5",
                   textTransform: "unset",
