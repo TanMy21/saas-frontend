@@ -4,9 +4,15 @@ import type { MRT_ColumnDef } from "material-react-table";
 import { type DroppableProvided } from "react-beautiful-dnd";
 import { type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { type IconType } from "react-icons/lib";
+import { type NavigateFunction } from "react-router-dom";
 import { z } from "zod";
 
+import {
+  useForgotPasswordMutation,
+  useSendLogoutMutation,
+} from "../app/slices/authApiSlice";
 import { useImportQuestionsMutation } from "../app/slices/elementApiSlice";
+import { useResendVerificationEmailMutation } from "../app/slices/userApiSlice";
 
 import { generateSurveySchema } from "./schema";
 
@@ -465,6 +471,20 @@ export interface NewWorkspaceMenuOptionProps {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+type ForgotPasswordTrigger = ReturnType<typeof useForgotPasswordMutation>[0];
+
+export interface PasswordResetFormProps {
+  setSubmittedEmail: React.Dispatch<React.SetStateAction<string>>;
+  forgotPassword: ForgotPasswordTrigger;
+  isLoading: boolean;
+  isSuccess: boolean;
+}
+
+export interface PasswordResetSuccessProps {
+  submittedEmail: string;
+  reset: () => void;
+}
+
 export type QuestionTypeKey =
   | "BINARY"
   | "EMAIL_CONTACT"
@@ -874,6 +894,25 @@ export interface UpdateUserInfoFormData {
   lastname: string;
   email: string;
   // organization: string;
+}
+
+export interface VerificationEmailProps {
+  email?: string;
+}
+
+type ResendVerificationEmailTrigger = ReturnType<
+  typeof useResendVerificationEmailMutation
+>[0];
+type SendLogoutTrigger = ReturnType<typeof useSendLogoutMutation>[0];
+
+export interface VerifyEmailCardProps {
+  resendVerificationEmail: ResendVerificationEmailTrigger;
+  sendLogout: SendLogoutTrigger;
+  setPersist: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+  isSuccess: boolean;
+  email: string;
+  navigate: NavigateFunction;
 }
 
 export interface Workspace {

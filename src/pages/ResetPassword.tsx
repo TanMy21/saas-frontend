@@ -4,7 +4,7 @@ import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import { Box, Button, Container, Paper, Typography } from "@mui/material";
 import { Link, useSearchParams } from "react-router-dom";
 
-import ResetPasswordForm from "../components/ResetPasswordForm";
+import ResetPasswordForm from "../components/auth/ResetPasswordForm";
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();

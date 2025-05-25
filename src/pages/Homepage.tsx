@@ -4,9 +4,11 @@ import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import HomepageLogo from "../components/HomepageLogo";
-import LogoLoader from "../components/Loaders/LogoLoader";
+import { useElectricTheme } from "../theme/useElectricTheme";
 
 const Homepage = () => {
+  const { textStyles, background, grey } = useElectricTheme();
+
   return (
     <>
       <Box
@@ -21,7 +23,7 @@ const Homepage = () => {
           width: "100vw",
           height: "100vh",
           overflow: "hidden",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: background.paper,
           // border: "2px solid green",
         }}
       >
@@ -72,33 +74,10 @@ const Homepage = () => {
               // border: "2px solid orange",
             }}
           >
-            <Typography
-              variant="h1"
-              sx={{
-                fontSize: { xs: "3.75rem", md: "4.5rem" },
-                fontWeight: "bold",
-                background:
-                  "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundSize: "200% 200%",
-                animation: "gradientAnimation 3s ease infinite",
-                letterSpacing: "-0.015em",
-                display: "inline-block",
-              }}
-            >
+            <Typography sx={textStyles.gradientPrimary}>
               Welcome to Feedflo
-            </Typography>{" "}
-            <Typography
-              sx={{
-                fontSize: { xs: "1.20rem", md: "1.5rem" },
-                color: "#404968",
-                maxWidth: "42rem",
-                marginX: "auto",
-                lineHeight: "1.625",
-                textAlign: "center",
-              }}
-            >
+            </Typography>
+            <Typography sx={textStyles.subtitleText}>
               Your gateway to valuable insights
             </Typography>
           </Box>
@@ -121,34 +100,7 @@ const Homepage = () => {
                 color: "white",
               }}
             >
-              <Button
-                variant="contained"
-                sx={{
-                  px: 4,
-                  py: 2,
-                  background:
-                    "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
-                  color: "white",
-                  borderRadius: "24px",
-                  fontWeight: "600",
-                  transition: "all 0.3s ease-in-out",
-                  boxShadow:
-                    "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
-                  width: "260px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 2,
-                  backgroundSize: "200% 200%",
-                  textTransform: "unset",
-                  animation: "gradientAnimation 3s ease infinite",
-                  "&:hover": {
-                    boxShadow:
-                      "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1)",
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
+              <Button variant="getStarted">
                 Get started <ArrowForwardIcon />
               </Button>
             </Link>{" "}
@@ -156,36 +108,10 @@ const Homepage = () => {
               to="/login"
               style={{
                 textDecoration: "none",
-                color: "white",
+                color: background.paper,
               }}
             >
-              <Button
-                variant="contained"
-                sx={{
-                  px: 4,
-                  py: 2,
-                  backgroundColor: "white",
-                  color: "#182331",
-                  borderRadius: "24px",
-                  fontWeight: "600",
-                  transition: "all 0.3s ease-in-out",
-                  gap: 2,
-                  boxShadow:
-                    "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)",
-                  border: "1px solid #e5e7eb",
-                  width: "260px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textTransform: "unset",
-                  "&:hover": {
-                    backgroundColor: "#f9fafb",
-                    boxShadow:
-                      "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
+              <Button variant="landingSignIn">
                 Sign in <LoginIcon />
               </Button>
             </Link>
@@ -201,7 +127,7 @@ const Homepage = () => {
             // border: "4px solid black",
           }}
         >
-          <Typography sx={{ color: "#969EAE" }}>
+          <Typography sx={{ color: grey[500] }}>
             &copy; 2025 Feedflo. All rights reserved.
           </Typography>
         </Box>

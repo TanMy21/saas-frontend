@@ -32,11 +32,11 @@ const shadows: [
   "0 4px 6px rgba(0, 0, 0, 0.1)",
   "0 10px 15px rgba(0, 0, 0, 0.15)",
   "0 1px 3px rgba(0, 0, 0, 0.08)",
-  "0 2px 4px rgba(0, 0, 0, 0.06)",
-  "0 5px 10px rgba(0, 0, 0, 0.08)",
-  "0 8px 16px rgba(0, 0, 0, 0.1)",
-  "0 12px 24px rgba(0, 0, 0, 0.12)",
-  "0 16px 32px rgba(0, 0, 0, 0.14)",
+  "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
+  "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1)",
+  "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)",
+  "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
+  "0px 4px 20px rgba(0,0,0,0.05)",
   "0 20px 40px rgba(0, 0, 0, 0.16)",
   "0 24px 48px rgba(0, 0, 0, 0.18)",
   "0 28px 56px rgba(0, 0, 0, 0.2)",
@@ -54,7 +54,7 @@ const shadows: [
   "0 76px 152px rgba(0, 0, 0, 0.44)",
 ];
 
-const muiSaaSTheme = createTheme({
+const electricBlueLightTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
@@ -65,14 +65,18 @@ const muiSaaSTheme = createTheme({
     secondary: {
       main: "#FF4757",
       contrastText: "#FFFFFF",
+      dark: "#202635",
     },
     background: {
       default: "#F8FBFF",
       paper: "#FFFFFF",
+      soft1: "#F8F9FF",
+      softRed: "#FEF2F2",
     },
     text: {
       primary: "#1A202C",
       secondary: "#718096",
+      danger: "#B91A1A",
     },
     success: {
       main: "#22C55E",
@@ -89,8 +93,25 @@ const muiSaaSTheme = createTheme({
       200: "#E2E8F0",
       300: "#CBD5E0",
       400: "#A0AEC0",
-      500: "#718096",
+      500: "#969EAE",
+      600: "#4B5563",
+      700: "#374151",
+      800: "#1F2937",
+      900: "#4B5563",
+      910: "#4E5866",
+      920: "#59626F",
+      950: "#666F7C",
+      955: "#69707F",
+      960: "#7F8692",
     },
+  },
+  brand: {
+    base: "#182331",
+    bgColor1: "#f9fafb",
+    bgColor2: "#E9EDF6",
+    bgColor3: "#F8F9FF",
+    divider1: "#747B88",
+    btnTxt1: "#6760EA",
   },
   typography: {
     fontFamily: "'Inter', sans-serif",
@@ -105,26 +126,129 @@ const muiSaaSTheme = createTheme({
   shape: {
     borderRadius: 8,
   },
+  borders: {
+    default: "1px solid #e5e7eb",
+    subtle: "1px solid #F1F3F5",
+    strong: "2px solid #A0AEC0",
+    light: "1px solid #F1F5F9",
+    top: "1px solid #e5e7eb",
+    bottom: "1px solid #e5e7eb",
+    left: "1px solid #e5e7eb",
+    right: "1px solid #e5e7eb",
+  },
+  gradient: {
+    from: "#0074EB",
+    to: "#005BC4",
+    angle: "171deg",
+    background: "linear-gradient(171deg, #0074EB 53%, #005BC4 93%)",
+  },
   components: {
     MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: "8px",
-          fontWeight: 500,
-        },
-        containedPrimary: {
-          background: "linear-gradient(120deg, #0074EB, #005BC4)",
-          "&:hover": {
-            backgroundColor: "#005BC4",
+      variants: [
+        {
+          props: { variant: "gradientPrimary" },
+          style: {
+            py: 1.5,
+            background: "linear-gradient(171deg, #0074EB 53%, #005BC4 93%)",
+            color: "white",
+            borderRadius: 4,
+            fontWeight: "bold",
+            transition: "opacity 0.2s",
+            textTransform: "none",
+            "&:hover": { opacity: 0.9 },
           },
         },
-        containedSecondary: {
-          backgroundColor: "#FF4757",
-          "&:hover": {
-            backgroundColor: "#E03A48",
+        {
+          props: { variant: "getStarted" },
+          style: {
+            px: 4,
+            py: 2,
+            background: "linear-gradient(171deg, #0074EB 53%, #005BC4 93%)",
+            color: "#FFFFFF",
+            borderRadius: 6,
+            fontWeight: "600",
+            transition: "all 0.3s ease-in-out",
+            boxShadow: shadows[5],
+            width: "260px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 2,
+            backgroundSize: "200% 200%",
+            textTransform: "unset",
+            animation: "gradientAnimation 3s ease infinite",
+            "&:hover": {
+              boxShadow: shadows[6],
+              transform: "scale(1.05)",
+            },
           },
         },
-      },
+        {
+          props: { variant: "landingSignIn" },
+          style: {
+            px: 4,
+            py: 2,
+            background: "#FFFFFF",
+            color: "#182331",
+            borderRadius: "24px",
+            fontWeight: "600",
+            transition: "all 0.3s ease-in-out",
+            gap: 2,
+            boxShadow: shadows[7],
+            border: "1px solid #e5e7eb",
+            width: "260px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textTransform: "unset",
+            "&:hover": {
+              backgroundColor: "#f9fafb",
+              boxShadow: shadows[8],
+              transform: "scale(1.05)",
+            },
+          },
+        },
+        {
+          props: { variant: "backLink1" },
+          style: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 1,
+            color: "#7C3AED",
+            fontWeight: "medium",
+            textTransform: "none",
+            background: "none",
+            textDecoration: "none",
+            "&:hover": { textDecoration: "none", background: "none" },
+          },
+        },
+        {
+          props: { variant: "backLink2" },
+          style: {
+            color: "#7C3BED",
+            fontWeight: "bold",
+            fontSize: "1rem",
+            textTransform: "unset",
+            "&:hover": { textDecoration: "none", background: "none" },
+          },
+        },
+        {
+          props: { variant: "textLink1" },
+          style: {
+            textTransform: "unset",
+            color: "#7E3DED",
+            fontWeight: "bold",
+            fontSize: "16px",
+            textDecoration: "none",
+            background: "none",
+            "&:hover": {
+              textDecoration: "none",
+              background: "none",
+            },
+          },
+        },
+      ],
     },
     MuiCssBaseline: {
       styleOverrides: {
@@ -148,6 +272,40 @@ const muiSaaSTheme = createTheme({
       },
     },
   },
+  textStyles: {
+    gradientPrimary: {
+      fontSize: "1.2rem",
+      fontWeight: "bold",
+      background: "linear-gradient(171deg, #0074EB 53%, #005BC4 93%)",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+      backgroundSize: "200% 200%",
+      animation: "gradientAnimation 3s ease infinite",
+      letterSpacing: "-0.015em",
+      display: "inline-block",
+    },
+    gradientSecondary: {
+      backgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+      backgroundImage: "linear-gradient(171deg, #0074EB 53%, #005BC4 93%)",
+      fontWeight: "bold",
+      fontSize: "2rem",
+    },
+    strongH6: {
+      fontSize: "1.25rem",
+      lineHeight: 1.6,
+      fontWeight: "bold",
+      color: "#080F1F",
+    },
+    subtitleText: {
+      fontSize: "1.2rem",
+      color: "#718096",
+      maxWidth: "42rem",
+      margin: "auto 0",
+      lineHeight: "1.625",
+      textAlign: "center",
+    },
+  },
   shadows,
   zIndex: {
     appBar: 1100,
@@ -158,4 +316,4 @@ const muiSaaSTheme = createTheme({
   },
 });
 
-export default muiSaaSTheme;
+export default electricBlueLightTheme;

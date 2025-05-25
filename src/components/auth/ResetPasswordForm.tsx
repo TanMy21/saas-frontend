@@ -19,15 +19,16 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { useResetPasswordMutation } from "../app/slices/authApiSlice";
-import { resetPasswordSchema } from "../utils/schema";
+import { useResetPasswordMutation } from "../../app/slices/authApiSlice";
+import { resetPasswordSchema } from "../../utils/schema";
 import {
   ErrorData,
   ResetPassword,
   ResetPasswordFormData,
-} from "../utils/types";
+} from "../../utils/types";
+import FormErrors from "../FormErrors";
 
-import FormErrors from "./FormErrors";
+ 
 
 const ResetPasswordForm = ({ code }: ResetPassword) => {
   const [resetPassword, { isSuccess, isError, error }] =

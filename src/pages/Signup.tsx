@@ -24,10 +24,13 @@ import { toast } from "react-toastify";
 
 import { useAddNewUserMutation } from "../app/slices/userApiSlice";
 import FormErrors from "../components/FormErrors";
+import { useElectricTheme } from "../theme/useElectricTheme";
 import { registerSchema } from "../utils/signupSchema";
 import { ErrorData, RegisterFormData } from "../utils/types";
 
 const Signup = () => {
+  const { primary, background, grey, shadows, gradient, borders, brand } =
+    useElectricTheme();
   const [addNewUser, { isLoading, isSuccess, isError, error }] =
     useAddNewUserMutation();
   const [showPassword, setShowPassword] = useState(false);
@@ -122,7 +125,7 @@ const Signup = () => {
               </Link>
               <Typography
                 variant="body1"
-                sx={{ fontSize: "20px", color: "gray" }}
+                sx={{ fontSize: "20px", color: grey[500] }}
               >
                 Create your account
               </Typography>
@@ -130,8 +133,8 @@ const Signup = () => {
             <Paper
               sx={{
                 p: 4,
-                borderRadius: "20px",
-                boxShadow: "0px 4px 20px rgba(0,0,0,0.05)",
+                borderRadius: 3,
+                boxShadow: shadows[9],
               }}
             >
               <form onSubmit={handleSubmit(submitRegisterData)}>
@@ -145,19 +148,19 @@ const Signup = () => {
                       id="firstName"
                       label="First name"
                       variant="filled"
-                      InputLabelProps={{ style: { color: "gray" } }}
+                      InputLabelProps={{ style: { color: grey[500] } }}
                       autoFocus
                       {...register("firstname")}
                       sx={{
-                        borderRadius: "12px",
-                        backgroundColor: "#E9EDF6",
+                        borderRadius: 3,
+                        backgroundColor: brand.bgColor2,
                         "& .MuiFilledInput-root": {
-                          borderRadius: "12px",
-                          backgroundColor: "#E9EDF6",
+                          borderRadius: 3,
+                          backgroundColor: brand.bgColor2,
                           borderBottom: "none !important",
                           "&:before, &:after": {
                             display: "none",
-                            backgroundColor: "#E9EDF6",
+                            backgroundColor: brand.bgColor2,
                           },
                         },
                       }}
@@ -174,19 +177,19 @@ const Signup = () => {
                       fullWidth
                       id="lastName"
                       label="Last name"
-                      InputLabelProps={{ style: { color: "gray" } }}
+                      InputLabelProps={{ style: { color: grey[500] } }}
                       variant="filled"
                       {...register("lastname")}
                       sx={{
-                        borderRadius: "12px",
-                        backgroundColor: "#E9EDF6",
+                        borderRadius: 3,
+                        backgroundColor: brand.bgColor2,
                         "& .MuiFilledInput-root": {
-                          borderRadius: "12px",
-                          backgroundColor: "#E9EDF6",
+                          borderRadius: 3,
+                          backgroundColor: brand.bgColor2,
                           borderBottom: "none !important",
                           "&:before, &:after": {
                             display: "none",
-                            backgroundColor: "#E9EDF6",
+                            backgroundColor: brand.bgColor2,
                           },
                         },
                       }}
@@ -201,20 +204,20 @@ const Signup = () => {
                   fullWidth
                   id="email"
                   label="Email address"
-                  InputLabelProps={{ style: { color: "gray" } }}
+                  InputLabelProps={{ style: { color: grey[500] } }}
                   variant="filled"
                   {...register("email")}
                   sx={{
                     mb: 2,
-                    borderRadius: "12px",
-                    backgroundColor: "#E9EDF6",
+                    borderRadius: 3,
+                    backgroundColor: brand.bgColor2,
                     "& .MuiFilledInput-root": {
-                      borderRadius: "12px",
-                      backgroundColor: "#E9EDF6",
+                      borderRadius: 3,
+                      backgroundColor: brand.bgColor2,
                       borderBottom: "none !important",
                       "&:before, &:after": {
                         display: "none",
-                        backgroundColor: "#E9EDF6",
+                        backgroundColor: brand.bgColor2,
                       },
                     },
                   }}
@@ -234,20 +237,20 @@ const Signup = () => {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   variant="filled"
-                  InputLabelProps={{ style: { color: "gray" } }}
+                  InputLabelProps={{ style: { color: grey[500] } }}
                   autoComplete="new-password"
                   {...register("password")}
                   sx={{
                     mb: 2,
-                    borderRadius: "12px",
-                    backgroundColor: "#E9EDF6",
+                    borderRadius: 3,
+                    backgroundColor: brand.bgColor2,
                     "& .MuiFilledInput-root": {
-                      borderRadius: "12px",
-                      backgroundColor: "#E9EDF6",
+                      borderRadius: 3,
+                      backgroundColor: brand.bgColor2,
                       borderBottom: "none !important",
                       "&:before, &:after": {
                         display: "none",
-                        backgroundColor: "#E9EDF6",
+                        backgroundColor: brand.bgColor2,
                       },
                     },
                   }}
@@ -279,7 +282,7 @@ const Signup = () => {
                   required
                   fullWidth
                   label="Confirm password"
-                  InputLabelProps={{ style: { color: "gray" } }}
+                  InputLabelProps={{ style: { color: grey[500] } }}
                   type={showConfirmPassword ? "text" : "password"}
                   id="confirmPassword"
                   variant="filled"
@@ -287,15 +290,15 @@ const Signup = () => {
                   {...register("confirmPassword")}
                   sx={{
                     mb: 2,
-                    borderRadius: "12px",
-                    backgroundColor: "#E9EDF6",
+                    borderRadius: 3,
+                    backgroundColor: brand.bgColor2,
                     "& .MuiFilledInput-root": {
-                      borderRadius: "12px",
-                      backgroundColor: "#E9EDF6",
+                      borderRadius: 3,
+                      backgroundColor: brand.bgColor2,
                       borderBottom: "none !important",
                       "&:before, &:after": {
                         display: "none",
-                        backgroundColor: "#E9EDF6",
+                        backgroundColor: brand.bgColor2,
                       },
                     },
                   }}
@@ -332,20 +335,20 @@ const Signup = () => {
                   type="organization"
                   id="organization"
                   variant="filled"
-                  InputLabelProps={{ style: { color: "gray" } }}
+                  InputLabelProps={{ style: { color: grey[500] } }}
                   autoComplete="organization"
                   {...register("organization")}
                   sx={{
                     mb: 2,
-                    borderRadius: "12px",
-                    backgroundColor: "#E9EDF6",
+                    borderRadius: 3,
+                    backgroundColor: brand.bgColor2,
                     "& .MuiFilledInput-root": {
-                      borderRadius: "12px",
-                      backgroundColor: "#E9EDF6",
+                      borderRadius: 3,
+                      backgroundColor: brand.bgColor2,
                       borderBottom: "none !important",
                       "&:before, &:after": {
                         display: "none",
-                        backgroundColor: "#E9EDF6",
+                        backgroundColor: brand.bgColor2,
                       },
                     },
                   }}
@@ -367,18 +370,17 @@ const Signup = () => {
                   disabled={isLoading}
                   sx={{
                     py: 1.5,
-                    borderRadius: "16px",
+                    borderRadius: 4,
                     fontWeight: "medium",
-                    background:
-                      "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
-                    color: "white",
+                    background: gradient.background,
+                    color: background.paper,
                     textTransform: "unset",
                     "&:hover": { opacity: 0.9 },
                   }}
                 >
                   {isLoading ? "Creating account..." : "Create account →"}
                 </Button>
-                <Divider sx={{ my: 3, color: "#747B88" }}>
+                <Divider sx={{ my: 3, color: brand.divider1 }}>
                   or continue with
                 </Divider>
                 <Button
@@ -391,12 +393,12 @@ const Signup = () => {
                     alignItems: "center",
                     gap: 1,
                     py: 1.5,
-                    borderRadius: "12px",
-                    color: "#6760EA",
-                    borderColor: "#F1F3F5",
+                    borderRadius: 3,
+                    color: brand.btnTxt1,
+                    border: borders.subtle,
                     textTransform: "unset",
                     "&:hover": {
-                      borderColor: "#F1F3F5",
+                      border: borders.subtle,
                     },
                   }}
                 >
@@ -405,14 +407,14 @@ const Signup = () => {
                 </Button>
                 <Typography
                   variant="body2"
-                  sx={{ textAlign: "center", mt: 2, color: "gray" }}
+                  sx={{ textAlign: "center", mt: 2, color: grey[600] }}
                 >
                   Already have an account? &nbsp;
                   <Link
                     to="/login"
                     style={{
                       textDecoration: "none",
-                      color: "#5047E5",
+                      color: primary.main,
                       fontWeight: "bold",
                     }}
                   >

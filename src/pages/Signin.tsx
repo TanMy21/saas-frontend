@@ -31,10 +31,13 @@ import { setCredentials } from "../app/slices/authSlice";
 import FormErrors from "../components/FormErrors";
 import LogoLoader from "../components/Loaders/LogoLoader";
 import usePersist from "../hooks/persist";
+import { useElectricTheme } from "../theme/useElectricTheme";
 import { loginSchema } from "../utils/schema";
 import { ErrorData, FetchBaseQueryError, LoginFormData } from "../utils/types";
 
 const Signin = () => {
+  const { primary, background, grey, shadows, gradient, borders, brand } =
+    useElectricTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -181,7 +184,11 @@ const Signin = () => {
   document.body.style.overflowY = "hidden";
 
   return (
-    <Container component="main" maxWidth="xl" sx={{ overflowY: "hidden" }}>
+    <Container
+      component="main"
+      maxWidth="xl"
+      sx={{ overflowY: "hidden", overflowX: "hidden" }}
+    >
       <Box
         sx={{
           minHeight: "100vh",
@@ -189,7 +196,6 @@ const Signin = () => {
           alignItems: "center",
           justifyContent: "center",
           p: 3,
-          backgroundColor: "#F8F9FF",
         }}
       >
         <Box
@@ -224,8 +230,7 @@ const Signin = () => {
               variant="h4"
               sx={{
                 fontWeight: "bold",
-                background:
-                  "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
+                background: gradient.background,
                 WebkitBackgroundClip: "text",
                 color: "transparent",
                 display: "inline-block",
@@ -233,7 +238,7 @@ const Signin = () => {
             >
               Welcome back
             </Typography>
-            <Typography variant="body1" sx={{ color: "gray" }}>
+            <Typography variant="body1" sx={{ color: grey[600] }}>
               Sign in to your account
             </Typography>
           </Box>
@@ -241,8 +246,8 @@ const Signin = () => {
           <Paper
             sx={{
               p: 4,
-              borderRadius: "20px",
-              boxShadow: "0px 4px 20px rgba(0,0,0,0.05)",
+              borderRadius: 5,
+              boxShadow: shadows[9],
             }}
           >
             <form onSubmit={handleSubmit(submitLoginData)}>
@@ -252,18 +257,18 @@ const Signin = () => {
                 fullWidth
                 id="email"
                 label="Email address"
-                InputLabelProps={{ style: { color: "gray" } }}
+                InputLabelProps={{ style: { color: grey[500] } }}
                 autoComplete="email"
                 autoFocus
                 {...register("email")}
                 variant="filled"
                 sx={{
                   mb: 2,
-                  borderRadius: "12px",
-                  backgroundColor: "#F8F9FF",
+                  borderRadius: 3,
+                  backgroundColor: brand.bgColor3,
                   "& .MuiFilledInput-root": {
-                    borderRadius: "12px",
-                    backgroundColor: "#F8F9FF",
+                    borderRadius: 3,
+                    backgroundColor: brand.bgColor3,
                     borderBottom: "none !important",
                     "&:before, &:after": {
                       display: "none",
@@ -285,18 +290,18 @@ const Signin = () => {
                 fullWidth
                 label="Password"
                 type={showPassword ? "text" : "password"}
-                InputLabelProps={{ style: { color: "gray" } }}
+                InputLabelProps={{ style: { color: grey[600] } }}
                 id="password"
                 autoComplete="password"
                 variant="filled"
                 {...register("password")}
                 sx={{
                   mb: 2,
-                  borderRadius: "12px",
-                  backgroundColor: "#F8F9FF",
+                  borderRadius: 3,
+                  backgroundColor: brand.bgColor3,
                   "& .MuiFilledInput-root": {
-                    borderRadius: "12px",
-                    backgroundColor: "#F8F9FF",
+                    borderRadius: 3,
+                    backgroundColor: brand.bgColor3,
                     borderBottom: "none !important",
                     "&:before, &:after": {
                       display: "none",
@@ -329,7 +334,7 @@ const Signin = () => {
                 <Link
                   to="/forgot"
                   style={{
-                    color: "#6760E9",
+                    color: primary.main,
                     fontSize: "14px",
                     textDecoration: "none",
                   }}
@@ -337,7 +342,6 @@ const Signin = () => {
                   Forgot password?
                 </Link>
               </Box>
-
               <Button
                 type="submit"
                 fullWidth
@@ -348,22 +352,19 @@ const Signin = () => {
                   alignItems: "center",
                   gap: 1,
                   py: 1.5,
-                  borderRadius: "16px",
+                  borderRadius: 4,
                   fontWeight: "medium",
-                  background:
-                    "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
-                  color: "white",
+                  background: gradient.background,
+                  color: background.paper,
                   textTransform: "unset",
                   "&:hover": { opacity: 0.9 },
                 }}
               >
                 Sign in <LoginIcon />
               </Button>
-
-              <Divider sx={{ color: "#6B7280", my: 3 }}>
+              <Divider sx={{ color: brand.divider1, my: 3 }}>
                 or continue with
               </Divider>
-
               <Button
                 onClick={handleGoogleAuth}
                 fullWidth
@@ -374,28 +375,27 @@ const Signin = () => {
                   alignItems: "center",
                   gap: 1,
                   py: 1.5,
-                  borderRadius: "16px",
-                  color: "#6760EA",
-                  borderColor: "#F1F3F5",
+                  borderRadius: 4,
+                  color: brand.btnTxt1,
+                  borderColor: borders.subtle,
                   textTransform: "unset",
                   "&:hover": {
-                    borderColor: "#F1F3F5",
+                    borderColor: borders.subtle,
                   },
                 }}
               >
                 <FcGoogle size={24} />
                 Continue with Google
               </Button>
-
               <Typography
                 variant="body2"
-                sx={{ textAlign: "center", mt: 2, color: "gray" }}
+                sx={{ textAlign: "center", mt: 2, color: grey[600] }}
               >
                 Don't have an account?{" "}
                 <Link
                   to="/register"
                   style={{
-                    color: "#7C3AED",
+                    color: primary.main,
                     fontWeight: "medium",
                     textDecoration: "none",
                   }}
