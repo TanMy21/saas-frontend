@@ -2,15 +2,14 @@ import { useState } from "react";
 
 import { Box, Grid, Paper, Tab, Tabs } from "@mui/material";
 
-import {
-  DashBoardHeader,
-  SettingsPageHeader,
-} from "../components/DashBoardHeader";
+import { SettingsPageHeader } from "../components/DashBoardHeader";
 import ScrollbarStyle from "../components/ScrollbarStyle";
 import UpdateInfo from "../components/Settings/UpdateInfo";
 import UpdatePassword from "../components/Settings/UpdatePassword";
+import { useElectricTheme } from "../theme/useElectricTheme";
 
 const Settings = () => {
+  const { scrollStyles, borders, background, palette } = useElectricTheme();
   const [tabIndex, setTabIndex] = useState(0);
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -20,27 +19,7 @@ const Settings = () => {
   return (
     <>
       <ScrollbarStyle />
-      <Box
-        sx={{
-          overflowX: "hidden",
-          overflowY: "hidden",
-          width: "100%",
-          height: "100%",
-          "&::-webkit-scrollbar": {
-            width: "10px", // Scrollbar width
-          },
-          "&::-webkit-scrollbar-track": {
-            background: "#f1f1f1", // Scrollbar track color
-          },
-          "&::-webkit-scrollbar-thumb": {
-            background: "#61A5D2", // Scrollbar thumb color
-            borderRadius: "10px", // Rounded corners on the scrollbar thumb
-            "&:hover": {
-              background: "#555", // Scrollbar thumb hover color
-            },
-          },
-        }}
-      >
+      <Box sx={scrollStyles.custom1}>
         <Grid container>
           <Grid
             item
@@ -100,7 +79,7 @@ const Settings = () => {
                     width: "20%",
                     height: "96%",
                     p: 1,
-                    backgroundColor: "#FFFFFF",
+                    backgroundColor: background.paper,
                     // border: "2px solid red",
                   }}
                 >
@@ -114,19 +93,19 @@ const Settings = () => {
                         height: "24px",
                         textTransform: "capitalize",
                         borderRight: "none",
-                        color:"#34375D",
+                        color: palette.text.tabRoot,
                       },
                       ".Mui-selected": {
-                        backgroundColor: "#FBF3FA",
+                        backgroundColor: background.soft2,
                         fontWeight: "bold",
-                        color: "#8A36D2",
+                        color: palette.text.tabSelected,
                         borderRadius: "0 16px 16px 0",
                       },
                       ".MuiTabs-indicator": {
-                        left: 0, // Move indicator to the left side
-                        right: "auto", // Remove indicator from the right
-                        width: "4px", // Width of the indicator
-                        backgroundColor: "#8020CE", // Blue color for the indicator
+                        left: 0,
+                        right: "auto",
+                        width: "4px",
+                        backgroundColor: background.soft3,
                         borderRadius: "0 16px 16px 0",
                       },
                     }}
@@ -142,8 +121,8 @@ const Settings = () => {
                     flexDirection: "column",
                     width: "80%",
                     height: "100%",
-                    borderLeft: "2px solid #E5E7EB",
-                    backgroundColor: "#FFFFFF",
+                    borderLeft: borders.strong,
+                    backgroundColor: background.paper,
                   }}
                 >
                   {tabIndex === 0 && <UpdateInfo />}

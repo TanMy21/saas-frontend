@@ -13,7 +13,8 @@ export const useElectricTheme = () => {
 
   return {
     palette: theme.palette,
-    brand:theme.brand,
+    brand: theme.brand,
+    iconStyle: theme.iconStyles,
     typography: theme.typography,
     shadows: theme.shadows,
     shape: theme.shape,
@@ -26,7 +27,8 @@ export const useElectricTheme = () => {
     text: theme.palette.text,
     background: theme.palette.background,
     grey: theme.palette.grey,
-    textStyles:theme.textStyles,
+    textStyles: theme.textStyles,
+    scrollStyles: theme.scrollStyles,
     spacing: theme.spacing,
   };
 };

@@ -15,9 +15,13 @@ import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useVerifyEmailQuery } from "../app/slices/authApiSlice";
+import { useElectricTheme } from "../theme/useElectricTheme";
 import { ErrorData } from "../utils/types";
 
 const VerifyUser = () => {
+  const { textStyles, background, grey, shadows, iconStyle } =
+    useElectricTheme();
+
   const { verificationCode } = useParams();
 
   const { isLoading, isSuccess, isError, error } =
@@ -81,20 +85,11 @@ const VerifyUser = () => {
                       mb: 1,
                     }}
                   >
-                    <Typography
-                      variant="h4"
-                      fontWeight="bold"
-                      sx={{
-                        backgroundClip: "text",
-                        textFillColor: "transparent",
-                        backgroundImage:
-                          "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
-                      }}
-                    >
+                    <Typography sx={textStyles.strongH4}>
                       {isSuccess ? "Welcome Aboard!" : "Invalid Link"}
                     </Typography>
                   </Box>
-                  <Typography color="#4B5563">
+                  <Typography sx={{ color: grey[900] }}>
                     {isSuccess
                       ? "Your gateway to valuable insights starts here"
                       : "This verification link is no longer valid"}
@@ -106,7 +101,7 @@ const VerifyUser = () => {
                   sx={{
                     p: 4,
                     borderRadius: 3,
-                    boxShadow: "0px 4px 20px rgba(0,0,0,0.05)",
+                    boxShadow: shadows[9],
                   }}
                 >
                   <Box
@@ -118,7 +113,9 @@ const VerifyUser = () => {
                         width: isSuccess ? 48 : "80%",
                         height: isSuccess ? 48 : "auto",
                         margin: "0 auto",
-                        bgcolor: isSuccess ? "#EDF7ED" : "#FEF2F2",
+                        bgcolor: isSuccess
+                          ? background.successSoft
+                          : background.softRed,
                         borderRadius: isSuccess ? "50%" : 2,
                         p: 2,
                         display: "flex",
@@ -129,23 +126,19 @@ const VerifyUser = () => {
                     >
                       {isSuccess ? (
                         <>
-                          <TaskAltIcon
-                            sx={{ color: "green", fontSize: "32px" }}
-                          />
+                          <TaskAltIcon sx={iconStyle.success} />
                         </>
                       ) : (
                         <>
                           {" "}
                           <ErrorOutlineIcon
                             sx={{
-                              color: isSuccess ? "green" : "#DC2626",
+                              color: isSuccess
+                                ? background.success
+                                : background.softRed,
                             }}
                           />
-                          <Typography
-                            variant="body2"
-                            fontWeight="bold"
-                            color="#991B1B"
-                          >
+                          <Typography sx={textStyles.bodyDanger}>
                             Link expired or invalid
                           </Typography>
                         </>
@@ -157,17 +150,7 @@ const VerifyUser = () => {
                       component={Link}
                       to={isSuccess ? "/login" : "/forgot"}
                       fullWidth
-                      sx={{
-                        py: 1.5,
-                        background:
-                          "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
-                        color: "white",
-                        borderRadius: 4,
-                        fontWeight: "bold",
-                        transition: "opacity 0.2s",
-                        textTransform: "unset",
-                        "&:hover": { opacity: 0.9 },
-                      }}
+                      variant="textLink2"
                     >
                       {isSuccess
                         ? "Continue to Login"
@@ -175,23 +158,15 @@ const VerifyUser = () => {
                     </Button>
 
                     {/* Back Link */}
-                    <Link
-                      to={"/"}
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textDecoration: "none",
-                        marginTop: "4%",
-                        gap: 4,
-                        color: "#7A37ED",
-                        fontWeight: "bold",
-                        fontSize: "16px",
-                      }}
+                    <Button
+                      component={Link}
+                      to={isSuccess ? "/login" : "/forgot"}
+                      fullWidth
+                      variant="textLink1"
                     >
                       <ArrowBackIcon />
                       Back to home
-                    </Link>
+                    </Button>
                   </Box>
                 </Paper>
               </Box>

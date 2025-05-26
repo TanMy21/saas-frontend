@@ -4,6 +4,7 @@ import { Box, Divider, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 
 import { useGetMeQuery } from "../app/slices/userApiSlice";
+import { useElectricTheme } from "../theme/useElectricTheme";
 import { getGreeting } from "../utils/formatDate";
 import { DashBoardHeaderProps } from "../utils/types";
 
@@ -114,6 +115,7 @@ export const DashBoardHeader = ({
 };
 
 export const SettingsPageHeader = () => {
+  const { textStyles, brand, background } = useElectricTheme();
   const [greeting, setGreeting] = useState(getGreeting());
 
   const { data: user } = useGetMeQuery("User");
@@ -133,9 +135,9 @@ export const SettingsPageHeader = () => {
       elevation={0}
       sx={{
         m: "0px",
-        bgcolor: "white",
+        bgcolor: background.paper,
         borderBottom: 1,
-        borderColor: "#EDEDED",
+        borderColor: brand.borderColor1,
         width: "100%",
         height: "48px",
       }}
@@ -160,15 +162,7 @@ export const SettingsPageHeader = () => {
             // border: "2px solid blue",
           }}
         >
-          <Typography
-            variant="subtitle1"
-            sx={{
-              fontWeight: "bold",
-              color: "#332C49",
-              padding: "8px",
-            }}
-            ml={2}
-          >
+          <Typography sx={textStyles.greetingsText} ml={2}>
             {`${greeting}, ${firstname}`}
           </Typography>
         </Box>

@@ -17,8 +17,10 @@ import { useNavigate } from "react-router-dom";
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
 import { useGetMeQuery } from "../app/slices/userApiSlice";
 import usePersist from "../hooks/persist";
+import { useElectricTheme } from "../theme/useElectricTheme";
 
 const HeaderIconMenu = () => {
+  const { brand, borders } = useElectricTheme();
   const navigate = useNavigate();
   const [persist, setPersist] = usePersist();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -70,9 +72,9 @@ const HeaderIconMenu = () => {
           width: 40,
           height: 40,
           borderRadius: "50%",
-          border: "6px solid rgba(232, 231, 231, 0.5)",
+          border: borders.avatarIcon,
           "&:hover": {
-            border: "6px solid rgba(232, 231, 231, 1)",
+            border: borders.avatarIconHovered,
           },
         }}
         aria-controls={open ? "account-menu" : undefined}
@@ -83,8 +85,8 @@ const HeaderIconMenu = () => {
           sx={{
             width: 32,
             height: 32,
-            backgroundColor: "#ADEBE4",
-            color: "#13137F",
+            backgroundColor: brand.avatarBg1,
+            color: brand.avatarTxt1,
           }}
         >
           {email?.charAt(0).toUpperCase()}
@@ -132,8 +134,8 @@ const HeaderIconMenu = () => {
                 sx={{
                   width: 32,
                   height: 32,
-                  backgroundColor: "#ADEBE4",
-                  color: "#13137F",
+                  backgroundColor: brand.avatarBg1,
+                  color: brand.avatarTxt1,
                 }}
               >
                 {email?.charAt(0).toUpperCase()}

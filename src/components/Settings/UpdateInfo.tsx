@@ -16,12 +16,14 @@ import {
   useGetMeQuery,
   useUpdateUserInfoMutation,
 } from "../../app/slices/userApiSlice";
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { updateUserInfoSchema } from "../../utils/schema";
 import { ErrorData, UpdateUserInfoFormData } from "../../utils/types";
 import FormErrors from "../FormErrors";
 
 const UpdateInfo = () => {
-  const { data: user, isLoading: isLoadingUser } = useGetMeQuery("User", {
+  const { grey, brand } = useElectricTheme();
+  const { data: user } = useGetMeQuery("User", {
     refetchOnMountOrArgChange: true,
   });
   const [updateUserInfo, { isSuccess, isError, error }] =
@@ -95,7 +97,7 @@ const UpdateInfo = () => {
         <Typography variant="h4" gutterBottom>
           General Info
         </Typography>
-        <Typography variant="body1" gutterBottom sx={{ color: "#808792" }}>
+        <Typography variant="body1" gutterBottom sx={{ color: grey[935] }}>
           Use the form below to update your profile
         </Typography>
         <Box
@@ -132,18 +134,18 @@ const UpdateInfo = () => {
                 fullWidth
                 autoFocus
                 error={!!errors.firstname}
-                InputLabelProps={{ style: { color: "gray" } }}
+                InputLabelProps={{ style: { color: grey[900] } }}
                 {...register("firstname")}
                 sx={{
-                  borderRadius: "12px",
-                  backgroundColor: "#E9EDF6",
+                  borderRadius: 3,
+                  backgroundColor: brand.bgColor2,
                   "& .MuiFilledInput-root": {
-                    borderRadius: "12px",
-                    backgroundColor: "#E9EDF6",
+                    borderRadius: 3,
+                    backgroundColor: brand.bgColor2,
                     borderBottom: "none !important",
                     "&:before, &:after": {
                       display: "none",
-                      backgroundColor: "#E9EDF6",
+                      backgroundColor: brand.bgColor2,
                     },
                   },
                 }}
@@ -162,21 +164,21 @@ const UpdateInfo = () => {
             >
               <TextField
                 label="Last name"
-                InputLabelProps={{ style: { color: "gray" } }}
+                InputLabelProps={{ style: { color: grey[900] } }}
                 variant="filled"
                 fullWidth
                 error={!!errors.lastname}
                 {...register("lastname")}
                 sx={{
-                  borderRadius: "12px",
-                  backgroundColor: "#E9EDF6",
+                  borderRadius: 3,
+                  backgroundColor: brand.bgColor2,
                   "& .MuiFilledInput-root": {
-                    borderRadius: "12px",
-                    backgroundColor: "#E9EDF6",
+                    borderRadius: 3,
+                    backgroundColor: brand.bgColor2,
                     borderBottom: "none !important",
                     "&:before, &:after": {
                       display: "none",
-                      backgroundColor: "#E9EDF6",
+                      backgroundColor: brand.bgColor2,
                     },
                   },
                 }}
@@ -189,22 +191,22 @@ const UpdateInfo = () => {
           <Box sx={{ display: "flex", gap: 2, mb: 1 }}>
             <TextField
               label="Email"
-              InputLabelProps={{ style: { color: "gray" } }}
+              InputLabelProps={{ style: { color: grey[900] } }}
               variant="filled"
               disabled
               fullWidth
               {...register("email")}
               sx={{
                 mb: 2,
-                borderRadius: "12px",
-                backgroundColor: "#E9EDF6",
+                borderRadius: 3,
+                backgroundColor: brand.bgColor2,
                 "& .MuiFilledInput-root": {
-                  borderRadius: "12px",
-                  backgroundColor: "#E9EDF6",
+                  borderRadius: 3,
+                  backgroundColor: brand.bgColor2,
                   borderBottom: "none !important",
                   "&:before, &:after": {
                     display: "none",
-                    backgroundColor: "#E9EDF6",
+                    backgroundColor: brand.bgColor2,
                   },
                 },
               }}
@@ -226,21 +228,7 @@ const UpdateInfo = () => {
               alignItems: "center",
             }}
           >
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{
-                width: "16%",
-                mb: 2,
-                textTransform: "capitalize",
-                backgroundColor: "#8020CE",
-                fontWeight: 600,
-                borderRadius: 4,
-                "&:hover": {
-                  backgroundColor: "#8020CE",
-                },
-              }}
-            >
+            <Button type="submit" variant="submit1">
               Update
             </Button>
           </Box>

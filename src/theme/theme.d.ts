@@ -1,4 +1,5 @@
 import "@mui/material/styles";
+import { type CSSObject } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
   interface Theme {
@@ -8,6 +9,7 @@ declare module "@mui/material/styles" {
       angle: string;
       background: string;
     };
+
     borders: {
       default: string;
       subtle: string;
@@ -17,7 +19,10 @@ declare module "@mui/material/styles" {
       bottom: string;
       left: string;
       right: string;
+      avatarIcon: string;
+      avatarIconHovered: string;
     };
+
     brand: {
       base: string;
       bgColor1: string;
@@ -25,12 +30,30 @@ declare module "@mui/material/styles" {
       bgColor3: string;
       divider1: string;
       btnTxt1: string;
+      borderColor1?: string;
+      avatarBg1?: string;
+      avatarTxt1?: string;
     };
+
     textStyles: {
       gradientPrimary: React.CSSProperties;
       gradientSecondary?: React.CSSProperties;
+      strongH4?: React.CSSProperties;
       strongH6?: React.CSSProperties;
       subtitleText?: React.CSSProperties;
+      bodyDanger?: React.CSSProperties;
+      bodyGrey?: React.CSSProperties;
+      greetingsText?: React.CSSProperties;
+    };
+
+    iconStyles: {
+      errorLarge: React.CSSProperties;
+      alert: React.CSSProperties;
+      success: React.CSSProperties;
+    };
+
+    scrollStyles: {
+      custom1: CSSObject;
     };
   }
 
@@ -48,6 +71,8 @@ declare module "@mui/material/styles" {
       900?: string;
       910?: string;
       920?: string;
+      930?: string;
+      940?: string;
       950?: string;
       955?: string;
       960?: string;
@@ -56,13 +81,20 @@ declare module "@mui/material/styles" {
 
   interface TypeBackground {
     soft1?: string;
+    soft2?: string;
+    soft3?: string;
+    success?: string;
+    successSoft?: string;
     softRed?: string;
     section?: string;
     hero?: string;
+    neutral?: string;
   }
 
   interface TypeText {
     danger?: string;
+    tabRoot?: string;
+    tabSelected?: string;
   }
 
   interface ThemeOptions {
@@ -72,7 +104,11 @@ declare module "@mui/material/styles" {
       angle?: string;
       background?: string;
     };
+
     borders?: Partial<Theme["borders"]>;
+
+    iconStyles?: Partial<Theme["iconStyles"]>;
+
     brand?: {
       base?: string;
       bgColor1?: string;
@@ -80,8 +116,16 @@ declare module "@mui/material/styles" {
       bgColor3?: string;
       divider1?: string;
       btnTxt1?: string;
+      borderColor1?: string;
+      avatarBg1?: string;
+      avatarTxt1?: string;
     };
+
     textStyles?: Partial<Theme["textStyles"]>;
+
+    scrollStyles?: {
+      custom1?: CSSObject;
+    };
   }
 
   interface PaletteOptions {
@@ -98,6 +142,9 @@ declare module "@mui/material/Button" {
     backLink1: true;
     backLink2: true;
     textLink1: true;
+    textLink2: true;
+    submitDisabled1: true;
+    submit1: true;
   }
 }
 
@@ -105,6 +152,9 @@ declare module "@mui/material" {
   interface Color {
     910?: string;
     920?: string;
+    930?: string;
+    935?: string;
+    940?: string;
     950?: string;
     955?: string;
     960?: string;

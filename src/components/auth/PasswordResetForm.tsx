@@ -42,7 +42,7 @@ const PasswordResetForm = ({
     const { email } = data;
     setSubmittedEmail(email);
     try {
-      await forgotPassword({ email }).unwrap();
+      await forgotPassword(email).unwrap();
     } catch (error) {
       console.error(error);
     }
@@ -80,7 +80,7 @@ const PasswordResetForm = ({
               mb: 1,
             }}
           >
-            <Typography sx={textStyles.gradientPrimary}>
+            <Typography sx={textStyles.gradientSecondary}>
               Reset password
             </Typography>
           </Box>

@@ -16,14 +16,17 @@ import { toast } from "react-toastify";
 
 import { useUpdatePasswordMutation } from "../../app/slices/authApiSlice";
 import { useGetMeQuery } from "../../app/slices/userApiSlice";
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { resetPasswordSchema } from "../../utils/schema";
 import { ErrorData, ResetPasswordFormData } from "../../utils/types";
 import FormErrors from "../FormErrors";
 
 const UpdatePassword = () => {
+  const { grey, brand } = useElectricTheme();
+
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { data: user, isLoading: isLoadingUser } = useGetMeQuery("User", {
+  const { data: user } = useGetMeQuery("User", {
     refetchOnMountOrArgChange: true,
   });
 
@@ -103,23 +106,23 @@ const UpdatePassword = () => {
               label="Password"
               id="password"
               variant="filled"
-              InputLabelProps={{ style: { color: "gray" } }}
+              InputLabelProps={{ style: { color: grey[900] } }}
               {...register("password")}
               sx={{
                 mb: 2,
-                borderRadius: "12px",
-                backgroundColor: "#E9EDF6",
+                borderRadius: 3,
+                backgroundColor: brand.bgColor2,
                 "& .MuiFilledInput-root": {
                   height: "52px",
-                  borderRadius: "12px",
-                  backgroundColor: "#E9EDF6",
+                  borderRadius: 3,
+                  backgroundColor: brand.bgColor2,
                   borderBottom: "none !important",
                   display: "flex",
                   alignItems: "center",
 
                   "&:before, &:after": {
                     display: "none",
-                    backgroundColor: "#E9EDF6",
+                    backgroundColor: brand.bgColor2,
                   },
                 },
                 "& .MuiFilledInput-input": {
@@ -165,20 +168,20 @@ const UpdatePassword = () => {
               type={showConfirmPassword ? "text" : "password"}
               id="confirmPassword"
               variant="filled"
-              InputLabelProps={{ style: { color: "gray" } }}
+              InputLabelProps={{ style: { color: grey[900] } }}
               {...register("confirmPassword")}
               sx={{
                 mb: 2,
-                borderRadius: "12px",
-                backgroundColor: "#E9EDF6",
+                borderRadius: 3,
+                backgroundColor: brand.bgColor2,
                 "& .MuiFilledInput-root": {
                   height: "52px",
-                  borderRadius: "12px",
-                  backgroundColor: "#E9EDF6",
+                  borderRadius: 3,
+                  backgroundColor: brand.bgColor2,
                   borderBottom: "none !important",
                   "&:before, &:after": {
                     display: "none",
-                    backgroundColor: "#E9EDF6",
+                    backgroundColor: brand.bgColor2,
                   },
                 },
                 "& .MuiFilledInput-input": {
@@ -224,22 +227,7 @@ const UpdatePassword = () => {
             )}
           </Box>
           <Box mt={1}>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 2,
-                mb: 2,
-                textTransform: "capitalize",
-                backgroundColor: "#7F56D9",
-                fontWeight: 600,
-                borderRadius: "4px",
-                "&:hover": {
-                  backgroundColor: "#7F56D9",
-                },
-              }}
-            >
+            <Button type="submit" fullWidth variant="submit1">
               Update Password
             </Button>
           </Box>

@@ -71,12 +71,19 @@ const electricBlueLightTheme = createTheme({
       default: "#F8FBFF",
       paper: "#FFFFFF",
       soft1: "#F8F9FF",
+      soft2: "#F3F7FB",
+      soft3: "#2055CE",
       softRed: "#FEF2F2",
+      success: "#F0FDF4",
+      successSoft: "#EDF7ED",
+      neutral: "#E9EDF6",
     },
     text: {
       primary: "#1A202C",
       secondary: "#718096",
       danger: "#B91A1A",
+      tabRoot: "#34375D",
+      tabSelected: "#8A36D2",
     },
     success: {
       main: "#22C55E",
@@ -89,20 +96,20 @@ const electricBlueLightTheme = createTheme({
     },
     divider: "#CBD5E0",
     grey: {
-      100: "#F1F5F9",
-      200: "#E2E8F0",
-      300: "#CBD5E0",
-      400: "#A0AEC0",
-      500: "#969EAE",
-      600: "#4B5563",
-      700: "#374151",
-      800: "#1F2937",
+      100: "#A0AEC0",
+      200: "#CBD5E0",
+      300: "#E2E8F0",
+      400: "#F1F5F9",
+      500: "#1F2937",
+      600: "#374151",
+      700: "#4E5866",
+      800: "#59626F",
       900: "#4B5563",
-      910: "#4E5866",
-      920: "#59626F",
-      950: "#666F7C",
-      955: "#69707F",
-      960: "#7F8692",
+      910: "#666F7C",
+      920: "#69707F",
+      930: "#7F8692",
+      935: "#808792",
+      940: "#969EAE",
     },
   },
   brand: {
@@ -112,6 +119,22 @@ const electricBlueLightTheme = createTheme({
     bgColor3: "#F8F9FF",
     divider1: "#747B88",
     btnTxt1: "#6760EA",
+    borderColor1: "#EDEDED",
+    avatarBg1: "#85A5CA",
+    avatarTxt1: "#FFFFFF",
+  },
+  iconStyles: {
+    errorLarge: {
+      color: "#DC2626",
+      fontSize: "32px",
+    },
+    alert: {
+      color: "#EF4444",
+    },
+    success: {
+      color: "#22C55E",
+      fontSize: "32px",
+    },
   },
   typography: {
     fontFamily: "'Inter', sans-serif",
@@ -129,12 +152,14 @@ const electricBlueLightTheme = createTheme({
   borders: {
     default: "1px solid #e5e7eb",
     subtle: "1px solid #F1F3F5",
-    strong: "2px solid #A0AEC0",
+    strong: "2px solid #E5E7EB",
     light: "1px solid #F1F5F9",
     top: "1px solid #e5e7eb",
     bottom: "1px solid #e5e7eb",
     left: "1px solid #e5e7eb",
     right: "1px solid #e5e7eb",
+    avatarIcon: "6px solid rgba(232, 231, 231, 0.5)",
+    avatarIconHovered: "6px solid rgba(232, 231, 231, 1)",
   },
   gradient: {
     from: "#0074EB",
@@ -151,7 +176,7 @@ const electricBlueLightTheme = createTheme({
             py: 1.5,
             background: "linear-gradient(171deg, #0074EB 53%, #005BC4 93%)",
             color: "white",
-            borderRadius: 4,
+            borderRadius: "24px",
             fontWeight: "bold",
             transition: "opacity 0.2s",
             textTransform: "none",
@@ -161,11 +186,10 @@ const electricBlueLightTheme = createTheme({
         {
           props: { variant: "getStarted" },
           style: {
-            px: 4,
-            py: 2,
+            padding: "12px 24px",
             background: "linear-gradient(171deg, #0074EB 53%, #005BC4 93%)",
             color: "#FFFFFF",
-            borderRadius: 6,
+            borderRadius: "24px",
             fontWeight: "600",
             transition: "all 0.3s ease-in-out",
             boxShadow: shadows[5],
@@ -186,8 +210,7 @@ const electricBlueLightTheme = createTheme({
         {
           props: { variant: "landingSignIn" },
           style: {
-            px: 4,
-            py: 2,
+            padding: "12px 24px",
             background: "#FFFFFF",
             color: "#182331",
             borderRadius: "24px",
@@ -248,6 +271,52 @@ const electricBlueLightTheme = createTheme({
             },
           },
         },
+        {
+          props: { variant: "textLink2" },
+          style: {
+            py: 1.5,
+            background:
+              "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
+            color: "white",
+            borderRadius: "16px",
+            fontWeight: "bold",
+            transition: "opacity 0.2s",
+            textTransform: "unset",
+            "&:hover": { opacity: 0.9 },
+          },
+        },
+        {
+          props: { variant: "submitDisabled1" },
+          style: {
+            py: 1.5,
+            background: "linear-gradient(171deg, #0074EB 53%, #005BC4 93%)",
+            color: "white",
+            borderRadius: "24px",
+            fontWeight: "bold",
+            transition: "opacity 0.2s",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textTransform: "unset",
+            "&:hover": { opacity: 0.9 },
+            "&:disabled": { cursor: "not-allowed", opacity: 0.7 },
+          },
+        },
+        {
+          props: { variant: "submit1" },
+          style: {
+            mt: 2,
+            mb: 2,
+            textTransform: "capitalize",
+            backgroundColor: "#005BC4",
+            color: "#FFFFFF",
+            fontWeight: 600,
+            borderRadius: "24px",
+            "&:hover": {
+              backgroundColor: "#005BC4",
+            },
+          },
+        },
       ],
     },
     MuiCssBaseline: {
@@ -274,7 +343,7 @@ const electricBlueLightTheme = createTheme({
   },
   textStyles: {
     gradientPrimary: {
-      fontSize: "1.2rem",
+      fontSize: "5rem",
       fontWeight: "bold",
       background: "linear-gradient(171deg, #0074EB 53%, #005BC4 93%)",
       WebkitBackgroundClip: "text",
@@ -285,11 +354,11 @@ const electricBlueLightTheme = createTheme({
       display: "inline-block",
     },
     gradientSecondary: {
+      fontSize: "3rem",
       backgroundClip: "text",
       WebkitTextFillColor: "transparent",
       backgroundImage: "linear-gradient(171deg, #0074EB 53%, #005BC4 93%)",
       fontWeight: "bold",
-      fontSize: "2rem",
     },
     strongH6: {
       fontSize: "1.25rem",
@@ -297,13 +366,55 @@ const electricBlueLightTheme = createTheme({
       fontWeight: "bold",
       color: "#080F1F",
     },
+    strongH4: {
+      fontSize: "1.5rem",
+      fontWeight: "bold",
+      backgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+      backgroundImage:
+        "linear-gradient(171deg,rgba(0, 127, 200, 1) 53%, rgba(0, 167, 193, 1) 93%)",
+    },
+    bodyDanger: {
+      color: "#7F1D1D",
+      fontWeight: "bold",
+    },
+    bodyGrey: {
+      color: "#57606D",
+      fontWeight: "bold",
+    },
     subtitleText: {
-      fontSize: "1.2rem",
+      fontSize: "1.8rem",
       color: "#718096",
       maxWidth: "42rem",
-      margin: "auto 0",
+      margin: "0 auto",
       lineHeight: "1.625",
       textAlign: "center",
+    },
+    greetingsText: {
+      fontWeight: "bold",
+      color: "#332C49",
+      padding: "8px",
+    },
+  },
+  scrollStyles: {
+    custom1: {
+      overflowX: "hidden",
+      overflowY: "hidden",
+      width: "100%",
+      height: "100%",
+      "&::-webkit-scrollbar": {
+        width: "10px",
+      },
+      "&::-webkit-scrollbar-track": {
+        background: "#f1f1f1",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        background: "#61A5D2",
+        borderRadius: "10px",
+        "&:hover": {
+          background: "#555",
+        },
+      },
     },
   },
   shadows,

@@ -38,7 +38,7 @@ const PasswordResetSuccess = ({
               mb: 1,
             }}
           >
-            <Typography sx={textStyles.gradientPrimary}>
+            <Typography sx={textStyles.gradientSecondary}>
               Check your email
             </Typography>
           </Box>
@@ -74,7 +74,7 @@ const PasswordResetSuccess = ({
           </Box>
 
           {/* Content */}
-          <Box sx={{ mb: 5 }}>
+          <Box sx={{ mb: 2 }}>
             <Typography sx={textStyles.strongH6}>
               Verification email sent
             </Typography>

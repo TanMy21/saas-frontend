@@ -9,6 +9,7 @@ import { z } from "zod";
 
 import {
   useForgotPasswordMutation,
+  useResetPasswordMutation,
   useSendLogoutMutation,
 } from "../app/slices/authApiSlice";
 import { useImportQuestionsMutation } from "../app/slices/elementApiSlice";
@@ -456,6 +457,13 @@ export interface MediaOptionsContainerProps {
 
 export interface MediaOptionProps {
   option: OptionType;
+}
+
+type ResetPasswordTrigger = ReturnType<typeof useResetPasswordMutation>[0];
+
+export interface NewPasswordFormProps {
+  code: string;
+  resetPassword: ResetPasswordTrigger;
 }
 
 export interface NewSurveyModalProps {
