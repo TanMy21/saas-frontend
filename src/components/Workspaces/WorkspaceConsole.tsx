@@ -30,7 +30,7 @@ const WorkspaceConsole = ({
   const debouncedSearch = useDebounce(search, 350);
   const limit =
     viewMode === "list" && isXL
-      ? 7
+      ? 6
       : viewMode === "list" && isMD
         ? 6
         : viewMode === "grid" && isXL

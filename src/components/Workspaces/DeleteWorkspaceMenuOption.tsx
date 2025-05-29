@@ -1,12 +1,14 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import { MenuItem } from "@mui/material";
 
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { WorkspaceMenuOptionsProps } from "../../utils/types";
 
 const DeleteWorkspaceMenuOption = ({
   setAnchorEl,
   setOpenModal,
 }: WorkspaceMenuOptionsProps) => {
+  const { text } = useElectricTheme();
   const handleClick = () => {
     setAnchorEl(null);
 
@@ -22,7 +24,7 @@ const DeleteWorkspaceMenuOption = ({
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "center",
-          color: "red",
+          color: text.danger,
           fontWeight: "500",
           gap: 1,
         }}

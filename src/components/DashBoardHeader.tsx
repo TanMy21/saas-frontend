@@ -18,6 +18,8 @@ export const DashBoardHeader = ({
   setRenameWorkspaceModalOpen,
   setDeleteWorkspaceModalOpen,
 }: DashBoardHeaderProps) => {
+  const { brand, textStyles } = useElectricTheme();
+
   const [greeting, setGreeting] = useState(getGreeting());
 
   const { data: user } = useGetMeQuery("User");
@@ -39,7 +41,7 @@ export const DashBoardHeader = ({
         m: "0px",
         bgcolor: "white",
         borderBottom: 1,
-        borderColor: "#EDEDED",
+        borderColor: brand.borderColor1,
         width: "100%",
         height: "48px",
       }}
@@ -64,22 +66,14 @@ export const DashBoardHeader = ({
             // border: "2px solid blue",
           }}
         >
-          <Typography
-            variant="subtitle1"
-            sx={{
-              fontWeight: "bold",
-              color: "#332C49",
-              padding: "8px",
-            }}
-            ml={2}
-          >
+          <Typography sx={textStyles.greetingsText} ml={2}>
             {`${greeting}, ${firstname}`}
           </Typography>
           <Divider
             orientation="vertical"
             variant="middle"
             flexItem
-            sx={{ backgroundColor: "#E2E5E9" }}
+            sx={{ backgroundColor: brand.divider2 }}
           />
           <WorkspacesDropDownMenu
             selectedWorkspace={selectedWorkspace}

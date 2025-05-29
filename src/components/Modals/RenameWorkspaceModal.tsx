@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { useUpdateWorkspaceNameMutation } from "../../app/slices/workspaceApiSlice";
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import {
   ErrorData,
   WorkspaceRename,
@@ -16,6 +17,7 @@ const RenameWorkspaceModal = ({
   onClose,
   selectedWorkspace,
 }: WorkspaceRenameModalProps) => {
+  const { background, textStyles } = useElectricTheme();
   const [updateWorkspaceName, { isSuccess, isError, error }] =
     useUpdateWorkspaceNameMutation();
 
@@ -71,19 +73,15 @@ const RenameWorkspaceModal = ({
             transform: "translate(-50%, -50%)",
             height: 128,
             width: 400,
-            bgcolor: "background.paper",
+            bgcolor: background.paper,
             borderRadius: 3,
             p: 4,
           }}
         >
           <Box>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-            >
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Box>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
+                <Typography sx={textStyles.strongH6}>
                   Rename workspace
                 </Typography>
               </Box>
@@ -117,42 +115,12 @@ const RenameWorkspaceModal = ({
                   <Button
                     type="button"
                     onClick={onClose}
-                    variant="text"
-                    size="small"
-                    sx={{
-                      width: "16%",
-                      height: "80%",
-                      p: 1,
-                      backgroundColor: "#E4E2E2",
-                      color: "black",
-                      fontWeight: "bold",
-                      "&.MuiButton-root:hover": {
-                        bgcolor: "#E4E2E2",
-                      },
-                      textTransform: "capitalize",
-                      borderRadius: 2,
-                    }}
+                    variant="outlined"
+                    size="medium"
                   >
                     Cancel
                   </Button>
-                  <Button
-                    type="submit"
-                    variant="text"
-                    size="small"
-                    sx={{
-                      width: "28%",
-                      height: "80%",
-                      p: 1,
-                      backgroundColor: "#752FEC",
-                      color: "white",
-                      fontWeight: "bold",
-                      "&.MuiButton-root:hover": {
-                        bgcolor: "#752FEC",
-                      },
-                      textTransform: "capitalize",
-                      borderRadius: 2,
-                    }}
-                  >
+                  <Button type="submit" variant="submitBtn2" size="small">
                     Rename
                   </Button>
                 </Box>

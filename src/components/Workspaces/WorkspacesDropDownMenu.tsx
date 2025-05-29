@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 
 import { useGetWorkspacesQuery } from "../../app/slices/workspaceApiSlice";
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { Workspace, WorkspaceDropDownMenuProps } from "../../utils/types";
 
 import DeleteWorkspaceMenuOption from "./DeleteWorkspaceMenuOption";
@@ -24,16 +25,11 @@ const WorkspacesDropDownMenu = ({
   setRenameWorkspaceModalOpen,
   setDeleteWorkspaceModalOpen,
 }: WorkspaceDropDownMenuProps) => {
+  const { iconStyle, grey } = useElectricTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openWorkspaceMenu = Boolean(anchorEl);
 
   const { data: workspaces } = useGetWorkspacesQuery("workspacesList");
-
-  // useEffect(() => {
-  //   if (workspaces?.length && !selectedWorkspace) {
-  //     setSelectedWorkspace(workspaces[0]);
-  //   }
-  // }, [workspaces, selectedWorkspace, setSelectedWorkspace]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -47,24 +43,9 @@ const WorkspacesDropDownMenu = ({
       {/* Header with Dropdown */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         <Box sx={{ flex: 1, position: "relative" }}>
-          <Button
-            onClick={handleClick}
-            variant="text"
-            sx={{
-              fontSize: "1.1rem",
-              fontWeight: "bold",
-              color: "#1D2B5A",
-              textTransform: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              "&:hover": {
-                backgroundColor: "transparent",
-              },
-            }}
-          >
+          <Button onClick={handleClick} variant="headerBtn1">
             {selectedWorkspace?.name || "Select Workspace"}
-            <ExpandMoreIcon sx={{ color: "#333B6B" }} />
+            <ExpandMoreIcon sx={iconStyle.expandMore} />
           </Button>
 
           {/* Dropdown Menu */}
@@ -80,12 +61,12 @@ const WorkspacesDropDownMenu = ({
                 borderRadius: 2,
                 boxShadow: 3,
                 border: "1px solid",
-                borderColor: "grey.200",
+                borderColor: grey[300],
               },
             }}
           >
             <Box sx={{ px: 2, py: 1 }}>
-              <Typography variant="caption" color="gray">
+              <Typography variant="caption" sx={{ color: grey[700] }}>
                 YOUR WORKSPACES
               </Typography>
             </Box>

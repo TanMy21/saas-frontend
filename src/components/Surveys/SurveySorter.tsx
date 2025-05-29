@@ -5,9 +5,11 @@ import {
   type SelectChangeEvent,
 } from "@mui/material";
 
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { SurveySorterProps } from "../../utils/types";
 
 const SurveySorter = ({ sortBy, setSortBy }: SurveySorterProps) => {
+  const { background, shadows } = useElectricTheme();
   const handleSortChange = (event: SelectChangeEvent) => {
     setSortBy(
       event.target.value as "Date created" | "Date updated" | "Alphabetically"
@@ -26,14 +28,14 @@ const SurveySorter = ({ sortBy, setSortBy }: SurveySorterProps) => {
           mt: "1%",
           borderRadius: 3,
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#E0D4F8", // default border color
+            borderColor: background.soft5,
           },
           "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#E0D4F8", // border on hover
+            borderColor: background.soft5,
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#E0D4F8", // border on focus/click
-            boxShadow: "0 0 0 2px rgba(117, 47, 236, 0.1)", // optional glow
+            borderColor: background.soft5,
+            boxShadow: shadows[10],
           },
         }}
       >

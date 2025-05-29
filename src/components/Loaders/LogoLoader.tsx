@@ -53,7 +53,7 @@ const AnimatedF = () => {
           },
         });
 
-        await new Promise((res) => setTimeout(res, 1280));
+        await new Promise((res) => setTimeout(res, 1000));
 
         await Promise.all([
           topControls.start({

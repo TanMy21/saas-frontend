@@ -347,9 +347,14 @@ export interface GridSurveyCardProps {
   viewMode: "list" | "grid";
 }
 
+export interface SurveyCardMetricIndicatorProps {
+  value: string;
+  title: string;
+}
+
 export interface GenerateSurveyModalProps {
   openGenerate: boolean;
-  setOpenGenerate: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenGenerate?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface GenerateSurveyFormProps {
@@ -457,6 +462,13 @@ export interface MediaOptionsContainerProps {
 
 export interface MediaOptionProps {
   option: OptionType;
+}
+
+export interface NewSurveyActionCardProps {
+  onClickHandler: () => void;
+  icon: React.ReactElement;
+  actionTitle: string;
+  actionSubTitle: string;
 }
 
 type ResetPasswordTrigger = ReturnType<typeof useResetPasswordMutation>[0];

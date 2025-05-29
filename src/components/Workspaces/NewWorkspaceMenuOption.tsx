@@ -1,12 +1,14 @@
 import AddIcon from "@mui/icons-material/Add";
 import { MenuItem } from "@mui/material";
 
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { NewWorkspaceMenuOptionProps } from "../../utils/types";
 
 const NewWorkspaceMenuOption = ({
   setAnchorEl,
   setOpenModal,
 }: NewWorkspaceMenuOptionProps) => {
+  const { primary } = useElectricTheme();
   const handleClick = () => {
     setAnchorEl(null);
 
@@ -23,7 +25,7 @@ const NewWorkspaceMenuOption = ({
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "center",
-          color: "purple",
+          color: primary.main,
           fontWeight: "500",
           gap: 1,
         }}

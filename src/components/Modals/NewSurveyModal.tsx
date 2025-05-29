@@ -2,19 +2,15 @@ import { useEffect } from "react";
 
 import EditIcon from "@mui/icons-material/Edit";
 import UploadIcon from "@mui/icons-material/Upload";
-import {
-  Avatar,
-  Box,
-  Button,
-  ButtonBase,
-  Modal,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Modal, Typography } from "@mui/material";
+import { RiAiGenerate } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useCreateSurveyMutation } from "../../app/slices/surveysApiSlice";
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { ErrorData, NewSurveyModalProps } from "../../utils/types";
+import NewSurveyActionCard from "../ModalComponents/NewSurveyActionCard";
 
 const NewSurveyModal = ({
   open,
@@ -22,11 +18,13 @@ const NewSurveyModal = ({
   workspaceId,
   workspaceName,
 }: NewSurveyModalProps) => {
+  const { background } = useElectricTheme();
   const navigate = useNavigate();
 
   const handleClose = () => setOpen(false);
   const openModal = true;
   const openModalImport = true;
+  const openModalGenerate = true;
 
   const [createSurvey, { isError, error }] = useCreateSurveyMutation();
 
@@ -55,6 +53,22 @@ const NewSurveyModal = ({
       if (surveyCreated) {
         navigate(`/survey/${surveyCreated.surveyID}`, {
           state: { workspaceId, workspaceName, openModalImport },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleGenerateQuestions = async () => {
+    try {
+      const surveyCreated = await createSurvey({
+        workspaceId,
+      }).unwrap();
+
+      if (surveyCreated) {
+        navigate(`/survey/${surveyCreated.surveyID}`, {
+          state: { workspaceId, workspaceName, openModalGenerate },
         });
       }
     } catch (error) {
@@ -93,8 +107,8 @@ const NewSurveyModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 480,
-          height: 280,
-          bgcolor: "#FAFAFA",
+          height: 360,
+          backgroundColor: background.paper,
           borderRadius: 3,
           p: 4,
         }}
@@ -112,148 +126,40 @@ const NewSurveyModal = ({
             <Typography variant="h5" component="h2">
               Create a new survey
             </Typography>
-            <Typography sx={{ fontSize: "16px", color: "#6F7683" }}>
+            <Typography sx={{ fontSize: "16px", color: "#6F7683", ml: "2%" }}>
               Choose how you'd like to start your survey
             </Typography>
           </Box>
           <Box
             sx={{
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 1,
-              width: "98%",
-              height: "64px",
-              border: "2px solid #E5E7EB",
-              borderRadius: 3,
+              flexDirection: "column",
+              width: "96%",
+              height: "68%",
+              margin: "0 auto",
+              gap: 2,
             }}
           >
-            <ButtonBase
-              onClick={handleCreateFromScratch}
-              sx={{
-                width: "100%",
-                height: "100%",
-                transition: "box-shadow 0.3s",
-                "&:hover": {
-                  boxShadow: 3,
-                  backgroundColor: "inherit",
-                  borderRadius: 3,
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "16%",
-                  height: "100%",
-                }}
-              >
-                <Avatar
-                  sx={{
-                    bgcolor: "#EDE9FE",
-                    color: "#7B39ED",
-                    width: 48,
-                    height: 48,
-                    borderRadius: "50%",
-                  }}
-                  variant="rounded"
-                >
-                  <EditIcon fontSize="medium" />
-                </Avatar>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  gap: 1,
-                  padding: 1,
-                  width: "80%",
-                  height: "98%",
-                }}
-              >
-                <Typography variant="h6" component="h2">
-                  Create from scratch
-                </Typography>
-                <Typography sx={{ fontSize: "16px", color: "#6F7683" }}>
-                  Start with a blank survey with your own questions
-                </Typography>
-              </Box>
-            </ButtonBase>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 1,
-              marginTop: 1,
-              width: "98%",
-              height: "64px",
-              border: "2px solid #E5E7EB",
-              borderRadius: 3,
-            }}
-          >
-            <ButtonBase
-              onClick={handleImportQuestions}
-              sx={{
-                width: "100%",
-                height: "100%",
-                transition: "box-shadow 0.3s",
-                "&:hover": {
-                  boxShadow: 3,
-                  backgroundColor: "inherit", 
-                  borderRadius: 3,
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "16%",
-                  height: "100%",
-                }}
-              >
-                <Avatar
-                  sx={{
-                    bgcolor: "#EDE9FE",
-                    color: "#7B39ED",
-                    width: 48,
-                    height: 48,
-                    borderRadius: "50%",
-                  }}
-                  variant="rounded"
-                >
-                  <UploadIcon fontSize="medium" />
-                </Avatar>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  gap: 1,
-                  padding: 1,
-                  width: "80%",
-                  height: "98%",
-                }}
-              >
-                <Typography variant="h6" component="h2">
-                  Upload questions
-                </Typography>
-                <Typography sx={{ fontSize: "16px", color: "#6F7683" }}>
-                  Start with uploading questions
-                </Typography>
-              </Box>
-            </ButtonBase>
+            <NewSurveyActionCard
+              icon={<EditIcon fontSize="medium" />}
+              onClickHandler={handleCreateFromScratch}
+              actionTitle={"Create from scratch"}
+              actionSubTitle={
+                "Start with a blank survey with your own questions"
+              }
+            />
+            <NewSurveyActionCard
+              icon={<UploadIcon fontSize="medium" />}
+              onClickHandler={handleImportQuestions}
+              actionTitle={"Upload questions"}
+              actionSubTitle={"Start with uploading your own questions"}
+            />
+            <NewSurveyActionCard
+              icon={<RiAiGenerate size={28} />}
+              onClickHandler={handleGenerateQuestions}
+              actionTitle={"Generate questions"}
+              actionSubTitle={"Start with generating questions"}
+            />
           </Box>
           <Box
             sx={{
@@ -268,21 +174,8 @@ const NewSurveyModal = ({
             <Button
               type="button"
               onClick={handleClose}
-              variant="text"
+              variant="outlined"
               size="small"
-              sx={{
-                width: "16%",
-                height: "80%",
-                p: 1,
-                backgroundColor: "#E4E2E2",
-                color: "black",
-                fontWeight: "bold",
-                "&.MuiButton-root:hover": {
-                  bgcolor: "#E4E2E2",
-                },
-                textTransform: "capitalize",
-                borderRadius: 2,
-              }}
             >
               Cancel
             </Button>

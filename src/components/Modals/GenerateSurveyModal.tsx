@@ -17,7 +17,7 @@ const GenerateSurveyModal = ({
 
   const handleClose = () => {
     setOpen(false);
-    setOpenGenerate(false);
+    setOpenGenerate?.(false);
   };
 
   return (
@@ -35,7 +35,7 @@ const GenerateSurveyModal = ({
           transform: "translate(-50%, -50%)",
           width: 600,
           bgcolor: "#FAFAFA",
-          borderRadius: 5,
+          borderRadius: 3,
           overflow: "hidden",
         }}
       >

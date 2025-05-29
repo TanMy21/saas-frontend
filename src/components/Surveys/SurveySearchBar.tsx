@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { FaTag } from "react-icons/fa";
 
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { SurveySearchBarProps } from "../../utils/types";
 
 const SurveySearchBar = ({
@@ -18,12 +19,7 @@ const SurveySearchBar = ({
   setTagOnly,
   setSearch,
 }: SurveySearchBarProps) => {
-  // const inputRef = useRef<HTMLInputElement>(null);
-
-  // const handleClear = () => {
-  //   setSearch("");
-  //   inputRef.current?.focus();
-  // };
+  const { primary, brand, shadows, background, grey } = useElectricTheme();
 
   return (
     <>
@@ -40,23 +36,23 @@ const SurveySearchBar = ({
               : "Search surveys by title and tag(s)..."
         }
         variant="filled"
-        InputLabelProps={{ style: { color: "gray" } }}
+        InputLabelProps={{ style: { color: grey[900] } }}
         sx={{
           mb: 1,
           margin: "auto",
           width: "98%",
           height: "96%",
-          backgroundColor: "white",
+          backgroundColor: background.paper,
           borderRadius: 3,
           border: "1px solid",
-          borderColor: "grey.200",
+          borderColor: grey[300],
           // boxShadow: 1,
           transition: "all 0.2s",
-          boxShadow: "0 0 0 2px rgba(124, 58, 237, 0.2)",
+          boxShadow: shadows[10],
           "& .MuiFilledInput-root": {
             height: "100%",
             borderRadius: 3,
-            backgroundColor: "#F8F9FF",
+            backgroundColor: background.soft1,
             borderBottom: "none !important",
             alignItems: "center",
             paddingTop: "0px",
@@ -72,7 +68,7 @@ const SurveySearchBar = ({
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon sx={{ color: "grey.600", mb: "56%" }} />
+              <SearchIcon sx={{ color: grey[600], mb: "56%" }} />
             </InputAdornment>
           ),
           endAdornment: (
@@ -81,12 +77,11 @@ const SurveySearchBar = ({
               <Box
                 sx={{
                   display: "flex",
-                  backgroundColor: "white",
+                  backgroundColor: background.paper,
                   borderRadius: "8px",
                   height: "24px",
                   padding: "4px",
                   boxShadow: 1,
-
                   border: "1px solid #E6E8EC",
                   mr: 1,
                 }}
@@ -98,14 +93,16 @@ const SurveySearchBar = ({
                       padding: "6px",
                       borderRadius: "6px",
                       backgroundColor:
-                        matchMode === "AND" ? "#EDE9FE" : "transparent",
-                      color: matchMode === "AND" ? "#7C39ED" : "#777E8B",
+                        matchMode === "AND" ? background.soft4 : "transparent",
+                      color: matchMode === "AND" ? primary.dark : primary.main,
                       fontSize: "12px",
                       fontWeight: "bold",
                       "&:hover": {
                         backgroundColor:
-                          matchMode === "AND" ? "#EDE9FE" : "transparent",
-                        color: "#7B39ED",
+                          matchMode === "AND"
+                            ? background.soft4
+                            : "transparent",
+                        color: primary.main,
                       },
                     }}
                   >
@@ -119,14 +116,14 @@ const SurveySearchBar = ({
                       padding: "6px",
                       borderRadius: "6px",
                       backgroundColor:
-                        matchMode === "OR" ? "#EDE9FE" : "transparent",
-                      color: matchMode === "OR" ? "#7C39ED" : "#777E8B",
+                        matchMode === "OR" ? background.soft4 : "transparent",
+                      color: matchMode === "OR" ? primary.dark : primary.main,
                       fontSize: "12px",
                       fontWeight: "bold",
                       "&:hover": {
                         backgroundColor:
-                          matchMode === "OR" ? "#EDE9FE" : "transparent",
-                        color: "#7B39ED",
+                          matchMode === "OR" ? background.soft4 : "transparent",
+                        color:  primary.main,
                       },
                     }}
                   >
@@ -144,11 +141,11 @@ const SurveySearchBar = ({
                   sx={{
                     padding: "6px",
                     borderRadius: "6px",
-                    backgroundColor: tagOnly ? "#EDE9FE" : "transparent",
-                    color: tagOnly ? "#7C39ED" : "#777E8B",
+                    backgroundColor: tagOnly ? background.soft4 : "transparent",
+                    color: tagOnly ? primary.dark : primary.main,
                     "&:hover": {
-                      backgroundColor: tagOnly ? "#EDE9FE" : "transparent",
-                      color: "#7B39ED",
+                      backgroundColor: tagOnly ? background.soft4 : "transparent",
+                      color: primary.dark,
                     },
                   }}
                 >

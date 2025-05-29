@@ -14,9 +14,11 @@ import RenameWorkspaceModal from "../components/Modals/RenameWorkspaceModal";
 import DashboardTour from "../components/Tour/DashboardTour";
 import WorkspaceConsole from "../components/Workspaces/WorkspaceConsole";
 import useAuth from "../hooks/useAuth";
+import { useElectricTheme } from "../theme/useElectricTheme";
 import { ErrorData, Workspace } from "../utils/types";
 
 const Dashboard = () => {
+  const { background } = useElectricTheme();
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector(selectUser);
   const { isAuthenticated } = useAuth();
@@ -29,7 +31,6 @@ const Dashboard = () => {
     useState(false);
   const {
     data: workspaces,
-    isLoading: isLoadingWorkspaces,
     isError: isErrorWorkspaces,
     error: workspaceError,
     isSuccess,
@@ -120,9 +121,8 @@ const Dashboard = () => {
         )}
 
         <Box
-          display={"flex"}
-          flexDirection={"row"}
           sx={{
+            display: "flex",
             position: "sticky",
             top: "0",
             width: "100%",
@@ -144,7 +144,7 @@ const Dashboard = () => {
             zIndex: 1,
             width: "100%",
             minHeight: "95vh",
-            background: "#FFFFFF",
+            background: background.paper,
             overflowX: "hidden",
             overflowY: "hidden",
           }}
@@ -156,22 +156,8 @@ const Dashboard = () => {
               flexGrow: 1,
               width: "100%",
               minHeight: "95vh",
-              overflowY: "auto",
+              overflowY: "hidden",
               overflowX: "hidden",
-              "&::-webkit-scrollbar": {
-                width: "10px", // Scrollbar width
-              },
-              "&::-webkit-scrollbar-track": {
-                background: "#f1f1f1", // Scrollbar track color
-              },
-              "&::-webkit-scrollbar-thumb": {
-                background: "#61A5D2", // Scrollbar thumb color
-                borderRadius: "10px", // Rounded corners on the scrollbar thumb
-                "&:hover": {
-                  background: "#555", // Scrollbar thumb hover color
-                },
-              },
-              // border: "2px solid red",
             }}
           >
             <Box
@@ -192,17 +178,18 @@ const Dashboard = () => {
           </Box>
         </Box>
       </Box>
+
       <NewWorkspaceModal
         open={newWorkspaceModalOpen}
         setOpen={setNewWorkspaceModalOpen}
       />
-      {/* {workspaceId && workspaceName && ( */}
+
       <RenameWorkspaceModal
         open={renameWorkspaceModalOpen}
         onClose={() => setRenameWorkspaceModalOpen(false)}
         selectedWorkspace={selectedWorkspace!}
       />
-      {/* )} */}
+
       <DeleteWorkspaceModal
         open={deleteWorkspaceModalOpen}
         onClose={() => setDeleteWorkspaceModalOpen(false)}

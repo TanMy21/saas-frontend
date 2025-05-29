@@ -3,9 +3,11 @@ import { Avatar, Box, ButtonBase, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { formatDate } from "../../utils/formatDate";
 import { SurveyListCardProps } from "../../utils/types";
 
+import ListSurveyCardMetricIndicator from "./ListSurveyCardMetricIndicator";
 import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
 
 const SurveyListCard = ({
@@ -13,6 +15,8 @@ const SurveyListCard = ({
   workspaceId,
   workspaceName,
 }: SurveyListCardProps) => {
+  const { brand, background, textStyles, borders, iconStyle } =
+    useElectricTheme();
   const navigate = useNavigate();
   const { data: elements = [] } = useGetElementsForSurveyQuery(survey.surveyID);
 
@@ -34,11 +38,10 @@ const SurveyListCard = ({
           width: "98%",
           height: { lg: "56px", xl: "64px" },
           margin: "auto",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: background.paper,
           borderRadius: 5,
-          border: "2px solid #E5E7EB",
+          border: borders.strong,
           mt: "12px",
-          // boxShadow: "0 6px 9px -9px rgba(0,0,0,0.4)",
         }}
       >
         <Box
@@ -82,14 +85,14 @@ const SurveyListCard = ({
             >
               <Avatar
                 sx={{
-                  bgcolor: "#EDE9FE",
+                  bgcolor: brand.avatarBg2,
                   width: 40,
                   height: 40,
                   mb: { lg: "12px", xl: "0px" },
                 }}
                 variant="rounded"
               >
-                <FeedIcon sx={{ color: "#6E25EB" }} />
+                <FeedIcon sx={iconStyle.listLayoutIcon} />
               </Avatar>
               <Box
                 sx={{
@@ -101,62 +104,23 @@ const SurveyListCard = ({
                   // border: "2px solid purple",
                 }}
               >
-                <Typography
-                  sx={{ fontSize: "16px", textOverflow: "clip" }}
-                  noWrap
-                >
+                <Typography sx={textStyles.cardSurveyTitle} noWrap>
                   {survey.title}
                 </Typography>
-                <Typography sx={{ fontSize: "12px", color: "#7E7571" }}>
+                <Typography sx={textStyles.cardSurveyCreatedAt}>
                   created: {formatDate(survey.createdAt)}
                 </Typography>
               </Box>
             </ButtonBase>
           </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "20%",
-              height: "96%",
-              // border: "2px solid red",
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: "24px",
-                fontWeight: "bold",
-                color: "#0F1828",
-              }}
-            >
-              {elements.length}
-            </Typography>
-            <Typography sx={{ fontSize: "16px", color: "#6B727F", mb: "8px" }}>
-              Questions
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "20%",
-              height: "96%",
-              // border: "2px solid red",
-            }}
-          >
-            <Typography
-              sx={{ fontSize: "24px", fontWeight: "bold", color: "#0F1828" }}
-            >
-              0
-            </Typography>
-            <Typography sx={{ fontSize: "16px", color: "#6B727F", mb: "8px" }}>
-              Responses
-            </Typography>
-          </Box>
+          <ListSurveyCardMetricIndicator
+            value={`${elements.length}`}
+            title={"Questions"}
+          />
+          <ListSurveyCardMetricIndicator
+            value={`${elements.length}`}
+            title={"Responses"}
+          />
           <Box
             sx={{
               display: "flex",

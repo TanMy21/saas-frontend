@@ -2,12 +2,14 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import ReorderIcon from "@mui/icons-material/Reorder";
 import { Box, IconButton } from "@mui/material";
 
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { SurveyViewModeProps } from "../../utils/types";
 
 const SurveysViewModeToggle = ({
   viewMode,
   setViewMode,
 }: SurveyViewModeProps) => {
+  const { primary, background } = useElectricTheme();
   return (
     <Box
       sx={{
@@ -25,11 +27,13 @@ const SurveysViewModeToggle = ({
         sx={{
           padding: "8px",
           borderRadius: "6px",
-          backgroundColor: viewMode === "list" ? "#EDE9FE" : "transparent",
-          color: viewMode === "list" ? "#7C39ED" : "#777E8B",
+          backgroundColor:
+            viewMode === "list" ? background.soft4 : "transparent",
+          color: viewMode === "list" ? primary.dark : primary.main,
           "&:hover": {
-            color: "#7B39ED",
-            backgroundColor: viewMode === "list" ? "#EDE9FE" : "transparent",
+            color: primary.dark,
+            backgroundColor:
+              viewMode === "list" ? background.soft4 : "transparent",
           },
         }}
       >
@@ -40,11 +44,13 @@ const SurveysViewModeToggle = ({
         sx={{
           padding: "8px",
           borderRadius: "6px",
-          backgroundColor: viewMode === "grid" ? "#EDE9FE" : "transparent",
-          color: viewMode === "grid" ? "#7C39ED" : "#6B7280",
+          backgroundColor:
+            viewMode === "grid" ? background.soft4 : "transparent",
+          color: viewMode === "grid" ? primary.dark : primary.main,
           "&:hover": {
-            color: "#7B39ED",
-            backgroundColor: viewMode === "grid" ? "#EDE9FE" : "transparent",
+            color: primary.dark,
+            backgroundColor:
+              viewMode === "grid" ? background.soft4 : "transparent",
           },
         }}
       >

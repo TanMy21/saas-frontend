@@ -29,9 +29,12 @@ declare module "@mui/material/styles" {
       bgColor2: string;
       bgColor3: string;
       divider1: string;
+      divider2: string;
       btnTxt1: string;
       borderColor1?: string;
       avatarBg1?: string;
+      avatarBg2?: string;
+      avatarBg3?: string;
       avatarTxt1?: string;
     };
 
@@ -44,12 +47,21 @@ declare module "@mui/material/styles" {
       bodyDanger?: React.CSSProperties;
       bodyGrey?: React.CSSProperties;
       greetingsText?: React.CSSProperties;
+      cardSurveyTitle?: React.CSSProperties;
+      cardSurveyCreatedAt?: React.CSSProperties;
+      metricLabelValue?: React.CSSProperties;
+      metricLabelTitle?: React.CSSProperties;
+      listViewMetricLabelValue?: React.CSSProperties;
+      listViewMetricLabelTitle?: React.CSSProperties;
+      newActionCardSubtitle?: React.CSSProperties;
     };
 
     iconStyles: {
       errorLarge: React.CSSProperties;
       alert: React.CSSProperties;
       success: React.CSSProperties;
+      expandMore: React.CSSProperties;
+      listLayoutIcon: React.CSSProperties;
     };
 
     scrollStyles: {
@@ -80,15 +92,20 @@ declare module "@mui/material/styles" {
   }
 
   interface TypeBackground {
+    subtle?: string;
     soft1?: string;
     soft2?: string;
     soft3?: string;
+    soft4?: string;
+    soft5?: string;
+    soft6?: string;
     success?: string;
     successSoft?: string;
     softRed?: string;
     section?: string;
     hero?: string;
     neutral?: string;
+    softGrey?: string;
   }
 
   interface TypeText {
@@ -115,9 +132,12 @@ declare module "@mui/material/styles" {
       bgColor2?: string;
       bgColor3?: string;
       divider1?: string;
+      divider2?: string;
       btnTxt1?: string;
       borderColor1?: string;
       avatarBg1?: string;
+      avatarBg2?: string;
+      avatarBg3?: string;
       avatarTxt1?: string;
     };
 
@@ -143,8 +163,12 @@ declare module "@mui/material/Button" {
     backLink2: true;
     textLink1: true;
     textLink2: true;
+    headerBtn1: true;
     submitDisabled1: true;
     submit1: true;
+    cancelBtn: true;
+    submitBtn2: true;
+    dangerBtn: true;
   }
 }
 

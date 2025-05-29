@@ -3,6 +3,7 @@ import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, ButtonBase, Typography } from "@mui/material";
 
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { NewSurveyProps } from "../../utils/types";
 import NewSurveyModal from "../Modals/NewSurveyModal";
 
@@ -11,6 +12,7 @@ const CreateNewSurveyCard = ({
   workspaceName,
   viewMode,
 }: NewSurveyProps) => {
+  const { background, primary, textStyles } = useElectricTheme();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   return (
@@ -19,7 +21,7 @@ const CreateNewSurveyCard = ({
         sx={{
           border: "2px dashed #E2E5E9",
           borderRadius: 5,
-          backgroundColor: "white",
+          backgroundColor: background.paper,
           p: viewMode === "grid" ? 2 : 0,
           display: "flex",
           flexDirection: viewMode === "grid" ? "column" : "row",
@@ -32,8 +34,8 @@ const CreateNewSurveyCard = ({
           margin: viewMode === "list" ? "auto" : null,
           transition: "border-color 0.3s",
           "&:hover": {
-            borderColor: "#6F25EB",
-            backgroundColor: "#EDE9FE",
+            borderColor: primary.dark,
+            backgroundColor: background.soft6,
           },
         }}
       >
@@ -54,7 +56,7 @@ const CreateNewSurveyCard = ({
               sx={{
                 width: 48,
                 height: 48,
-                backgroundColor: "#EDE9FE",
+                backgroundColor: background.soft6,
                 borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
@@ -63,12 +65,10 @@ const CreateNewSurveyCard = ({
                 transition: "background-color 0.3s",
               }}
             >
-              <AddIcon sx={{ fontSize: 24, color: "#6E25EB" }} />
+              <AddIcon sx={{ fontSize: 24, color: primary.dark }} />
             </Box>
-            <Typography variant="h6" fontWeight="medium" color="grey.900">
-              Create new survey
-            </Typography>
-            <Typography variant="body2" color="grey.500">
+            <Typography sx={textStyles.strongH6}>Create new survey</Typography>
+            <Typography sx={textStyles.bodyGrey}>
               Start collecting valuable feedback
             </Typography>
           </ButtonBase>
@@ -91,18 +91,18 @@ const CreateNewSurveyCard = ({
                 ml: 2,
                 width: 40,
                 height: 40,
-                backgroundColor: "#EDE9FE",
+                backgroundColor: background.soft6,
                 borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 transition: "background-color 0.3s",
                 "&:hover": {
-                  backgroundColor: "purple.200",
+                  backgroundColor: background.soft6,
                 },
               }}
             >
-              <AddIcon sx={{ fontSize: 24, color: "#6E25EB" }} />
+              <AddIcon sx={{ fontSize: 24, color: primary.dark }} />
             </Box>
             <Box
               sx={{
@@ -115,10 +115,10 @@ const CreateNewSurveyCard = ({
                 height: "96%",
               }}
             >
-              <Typography variant="h6" fontWeight="medium" color="grey.900">
+              <Typography sx={textStyles.strongH6}>
                 Create new survey
               </Typography>
-              <Typography variant="body2" color="grey.500">
+              <Typography sx={textStyles.bodyGrey}>
                 Start collecting valuable feedback
               </Typography>
             </Box>

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { useCreateNewWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import {
   ErrorData,
   NewWorkspaceModalProps,
@@ -12,6 +13,7 @@ import {
 } from "../../utils/types";
 
 const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
+  const { background, textStyles } = useElectricTheme();
   const [createNewWorkspace, { isSuccess, isError, error }] =
     useCreateNewWorkspaceMutation();
 
@@ -71,24 +73,19 @@ const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
             transform: "translate(-50%, -50%)",
             width: 400,
             height: 128,
-            bgcolor: "background.paper",
+            bgcolor: background.paper,
             borderRadius: 3,
             p: 4,
           }}
         >
-          <Box>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-            >
-              <Box>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Create a new workspace
-                </Typography>
-              </Box>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Box>
+              <Typography sx={textStyles.strongH6}>
+                Create a new workspace
+              </Typography>
             </Box>
           </Box>
+
           <Box>
             <form onSubmit={handleSubmit(createWorkspace)}>
               <Box>
@@ -115,42 +112,12 @@ const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
                   <Button
                     type="button"
                     onClick={() => setOpen(false)}
-                    variant="text"
-                    size="small"
-                    sx={{
-                      width: "16%",
-                      height: "80%",
-                      p: 1,
-                      backgroundColor: "#E4E2E2",
-                      color: "black",
-                      fontWeight: "bold",
-                      "&.MuiButton-root:hover": {
-                        bgcolor: "#E4E2E2",
-                      },
-                      textTransform: "capitalize",
-                      borderRadius: 2,
-                    }}
+                    variant="outlined"
+                    size="medium"
                   >
                     Cancel
                   </Button>
-                  <Button
-                    type="submit"
-                    variant="text"
-                    size="small"
-                    sx={{
-                      width: "48%",
-                      height: "80%",
-                      p: 1,
-                      backgroundColor: "#752FEC",
-                      color: "white",
-                      fontWeight: "bold",
-                      "&.MuiButton-root:hover": {
-                        bgcolor: "#752FEC",
-                      },
-                      textTransform: "unset",
-                      borderRadius: 2,
-                    }}
-                  >
+                  <Button type="submit" variant="submitBtn2" size="large">
                     Create workspace
                   </Button>
                 </Box>

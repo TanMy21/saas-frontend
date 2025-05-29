@@ -1,9 +1,11 @@
 import { Box, ButtonBase, Tooltip, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { formatDate } from "../../utils/formatDate";
 import { GridSurveyCardProps } from "../../utils/types";
 
+import GridSurveyCardMetricIndicator from "./GridSurveyCardMetricIndicator";
 import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
 
 const GridSurveyCard = ({
@@ -12,6 +14,7 @@ const GridSurveyCard = ({
   workspaceName,
   viewMode,
 }: GridSurveyCardProps) => {
+  const { grey, shadows, background, textStyles } = useElectricTheme();
   const navigate = useNavigate();
   const goToSurvey = (surveyID: string) => {
     navigate(`/survey/${surveyID}`, {
@@ -25,18 +28,16 @@ const GridSurveyCard = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "white",
-        borderRadius: 5,
+        backgroundColor: background.paper,
+        borderRadius: 4,
         border: "2px solid",
-        borderColor: "grey.300",
+        borderColor: grey[300],
         p: 1,
-        boxShadow:
-          "0px 20px 56px rgba(47, 45, 94, 0.06), 0px 6px 20px rgba(47, 45, 94, 0.06)",
+        boxShadow: shadows[12],
         transition: "all 0.1s ease-in-out",
         cursor: "pointer",
         "&:hover": {
-          boxShadow:
-            "0px 20px 56px rgba(47, 45, 94, 0.12), 0px 6px 20px rgba(47, 45, 94, 0.24)",
+          boxShadow: shadows[13],
           transform: "translateY(-2px)",
         },
       }}
@@ -79,27 +80,11 @@ const GridSurveyCard = ({
             }}
           >
             <Tooltip title={survey.title} placement="top" arrow>
-              <Typography
-                variant="h6"
-                fontWeight="bold"
-                color="#272F3F"
-                sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
+              <Typography sx={textStyles.cardSurveyTitle}>
                 {survey.title}
               </Typography>
             </Tooltip>
-            <Typography
-              fontWeight="bold"
-              color="#272F3F"
-              sx={{
-                fontSize: "14px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
+            <Typography sx={textStyles.cardSurveyCreatedAt}>
               created: {formatDate(survey.createdAt)}
             </Typography>
           </ButtonBase>
@@ -127,8 +112,7 @@ const GridSurveyCard = ({
             flexDirection: "row",
             margin: "auto",
             width: "98%",
-            height: "40%",
-            // border: "2px solid blue",
+            height: "48%",
           }}
         >
           <ButtonBase
@@ -139,76 +123,12 @@ const GridSurveyCard = ({
               justifyContent: "space-between",
               gap: 1,
               width: "100%",
-              height: "98%",
+              height: "100%",
               border: "none",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "48%",
-                height: "96%",
-                border: "none",
-                backgroundColor: "#F9F9FA",
-                borderRadius: 3,
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: "32px",
-                  color: "#3B3C3F",
-                  fontWeight: "bold",
-                }}
-              >
-                0
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "16px",
-                  color: "#737783",
-                  fontWeight: "bold",
-                  mt: "-12px",
-                }}
-              >
-                Questions
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "48%",
-                height: "96%",
-                border: "none",
-                backgroundColor: "#F9F9FA",
-                borderRadius: 3,
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: "33px",
-                  color: "#3B3C3F",
-                  fontWeight: "bold",
-                }}
-              >
-                0
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "16px",
-                  color: "#737783",
-                  fontWeight: "bold",
-                  mt: "-16px",
-                }}
-              >
-                Responses
-              </Typography>
-            </Box>
+            <GridSurveyCardMetricIndicator value={"0"} title={"Questions"} />
+            <GridSurveyCardMetricIndicator value={"0"} title={"Responses"} />
           </ButtonBase>
         </Box>
       </Box>

@@ -20,7 +20,7 @@ const SurveysCollection = ({
         display: "flex",
         flexDirection: "row",
         margin: "auto",
-        marginTop: { md: "0%", lg: layoutContainerMarginTopLG, xl: "0%" },
+        marginTop: { md: "0%", lg: layoutContainerMarginTopLG, xl: "1%" },
         width: "98%",
         height: { md: "84%", lg: layoutContainerHeightLG, xl: "84%" },
         // border: "2px solid red",

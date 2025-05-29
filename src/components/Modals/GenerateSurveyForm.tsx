@@ -307,10 +307,10 @@ const GenerateSurveyForm = ({ surveyID, setOpen }: GenerateSurveyFormProps) => {
             sx={{
               display: "flex",
               width: "100%",
-              height: "40px",
+              height: "60px",
               justifyContent: "flex-end",
               p: 1,
-              // border: "2px solid red",
+              border: "2px solid red",
               borderTop: "1px solid #E0E0E0",
             }}
           >

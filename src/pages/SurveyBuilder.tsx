@@ -16,6 +16,7 @@ import { RootState } from "../app/store";
 import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
 import CanvasConsole from "../components/CanvasConsole";
 import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
+import GenerateSurveyModal from "../components/Modals/GenerateSurveyModal";
 import ImportQuestionsModal from "../components/Modals/ImportQuestionsModal";
 import ScrollbarStyle from "../components/ScrollbarStyle";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
@@ -35,6 +36,7 @@ const SurveyBuilder = () => {
 
   const isOpen = location.state?.openModal || false;
   const isOpenImport = location.state?.openModalImport || false;
+  const isOpenGenerate = location.state?.openModalGenerate || false;
   // const [stepIndex, setStepIndex] = useState(0);
   const [runTour, setRunTour] = useState(false);
   const [surveyTitle, setSurveyTitle] = useState<string>("");
@@ -238,6 +240,7 @@ const SurveyBuilder = () => {
           setSurveyTitle={setSurveyTitle}
         />
         <ImportQuestionsModal isOpen={isOpenImport} surveyID={surveyID} />
+        <GenerateSurveyModal openGenerate={isOpenGenerate} />
       </Box>
     </>
   );

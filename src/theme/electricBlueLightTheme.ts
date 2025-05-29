@@ -27,31 +27,31 @@ const shadows: [
   string,
   string,
 ] = [
-  "none",
-  "0 1px 2px rgba(0, 0, 0, 0.05)",
-  "0 4px 6px rgba(0, 0, 0, 0.1)",
-  "0 10px 15px rgba(0, 0, 0, 0.15)",
-  "0 1px 3px rgba(0, 0, 0, 0.08)",
-  "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
-  "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1)",
-  "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)",
-  "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)",
-  "0px 4px 20px rgba(0,0,0,0.05)",
-  "0 20px 40px rgba(0, 0, 0, 0.16)",
-  "0 24px 48px rgba(0, 0, 0, 0.18)",
-  "0 28px 56px rgba(0, 0, 0, 0.2)",
-  "0 32px 64px rgba(0, 0, 0, 0.22)",
-  "0 36px 72px rgba(0, 0, 0, 0.24)",
-  "0 40px 80px rgba(0, 0, 0, 0.26)",
-  "0 44px 88px rgba(0, 0, 0, 0.28)",
-  "0 48px 96px rgba(0, 0, 0, 0.3)",
-  "0 52px 104px rgba(0, 0, 0, 0.32)",
-  "0 56px 112px rgba(0, 0, 0, 0.34)",
-  "0 60px 120px rgba(0, 0, 0, 0.36)",
-  "0 64px 128px rgba(0, 0, 0, 0.38)",
-  "0 68px 136px rgba(0, 0, 0, 0.4)",
-  "0 72px 144px rgba(0, 0, 0, 0.42)",
-  "0 76px 152px rgba(0, 0, 0, 0.44)",
+  "none", //0
+  "0 1px 2px rgba(0, 0, 0, 0.05)", //1
+  "0 4px 6px rgba(0, 0, 0, 0.1)", //2
+  "0 10px 15px rgba(0, 0, 0, 0.15)", //3
+  "0 1px 3px rgba(0, 0, 0, 0.08)", //4
+  "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)", //5
+  "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1)", //6
+  "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)", //7
+  "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)", //8
+  "0px 4px 20px rgba(0,0,0,0.05)", //9
+  "0 0 0 2px rgba(69, 97, 226, 0.2)", //10
+  "0px 20px 56px rgba(47, 45, 94, 0.06), 0px 6px 20px rgba(47, 45, 94, 0.06)", //11
+  "0px 20px 56px rgba(47, 45, 94, 0.12), 0px 6px 20px rgba(47, 45, 94, 0.24)", //12
+  "0 32px 64px rgba(0, 0, 0, 0.22)", //13
+  "0 36px 72px rgba(0, 0, 0, 0.24)", //14
+  "0 40px 80px rgba(0, 0, 0, 0.26)", //15
+  "0 44px 88px rgba(0, 0, 0, 0.28)", //16
+  "0 48px 96px rgba(0, 0, 0, 0.3)", //17
+  "0 52px 104px rgba(0, 0, 0, 0.32)", //18
+  "0 56px 112px rgba(0, 0, 0, 0.34)", //19
+  "0 60px 120px rgba(0, 0, 0, 0.36)", //20
+  "0 64px 128px rgba(0, 0, 0, 0.38)", //21
+  "0 68px 136px rgba(0, 0, 0, 0.4)", //22
+  "0 72px 144px rgba(0, 0, 0, 0.42)", //23
+  "0 76px 152px rgba(0, 0, 0, 0.44)", //24
 ];
 
 const electricBlueLightTheme = createTheme({
@@ -70,13 +70,18 @@ const electricBlueLightTheme = createTheme({
     background: {
       default: "#F8FBFF",
       paper: "#FFFFFF",
+      subtle: "F9F9FA",
       soft1: "#F8F9FF",
       soft2: "#F3F7FB",
       soft3: "#2055CE",
+      soft4: "#ABB6D0",
+      soft5: "#2B7CB7",
+      soft6: "#E6F0FD",
       softRed: "#FEF2F2",
       success: "#F0FDF4",
       successSoft: "#EDF7ED",
       neutral: "#E9EDF6",
+      softGrey: "#ECECEC",
     },
     text: {
       primary: "#1A202C",
@@ -118,9 +123,12 @@ const electricBlueLightTheme = createTheme({
     bgColor2: "#E9EDF6",
     bgColor3: "#F8F9FF",
     divider1: "#747B88",
+    divider2: "#E2E5E9",
     btnTxt1: "#6760EA",
     borderColor1: "#EDEDED",
     avatarBg1: "#85A5CA",
+    avatarBg2: "#B9A90B",
+    avatarBg3: "#C9DADE",
     avatarTxt1: "#FFFFFF",
   },
   iconStyles: {
@@ -134,6 +142,12 @@ const electricBlueLightTheme = createTheme({
     success: {
       color: "#22C55E",
       fontSize: "32px",
+    },
+    expandMore: {
+      color: "#333B6B",
+    },
+    listLayoutIcon: {
+      color: "#FFFFFF",
     },
   },
   typography: {
@@ -286,6 +300,21 @@ const electricBlueLightTheme = createTheme({
           },
         },
         {
+          props: { variant: "headerBtn1" },
+          style: {
+            fontSize: "1.1rem",
+            fontWeight: "bold",
+            color: "#1D2B5A",
+            textTransform: "none",
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            "&:hover": {
+              backgroundColor: "transparent",
+            },
+          },
+        },
+        {
           props: { variant: "submitDisabled1" },
           style: {
             py: 1.5,
@@ -315,6 +344,55 @@ const electricBlueLightTheme = createTheme({
             "&:hover": {
               backgroundColor: "#005BC4",
             },
+          },
+        },
+        {
+          props: { variant: "cancelBtn" },
+          style: {
+            width: "16%",
+            height: "80%",
+            px: "36px",
+            // p: "24px 48px",
+            backgroundColor: "transparent",
+            color: "black",
+            fontWeight: "bold",
+            border: "1px solid rgb(81, 142, 211)",
+            "&.MuiButton-root:hover": {
+              bgcolor: "transparent",
+            },
+            textTransform: "capitalize",
+            borderRadius: "24px",
+          },
+        },
+        {
+          props: { variant: "submitBtn2" },
+          style: {
+            width: "48%",
+            height: "80%",
+            p: 2,
+            backgroundColor: "#005BC4",
+            color: "white",
+            fontWeight: "bold",
+            "&.MuiButton-root:hover": {
+              backgroundColor: "#005BC4",
+            },
+            textTransform: "unset",
+            borderRadius: "16px",
+          },
+        },
+        {
+          props: { variant: "dangerBtn" },
+          style: {
+            backgroundColor: "#B31212",
+            color: "white",
+            width: "36%",
+            height: "40px",
+            "&.MuiButton-root:hover": {
+              bgcolor: "#B31212",
+            },
+            textTransform: "capitalize",
+            borderRadius: "12px",
+            fontWeight: "bold",
           },
         },
       ],
@@ -379,7 +457,7 @@ const electricBlueLightTheme = createTheme({
       fontWeight: "bold",
     },
     bodyGrey: {
-      color: "#57606D",
+      color: "#6B727F",
       fontWeight: "bold",
     },
     subtitleText: {
@@ -394,6 +472,46 @@ const electricBlueLightTheme = createTheme({
       fontWeight: "bold",
       color: "#332C49",
       padding: "8px",
+    },
+    cardSurveyTitle: {
+      fontSize: "1.25rem",
+      fontWeight: "bold",
+      color: "#272F3F",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    },
+    cardSurveyCreatedAt: {
+      fontSize: "14px",
+      fontWeight: "bold",
+      color: "#7E7571",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    },
+    newActionCardSubtitle: {
+      fontSize: "15px",
+      fontWeight: "bold",
+      color: "#7E7571",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    },
+    metricLabelValue: {
+      fontSize: "36px",
+      color: "#3B3C3F",
+      fontWeight: "bold",
+    },
+    metricLabelTitle: {
+      fontSize: "16px",
+      color: "#737783",
+      fontWeight: "bold",
+    },
+    listViewMetricLabelValue: {
+      fontSize: "24px",
+      fontWeight: "bold",
+      color: "#0F1828",
+    },
+    listViewMetricLabelTitle: {
+      fontSize: "16px",
+      color: "#6B727F",
     },
   },
   scrollStyles: {

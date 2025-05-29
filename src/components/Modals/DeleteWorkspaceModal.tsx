@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useDeleteWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import {
   ErrorData,
   WorkspaceDelete,
@@ -17,6 +18,7 @@ const DeleteWorkspaceModal = ({
   onClose,
   selectedWorkspace,
 }: WorkspaceDeleteModalProps) => {
+  const { background, textStyles } = useElectricTheme();
   const navigate = useNavigate();
 
   const { register, handleSubmit } = useForm<WorkspaceDelete>();
@@ -76,20 +78,16 @@ const DeleteWorkspaceModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 400,
-          height: 220,
-          bgcolor: "background.paper",
+          height: 228,
+          bgcolor: background.paper,
           borderRadius: 3,
           p: 2,
         }}
       >
         <Box>
-          <Box
-            display={"flex"}
-            flexDirection={"row"}
-            justifyContent={"space-between"}
-          >
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Box>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
+              <Typography sx={textStyles.strongH6}>
                 Delete this Workspace?
               </Typography>
             </Box>
@@ -128,46 +126,19 @@ const DeleteWorkspaceModal = ({
                   justifyContent: "flex-end",
                   height: "40px",
                   gap: 2,
-                  mt: 1,
+                  mt: 0.5,
                   mb: 2,
                 }}
               >
                 <Button
                   type="button"
                   onClick={onClose}
-                  variant="text"
+                  variant="outlined"
                   size="small"
-                  sx={{
-                    backgroundColor: "#E4E2E2",
-                    color: "black",
-                    height: "80%",
-                    "&.MuiButton-root:hover": {
-                      bgcolor: "#E4E2E2",
-                    },
-                    textTransform: "capitalize",
-                    borderRadius: 2,
-                  }}
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  variant="text"
-                  size="small"
-                  sx={{
-                    backgroundColor: "#B31212",
-                    color: "white",
-                    width: "28%",
-                    height: "80%",
-                    "&.MuiButton-root:hover": {
-                      bgcolor: "#B31212",
-                    },
-                    textTransform: "capitalize",
-                    borderRadius: 2,
-                    fontWeight: "bold",
-                  }}
-                  color="error"
-                >
+                <Button type="submit" variant="dangerBtn" size="small">
                   {isLoading ? "Deleting..." : "Yes, Delete it"}
                 </Button>
               </Box>

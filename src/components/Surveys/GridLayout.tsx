@@ -1,4 +1,4 @@
-import { Box, Collapse, Grow } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { WorkspaceLayoutProps } from "../../utils/types";
 
@@ -31,22 +31,6 @@ const GridLayout = ({
           maxHeight: {
             lg: "640px",
           },
-          // overflowY: "auto",
-          // overflowX: "hidden",
-          // "&::-webkit-scrollbar": {
-          //   width: "10px", // Scrollbar width
-          // },
-          // "&::-webkit-scrollbar-track": {
-          //   background: "#f1f1f1", // Scrollbar track color
-          // },
-          // "&::-webkit-scrollbar-thumb": {
-          //   background: "#61A5D2", // Scrollbar thumb color
-          //   borderRadius: "10px", // Rounded corners on the scrollbar thumb
-          //   "&:hover": {
-          //     background: "#555", // Scrollbar thumb hover color
-          //   },
-          // },
-          // border: "2px solid green",
         }}
       >
         <CreateNewSurveyCard
