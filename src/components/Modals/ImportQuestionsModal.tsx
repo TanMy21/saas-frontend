@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, IconButton, Modal, Typography } from "@mui/material";
+import { Alert, Box, IconButton, Modal, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 import { useImportQuestionsMutation } from "../../app/slices/elementApiSlice";
@@ -17,12 +17,15 @@ const ImportQuestionsModal = ({
 }: ImportQuestionProps) => {
   const { surveyID } = useParams();
   const [open, setOpen] = useState(isOpen);
+  const [importText, setImportText] = useState("");
+  const [importBtnClicked, setImportBtnClicked] = useState(false);
 
   const [importQuestions, { isLoading }] = useImportQuestionsMutation();
 
   const handleClose = () => {
     setOpen(false);
     setOpenImport!(false);
+    setImportBtnClicked(false);
   };
 
   return (
@@ -41,7 +44,7 @@ const ImportQuestionsModal = ({
           width: 800,
           height: 680,
           bgcolor: "#FAFAFA",
-          borderRadius: 5,
+          borderRadius: "16px",
           overflow: "hidden",
         }}
       >
@@ -49,7 +52,7 @@ const ImportQuestionsModal = ({
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 1,
+            gap: 0.5,
             margin: "auto",
             width: "100%",
             height: "100%",
@@ -67,7 +70,6 @@ const ImportQuestionsModal = ({
               borderBottom: "1px solid #E0E0E0",
             }}
           >
-            {" "}
             <Typography
               sx={{
                 fontSize: "20px",
@@ -76,7 +78,7 @@ const ImportQuestionsModal = ({
                 marginLeft: "2%",
               }}
             >
-              Upload Image
+              Import Questions
             </Typography>
             <Box
               sx={{
@@ -103,6 +105,7 @@ const ImportQuestionsModal = ({
           <Box
             sx={{
               display: "flex",
+              flexDirection: "column",
               width: "98%",
               height: "88%",
               justifyContent: "space-between",
@@ -110,6 +113,11 @@ const ImportQuestionsModal = ({
               // border: "2px solid red",
             }}
           >
+            {importBtnClicked && importText.trim().length === 0 && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                You need to add some questions before importing
+              </Alert>
+            )}
             {isLoading ? (
               <ImportQuestionsLoader />
             ) : (
@@ -117,6 +125,9 @@ const ImportQuestionsModal = ({
                 importQuestions={importQuestions}
                 surveyID={surveyID!}
                 isLoading={isLoading}
+                importText={importText}
+                setImportText={setImportText}
+                setImportBtnClicked={setImportBtnClicked}
                 handleClose={handleClose}
               />
             )}

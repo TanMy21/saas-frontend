@@ -1,6 +1,9 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+
+import { useElectricTheme } from "../../theme/useElectricTheme";
 
 const ImportQuestionModalPlaceholderTxt = () => {
+  const { grey } = useElectricTheme();
   return (
     <Box
       sx={{
@@ -9,53 +12,66 @@ const ImportQuestionModalPlaceholderTxt = () => {
         left: 0,
         width: "100%",
         height: "100%",
-        color: "text.secondary",
+        color: "#475569",
         pointerEvents: "none",
         fontSize: "16px",
         lineHeight: 1.7,
+        px: 2,
+        py: 2,
         whiteSpace: "pre-line",
         padding: "16px",
         overflowY: "auto",
       }}
     >
-      1. Import questions{"\n"}
-      2. Add questions followed by its options{"\n"}
-      3. Edit and adjust formatting later{"\n\n"}
-      <Box component="span" sx={{ fontWeight: 600 }}>
+      {/* Instructions */}
+      <Typography variant="body2" sx={{ fontWeight: 500, color: grey[700] }}>
+        1. Import questions{"\n"}
+        2. Add questions followed by their options{"\n"}
+        3. Edit and adjust formatting later{"\n"}
+      </Typography>
+
+      {/* Example header */}
+      <Typography sx={{ fontWeight: 600, mt: 2, color: grey[700] }}>
         Example:
+      </Typography>
+
+      {/* Example 1 */}
+      <Typography sx={{ mt: 1, color: grey[700] }}>
+        How satisfied are you with our customer service?
+      </Typography>
+      {/* Indented options */}
+      <Box sx={{ pl: 2, color: grey[700] }}>
+        <Typography sx={{ color: grey[700] }}>A) Very satisfied</Typography>
+        <Typography sx={{ color: grey[700] }}>B) Satisfied</Typography>
+        <Typography sx={{ color: grey[700] }}>C) Neutral</Typography>
+        <Typography sx={{ color: grey[700] }}>D) Dissatisfied</Typography>
+        <Typography sx={{ color: grey[700] }}>E) Very dissatisfied</Typography>
       </Box>
-      {"\n"}
-      What is the capital of France?{"\n"}
-      <Box
-        component="span"
-        sx={{ display: "block", marginLeft: "16px", color: "grey.500" }}
-      >
-        A) Paris{"\n"}
-        B) London{"\n"}
-        C) Berlin{"\n"}
-        D) Madrid
-      </Box>
-      <Box
-        component="span"
+
+      {/* 'or' */}
+      <Typography
         sx={{
-          display: "block",
           textAlign: "center",
-          fontSize: "20px",
+          fontSize: "18px",
           fontWeight: 500,
-          color: "grey.400",
-          marginY: "8px",
+          my: 1,
+          color: grey[700],
         }}
       >
         or
-      </Box>
-      <Box component="span" sx={{ color: "grey.500" }}>
-        What is the capital of France?{"\n"}
-        <Box component="span" sx={{ display: "block", marginLeft: "16px" }}>
-          Paris{"\n"}
-          London{"\n"}
-          Berlin{"\n"}
-          Madrid
-        </Box>
+      </Typography>
+
+      {/* Example 2 */}
+      <Typography sx={{ color: grey[700] }}>
+        How satisfied are you with our customer service?
+      </Typography>
+      {/* Indented options without labels */}
+      <Box sx={{ pl: 2 }}>
+        <Typography sx={{ color: grey[700] }}>Very satisfied</Typography>
+        <Typography sx={{ color: grey[700] }}>Satisfied</Typography>
+        <Typography sx={{ color: grey[700] }}>Neutral</Typography>
+        <Typography sx={{ color: grey[700] }}>Dissatisfied</Typography>
+        <Typography sx={{ color: grey[700] }}>Very dissatisfied</Typography>
       </Box>
     </Box>
   );

@@ -40,7 +40,6 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
       setRefreshKey((prev) => !prev);
     }
   }, [backgroundColor, backgroundImage]);
-  console.log("backgroundColor", backgroundColor);
   return (
     <Box
       key={boxKey}
@@ -52,7 +51,7 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
         minHeight: "72vh",
         // height: "auto",
         flexGrow: 1,
-        borderRadius: 6,
+        borderRadius: "24px",
         bgcolor: "#FFFFFF",
         border: "3px solid #E0E0E0",
         boxShadow: " 0 4px 20px rgba(0, 0, 0, 0.08)",

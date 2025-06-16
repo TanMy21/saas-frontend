@@ -5,11 +5,9 @@ import {
   type SelectChangeEvent,
 } from "@mui/material";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
 import { SurveySorterProps } from "../../utils/types";
 
 const SurveySorter = ({ sortBy, setSortBy }: SurveySorterProps) => {
-  const { background, shadows } = useElectricTheme();
   const handleSortChange = (event: SelectChangeEvent) => {
     setSortBy(
       event.target.value as "Date created" | "Date updated" | "Alphabetically"
@@ -27,16 +25,6 @@ const SurveySorter = ({ sortBy, setSortBy }: SurveySorterProps) => {
           height: "100%",
           mt: "1%",
           borderRadius: 3,
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: background.soft5,
-          },
-          "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: background.soft5,
-          },
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: background.soft5,
-            boxShadow: shadows[10],
-          },
         }}
       >
         <MenuItem value={"Date created"}>Date created</MenuItem>

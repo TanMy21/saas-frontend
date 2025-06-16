@@ -9,6 +9,7 @@ import {
   initializeTypography,
   resetTypography,
 } from "../app/slices/elementTypographySlice";
+import { setSurveyCanvas } from "../app/slices/surveyCanvasSlice";
 import { useGetSurveyCanvasByIdQuery } from "../app/slices/surveysApiSlice";
 import { setElements } from "../app/slices/surveySlice";
 import { fetchUser, selectUser } from "../app/slices/userSlice";
@@ -18,10 +19,10 @@ import CanvasConsole from "../components/CanvasConsole";
 import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
 import GenerateSurveyModal from "../components/Modals/GenerateSurveyModal";
 import ImportQuestionsModal from "../components/Modals/ImportQuestionsModal";
-import ScrollbarStyle from "../components/ScrollbarStyle";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
 import SurveyPreferencesPanel from "../components/Surveys/SurveyPreferencesPanel";
+import { SurveyCanvasRefetchContext } from "../context/BuilderRefetchCanvas";
 import { Element, LocationStateProps } from "../utils/types";
 
 const SurveyBuilder = () => {
@@ -58,14 +59,15 @@ const SurveyBuilder = () => {
     error: errorCanvas,
     isLoading: isLoadingCanvas,
     isFetching: isFetchingCanvas,
+    refetch: refetchCanvas,
   } = useGetSurveyCanvasByIdQuery(surveyID, {
     skip: !surveyID,
     pollingInterval: 200000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-
-  const { questions = [] as Element[], title } = surveyCanvas || {};
+  const { getSurveyCanvas } = surveyCanvas ?? {};
+  const { questions = [] as Element[], title } = getSurveyCanvas ?? {};
 
   useEffect(() => {
     if (isErrorCanvas) {
@@ -80,6 +82,12 @@ const SurveyBuilder = () => {
       setLoading(true);
     }
   }, [isLoadingCanvas, isFetchingCanvas, questions]);
+
+  useEffect(() => {
+    if (surveyCanvas) {
+      dispatch(setSurveyCanvas(surveyCanvas));
+    }
+  }, [surveyCanvas, dispatch]);
 
   useEffect(() => {
     if (questions && questions.length > 0) {
@@ -137,22 +145,24 @@ const SurveyBuilder = () => {
 
   return (
     <>
-      <ScrollbarStyle />
+      {/* <ScrollbarStyle /> */}
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           width: "100%",
           height: "100vh",
+          overflow: "hidden",
           border: "2px solid black",
         }}
       >
+        {/* Header */}
         <Box
           sx={{
             display: "flex",
             width: "100%",
             height: "6vh",
-            border: "2px solid red",
+            // border: "2px solid red",
             flexShrink: 0,
           }}
         >
@@ -163,38 +173,25 @@ const SurveyBuilder = () => {
             title={title}
           />
         </Box>
+        {/* Builder */}
         <Box
           sx={{
             display: "flex",
+            flexDirection: "row",
             width: "100%",
-            alignItems: "stretch",
-            overflowX: "hidden",
-            overflowY: "auto",
-            minHeight: "94vh",
-            height: "auto",
-            border: "2px solid green",
-            "&::-webkit-scrollbar": {
-              width: "10px", // Scrollbar width
-            },
-            "&::-webkit-scrollbar-track": {
-              background: "#f1f1f1", // Scrollbar track color
-            },
-            "&::-webkit-scrollbar-thumb": {
-              background: "#61A5D2", // Scrollbar thumb color
-              borderRadius: "10px", // Rounded corners on the scrollbar thumb
-              "&:hover": {
-                background: "#555", // Scrollbar thumb hover color
-              },
-            },
+            minHeight: 0,
+            height: "calc(100vh - 64px)",
+            flexGrow: 1,
+            overflow: "hidden",
           }}
         >
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
               width: "16%",
-              height: "auto",
-              border: "2px solid blue",
+              height: "94vh",
+              flexShrink: 0,
+              backgroundColor: "white",
+              borderRight: "2px solid #E5E7EB",
             }}
           >
             <SurveyBuilderLeftSidebar
@@ -203,29 +200,23 @@ const SurveyBuilder = () => {
               elements={elements}
             />
           </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "68%",
-              height: "auto",
-              border: "2px solid blue",
-            }}
-          >
-            <CanvasConsole
-              display={display}
-              setDisplay={setDisplay}
-              question={selectedQuestion}
-              noElements={noElements}
-            />
+          <Box sx={{ width: "68%", height: "94vh", flexShrink: 0 }}>
+            <SurveyCanvasRefetchContext.Provider value={refetchCanvas}>
+              <CanvasConsole
+                display={display}
+                setDisplay={setDisplay}
+                question={selectedQuestion}
+                noElements={noElements}
+              />
+            </SurveyCanvasRefetchContext.Provider>
           </Box>
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
               width: "16%",
-              height: "auto",
-              border: "2px solid blue",
+              height: "94vh",
+              flexShrink: 0,
+              backgroundColor: "white",
+              borderLeft: "2px solid #E5E7EB",
             }}
           >
             <SurveyPreferencesPanel

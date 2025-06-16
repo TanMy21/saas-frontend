@@ -54,8 +54,8 @@ const CreateNewSurveyCard = ({
           >
             <Box
               sx={{
-                width: 48,
-                height: 48,
+                width: { md: 40, xl: 48 },
+                height: { md: 40, xl: 48 },
                 backgroundColor: background.soft6,
                 borderRadius: "50%",
                 display: "flex",
@@ -68,7 +68,9 @@ const CreateNewSurveyCard = ({
               <AddIcon sx={{ fontSize: 24, color: primary.dark }} />
             </Box>
             <Typography sx={textStyles.strongH6}>Create new survey</Typography>
-            <Typography sx={textStyles.bodyGrey}>
+            <Typography
+              sx={{ ...textStyles.bodyGrey, fontSize: { md: 16, xl: 20 } }}
+            >
               Start collecting valuable feedback
             </Typography>
           </ButtonBase>

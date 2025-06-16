@@ -11,11 +11,13 @@ import {
 import { useUpdateElementOrderMutation } from "../../../app/slices/elementApiSlice";
 import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
+import { useElectricTheme } from "../../../theme/useElectricTheme";
 import { ElementsPanelProps, Element } from "../../../utils/types";
 
 import ElementsListItem from "./ElementsListItem";
 
 const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
+  const { scrollStyles } = useElectricTheme();
   const [updateElementOrder /*{ isError, error }*/] =
     useUpdateElementOrderMutation();
 
@@ -107,25 +109,11 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
     <>
       <Box
         sx={{
-          // padding: "8px",
           overflowY: "auto",
           overflowX: "hidden",
           maxWidth: { md: "100%", lg: "100%", xl: "100%" },
           maxHeight: "98%",
-          scrollbarGutter: "stable both-edges",
-          "&::-webkit-scrollbar": {
-            width: "10px", // Scrollbar width
-          },
-          "&::-webkit-scrollbar-track": {
-            background: "#f1f1f1", // Scrollbar track color
-          },
-          "&::-webkit-scrollbar-thumb": {
-            background: "#752FEC", // Scrollbar thumb color
-            borderRadius: "10px", // Rounded corners on the scrollbar thumb
-            "&:hover": {
-              background: "#555", // Scrollbar thumb hover color
-            },
-          },
+          ...scrollStyles.elementsPanel,
         }}
       >
         {elements.length === 0 ? null : (

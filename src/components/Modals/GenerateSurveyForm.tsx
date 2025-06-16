@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { useGenerateSurveyMutation } from "../../app/slices/surveysApiSlice";
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { questionTypes } from "../../utils/elementsConfig";
 import { generateSurveySchema } from "../../utils/schema";
 import {
@@ -15,7 +16,12 @@ import {
 } from "../../utils/types";
 import GenerateSurveyLoader from "../Loaders/GenerateSurveyLoader";
 
-const GenerateSurveyForm = ({ surveyID, setOpen }: GenerateSurveyFormProps) => {
+const GenerateSurveyForm = ({
+  surveyID,
+  setOpen,
+  handleClose,
+}: GenerateSurveyFormProps) => {
+  const { scrollStyles } = useElectricTheme();
   const [generateSurvey, { isLoading, isError, error }] =
     useGenerateSurveyMutation();
 
@@ -60,6 +66,7 @@ const GenerateSurveyForm = ({ surveyID, setOpen }: GenerateSurveyFormProps) => {
       }).unwrap();
       reset();
       setOpen(false);
+      handleClose();
     } catch (error) {
       console.error("Error generating survey:", error);
     }
@@ -87,40 +94,39 @@ const GenerateSurveyForm = ({ surveyID, setOpen }: GenerateSurveyFormProps) => {
       {isLoading ? (
         <GenerateSurveyLoader />
       ) : (
-        <>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            height: "100%",
+            // border: "2px solid green",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
+              margin: "auto",
               width: "100%",
-              height: "100%",
+              height: "92%",
+              // border: "2px solid green",
             }}
           >
+            {/* form */}
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 gap: 0.5,
-                width: "92%",
-                height: "720px",
+                width: "96%",
+                height: "560px",
                 overflowX: "hidden",
                 scrollBehavior: "smooth",
                 overflowY: "auto",
-                "&::-webkit-scrollbar": {
-                  width: "8px",
-                },
-                "&::-webkit-scrollbar-track": {
-                  background: "#f1f1f1",
-                },
-                "&::-webkit-scrollbar-thumb": {
-                  background: "#752FEC",
-                  borderRadius: "10px",
-                  "&:hover": {
-                    background: "#555",
-                  },
-                },
                 margin: "auto",
                 p: 1,
+                ...scrollStyles.elementsPanel,
                 // border: "2px solid green",
               }}
             >
@@ -303,37 +309,38 @@ const GenerateSurveyForm = ({ surveyID, setOpen }: GenerateSurveyFormProps) => {
               </Box>
             </Box>
           </Box>
+          {/* buttons */}
           <Box
             sx={{
               display: "flex",
+              flexDirection: "column",
+              margin: "auto",
               width: "100%",
-              height: "60px",
-              justifyContent: "flex-end",
-              p: 1,
-              border: "2px solid red",
+              height: "8%",
               borderTop: "1px solid #E0E0E0",
             }}
           >
-            <Button
-              variant="contained"
-              onClick={handleSubmit(onSubmit)}
+            <Box
               sx={{
-                alignSelf: "flex-end",
-                mr: "4%",
-                textTransform: "capitalize",
-                backgroundColor: "#752FEC",
-                color: "white",
-                fontWeight: "bold",
-                "&.MuiButton-root:hover": {
-                  bgcolor: "#752FEC",
-                },
-                borderRadius: 2,
+                display: "flex",
+                width: "100%",
+                height: "40px",
+                justifyContent: "flex-end",
+                p: 1,
               }}
             >
-              Generate
-            </Button>
+              <Button
+                variant="submitBtn2"
+                type="submit"
+                disabled={isLoading}
+                onClick={handleSubmit(onSubmit)}
+                sx={{ width: "24%", height: "36px", mr: "28px" }}
+              >
+                Generate
+              </Button>
+            </Box>
           </Box>
-        </>
+        </Box>
       )}
     </>
   );

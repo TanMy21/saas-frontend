@@ -10,6 +10,10 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
       query: (surveyID) => `/s/survey/${surveyID}`,
       providesTags: ["Surveys"],
     }),
+    getSurveySettings: builder.query({
+      query: (surveyID) => `/s/settings/${surveyID}`,
+      providesTags: ["Surveys"],
+    }),
     getSurveyCanvasById: builder.query({
       query: (surveyID) => `/s/survey/canvas/${surveyID}`,
       providesTags: ["Surveys"],
@@ -47,27 +51,14 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Surveys"],
     }),
     updateSurvey: builder.mutation({
-      query: ({
-        surveyID,
-        title,
-        description,
-        startDate,
-        endDate,
-        language,
-        responseLimit,
-        isTemplate,
-      }) => ({
-        url: `/s/${surveyID}`,
+      query: ({ surveyID, startDate, endDate, language }) => ({
+        url: `/s/settings/${surveyID}`,
         method: "PUT",
         body: {
           surveyID,
-          title,
-          description,
           startDate,
           endDate,
           language,
-          responseLimit,
-          isTemplate,
         },
       }),
       invalidatesTags: ["Surveys"],
@@ -113,6 +104,7 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetSurveysQuery,
+  useGetSurveySettingsQuery,
   useGetSurveyByIdQuery,
   useGetSurveyCanvasByIdQuery,
   useCreateSurveyMutation,

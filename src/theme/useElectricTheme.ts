@@ -28,6 +28,7 @@ export const useElectricTheme = () => {
     background: theme.palette.background,
     grey: theme.palette.grey,
     textStyles: theme.textStyles,
+    tabStyles: theme.tabStyles,
     scrollStyles: theme.scrollStyles,
     spacing: theme.spacing,
   };

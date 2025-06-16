@@ -3,6 +3,7 @@ import { useState } from "react";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { Box, Button, TextField } from "@mui/material";
 
+import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
 import { ImportQuestionModalInputFieldProps } from "../../utils/types";
 
 import ImportQuestionModalPlaceholderTxt from "./ImportQuestionModalPlaceholderTxt";
@@ -11,25 +12,35 @@ const ImportQuestionModalInputField = ({
   surveyID,
   isLoading,
   importQuestions,
+  importText,
+  setImportText,
+  setImportBtnClicked,
   handleClose,
 }: ImportQuestionModalInputFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [value, setValue] = useState("");
+  const refetchCanvas = useSurveyCanvasRefetch();
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setValue(event.target.value);
+    setImportText(event.target.value);
   };
 
   const handleImport = async () => {
     try {
+      setImportBtnClicked(true);
       // const questionsGenerated =
+
+      if (importText.trim().length === 0) {
+        return;
+      }
+
       await importQuestions({
         surveyID,
-        value,
+        value: importText,
       }).unwrap();
-      setValue("");
+      setImportText("");
+      refetchCanvas();
       handleClose();
     } catch (error) {
       console.error(error);
@@ -41,8 +52,8 @@ const ImportQuestionModalInputField = ({
         position: "relative",
         borderRadius: "12px",
         border: "1px solid",
-        width: "96%",
-        height: "96%",
+        width: "98%",
+        height: "98%",
         margin: "auto",
         borderColor: isFocused ? "#6366F1" : "#CBD5E1",
         boxShadow: isFocused
@@ -56,9 +67,15 @@ const ImportQuestionModalInputField = ({
         overflow: "hidden",
       }}
     >
-      <Box sx={{ height: "100%", overflow: "auto", padding: "4px" }}>
+      <Box
+        sx={{
+          height: "100%",
+          overflow: "auto",
+          padding: "4px",
+        }}
+      >
         <TextField
-          value={value}
+          value={importText}
           onChange={handleChange}
           multiline
           // minRows={16}
@@ -101,7 +118,7 @@ const ImportQuestionModalInputField = ({
         />
       </Box>
       {/* Placeholder Overlay */}
-      {value.length === 0 && <ImportQuestionModalPlaceholderTxt />}
+      {importText.length === 0 && <ImportQuestionModalPlaceholderTxt />}
       {/* Upload Button */}
       <Box
         sx={{
@@ -116,7 +133,7 @@ const ImportQuestionModalInputField = ({
           disabled={isLoading}
           sx={{
             borderRadius: "50%",
-            backgroundColor: "#434EE7",
+            backgroundColor: "#005BC4",
             color: "#FFFFFF",
             position: "absolute",
             bottom: "16px",
@@ -126,7 +143,7 @@ const ImportQuestionModalInputField = ({
             minWidth: "36px",
             transition: "all 0.2s ease",
             "&:hover": {
-              backgroundColor: "#434EE7",
+              backgroundColor: "#005BC4",
               color: "#FFFFFF",
               transform: "scale(1.2)",
             },

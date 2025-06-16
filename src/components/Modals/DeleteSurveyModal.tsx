@@ -63,7 +63,7 @@ const DeleteSurveyModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 400,
-          height: 104,
+          minHeight: 120,
           bgcolor: "background.paper",
           borderRadius: 3,
           p: 4,
@@ -86,8 +86,25 @@ const DeleteSurveyModal = ({
               You will lose all the data associated with this survey:
             </Typography>
           </Box>
-          <Box>
-            <Typography sx={{ fontWeight: "bold" }} mt={1} mb={1}>
+          <Box
+            sx={{
+              display: "flex",
+              width: "98%",
+              height: "60%",
+              textWrap: "wrap",
+            }}
+          >
+            <Typography
+              sx={{
+                fontWeight: "bold",
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
+                lineHeight: 1.4,
+              }}
+              mt={1}
+              mb={1}
+            >
               {sTitle} will be permanently deleted
             </Typography>
           </Box>
@@ -100,45 +117,21 @@ const DeleteSurveyModal = ({
               height: "40px",
               gap: 2,
               mt: 1,
-              mb: 2,
+              mb: "-4%",
             }}
           >
             <Button
               type="button"
               onClick={onClose}
-              variant="text"
+              variant="outlined"
               size="small"
-              sx={{
-                backgroundColor: "#E4E2E2",
-                color: "black",
-                height: "80%",
-                "&.MuiButton-root:hover": {
-                  bgcolor: "#E4E2E2",
-                },
-                textTransform: "capitalize",
-                borderRadius: 2,
-              }}
             >
               Cancel
             </Button>
-
             <Button
               type="submit"
-              variant="text"
+              variant="dangerBtn"
               size="small"
-              sx={{
-                backgroundColor: "#B31212",
-                color: "white",
-                width: "28%",
-                height: "80%",
-                "&.MuiButton-root:hover": {
-                  bgcolor: "#B31212",
-                },
-                textTransform: "capitalize",
-                borderRadius: 2,
-                fontWeight: "bold",
-              }}
-              color="error"
               onClick={handleDeleteSurvey}
             >
               {isLoading ? "Deleting..." : "Yes, Delete it"}

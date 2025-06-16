@@ -94,11 +94,14 @@ const Signup = () => {
       <Container component="main" sx={{ width: "100%", minHeight: "900px" }}>
         <Box
           sx={{
-            minHeight: "100vh",
+            width: "80%",
+            height: { md: "78%" },
             display: "flex",
             alignItems: "center",
+            margin: "auto",
             justifyContent: "center",
             p: 3,
+            border: "2px solid green",
             // backgroundColor: "#F8F9FF",
           }}
         >

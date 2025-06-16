@@ -86,8 +86,8 @@ const SurveyListCard = ({
               <Avatar
                 sx={{
                   bgcolor: brand.avatarBg2,
-                  width: 40,
-                  height: 40,
+                  width: { md: 36, xl: 40 },
+                  height: { md: 36, xl: 40 },
                   mb: { lg: "12px", xl: "0px" },
                 }}
                 variant="rounded"
@@ -107,7 +107,9 @@ const SurveyListCard = ({
                 <Typography sx={textStyles.cardSurveyTitle} noWrap>
                   {survey.title}
                 </Typography>
-                <Typography sx={textStyles.cardSurveyCreatedAt}>
+                <Typography
+                  sx={{ ...textStyles.cardSurveyCreatedAt, mb: { md: 2 } }}
+                >
                   created: {formatDate(survey.createdAt)}
                 </Typography>
               </Box>
@@ -117,10 +119,7 @@ const SurveyListCard = ({
             value={`${elements.length}`}
             title={"Questions"}
           />
-          <ListSurveyCardMetricIndicator
-            value={`${elements.length}`}
-            title={"Responses"}
-          />
+          <ListSurveyCardMetricIndicator value={`0`} title={"Responses"} />
           <Box
             sx={{
               display: "flex",

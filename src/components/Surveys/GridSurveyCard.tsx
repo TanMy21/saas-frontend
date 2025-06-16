@@ -84,7 +84,9 @@ const GridSurveyCard = ({
                 {survey.title}
               </Typography>
             </Tooltip>
-            <Typography sx={textStyles.cardSurveyCreatedAt}>
+            <Typography
+              sx={{ ...textStyles.cardSurveyCreatedAt, fontSize: { md: 16 } }}
+            >
               created: {formatDate(survey.createdAt)}
             </Typography>
           </ButtonBase>

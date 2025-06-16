@@ -11,6 +11,7 @@ import {
 import { addElement } from "../../../app/slices/surveySlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
+import { useElectricTheme } from "../../../theme/useElectricTheme";
 import { elementIcons } from "../../../utils/elementsConfig";
 import { AddElementMenuProps, Element, ErrorData } from "../../../utils/types";
 
@@ -21,6 +22,7 @@ const AddElementMenu = ({
   handleClose,
   handleClick,
 }: AddElementMenuProps) => {
+  const { primary } = useElectricTheme();
   const dispatch = useAppDispatch();
   const [createElement, { isError, error }] = useCreateElementMutation();
 
@@ -147,13 +149,16 @@ const AddElementMenu = ({
       <IconButton
         onClick={handleClick}
         sx={{
-          background: "#752FEC",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          background: primary.dark,
           width: "32px",
           height: "32px",
           borderRadius: 4,
           color: "white",
           "&:hover": {
-            backgroundColor: "#752FEC",
+            backgroundColor: primary.dark,
           },
         }}
       >

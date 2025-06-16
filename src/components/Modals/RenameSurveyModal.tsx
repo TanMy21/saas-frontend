@@ -112,40 +112,17 @@ const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
                   <Button
                     type="button"
                     onClick={onClose}
-                    variant="text"
-                    size="small"
-                    sx={{
-                      width: "16%",
-                      height: "80%",
-                      p: 1,
-                      backgroundColor: "#E4E2E2",
-                      color: "black",
-                      fontWeight: "bold",
-                      "&.MuiButton-root:hover": {
-                        bgcolor: "#E4E2E2",
-                      },
-                      textTransform: "capitalize",
-                      borderRadius: 2,
-                    }}
+                    variant="outlined"
+                    size="medium"
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
-                    variant="text"
+                    variant="submitBtn2"
                     size="small"
                     sx={{
                       width: "28%",
-                      height: "80%",
-                      p: 1,
-                      backgroundColor: "#752FEC",
-                      color: "white",
-                      fontWeight: "bold",
-                      "&.MuiButton-root:hover": {
-                        bgcolor: "#752FEC",
-                      },
-                      textTransform: "capitalize",
-                      borderRadius: 2,
                     }}
                   >
                     Rename

@@ -61,7 +61,7 @@ export const DashBoardHeader = ({
             justifyContent: "flex-start",
             alignItems: "center",
             gap: 1,
-            width: { lg: "64%", xl: "36%" },
+            width: { lg: "40%", xl: "36%" },
             height: "96%",
             // border: "2px solid blue",
           }}

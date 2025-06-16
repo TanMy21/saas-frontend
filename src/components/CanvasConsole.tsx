@@ -22,8 +22,8 @@ const CanvasConsole = ({
       sx={{
         display: "flex",
         flexDirection: "column",
+        overflowY: "visible",
         width: "100%",
-        flexGrow: 1,
         // border: "2px solid orange",
       }}
     >
@@ -31,7 +31,7 @@ const CanvasConsole = ({
       <Box
         sx={{
           marginLeft: "1%",
-          marginTop: "2%",
+          marginTop: "1%",
           maxWidth: "98%",
           minHeight: "84%",
         }}

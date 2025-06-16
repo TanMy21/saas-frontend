@@ -1,22 +1,23 @@
 import { useState } from "react";
 
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import EmailIcon from "@mui/icons-material/Email";
-import FacebookIcon from "@mui/icons-material/Facebook";
+// import EmailIcon from "@mui/icons-material/Email";
+// import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkIcon from "@mui/icons-material/Link";
 import ShareIcon from "@mui/icons-material/Share";
-import XIcon from "@mui/icons-material/X";
+// import XIcon from "@mui/icons-material/X";
 import {
   Box,
   Button,
   InputAdornment,
-  InputBase,
+  // InputBase,
   Modal,
   TextField,
   Typography,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { ShareSurveyProps } from "../../utils/types";
 
 const ShareSurveyModal = ({
@@ -25,6 +26,7 @@ const ShareSurveyModal = ({
   setShareBtnSelected,
   setOpenSnackbar,
 }: ShareSurveyProps) => {
+  const { background, textStyles } = useElectricTheme();
   const [copied, setCopied] = useState(false);
   const { surveyID } = useParams();
   const shareBaseURL = import.meta.env.VITE_SHARE_BASE_URL;
@@ -61,9 +63,9 @@ const ShareSurveyModal = ({
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 500,
-            height: 212,
-            bgcolor: "background.paper",
-            borderRadius: "8px",
+            height: 220,
+            bgcolor: background.paper,
+            borderRadius: "16px",
             // border: "2px solid red",
           }}
         >
@@ -80,11 +82,7 @@ const ShareSurveyModal = ({
             }}
           >
             <ShareIcon />
-            <Typography
-              id="modal-modal-title"
-              fontSize={24}
-              sx={{ color: "#37415C" }}
-            >
+            <Typography sx={textStyles.modalTitle}>
               Share your survey
             </Typography>
           </Box>
@@ -131,9 +129,9 @@ const ShareSurveyModal = ({
                   flexDirection: "row",
                   justifyContent: "flex-start",
                   alignItems: "flex-end",
-                  width: "98%",
+                  width: "100%",
                   height: "48px",
-                  gap: 2,
+                  gap: 4,
                   // border: "2px solid green",
                 }}
               >
@@ -184,29 +182,10 @@ const ShareSurveyModal = ({
                   }}
                 />
                 <Button
-                  variant="contained"
+                  variant="submitBtn2"
                   onClick={handleCopyClick}
                   endIcon={<ContentCopyIcon />}
-                  sx={{
-                    marginBottom: "2%",
-                    borderRadius: 2,
-                    px: 3,
-                    py: 0.8,
-                    fontWeight: "bold",
-                    ...(copied
-                      ? {
-                          backgroundColor: "#F9FAFB",
-                          borderColor: "#E5E7EB",
-                          color: "#374151",
-                        }
-                      : {
-                          backgroundColor: "#F9FAFB",
-                          borderColor: "#E5E7EB",
-                          color: "#374151",
-                          "&:hover": { backgroundColor: "#F9FAFB" },
-                        }),
-                    textTransform: "none",
-                  }}
+                  sx={{ mb: 1 }}
                 >
                   {copied ? "Copied!" : "Copy"}
                 </Button>
@@ -297,35 +276,32 @@ const ShareSurveyModal = ({
             sx={{
               display: "flex",
               width: "100%",
+              height: "56px",
+              padding: "4px 0px",
               justifyContent: "flex-end",
               borderTop: "1px solid #f3f4f6",
-              pb: 1,
               // border: "2px solid red",
             }}
           >
-            <Button
-              type="button"
-              onClick={() => setOpen(false)}
-              variant="outlined"
-              size="small"
+            <Box
               sx={{
-                width: "16%",
-                height: "80%",
-                p: 1,
-                mr: 3,
-                mt: 1,
-                color: "#374151",
-                borderColor: "#E5E7EB",
-                fontWeight: "bold",
-                "&.MuiButton-root:hover": {
-                  bgcolor: "transparent",
-                },
-                textTransform: "capitalize",
-                borderRadius: 2,
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                margin: "auto",
+                width: "92%",
+                height: "92%",
               }}
             >
-              Close
-            </Button>
+              <Button
+                type="button"
+                onClick={() => setOpen(false)}
+                variant="cancelBtn"
+                size="medium"
+              >
+                Cancel
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Modal>

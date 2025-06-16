@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { ZodType, z } from "zod";
 
@@ -8,61 +8,29 @@ dayjs.extend(isSameOrAfter);
 
 const hexColorRegex = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
 
+const isoDateField = z
+  .string()
+  .optional()
+  .refine((date) => !date || dayjs(date).isValid(), {
+    message: "Invalid date format",
+  })
+  .refine((date) => !date || dayjs(date).isSameOrAfter(dayjs(), "day"), {
+    message: "Date cannot be older than today",
+  });
+
 export const settingsUpdateSchema = z.object({
+  startDate: z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), {
+    message: "Invalid start date",
+  }),
+  endDate: z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), {
+    message: "Invalid end date",
+  }),
+  language: z.string(),
+});
+
+export const titleDescriptionUpdateSchema = z.object({
   title: z.string().min(1, "Title must be at least 1 character long"),
   description: z.string(),
-  startDate: z
-    .string()
-    .optional()
-    .refine(
-      (date) => {
-        if (!date) return true; // Allow if empty
-        const parsedDate = dayjs(date, "DD/MM/YYYY");
-        return parsedDate.isValid();
-      },
-      {
-        message: "Invalid start date format",
-      }
-    )
-    .refine(
-      (date) => {
-        if (!date) return true; // Allow if empty
-        const parsedDate = dayjs(date, "DD/MM/YYYY");
-        return parsedDate.isSameOrAfter(dayjs(), "day");
-      },
-      {
-        message: "Start date cannot be older than today",
-      }
-    ),
-  endDate: z
-    .string()
-    .optional()
-    .refine((date) => !date || dayjs(date, "DD/MM/YYYY").isValid(), {
-      message: "Invalid end date format",
-    })
-    .refine(
-      (date) => {
-        if (!date) return true; // Allow if empty
-        const parsedDate = dayjs(date, "DD/MM/YYYY");
-        return parsedDate.isValid();
-      },
-      {
-        message: "Invalid end date format",
-      }
-    )
-    .refine(
-      (date) => {
-        if (!date) return true; // Allow if empty
-        const parsedDate = dayjs(date, "DD/MM/YYYY");
-        return parsedDate.isSameOrAfter(dayjs(), "day");
-      },
-      {
-        message: "End date cannot be older than today",
-      }
-    ),
-  responseLimit: z.number().optional(),
-  language: z.string(),
-  isTemplate: z.boolean(),
 });
 
 export const downloadDataSchema = z.object({

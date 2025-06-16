@@ -85,6 +85,7 @@ const electricBlueLightTheme = createTheme({
     },
     text: {
       primary: "#1A202C",
+      primaryDark: "#022B67",
       secondary: "#718096",
       danger: "#B91A1A",
       tabRoot: "#34375D",
@@ -101,20 +102,16 @@ const electricBlueLightTheme = createTheme({
     },
     divider: "#CBD5E0",
     grey: {
-      100: "#A0AEC0",
-      200: "#CBD5E0",
-      300: "#E2E8F0",
-      400: "#F1F5F9",
-      500: "#1F2937",
-      600: "#374151",
-      700: "#4E5866",
-      800: "#59626F",
-      900: "#4B5563",
-      910: "#666F7C",
-      920: "#69707F",
-      930: "#7F8692",
-      935: "#808792",
-      940: "#969EAE",
+      100: "#F9FAFB",  
+      200: "#F3F4F6",  
+      300: "#E5E7EB",  
+      400: "#D1D5DB",  
+      500: "#9CA3AF",  
+      600: "#6B7280",  
+      700: "#4B5563",  
+      800: "#374151",  
+      900: "#1F2937",  
+      910: "#111827",  
     },
   },
   brand: {
@@ -354,7 +351,7 @@ const electricBlueLightTheme = createTheme({
             px: "36px",
             // p: "24px 48px",
             backgroundColor: "transparent",
-            color: "black",
+            color: "#005BC4",
             fontWeight: "bold",
             border: "1px solid rgb(81, 142, 211)",
             "&.MuiButton-root:hover": {
@@ -473,6 +470,11 @@ const electricBlueLightTheme = createTheme({
       color: "#332C49",
       padding: "8px",
     },
+    modalTitle: {
+      fontSize: "24px",
+      fontWeight: "bold",
+      color: "#272F3F",
+    },
     cardSurveyTitle: {
       fontSize: "1.25rem",
       fontWeight: "bold",
@@ -514,8 +516,61 @@ const electricBlueLightTheme = createTheme({
       color: "#6B727F",
     },
   },
+  tabStyles: {
+    base: {
+      height: "64px",
+      minHeight: "64px",
+      "& .MuiTabs-flexContainer": {
+        alignItems: "flex-end", // push tabs to bottom
+        height: "100%",
+      },
+      "& .MuiTab-root": {
+        minHeight: "auto",
+        paddingBottom: "4px", // THIS adds spacing between text & indicator
+      },
+      "& .MuiTabs-indicator": {
+        height: "3px",
+        backgroundColor: "#6366F1",
+      },
+    },
+    createTab: {
+      fontWeight: 600,
+      "&.Mui-selected": {
+        color: "#6366F1",
+        "& .MuiTab-iconWrapper": {
+          color: "#6366F1",
+        },
+      },
+    },
+    flowTab: {
+      fontWeight: 600,
+      color: "#1ABEBE",
+      "&.Mui-selected": {
+        color: "#1ABEBE",
+        "& .MuiTab-iconWrapper": {
+          color: "#1ABEBE",
+        },
+      },
+    },
+    resultsTab: {
+      fontWeight: 600,
+      color: "#B9A90B",
+      "&.Mui-selected": {
+        color: "#B9A90B",
+        "& .MuiTab-iconWrapper": {
+          color: "#B9A90B",
+        },
+      },
+    },
+    indicatorColorMap: {
+      create: "#6366F1",
+      flow: "#1ABEBE",
+      results: "#B9A90B",
+    },
+  },
   scrollStyles: {
     custom1: {
+      scrollbarGutter: "stable both-edges",
       overflowX: "hidden",
       overflowY: "hidden",
       width: "100%",
@@ -528,6 +583,38 @@ const electricBlueLightTheme = createTheme({
       },
       "&::-webkit-scrollbar-thumb": {
         background: "#61A5D2",
+        borderRadius: "10px",
+        "&:hover": {
+          background: "#555",
+        },
+      },
+    },
+    builderMain: {
+      scrollbarGutter: "stable both-edges",
+      "&::-webkit-scrollbar": {
+        width: "10px",
+      },
+      "&::-webkit-scrollbar-track": {
+        background: "#f1f1f1",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        background: "#005BC4",
+        borderRadius: "10px",
+        "&:hover": {
+          background: "#555",
+        },
+      },
+    },
+    elementsPanel: {
+      scrollbarGutter: "stable both-edges",
+      "&::-webkit-scrollbar": {
+        width: "8px",
+      },
+      "&::-webkit-scrollbar-track": {
+        background: "#f1f1f1",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        background: "#005BC4",
         borderRadius: "10px",
         "&:hover": {
           background: "#555",

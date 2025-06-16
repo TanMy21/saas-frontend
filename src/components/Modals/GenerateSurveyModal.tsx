@@ -8,6 +8,10 @@ import { GenerateSurveyModalProps } from "../../utils/types";
 
 import GenerateSurveyForm from "./GenerateSurveyForm";
 
+export interface GenerateSurveyFormRef {
+  submit: () => void;
+}
+
 const GenerateSurveyModal = ({
   openGenerate,
   setOpenGenerate,
@@ -35,7 +39,7 @@ const GenerateSurveyModal = ({
           transform: "translate(-50%, -50%)",
           width: 600,
           bgcolor: "#FAFAFA",
-          borderRadius: 3,
+          borderRadius: "16px",
           overflow: "hidden",
         }}
       >
@@ -43,7 +47,6 @@ const GenerateSurveyModal = ({
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 1,
             margin: "auto",
             width: "100%",
             height: 720,
@@ -98,11 +101,11 @@ const GenerateSurveyModal = ({
               display: "flex",
               flexDirection: "column",
               width: "100%",
-              height: "80%",
+              height: "92%",
               // border: "2px solid red",
             }}
           >
-            <GenerateSurveyForm surveyID={surveyID!} setOpen={setOpen} />
+            <GenerateSurveyForm surveyID={surveyID!} setOpen={setOpen} handleClose={handleClose}/>
           </Box>
         </Box>
       </Box>

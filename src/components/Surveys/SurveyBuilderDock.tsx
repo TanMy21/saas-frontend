@@ -6,13 +6,16 @@ import { BsFillShareFill } from "react-icons/bs";
 import { CiMobile3 } from "react-icons/ci";
 import { IoMdSettings } from "react-icons/io";
 import { IoDesktop } from "react-icons/io5";
+import { MdEdit } from "react-icons/md";
 import { RiAiGenerate } from "react-icons/ri";
+import { useParams } from "react-router-dom";
 
 import { DockItemProps, SurveyIslandProps } from "../../utils/types";
 import GenerateSurveyModal from "../Modals/GenerateSurveyModal";
 import ImportQuestionsModal from "../Modals/ImportQuestionsModal";
 import ShareSurveyModal from "../Modals/ShareSurveyModal";
 import SurveySettingsModal from "../Modals/SurveySettingsModal";
+import SurveyTitleEditModal from "../Modals/SurveyTitleEditModal";
 import SnackbarAlert from "../SnackbarAlert";
 
 const DOCK_HEIGHT = 36;
@@ -20,10 +23,12 @@ const DEFAULT_ICON_SIZE = 36;
 const HOVER_ICON_SIZE = 64;
 
 const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
+  const { surveyID } = useParams();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openShare, setOpenShare] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [openGenerate, setOpenGenerate] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
   const [shareBtnSelected, setShareBtnSelected] = useState(false);
@@ -32,20 +37,26 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
     {
       id: "mobile",
       icon: <CiMobile3 />,
-      label: "Mobile View",
+      label: "Mobile view",
       action: () => setDisplay("mobile"),
     },
     {
       id: "desktop",
       icon: <IoDesktop />,
-      label: "Desktop View",
+      label: "Desktop view",
       action: () => setDisplay("desktop"),
     },
     {
       id: "share",
       icon: <BsFillShareFill />,
-      label: "Share Survey",
+      label: "Share survey",
       action: () => setOpenShare(true),
+    },
+    {
+      id: "edit-sruvey",
+      icon: <MdEdit />,
+      label: "Edit survey",
+      action: () => setOpenEdit(true),
     },
     {
       id: "settings",
@@ -56,13 +67,13 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
     {
       id: "import",
       icon: <UploadIcon />,
-      label: "Import Questions",
+      label: "Import questions",
       action: () => setOpenImport(true),
     },
     {
       id: "generate",
       icon: <RiAiGenerate />,
-      label: "Generate Questions",
+      label: "Generate questions",
       action: () => setOpenGenerate(true),
     },
   ];
@@ -74,7 +85,7 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
         left: 0,
         right: 0,
         margin: "auto",
-        marginTop: { xl: "2%" },
+        marginTop: { md: "5%", xl: "2%" },
         marginBottom: "0%",
         backgroundColor: "#FFF",
         borderRadius: 5,
@@ -109,7 +120,10 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
         setOpenSnackbar={setOpenSnackbar}
       />
 
+      <SurveyTitleEditModal openEdit={openEdit} setOpenEdit={setOpenEdit} />
+
       <SurveySettingsModal
+        surveyID={surveyID!}
         openSettings={openSettings}
         setOpenSettings={setOpenSettings}
       />

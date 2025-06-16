@@ -43,8 +43,8 @@ const SurveyBuilderLeftSidebar = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "auto",
-        // border: "2px solid green",
+        width: "100%",
+        height: "100%",
       }}
     >
       <Box
@@ -53,8 +53,9 @@ const SurveyBuilderLeftSidebar = ({
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          width: "92%",
-          p: 1,
+          width: { md: "88%", xl: "92%" },
+          p: 2,
+          pt: { md: 3 },
           height: "40px",
           borderBottom: "1px solid #F3F4F6",
           // border: "2px solid blue",

@@ -1,4 +1,5 @@
 import { type Edge, type Node } from "@xyflow/react";
+import { Dayjs } from "dayjs";
 import type { JwtPayload } from "jwt-decode";
 import type { MRT_ColumnDef } from "material-react-table";
 import { type DroppableProvided } from "react-beautiful-dnd";
@@ -360,6 +361,7 @@ export interface GenerateSurveyModalProps {
 export interface GenerateSurveyFormProps {
   surveyID: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleClose: () => void;
 }
 
 export interface LocationStateProps {
@@ -416,6 +418,9 @@ export interface ImportQuestionProps {
 export interface ImportQuestionModalInputFieldProps {
   surveyID: string;
   isLoading: boolean;
+  importText: string;
+  setImportText: React.Dispatch<React.SetStateAction<string>>;
+  setImportBtnClicked: React.Dispatch<React.SetStateAction<boolean>>;
   importQuestions: ReturnType<typeof useImportQuestionsMutation>[0];
   handleClose: () => void;
 }
@@ -432,6 +437,12 @@ export interface InsightCardProps {
 export interface InputResponseProps {
   inputPlaceholder: string;
   submitButtonText: string;
+}
+
+export interface Language {
+  id: string;
+  code: string;
+  name: string;
 }
 
 export interface MediaElementCardProps {
@@ -706,13 +717,16 @@ export interface ResetPassword {
 }
 
 export interface SettingsFormData {
+  startDate: Dayjs | null;
+  endDate: Dayjs | null;
+  responseLimit?: number;
+  language: string;
+  isTemplate?: boolean;
+}
+
+export interface SurveyTitleAndDescription {
   title: string;
   description: string;
-  startDate: string;
-  endDate: string;
-  responseLimit: number;
-  language: string;
-  isTemplate: boolean;
 }
 
 export interface SnackbarAlertProps {
@@ -823,8 +837,14 @@ export interface ShareSurveyProps {
 }
 
 export interface SurveySettingsProps {
+  surveyID: string;
   openSettings: boolean;
   setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface SurveyTitleEditModalProps {
+  openEdit: boolean;
+  setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface SurveyIslandProps {
@@ -842,7 +862,17 @@ export interface SurveyBuilderHeaderProps {
   survey: Survey;
   workspaceId: string;
   workspaceName: string;
-  title: string;
+  title?: string;
+  surveyTitle?: string;
+}
+
+export interface SurveyBuilderHeaderTabsProps {
+  tabValue: string;
+  setTabValue: React.Dispatch<React.SetStateAction<string>>;
+  survey: Survey;
+  surveyID: string;
+  workspaceId: string;
+  workspaceName: string;
 }
 
 export interface SurveyPreferencesPanelProps {

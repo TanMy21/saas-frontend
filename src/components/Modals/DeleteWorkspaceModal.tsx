@@ -78,7 +78,7 @@ const DeleteWorkspaceModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 400,
-          height: 228,
+          minHeight: 240,
           bgcolor: background.paper,
           borderRadius: 3,
           p: 2,
@@ -97,9 +97,26 @@ const DeleteWorkspaceModal = ({
               You will lose all the data associated with this workspace:
             </Typography>
           </Box>
-          <Box>
-            <Typography sx={{ fontWeight: "bold" }} mt={1} mb={1}>
-              {name} will be permanently deleted
+          <Box
+            sx={{
+              display: "flex",
+              width: "98%",
+              height: "60%",
+              textWrap: "wrap",
+            }}
+          >
+            <Typography
+              sx={{
+                fontWeight: "bold",
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
+                lineHeight: 1.4,
+              }}
+              mt={1}
+              mb={2}
+            >
+              {name} will be permanently deleted{" "}
             </Typography>
           </Box>
           <Box>
@@ -126,8 +143,7 @@ const DeleteWorkspaceModal = ({
                   justifyContent: "flex-end",
                   height: "40px",
                   gap: 2,
-                  mt: 0.5,
-                  mb: 2,
+                  mt: 2,
                 }}
               >
                 <Button

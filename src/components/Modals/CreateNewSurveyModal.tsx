@@ -15,7 +15,6 @@ import { toast } from "react-toastify";
 import { useUpdateSurveyTitleandDescriptionMutation } from "../../app/slices/surveysApiSlice";
 import { ErrorData, SurveyNameProps } from "../../utils/types";
 
-
 const CreateNewSurveyModal = ({
   isOpen,
   surveyID,
@@ -91,58 +90,91 @@ const CreateNewSurveyModal = ({
           transform: "translate(-50%, -50%)",
           width: 400,
           bgcolor: "background.paper",
-          borderRadius: 1,
-          p: 4,
+          borderRadius: "16px",
+          p: 2,
         }}
       >
-        <Box>
-          <Box
-            display={"flex"}
-            flexDirection={"row"}
-            justifyContent={"space-between"}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            margin: "0 auto",
+            justifyContent: "space-between",
+            width: "98%",
+            height: "8%",
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Create your new survey
+          </Typography>
+          <IconButton
+            aria-label="more"
+            aria-controls="long-menu"
+            aria-haspopup="true"
+            onClick={onClose}
           >
-            <Box>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Create your new survey
-              </Typography>
-            </Box>
-            <Box>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={onClose}
-                sx={{ marginTop: -2 }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          </Box>
+            <CloseIcon />
+          </IconButton>
         </Box>
         <Box>
           <form onSubmit={handleSubmit(handleNameSurvey)}>
-            <Box sx={{ mt: 1 }}>
-              <Box>
-                <Typography>Name your survey: </Typography>
-              </Box>
-              <Box>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  size="small"
-                  defaultValue={"New Survey name"}
-                  id="surveyName"
-                  autoComplete="Name of Survey"
-                  autoFocus
-                  {...register("surveyName")}
-                />
-              </Box>
-            </Box>
-            <Box>
-              <Typography>Small description for your survey: </Typography>
-            </Box>
-            <Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                margin: "0 auto",
+                gap: 0.5,
+                width: "100%",
+                height: "80%",
+                mt: 1,
+                // border: "2px solid blue",
+              }}
+            >
+              {/* name your survey */}
+              <Typography
+                sx={{
+                  fontSize: "16px",
+                  fontStyle: "bold",
+                  color: "#272F3F",
+                }}
+              >
+                Name your survey:
+              </Typography>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                size="small"
+                defaultValue={"New Survey name"}
+                id="surveyName"
+                autoFocus
+                {...register("surveyName")}
+                sx={{
+                  marginTop: "0%",
+                  width: "100%",
+                  "& .MuiInputBase-root": {
+                    height: "48px",
+                    borderRadius: 2,
+                    border: "1px solid #e5e7eb",
+                    px: 0.5,
+                    py: 0.5,
+                    "&:hover": { borderColor: "#a3a3a3" },
+                    "&.Mui-focused": {
+                      borderColor: "transparent",
+                    },
+                  },
+                }}
+              />
+              {/* description of survey */}
+              <Typography
+                sx={{
+                  fontSize: "16px",
+                  fontStyle: "bold",
+                  color: "#272F3F",
+                }}
+              >
+                Small description for your survey:
+              </Typography>
               <TextField
                 margin="normal"
                 required
@@ -150,55 +182,55 @@ const CreateNewSurveyModal = ({
                 size="small"
                 defaultValue={"Description of Survey"}
                 id="surveyDescription"
-                autoComplete="Description of survey"
                 autoFocus
                 {...register("surveyDescription")}
+                sx={{
+                  marginTop: "0%",
+                  width: "100%",
+                  "& .MuiInputBase-root": {
+                    height: "48px",
+                    borderRadius: 2,
+                    border: "1px solid #e5e7eb",
+                    px: 0.5,
+                    py: 0.5,
+                    "&:hover": { borderColor: "#a3a3a3" },
+                    "&.Mui-focused": {
+                      borderColor: "transparent",
+                    },
+                  },
+                }}
               />
-            </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"flex-end"}
-            >
-              <Box mr={2}>
-                <Button
-                  type="button"
-                  onClick={onClose}
-                  variant="text"
-                  size="small"
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end ",
+                  width: "100%",
+                  height: "10%",
+                }}
+              >
+                <Box
                   sx={{
-                    mt: 3,
-                    mb: 2,
-                    backgroundColor: "#E4E2E2",
-                    color: "black",
-                    "&.MuiButton-root:hover": {
-                      bgcolor: "#E4E2E2",
-                    },
-                    textTransform: "capitalize",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    gap: 2,
+                    width: "60%",
+                    height: "98%",
                   }}
                 >
-                  Cancel
-                </Button>
-              </Box>
-              <Box>
-                <Button
-                  type="submit"
-                  variant="text"
-                  size="small"
-                  sx={{
-                    mt: 3,
-                    mb: 2,
-                    backgroundColor: "#262627",
-                    color: "white",
-                    "&.MuiButton-root:hover": {
-                      bgcolor: "#262627",
-                    },
-                    textTransform: "capitalize",
-                  }}
-                  color="error"
-                >
-                  Continue
-                </Button>
+                  <Button type="button" onClick={onClose} variant="cancelBtn">
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="submitBtn2"
+                    size="small"
+                    sx={{ width: "100px" }}
+                  >
+                    Continue
+                  </Button>
+                </Box>
               </Box>
             </Box>
           </form>

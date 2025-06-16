@@ -54,6 +54,15 @@ declare module "@mui/material/styles" {
       listViewMetricLabelValue?: React.CSSProperties;
       listViewMetricLabelTitle?: React.CSSProperties;
       newActionCardSubtitle?: React.CSSProperties;
+      modalTitle?: React.CSSProperties;
+    };
+
+    tabStyles: {
+      base: SxProps<Theme>;
+      createTab: SxProps<Theme>;
+      flowTab: SxProps<Theme>;
+      resultsTab: SxProps<Theme>;
+      indicatorColorMap: Record<string, string>;
     };
 
     iconStyles: {
@@ -66,6 +75,8 @@ declare module "@mui/material/styles" {
 
     scrollStyles: {
       custom1: CSSObject;
+      builderMain: CSSObject;
+      elementsPanel: CSSObject;
     };
   }
 
@@ -81,9 +92,11 @@ declare module "@mui/material/styles" {
       700?: string;
       800?: string;
       900?: string;
+      905?: string;
       910?: string;
       920?: string;
       930?: string;
+      931?: string;
       940?: string;
       950?: string;
       955?: string;
@@ -109,6 +122,7 @@ declare module "@mui/material/styles" {
   }
 
   interface TypeText {
+    primaryDark?: string;
     danger?: string;
     tabRoot?: string;
     tabSelected?: string;
@@ -142,9 +156,17 @@ declare module "@mui/material/styles" {
     };
 
     textStyles?: Partial<Theme["textStyles"]>;
-
+    tabStyles?: {
+      base?: SxProps<Theme>;
+      createTab?: SxProps<Theme>;
+      flowTab?: SxProps<Theme>;
+      resultsTab?: SxProps<Theme>;
+      indicatorColorMap?: Record<string, string>;
+    };
     scrollStyles?: {
       custom1?: CSSObject;
+      builderMain?: CSSObject;
+      elementsPanel?: CSSObject;
     };
   }
 
@@ -169,14 +191,17 @@ declare module "@mui/material/Button" {
     cancelBtn: true;
     submitBtn2: true;
     dangerBtn: true;
+    addBtn: true;
   }
 }
 
 declare module "@mui/material" {
   interface Color {
+    905?: string;
     910?: string;
     920?: string;
     930?: string;
+    931?: string;
     935?: string;
     940?: string;
     950?: string;

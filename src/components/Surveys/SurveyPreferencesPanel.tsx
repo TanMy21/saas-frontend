@@ -1,6 +1,6 @@
-import SettingsIcon from "@mui/icons-material/Settings";
 import { Box } from "@mui/material";
 
+import { useElectricTheme } from "../../theme/useElectricTheme";
 import { SurveyPreferencesPanelProps } from "../../utils/types";
 
 import ElementSettingsContainer from "./ElementSettings/ElementSettingsContainer";
@@ -9,36 +9,25 @@ const SurveyPreferencesPanel = ({
   questionId,
   question,
 }: SurveyPreferencesPanelProps) => {
+  const { scrollStyles } = useElectricTheme();
   return (
     <Box
       id="question-settings"
       sx={{
         display: "flex",
         flexDirection: "column",
-        flexGrow: 1,
-        width: "100%",
-        minHeight: "100%",
-        height: "auto",
-        overflowY: "scroll",
+        width: "98%",
+        height: "100%",
         overflowX: "hidden",
-        scrollBehavior: "smooth",
+        overflowY: "auto",
         left: "0",
         right: "0",
-        // border: "2px solid green",
-        borderLeft: "2px solid #E5E7EB",
+        backgroundColor: "white",
+        pt: { md: 2, xl: 1 },
+        ...scrollStyles.elementsPanel,
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          minHeight: "92%",
-          // border: "2px solid green",
-        }}
-      >
-        <ElementSettingsContainer questionId={questionId} question={question} />
-      </Box>
+      <ElementSettingsContainer questionId={questionId} question={question} />
     </Box>
   );
 };

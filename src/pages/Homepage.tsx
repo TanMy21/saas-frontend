@@ -52,8 +52,8 @@ const Homepage = () => {
             <Box
               sx={{
                 display: "flex",
-                width: "80%",
-                height: "80%",
+                width: { md: "200px", xl: "80%" },
+                height: { md: "200px", xl: "80%" },
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -68,15 +68,23 @@ const Homepage = () => {
               justifyContent: "center",
               alignItems: "center",
               gap: "2%",
-              width: "92%",
+              p: 2,
+              width: { md: "98%", xl: "92%" },
               height: "30%",
-              margin: "0 auto 0 auto",
-              // border: "2px solid orange",
+              margin: "0 auto",
+              marginTop: { md: "4%" },
             }}
           >
-            <Typography sx={textStyles.gradientPrimary}>
-              Welcome to Feedflo
-            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "row" }}>
+              <Typography sx={textStyles.gradientPrimary}>
+                Welcome to
+              </Typography>
+              <Typography
+                sx={{ ...textStyles.gradientPrimary, fontStyle: "italic" }}
+              >
+                &nbsp;Feedflo
+              </Typography>
+            </Box>
             <Typography sx={textStyles.subtitleText}>
               Your gateway to valuable insights
             </Typography>
@@ -127,7 +135,7 @@ const Homepage = () => {
             // border: "4px solid black",
           }}
         >
-          <Typography sx={{ color: grey[500] }}>
+          <Typography sx={{ color: grey[200] }}>
             &copy; 2025 Feedflo. All rights reserved.
           </Typography>
         </Box>

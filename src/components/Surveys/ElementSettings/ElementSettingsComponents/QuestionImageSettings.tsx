@@ -3,12 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ImageIcon from "@mui/icons-material/Image";
-import Switch from "@mui/joy/Switch";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
+  Switch,
 } from "@mui/material";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";

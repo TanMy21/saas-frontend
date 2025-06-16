@@ -92,7 +92,6 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
         >
           Survey Tags
         </Typography>
-
         <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
           <TextField
             inputRef={inputRef}
@@ -116,14 +115,20 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
               width: "20%",
               height: "80%",
               p: 1,
-              backgroundColor: "#752FEC",
+              backgroundColor: "#005BC4",
               color: "white",
               fontWeight: "bold",
+              "& .MuiButton-label": {
+                color: "white",
+              },
+              "& .MuiTypography-root": {
+                color: "white",
+              },
               "&.MuiButton-root:hover": {
-                bgcolor: "#752FEC",
+                backgroundColor: "#005BC4",
               },
               textTransform: "capitalize",
-              borderRadius: 2,
+              borderRadius: "16px",
             }}
           >
             Add
@@ -158,46 +163,19 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
             justifyContent: "flex-end",
             gap: 2,
             mt: 1,
+            mb: "-4%",
           }}
         >
-          <Button
-            variant="text"
-            onClick={onClose}
-            sx={{
-              width: "16%",
-              height: "80%",
-              p: 1,
-              backgroundColor: "#E4E2E2",
-              color: "black",
-              fontWeight: "bold",
-              "&.MuiButton-root:hover": {
-                bgcolor: "#E4E2E2",
-              },
-              textTransform: "capitalize",
-              borderRadius: 2,
-            }}
-          >
+          <Button variant="outlined" onClick={onClose}>
             Cancel
           </Button>
           <Button
             type="submit"
-            variant="text"
+            variant="submitBtn2"
             size="small"
             disabled={isLoading}
-            sx={{
-              width: "28%",
-              height: "100%",
-              p: "9px",
-              backgroundColor: "#752FEC",
-              color: "white",
-              fontWeight: "bold",
-              "&.MuiButton-root:hover": {
-                bgcolor: "#752FEC",
-              },
-              textTransform: "capitalize",
-              borderRadius: 2,
-            }}
             onClick={handleSave}
+            sx={{ width: "160px" }}
           >
             {isLoading ? "Saving Tags..." : "Save Tags"}
           </Button>
