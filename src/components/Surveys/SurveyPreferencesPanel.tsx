@@ -16,15 +16,14 @@ const SurveyPreferencesPanel = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        width: "98%",
+        width: "100%",
         height: "100%",
         overflowX: "hidden",
         overflowY: "auto",
-        left: "0",
-        right: "0",
         backgroundColor: "white",
         pt: { md: 2, xl: 1 },
         ...scrollStyles.elementsPanel,
+        // border:"2px solid red",
       }}
     >
       <ElementSettingsContainer questionId={questionId} question={question} />

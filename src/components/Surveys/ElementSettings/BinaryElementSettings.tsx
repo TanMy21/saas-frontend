@@ -15,6 +15,7 @@ const BinaryElementSettings = ({ qID }: ElementSettingsProps) => {
         flexDirection: "column",
         width: "100%",
         heigh: "100%",
+        // border:"2px solid blue",
       }}
     >
       <QuestionTextandDescriptionSettings />

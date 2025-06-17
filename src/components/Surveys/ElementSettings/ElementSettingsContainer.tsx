@@ -1,3 +1,5 @@
+import { Box } from "@mui/material";
+
 import { elementSettingsComponents } from "../../../utils/elementsConfig";
 import {
   ElementSettingsContainerProps,
@@ -16,9 +18,20 @@ const ElementSettingsContainer = ({
   return (
     <>
       {/* Element view */}
-      {question?.type && (
-        <ElementSettingsComponent qID={questionId!} question={question} />
-      )}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          height: "100%",
+          marginLeft:"-4%",
+          // border: "2px solid green",
+        }}
+      >
+        {question?.type && (
+          <ElementSettingsComponent qID={questionId!} question={question} />
+        )}
+      </Box>
     </>
   );
 };

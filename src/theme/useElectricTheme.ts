@@ -1,7 +1,7 @@
 import { useTheme } from "@mui/material/styles";
 import { type Theme } from "@mui/material/styles";
 
-export const useElectricTheme = () => {
+export const useAppTheme = () => {
   const theme = useTheme<Theme>() as Theme & {
     gradient: {
       from: string;

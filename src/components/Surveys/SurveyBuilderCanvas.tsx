@@ -48,7 +48,7 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "96%",
-        minHeight: "72vh",
+        height: { md: "70vh", xl: "72vh" },
         // height: "auto",
         flexGrow: 1,
         borderRadius: "24px",
@@ -66,7 +66,12 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
-        overflow: "hidden",
+        overflowX: "hidden",
+        overflowY: "auto",
+        scrollbarWidth: "none",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
       }}
     >
       <ElementBackgroundPreferencesButtons

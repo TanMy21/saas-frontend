@@ -90,6 +90,10 @@ const QuestionTextandDescriptionSettings = () => {
         borderTop: "1px solid #E0E0E0",
         borderRadius: 0,
         boxShadow: "none",
+        "& .MuiAccordionSummary-root": {
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+        },
       }}
       defaultExpanded
     >

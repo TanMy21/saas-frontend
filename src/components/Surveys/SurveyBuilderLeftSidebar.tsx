@@ -45,6 +45,7 @@ const SurveyBuilderLeftSidebar = ({
         flexDirection: "column",
         width: "100%",
         height: "100%",
+        overflow: "hidden",
       }}
     >
       <Box
@@ -53,36 +54,47 @@ const SurveyBuilderLeftSidebar = ({
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          width: { md: "88%", xl: "92%" },
-          p: 2,
-          pt: { md: 3 },
-          height: "40px",
-          borderBottom: "1px solid #F3F4F6",
-          // border: "2px solid blue",
+          margin: "2% auto",
+          width: "100%",
+          height: "48px",
+          marginTop: { md: "8%", xl: "4%" },
+          borderBottom: "2px solid #F3F4F6",
         }}
       >
         {/* Menu */}
-        <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
-          {`Questions (${questionCount})`}
-        </Typography>
         <Box
-          id="add-element-menu"
           sx={{
             display: "flex",
-            justifyContent: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
             alignItems: "center",
-            width: "15%",
-            height: "38px",
-            // border: "2px solid red",
+            margin: "0 auto",
+            width: "92%",
+            height: "98%",
           }}
         >
-          <AddElementMenu
-            surveyID={surveyID!}
-            anchorEl={anchorEl}
-            open={open}
-            handleClick={handleClick}
-            handleClose={handleClose}
-          />
+          <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
+            {`Questions (${questionCount})`}
+          </Typography>
+          <Box
+            id="add-element-menu"
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "15%",
+              height: "38px",
+              // border: "2px solid red",
+            }}
+          >
+            <AddElementMenu
+              surveyID={surveyID!}
+              anchorEl={anchorEl}
+              open={open}
+              handleClick={handleClick}
+              handleClose={handleClose}
+            />
+          </Box>
         </Box>
       </Box>
       <ElementsPanel setQuestionId={setQuestionId} />
