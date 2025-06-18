@@ -18,7 +18,7 @@ import {
   useGetSurveyByIdQuery,
   useUpdateSurveyTitleandDescriptionMutation,
 } from "../../app/slices/surveysApiSlice";
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { titleDescriptionUpdateSchema } from "../../utils/schema";
 import {
   ErrorData,
@@ -31,7 +31,7 @@ const SurveyTitleEditModal = ({
   openEdit,
   setOpenEdit,
 }: SurveyTitleEditModalProps) => {
-  const { textStyles } = useElectricTheme();
+  const { textStyles } = useAppTheme();
   const { surveyID } = useParams();
   const { data: survey } = useGetSurveyByIdQuery(surveyID, {
     skip: !surveyID,

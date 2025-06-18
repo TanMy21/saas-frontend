@@ -4,10 +4,10 @@ import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import HomepageLogo from "../components/HomepageLogo";
-import { useElectricTheme } from "../theme/useElectricTheme";
+import { useAppTheme } from "../theme/useAppTheme";
 
 const Homepage = () => {
-  const { textStyles, background, grey } = useElectricTheme();
+  const { textStyles, background, grey } = useAppTheme();
 
   return (
     <>

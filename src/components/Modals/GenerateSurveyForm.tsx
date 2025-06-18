@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { useGenerateSurveyMutation } from "../../app/slices/surveysApiSlice";
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { questionTypes } from "../../utils/elementsConfig";
 import { generateSurveySchema } from "../../utils/schema";
 import {
@@ -21,7 +21,7 @@ const GenerateSurveyForm = ({
   setOpen,
   handleClose,
 }: GenerateSurveyFormProps) => {
-  const { scrollStyles } = useElectricTheme();
+  const { scrollStyles } = useAppTheme();
   const [generateSurvey, { isLoading, isError, error }] =
     useGenerateSurveyMutation();
 

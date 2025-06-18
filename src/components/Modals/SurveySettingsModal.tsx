@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 import { useUpdateSurveyMutation } from "../../app/slices/surveysApiSlice";
 import { RootState } from "../../app/store";
 import { useAppSelector } from "../../app/typedReduxHooks";
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { settingsUpdateSchema } from "../../utils/schema";
 import {
   ErrorData,
@@ -37,7 +37,7 @@ const SurveySettingsModal = ({
   openSettings,
   setOpenSettings,
 }: SurveySettingsProps) => {
-  const { scrollStyles, textStyles } = useElectricTheme();
+  const { scrollStyles, textStyles } = useAppTheme();
   const surveyCanvas = useAppSelector(
     (state: RootState) => state.surveyCanvas.data
   );

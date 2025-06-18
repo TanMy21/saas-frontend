@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { useCreateNewWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import {
   ErrorData,
   NewWorkspaceModalProps,
@@ -13,7 +13,7 @@ import {
 } from "../../utils/types";
 
 const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
-  const { background, textStyles } = useElectricTheme();
+  const { background, textStyles } = useAppTheme();
   const [createNewWorkspace, { isSuccess, isError, error }] =
     useCreateNewWorkspaceMutation();
 

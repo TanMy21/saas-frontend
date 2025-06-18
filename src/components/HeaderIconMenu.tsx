@@ -17,10 +17,10 @@ import { useNavigate } from "react-router-dom";
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
 import { useGetMeQuery } from "../app/slices/userApiSlice";
 import usePersist from "../hooks/persist";
-import { useElectricTheme } from "../theme/useElectricTheme";
+import { useAppTheme } from "../theme/useAppTheme";
 
 const HeaderIconMenu = () => {
-  const { brand, borders } = useElectricTheme();
+  const { brand, borders } = useAppTheme();
   const navigate = useNavigate();
   const [persist, setPersist] = usePersist();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

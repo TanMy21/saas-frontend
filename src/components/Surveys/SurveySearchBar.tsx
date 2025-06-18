@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { FaTag } from "react-icons/fa";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { SurveySearchBarProps } from "../../utils/types";
 
 const SurveySearchBar = ({
@@ -19,7 +19,7 @@ const SurveySearchBar = ({
   setTagOnly,
   setSearch,
 }: SurveySearchBarProps) => {
-  const { primary, brand, shadows, background, grey } = useElectricTheme();
+  const { primary, brand, shadows, background, grey } = useAppTheme();
 
   return (
     <>

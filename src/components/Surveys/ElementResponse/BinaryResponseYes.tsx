@@ -85,7 +85,7 @@ const BinaryResponseYes = ({
                 maxLength: 60,
               }}
               sx={{
-                width: "100%",
+                width: "96%",
                 outline: "none",
               }}
             />
@@ -99,6 +99,7 @@ const BinaryResponseYes = ({
               cursor: "text",
               borderRadius: 1,
               color: "#626B77",
+              width: "92%",
               fontSize: 16,
               fontWeight: "bold",
               "&:hover": {

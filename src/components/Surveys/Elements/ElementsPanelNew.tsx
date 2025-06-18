@@ -11,13 +11,13 @@ import {
 import { useUpdateElementOrderMutation } from "../../../app/slices/elementApiSlice";
 import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
-import { useElectricTheme } from "../../../theme/useElectricTheme";
+import { useAppTheme } from "../../../theme/useAppTheme";
 import { ElementsPanelProps, Element } from "../../../utils/types";
 
 import ElementsListItem from "./ElementsListItem";
 
 const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
-  const { scrollStyles } = useElectricTheme();
+  const { scrollStyles } = useAppTheme();
   const [updateElementOrder /*{ isError, error }*/] =
     useUpdateElementOrderMutation();
 

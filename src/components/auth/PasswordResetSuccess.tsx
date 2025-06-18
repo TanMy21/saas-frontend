@@ -3,14 +3,14 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import { ArrowLeftIcon } from "@mui/x-date-pickers";
 import { Link } from "react-router-dom";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { PasswordResetSuccessProps } from "../../utils/types";
 
 const PasswordResetSuccess = ({
   submittedEmail,
   reset,
 }: PasswordResetSuccessProps) => {
-  const { primary, background, grey, textStyles, shadows } = useElectricTheme();
+  const { primary, background, grey, textStyles, shadows } = useAppTheme();
   return (
     <Box
       sx={{

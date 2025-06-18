@@ -4,11 +4,11 @@ import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 
 const InvalidResetLinkCard = () => {
   const { textStyles, background, grey, shadows, iconStyle } =
-    useElectricTheme();
+    useAppTheme();
   return (
     <Box
       sx={{

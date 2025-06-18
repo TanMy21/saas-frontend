@@ -1,13 +1,13 @@
 import { Box, Typography } from "@mui/material";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { SurveyCardMetricIndicatorProps } from "../../utils/types";
 
 const GridSurveyCardMetricIndicator = ({
   value,
   title,
 }: SurveyCardMetricIndicatorProps) => {
-  const { background, textStyles } = useElectricTheme();
+  const { background, textStyles } = useAppTheme();
   return (
     <Box
       sx={{

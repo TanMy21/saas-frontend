@@ -100,6 +100,7 @@ const BinaryResponseNo = ({
               cursor: "text",
               borderRadius: 1,
               color: "#626B77",
+              width: "92%",
               fontSize: 16,
               fontWeight: "bold",
               "&:hover": {

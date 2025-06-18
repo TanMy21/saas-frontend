@@ -16,13 +16,13 @@ import {
   useGetMeQuery,
   useUpdateUserInfoMutation,
 } from "../../app/slices/userApiSlice";
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { updateUserInfoSchema } from "../../utils/schema";
 import { ErrorData, UpdateUserInfoFormData } from "../../utils/types";
 import FormErrors from "../FormErrors";
 
 const UpdateInfo = () => {
-  const { grey, brand } = useElectricTheme();
+  const { grey, brand } = useAppTheme();
   const { data: user } = useGetMeQuery("User", {
     refetchOnMountOrArgChange: true,
   });

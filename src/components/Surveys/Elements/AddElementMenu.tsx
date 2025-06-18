@@ -11,7 +11,7 @@ import {
 import { addElement } from "../../../app/slices/surveySlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
-import { useElectricTheme } from "../../../theme/useElectricTheme";
+import { useAppTheme } from "../../../theme/useAppTheme";
 import { elementIcons } from "../../../utils/elementsConfig";
 import { AddElementMenuProps, Element, ErrorData } from "../../../utils/types";
 
@@ -22,7 +22,7 @@ const AddElementMenu = ({
   handleClose,
   handleClick,
 }: AddElementMenuProps) => {
-  const { primary } = useElectricTheme();
+  const { primary } = useAppTheme();
   const dispatch = useAppDispatch();
   const [createElement, { isError, error }] = useCreateElementMutation();
 

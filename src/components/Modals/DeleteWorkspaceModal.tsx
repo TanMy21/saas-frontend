@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useDeleteWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import {
   ErrorData,
   WorkspaceDelete,
@@ -18,7 +18,7 @@ const DeleteWorkspaceModal = ({
   onClose,
   selectedWorkspace,
 }: WorkspaceDeleteModalProps) => {
-  const { background, textStyles } = useElectricTheme();
+  const { background, textStyles } = useAppTheme();
   const navigate = useNavigate();
 
   const { register, handleSubmit } = useForm<WorkspaceDelete>();

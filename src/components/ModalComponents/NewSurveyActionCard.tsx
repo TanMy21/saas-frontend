@@ -1,6 +1,6 @@
 import { Avatar, Box, ButtonBase, Typography } from "@mui/material";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { NewSurveyActionCardProps } from "../../utils/types";
 
 const NewSurveyActionCard = ({
@@ -9,7 +9,7 @@ const NewSurveyActionCard = ({
   actionTitle,
   actionSubTitle,
 }: NewSurveyActionCardProps) => {
-  const { borders, brand, primary, textStyles } = useElectricTheme();
+  const { borders, brand, primary, textStyles } = useAppTheme();
   return (
     <Box
       sx={{

@@ -24,13 +24,13 @@ import { toast } from "react-toastify";
 
 import { useAddNewUserMutation } from "../app/slices/userApiSlice";
 import FormErrors from "../components/FormErrors";
-import { useElectricTheme } from "../theme/useElectricTheme";
+import { useAppTheme } from "../theme/useAppTheme";
 import { registerSchema } from "../utils/signupSchema";
 import { ErrorData, RegisterFormData } from "../utils/types";
 
 const Signup = () => {
   const { primary, background, grey, shadows, gradient, borders, brand } =
-    useElectricTheme();
+    useAppTheme();
   const [addNewUser, { isLoading, isSuccess, isError, error }] =
     useAddNewUserMutation();
   const [showPassword, setShowPassword] = useState(false);

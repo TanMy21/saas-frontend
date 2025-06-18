@@ -1,7 +1,7 @@
 import { Box, ButtonBase, Tooltip, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { formatDate } from "../../utils/formatDate";
 import { GridSurveyCardProps } from "../../utils/types";
 
@@ -14,7 +14,7 @@ const GridSurveyCard = ({
   workspaceName,
   viewMode,
 }: GridSurveyCardProps) => {
-  const { grey, shadows, background, textStyles } = useElectricTheme();
+  const { grey, shadows, background, textStyles } = useAppTheme();
   const navigate = useNavigate();
   const goToSurvey = (surveyID: string) => {
     navigate(`/survey/${surveyID}`, {

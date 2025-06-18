@@ -6,10 +6,10 @@ import { SettingsPageHeader } from "../components/DashBoardHeader";
 import ScrollbarStyle from "../components/ScrollbarStyle";
 import UpdateInfo from "../components/Settings/UpdateInfo";
 import UpdatePassword from "../components/Settings/UpdatePassword";
-import { useElectricTheme } from "../theme/useElectricTheme";
+import { useAppTheme } from "../theme/useAppTheme";
 
 const Settings = () => {
-  const { scrollStyles, borders, background, palette } = useElectricTheme();
+  const { scrollStyles, borders, background, palette } = useAppTheme();
   const [tabIndex, setTabIndex] = useState(0);
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {

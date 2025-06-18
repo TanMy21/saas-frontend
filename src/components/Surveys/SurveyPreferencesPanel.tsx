@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { SurveyPreferencesPanelProps } from "../../utils/types";
 
 import ElementSettingsContainer from "./ElementSettings/ElementSettingsContainer";
@@ -9,7 +9,7 @@ const SurveyPreferencesPanel = ({
   questionId,
   question,
 }: SurveyPreferencesPanelProps) => {
-  const { scrollStyles } = useElectricTheme();
+  const { scrollStyles } = useAppTheme();
   return (
     <Box
       id="question-settings"

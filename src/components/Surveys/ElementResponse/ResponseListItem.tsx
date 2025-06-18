@@ -83,8 +83,7 @@ const ResponseListItem = ({
         borderRadius: 6,
         mb: 1.5,
         transition: "box-shadow 0.2s ease-in-out",
-        boxShadow:
-          "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
+        boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
         "&:hover": {
           backgroundColor: "#f5f7ff",
           boxShadow: "0 4px 12px rgba(80, 84, 255, 0.12)",
@@ -175,7 +174,7 @@ const ResponseListItem = ({
                 maxLength: 60,
               }}
               sx={{
-                width: "100%",
+                width: "96%",
                 outline: "none",
               }}
             />

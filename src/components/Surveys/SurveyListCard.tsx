@@ -3,7 +3,7 @@ import { Avatar, Box, ButtonBase, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { formatDate } from "../../utils/formatDate";
 import { SurveyListCardProps } from "../../utils/types";
 
@@ -16,7 +16,7 @@ const SurveyListCard = ({
   workspaceName,
 }: SurveyListCardProps) => {
   const { brand, background, textStyles, borders, iconStyle } =
-    useElectricTheme();
+    useAppTheme();
   const navigate = useNavigate();
   const { data: elements = [] } = useGetElementsForSurveyQuery(survey.surveyID);
 

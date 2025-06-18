@@ -17,13 +17,13 @@ import {
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { resetPasswordSchema } from "../../utils/schema";
 import { NewPasswordFormProps, ResetPasswordFormData } from "../../utils/types";
 import FormErrors from "../FormErrors";
 
 const NewPasswordForm = ({ code, resetPassword }: NewPasswordFormProps) => {
-  const { textStyles, background, grey, shadows } = useElectricTheme();
+  const { textStyles, background, grey, shadows } = useAppTheme();
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 

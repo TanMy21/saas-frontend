@@ -1,14 +1,14 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { MenuItem } from "@mui/material";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { WorkspaceMenuOptionsProps } from "../../utils/types";
 
 const RenameWorkspaceMenuOption = ({
   setAnchorEl,
   setOpenModal,
 }: WorkspaceMenuOptionsProps) => {
-  const { primary } = useElectricTheme();
+  const { primary } = useAppTheme();
   const handleClick = () => {
     setAnchorEl(null);
 

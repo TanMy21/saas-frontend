@@ -16,13 +16,13 @@ import { toast } from "react-toastify";
 
 import { useUpdatePasswordMutation } from "../../app/slices/authApiSlice";
 import { useGetMeQuery } from "../../app/slices/userApiSlice";
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { resetPasswordSchema } from "../../utils/schema";
 import { ErrorData, ResetPasswordFormData } from "../../utils/types";
 import FormErrors from "../FormErrors";
 
 const UpdatePassword = () => {
-  const { grey, brand } = useElectricTheme();
+  const { grey, brand } = useAppTheme();
 
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

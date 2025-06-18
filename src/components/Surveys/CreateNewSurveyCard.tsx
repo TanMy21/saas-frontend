@@ -3,7 +3,7 @@ import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, ButtonBase, Typography } from "@mui/material";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { NewSurveyProps } from "../../utils/types";
 import NewSurveyModal from "../Modals/NewSurveyModal";
 
@@ -12,7 +12,7 @@ const CreateNewSurveyCard = ({
   workspaceName,
   viewMode,
 }: NewSurveyProps) => {
-  const { background, primary, textStyles } = useElectricTheme();
+  const { background, primary, textStyles } = useAppTheme();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   return (

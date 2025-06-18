@@ -3,11 +3,11 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { VerificationEmailProps } from "../../utils/types";
 
 const VerificationEmailSent = ({ email }: VerificationEmailProps) => {
-  const { primary, secondary, grey, shadows, gradient } = useElectricTheme();
+  const { primary, secondary, grey, shadows, gradient } = useAppTheme();
   return (
     <Box
       sx={{

@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { ShareSurveyProps } from "../../utils/types";
 
 const ShareSurveyModal = ({
@@ -26,7 +26,7 @@ const ShareSurveyModal = ({
   setShareBtnSelected,
   setOpenSnackbar,
 }: ShareSurveyProps) => {
-  const { background, textStyles } = useElectricTheme();
+  const { background, textStyles } = useAppTheme();
   const [copied, setCopied] = useState(false);
   const { surveyID } = useParams();
   const shareBaseURL = import.meta.env.VITE_SHARE_BASE_URL;

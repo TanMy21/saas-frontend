@@ -4,7 +4,7 @@ import { Tab, Tabs } from "@mui/material";
 import { PiFlowArrowBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 
-import { useElectricTheme } from "../../../theme/useElectricTheme";
+import { useAppTheme } from "../../../theme/useAppTheme";
 import { SurveyBuilderHeaderTabsProps } from "../../../utils/types";
 
 const SurveyBuilderHeaderTabs = ({
@@ -16,7 +16,7 @@ const SurveyBuilderHeaderTabs = ({
   workspaceName,
 }: SurveyBuilderHeaderTabsProps) => {
   const navigate = useNavigate();
-  const { tabStyles } = useElectricTheme();
+  const { tabStyles } = useAppTheme();
   const headerProps = {
     tabValue,
     survey,

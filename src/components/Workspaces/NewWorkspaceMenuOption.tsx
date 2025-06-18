@@ -1,14 +1,14 @@
 import AddIcon from "@mui/icons-material/Add";
 import { MenuItem } from "@mui/material";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { NewWorkspaceMenuOptionProps } from "../../utils/types";
 
 const NewWorkspaceMenuOption = ({
   setAnchorEl,
   setOpenModal,
 }: NewWorkspaceMenuOptionProps) => {
-  const { primary } = useElectricTheme();
+  const { primary } = useAppTheme();
   const handleClick = () => {
     setAnchorEl(null);
 

@@ -3,7 +3,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { Box, Button, Paper, Typography } from "@mui/material";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { VerifyEmailCardProps } from "../../utils/types";
 
 const VerifyEmailCard = ({
@@ -16,7 +16,7 @@ const VerifyEmailCard = ({
   navigate,
 }: VerifyEmailCardProps) => {
   const { primary, background, grey, shadows, text, textStyles } =
-    useElectricTheme();
+    useAppTheme();
 
   const handleResendCode = async () => {
     try {

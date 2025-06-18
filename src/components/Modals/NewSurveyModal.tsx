@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useCreateSurveyMutation } from "../../app/slices/surveysApiSlice";
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { ErrorData, NewSurveyModalProps } from "../../utils/types";
 import NewSurveyActionCard from "../ModalComponents/NewSurveyActionCard";
 
@@ -18,7 +18,7 @@ const NewSurveyModal = ({
   workspaceId,
   workspaceName,
 }: NewSurveyModalProps) => {
-  const { background } = useElectricTheme();
+  const { background } = useAppTheme();
   const navigate = useNavigate();
 
   const handleClose = () => setOpen(false);

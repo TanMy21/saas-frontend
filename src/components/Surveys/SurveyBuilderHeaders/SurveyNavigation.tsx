@@ -3,7 +3,7 @@ import { Box, IconButton, Tooltip } from "@mui/material";
 import { FaAngleRight } from "react-icons/fa6";
 import { NavLink, useNavigate } from "react-router-dom";
 
-import { useElectricTheme } from "../../../theme/useElectricTheme";
+import { useAppTheme } from "../../../theme/useAppTheme";
 import { SurveyBuilderHeaderProps } from "../../../utils/types";
 
 const SurveyNavigation = ({
@@ -13,7 +13,7 @@ const SurveyNavigation = ({
   surveyTitle,
 }: SurveyBuilderHeaderProps) => {
   const navigate = useNavigate();
-  const { grey, text } = useElectricTheme();
+  const { grey, text } = useAppTheme();
 
   const handleNavigationBack = () => {
     navigate(-1);

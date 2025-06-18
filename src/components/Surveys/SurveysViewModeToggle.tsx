@@ -2,14 +2,14 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import ReorderIcon from "@mui/icons-material/Reorder";
 import { Box, IconButton } from "@mui/material";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { SurveyViewModeProps } from "../../utils/types";
 
 const SurveysViewModeToggle = ({
   viewMode,
   setViewMode,
 }: SurveyViewModeProps) => {
-  const { primary, background } = useElectricTheme();
+  const { primary, background } = useAppTheme();
   return (
     <Box
       sx={{

@@ -14,7 +14,7 @@ import {
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { forgetPasswordSchema } from "../../utils/schema";
 import {
   ForgotPasswordRequest,
@@ -28,7 +28,7 @@ const PasswordResetForm = ({
   isLoading,
   isSuccess,
 }: PasswordResetFormProps) => {
-  const { primary, background, grey, textStyles, shadows } = useElectricTheme();
+  const { primary, background, grey, textStyles, shadows } = useAppTheme();
 
   const {
     register,

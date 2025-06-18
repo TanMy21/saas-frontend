@@ -4,7 +4,7 @@ import { Box, Divider, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 
 import { useGetMeQuery } from "../app/slices/userApiSlice";
-import { useElectricTheme } from "../theme/useElectricTheme";
+import { useAppTheme } from "../theme/useAppTheme";
 import { getGreeting } from "../utils/formatDate";
 import { DashBoardHeaderProps } from "../utils/types";
 
@@ -18,7 +18,7 @@ export const DashBoardHeader = ({
   setRenameWorkspaceModalOpen,
   setDeleteWorkspaceModalOpen,
 }: DashBoardHeaderProps) => {
-  const { brand, textStyles } = useElectricTheme();
+  const { brand, textStyles } = useAppTheme();
 
   const [greeting, setGreeting] = useState(getGreeting());
 
@@ -109,7 +109,7 @@ export const DashBoardHeader = ({
 };
 
 export const SettingsPageHeader = () => {
-  const { textStyles, brand, background } = useElectricTheme();
+  const { textStyles, brand, background } = useAppTheme();
   const [greeting, setGreeting] = useState(getGreeting());
 
   const { data: user } = useGetMeQuery("User");

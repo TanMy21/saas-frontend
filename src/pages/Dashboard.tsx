@@ -14,11 +14,11 @@ import RenameWorkspaceModal from "../components/Modals/RenameWorkspaceModal";
 import DashboardTour from "../components/Tour/DashboardTour";
 import WorkspaceConsole from "../components/Workspaces/WorkspaceConsole";
 import useAuth from "../hooks/useAuth";
-import { useElectricTheme } from "../theme/useElectricTheme";
+import { useAppTheme } from "../theme/useAppTheme";
 import { ErrorData, Workspace } from "../utils/types";
 
 const Dashboard = () => {
-  const { background } = useElectricTheme();
+  const { background } = useAppTheme();
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector(selectUser);
   const { isAuthenticated } = useAuth();

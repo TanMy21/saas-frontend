@@ -15,12 +15,11 @@ import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useVerifyEmailQuery } from "../app/slices/authApiSlice";
-import { useElectricTheme } from "../theme/useElectricTheme";
+import { useAppTheme } from "../theme/useAppTheme";
 import { ErrorData } from "../utils/types";
 
 const VerifyUser = () => {
-  const { textStyles, background, grey, shadows, iconStyle } =
-    useElectricTheme();
+  const { textStyles, background, grey, shadows, iconStyle } = useAppTheme();
 
   const { verificationCode } = useParams();
 

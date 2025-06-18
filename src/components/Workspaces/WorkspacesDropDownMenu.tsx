@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 
 import { useGetWorkspacesQuery } from "../../app/slices/workspaceApiSlice";
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { Workspace, WorkspaceDropDownMenuProps } from "../../utils/types";
 
 import DeleteWorkspaceMenuOption from "./DeleteWorkspaceMenuOption";
@@ -25,7 +25,7 @@ const WorkspacesDropDownMenu = ({
   setRenameWorkspaceModalOpen,
   setDeleteWorkspaceModalOpen,
 }: WorkspaceDropDownMenuProps) => {
-  const { iconStyle, grey } = useElectricTheme();
+  const { iconStyle, grey } = useAppTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openWorkspaceMenu = Boolean(anchorEl);
 

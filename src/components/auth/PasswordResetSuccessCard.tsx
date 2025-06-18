@@ -3,11 +3,11 @@ import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 
 const PasswordResetSuccessCard = () => {
   const { textStyles, background, grey, shadows, iconStyle } =
-    useElectricTheme();
+    useAppTheme();
   return (
     <Box sx={{ width: "100%", maxWidth: 480, textAlign: "center" }}>
       {/* Header */}

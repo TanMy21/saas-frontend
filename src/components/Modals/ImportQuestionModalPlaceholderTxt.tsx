@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 
 const ImportQuestionModalPlaceholderTxt = () => {
-  const { grey } = useElectricTheme();
+  const { grey } = useAppTheme();
   return (
     <Box
       sx={{

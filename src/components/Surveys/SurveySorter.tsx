@@ -29,7 +29,7 @@ const SurveySorter = ({ sortBy, setSortBy }: SurveySorterProps) => {
       >
         <MenuItem value={"Date created"}>Date created</MenuItem>
         <MenuItem value={"Date updated"}>Date updated</MenuItem>
-        <MenuItem value={"Alphabetically"}>Alphabetical</MenuItem>
+        <MenuItem value={"Alphabetically"}>A-Z</MenuItem>
       </Select>
     </FormControl>
   );

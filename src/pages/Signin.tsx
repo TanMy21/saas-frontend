@@ -31,13 +31,13 @@ import { setCredentials } from "../app/slices/authSlice";
 import FormErrors from "../components/FormErrors";
 import LogoLoader from "../components/Loaders/LogoLoader";
 import usePersist from "../hooks/persist";
-import { useElectricTheme } from "../theme/useElectricTheme";
+import { useAppTheme } from "../theme/useAppTheme";
 import { loginSchema } from "../utils/schema";
 import { ErrorData, FetchBaseQueryError, LoginFormData } from "../utils/types";
 
 const Signin = () => {
   const { primary, background, grey, shadows, gradient, borders, brand } =
-    useElectricTheme();
+    useAppTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();

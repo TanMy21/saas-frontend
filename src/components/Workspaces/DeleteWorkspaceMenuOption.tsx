@@ -1,14 +1,14 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import { MenuItem } from "@mui/material";
 
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { WorkspaceMenuOptionsProps } from "../../utils/types";
 
 const DeleteWorkspaceMenuOption = ({
   setAnchorEl,
   setOpenModal,
 }: WorkspaceMenuOptionsProps) => {
-  const { text } = useElectricTheme();
+  const { text } = useAppTheme();
   const handleClick = () => {
     setAnchorEl(null);
 

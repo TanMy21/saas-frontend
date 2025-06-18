@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { useUpdateWorkspaceNameMutation } from "../../app/slices/workspaceApiSlice";
-import { useElectricTheme } from "../../theme/useElectricTheme";
+import { useAppTheme } from "../../theme/useAppTheme";
 import {
   ErrorData,
   WorkspaceRename,
@@ -17,7 +17,7 @@ const RenameWorkspaceModal = ({
   onClose,
   selectedWorkspace,
 }: WorkspaceRenameModalProps) => {
-  const { background, textStyles } = useElectricTheme();
+  const { background, textStyles } = useAppTheme();
   const [updateWorkspaceName, { isSuccess, isError, error }] =
     useUpdateWorkspaceNameMutation();
 
