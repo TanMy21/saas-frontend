@@ -36,7 +36,7 @@ const MediaElementCardIconBtns = ({
         transition: "opacity 0.3s ease",
       }}
     >
-      <Tooltip title="Replace Image">
+      <Tooltip title="Replace image">
         <IconButton
           onClick={() => setReplaceImageModalOpen(true)}
           sx={{
@@ -60,7 +60,7 @@ const MediaElementCardIconBtns = ({
         setUploadImageModalOpen={setReplaceImageModalOpen}
         optionID={optionID}
       />
-      <Tooltip title="Remove Image">
+      <Tooltip title="Remove image">
         <IconButton
           onClick={handleRemoveImage}
           sx={{

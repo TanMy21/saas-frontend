@@ -21,6 +21,7 @@ const ResponseListItem = ({
   qType,
   response,
   index,
+  display,
 }: ResponseListItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingID, setEditingID] = useState<string | null>(response.optionID);
@@ -73,8 +74,10 @@ const ResponseListItem = ({
       sx={{
         display: "flex",
         flexDirection: "row",
-        width: "100%",
-        height: 48,
+        flexWrap: "wrap",
+        width: display === "mobile" ? "92%" : "100%",
+        margin: display === "mobile" ? "2% auto" : "0 auto",
+        // height: 48,
         alignItems: "center",
         gap: 2,
         p: 1,
@@ -92,16 +95,18 @@ const ResponseListItem = ({
       onMouseEnter={() => setHoveredIndex(index)}
       onMouseLeave={() => setHoveredIndex(null)}
     >
-      <Box
-        sx={{
-          mt: 1,
-          cursor: "grab",
-          opacity: hoveredIndex === index ? 1 : 0,
-          transition: "opacity 0.2s",
-        }}
-      >
-        <FaGripVertical size={18} style={{ color: "#6D7584" }} />
-      </Box>
+      {display === "desktop" && (
+        <Box
+          sx={{
+            mt: 1,
+            cursor: "grab",
+            opacity: hoveredIndex === index ? 1 : 0,
+            transition: "opacity 0.2s",
+          }}
+        >
+          <FaGripVertical size={18} style={{ color: "#6D7584" }} />
+        </Box>
+      )}
       {qType === "RADIO" && (
         <Box>
           <Radio
@@ -109,6 +114,7 @@ const ResponseListItem = ({
             sx={{
               transform: "scale(1.2)",
               padding: 0,
+              ...(display === "mobile" && { marginLeft: 1 }),
               color: "#CFD3D9",
               "&:hover": {
                 backgroundColor: "transparent",
@@ -127,6 +133,7 @@ const ResponseListItem = ({
             sx={{
               transform: "scale(1.2)",
               padding: 0,
+              ...(display === "mobile" && { marginLeft: 1 }),
               color: "#CFD3D9",
               borderRadius: 4,
               "& .MuiSvgIcon-root": {
@@ -148,6 +155,7 @@ const ResponseListItem = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            ...(display === "mobile" && { marginLeft: 1 }),
             height: 28,
             width: 28,
             backgroundColor: "primary.main",
@@ -159,10 +167,20 @@ const ResponseListItem = ({
           <span style={{ fontWeight: 500 }}>{index + 1}</span>
         </Box>
       )}
-
       <Box
         onDoubleClick={() => handleDoubleClick(response)}
-        sx={{ flexGrow: 1 }}
+        sx={{
+          // flexGrow: display === "mobile" ? 0 : 1,
+          ...(display === "mobile" && { width: "92%" }),
+          minWidth: 0, // allow shrinking
+          maxWidth: display === "mobile" ? "92%" : "100%",
+          // flexGrow: 1,
+          flex: 1,
+          // minWidth: display === "mobile" ? "60%" : "0",
+          wordBreak: "break-word",
+          overflowWrap: "anywhere",
+          // border: "2px solid red",
+        }}
       >
         {isEditing ? (
           <ClickAwayListener onClickAway={handleClickAway}>
@@ -174,8 +192,9 @@ const ResponseListItem = ({
                 maxLength: 60,
               }}
               sx={{
-                width: "96%",
+                width: display === "mobile" ? "100%" : "96%",
                 outline: "none",
+                // border: "2px solid green",
               }}
             />
           </ClickAwayListener>
@@ -183,28 +202,32 @@ const ResponseListItem = ({
           <Box
             onClick={() => setIsEditing(true)}
             sx={{
+              flex: 1,
+              minWidth: 0,
+              maxWidth: "100%",
               py: 1,
               px: 1,
               cursor: "text",
               borderRadius: 1,
               color: "#626B77",
-              fontSize: 16,
+              fontSize: display === "mobile" ? 14 : 16,
               fontWeight: "bold",
               "&:hover": {
                 backgroundColor: "white",
               },
+              // border: "2px solid blue",
             }}
           >
             {response.text}
           </Box>
         )}
       </Box>
-
       <Button
         onClick={() => deleteResponseItem(response.optionID)}
         aria-label="Delete instruction"
         sx={{
           p: 1.5,
+          flexShrink: 0,
           minWidth: "auto",
           transition: "background-color 0.2s",
           backgroundColor: "transparent",
@@ -214,6 +237,7 @@ const ResponseListItem = ({
             backgroundColor: "transparent",
           },
           opacity: hoveredIndex === index ? 1 : 0,
+          // border: "2px solid orange",
         }}
       >
         <DeleteIcon />

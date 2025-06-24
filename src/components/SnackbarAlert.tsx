@@ -10,9 +10,10 @@ const SnackbarAlert = ({
     <div>
       <Snackbar
         open={openSnackbar}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         autoHideDuration={2000}
         onClose={handleCloseSnackbar}
+        sx={{ zIndex: 2000 }}
       >
         <Alert
           variant="filled"

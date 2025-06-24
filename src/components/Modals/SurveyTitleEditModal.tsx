@@ -157,9 +157,7 @@ const SurveyTitleEditModal = ({
               pr: 1,
             }}
           >
-            <Typography sx={textStyles.modalTitle}>
-              Update title and description{" "}
-            </Typography>
+            <Typography sx={textStyles.modalTitle}>Edit</Typography>
             <IconButton
               aria-label="more"
               aria-controls="long-menu"

@@ -10,6 +10,8 @@ import {
   Box,
   InputAdornment,
   TextField,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,12 +49,14 @@ const NavigationButtonTextSettings = () => {
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [inputLength, setInputLength] = useState(
-    questionPreferences?.uiConfig?.buttonText?.length || 0
+    questionPreferences?.uiConfig?.buttonText?.length ?? 0
   );
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
       const { buttonText } = data;
+
+      if (buttonText === questionPreferences?.uiConfig?.buttonText) return;
 
       const uiConfig = { buttonText };
       await updateQuestionPreferenceUIConfig({
@@ -100,6 +104,9 @@ const NavigationButtonTextSettings = () => {
           boxShadow: "none",
         }}
         defaultExpanded={false}
+        disableGutters
+        elevation={0}
+        square
       >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -119,7 +126,9 @@ const NavigationButtonTextSettings = () => {
             }}
           >
             <NavigationIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
-            Navigation Button
+            <Tooltip title="Set the text on the navigation button">
+              <Typography>Navigation button</Typography>
+            </Tooltip>
           </Box>
         </AccordionSummary>
         <AccordionDetails>
@@ -143,14 +152,41 @@ const NavigationButtonTextSettings = () => {
                 render={({ field }) => (
                   <TextField
                     type="text"
+                    variant="standard"
+                    placeholder="Enter your question"
                     fullWidth
                     sx={{
-                      "& .MuiInputBase-root": {
-                        height: "40px",
-                        fontSize: "16px",
-                        borderRadius: 2,
-                        backgroundColor: "#F9FAFB",
+                      "& .MuiInputBase-input": {
+                        lineHeight: "1.5",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
+                        fontWeight: 500,
                       },
+                      "& .MuiInputBase-root": {
+                        borderRadius: "8px",
+                        height: "42px",
+                        fontSize: "15px",
+                        backgroundColor: "#F3F4F6",
+                        fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
+                        fontWeight: 500,
+                        color: "#1F2937",
+                        px: 1.5,
+                        transition: "background-color 0.2s ease",
+                        "&:hover": {
+                          backgroundColor: "#E5E7EB",
+                        },
+                        "&.Mui-focused": {
+                          backgroundColor: "#E0E7FF",
+                        },
+                      },
+                      "& input::placeholder": {
+                        color: "#9CA3AF",
+                        opacity: 1,
+                        fontWeight: 400,
+                      },
+                      mb: 2,
                     }}
                     {...field}
                     value={field.value}
@@ -164,6 +200,7 @@ const NavigationButtonTextSettings = () => {
                       }
                     }}
                     InputProps={{
+                      disableUnderline: true,
                       endAdornment: (
                         <InputAdornment position="end">
                           <Box

@@ -9,6 +9,8 @@ import {
   AccordionSummary,
   Box,
   Switch,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -90,8 +92,16 @@ const ValidationSettings = () => {
           borderTop: "1px solid #E0E0E0",
           borderRadius: 0,
           boxShadow: "none",
+          "&:before": { display: "none" },
+          "& .MuiAccordionSummary-root": {
+            borderTopLeftRadius: "0px",
+            borderTopRightRadius: "0px",
+          },
         }}
         defaultExpanded={false}
+        disableGutters
+        elevation={0}
+        square
       >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -112,7 +122,9 @@ const ValidationSettings = () => {
             <CheckCircleOutlineIcon
               sx={{ color: "#752FEC", fontSize: "20px" }}
             />
-            Response Validation
+            <Tooltip title="Set whether the question is required or not">
+              <Typography>Response required</Typography>
+            </Tooltip>
           </Box>
         </AccordionSummary>
         <AccordionDetails>

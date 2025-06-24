@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Slider, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  InputAdornment,
+  Slider,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -30,8 +36,8 @@ const QuestionImageDimensions = () => {
     useForm<QuestionImageDimensionsFormProps>({
       resolver: zodResolver(questionImageSettingsSchema),
       defaultValues: {
-        questionImageHeight: questionImageHeight || 250,
-        questionImageWidth: questionImageWidth || 200,
+        questionImageHeight: questionImageHeight ?? 250,
+        questionImageWidth: questionImageWidth ?? 200,
       },
     });
 
@@ -82,129 +88,191 @@ const QuestionImageDimensions = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{ mb: 2 }}>
         {/* Image Width */}
-        <Box sx={{ mb: 1, ml: 1, width: "98%" }}>
-          <Typography
-            variant="body2"
-            sx={{ mb: 1, fontWeight: "bold", color: "#444D5C" }}
-          >
-            Image Width
-          </Typography>
+        <Box sx={{ mb: 1, width: "98%" }}>
           <Box
             sx={{
               display: "flex",
-              width: "96%",
-              ml: 1,
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 1,
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                fontWeight: "bold",
+                color: "#444D5C",
+              }}
+            >
+              Image width
+            </Typography>
+            <Controller
+              name="questionImageWidth"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  type="number"
+                  variant="standard"
+                  value={field.value}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    field.onChange(value);
+                    markFormTouched();
+                    dispatch(dispatch(setImageWidth(value)));
+                  }}
+                  inputProps={{ min: 275, max: 825 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        sx={{ color: "#6846E5", marginBottom: 0.5 }}
+                      >
+                        px
+                      </InputAdornment>
+                    ),
+                    disableUnderline: true,
+                  }}
+                  sx={{
+                    width: 92,
+                    "& .MuiInputBase-root": {
+                      borderRadius: 1,
+                      backgroundColor: "#EEF2FF",
+                      height: "36px",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      color: "#6846E5",
+                      border: "none",
+                      boxShadow: "none",
+                      px: 1.25,
+                    },
+                  }}
+                />
+              )}
+            />
+          </Box>
+          {/* Slider below, syncs as before */}
+          <Box
+            sx={{
+              display: "flex",
               alignItems: "center",
               gap: 2,
-              //   border: "1px solid red",
+              width: "80%",
             }}
           >
             <Controller
               name="questionImageWidth"
               control={control}
               render={({ field }) => (
-                <>
-                  <Slider
-                    min={275}
-                    max={825}
-                    value={field.value}
-                    onChange={(_, val) => {
-                      const numericValue = Array.isArray(val) ? val[0] : val;
-                      field.onChange(numericValue);
-                      markFormTouched();
-                      dispatch(setImageWidth(numericValue));
-                    }}
-                    sx={{ flex: 1 }}
-                  />
-                  <TextField
-                    type="number"
-                    value={field.value}
-                    onChange={(e) => {
-                      const value = Number(e.target.value);
-                      field.onChange(value);
-                      markFormTouched();
-                      dispatch(setImageWidth(value));
-                    }}
-                    inputProps={{ min: 275, max: 825 }}
-                    sx={{
-                      width: 76,
-                      "& .MuiInputBase-root": {
-                        width: "100%",
-                        borderRadius: 2,
-                        backgroundColor: "#F9FAFB",
-                        height: "40px",
-                        fontSize: "16px",
-                      },
-                    }}
-                  />
-                  <Typography variant="body2" color="text.secondary">
-                    px
-                  </Typography>
-                </>
+                <Slider
+                  min={275}
+                  max={825}
+                  value={field.value}
+                  onChange={(_, val) => {
+                    const numericValue = Array.isArray(val) ? val[0] : val;
+                    field.onChange(numericValue);
+                    markFormTouched();
+                    dispatch(setImageWidth(numericValue));
+                  }}
+                  sx={{ flex: 1 }}
+                />
               )}
             />
           </Box>
         </Box>
         {/* Image Height */}
-        <Box sx={{ mb: 1, ml: 1, width: "98%" }}>
-          <Typography
-            variant="body2"
-            sx={{ mb: 1, fontWeight: "bold", color: "#444D5C" }}
-          >
-            Image Height
-          </Typography>
+        <Box sx={{ mb: 1, width: "98%" }}>
           <Box
             sx={{
               display: "flex",
-              width: "96%",
-              ml: 1,
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 1,
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                fontWeight: "bold",
+                color: "#444D5C",
+              }}
+            >
+              Image height
+            </Typography>
+            <Controller
+              name="questionImageHeight"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  type="number"
+                  variant="standard"
+                  value={field.value}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    field.onChange(value);
+                    markFormTouched();
+                    dispatch(setImageHeight(value));
+                  }}
+                  inputProps={{ min: 120, max: 240 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        sx={{ color: "#6846E5", marginBottom: 0.5 }}
+                      >
+                        px
+                      </InputAdornment>
+                    ),
+                    disableUnderline: true,
+                  }}
+                  sx={{
+                    width: 92,
+                    "& .MuiInputBase-root": {
+                      borderRadius: 1,
+                      backgroundColor: "#EEF2FF",
+                      height: "36px",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      color: "#6846E5",
+                      border: "none",
+                      boxShadow: "none",
+                      px: 1.25,
+                    },
+                  }}
+                />
+              )}
+            />
+          </Box>
+          {/* Slider below, syncs as before */}
+          <Box
+            sx={{
+              display: "flex",
               alignItems: "center",
               gap: 2,
-              //   border: "1px solid red",
+              width: "80%",
             }}
           >
             <Controller
               name="questionImageHeight"
               control={control}
               render={({ field }) => (
-                <>
-                  <Slider
-                    min={120}
-                    max={240}
-                    value={field.value}
-                    onChange={(_, val) => {
-                      const numericValue = Array.isArray(val) ? val[0] : val;
-                      field.onChange(numericValue);
-                      markFormTouched();
-                      dispatch(setImageHeight(numericValue));
-                    }}
-                    sx={{ flex: 1 }}
-                  />
-                  <TextField
-                    type="number"
-                    value={field.value}
-                    onChange={(e) => {
-                      const value = Number(e.target.value);
-                      field.onChange(value);
-                      markFormTouched();
-                      dispatch(setImageHeight(value));
-                    }}
-                    inputProps={{ min: 120, max: 240 }}
-                    sx={{
-                      width: 76,
-                      "& .MuiInputBase-root": {
-                        width: "100%",
-                        borderRadius: 2,
-                        backgroundColor: "#F9FAFB",
-                        height: "40px",
-                        fontSize: "16px",
-                      },
-                    }}
-                  />
-                  <Typography variant="body2" color="text.secondary">
-                    px
-                  </Typography>
-                </>
+                <Slider
+                  min={120}
+                  max={240}
+                  value={field.value}
+                  onChange={(_, val) => {
+                    const numericValue = Array.isArray(val) ? val[0] : val;
+                    field.onChange(numericValue);
+                    markFormTouched();
+                    dispatch(setImageHeight(numericValue));
+                  }}
+                  sx={{ flex: 1 }}
+                />
               )}
             />
           </Box>

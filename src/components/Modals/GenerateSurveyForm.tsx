@@ -138,7 +138,7 @@ const GenerateSurveyForm = ({
                   mb: 1,
                 }}
               >
-                Enter Survey Topic and Description
+                Enter survey topic and description
               </Typography>
               <Controller
                 name="description"
@@ -164,7 +164,7 @@ const GenerateSurveyForm = ({
                   mb: 1,
                 }}
               >
-                Number of Questions
+                Number of questions
               </Typography>
               <Controller
                 name="numberOfQuestions"
@@ -173,7 +173,7 @@ const GenerateSurveyForm = ({
                   <TextField
                     {...field}
                     type="number"
-                    inputProps={{ min: 4 }}
+                    inputProps={{ min: 4, max: 50 }}
                     fullWidth
                     error={!!fieldState.error}
                     helperText={fieldState.error?.message}
@@ -191,7 +191,7 @@ const GenerateSurveyForm = ({
                     mb: 1,
                   }}
                 >
-                  Question Types
+                  Question types
                 </Typography>
                 <Box
                   sx={{
@@ -212,7 +212,7 @@ const GenerateSurveyForm = ({
                       mb: 1,
                     }}
                   >
-                    Selected Types:
+                    Selected types:
                   </Typography>
                   <Stack
                     direction="row"
@@ -275,7 +275,7 @@ const GenerateSurveyForm = ({
                       mb: 1,
                     }}
                   >
-                    Available Types:
+                    Available types:
                   </Typography>
                   <Stack
                     direction="row"

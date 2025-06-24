@@ -1,11 +1,14 @@
 import { Box, Button, TextField } from "@mui/material";
 
+import { useAppTheme } from "../../../theme/useAppTheme";
 import { InputResponseProps } from "../../../utils/types";
 
 const InputResponse = ({
   inputPlaceholder,
   submitButtonText,
+  display,
 }: InputResponseProps) => {
+  const { primary } = useAppTheme();
   return (
     <Box
       sx={{
@@ -23,11 +26,11 @@ const InputResponse = ({
         variant="standard"
         sx={{
           margin: "0 auto",
-          width: "56%",
+          width: display === "mobile" ? "92%" : "56%",
           "& .MuiInputBase-input": {
             whiteSpace: "noWrap",
             height: "64px",
-            fontSize: "36px",
+            fontSize: display === "mobile" ? "24px" : "36px",
             padding: "0px 8px 0px 16px",
             lineHeight: 1,
           },
@@ -53,21 +56,22 @@ const InputResponse = ({
           alignItems: "flex-end",
           margin: "16px auto",
           paddingRight: "4%",
-          width: "60%",
+          width: display === "mobile" ? "96%" : "60%",
           height: "25%",
-          //   border: "2px solid green",
+          // border: "2px solid green",
         }}
       >
         <Button
           sx={{
             borderRadius: 8,
-            backgroundColor: "#434EE7",
+            backgroundColor: primary.dark,
             textTransform: "capitalize",
             padding: "8px 16px",
             fontWeight: "bold",
-            width: "20%",
+            width: display === "mobile" ? "120px" : "20%",
+            ...(display === "mobile" && { ml: "96%" }),
             "&:hover": {
-              backgroundColor: "#434EE7",
+              backgroundColor: primary.dark,
             },
           }}
           variant="contained"

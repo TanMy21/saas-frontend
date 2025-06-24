@@ -98,6 +98,48 @@ const questionSlice = createSlice({
       state.selectedQuestion.questionPreferences.uiConfig.buttonText =
         action.payload;
     },
+    updateBinaryButtonTextYes: (state, action: PayloadAction<string>) => {
+      if (!state.selectedQuestion?.questionPreferences) return;
+
+      if (!state.selectedQuestion.questionPreferences.uiConfig) {
+        state.selectedQuestion.questionPreferences.uiConfig = {};
+      }
+
+      state.selectedQuestion.questionPreferences.uiConfig.buttonTextYes =
+        action.payload;
+    },
+    updateBinaryButtonTextNo: (state, action: PayloadAction<string>) => {
+      if (!state.selectedQuestion?.questionPreferences) return;
+
+      if (!state.selectedQuestion.questionPreferences.uiConfig) {
+        state.selectedQuestion.questionPreferences.uiConfig = {};
+      }
+
+      state.selectedQuestion.questionPreferences.uiConfig.buttonTextNo =
+        action.payload;
+    },
+
+    updateMinValue: (state, action: PayloadAction<number>) => {
+      if (!state.selectedQuestion?.questionPreferences) return;
+
+      if (!state.selectedQuestion.questionPreferences.uiConfig) {
+        state.selectedQuestion.questionPreferences.uiConfig = {};
+      }
+
+      state.selectedQuestion.questionPreferences.uiConfig.minValue =
+        action.payload;
+    },
+
+    updateMaxValue: (state, action: PayloadAction<number>) => {
+      if (!state.selectedQuestion?.questionPreferences) return;
+
+      if (!state.selectedQuestion.questionPreferences.uiConfig) {
+        state.selectedQuestion.questionPreferences.uiConfig = {};
+      }
+
+      state.selectedQuestion.questionPreferences.uiConfig.maxValue =
+        action.payload;
+    },
     resetQuestion: () => initialState,
   },
 });
@@ -113,7 +155,11 @@ export const {
   setImageAltText,
   toggleElementRequired,
   toggleShowImage,
+  updateMinValue,
+  updateMaxValue,
   updateUIButtonText,
+  updateBinaryButtonTextYes,
+  updateBinaryButtonTextNo,
   updateQuestionField,
   resetQuestion,
 } = questionSlice.actions;

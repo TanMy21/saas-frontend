@@ -52,6 +52,7 @@ const EmailContactELement = ({ display }: ElementProps) => {
         <InputResponse
           inputPlaceholder={placeholderText}
           submitButtonText={submitButtonText}
+          display={display}
         />
       </Box>
     </Box>

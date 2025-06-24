@@ -46,7 +46,13 @@ const ChoiceElement = ({ qID, display }: ElementProps) => {
           // border: "2px solid blue",
         }}
       >
-        <ResponseList qID={qID!} qType={"RADIO"} optionText={"Choice"} />
+        <ResponseList
+          key={qID}
+          qID={qID!}
+          qType={"RADIO"}
+          optionText={"Choice"}
+          display={display}
+        />
       </Box>
     </Box>
   );

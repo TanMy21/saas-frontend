@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import { Box, ClickAwayListener, TextField } from "@mui/material";
 
 import { useUpdateQuestionPreferenceUIConfigMutation } from "../../../app/slices/elementApiSlice";
-import { BinaryResposneProps } from "../../../utils/types";
+import { BinaryResponseProps } from "../../../utils/types";
 
 const BinaryResponseYes = ({
   questionID,
   buttonTextYes,
   index,
-}: BinaryResposneProps) => {
+  display,
+}: BinaryResponseProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState<string>(buttonTextYes!);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -54,7 +55,7 @@ const BinaryResponseYes = ({
       sx={{
         display: "flex",
         flexDirection: "row",
-        width: "100%",
+        width: display === "mobile" ? "84%" : "100%",
         height: 48,
         alignItems: "center",
         gap: 2,

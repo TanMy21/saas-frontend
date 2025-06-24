@@ -3,11 +3,13 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 
 import { RootState } from "../../../app/store";
+import { useAppTheme } from "../../../theme/useAppTheme";
 import { ElementProps } from "../../../utils/types";
 
 import ElementQuestionText from "./ElementQuestionText";
 
 const WelcomeScreenElement = ({ display }: ElementProps) => {
+  const { primary } = useAppTheme();
   const question = useSelector(
     (state: RootState) => state.question.selectedQuestion
   );
@@ -23,10 +25,9 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        margin: "auto",
-        width: "98%",
+        margin: display === "mobile" ? "36% auto" : "0 auto",
+        width: display === "mobile" ? "92%" : "98%",
         zIndex: 20,
-        // border: "2px solid red",
       }}
     >
       <Box
@@ -59,12 +60,12 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
         <Button
           sx={{
             borderRadius: 8,
-            backgroundColor: "#434EE7",
-            textTransform: "capitalize",
+            backgroundColor: primary.dark,
+            textTransform: "unset",
             padding: "16px 24px",
             fontWeight: "bold",
             "&:hover": {
-              backgroundColor: "#434EE7",
+              backgroundColor: primary.dark,
             },
           }}
           variant="contained"

@@ -1,5 +1,6 @@
 import { Box, Button } from "@mui/material";
 
+import { useAppTheme } from "../../../theme/useAppTheme";
 import { ElementProps } from "../../../utils/types";
 
 import ElementQuestionText from "./ElementQuestionText";
@@ -11,6 +12,7 @@ const EndScreenElement = ({
   qDescription,
   display,
 }: ElementProps) => {
+  const { primary } = useAppTheme();
   return (
     <Box
       sx={{
@@ -51,7 +53,7 @@ const EndScreenElement = ({
           alignItems: "center",
           width: "100%",
           height: "60%",
-          margin: "auto",
+          margin: "2% auto",
           // border: "2px solid blue",
         }}
       >
@@ -59,12 +61,12 @@ const EndScreenElement = ({
           sx={{
             mt: 2,
             borderRadius: 8,
-            backgroundColor: "#434EE7",
+            backgroundColor: primary.dark,
             textTransform: "capitalize",
             padding: "16px 24px",
             fontWeight: "bold",
             "&:hover": {
-              backgroundColor: "#434EE7",
+              backgroundColor: primary.dark,
             },
           }}
           variant="contained"

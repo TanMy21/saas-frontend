@@ -24,8 +24,7 @@ const ElementSettingsContainer = ({
           flexDirection: "column",
           width: "100%",
           height: "100%",
-          marginLeft:"-4%",
-          // border: "2px solid green",
+          // border: "2px solid blue",
         }}
       >
         {question?.type && (

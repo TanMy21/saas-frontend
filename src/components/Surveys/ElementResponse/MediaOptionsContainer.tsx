@@ -29,7 +29,10 @@ import {
 
 import MediaOption from "./MediaOption";
 
-const MediaOptionsContainer = ({ qID }: MediaOptionsContainerProps) => {
+const MediaOptionsContainer = ({
+  qID,
+  display,
+}: MediaOptionsContainerProps) => {
   const { data: options = [] as OptionType[], refetch } =
     useGetOptionsOfQuestionQuery(qID);
 
@@ -113,8 +116,8 @@ const MediaOptionsContainer = ({ qID }: MediaOptionsContainerProps) => {
             display: "grid",
             gridTemplateColumns: {
               xs: "1fr",
-              sm: "repeat(2, 1fr)",
-              md: "repeat(3, 1fr)",
+              sm: display === "mobile" ? "1fr" : "repeat(2, 1fr)",
+              md: display === "mobile" ? "1fr" : "repeat(3, 1fr)",
             },
             alignItems: "stretch",
             gap: { xs: 2, sm: 3, md: 4 },
@@ -123,6 +126,12 @@ const MediaOptionsContainer = ({ qID }: MediaOptionsContainerProps) => {
             margin: "0 auto",
             padding: 1,
             // border: "2px solid red",
+            "@media (max-width: 900px)": {
+              gridTemplateColumns: "repeat(2, 1fr)", // tablet
+            },
+            "@media (max-width: 600px)": {
+              gridTemplateColumns: "1fr", // mobile
+            },
           }}
         >
           {options.map((option) => (

@@ -16,12 +16,13 @@ const SurveyPreferencesPanel = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        width: "100%",
+        width: "98%",
         height: "100%",
         overflowX: "hidden",
         overflowY: "auto",
         backgroundColor: "white",
-        pt: { md: 2, xl: 1 },
+        marginTop: { md: 2, xl: 1 },
+        padding: 0,
         ...scrollStyles.elementsPanel,
         // border:"2px solid red",
       }}

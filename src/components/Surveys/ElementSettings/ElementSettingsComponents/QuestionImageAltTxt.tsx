@@ -72,8 +72,8 @@ const QuestionImageAltTxt = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-      <Typography variant="body2" sx={{ fontWeight: 500, color: "grey.700" }}>
-        Image Alt Text
+      <Typography sx={{ fontSize: 16, fontWeight: 600, color: "#3F3F46" }}>
+        Image alt text
       </Typography>
       <Controller
         name="questionImageAltTxt"
@@ -90,26 +90,46 @@ const QuestionImageAltTxt = () => {
               dispatch(setImageAltText(value));
             }}
             placeholder="Describe the image for screen readers"
-            variant="outlined"
+            variant="standard"
             InputProps={{
+              disableUnderline: true,
               sx: {
                 fontSize: "0.875rem",
               },
             }}
             InputLabelProps={{ shrink: false }}
             sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 1,
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "blue.500",
+              "& .MuiInputBase-input": {
+                lineHeight: "1.5",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
+                fontWeight: 500,
+              },
+              "& .MuiInputBase-root": {
+                borderRadius: "8px",
+                height: "42px",
+                fontSize: "15px",
+                backgroundColor: "#F3F4F6",
+                fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
+                fontWeight: 500,
+                color: "#1F2937",
+                px: 1.5,
+                transition: "background-color 0.2s ease",
+                "&:hover": {
+                  backgroundColor: "#E5E7EB",
+                },
+                "&.Mui-focused": {
+                  backgroundColor: "#E0E7FF",
                 },
               },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "grey.300",
-              },
               "& input::placeholder": {
-                color: "grey.400",
+                color: "#9CA3AF",
+                opacity: 1,
+                fontWeight: 400,
               },
+              mb: 2,
             }}
           />
         )}

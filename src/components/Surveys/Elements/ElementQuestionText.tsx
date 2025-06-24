@@ -46,7 +46,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
     question?.questionPreferences?.descriptionFontColor ??
     "#000000";
 
-  const orderFontSize = titleFontSize * 0.5;
+  const orderFontSize = titleFontSize * 0.8;
   const arrowFontSize = titleFontSize * 0.45;
 
   const nonOrderableTypes = [
@@ -88,163 +88,101 @@ const ElementQuestionText = ({ display }: ElementProps) => {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "flex-end",
+        margin: "auto",
+        // marginTop: "12%",
+        width: display === "mobile" ? "92%" : "98%",
+        border: "2px solid red",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
           justifyContent: "center",
-          alignItems: "flex-end",
+          alignItems: "center",
           margin: "auto",
-          // marginTop: "12%",
-          width: "98%",
-          // border: "2px solid red",
+          width: "100%",
+          // border: "2px solid green",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: "auto",
-            width: "100%",
-            // border: "2px solid green",
-          }}
-        >
-          {isNonOrderableType ? null : (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "fit-content",
-                marginRight: 1,
-              }}
-            >
-              <Typography
-                sx={{
-                  marginTop: 1,
-                  fontWeight: "bold",
-                  color: "black",
-                  fontSize: orderFontSize || 20,
-                }}
-              >
-                {order}
-              </Typography>
-            </Box>
-          )}
-          {isNonOrderableType ? null : (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                // border: "2px solid green",
-              }}
-            >
-              <Typography
-                sx={{
-                  marginTop: 2,
-                  marginRight: 2,
-                  fontSize: arrowFontSize || 16,
-                }}
-              >
-                <FaArrowRightLong />
-              </Typography>
-            </Box>
-          )}
+        {isNonOrderableType ? null : (
           <Box
-            onDoubleClick={handleDoubleClick}
             sx={{
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
-              // border: "2px solid orange",
+              width: "fit-content",
+              marginRight: 1,
             }}
           >
-            {isEditing ? (
-              <TextField
-                id="outlined-basic"
-                type="text"
-                value={text}
-                onChange={handleChangeText}
-                onBlur={handleBlur}
-                sx={{
-                  backgroundColor: "transparent",
-                  fontStyle: "italic",
-                  fontSize: "3.75rem",
-                  width: "100%",
-                  "& .MuiInputBase-input": {
-                    fontSize: "2rem",
-                  },
-                  fontFamily:
-                    "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      border: "none",
-                    },
-                    "&:hover fieldset": {
-                      border: "none",
-                    },
-                    "&.Mui-focused fieldset": {
-                      border: "none",
-                    },
-                  },
-                }}
-              />
-            ) : (
-              <Typography
-                sx={{
-                  whiteSpace: qWhiteSpace,
-                  width: "100%",
-                  maxWidth: "80ch",
-                  fontStyle: "italic",
-                  fontFamily:
-                    "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                  fontSize: titleFontSize,
-                  textAlign: {
-                    xs: "start",
-                    sm: "start",
-                    md: "start",
-                    xl: "justify",
-                  },
-                  color: titleFontColor,
-                }}
-              >
-                {text}
-              </Typography>
-            )}
+            <Typography
+              sx={{
+                marginTop: 1,
+                fontWeight: "bold",
+                color: "black",
+                fontSize: display === "mobile" ? 20 : orderFontSize || 20,
+              }}
+            >
+              {order}
+            </Typography>
           </Box>
-        </Box>
+        )}
+        {isNonOrderableType ? null : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              // border: "2px solid green",
+            }}
+          >
+            <Typography
+              sx={{
+                marginTop: 2,
+                marginRight: 2,
+                fontSize: arrowFontSize || 16,
+              }}
+            >
+              <FaArrowRightLong />
+            </Typography>
+          </Box>
+        )}
         <Box
+          onDoubleClick={handleDoubleClick}
           sx={{
             display: "flex",
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-            width: "100%",
-            margin: "auto",
-            // border: "2px solid black",
+            // border: "2px solid orange",
           }}
         >
-          <Box onDoubleClick={handleDoubleClick}>
-            {isEditing ? (
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                type="text"
-                value={description}
-                onChange={handleChangeDescription}
-                onBlur={handleBlurDescription}
-                sx={{
-                  backgroundColor: "transparent",
-                  "& .MuiInputBase-input": {
-                    fontSize: "1.6rem",
-                  },
+          {isEditing ? (
+            <TextField
+              id="outlined-basic"
+              type="text"
+              value={text}
+              onChange={handleChangeText}
+              onBlur={handleBlur}
+              sx={{
+                backgroundColor: "transparent",
+                fontStyle: "italic",
+                fontSize: "3.75rem",
+                width: "100%",
+                "& .MuiInputBase-input": {
+                  fontSize: "2rem",
+                },
+                fontFamily:
+                  "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                "& .MuiOutlinedInput-root": {
                   "& fieldset": {
                     border: "none",
                   },
@@ -254,27 +192,87 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   "&.Mui-focused fieldset": {
                     border: "none",
                   },
-                }}
-              />
-            ) : (
-              <Typography
-                sx={{
-                  fontStyle: "italic",
-                  fontFamily:
-                    "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                  whiteSpace: qWhiteSpace,
-                  width: "fit-content",
-                  fontSize: descriptionFontSize,
-                  color: descriptionFontColor,
-                }}
-              >
-                {description === "" ? "Description (optional)" : description}
-              </Typography>
-            )}
-          </Box>
+                },
+              }}
+            />
+          ) : (
+            <Typography
+              sx={{
+                whiteSpace: qWhiteSpace,
+                width: "100%",
+                maxWidth: "80ch",
+                fontStyle: "italic",
+                fontFamily:
+                  "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                fontSize: display === "mobile" ? "20px" : titleFontSize,
+                textAlign: {
+                  xs: "start",
+                  sm: "start",
+                  md: "start",
+                  xl: "justify",
+                },
+                color: titleFontColor,
+              }}
+            >
+              {text}
+            </Typography>
+          )}
         </Box>
       </Box>
-    </>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          margin: display === "mobile" ? "8% auto" : "2% auto",
+          // border: "2px solid black",
+        }}
+      >
+        <Box onDoubleClick={handleDoubleClick}>
+          {isEditing ? (
+            <TextField
+              id="outlined-basic"
+              variant="outlined"
+              type="text"
+              value={description}
+              onChange={handleChangeDescription}
+              onBlur={handleBlurDescription}
+              sx={{
+                backgroundColor: "transparent",
+                "& .MuiInputBase-input": {
+                  fontSize: "1.6rem",
+                },
+                "& fieldset": {
+                  border: "none",
+                },
+                "&:hover fieldset": {
+                  border: "none",
+                },
+                "&.Mui-focused fieldset": {
+                  border: "none",
+                },
+              }}
+            />
+          ) : (
+            <Typography
+              sx={{
+                fontStyle: "italic",
+                fontFamily:
+                  "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                whiteSpace: qWhiteSpace,
+                width: "fit-content",
+                fontSize: descriptionFontSize,
+                color: descriptionFontColor,
+              }}
+            >
+              {description === "" ? "Description (optional)" : description}
+            </Typography>
+          )}
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

@@ -13,7 +13,6 @@ const MediaElement = ({ qID, display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        paddingTop: "160px",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -26,6 +25,7 @@ const MediaElement = ({ qID, display }: ElementProps) => {
           alignItems: "flex-end",
           width: "100%",
           margin: "0 auto",
+          marginTop: "16%",
           zIndex: 2,
           mb: 5,
           // border: "2px solid blue",
@@ -45,7 +45,7 @@ const MediaElement = ({ qID, display }: ElementProps) => {
           zIndex: 1,
         }}
       >
-        <MediaOptionsContainer qID={qID!} />
+        <MediaOptionsContainer qID={qID!} display={display} />
       </Box>
     </Box>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 // import EmailIcon from "@mui/icons-material/Email";
@@ -45,155 +45,160 @@ const ShareSurveyModal = ({
   const handleClose = () => {
     setShareBtnSelected(false);
     setOpen(false);
+    setCopied(false);
   };
+
+  useEffect(() => {
+    if (!open) {
+      setCopied(false);
+    }
+  }, [open]);
+
   return (
-    <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          display: "flex",
+          flexDirection: "column",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 500,
+          height: 220,
+          bgcolor: background.paper,
+          borderRadius: "16px",
+          // border: "2px solid red",
+        }}
       >
+        {/* Modal title */}
         <Box
           sx={{
-            position: "absolute",
             display: "flex",
-            flexDirection: "column",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 500,
-            height: 220,
-            bgcolor: background.paper,
-            borderRadius: "16px",
-            // border: "2px solid red",
+            flexDirection: "row",
+            padding: "2%",
+            width: "96%",
+            alignItems: "center",
+            gap: 2,
+            // border: "2px solid green",
           }}
         >
-          {/* Modal title */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              padding: "2%",
-              width: "96%",
-              alignItems: "center",
-              gap: 2,
-              // border: "2px solid green",
-            }}
-          >
-            <ShareIcon />
-            <Typography sx={textStyles.modalTitle}>
-              Share your survey
-            </Typography>
-          </Box>
-          {/* shareURL */}
+          <ShareIcon />
+          <Typography sx={textStyles.modalTitle}>Share your survey</Typography>
+        </Box>
+        {/* shareURL */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "1%",
+            marginTop: "1%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            width: "92%",
+            height: "98%",
+            // border: "2px solid blue",
+          }}
+        >
+          {/* share survey link */}
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
+              alignItems: "flex-start",
               padding: "1%",
-              marginTop: "1%",
-              marginLeft: "auto",
-              marginRight: "auto",
-              width: "92%",
-              height: "98%",
-              // border: "2px solid blue",
+              width: "98%",
+              height: "80px",
+              // border: "2px solid orange",
             }}
           >
-            {/* share survey link */}
+            <Box>
+              <Typography
+                fontSize={16}
+                fontWeight={"bold"}
+                mb={1}
+                color="#37415C"
+              >
+                Survey Link
+              </Typography>
+            </Box>
+
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                padding: "1%",
-                width: "98%",
-                height: "80px",
-                // border: "2px solid orange",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "flex-end",
+                width: "100%",
+                height: "48px",
+                gap: 4,
+                // border: "2px solid green",
               }}
             >
-              <Box>
-                <Typography
-                  fontSize={16}
-                  fontWeight={"bold"}
-                  mb={1}
-                  color="#37415C"
-                >
-                  Survey Link
-                </Typography>
-              </Box>
-
-              <Box
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="share-link"
+                InputLabelProps={{ style: { color: "gray" } }}
+                value={shareURL}
+                variant="filled"
                 sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "flex-start",
-                  alignItems: "flex-end",
-                  width: "100%",
-                  height: "48px",
-                  gap: 4,
-                  // border: "2px solid green",
-                }}
-              >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="share-link"
-                  InputLabelProps={{ style: { color: "gray" } }}
-                  value={shareURL}
-                  variant="filled"
-                  sx={{
+                  borderRadius: "12px",
+                  backgroundColor: "#F8F9FF",
+                  "& .MuiFilledInput-root": {
+                    height: "40px",
                     borderRadius: "12px",
                     backgroundColor: "#F8F9FF",
-                    "& .MuiFilledInput-root": {
-                      height: "40px",
-                      borderRadius: "12px",
-                      backgroundColor: "#F8F9FF",
-                      borderBottom: "none !important",
-                      display: "flex",
-                      alignItems: "center",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
+                    borderBottom: "none !important",
+                    display: "flex",
+                    alignItems: "center",
+                    paddingTop: "0px",
+                    paddingBottom: "0px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    "& input": {
+                      padding: 0,
+                      paddingLeft: "4px",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
-                      "& input": {
-                        padding: 0,
-                        paddingLeft: "4px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      },
-                      "&:before, &:after": {
-                        display: "none",
-                      },
                     },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment
-                        position="start"
-                        sx={{ marginBottom: "16px" }}
-                      >
-                        <LinkIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <Button
-                  variant="submitBtn2"
-                  onClick={handleCopyClick}
-                  endIcon={<ContentCopyIcon />}
-                  sx={{ mb: 1 }}
-                >
-                  {copied ? "Copied!" : "Copy"}
-                </Button>
-              </Box>
+                    "&:before, &:after": {
+                      display: "none",
+                    },
+                  },
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment
+                      position="start"
+                      sx={{ marginBottom: "16px" }}
+                    >
+                      <LinkIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Button
+                variant="submitBtn2"
+                onClick={handleCopyClick}
+                endIcon={<ContentCopyIcon />}
+                sx={{ mb: 1 }}
+              >
+                {copied ? "Copied!" : "Copy"}
+              </Button>
             </Box>
+          </Box>
 
-            {/* Share Options */}
-            {/* <Box sx={{ border: "2px solid orange" }}>
+          {/* Share Options */}
+          {/* <Box sx={{ border: "2px solid orange" }}>
               <Typography
                 variant="body2"
                 fontWeight={500}
@@ -246,8 +251,8 @@ const ShareSurveyModal = ({
               </Box>
             </Box> */}
 
-            {/* QR Code */}
-            {/* <Box sx={{ border: "2px solid purple" }}>
+          {/* QR Code */}
+          {/* <Box sx={{ border: "2px solid purple" }}>
               <Typography
                 variant="body2"
                 fontWeight={500}
@@ -270,42 +275,41 @@ const ShareSurveyModal = ({
                 <img alt="QR Code" width={128} height={128} />
               </Box>
             </Box> */}
-          </Box>
-          {/* Footer */}
+        </Box>
+        {/* Footer */}
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            height: "56px",
+            padding: "4px 0px",
+            justifyContent: "flex-end",
+            borderTop: "1px solid #f3f4f6",
+            // border: "2px solid red",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
-              width: "100%",
-              height: "56px",
-              padding: "4px 0px",
               justifyContent: "flex-end",
-              borderTop: "1px solid #f3f4f6",
-              // border: "2px solid red",
+              alignItems: "center",
+              margin: "auto",
+              width: "92%",
+              height: "92%",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                margin: "auto",
-                width: "92%",
-                height: "92%",
-              }}
+            <Button
+              type="button"
+              onClick={() => setOpen(false)}
+              variant="cancelBtn"
+              size="medium"
             >
-              <Button
-                type="button"
-                onClick={() => setOpen(false)}
-                variant="cancelBtn"
-                size="medium"
-              >
-                Cancel
-              </Button>
-            </Box>
+              Cancel
+            </Button>
           </Box>
         </Box>
-      </Modal>
-    </>
+      </Box>
+    </Modal>
   );
 };
 

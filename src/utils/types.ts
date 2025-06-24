@@ -56,11 +56,12 @@ export interface BuilderSpaceProps {
   noElements: boolean;
 }
 
-export interface BinaryResposneProps {
+export interface BinaryResponseProps {
   questionID?: string;
   buttonTextYes?: string;
   buttonTextNo?: string;
   index?: number;
+  display?: string | null;
 }
 
 export interface ColorPickerProps {
@@ -437,6 +438,7 @@ export interface InsightCardProps {
 export interface InputResponseProps {
   inputPlaceholder: string;
   submitButtonText: string;
+  display?: string | null;
 }
 
 export interface Language {
@@ -469,6 +471,7 @@ export interface MediaElementMediaProps {
 
 export interface MediaOptionsContainerProps {
   qID: string;
+  display?: string | null;
 }
 
 export interface MediaOptionProps {
@@ -616,6 +619,8 @@ export interface QuestionUIConfig {
   maxRange?: number;
   multipleSelection?: boolean;
   superSize?: boolean;
+  minValue?: number;
+  maxValue?: number;
 }
 
 export interface QuestionBackgroundColorProps {
@@ -639,6 +644,23 @@ export interface SurveyCanvasQuestionSettings {
   questionBackgroundColor?: string;
   required?: boolean;
   uiConfig?: QuestionUIConfig;
+}
+
+export interface Mark {
+  value: number;
+  label?: string;
+}
+
+export interface StaticSliderConfig {
+  tick: {
+    minSize: number;
+    increment: number;
+  };
+  segment: {
+    minThickness: number;
+    increment: number;
+  };
+  gap: number;
 }
 
 export interface QuestionSetting {
@@ -704,12 +726,14 @@ export interface ResponseListProps {
   qID: string;
   qType?: string;
   optionText: string;
+  display?: string | null;
 }
 
 export interface ResponseListItemProps {
   qType?: string;
   response: OptionType;
   index: number;
+  display?: string | null;
 }
 
 export interface ResetPassword {
@@ -798,6 +822,9 @@ export interface OptionType {
   value: string;
   image: string;
   order: number;
+}
+export interface ScaleResponseProps {
+  display?: string | null;
 }
 
 export interface ScreenSettingsProps {

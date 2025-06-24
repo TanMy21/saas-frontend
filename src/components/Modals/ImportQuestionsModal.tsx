@@ -78,7 +78,7 @@ const ImportQuestionsModal = ({
                 marginLeft: "2%",
               }}
             >
-              Import Questions
+              Import questions
             </Typography>
             <Box
               sx={{

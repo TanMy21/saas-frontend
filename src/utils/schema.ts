@@ -163,6 +163,19 @@ export const uiConfigPreferenceSchema = z.object({
     .min(1, "Button text must be at least 1 character long")
     .max(24, "Button text must be at most 24 characters long")
     .optional(),
+  buttonTextYes: z
+    .string()
+    .min(1, "Button text must be at least 1 character long")
+    .max(24, "Button text must be at most 24 characters long")
+    .optional(),
+  buttonTextNo: z
+    .string()
+    .min(1, "Button text must be at least 1 character long")
+    .max(24, "Button text must be at most 24 characters long")
+    .optional(),
+  minValue: z.number().min(0, "Minimum value must be at least 0").optional(),
+  maxValue: z.number().optional(),
+  multipleSelection: z.boolean().optional(),
   required: z.boolean().optional(),
 });
 

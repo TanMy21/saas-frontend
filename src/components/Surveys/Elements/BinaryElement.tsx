@@ -26,7 +26,7 @@ const BinaryElement = ({ display }: ElementProps) => {
           alignItems: "flex-end",
           width: "100%",
           margin: "0 auto",
-          marginTop: "8%",
+          marginTop: "16%",
           zIndex: 2,
           mb: 5,
           // border: "2px solid blue",
@@ -42,11 +42,11 @@ const BinaryElement = ({ display }: ElementProps) => {
           alignItems: "center",
           width: "100%",
           height: "48%",
-          margin: "auto",
+          marginTop: "2%",
           // border: "2px solid blue",
         }}
       >
-        <BinaryResponseContainer />
+        <BinaryResponseContainer display={display} />
       </Box>
     </Box>
   );

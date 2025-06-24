@@ -42,7 +42,7 @@ const QuestionImageUpload = ({ questionID }: QuestionImageUploadProps) => {
           },
         }}
       >
-        Upload Image
+        Upload image
       </Button>
       <QuestionImageUploadModal
         uploadImageModalOpen={uploadImageModalOpen}

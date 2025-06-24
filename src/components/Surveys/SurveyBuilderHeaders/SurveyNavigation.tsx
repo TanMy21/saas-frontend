@@ -55,7 +55,7 @@ const SurveyNavigation = ({
             return {
               display: "block",
               color: text.primaryDark,
-              lineHeight: "16px",
+              lineHeight: "20px",
               fontWeight: "bold",
               textDecoration: "none",
               overflow: "hidden",

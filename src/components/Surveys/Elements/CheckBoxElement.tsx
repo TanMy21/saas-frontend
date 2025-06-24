@@ -51,6 +51,7 @@ const CheckBoxElement = ({ qID, display }: ElementProps) => {
           qID={qID!}
           qType={"MULTIPLE_CHOICE"}
           optionText={"Choice"}
+          display={display}
         />
       </Box>
     </Box>

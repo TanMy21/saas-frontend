@@ -72,7 +72,7 @@ const GenerateSurveyModal = ({
                 marginLeft: "2%",
               }}
             >
-              Generate Questions
+              Generate questions
             </Typography>
             <Box
               sx={{

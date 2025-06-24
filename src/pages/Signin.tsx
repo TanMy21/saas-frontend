@@ -217,7 +217,7 @@ const Signin = () => {
               <Link to="/" style={{ textDecoration: "none" }}>
                 <img
                   src="/Logo.png"
-                  alt="Your Image"
+                  alt="logo"
                   style={{
                     maxWidth: "25%",
                     maxHeight: "25%",
@@ -239,7 +239,7 @@ const Signin = () => {
               Welcome back
             </Typography>
             <Typography variant="body1" sx={{ color: grey[600] }}>
-              Sign in to your account
+              Sign in to create, share, and learn
             </Typography>
           </Box>
 

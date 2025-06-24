@@ -122,7 +122,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
               }}
             >
               <InsertPhotoIcon sx={{ fontSize: 24 }} />
-              <span>Upload Image</span>
+              <span>Upload image</span>
             </Box>
           )}
           <MediaElementImageUploadModal

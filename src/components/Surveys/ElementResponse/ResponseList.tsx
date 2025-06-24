@@ -20,7 +20,12 @@ import { generateOptionLabel } from "../../../utils/utils";
 
 import ResponseListItem from "./ResponseListItem";
 
-const ResponseList = ({ qID, qType, optionText }: ResponseListProps) => {
+const ResponseList = ({
+  qID,
+  qType,
+  optionText,
+  display,
+}: ResponseListProps) => {
   const { data: options = [] as OptionType[] } =
     useGetOptionsOfQuestionQuery(qID);
 
@@ -98,56 +103,70 @@ const ResponseList = ({ qID, qType, optionText }: ResponseListProps) => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        width: "80%",
-        height: "100%",
+        width: display === "mobile" ? "100%" : "80%",
+        // height: "100%",
         margin: "auto",
-        padding: 2,
+        padding: display === "mobile" ? 0 : 2,
         gap: 2,
         // border: "2px solid green",
       }}
     >
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="responses">
-          {(provided) => (
-            <Box
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                width: "80%",
-                height: "100%",
-                gap: 2,
-                // border: "2px solid red",
-              }}
-            >
-              {localOptions?.map((option, index) => (
-                <Draggable
-                  key={option.optionID}
-                  draggableId={option.optionID}
-                  index={index}
-                >
-                  {(provided) => (
-                    <Box
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <ResponseListItem
-                        key={option.optionID}
-                        qType={qType}
-                        response={option}
-                        index={index}
-                      />
-                    </Box>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </Box>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          margin: "0 auto",
+          width: display === "mobile" ? "92%" : "100%",
+          // height: "100%",
+          padding: 1,
+          // border: "2px solid purple",
+        }}
+      >
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="responses">
+            {(provided) => (
+              <Box
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: display === "mobile" ? "92%" : "80%",
+                  // height: "100%",
+                  gap: 2,
+                  // border: "2px solid red",
+                }}
+              >
+                {localOptions?.map((option, index) => (
+                  <Draggable
+                    key={option.optionID}
+                    draggableId={option.optionID}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <Box
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <ResponseListItem
+                          key={option.optionID}
+                          qType={qType}
+                          response={option}
+                          index={index}
+                          display={display}
+                        />
+                      </Box>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </Box>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -155,6 +174,8 @@ const ResponseList = ({ qID, qType, optionText }: ResponseListProps) => {
           width: "83%",
           height: "100%",
           gap: 2,
+          margin: "1% auto",
+          marginBottom: "12%",
           // border: "2px solid red",
         }}
       >
@@ -176,7 +197,7 @@ const ResponseList = ({ qID, qType, optionText }: ResponseListProps) => {
             textTransform: "none",
             margin: "auto",
             boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
-            ml: 2,
+            ml: display === "mobile" ? 0 : 2,
             "&:hover": {
               color: "#626B77",
               border: "1px solid #E2E8F0",

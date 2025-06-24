@@ -46,7 +46,13 @@ const RankElement = ({ qID, display }: ElementProps) => {
           // border: "2px solid blue",
         }}
       >
-        <ResponseList qID={qID!} qType={"RANK"} optionText={"Rank"} />
+        <ResponseList
+          key={qID}
+          qID={qID!}
+          qType={"RANK"}
+          optionText={"Rank"}
+          display={display}
+        />
       </Box>
     </Box>
   );

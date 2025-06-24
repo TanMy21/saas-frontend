@@ -217,6 +217,7 @@ const SurveyBuilder = () => {
               flexShrink: 0,
               backgroundColor: "white",
               borderLeft: "2px solid #E5E7EB",
+              // border: "2px solid green",
             }}
           >
             <SurveyPreferencesPanel

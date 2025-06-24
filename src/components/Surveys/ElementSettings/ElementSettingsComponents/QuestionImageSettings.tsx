@@ -9,6 +9,8 @@ import {
   AccordionSummary,
   Box,
   Switch,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -109,7 +111,9 @@ const QuestionImageSettings = () => {
           }}
         >
           <ImageIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
-          Question Image
+          <Tooltip title="Set an image for the question">
+            <Typography>Question image</Typography>
+          </Tooltip>
         </Box>
       </AccordionSummary>
       <AccordionDetails>

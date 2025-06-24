@@ -44,13 +44,14 @@ const TextElement = ({ display, qImage }: ElementProps) => {
           alignItems: "center",
           width: "100%",
           height: "48%",
-          margin: "0 auto",
+          margin: "1% auto",
           // border: "2px solid blue",
         }}
       >
         <InputResponse
           inputPlaceholder={"Type your answer here..."}
           submitButtonText={"Ok"}
+          display={display}
         />
       </Box>
     </Box>

@@ -26,7 +26,7 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
           alignItems: "flex-end",
           width: "100%",
           margin: "0 auto",
-          marginTop: "8%",
+          marginTop: "12%",
           zIndex: 2,
           mb: 5,
           // border: "2px solid blue",
@@ -42,7 +42,7 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
           alignItems: "center",
           width: "100%",
           minHeight: "60%",
-          margin: "auto",
+          margin: "0 auto",
           // border: "2px solid blue",
         }}
       >
@@ -51,6 +51,7 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
           qID={qID!}
           qType="INSTRUCTIONS"
           optionText={"Instruction"}
+          display={display}
         />
       </Box>
     </Box>

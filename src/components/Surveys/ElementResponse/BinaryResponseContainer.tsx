@@ -1,13 +1,14 @@
 import { Box } from "@mui/material";
-import { useSelector } from "react-redux";
 
 import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
+import { BinaryResponseProps } from "../../../utils/types";
 
 import BinaryResponseNo from "./BinaryResponseNo";
 import BinaryResponseYes from "./BinaryResponseYes";
 
-const BinaryResponseContainer = () => {
-  const question = useSelector(
+const BinaryResponseContainer = ({ display }: BinaryResponseProps) => {
+  const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion
   );
 
@@ -37,7 +38,7 @@ const BinaryResponseContainer = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          width: "80%",
+          width: display === "mobile" ? "98%" : "80%",
           height: "100%",
           gap: 2,
           // border: "2px solid red",
@@ -47,11 +48,13 @@ const BinaryResponseContainer = () => {
           questionID={questionID}
           buttonTextYes={buttonTextYes}
           index={0}
+          display={display}
         />
         <BinaryResponseNo
           questionID={questionID}
           buttonTextNo={buttonTextNo}
           index={1}
+          display={display}
         />
       </Box>
     </Box>
