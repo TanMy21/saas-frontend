@@ -5,17 +5,12 @@ import { ElementProps } from "../../../utils/types";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const EndScreenElement = ({
-  qID,
-  qText,
-  qType,
-  qDescription,
-  display,
-}: ElementProps) => {
+const EndScreenElement = ({ display }: ElementProps) => {
   const { primary } = useAppTheme();
   return (
     <Box
       sx={{
+        position: "relative",
         display: "flex",
         flexDirection: "column",
         margin: "auto",
@@ -26,6 +21,8 @@ const EndScreenElement = ({
     >
       <Box
         sx={{
+          position: "absolute",
+          bottom: "60%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
@@ -37,16 +34,12 @@ const EndScreenElement = ({
           // border: "2px solid blue",
         }}
       >
-        <ElementQuestionText
-          qID={qID}
-          qText={qText}
-          qType={qType}
-          qDescription={qDescription}
-          display={display}
-        />
+        <ElementQuestionText display={display} />
       </Box>
       <Box
         sx={{
+          position: "absolute",
+          top: "50%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",
@@ -57,23 +50,32 @@ const EndScreenElement = ({
           // border: "2px solid blue",
         }}
       >
-        <Button
+        <Box
           sx={{
-            mt: 2,
-            borderRadius: 8,
-            backgroundColor: primary.dark,
-            textTransform: "capitalize",
-            padding: "16px 24px",
-            fontWeight: "bold",
-            "&:hover": {
-              backgroundColor: primary.dark,
-            },
+            transformOrigin: "bottom",
+            display: "flex",
+            flexDirection: "column",
+            // border: "2px dashed red",
           }}
-          variant="contained"
-          size="large"
         >
-          Submit
-        </Button>
+          <Button
+            sx={{
+              mt: 2,
+              borderRadius: 8,
+              backgroundColor: primary.dark,
+              textTransform: "capitalize",
+              padding: "16px 24px",
+              fontWeight: "bold",
+              "&:hover": {
+                backgroundColor: primary.dark,
+              },
+            }}
+            variant="contained"
+            size="large"
+          >
+            Submit
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

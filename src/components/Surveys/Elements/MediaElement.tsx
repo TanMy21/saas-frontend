@@ -9,6 +9,7 @@ const MediaElement = ({ qID, display }: ElementProps) => {
   return (
     <Box
       sx={{
+        position: "relative",
         display: "flex",
         flexDirection: "column",
         margin: "auto",
@@ -19,6 +20,8 @@ const MediaElement = ({ qID, display }: ElementProps) => {
     >
       <Box
         sx={{
+          position: "absolute",
+          bottom: "60%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
@@ -35,6 +38,8 @@ const MediaElement = ({ qID, display }: ElementProps) => {
       </Box>
       <Box
         sx={{
+          position: "absolute",
+          top: "50%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",
@@ -45,7 +50,17 @@ const MediaElement = ({ qID, display }: ElementProps) => {
           zIndex: 1,
         }}
       >
-        <MediaOptionsContainer qID={qID!} display={display} />
+        <Box
+          sx={{
+            transformOrigin: "bottom",
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            // border: "2px dashed red",
+          }}
+        >
+          <MediaOptionsContainer qID={qID!} display={display} />
+        </Box>
       </Box>
     </Box>
   );

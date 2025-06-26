@@ -9,17 +9,20 @@ const ScaleElement = ({ display }: ElementProps) => {
   return (
     <Box
       sx={{
+        position: "relative",
         display: "flex",
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        ...(display === "mobile" && { height: "auto" }),
+        // ...(display === "mobile" && { height: "auto" }),
         zIndex: 20,
         border: "2px solid red",
       }}
     >
       <Box
         sx={{
+          position: "absolute",
+          bottom: "60%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
@@ -33,16 +36,15 @@ const ScaleElement = ({ display }: ElementProps) => {
       </Box>
       <Box
         sx={{
-          transform: display === "mobile" ? "rotate(-90deg)" : "none",
-          transformOrigin: "center",
-          // width: window.innerWidth < 600 ? `${containerWidth}px` : "100%",
-          // height: window.innerWidth < 600 ? `${containerWidth}px` : "100px",
+          position: "absolute",
+          top: "50%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "center",
           width: "100%",
           margin: "2% auto",
+          ...(display === "mobile" && { height: "200px" }),
           border: "2px solid blue",
         }}
       >

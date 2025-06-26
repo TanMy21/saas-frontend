@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import { ScaleResponseProps } from "../../../utils/types";
 
 import ProgressiveSlider from "./ProgressiveSlider";
+import ScaleCounter from "./ScaleCounter";
 
 const ScaleResponse = ({ display }: ScaleResponseProps) => {
   return (
@@ -12,7 +13,7 @@ const ScaleResponse = ({ display }: ScaleResponseProps) => {
         p: { xs: 2, sm: 3, md: 4, xl: 6 },
       }}
     >
-      <ProgressiveSlider />
+      {display === "mobile" ? <ScaleCounter /> : <ProgressiveSlider />}
     </Box>
   );
 };

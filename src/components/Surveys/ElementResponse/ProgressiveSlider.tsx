@@ -8,8 +8,6 @@ import { Mark, StaticSliderConfig } from "../../../utils/types";
 
 import { CustomTrackContainer } from "./CustomTrackContainer";
 
-// --- Static Configuration ---
-// These values control the slider's appearance but not its range.
 const STATIC_CONFIG: StaticSliderConfig = {
   tick: {
     minSize: 8,
@@ -22,48 +20,30 @@ const STATIC_CONFIG: StaticSliderConfig = {
   gap: 8,
 };
 
-// --- Helper Functions ---
-
-/**
- * Dynamically generates the marks for the slider based on a min and max value.
- */
 const generateMarks = (minValue: number, maxValue: number): Mark[] => {
   const marks: Mark[] = [];
   for (let i = minValue; i <= maxValue; i++) {
     marks.push({
       value: i,
-      label: `${i}`, // The label is now the value itself
+      label: `${i}`,
     });
   }
   return marks;
 };
 
-/**
- * Calculates the position of a value on the slider as a percentage.
- */
 const valueToPercent = (value: number, min: number, max: number): number => {
-  // Handle the case where min and max are the same to avoid division by zero
   if (max === min) {
     return 0;
   }
   return ((value - min) * 100) / (max - min);
 };
 
-/**
- * Calculates the size of a tick based on its index.
- */
 const getTickSize = (index: number): number =>
   STATIC_CONFIG.tick.minSize + index * STATIC_CONFIG.tick.increment;
 
-/**
- * Calculates the thickness of a segment based on its index.
- */
 const getSegmentThickness = (index: number): number =>
   STATIC_CONFIG.segment.minThickness + index * STATIC_CONFIG.segment.increment;
 
-/**
- * Determines the background for a segment based on its position and the slider's value.
- */
 const getSegmentBackground = (
   index: number,
   currentValue: number,
@@ -74,7 +54,7 @@ const getSegmentBackground = (
   const isActive = marks[index].value < currentValue;
 
   if (!isActive) {
-    return "#F0F4F8"; // Inactive color
+    return "#F0F4F8";
   }
 
   if (progress <= 0.25) {
@@ -84,7 +64,6 @@ const getSegmentBackground = (
   } else if (progress <= 0.75) {
     return "linear-gradient(to right, #6596FE, #3777FE)";
   } else {
-    // progress < 1
     return "linear-gradient(to right, #3777FE, #1E3A8A)";
   }
 };
@@ -101,17 +80,14 @@ const ProgressiveSlider = () => {
     maxValue: 5,
   };
 
-  // Generate marks dynamically based on the props
   const marks = useMemo(
     () => generateMarks(minValue ?? 1, maxValue ?? 5),
     [minValue, maxValue]
   );
 
-  // The slider's min/max now directly match the data values
   const min = minValue ?? 1;
   const max = maxValue ?? 5;
 
-  // Set the initial value to the middle of the range
   const [value, setValue] = useState<number>(Math.ceil((min + max) / 2));
 
   const handleSliderChange = (
@@ -127,7 +103,6 @@ const ProgressiveSlider = () => {
     const labels: ReactNode[] = [];
 
     marks.forEach((mark: Mark, i: number) => {
-      // Use the component's min/max for percentage calculation
       const percent = valueToPercent(mark.value, min, max);
       const tickSize = getTickSize(i);
 
@@ -213,7 +188,7 @@ const ProgressiveSlider = () => {
           value={value}
           min={min}
           max={max}
-          step={1} // Step by 1 since we have integer values
+          step={1}
           marks={marks}
           onChange={handleSliderChange}
           sx={{

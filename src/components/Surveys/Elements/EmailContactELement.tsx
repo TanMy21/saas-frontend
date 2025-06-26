@@ -12,6 +12,7 @@ const EmailContactELement = ({ display }: ElementProps) => {
   return (
     <Box
       sx={{
+        position: "relative",
         display: "flex",
         flexDirection: "column",
         margin: "auto",
@@ -23,6 +24,8 @@ const EmailContactELement = ({ display }: ElementProps) => {
     >
       <Box
         sx={{
+          position: "absolute",
+          bottom: "60%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
@@ -39,6 +42,8 @@ const EmailContactELement = ({ display }: ElementProps) => {
       </Box>
       <Box
         sx={{
+          position: "absolute",
+          top: "50%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",

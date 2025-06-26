@@ -9,6 +9,7 @@ const ChoiceElement = ({ qID, display }: ElementProps) => {
   return (
     <Box
       sx={{
+        position: "relative",
         display: "flex",
         flexDirection: "column",
         margin: "auto",
@@ -20,6 +21,8 @@ const ChoiceElement = ({ qID, display }: ElementProps) => {
     >
       <Box
         sx={{
+          position: "absolute",
+          bottom: "60%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
@@ -36,6 +39,8 @@ const ChoiceElement = ({ qID, display }: ElementProps) => {
       </Box>
       <Box
         sx={{
+          position: "absolute",
+          top: "50%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",

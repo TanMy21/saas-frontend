@@ -23,6 +23,7 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
   return (
     <Box
       sx={{
+        position: "relative",
         display: "flex",
         flexDirection: "column",
         margin: display === "mobile" ? "36% auto" : "0 auto",
@@ -32,6 +33,8 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
     >
       <Box
         sx={{
+          position: "absolute",
+          bottom: "60%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
@@ -47,6 +50,8 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
       </Box>
       <Box
         sx={{
+          position: "absolute",
+          top: "50%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",
@@ -57,23 +62,33 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
           // border: "2px solid blue",
         }}
       >
-        <Button
+        <Box
           sx={{
-            borderRadius: 8,
-            backgroundColor: primary.dark,
-            textTransform: "unset",
-            padding: "16px 24px",
-            fontWeight: "bold",
-            "&:hover": {
-              backgroundColor: primary.dark,
-            },
+            transformOrigin: "bottom",
+            display: "flex",
+            flexDirection: "column",
+            // width: "100%",
+            border: "2px dashed red",
           }}
-          variant="contained"
-          size="large"
-          endIcon={<FaArrowRightLong fontSize={"24px"} />}
         >
-          {buttonText}
-        </Button>
+          <Button
+            sx={{
+              borderRadius: 8,
+              backgroundColor: primary.dark,
+              textTransform: "unset",
+              padding: "16px 24px",
+              fontWeight: "bold",
+              "&:hover": {
+                backgroundColor: primary.dark,
+              },
+            }}
+            variant="contained"
+            size="large"
+            endIcon={<FaArrowRightLong fontSize={"24px"} />}
+          >
+            {buttonText}
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

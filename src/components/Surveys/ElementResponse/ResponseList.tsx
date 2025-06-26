@@ -99,115 +99,125 @@ const ResponseList = ({
   return (
     <Box
       sx={{
+        transformOrigin: "bottom",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        width: display === "mobile" ? "100%" : "80%",
-        // height: "100%",
-        margin: "auto",
-        padding: display === "mobile" ? 0 : 2,
-        gap: 2,
-        // border: "2px solid green",
+        width: "100%",
+        // border: "2px dashed red",
       }}
     >
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
+          justifyContent: "center",
           alignItems: "center",
-          margin: "0 auto",
-          width: display === "mobile" ? "92%" : "100%",
+          width: display === "mobile" ? "100%" : "80%",
           // height: "100%",
-          padding: 1,
-          // border: "2px solid purple",
-        }}
-      >
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="responses">
-            {(provided) => (
-              <Box
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: display === "mobile" ? "92%" : "80%",
-                  // height: "100%",
-                  gap: 2,
-                  // border: "2px solid red",
-                }}
-              >
-                {localOptions?.map((option, index) => (
-                  <Draggable
-                    key={option.optionID}
-                    draggableId={option.optionID}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <Box
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <ResponseListItem
-                          key={option.optionID}
-                          qType={qType}
-                          response={option}
-                          index={index}
-                          display={display}
-                        />
-                      </Box>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </Box>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          width: "83%",
-          height: "100%",
+          margin: "auto",
+          padding: display === "mobile" ? 0 : 2,
           gap: 2,
-          margin: "1% auto",
-          marginBottom: "12%",
-          // border: "2px solid red",
+          // border: "2px solid green",
         }}
       >
-        <Button
-          onClick={addResponse}
-          variant="outlined"
-          disabled={(options?.length ?? 0) >= 10}
-          startIcon={<MdAdd fontSize={"24px"} />}
+        <Box
           sx={{
-            mt: 4,
-            py: 1.5,
-            borderRadius: 4,
-            border: "1px solid #E2E8F0",
-            width: "98%",
-            color: "#626B77",
-            fontWeight: "bold",
-            backgroundColor: "#f8f9fc",
-            justifyContent: "center",
-            textTransform: "none",
-            margin: "auto",
-            boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
-            ml: display === "mobile" ? 0 : 2,
-            "&:hover": {
-              color: "#626B77",
-              border: "1px solid #E2E8F0",
-              backgroundColor: "#f8f9fc",
-              boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
-            },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            margin: "0 auto",
+            width: display === "mobile" ? "92%" : "100%",
+            // height: "100%",
+            padding: 1,
+            // border: "2px solid purple",
           }}
         >
-          Add new {optionText}
-        </Button>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="responses">
+              {(provided) => (
+                <Box
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: display === "mobile" ? "92%" : "80%",
+                    // height: "100%",
+                    gap: 2,
+                    // border: "2px solid red",
+                  }}
+                >
+                  {localOptions?.map((option, index) => (
+                    <Draggable
+                      key={option.optionID}
+                      draggableId={option.optionID}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <Box
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <ResponseListItem
+                            key={option.optionID}
+                            qType={qType}
+                            response={option}
+                            index={index}
+                            display={display}
+                          />
+                        </Box>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </Box>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "83%",
+            height: "100%",
+            gap: 2,
+            margin: "1% auto",
+            marginBottom: "12%",
+            // border: "2px solid red",
+          }}
+        >
+          <Button
+            onClick={addResponse}
+            variant="outlined"
+            disabled={(options?.length ?? 0) >= 10}
+            startIcon={<MdAdd fontSize={"24px"} />}
+            sx={{
+              mt: 4,
+              py: 1.5,
+              borderRadius: 4,
+              border: "1px solid #E2E8F0",
+              width: "98%",
+              color: "#626B77",
+              fontWeight: "bold",
+              backgroundColor: "#f8f9fc",
+              justifyContent: "center",
+              textTransform: "none",
+              margin: "auto",
+              boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
+              ml: display === "mobile" ? 0 : 2,
+              "&:hover": {
+                color: "#626B77",
+                border: "1px solid #E2E8F0",
+                backgroundColor: "#f8f9fc",
+                boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
+              },
+            }}
+          >
+            Add new {optionText}
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
