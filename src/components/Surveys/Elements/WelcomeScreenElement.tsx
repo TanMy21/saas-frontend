@@ -26,21 +26,24 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        margin: display === "mobile" ? "36% auto" : "0 auto",
-        width: display === "mobile" ? "92%" : "98%",
+        // margin: display === "mobile" ? "36% auto" : "0 auto",
+        // width: display === "mobile" ? "92%" : "98%",
+        margin: "auto",
+        width: "98%",
+        minHeight: "700px",
         zIndex: 20,
       }}
     >
       <Box
         sx={{
           position: "absolute",
-          bottom: "60%",
+          bottom: "50%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          margin: "0 auto",
+          margin: "8% auto",
           zIndex: 2,
           mb: 5,
           // border: "2px solid blue",
@@ -68,7 +71,7 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
             display: "flex",
             flexDirection: "column",
             // width: "100%",
-            border: "2px dashed red",
+            // border: "2px dashed red",
           }}
         >
           <Button
@@ -76,7 +79,7 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
               borderRadius: 8,
               backgroundColor: primary.dark,
               textTransform: "unset",
-              padding: "16px 24px",
+              padding: display === "mobile" ? "8px 12px" : "16px 24px",
               fontWeight: "bold",
               "&:hover": {
                 backgroundColor: primary.dark,

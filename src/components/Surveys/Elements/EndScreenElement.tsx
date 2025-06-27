@@ -14,6 +14,7 @@ const EndScreenElement = ({ display }: ElementProps) => {
         display: "flex",
         flexDirection: "column",
         margin: "auto",
+        minHeight: "700px",
         width: "98%",
         zIndex: 20,
         // border: "2px solid red",
@@ -22,13 +23,13 @@ const EndScreenElement = ({ display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          bottom: "60%",
+          bottom: "50%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          margin: "0 auto",
+          margin: "8% auto",
           zIndex: 2,
           mb: 5,
           // border: "2px solid blue",
@@ -45,8 +46,8 @@ const EndScreenElement = ({ display }: ElementProps) => {
           justifyContent: "start",
           alignItems: "center",
           width: "100%",
-          height: "60%",
-          margin: "2% auto",
+          height: "48%",
+          margin: "0 auto",
           // border: "2px solid blue",
         }}
       >
@@ -64,7 +65,7 @@ const EndScreenElement = ({ display }: ElementProps) => {
               borderRadius: 8,
               backgroundColor: primary.dark,
               textTransform: "capitalize",
-              padding: "16px 24px",
+              padding: display === "mobile" ? "8px 12px" : "16px 24px",
               fontWeight: "bold",
               "&:hover": {
                 backgroundColor: primary.dark,

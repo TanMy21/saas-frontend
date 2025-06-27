@@ -25,14 +25,14 @@ const EmailContactELement = ({ display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          bottom: "60%",
+          bottom: "50%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
           margin: "0 auto",
-          marginTop: "16%",
+          marginTop: "8%",
           marginBottom: 5,
           zIndex: 2,
           // border: "2px solid blue",

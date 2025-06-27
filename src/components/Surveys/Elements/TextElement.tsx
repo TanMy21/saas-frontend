@@ -10,24 +10,27 @@ const TextElement = ({ display, qImage }: ElementProps) => {
   return (
     <Box
       sx={{
+        position: "relative",
         display: "flex",
         flexDirection: "column",
         margin: "auto",
         width: "98%",
-        minHeight: "800px",
+        minHeight: "700px",
         zIndex: 20,
         // border: "2px solid red",
       }}
     >
       <Box
         sx={{
+          position: "absolute",
+          bottom: "50%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
           margin: "0 auto",
-          marginTop: "16%",
+          marginTop: "8%",
           marginBottom: 5,
           zIndex: 2,
           // border: "2px solid blue",
@@ -38,6 +41,8 @@ const TextElement = ({ display, qImage }: ElementProps) => {
       {qImage && <ElementImageContainer />}
       <Box
         sx={{
+          position: "absolute",
+          top: "50%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",

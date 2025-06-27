@@ -14,21 +14,22 @@ const ScaleElement = ({ display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
+        minHeight: "700px",
         // ...(display === "mobile" && { height: "auto" }),
         zIndex: 20,
-        border: "2px solid red",
+        // border: "2px solid red",
       }}
     >
       <Box
         sx={{
           position: "absolute",
-          bottom: "60%",
+          bottom: "50%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
-          marginTop: "2%",
+          marginTop: "2% auto",
           // border: "2px solid blue",
         }}
       >
@@ -45,7 +46,7 @@ const ScaleElement = ({ display }: ElementProps) => {
           width: "100%",
           margin: "2% auto",
           ...(display === "mobile" && { height: "200px" }),
-          border: "2px solid blue",
+          // border: "2px solid blue",
         }}
       >
         <ScaleResponse display={display} />

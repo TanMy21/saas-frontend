@@ -73,6 +73,7 @@ const HeaderIconMenu = () => {
           height: 40,
           borderRadius: "50%",
           border: borders.avatarIcon,
+          transition: "border 0.2s ease",
           "&:hover": {
             border: borders.avatarIconHovered,
           },
@@ -87,6 +88,8 @@ const HeaderIconMenu = () => {
             height: 32,
             backgroundColor: brand.avatarBg1,
             color: brand.avatarTxt1,
+            fontWeight: "bold",
+            fontSize: "0.875rem",
           }}
         >
           {email?.charAt(0).toUpperCase()}

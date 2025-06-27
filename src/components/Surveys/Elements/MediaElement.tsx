@@ -14,6 +14,7 @@ const MediaElement = ({ qID, display }: ElementProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "98%",
+        minHeight: "700px",
         zIndex: 20,
         // border: "2px solid red",
       }}
@@ -21,14 +22,14 @@ const MediaElement = ({ qID, display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          bottom: "60%",
+          bottom: "50%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "flex-end",
           width: "100%",
           margin: "0 auto",
-          marginTop: "16%",
+          marginTop: "8%",
           zIndex: 2,
           mb: 5,
           // border: "2px solid blue",

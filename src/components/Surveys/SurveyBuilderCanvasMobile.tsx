@@ -24,36 +24,39 @@ const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
     elementComponents[question?.type as QuestionTypeKey];
 
   return (
-    <Box display={"flex"} flexDirection={"column"}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        margin: "auto",
+        width: "300px",
+        height: { md: "600px", lg: "600px", xl: "700px" },
+        border: "3px solid #E0E0E0",
+        borderRadius: "24px",
+        mt: "1%",
+        mb: "2%",
+        bgcolor: "#FFFFFF",
+        boxShadow: " 0 4px 20px rgba(0, 0, 0, 0.08)",
+        transition: "minWidth 1s ease-in-out, opacity 1s ease-in-out",
+        position: "relative",
+        backgroundColor: backgroundColor,
+        backgroundImage: backgroundImage,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        overflowX: "hidden",
+        overflowY: "auto",
+        scrollbarWidth: "none",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
+      }}
+    >
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
           margin: "auto",
-          border: "3px solid #E0E0E0",
-          borderRadius: "24px",
-          mt: "2%",
-          mb: "2%",
-          pt: "8%",
-          // pl: "1%",
-          // pr: "1%",
-          bgcolor: "#FFFFFF",
-          width: "300px",
-          boxShadow: " 0 4px 20px rgba(0, 0, 0, 0.08)",
-          height: { lg: "480px", xl: "600px" },
-          transition: "minWidth 1s ease-in-out, opacity 1s ease-in-out",
-          position: "relative",
-          backgroundColor: backgroundColor,
-          backgroundImage: backgroundImage,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          overflowX: "hidden",
-          overflowY: "auto",
-          scrollbarWidth: "none",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
+          width: "96%",
+          // height: "100%",
         }}
       >
         {/* Element view */}

@@ -32,47 +32,45 @@ const WorkspaceDropDown = ({ selectedWorkspace }: WorkspaceDropDownMenu) => {
   };
 
   return (
-    <>
-      <Box id="workspace-dropdown-menu">
-        <IconButton
-          aria-label="more"
-          aria-controls="long-menu"
-          aria-haspopup="true"
-          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-            handleClick(e);
-          }}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-        <Menu
-          id="basic-menu"
-          anchorEl={menuAnchor}
-          open={Boolean(menuAnchor)}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-        >
-          <MenuItem onClick={handleOpenModalRename}>Rename</MenuItem>
-          <Divider />
-          <MenuItem sx={{ color: "red" }} onClick={handleOpenModalDelete}>
-            Delete
-          </MenuItem>
-        </Menu>
-        {/* Remame Modal */}
-        <RenameWorkspaceModal
-          open={openRenameModel}
-          onClose={() => setOpenRenameModel(false)}
-          selectedWorkspace={selectedWorkspace}
-        />
-        {/* Delete Modal */}
-        <DeleteWorkspaceModal
-          open={openDeleteModel}
-          onClose={() => setOpenDeleteModel(false)}
-          selectedWorkspace={selectedWorkspace}
-        />
-      </Box>
-    </>
+    <Box id="workspace-dropdown-menu">
+      <IconButton
+        aria-label="more"
+        aria-controls="long-menu"
+        aria-haspopup="true"
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          handleClick(e);
+        }}
+      >
+        <MoreHorizIcon />
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={handleOpenModalRename}>Rename</MenuItem>
+        <Divider />
+        <MenuItem sx={{ color: "red" }} onClick={handleOpenModalDelete}>
+          Delete
+        </MenuItem>
+      </Menu>
+      {/* Remame Modal */}
+      <RenameWorkspaceModal
+        open={openRenameModel}
+        onClose={() => setOpenRenameModel(false)}
+        selectedWorkspace={selectedWorkspace}
+      />
+      {/* Delete Modal */}
+      <DeleteWorkspaceModal
+        open={openDeleteModel}
+        onClose={() => setOpenDeleteModel(false)}
+        selectedWorkspace={selectedWorkspace}
+      />
+    </Box>
   );
 };
 export default WorkspaceDropDown;

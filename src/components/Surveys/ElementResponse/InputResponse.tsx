@@ -16,7 +16,7 @@ const InputResponse = ({
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        border: "2px dashed red",
+        // border: "2px dashed red",
       }}
     >
       <Box
@@ -75,7 +75,7 @@ const InputResponse = ({
               borderRadius: 8,
               backgroundColor: primary.dark,
               textTransform: "capitalize",
-              padding: "8px 16px",
+              padding: display === "mobile" ? "4px 8px" : "8px 16px",
               fontWeight: "bold",
               width: display === "mobile" ? "120px" : "20%",
               ...(display === "mobile" && { ml: "96%" }),

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Box, TextField, Typography } from "@mui/material";
-import { FaArrowRightLong } from "react-icons/fa6";
+// import { FaArrowRightLong } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -10,9 +10,11 @@ import {
 } from "../../../app/slices/elementApiSlice";
 import { updateQuestionField } from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
+import { useAppTheme } from "../../../theme/useAppTheme";
 import { ElementProps } from "../../../utils/types";
 
 const ElementQuestionText = ({ display }: ElementProps) => {
+  const { primary } = useAppTheme();
   const dispatch = useDispatch();
   const typographySettings = useSelector(
     (state: RootState) => state.elementTypography
@@ -46,8 +48,13 @@ const ElementQuestionText = ({ display }: ElementProps) => {
     question?.questionPreferences?.descriptionFontColor ??
     "#000000";
 
+  const defaultFontSize = 20;
   const orderFontSize = titleFontSize * 0.8;
-  const arrowFontSize = titleFontSize * 0.45;
+  const actualFontSize =
+    display === "mobile" ? defaultFontSize : orderFontSize || defaultFontSize;
+  const circleSize = actualFontSize * 1.2;
+
+  // const arrowFontSize = titleFontSize * 0.45;
 
   const nonOrderableTypes = [
     "WELCOME_SCREEN",
@@ -127,23 +134,26 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
-                width: "fit-content",
-                marginRight: 1,
+                width: `${circleSize}px`,
+                height: `${circleSize}px`,
+                borderRadius: "50%",
+                backgroundColor: primary.light,
+                marginRight: 2,
               }}
             >
               <Typography
                 sx={{
-                  marginTop: 1,
                   fontWeight: "bold",
                   color: "black",
-                  fontSize: display === "mobile" ? 20 : orderFontSize || 20,
+                  // fontSize: display === "mobile" ? "32px" : orderFontSize || 20,
+                  fontSize: orderFontSize || 20,
                 }}
               >
                 {order}
               </Typography>
             </Box>
           )}
-          {isNonOrderableType ? null : (
+          {/* {isNonOrderableType ? null : (
             <Box
               sx={{
                 display: "flex",
@@ -163,7 +173,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                 <FaArrowRightLong />
               </Typography>
             </Box>
-          )}
+          )} */}
           <Box
             onDoubleClick={handleDoubleClick}
             sx={{

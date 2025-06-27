@@ -22,7 +22,7 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          bottom: "60%",
+          bottom: "50%",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",

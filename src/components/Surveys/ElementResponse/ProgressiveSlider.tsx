@@ -132,7 +132,7 @@ const ProgressiveSlider = () => {
             left: `${percent}%`,
             transform: "translateX(-50%)",
             textAlign: "center",
-            fontSize: "0.8rem",
+            fontSize: "1rem",
             whiteSpace: "nowrap",
             fontWeight: value === mark.value ? "bold" : "normal",
             color: value === mark.value ? "primary.main" : "text.secondary",

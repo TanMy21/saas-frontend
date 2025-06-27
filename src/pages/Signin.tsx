@@ -239,7 +239,7 @@ const Signin = () => {
               Welcome back
             </Typography>
             <Typography variant="body1" sx={{ color: grey[600] }}>
-              Sign in to create, share, and learn
+              Create . Share . Learn
             </Typography>
           </Box>
 

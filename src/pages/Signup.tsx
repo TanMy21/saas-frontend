@@ -142,7 +142,7 @@ const Signup = () => {
               display: "flex",
               flexDirection: "row",
               margin: "0 auto",
-              width: "80%",
+              width: "60%",
               height: { md: "8%", lg: "12%", xl: "12%" },
               // border: "2px solid red",
             }}
@@ -195,7 +195,7 @@ const Signup = () => {
               variant="body1"
               sx={{ fontSize: "20px", color: grey[600] }}
             >
-              Create. Share. Understand.
+              Create . Share . Understand
             </Typography>
           </Box>
           {/* form */}
