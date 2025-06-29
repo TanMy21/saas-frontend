@@ -257,6 +257,14 @@ export interface FetchBaseQueryError {
   };
 }
 
+export interface FontSizeControlProps {
+  name: keyof TypographySettingsForm;
+  label?: string;
+  control: any;
+  dispatchKey: keyof TypographySettingsForm;
+  markFormTouched: () => void;
+}
+
 export interface FlowFormConditionBlockProps {
   condition: Condition;
   blockIndex: number;
@@ -635,8 +643,10 @@ export interface SurveyCanvasQuestionSettings {
   creatorId: string;
   updaterId?: string;
   titleFontSize?: number;
+  titleFontSizeMobile?: number;
   titleFontColor?: string;
   descriptionFontSize?: number;
+  descriptionFontSizeMobile?: number;
   descriptionFontColor?: string;
   questionImageTemplate?: boolean;
   questionImageTemplateUrl?: string;
@@ -939,10 +949,17 @@ export interface SurveyWelcomeElementProps {
 }
 
 export interface TypographySettingsForm {
-  titleFontSize: number;
-  titleFontColor: string;
-  descriptionFontSize: number;
-  descriptionFontColor: string;
+  titleFontSize?: number;
+  titleFontSizeMobile?: number;
+  titleFontColor?: string;
+  descriptionFontSize?: number;
+  descriptionFontSizeMobile?: number;
+  descriptionFontColor?: string;
+}
+
+export interface TypographySettingsView {
+  view: "desktop" | "mobile";
+  setView: React.Dispatch<React.SetStateAction<"desktop" | "mobile">>;
 }
 
 export interface UserInfo {

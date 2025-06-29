@@ -16,59 +16,56 @@ const QuestionFlow = () => {
   const { data: Elements } = useGetElementsForSurveyQuery(surveyID!);
 
   return (
-    <>
-      <Box
-        sx={{
-          overflowX: "hidden",
-          overflowY: "hidden",
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        <Grid container>
-          <Grid
-            item
-            display={"flex"}
-            flexDirection={"row"}
-            xs={12}
-            sx={{
-              position: "sticky",
-              top: "0",
-              width: "100%",
-              zIndex: "10",
-            }}
-          >
-            <SurveyBuilderHeader
-              tabValue={tabValue}
-              survey={survey!}
-              workspaceId={workspaceId!}
-              workspaceName={workspaceName!}
-              title={title}
-            />
-          </Grid>
-          <Grid
-            item
-            xl={12}
-            lg={12}
-            md={12}
-            xs={12}
-            display={"flex"}
-            flexDirection={"row"}
-            justifyContent={"center"}
-            sx={{
-              width: "100%",
-              minHeight: "90vh",
-              overflowX: "hidden",
-              overflowY: "auto",
-              border: "2px solid green",
-            }}
-          >
-            {/* Main content area */}
-            <QuestionFlowContainer Elements={Elements!} surveyID={surveyID!} />
-          </Grid>
+    <Box
+      sx={{
+        overflowX: "hidden",
+        overflowY: "hidden",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <Grid container>
+        <Grid
+          item
+          display={"flex"}
+          flexDirection={"row"}
+          xs={12}
+          sx={{
+            position: "sticky",
+            top: "0",
+            width: "100%",
+            zIndex: "10",
+          }}
+        >
+          <SurveyBuilderHeader
+            survey={survey!}
+            workspaceId={workspaceId!}
+            workspaceName={workspaceName!}
+            title={title}
+          />
         </Grid>
-      </Box>
-    </>
+        <Grid
+          item
+          xl={12}
+          lg={12}
+          md={12}
+          xs={12}
+          display={"flex"}
+          flexDirection={"row"}
+          justifyContent={"center"}
+          sx={{
+            width: "100%",
+            minHeight: "90vh",
+            overflowX: "hidden",
+            overflowY: "auto",
+            border: "2px solid green",
+          }}
+        >
+          {/* Main content area */}
+          <QuestionFlowContainer Elements={Elements!} surveyID={surveyID!} />
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

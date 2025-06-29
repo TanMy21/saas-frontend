@@ -103,6 +103,22 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
+    updateElementTypographyMobileView: builder.mutation({
+      query: ({
+        questionID,
+        titleFontSizeMobile,
+        descriptionFontSizeMobile,
+      }) => ({
+        url: `/q/mobile/settings`,
+        method: "PATCH",
+        body: {
+          questionID,
+          titleFontSizeMobile,
+          descriptionFontSizeMobile,
+        },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
     updateScreenElements: builder.mutation({
       query: ({ questionID, text, description }) => ({
         url: `/q/screen/elements`,
@@ -222,6 +238,7 @@ export const {
   useUpdateElementTextMutation,
   useUpdateElementOrderMutation,
   useUpdateElementTypographyMutation,
+  useUpdateElementTypographyMobileViewMutation,
   useUpdateQuestionRequiredPreferenceMutation,
   useUpdateQuestionPreferenceUIConfigMutation,
   useUpdateQuestionImageDimensionsMutation,

@@ -8,8 +8,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  InputAdornment,
-  Slider,
   TextField,
   Tooltip,
   Typography,
@@ -18,7 +16,10 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { FiType } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 
-import { useUpdateElementTypographyMutation } from "../../../../app/slices/elementApiSlice";
+import {
+  useUpdateElementTypographyMobileViewMutation,
+  useUpdateElementTypographyMutation,
+} from "../../../../app/slices/elementApiSlice";
 import { updateTypographyField } from "../../../../app/slices/elementTypographySlice";
 import { RootState } from "../../../../app/store";
 import { TypographySettingsFormSchema } from "../../../../utils/schema";
@@ -28,28 +29,46 @@ import {
 } from "../../../../utils/types";
 
 import ColorPicker from "./ColorPicker";
+import FontSizeControl from "./FontSizeControl";
+import FontSizeViewToggle from "./FontSizeViewToggle";
 
 const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
+  const [fontSizeView, setFontSizeView] = useState<"desktop" | "mobile">(
+    "desktop"
+  );
   const typographySettings = useSelector(
     (state: RootState) => state.elementTypography
   );
   const dispatch = useDispatch();
 
+  const isDesktop = fontSizeView === "desktop";
+  const titleKey = (
+    isDesktop ? "titleFontSize" : "titleFontSizeMobile"
+  ) as keyof TypographySettingsForm;
+  const descriptionKey = (
+    isDesktop ? "descriptionFontSize" : "descriptionFontSizeMobile"
+  ) as keyof TypographySettingsForm;
   const [updateElementTypography] = useUpdateElementTypographyMutation();
+  const [updateElementTypographyMobileView] =
+    useUpdateElementTypographyMobileViewMutation();
 
   const {
     titleFontColor,
     titleFontSize,
+    titleFontSizeMobile,
     descriptionFontColor,
     descriptionFontSize,
+    descriptionFontSizeMobile,
   } = typographySettings || {};
 
   const { handleSubmit, control, reset } = useForm<TypographySettingsForm>({
     resolver: zodResolver(TypographySettingsFormSchema),
     defaultValues: {
       titleFontSize,
+      titleFontSizeMobile,
       titleFontColor,
       descriptionFontSize,
+      descriptionFontSizeMobile,
       descriptionFontColor,
     },
   });
@@ -80,6 +99,21 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
     }
   };
 
+  const onSubmitMobile = async (data: TypographySettingsForm) => {
+    try {
+      const { titleFontSizeMobile, descriptionFontSizeMobile } = data;
+
+      await updateElementTypographyMobileView({
+        questionID: qID,
+        titleFontSizeMobile,
+        descriptionFontSizeMobile,
+      }).unwrap();
+      setFormTouched(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const markFormTouched = () => {
     if (!formTouched) setFormTouched(true);
   };
@@ -92,7 +126,12 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      handleSubmit(onSubmit)();
+      if (isDesktop) {
+        handleSubmit(onSubmit)();
+      } else {
+        handleSubmit(onSubmitMobile)();
+      }
+
       setFormTouched(false);
     }, 2500);
   }, [watchedValues, formTouched, handleSubmit]);
@@ -100,20 +139,28 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   useEffect(() => {
     reset({
       titleFontSize,
+      titleFontSizeMobile,
       titleFontColor,
       descriptionFontSize,
+      descriptionFontSizeMobile,
       descriptionFontColor,
     });
   }, [
     titleFontSize,
+    titleFontSizeMobile,
     titleFontColor,
     descriptionFontSize,
+    descriptionFontSizeMobile,
     descriptionFontColor,
     reset,
   ]);
 
+  useEffect(() => {
+    console.log("watchedValues", watchedValues);
+  }, [watchedValues, formTouched]);
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={(e) => e.preventDefault()}>
       <Accordion
         defaultExpanded={false}
         disableGutters
@@ -173,7 +220,15 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                 Title
               </Typography>
               {/* Font Size */}
-              <Box sx={{ mb: 1, ml: 1, width: "98%" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  mb: 1,
+                  ml: 1,
+                  width: "98%",
+                }}
+              >
                 <Box
                   sx={{
                     display: "flex",
@@ -195,90 +250,20 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     <FiType style={{ marginBottom: "1%", color: "#752FEC" }} />
                     Font size
                   </Typography>
-                  <Controller
-                    name="titleFontSize"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        type="number"
-                        variant="standard"
-                        value={field.value}
-                        onChange={(e) => {
-                          const value = Number(e.target.value);
-                          field.onChange(value);
-                          markFormTouched();
-                          dispatch(
-                            updateTypographyField({
-                              key: "titleFontSize",
-                              value: value,
-                            })
-                          );
-                        }}
-                        inputProps={{ min: 8, max: 72 }}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment
-                              position="end"
-                              sx={{ color: "#6846E5", marginBottom: 0.5 }}
-                            >
-                              px
-                            </InputAdornment>
-                          ),
-                          disableUnderline: true,
-                        }}
-                        sx={{
-                          width: 92,
-                          "& .MuiInputBase-root": {
-                            borderRadius: 1,
-                            backgroundColor: "#EEF2FF",
-                            height: "36px",
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            color: "#6846E5",
-                            border: "none",
-                            boxShadow: "none",
-                            px: 1.25,
-                          },
-                        }}
-                      />
-                    )}
-                  />
+                  <Box>
+                    <FontSizeViewToggle
+                      view={fontSizeView}
+                      setView={setFontSizeView}
+                    />
+                  </Box>
                 </Box>
-
-                {/* Slider below, syncs as before */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    width: "96%",
-                    ml: 1,
-                  }}
-                >
-                  <Controller
-                    name="titleFontSize"
+                <Box>
+                  <FontSizeControl
+                    key={titleKey}
+                    name={titleKey}
+                    dispatchKey={titleKey}
                     control={control}
-                    render={({ field }) => (
-                      <Slider
-                        min={8}
-                        max={72}
-                        value={field.value}
-                        onChange={(_, val) => {
-                          const numericValue = Array.isArray(val)
-                            ? val[0]
-                            : val;
-                          field.onChange(numericValue);
-                          markFormTouched();
-                          dispatch(
-                            updateTypographyField({
-                              key: "titleFontSize",
-                              value: numericValue,
-                            })
-                          );
-                        }}
-                        sx={{ flex: 1 }}
-                      />
-                    )}
+                    markFormTouched={markFormTouched}
                   />
                 </Box>
               </Box>
@@ -315,7 +300,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     render={({ field }) => (
                       <>
                         <ColorPicker
-                          color={field.value}
+                          color={field.value!}
                           setColor={(color: string) => {
                             field.onChange(color);
                             markFormTouched();
@@ -384,7 +369,15 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                 Description
               </Typography>
               {/* Font Size */}
-              <Box sx={{ mb: 1, ml: 1, width: "98%" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  mb: 1,
+                  ml: 1,
+                  width: "98%",
+                }}
+              >
                 <Box
                   sx={{
                     display: "flex",
@@ -403,94 +396,23 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                       color: "#444D5C",
                     }}
                   >
-                    <FiType style={{ marginBottom: "1%", color: "#752FEC" }} />{" "}
+                    <FiType style={{ marginBottom: "1%", color: "#752FEC" }} />
                     Font size
                   </Typography>
-
-                  <Controller
-                    name="descriptionFontSize"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        type="number"
-                        variant="standard"
-                        value={field.value}
-                        onChange={(e) => {
-                          const value = Number(e.target.value);
-                          field.onChange(value);
-                          markFormTouched();
-                          dispatch(
-                            updateTypographyField({
-                              key: "descriptionFontSize",
-                              value: value,
-                            })
-                          );
-                        }}
-                        inputProps={{ min: 8, max: 72 }}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment
-                              position="end"
-                              sx={{ color: "#6846E5", marginBottom: 0.5 }}
-                            >
-                              px
-                            </InputAdornment>
-                          ),
-                          disableUnderline: true,
-                        }}
-                        sx={{
-                          width: 92,
-                          "& .MuiInputBase-root": {
-                            borderRadius: 1,
-                            backgroundColor: "#EEF2FF",
-                            height: "36px",
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            color: "#6846E5",
-                            border: "none",
-                            boxShadow: "none",
-                            px: 1.25,
-                          },
-                        }}
-                      />
-                    )}
-                  />
+                  <Box>
+                    <FontSizeViewToggle
+                      view={fontSizeView}
+                      setView={setFontSizeView}
+                    />
+                  </Box>
                 </Box>
-
-                {/* Slider below, syncs as before */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    width: "96%",
-                    ml: 1,
-                  }}
-                >
-                  <Controller
-                    name="descriptionFontSize"
+                <Box>
+                  <FontSizeControl
+                    key={descriptionKey}
+                    name={descriptionKey}
+                    dispatchKey={descriptionKey}
                     control={control}
-                    render={({ field }) => (
-                      <Slider
-                        min={8}
-                        max={72}
-                        value={field.value}
-                        onChange={(_, val) => {
-                          const numericValue = Array.isArray(val)
-                            ? val[0]
-                            : val;
-                          field.onChange(numericValue);
-                          markFormTouched();
-                          dispatch(
-                            updateTypographyField({
-                              key: "descriptionFontSize",
-                              value: numericValue,
-                            })
-                          );
-                        }}
-                        sx={{ flex: 1 }}
-                      />
-                    )}
+                    markFormTouched={markFormTouched}
                   />
                 </Box>
               </Box>
@@ -527,7 +449,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     render={({ field }) => (
                       <>
                         <ColorPicker
-                          color={field.value}
+                          color={field.value!}
                           setColor={(color: string) => {
                             field.onChange(color);
                             markFormTouched();

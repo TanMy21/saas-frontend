@@ -4,8 +4,10 @@ import { TypographySettingsForm } from "../../utils/types";
 
 const defaultState: TypographySettingsForm = {
   titleFontSize: 36,
+  titleFontSizeMobile: 28,
   titleFontColor: "#000000",
   descriptionFontSize: 16,
+  descriptionFontSizeMobile: 16,
   descriptionFontColor: "#000000",
 };
 
@@ -19,6 +21,7 @@ const elementTypographySlice = createSlice({
     ) => {
       return { ...defaultState, ...action.payload };
     },
+
     updateTypographyField: (
       state,
       action: PayloadAction<{
@@ -28,11 +31,15 @@ const elementTypographySlice = createSlice({
     ) => {
       state[action.payload.key] = action.payload.value as never;
     },
+
     resetTypography: () => defaultState,
   },
 });
 
-export const { initializeTypography, updateTypographyField, resetTypography } =
-  elementTypographySlice.actions;
+export const {
+  initializeTypography,
+  updateTypographyField,
+  resetTypography,
+} = elementTypographySlice.actions;
 
 export default elementTypographySlice.reducer;

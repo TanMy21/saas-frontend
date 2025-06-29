@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { Box, TextField, Typography } from "@mui/material";
-// import { FaArrowRightLong } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -27,14 +26,14 @@ const ElementQuestionText = ({ display }: ElementProps) => {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const qFontSize = display === "mobile" ? "28px" : "32px";
-  const descritptionFontSize = display === "mobile" ? "16px" : "20px";
-  const qWhiteSpace = display === "mobile" ? "0.1em" : "normal";
-
   const titleFontSize =
     typographySettings.titleFontSize ??
     question?.questionPreferences?.titleFontSize ??
     36;
+  const titleFontSizeMobile =
+    typographySettings.titleFontSizeMobile ??
+    question?.questionPreferences?.titleFontSizeMobile ??
+    28;
   const titleFontColor =
     typographySettings.titleFontColor ??
     question?.questionPreferences?.titleFontColor ??
@@ -43,18 +42,20 @@ const ElementQuestionText = ({ display }: ElementProps) => {
     typographySettings.descriptionFontSize ??
     question?.questionPreferences?.descriptionFontSize ??
     16;
+  const descriptionFontSizeMobile =
+    typographySettings.descriptionFontSizeMobile ??
+    question?.questionPreferences?.descriptionFontSizeMobile ??
+    16;
   const descriptionFontColor =
     typographySettings.descriptionFontColor ??
     question?.questionPreferences?.descriptionFontColor ??
     "#000000";
 
   const defaultFontSize = 20;
-  const orderFontSize = titleFontSize * 0.8;
+  const orderFontSize = titleFontSize * 0.6;
   const actualFontSize =
     display === "mobile" ? defaultFontSize : orderFontSize || defaultFontSize;
   const circleSize = actualFontSize * 1.2;
-
-  // const arrowFontSize = titleFontSize * 0.45;
 
   const nonOrderableTypes = [
     "WELCOME_SCREEN",
@@ -144,7 +145,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               <Typography
                 sx={{
                   fontWeight: "bold",
-                  color: "black",
+                  color: "white",
                   // fontSize: display === "mobile" ? "32px" : orderFontSize || 20,
                   fontSize: orderFontSize || 20,
                 }}
@@ -153,27 +154,6 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               </Typography>
             </Box>
           )}
-          {/* {isNonOrderableType ? null : (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                // border: "2px solid green",
-              }}
-            >
-              <Typography
-                sx={{
-                  marginTop: 2,
-                  marginRight: 2,
-                  fontSize: arrowFontSize || 16,
-                }}
-              >
-                <FaArrowRightLong />
-              </Typography>
-            </Box>
-          )} */}
           <Box
             onDoubleClick={handleDoubleClick}
             sx={{
@@ -217,20 +197,21 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             ) : (
               <Typography
                 sx={{
-                  whiteSpace: qWhiteSpace,
+                  whiteSpace: "normal",
                   width: "100%",
                   maxWidth: "80ch",
                   fontStyle: "italic",
                   fontFamily:
                     "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                  fontSize: display === "mobile" ? "20px" : titleFontSize,
-                  textAlign: {
-                    xs: "start",
-                    sm: "start",
-                    md: "start",
-                    xl: "justify",
-                  },
+                  fontSize:
+                    display === "mobile" ? titleFontSizeMobile : titleFontSize,
+                  textAlign: "start",
                   color: titleFontColor,
+                  lineHeight: 1.4,
+                  overflowWrap: "break-word",
+                  hyphens: "auto",
+                  letterSpacing: "0.01em",
+                  wordSpacing: "0.05em",
                 }}
               >
                 {text}
@@ -280,9 +261,12 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   fontStyle: "italic",
                   fontFamily:
                     "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                  whiteSpace: qWhiteSpace,
+                  whiteSpace: "normal",
                   width: "fit-content",
-                  fontSize: descriptionFontSize,
+                  fontSize:
+                    display === "mobile"
+                      ? descriptionFontSizeMobile
+                      : descriptionFontSize,
                   color: descriptionFontColor,
                 }}
               >

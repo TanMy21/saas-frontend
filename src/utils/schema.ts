@@ -117,10 +117,12 @@ export const welcomeSettingsSchema = z.object({
 
 export const TypographySettingsFormSchema = z.object({
   titleFontSize: z.number().min(1),
+  titleFontSizeMobile: z.number().min(1).optional(),
   titleFontColor: z.string().regex(hexColorRegex, {
     message: "Invalid hex color (expected format: #RRGGBB or #RGB)",
   }),
   descriptionFontSize: z.number().min(1),
+  descriptionFontSizeMobile: z.number().min(1).optional(),
   descriptionFontColor: z.string().regex(hexColorRegex, {
     message: "Invalid hex color (expected format: #RRGGBB or #RGB)",
   }),
