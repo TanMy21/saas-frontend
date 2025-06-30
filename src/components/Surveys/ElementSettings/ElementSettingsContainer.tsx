@@ -24,6 +24,10 @@ const ElementSettingsContainer = ({
           flexDirection: "column",
           width: "100%",
           height: "100%",
+          left: "0%",
+          m: 0,
+          p: 0,
+          boxSizing: "border-box",
           // border: "2px solid blue",
         }}
       >

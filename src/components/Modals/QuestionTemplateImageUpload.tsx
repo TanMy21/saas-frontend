@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 
 import { useUploadQuestionTemplateImageMutation } from "../../app/slices/elementApiSlice";
 import { setTemplateImage } from "../../app/slices/elementSlice";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { ErrorData, QuestionImageUploadModalProps } from "../../utils/types";
 
 const QuestionTemplateImageUpload = ({
@@ -18,6 +19,7 @@ const QuestionTemplateImageUpload = ({
   setUploadImageModalOpen,
   questionID,
 }: QuestionImageUploadModalProps) => {
+  const { primary } = useAppTheme();
   const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -125,8 +127,8 @@ const QuestionTemplateImageUpload = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 800,
-          height: 600,
-          bgcolor: "background.paper",
+          height: { md: 500, xl: 600 },
+          bgcolor: "#f4f6f8",
           borderRadius: "2%",
           boxShadow: 1,
         }}
@@ -146,7 +148,7 @@ const QuestionTemplateImageUpload = ({
               justifyContent: "space-between",
               alignItems: "center",
               width: "100%",
-              height: "8%",
+              height: { md: "10%", xl: "8%" },
               borderBottom: "1px solid #E0E0E0",
             }}
           >
@@ -187,13 +189,13 @@ const QuestionTemplateImageUpload = ({
           <Box
             sx={{
               width: "100%",
-              height: "500px",
+              height: {md:"400px",xl:"500px"},
             }}
           >
             <Box
               sx={{
                 width: "92%",
-                height: "440px",
+                height: { md: "320px", xl: "440px" },
                 margin: "auto",
                 marginTop: "4%",
                 border: "2px dashed #7866E3",
@@ -366,7 +368,7 @@ const QuestionTemplateImageUpload = ({
           <Box
             sx={{
               width: "100%",
-              height: "8%",
+              height: "12%",
               borderTop: "1px solid #E0E0E0",
             }}
           >
@@ -386,16 +388,18 @@ const QuestionTemplateImageUpload = ({
                   onClick={handleUpload}
                   component="label"
                   role={undefined}
-                  variant="contained"
-                  size="small"
+                  variant="submitBtn2"
+                  size="medium"
                   tabIndex={-1}
                   startIcon={isLoading ? <SaveIcon /> : <CloudUploadIcon />}
                   sx={{
                     borderRadius: 5,
+                    width: "200px",
+
                     textTransform: "none",
-                    backgroundColor: "#1E6361",
+                    backgroundColor: primary.main,
                     "&:hover": {
-                      backgroundColor: "#1E6361",
+                      backgroundColor: primary.main,
                     },
                   }}
                 >

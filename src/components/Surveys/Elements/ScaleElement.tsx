@@ -23,7 +23,7 @@ const ScaleElement = ({ display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          bottom: "50%",
+          bottom:{ md: "64%", xl: "50%" },
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
@@ -38,7 +38,7 @@ const ScaleElement = ({ display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          top: "50%",
+          top: { md: "32%", xl: "50%" },
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",

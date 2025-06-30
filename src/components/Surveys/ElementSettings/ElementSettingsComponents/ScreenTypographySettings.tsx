@@ -199,14 +199,14 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
             </Tooltip>
           </Box>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               width: "100%",
               height: "100%",
-              // border: "2px solid red",
+              border: "2px solid red",
             }}
           >
             {/* === TEXT SETTINGS === */}

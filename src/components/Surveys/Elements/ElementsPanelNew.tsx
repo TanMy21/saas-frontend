@@ -106,32 +106,30 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
   };
 
   return (
-    <>
-      <Box
-        sx={{
-          overflowY: "auto",
-          overflowX: "hidden",
-          maxWidth: { md: "100%", lg: "100%", xl: "100%" },
-          maxHeight: "98%",
-          ...scrollStyles.elementsPanel,
-        }}
-      >
-        {elements.length === 0 ? null : (
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="elements">
-              {(provided) => (
-                <ElementsListItem
-                  provided={provided}
-                  setQuestionId={setQuestionId!}
-                  displayedQuestions={displayedQuestions}
-                  nonOrderableTypes={nonOrderableTypes}
-                />
-              )}
-            </Droppable>
-          </DragDropContext>
-        )}
-      </Box>
-    </>
+    <Box
+      sx={{
+        overflowY: "auto",
+        overflowX: "hidden",
+        maxWidth: { md: "100%", lg: "100%", xl: "100%" },
+        maxHeight: "98%",
+        ...scrollStyles.elementsPanel,
+      }}
+    >
+      {elements.length === 0 ? null : (
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="elements">
+            {(provided) => (
+              <ElementsListItem
+                provided={provided}
+                setQuestionId={setQuestionId!}
+                displayedQuestions={displayedQuestions}
+                nonOrderableTypes={nonOrderableTypes}
+              />
+            )}
+          </Droppable>
+        </DragDropContext>
+      )}
+    </Box>
   );
 };
 

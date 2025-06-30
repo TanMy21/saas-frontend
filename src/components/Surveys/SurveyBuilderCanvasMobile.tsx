@@ -30,7 +30,7 @@ const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
         flexDirection: "column",
         margin: "auto",
         width: "300px",
-        height: { md: "600px", lg: "600px", xl: "700px" },
+        height: { md: "520px", xl: "700px" },
         border: "3px solid #E0E0E0",
         borderRadius: "24px",
         mt: "1%",

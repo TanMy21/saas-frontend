@@ -37,7 +37,7 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          bottom: "50%",
+          bottom: { md: "56%", xl: "50%" },
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
@@ -54,7 +54,7 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          top: "50%",
+          top: { md: "44%", xl: "50%" },
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",

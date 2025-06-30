@@ -69,7 +69,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
         border: "2px solid #F1F1F1",
         borderRadius: 4,
         flex: 1,
-        minHeight: { xs: 160, sm: 200, md: 240, xl: 240 },
+        minHeight: { xs: 160, sm: 200, md: 200, xl: 240 },
         overflow: "hidden",
         boxShadow: transform ? "0 8px 20px rgba(0, 0, 0, 0.12)" : "none",
         transition:
@@ -226,7 +226,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
           gap: 1,
           p: 1,
           width: "100%",
-          minHeight: 80,
+          minHeight: { md: 40, xl: 60 },
           height: "100%",
           backgroundColor: "white",
           // border: "1px solid red",

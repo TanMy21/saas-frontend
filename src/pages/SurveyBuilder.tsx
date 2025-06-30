@@ -212,8 +212,8 @@ const SurveyBuilder = () => {
           </Box>
           <Box
             sx={{
-              width: "16%",
-              height: "94vh",
+              width: { md: "24%", xl: "16%" },
+              height: "100%",
               flexShrink: 0,
               backgroundColor: "white",
               borderLeft: "2px solid #E5E7EB",

@@ -606,7 +606,7 @@ const electricBlueLightTheme = createTheme({
       },
     },
     elementsPanel: {
-      scrollbarGutter: "stable both-edges",
+      // scrollbarGutter: "stable both-edges",
       "&::-webkit-scrollbar": {
         width: "8px",
       },

@@ -68,7 +68,7 @@ const SurveyBuilderLeftSidebar = ({
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            margin: "0 auto",
+            margin: { md: "6% auto", xl: "0 auto" },
             width: "92%",
             height: "98%",
           }}

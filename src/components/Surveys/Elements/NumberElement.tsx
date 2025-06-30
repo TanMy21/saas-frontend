@@ -22,7 +22,7 @@ const NumberElement = ({ display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          bottom: "50%",
+          bottom: { md: "60%", xl: "50%" },
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
@@ -40,7 +40,7 @@ const NumberElement = ({ display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          top: "50%",
+          top: { md: "36%", xl: "50%" },
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",

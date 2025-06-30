@@ -121,11 +121,11 @@ const MediaOptionsContainer = ({
             },
             alignItems: "stretch",
             gap: { xs: 2, sm: 3, md: 4 },
-            width: "80%",
+            width: {md:"96%",xl:"80%"},
             height: "auto",
             margin: "0 auto",
             padding: 1,
-            // border: "2px solid red",
+            // border: "2px solid green",
             "@media (max-width: 900px)": {
               gridTemplateColumns: "repeat(2, 1fr)", // tablet
             },

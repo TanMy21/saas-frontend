@@ -127,18 +127,20 @@ const NavigationButtonTextSettings = () => {
           >
             <NavigationIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
             <Tooltip title="Set the text on the navigation button">
-              <Typography>Navigation button</Typography>
+              <Typography>
+                Navigation button
+              </Typography>
             </Tooltip>
           </Box>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               width: "96%",
               height: "100%",
-              marginLeft: "4%",
+              marginLeft: "2%",
               // border: "2px solid red",
             }}
           >

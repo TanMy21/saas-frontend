@@ -123,7 +123,7 @@ const QuestionTextandDescriptionSettings = () => {
           </Tooltip>
         </Box>
       </AccordionSummary>
-      <AccordionDetails sx={{ px: 3, pb: 3 }}>
+      <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
         <Box
           sx={{
             display: "flex",
@@ -160,6 +160,7 @@ const QuestionTextandDescriptionSettings = () => {
                     "& .MuiInputBase-root": {
                       borderRadius: "8px",
                       height: "42px",
+                      width: { md: "98%" },
                       fontSize: "15px",
                       backgroundColor: "#F3F4F6",
                       fontWeight: 500,
@@ -216,6 +217,7 @@ const QuestionTextandDescriptionSettings = () => {
                     "& .MuiInputBase-root": {
                       borderRadius: "8px",
                       height: "42px",
+                      width: { md: "98%" },
                       fontSize: "15px",
                       backgroundColor: "#F3F4F6",
                       color: "#1F2937",

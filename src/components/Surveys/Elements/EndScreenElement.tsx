@@ -23,7 +23,7 @@ const EndScreenElement = ({ display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          bottom: "50%",
+          bottom: { md: "56%", xl: "50%" },
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
@@ -40,7 +40,7 @@ const EndScreenElement = ({ display }: ElementProps) => {
       <Box
         sx={{
           position: "absolute",
-          top: "50%",
+          top: { md: "40%", xl: "50%" },
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",

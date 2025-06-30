@@ -189,7 +189,7 @@ const NumberInputRangeSettings = () => {
                       },
                       "& .MuiInputBase-root": {
                         borderRadius: "8px",
-                        width: "72%",
+                        width: { md: "96%", xl: "72%" },
                         height: "80%",
                         fontSize: "15px",
                         backgroundColor: "#F3F4F6",
@@ -278,7 +278,7 @@ const NumberInputRangeSettings = () => {
                       },
                       "& .MuiInputBase-root": {
                         borderRadius: "8px",
-                        width: "72%",
+                        width: { md: "96%", xl: "72%" },
                         height: "80%",
                         marginLeft: "24%",
                         fontSize: "15px",
