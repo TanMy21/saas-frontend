@@ -200,7 +200,13 @@ const SurveyBuilder = () => {
               elements={elements}
             />
           </Box>
-          <Box sx={{ width: "68%", height: "94vh", flexShrink: 0 }}>
+          <Box
+            sx={{
+              width: { md: "64%", xl: "68%" },
+              height: "94vh",
+              flexShrink: 0,
+            }}
+          >
             <SurveyCanvasRefetchContext.Provider value={refetchCanvas}>
               <CanvasConsole
                 display={display}

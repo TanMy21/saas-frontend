@@ -199,14 +199,14 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
             </Tooltip>
           </Box>
         </AccordionSummary>
-        <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
+        <AccordionDetails sx={{ px: { md: 2, xl: 1 }, pb: 2 }}>
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               width: "100%",
               height: "100%",
-              border: "2px solid red",
+              // border: "2px solid red",
             }}
           >
             {/* === TEXT SETTINGS === */}
@@ -225,8 +225,8 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                   display: "flex",
                   flexDirection: "column",
                   mb: 1,
-                  ml: 1,
-                  width: "98%",
+                  ml: { md: 0, xl: 1 },
+                  width: "96%",
                 }}
               >
                 <Box
@@ -235,6 +235,8 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     alignItems: "center",
                     justifyContent: "space-between",
                     mb: 1,
+                    width: "100%",
+                    // border: "2px solid blue",
                   }}
                 >
                   <Typography
@@ -247,7 +249,14 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                       color: "#444D5C",
                     }}
                   >
-                    <FiType style={{ marginBottom: "1%", color: "#752FEC" }} />
+                    <Box sx={{ display: { md: "none" } }}>
+                      <FiType
+                        style={{
+                          marginBottom: "1%",
+                          color: "#752FEC",
+                        }}
+                      />
+                    </Box>
                     Font size
                   </Typography>
                   <Box>
@@ -268,7 +277,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                 </Box>
               </Box>
               {/* Text Color */}
-              <Box sx={{ mb: 1, ml: 1, width: "98%" }}>
+              <Box sx={{ mb: 1, ml: 1, width: "96%" }}>
                 <Typography
                   variant="body2"
                   sx={{
@@ -288,10 +297,11 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     display: "flex",
                     justifyContent: "flex-start",
                     alignItems: "center",
-                    width: "96%",
+                    width: { md: "98%", xl: "96%" },
                     height: "40px",
-                    marginLeft: 2,
+                    marginLeft: { md: "2px", xl: 2 },
                     gap: 4,
+                    // border: "2px solid blue",
                   }}
                 >
                   <Controller
@@ -339,7 +349,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                             flex: 1,
                             "& .MuiInputBase-root": {
                               borderRadius: 1,
-                              width: "80%",
+                              width: { md: "92%", xl: "80%" },
                               height: "36px",
                               fontSize: "16px",
                               backgroundColor: "#EEF2FF",
@@ -374,8 +384,8 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                   display: "flex",
                   flexDirection: "column",
                   mb: 1,
-                  ml: 1,
-                  width: "98%",
+                  ml: { md: 0, xl: 1 },
+                  width: "96%",
                 }}
               >
                 <Box
@@ -384,6 +394,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     alignItems: "center",
                     justifyContent: "space-between",
                     mb: 1,
+                    width: "100%",
                   }}
                 >
                   <Typography
@@ -396,7 +407,11 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                       color: "#444D5C",
                     }}
                   >
-                    <FiType style={{ marginBottom: "1%", color: "#752FEC" }} />
+                    <Box sx={{ display: { md: "none" } }}>
+                      <FiType
+                        style={{ marginBottom: "1%", color: "#752FEC" }}
+                      />
+                    </Box>
                     Font size
                   </Typography>
                   <Box>
@@ -417,7 +432,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                 </Box>
               </Box>
               {/* Description Color */}
-              <Box sx={{ mb: 1, ml: 1, width: "98%" }}>
+              <Box sx={{ mb: 1, ml: 1, width: "96%" }}>
                 <Typography
                   variant="body2"
                   sx={{
@@ -437,9 +452,9 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     display: "flex",
                     justifyContent: "flex-start",
                     alignItems: "center",
-                    width: "96%",
+                    width: { md: "98%", xl: "96%" },
                     height: "40px",
-                    marginLeft: 2,
+                    marginLeft: { md: "2px", xl: 2 },
                     gap: 4,
                   }}
                 >
@@ -488,7 +503,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                             flex: 1,
                             "& .MuiInputBase-root": {
                               borderRadius: 1,
-                              width: "80%",
+                              width: { md: "92%", xl: "80%" },
                               height: "36px",
                               fontSize: "16px",
                               backgroundColor: "#EEF2FF",

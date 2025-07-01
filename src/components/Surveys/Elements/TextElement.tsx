@@ -7,50 +7,72 @@ import ElementImageContainer from "./ElementImageContainer";
 import ElementQuestionText from "./ElementQuestionText";
 
 const TextElement = ({ display, qImage }: ElementProps) => {
+  let questionMarginTop;
+
+  if (display === "mobile") {
+    questionMarginTop = qImage ? "24%" : "52%";
+  } else {
+    questionMarginTop = qImage ? "8%" : "20%";
+  }
   return (
     <Box
       sx={{
         position: "relative",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "flex-start",
+        alignItems: "center",
         margin: "auto",
         width: "98%",
         minHeight: "700px",
         zIndex: 20,
-        // border: "2px solid red",
+        gap: 2,
       }}
     >
+      {/* question section */}
       <Box
         sx={{
-          position: "absolute",
-          bottom: { md: "60%", xl: "50%" },
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "flex-end",
+          flexDirection: "column-reverse",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          px: 2,
+          minHeight: "30%",
+          overflow: "visible",
           width: "100%",
-          margin: "0 auto",
-          marginTop: "8%",
-          marginBottom: 5,
-          zIndex: 2,
-          // border: "2px solid blue",
+          margin: "0% auto",
+          marginTop: questionMarginTop,
         }}
       >
         <ElementQuestionText display={display} />
       </Box>
-      {qImage && <ElementImageContainer />}
+      {/* Image container */}
+      {qImage && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            px: 2,
+            py: 1,
+            maxHeight: "280px",
+            marginBottom: { xl: 3 },
+          }}
+        >
+          <ElementImageContainer />
+        </Box>
+      )}
       <Box
         sx={{
-          position: "absolute",
-          top: { md: "36%", xl: "50%" },
           display: "flex",
           flexDirection: "column",
-          justifyContent: "start",
+          justifyContent: "flex-start",
           alignItems: "center",
           width: "100%",
-          height: "48%",
-          margin: "1% auto",
-          // border: "2px solid blue",
+          px: 2,
+          minHeight: "30%",
+          overflow: "visible",
         }}
       >
         <InputResponse

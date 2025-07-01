@@ -1,4 +1,10 @@
-import { Box, InputAdornment, Slider, TextField } from "@mui/material";
+import {
+  Box,
+  InputAdornment,
+  Slider,
+  TextField,
+  useMediaQuery,
+} from "@mui/material";
 import { Controller } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
@@ -12,14 +18,19 @@ const FontSizeControl = ({
   markFormTouched,
 }: FontSizeControlProps) => {
   const dispatch = useDispatch();
+  const isMd = useMediaQuery("(min-width:900px) and (max-width:1280px)");
+  const isXl = useMediaQuery("(min-width:1300px) and (max-width:1900px)");
+
   return (
     <Box
       sx={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: { md: "column", xl: "row" },
         justifyContent: "space-between",
         width: "100%",
-        height: "40px",
+        height: { md: "80px", xl: "40px" },
+        // border: "2px solid green",
+        p: { md: "2px" },
       }}
     >
       <Box
@@ -27,8 +38,10 @@ const FontSizeControl = ({
           display: "flex",
           alignItems: "center",
           gap: 2,
-          width: "50%",
+          width: { md: "90%", xl: "50%" },
+          // height: { md: "120px" },
           ml: 1,
+          marginTop: { md: "20%", xl: "0%" },
         }}
       >
         <Controller
@@ -38,6 +51,9 @@ const FontSizeControl = ({
             <Slider
               min={8}
               max={72}
+              step={1}
+              valueLabelDisplay={"on"}
+              // valueLabelDisplay={"on"}
               value={field.value}
               onChange={(_, val) => {
                 const numericValue = Array.isArray(val) ? val[0] : val;
@@ -50,72 +66,99 @@ const FontSizeControl = ({
                   })
                 );
               }}
-              sx={{ flex: 1 }}
-            />
-          )}
-        />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          width: "40%",
-          height: "40px",
-          // border:"2px solid red",
-        }}
-      >
-        <Controller
-          name={name}
-          control={control}
-          render={({ field }) => (
-            <TextField
-              type="number"
-              variant="standard"
-              value={field.value}
-              onChange={(e) => {
-                const value = Number(e.target.value);
-                field.onChange(value);
-                markFormTouched();
-                dispatch(
-                  updateTypographyField({
-                    key: dispatchKey,
-                    value: value,
-                  })
-                );
-              }}
-              inputProps={{ min: 8, max: 72 }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment
-                    position="end"
-                    sx={{ color: "#6846E5", marginBottom: 0.5 }}
-                  >
-                    px
-                  </InputAdornment>
-                ),
-                disableUnderline: true,
-              }}
               sx={{
-                width: "100%",
-                // border:"2px solid green",
-                "& .MuiInputBase-root": {
-                  borderRadius: 1,
-                  backgroundColor: "#EEF2FF",
-                  height: "36px",
-                  minWidth: 80,
-                  width: "100%",
-                  fontSize: "16px",
+                flex: 1,
+                "& .MuiSlider-markLabel": {
+                  fontSize: "12px",
+                  color: "black",
+                },
+                "& .MuiSlider-mark": {
+                  backgroundColor: "black",
+                  height: 8,
+                  width: 2,
+                },
+                "& .MuiSlider-valueLabel": {
+                  backgroundColor: "#6846E5",
+                  color: "#fff",
+                  fontSize: {xl:"10px"},
                   fontWeight: "bold",
-                  color: "#6846E5",
-                  // border: "2px solid blue",
-                  boxShadow: "none",
-                  px: 1.25,
+                  borderRadius: "4px",
+                  // top: -10,
+                  "& *": {
+                    background: "transparent",
+                    color: "inherit",
+                  },
                 },
               }}
             />
           )}
         />
       </Box>
+      {isXl && (
+        <Box
+          sx={{
+            display: { md: "none", xl: "flex" },
+            justifyContent: { md: "center" },
+            alignItems: "center",
+            width: { xl: "40%" },
+            height: { md: "none", xl: "40px" },
+            // margin: { md: "0 auto" },
+            // border: "2px solid red",
+          }}
+        >
+          <Controller
+            name={name}
+            control={control}
+            render={({ field }) => (
+              <TextField
+                type="number"
+                variant="standard"
+                value={field.value}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  field.onChange(value);
+                  markFormTouched();
+                  dispatch(
+                    updateTypographyField({
+                      key: dispatchKey,
+                      value: value,
+                    })
+                  );
+                }}
+                inputProps={{ min: 8, max: 72 }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      sx={{ color: "#6846E5", marginBottom: 0.5 }}
+                    >
+                      px
+                    </InputAdornment>
+                  ),
+                  disableUnderline: true,
+                }}
+                sx={{
+                  width: "100%",
+                  // border:"2px solid green",
+                  "& .MuiInputBase-root": {
+                    borderRadius: 1,
+                    backgroundColor: "#EEF2FF",
+                    height: "36px",
+                    minWidth: 80,
+                    width: "100%",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    color: "#6846E5",
+                    // border: "2px solid blue",
+                    boxShadow: "none",
+                    px: 1.25,
+                  },
+                }}
+              />
+            )}
+          />
+        </Box>
+      )}
     </Box>
   );
 };

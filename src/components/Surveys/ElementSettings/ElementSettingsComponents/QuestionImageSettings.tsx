@@ -116,14 +116,13 @@ const QuestionImageSettings = () => {
           </Tooltip>
         </Box>
       </AccordionSummary>
-      <AccordionDetails>
+      <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: "96%",
+            width: "100%",
             height: "80%",
-            marginLeft: "4%",
             // border: "2px solid red",
           }}
         >

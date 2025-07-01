@@ -13,7 +13,9 @@ const QuestionFlow = () => {
   const { tabValue, survey, workspaceId, workspaceName } = headerProps || {};
   const { title } = (survey as Survey) || "";
 
-  const { data: Elements } = useGetElementsForSurveyQuery(surveyID!);
+  const { data } = useGetElementsForSurveyQuery(surveyID!);
+
+  console.log("Data: ", data);
 
   return (
     <Box
@@ -62,7 +64,7 @@ const QuestionFlow = () => {
           }}
         >
           {/* Main content area */}
-          <QuestionFlowContainer Elements={Elements!} surveyID={surveyID!} />
+          <QuestionFlowContainer Elements={data!} surveyID={surveyID!} />
         </Grid>
       </Grid>
     </Box>

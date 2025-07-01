@@ -125,7 +125,7 @@ const NumberInputRangeSettings = () => {
           </Tooltip>
         </Box>
       </AccordionSummary>
-      <AccordionDetails>
+      <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
         <Box
           mt={1}
           sx={{
@@ -134,6 +134,7 @@ const NumberInputRangeSettings = () => {
             height: "100%",
             width: "96%",
             marginLeft: "1%",
+            // border: "2px solid red",
           }}
         >
           {/* min value */}
@@ -141,11 +142,12 @@ const NumberInputRangeSettings = () => {
             mt={1}
             sx={{
               display: "flex",
-              flexDirection: "row",
+              flexDirection: { xs: "column", md: "column", xl: "row" },
               justifyContent: "flex-start",
-              alignItems: "center",
+              alignItems: { xs: "flex-start", md: "flex-start", xl: "center" },
               width: "100%",
-              height: "48px",
+              miHeight: "48px",
+              gap: { md: 1 },
             }}
           >
             <Box
@@ -153,11 +155,12 @@ const NumberInputRangeSettings = () => {
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "flex-start",
-                width: "60%",
+                width: { xs: "100%", xl: "60%" },
                 height: "100%",
                 fontWeight: 500,
                 fontSize: "16px",
                 color: "#3F3F46",
+                mb: { md: 1 },
               }}
             >
               Min number
@@ -166,7 +169,7 @@ const NumberInputRangeSettings = () => {
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
-                width: "40%",
+                width: "100%",
                 height: "100%",
               }}
             >
@@ -186,17 +189,19 @@ const NumberInputRangeSettings = () => {
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
+                        fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
+                        fontWeight: 500,
                       },
                       "& .MuiInputBase-root": {
                         borderRadius: "8px",
-                        width: { md: "96%", xl: "72%" },
-                        height: "80%",
+                        width: { md: "100%", xl: "72%" },
+                        height: "100%",
                         fontSize: "15px",
                         backgroundColor: "#F3F4F6",
                         fontWeight: 600,
                         color: "#1F2937",
                         px: 1.5,
-                        marginLeft: "24%",
+                        marginLeft: { md: "0%", xl: "16%" },
                         transition: "background-color 0.2s ease",
                         "&:hover": {
                           backgroundColor: "#E5E7EB",
@@ -227,11 +232,12 @@ const NumberInputRangeSettings = () => {
             mt={1}
             sx={{
               display: "flex",
-              flexDirection: "row",
+              flexDirection: { xs: "column", md: "column", xl: "row" },
               justifyContent: "flex-start",
-              alignItems: "center",
-              height: "48px",
+              alignItems: { xs: "flex-start", md: "flex-start", xl: "center" },
+              minHeight: "48px",
               width: "100%",
+              gap: { md: 1 },
             }}
           >
             <Box
@@ -239,11 +245,12 @@ const NumberInputRangeSettings = () => {
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "flex-start",
-                width: "60%",
+                width: { xs: "100%", xl: "60%" },
                 height: "100%",
                 fontWeight: 500,
                 fontSize: "16px",
                 color: "#3F3F46",
+                mb: { md: 1 },
               }}
             >
               Max number
@@ -252,8 +259,9 @@ const NumberInputRangeSettings = () => {
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
-                width: "40%",
+                width: "100%",
                 height: "100%",
+                mb: { md: 1 },
               }}
             >
               <Controller
@@ -278,9 +286,9 @@ const NumberInputRangeSettings = () => {
                       },
                       "& .MuiInputBase-root": {
                         borderRadius: "8px",
-                        width: { md: "96%", xl: "72%" },
-                        height: "80%",
-                        marginLeft: "24%",
+                        width: { md: "100%", xl: "72%" },
+                        height: "100%",
+                        marginLeft: { md: "0%", xl: "16%" },
                         fontSize: "15px",
                         backgroundColor: "#F3F4F6",
                         fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,

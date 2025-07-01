@@ -136,11 +136,12 @@ const QuestionImageDimensions = () => {
                     disableUnderline: true,
                   }}
                   sx={{
-                    width: 92,
+                    width: { md: 120, xl: 92 },
                     "& .MuiInputBase-root": {
                       borderRadius: 1,
                       backgroundColor: "#EEF2FF",
                       height: "36px",
+                      width: { md: "100%" },
                       fontSize: "16px",
                       fontWeight: "bold",
                       color: "#6846E5",
@@ -153,13 +154,14 @@ const QuestionImageDimensions = () => {
               )}
             />
           </Box>
-          {/* Slider below, syncs as before */}
+          {/* Slider */}
           <Box
             sx={{
               display: "flex",
               alignItems: "center",
               gap: 2,
-              width: "80%",
+              ml: 2,
+              width: { md: "68%", xl: "80%" },
             }}
           >
             <Controller
@@ -231,11 +233,12 @@ const QuestionImageDimensions = () => {
                     disableUnderline: true,
                   }}
                   sx={{
-                    width: 92,
+                    width: { md: 120, xl: 92 },
                     "& .MuiInputBase-root": {
                       borderRadius: 1,
                       backgroundColor: "#EEF2FF",
                       height: "36px",
+                      width: { md: "100%" },
                       fontSize: "16px",
                       fontWeight: "bold",
                       color: "#6846E5",
@@ -254,7 +257,8 @@ const QuestionImageDimensions = () => {
               display: "flex",
               alignItems: "center",
               gap: 2,
-              width: "80%",
+              ml: 2,
+              width: { md: "68%", xl: "80%" },
             }}
           >
             <Controller
