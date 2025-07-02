@@ -1,21 +1,24 @@
 import { Box, Grid } from "@mui/material";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { useGetElementsForSurveyQuery } from "../app/slices/elementApiSlice";
+import { RootState } from "../app/store";
+import { useAppSelector } from "../app/typedReduxHooks";
 import QuestionFlowContainer from "../components/Flow/QuestionFlowContainer";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
-import { LocationStateProps, Survey } from "../utils/types";
+import { LocationStateProps } from "../utils/types";
 
 const QuestionFlow = () => {
-  const { surveyID } = useParams();
   const location = useLocation();
   const { headerProps } = (location.state as LocationStateProps) || {};
-  const { tabValue, survey, workspaceId, workspaceName } = headerProps || {};
-  const { title } = (survey as Survey) || "";
+  const { survey, workspaceId, workspaceName } = headerProps || {};
 
-  const { data } = useGetElementsForSurveyQuery(surveyID!);
-
-  console.log("Data: ", data);
+  const surveyCanvas = useAppSelector(
+    (state: RootState) => state.surveyCanvas.data
+  );
+  const { getSurveyCanvas } = surveyCanvas;
+  const { surveyID, title } = getSurveyCanvas;
+  const { data } = useGetElementsForSurveyQuery(surveyID);
 
   return (
     <Box
@@ -64,7 +67,7 @@ const QuestionFlow = () => {
           }}
         >
           {/* Main content area */}
-          <QuestionFlowContainer Elements={data!} surveyID={surveyID!} />
+          <QuestionFlowContainer Elements={data!} surveyID={surveyID} />
         </Grid>
       </Grid>
     </Box>

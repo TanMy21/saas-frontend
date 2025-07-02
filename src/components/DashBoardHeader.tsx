@@ -24,7 +24,7 @@ export const DashBoardHeader = ({
 
   const { data: user } = useGetMeQuery("User");
 
-  const { firstname } = user || {};
+  const { firstname } = user ?? {};
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -114,7 +114,7 @@ export const SettingsPageHeader = () => {
 
   const { data: user } = useGetMeQuery("User");
 
-  const { firstname } = user || {};
+  const { firstname } = user ?? {};
 
   useEffect(() => {
     const interval = setInterval(() => {

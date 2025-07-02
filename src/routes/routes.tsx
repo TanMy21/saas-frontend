@@ -27,6 +27,7 @@ const router = createBrowserRouter([
   { path: "/not-verified", element: <EmailNotVerified /> },
   {
     element: <PersistLogin />,
+    errorElement: <ErrorPage />,
     children: [
       {
         element: <RequireAuth />,

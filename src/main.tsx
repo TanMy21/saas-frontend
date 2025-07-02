@@ -1,4 +1,3 @@
-// import React from "react";
 import { ThemeProvider } from "@mui/material";
 import { PostHogProvider } from "posthog-js/react";
 import ReactDOM from "react-dom/client";
@@ -7,6 +6,7 @@ import { RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import store from "./app/store";
+import AppErrorBoundary from "./AppErrorBoundary";
 import router from "./routes/routes";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,14 +22,16 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
   <>
     <Provider store={store}>
-      <ThemeProvider theme={electricBlueLightTheme}>
-        <PostHogProvider
-          apiKey={import.meta.env.VITE_POSTHOG_KEY}
-          options={options}
-        >
-          <RouterProvider router={router} />
-        </PostHogProvider>
-      </ThemeProvider>
+      <AppErrorBoundary>
+        <ThemeProvider theme={electricBlueLightTheme}>
+          <PostHogProvider
+            apiKey={import.meta.env.VITE_POSTHOG_KEY}
+            options={options}
+          >
+            <RouterProvider router={router} />
+          </PostHogProvider>
+        </ThemeProvider>
+      </AppErrorBoundary>
     </Provider>
     <ToastContainer />
   </>

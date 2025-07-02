@@ -18,6 +18,11 @@ import { useResendVerificationEmailMutation } from "../app/slices/userApiSlice";
 
 import { generateSurveySchema } from "./schema";
 
+export type AppErrorBoundaryProps = Readonly<{
+  readonly children: React.ReactNode;
+}>;
+
+
 export type AuthInitialState = {
   token: string | null;
 };
@@ -200,6 +205,10 @@ interface ErrorMessage {
   message: string;
 }
 
+export type ErrorFallbackProps = Readonly<{
+  error: Error;
+  resetErrorBoundary: () => void;
+}>;
 export interface ElementsResponse {
   elements: ElementType[];
 }
