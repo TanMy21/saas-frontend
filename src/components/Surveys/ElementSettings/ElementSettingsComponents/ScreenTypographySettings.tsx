@@ -155,10 +155,6 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
     reset,
   ]);
 
-  useEffect(() => {
-    console.log("watchedValues", watchedValues);
-  }, [watchedValues, formTouched]);
-
   return (
     <form onSubmit={(e) => e.preventDefault()}>
       <Accordion

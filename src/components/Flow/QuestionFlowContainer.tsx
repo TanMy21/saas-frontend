@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import {
   ReactFlow,
   Controls,
@@ -55,11 +55,8 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
     target: 0,
   });
 
-  const {
-    data: questionConditions,
-    isLoading,
-    error,
-  } = useGetAllConditionsForSurveyQuery(surveyID);
+  const { data: questionConditions, isLoading } =
+    useGetAllConditionsForSurveyQuery(surveyID);
 
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
     setSelectedNode(node);
@@ -71,7 +68,7 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
     setEdgeFormData((prev) => ({
       ...prev,
       sourceQuestionID: String(node.data?.questionID as string) || "",
-      sourceQuestionOrder: Number(node.data?.order as number) ?? -1,
+      sourceQuestionOrder: Number((node.data?.order as number) ?? -1),
       sourceQuestionText: String(node.data?.question as string) || "",
       sourceQuestionIcon: String(node.data?.element as string) || "",
     }));
@@ -189,7 +186,7 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
         question.type !== "INSTRUCTIONS"
     );
 
-    const sortedQuestions = filteredQuestions.sort(
+    const sortedQuestions = [...filteredQuestions].sort(
       (a: any, b: any) => a.order - b.order
     );
 
@@ -219,7 +216,7 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
         data: { bypass: false },
       }));
 
-    const bypassEdges: Edge[] = (questionConditions || []).map(
+    const bypassEdges: Edge[] = (questionConditions ?? []).map(
       (condition: any) => {
         const sourceNode = generatedNodes.find(
           (node) => node.id === condition.relatedQuestionID
@@ -246,6 +243,24 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
     setEdges([...generatedEdges, ...bypassEdges]);
   }, [Elements, questionConditions]);
 
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          marginTop: "1%",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "80%",
+          height: "96%",
+          border: "3px solid red",
+        }}
+      >
+        <CircularProgress size={120} />;
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -253,6 +268,7 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
         marginTop: "1%",
         width: "80%",
         height: "96%",
+        padding: 2,
         border: "3px solid red",
       }}
     >

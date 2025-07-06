@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 
-import error500 from "../../public/error_500.svg";
 import { useAppTheme } from "../theme/useAppTheme";
 
 const ErrorPage = () => {
@@ -30,7 +29,7 @@ const ErrorPage = () => {
           // border: "2px solid blue",
         }}
       >
-        <img src={error500} style={{ width: "100%", height: "100%" }} />
+        <img src="/error_500.svg" style={{ width: "100%", height: "100%" }} />
       </Box>
 
       <Box

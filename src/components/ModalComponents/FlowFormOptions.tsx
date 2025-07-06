@@ -40,7 +40,7 @@ const FlowFormOptions = ({
         <Select
           {...register(`conditions.${blockIndex}.conditionValue`)}
           defaultValue={
-            condition.conditionValue ||
+            condition.conditionValue ??
             (options && options?.length > 0 ? options[0].value : "")
           }
           onChange={(e) => {

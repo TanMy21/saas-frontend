@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Box, Toolbar } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 
+import { RootState } from "../../app/store";
+import { useAppSelector } from "../../app/typedReduxHooks";
 import { SurveyBuilderHeaderProps } from "../../utils/types";
 import HeaderIconMenu from "../HeaderIconMenu";
 
@@ -13,11 +15,16 @@ const SurveyBuilderHeader = ({
   survey,
   workspaceId,
   workspaceName,
-  title,
 }: SurveyBuilderHeaderProps) => {
   const [surveyTitle, setSurveyTitle] = useState<string | undefined>("");
   const [tabValue, setTabValue] = useState<string>("create");
-  const { surveyID } = survey || {};
+
+  const surveyCanvas = useAppSelector(
+    (state: RootState) => state.surveyCanvas.data
+  );
+
+  const { getSurveyCanvas } = surveyCanvas ?? {};
+  const { surveyID, title } = getSurveyCanvas ?? {};
 
   useEffect(() => {
     if (location.pathname.includes("/results")) {

@@ -77,6 +77,7 @@ declare module "@mui/material/styles" {
       custom1: CSSObject;
       builderMain: CSSObject;
       elementsPanel: CSSObject;
+      conditionsScroll: CSSObject;
     };
   }
 
@@ -165,6 +166,7 @@ declare module "@mui/material/styles" {
     };
     scrollStyles?: {
       custom1?: CSSObject;
+      conditionsScroll: CSSObject;
       builderMain?: CSSObject;
       elementsPanel?: CSSObject;
     };

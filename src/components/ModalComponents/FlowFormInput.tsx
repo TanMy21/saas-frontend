@@ -16,8 +16,6 @@ const FlowFormInput = ({
     "is-equal-to": "Is Equal To",
   };
 
-  // console.log("Flow Form Input, Condition: ", condition);
-
   const conditions = watch("conditions");
   if (
     typeof blockIndex === "number" &&
@@ -42,7 +40,7 @@ const FlowFormInput = ({
     >
       <Box sx={{ width: "50%", height: "96%" }}>
         {questionType === "NUMBER" ? (
-          <>
+         
             <Select
               {...register(`conditions.${blockIndex}.conditionType`)}
               defaultValue={"is-equal-to"}
@@ -58,7 +56,7 @@ const FlowFormInput = ({
                 Is Greater than Equal To
               </MenuItem>
             </Select>
-          </>
+          
         ) : (
           <Box sx={{ width: "100%", height: "96%" }}>
             <TextField

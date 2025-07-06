@@ -3,7 +3,11 @@ import { Dayjs } from "dayjs";
 import type { JwtPayload } from "jwt-decode";
 import type { MRT_ColumnDef } from "material-react-table";
 import { type DroppableProvided } from "react-beautiful-dnd";
-import { type FieldErrors, type UseFormRegister } from "react-hook-form";
+import {
+  Control,
+  type FieldErrors,
+  type UseFormRegister,
+} from "react-hook-form";
 import { type IconType } from "react-icons/lib";
 import { type NavigateFunction } from "react-router-dom";
 import { z } from "zod";
@@ -21,7 +25,6 @@ import { generateSurveySchema } from "./schema";
 export type AppErrorBoundaryProps = Readonly<{
   readonly children: React.ReactNode;
 }>;
-
 
 export type AuthInitialState = {
   token: string | null;
@@ -288,6 +291,7 @@ export interface FlowFormConditionBlockProps {
     target: number;
   };
   Elements: Element[];
+  control: Control<any>;
   register: UseFormRegister<any>;
   watch: any;
   setValue: any;
@@ -343,6 +347,7 @@ export interface FlowFormProps {
   questionType?: string;
   type?: string;
   setConditions: React.Dispatch<React.SetStateAction<Condition[]>>;
+  control: Control<any>;
   register: UseFormRegister<any>;
   watch: any;
   setValue: any;

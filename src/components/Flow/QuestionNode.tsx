@@ -15,12 +15,17 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "120px",
-        width: "164px",
-        backgroundColor: "#FFFFFF",
-        border: "4px solid #eee",
-        borderRadius: "8px",
+        width: "180px",
+        height: "140px",
         position: "relative",
+        backgroundColor: "#F9FAFB",
+        border: "2px solid #E5E7EB",
+        borderRadius: "12px",
+        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.08)",
+        transition: "box-shadow 0.2s",
+        "&:hover": {
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.12)",
+        },
       }}
     >
       <Handle
@@ -86,6 +91,8 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
           width: "92%",
           height: "64px",
           fontSize: "8px",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
           // border: "2px solid red",
         }}
       >

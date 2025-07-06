@@ -1,5 +1,5 @@
 import { Box, Grid } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { useGetElementsForSurveyQuery } from "../app/slices/elementApiSlice";
 import { RootState } from "../app/store";
@@ -10,14 +10,18 @@ import { LocationStateProps } from "../utils/types";
 
 const QuestionFlow = () => {
   const location = useLocation();
+  const params = useParams();
   const { headerProps } = (location.state as LocationStateProps) || {};
   const { survey, workspaceId, workspaceName } = headerProps || {};
 
   const surveyCanvas = useAppSelector(
     (state: RootState) => state.surveyCanvas.data
   );
-  const { getSurveyCanvas } = surveyCanvas;
-  const { surveyID, title } = getSurveyCanvas;
+  const { getSurveyCanvas } = surveyCanvas ?? {};
+  const { surveyID: flowSurveyID, title } = getSurveyCanvas ?? {};
+
+  const surveyID = flowSurveyID ?? params.surveyID;
+
   const { data } = useGetElementsForSurveyQuery(surveyID);
 
   return (
