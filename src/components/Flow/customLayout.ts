@@ -47,7 +47,7 @@ export function layoutNodesWithBypasses(nodes: Node[], edges: Edge[]): Node[] {
       if (!skipped) continue;
 
       const currentLevel = nodeLevels.get(skipped.id) ?? 0;
-      const newLevel = Math.max(currentLevel, bypassDepth);
+      const newLevel = Math.max(currentLevel, 2);
       nodeLevels.set(skipped.id, newLevel);
     }
   });

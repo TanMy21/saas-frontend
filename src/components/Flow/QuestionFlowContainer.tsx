@@ -123,6 +123,24 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
       return eds;
     });
 
+    const sourceNode = nodes.find((n) => n.id === connection.source);
+    if (sourceNode) {
+      setSelectedNode(sourceNode);
+
+      setEdgeFormData((prev) => ({
+        ...prev,
+        sourceQuestionID: String(sourceNode.data?.questionID),
+        sourceQuestionOrder: Number(sourceNode.data?.order),
+        sourceQuestionText: String(sourceNode.data?.question),
+        sourceQuestionIcon: String(sourceNode.data?.element),
+        source: Number(sourceNode.id),
+        target: Number(connection.target),
+      }));
+    }
+
+    setErrors({});
+    setIsValidArray([]);
+
     setOpenConditions(true);
   };
 
@@ -210,12 +228,12 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
       <Box
         sx={{
           display: "flex",
-          marginTop: "1%",
+          margin: "0% auto",
           justifyContent: "center",
           alignItems: "center",
           width: "80%",
           height: "96%",
-          border: "3px solid red",
+          // border: "3px solid red",
         }}
       >
         <CircularProgress size={120} />;
@@ -227,14 +245,24 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
     <Box
       sx={{
         display: "flex",
-        marginTop: "1%",
-        width: "80%",
-        height: "96%",
+        margin: "1% auto",
+        width: "96%",
+        height: "92%",
         padding: 2,
-        border: "3px solid red",
+        backgroundColor: "#F6F8FF",
+        borderRadius: "12px",
+        boxShadow: "inset 0 4px 8px rgba(0, 0, 0, 0.06)",
+        border: "1px solid #E0E4FF",
+        // background: "linear-gradient(145deg, #f0f3ff, #dfe3f2)",
+        overflow: "hidden",
       }}
     >
-      <Box sx={{ width: "100%", height: "100%" }}>
+      <Box
+        sx={{
+          width: "100%",
+          height: "100%",
+        }}
+      >
         <ReactFlow
           nodes={nodes}
           edges={edges}

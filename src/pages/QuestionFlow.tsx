@@ -64,10 +64,10 @@ const QuestionFlow = () => {
           justifyContent={"center"}
           sx={{
             width: "100%",
-            minHeight: "90vh",
+            height: "92vh",
             overflowX: "hidden",
-            overflowY: "auto",
-            border: "2px solid green",
+            overflowY: "hidden",
+            // border: "2px solid green",
           }}
         >
           {/* Main content area */}

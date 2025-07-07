@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import ClearIcon from "@mui/icons-material/Clear";
-import { Box } from "@mui/material";
 import {
   type EdgeProps,
   getBezierPath,
@@ -40,7 +39,7 @@ const BypassEdge = ({
   // Check if nodes are on the same level
   const SAME_LEVEL_THRESHOLD = 10;
   const CURVATURE = 0.3;
-  const isSameLevel = Math.abs(sourceY - targetY) <SAME_LEVEL_THRESHOLD;
+  const isSameLevel = Math.abs(sourceY - targetY) < SAME_LEVEL_THRESHOLD;
 
   // generate straight or curved path based on Y difference
   const [edgePath, labelX, labelY] = isSameLevel
@@ -52,7 +51,7 @@ const BypassEdge = ({
         targetY,
         sourcePosition,
         targetPosition,
-        curvature:CURVATURE,
+        curvature: CURVATURE,
       });
 
   useEffect(() => {
@@ -75,7 +74,7 @@ const BypassEdge = ({
   const absAngle = Math.abs(angleDeg % 180);
   const angleFactor = Math.sin((absAngle * Math.PI) / 180);
 
-  const dynamicWidth = 120 + angleFactor * 60;
+  const dynamicWidth = 100 + angleFactor * 60;
   const dynamicHeight = 25 + angleFactor * 30;
   const offsetX = dynamicWidth / 2;
   const offsetY = dynamicHeight / 2;
@@ -99,29 +98,34 @@ const BypassEdge = ({
         y={labelY - offsetY}
         width={dynamicWidth}
         height={dynamicHeight}
+        style={{
+          overflow: "visible",
+          pointerEvents: "all",
+        }}
       >
-        <Box
-          sx={{
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#F6F8FF",
+            borderRadius: "16px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#F6F8FF",
-            borderRadius: "16px",
             padding: "2px 4px",
-            fontSize: "12px",
+            fontSize: "14px",
             fontWeight: "bold",
             color: "#000",
-            height: "100%",
-            gap: "12px",
-            border: "none",
             transform: `rotate(${angleDeg}deg)`,
             transformOrigin: "center center",
+            gap: "12px",
           }}
         >
-          <Box> {`${sourceOrder} ➝ ${targetOrder}`}</Box>
-          <Box
+          <div>{`${sourceOrder} ➝ ${targetOrder}`}</div>
+          <button
             onClick={handleDeleteEdge}
-            sx={{
+            style={{
+              all: "unset",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -135,8 +139,8 @@ const BypassEdge = ({
               fontSize="small"
               sx={{ fontSize: "16px", color: "#D32F2F" }}
             />
-          </Box>
-        </Box>
+          </button>
+        </div>
       </foreignObject>
     </>
   );
