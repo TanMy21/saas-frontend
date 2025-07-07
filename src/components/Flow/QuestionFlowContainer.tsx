@@ -22,6 +22,7 @@ import {
   Condition,
   EdgeFormData,
   QuestionFlowProps,
+  NodeData,
 } from "../../utils/types";
 import FlowConditionModal from "../Modals/FlowConditionModal";
 
@@ -77,9 +78,12 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
     setEdges((eds) => {
       const sourceNode = nodes.find((n) => n.id === connection.source);
       const targetNode = nodes.find((n) => n.id === connection.target);
-      const sourceIndex = nodes.findIndex((n) => n.id === connection.source);
-      const targetIndex = nodes.findIndex((n) => n.id === connection.target);
-      const isBypass = targetIndex - sourceIndex > 1;
+
+      if (!sourceNode || !targetNode) return eds;
+
+      const sourceOrder = (sourceNode?.data as unknown as NodeData)?.order ?? 0;
+      const targetOrder = (targetNode?.data as unknown as NodeData)?.order ?? 0;
+      const isBypass = targetOrder - sourceOrder > 1;
 
       const exists = eds.some(
         (edge) =>
@@ -93,8 +97,8 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
           type: "bypass-edge",
           data: {
             bypass: isBypass,
-            sourceOrder: sourceIndex,
-            targetOrder: targetIndex,
+            sourceOrder: sourceOrder,
+            targetOrder: targetOrder,
           },
         };
 

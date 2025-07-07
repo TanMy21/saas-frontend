@@ -527,6 +527,16 @@ export interface NewWorkspaceMenuOptionProps {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export interface NodeData {
+  questionID?: string;
+  relatedSurveyId?: string;
+  description?: string;
+  creatorId?: string;
+  text?: string;
+  type?: string;
+  order: number;
+}
+
 type ForgotPasswordTrigger = ReturnType<typeof useForgotPasswordMutation>[0];
 
 export interface PasswordResetFormProps {
