@@ -1,6 +1,27 @@
+import { useEffect, useState } from "react";
+
 import ClearIcon from "@mui/icons-material/Clear";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { type EdgeProps, useReactFlow } from "@xyflow/react";
+import { Box } from "@mui/material";
+import {
+  type EdgeProps,
+  getBezierPath,
+  getStraightPath,
+  useReactFlow,
+} from "@xyflow/react";
+
+function getAngleFromPath(path: string): number {
+  const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  pathEl.setAttribute("d", path);
+
+  const len = pathEl.getTotalLength();
+  const p1 = pathEl.getPointAtLength(len / 2 - 1);
+  const p2 = pathEl.getPointAtLength(len / 2 + 1);
+
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+
+  return Math.atan2(dy, dx); //in radians
+}
 
 const BypassEdge = ({
   id,
@@ -8,39 +29,54 @@ const BypassEdge = ({
   sourceY,
   targetX,
   targetY,
+  sourcePosition,
+  targetPosition,
   data,
   markerEnd,
-  style = {},
 }: EdgeProps) => {
   const { setEdges } = useReactFlow();
 
-  const curveDirection = Math.random() > 0.5 ? 1 : -1;
-  const offset = data?.bypass ? 300 * curveDirection : 0;
+  const [angleDeg, setAngleDeg] = useState(0);
+  // Check if nodes are on the same level
+  const isSameLevel = Math.abs(sourceY - targetY) < 10;
 
-  const midX = (sourceX + targetX) / 2;
-  const midY = (sourceY + targetY) / 2 + offset / 2;
+  // generate straight or curved path based on Y difference
+  const [edgePath, labelX, labelY] = isSameLevel
+    ? getStraightPath({ sourceX, sourceY, targetX, targetY })
+    : getBezierPath({
+        sourceX,
+        sourceY,
+        targetX,
+        targetY,
+        sourcePosition,
+        targetPosition,
+        curvature: 0.3,
+      });
 
-  const apexY = curveDirection === 1 ? midY - 40 : midY + 40;
-
-  const apexLeftX = midX - 50;
-  const apexRightX = midX + 50;
-
-  const edgePath = `
-  M${sourceX},${sourceY} 
-  L${apexLeftX},${apexY} 
-  L${apexRightX},${apexY} 
-  L${targetX},${targetY}
-`;
+  useEffect(() => {
+    if (!isSameLevel) {
+      const rad = getAngleFromPath(edgePath);
+      const deg = (rad * 180) / Math.PI;
+      setAngleDeg(deg);
+    } else {
+      setAngleDeg(0); // reset to horizontal for straight
+    }
+  }, [edgePath, isSameLevel]);
 
   const handleDeleteEdge = () => {
-    setEdges((eds) => eds.filter((edge) => edge.id !== id));
+    setEdges((edges) => edges.filter((edge) => edge.id !== id));
   };
-
-  const labelX = midX - 20;
-  const labelY = apexY - (curveDirection === 1 ? -1 : 1);
 
   const sourceOrder = (data?.sourceOrder as number) ?? "";
   const targetOrder = (data?.targetOrder as number) ?? "";
+
+  const absAngle = Math.abs(angleDeg % 180);
+  const angleFactor = Math.sin((absAngle * Math.PI) / 180);
+
+  const dynamicWidth = 120 + angleFactor * 60;
+  const dynamicHeight = 25 + angleFactor * 30;
+  const offsetX = dynamicWidth / 2;
+  const offsetY = dynamicHeight / 2;
 
   return (
     <>
@@ -48,55 +84,57 @@ const BypassEdge = ({
         id={id}
         d={edgePath}
         markerEnd={markerEnd}
-        style={{
-          stroke: data?.bypass ? "#1ABEBE" : "#555",
-          strokeWidth: data?.bypass ? 2 : 1.5,
-          ...style,
-        }}
         className="react-flow__edge-path"
+        style={{
+          stroke: "#1ABEBE",
+          strokeWidth: 2,
+          fill: "none",
+        }}
       />
-      <foreignObject x={labelX} y={labelY - 20} width={60} height={40}>
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: "#E7E5E5",
-            color: "#000",
-            borderRadius: "8px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "20px",
-            fontWeight: "bold",
-          }}
-        >
-          {`${sourceOrder + 1} - ${targetOrder + 1}`}
-        </div>
-      </foreignObject>
 
       <foreignObject
-        x={labelX - 25}
-        y={labelY - 18}
-        width={36}
-        height={36}
-        style={{ cursor: "pointer" }}
+        x={labelX - offsetX}
+        y={labelY - offsetY}
+        width={dynamicWidth}
+        height={dynamicHeight}
       >
-        <div
-          onClick={handleDeleteEdge}
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: "#E7E5E5",
-            color: "#f00",
-            borderRadius: "50%",
+        <Box
+          sx={{
             display: "flex",
-            justifyContent: "center",
             alignItems: "center",
-            fontSize: "30px",
+            justifyContent: "center",
+            backgroundColor: "#F6F8FF",
+            borderRadius: "16px",
+            padding: "2px 4px",
+            fontSize: "12px",
+            fontWeight: "bold",
+            color: "#000",
+            height: "100%",
+            gap: "12px",
+            border: "none",
+            transform: `rotate(${angleDeg}deg)`,
+            transformOrigin: "center center",
           }}
         >
-          <HighlightOffIcon />
-        </div>
+          <Box> {`${sourceOrder} ➝ ${targetOrder}`}</Box>
+          <Box
+            onClick={handleDeleteEdge}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "50%",
+              width: "20px",
+              height: "20px",
+              cursor: "pointer",
+            }}
+          >
+            <ClearIcon
+              fontSize="small"
+              sx={{ fontSize: "16px", color: "#D32F2F" }}
+            />
+          </Box>
+        </Box>
       </foreignObject>
     </>
   );
