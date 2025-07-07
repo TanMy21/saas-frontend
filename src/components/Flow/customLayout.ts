@@ -2,8 +2,8 @@ import { type Node, type Edge, Position } from "@xyflow/react";
 
 import { NodeData } from "../../utils/types";
 
-const X_SPACING = 280;
-const Y_SPACING = 200;
+const HORIZONTAL_SPACING = 280;
+const VERTICAL_SPACING = 200;
 
 export function layoutNodesWithBypasses(nodes: Node[], edges: Edge[]): Node[] {
   const nodeMap = new Map<string, Node>();
@@ -37,8 +37,8 @@ export function layoutNodesWithBypasses(nodes: Node[], edges: Edge[]): Node[] {
     const target = nodeMap.get(edge.target);
     if (!source || !target) return;
 
-    const sourceOrder = (source.data as any).order;
-    const targetOrder = (target.data as any).order;
+    const sourceOrder = (source.data as unknown as NodeData).order;
+    const targetOrder = (target.data as unknown as NodeData).order;
 
     const bypassDepth = targetOrder - sourceOrder - 1;
 
@@ -60,8 +60,8 @@ export function layoutNodesWithBypasses(nodes: Node[], edges: Edge[]): Node[] {
     return {
       ...node,
       position: {
-        x: order * X_SPACING,
-        y: level * Y_SPACING,
+        x: order * HORIZONTAL_SPACING,
+        y: level * VERTICAL_SPACING,
       },
       sourcePosition: Position.Right,
       targetPosition: Position.Left,

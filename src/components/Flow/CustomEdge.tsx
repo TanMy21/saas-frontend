@@ -15,7 +15,9 @@ export default function CustomEdge({
   targetPosition,
   markerEnd,
 }: EdgeProps) {
-  const isSameLevel = Math.abs(sourceY - targetY) < 10;
+  const SAME_LEVEL_THRESHOLD = 10;
+  const CURVATURE = 0.3;
+  const isSameLevel = Math.abs(sourceY - targetY) < SAME_LEVEL_THRESHOLD;
 
   const [edgePath] = isSameLevel
     ? getStraightPath({ sourceX, sourceY, targetX, targetY })
@@ -26,7 +28,7 @@ export default function CustomEdge({
         targetY,
         sourcePosition,
         targetPosition,
-        curvature: 0.3,
+        curvature: CURVATURE,
       });
 
   return (

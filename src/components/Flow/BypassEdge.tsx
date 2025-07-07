@@ -38,7 +38,9 @@ const BypassEdge = ({
 
   const [angleDeg, setAngleDeg] = useState(0);
   // Check if nodes are on the same level
-  const isSameLevel = Math.abs(sourceY - targetY) < 10;
+  const SAME_LEVEL_THRESHOLD = 10;
+  const CURVATURE = 0.3;
+  const isSameLevel = Math.abs(sourceY - targetY) <SAME_LEVEL_THRESHOLD;
 
   // generate straight or curved path based on Y difference
   const [edgePath, labelX, labelY] = isSameLevel
@@ -50,7 +52,7 @@ const BypassEdge = ({
         targetY,
         sourcePosition,
         targetPosition,
-        curvature: 0.3,
+        curvature:CURVATURE,
       });
 
   useEffect(() => {
