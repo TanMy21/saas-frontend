@@ -42,10 +42,11 @@ const FlowConditionModal = ({
   setConditions,
   errors,
   setErrors,
+  setEdges,
   setIsValidArray,
   Elements,
 }: FlowConditionModalProps) => {
-  const { primary, scrollStyles, grey, brand } = useAppTheme();
+  const { primary, scrollStyles, grey } = useAppTheme();
   const questionID = selectedNode?.data?.questionID as string;
   const { surveyID } = useParams();
   const {
@@ -80,6 +81,13 @@ const FlowConditionModal = ({
     useCreateConditionMutation();
 
   const handleClose = () => {
+    setEdges((prevEdges) =>
+      prevEdges.filter(
+        (edge) =>
+          edge.type !== "bypass-edge" || edge.data?.flowConditionID !== ""
+      )
+    );
+
     setOpenConditions(false);
     setSelectedNode(null);
   };
@@ -163,8 +171,12 @@ const FlowConditionModal = ({
   };
 
   useEffect(() => {
-    if (questionID) {
-      setConditions(fetchConditions ?? []);
+    if (questionID && fetchConditions) {
+      setConditions((prev) => {
+        const hasUnsaved = prev.some((cond) => cond.flowConditionID === "");
+        if (hasUnsaved) return prev;
+        return fetchConditions;
+      });
 
       reset({
         [questionID]: {},
@@ -198,6 +210,7 @@ const FlowConditionModal = ({
             width: "100%",
             gap: "1%",
             height: 600,
+            overflow: "hidden",
             // border: "2px solid black",
           }}
         >
@@ -207,24 +220,31 @@ const FlowConditionModal = ({
               flexDirection: "row",
               width: "100%",
               flex: 1,
-              // border: "2px solid red",
+              // border: "2px solid green",
               borderBottom: "1px solid #FFFFFF",
             }}
           >
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "flex-start",
                 alignItems: "center",
                 height: "98%",
-                flex: 1,
+                width: "20%",
                 // border: "2px solid red",
               }}
             >
               <Chip
                 sx={{
-                  fontSize: "24px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontSize: "20px",
+                  marginLeft: "12%",
                   backgroundColor: "white",
+                  width: "48%",
+                  height: "60%",
+                  gap: "4px",
                   "& .MuiChip-label": {
                     fontSize: "16px",
                     fontWeight: "bold",
@@ -250,12 +270,12 @@ const FlowConditionModal = ({
                 justifyContent: "center",
                 alignItems: "center",
                 height: "98%",
-                flex: 6,
+                width: "60%",
                 // border: "2px solid green",
               }}
             >
               <Typography
-                sx={{ fontSize: "24px", fontStyle: "bold", color: "#171717" }}
+                sx={{ fontSize: "20px", fontStyle: "bold", color: "#171717" }}
               >
                 Edit conditions
               </Typography>
@@ -263,10 +283,10 @@ const FlowConditionModal = ({
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "flex-end",
                 alignItems: "center",
                 height: "98%",
-                flex: 1,
+                width: "20%",
                 // border: "2px solid blue",
               }}
             >
@@ -275,6 +295,7 @@ const FlowConditionModal = ({
                 aria-controls="long-menu"
                 aria-haspopup="true"
                 onClick={handleClose}
+                sx={{ marginRight: "12%", color: grey[800] }}
               >
                 <CloseIcon />
               </IconButton>
@@ -315,7 +336,7 @@ const FlowConditionModal = ({
                   ) : (
                     (conditions ?? []).map((condition, index: number) => (
                       <FlowFormConditionBlock
-                        key={index}
+                        key={index} // NOSONAR
                         condition={condition}
                         blockIndex={index + 1}
                         selectedNode={selectedNode}
@@ -326,16 +347,17 @@ const FlowConditionModal = ({
                         control={control}
                         watch={watch}
                         setValue={setValue}
+                        setEdges={setEdges}
                         setConditions={setConditions}
                         // setTouchedConditions={setTouchedConditions}
                         errors={errors[index] || []}
                         formErrors={formErrors}
                         isValid={
-                          !touchedAccordions[index] &&
-                          hasSubmitted &&
-                          errors[index]?.length > 0
-                            ? false
-                            : true
+                          !(
+                            !touchedAccordions[index] &&
+                            hasSubmitted &&
+                            errors[index]?.length > 0
+                          )
                         }
                         onAccordionClick={() => handleAccordionClick(index)}
                       />

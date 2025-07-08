@@ -40,6 +40,7 @@ const FlowFormConditionBlock = ({
   register,
   watch,
   setValue,
+  setEdges,
   setConditions,
   errors,
   formErrors,
@@ -78,7 +79,24 @@ const FlowFormConditionBlock = ({
 
   const handleDeleteCondition = async () => {
     try {
-      await deleteCondition(condition.flowConditionID).unwrap();
+      setConditions((prev) =>
+        prev.filter((cond, idx) => idx !== blockIndex - 1)
+      );
+
+      setEdges((prevEdges) =>
+        prevEdges.filter(
+          (edge) =>
+            !(
+              edge.type === "bypass-edge" &&
+              edge.source === condition.relatedQuestionID &&
+              edge.target === condition.goto_questionID
+            )
+        )
+      );
+
+      if (condition.flowConditionID) {
+        await deleteCondition(condition.flowConditionID).unwrap();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -176,7 +194,7 @@ const FlowFormConditionBlock = ({
               padding: "1%",
               width: "98%",
               // height: "100px",
-              border: "2px solid red",
+              // border: "2px solid red",
             }}
           >
             <Box
@@ -189,7 +207,7 @@ const FlowFormConditionBlock = ({
                 margin: "auto",
                 fontSize: "16px",
                 fontWeight: "bold",
-                border: "2px solid orange",
+                // border: "2px solid orange",
               }}
             >
               If
@@ -201,7 +219,7 @@ const FlowFormConditionBlock = ({
                 alignItems: "center",
                 width: "96%",
                 margin: "auto",
-                border: "2px solid orange",
+                // border: "2px solid orange",
               }}
             >
               <Box
@@ -249,7 +267,7 @@ const FlowFormConditionBlock = ({
                 width: "96%",
                 height: "33%",
                 margin: "auto",
-                border: "2px solid orange",
+                // border: "2px solid orange",
               }}
             >
               <Box
@@ -259,7 +277,7 @@ const FlowFormConditionBlock = ({
                   padding: "1%",
                   width: "100%",
                   // height: "98%",
-                  border: "2px solid red",
+                  // border: "2px solid red",
                 }}
               >
                 {ConditionComponent ? (

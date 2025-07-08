@@ -1,3 +1,4 @@
+import { ReactFlowProvider } from "@xyflow/react";
 import { createBrowserRouter } from "react-router-dom";
 
 import PersistLogin from "../app/slices/PersistLogin";
@@ -45,7 +46,11 @@ const router = createBrowserRouter([
           },
           {
             path: "/s/flow/:surveyID",
-            element: <QuestionFlow />,
+            element: (
+              <ReactFlowProvider>
+                <QuestionFlow />
+              </ReactFlowProvider>
+            ),
           },
           {
             path: "/s/results/:surveyID",

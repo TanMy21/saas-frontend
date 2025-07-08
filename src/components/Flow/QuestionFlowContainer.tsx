@@ -13,6 +13,7 @@ import {
   type OnConnect,
   type NodeMouseHandler,
   type EdgeChange,
+  useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -39,6 +40,7 @@ const edgeTypes = {
 };
 
 const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
+  const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, _onEdgesChange] = useEdgesState<ICustomEdge>([]);
   const [conditions, setConditions] = useState<Condition[]>([]);
@@ -99,6 +101,7 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
             bypass: isBypass,
             sourceOrder: sourceOrder,
             targetOrder: targetOrder,
+            flowConditionID: "",
           },
         };
 
@@ -212,6 +215,7 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
           targetOrder:
             sorted.find((q) => q.questionID === condition.goto_questionID)
               ?.order ?? 0,
+          flowConditionID: condition.flowConditionID,
         },
       })
     );
@@ -222,6 +226,12 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
     setNodes(layouted);
     setEdges(allEdges);
   }, [Elements, questionConditions]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      fitView({ padding: 0.2 });
+    }, 0);
+  }, [nodes]);
 
   if (isLoading) {
     return (
@@ -287,6 +297,7 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
         edgeFormData={edgeFormData}
         errors={errors}
         setErrors={setErrors}
+        setEdges={setEdges}
         isValidArray={isValidArray}
         setIsValidArray={setIsValidArray}
         conditions={conditions}

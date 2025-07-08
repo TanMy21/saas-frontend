@@ -8,6 +8,8 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
+import { useDeleteConditionMutation } from "../../app/slices/flowApiSlice";
+
 function getAngleFromPath(path: string): number {
   const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
   pathEl.setAttribute("d", path);
@@ -34,7 +36,7 @@ const BypassEdge = ({
   markerEnd,
 }: EdgeProps) => {
   const { setEdges } = useReactFlow();
-
+  const [deleteCondition] = useDeleteConditionMutation();
   const [angleDeg, setAngleDeg] = useState(0);
   // Check if nodes are on the same level
   const SAME_LEVEL_THRESHOLD = 10;
@@ -64,8 +66,15 @@ const BypassEdge = ({
     }
   }, [edgePath, isSameLevel]);
 
-  const handleDeleteEdge = () => {
-    setEdges((edges) => edges.filter((edge) => edge.id !== id));
+  const handleDeleteEdge = async () => {
+    try {
+      if (data?.flowConditionID) {
+        await deleteCondition(data?.flowConditionID).unwrap();
+      }
+      setEdges((edges) => edges.filter((edge) => edge.id !== id));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const sourceOrder = (data?.sourceOrder as number) ?? "";
@@ -78,6 +87,8 @@ const BypassEdge = ({
   const dynamicHeight = 25 + angleFactor * 30;
   const offsetX = dynamicWidth / 2;
   const offsetY = dynamicHeight / 2;
+
+  console.log("Edge Data: ", data);
 
   return (
     <>

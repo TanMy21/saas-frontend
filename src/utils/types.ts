@@ -295,6 +295,7 @@ export interface FlowFormConditionBlockProps {
   register: UseFormRegister<any>;
   watch: any;
   setValue: any;
+  setEdges: React.Dispatch<React.SetStateAction<ICustomEdge[]>>;
   setConditions: React.Dispatch<React.SetStateAction<Condition[]>>;
   // setTouchedConditions: React.Dispatch<
   //   React.SetStateAction<Record<number, boolean>>
@@ -326,6 +327,7 @@ export interface FlowConditionModalProps {
   conditions: Condition[];
   errors: Record<number, string[]>;
   setErrors: React.Dispatch<React.SetStateAction<Record<number, string[]>>>;
+  setEdges: React.Dispatch<React.SetStateAction<ICustomEdge[]>>;
   isValidArray: boolean[];
   setIsValidArray: React.Dispatch<React.SetStateAction<boolean[]>>;
   setConditions: React.Dispatch<React.SetStateAction<Condition[]>>;

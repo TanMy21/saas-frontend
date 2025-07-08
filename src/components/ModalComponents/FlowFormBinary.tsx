@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { Box, MenuItem, Select, TextField } from "@mui/material";
+import { Box, FormControl, MenuItem, OutlinedInput, Select, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 
 import { useLazyGetQuestionPreferencesByIDQuery } from "../../app/slices/questionPreferencesApiSlice";
@@ -59,7 +59,7 @@ const FlowFormBinary = ({
         flexDirection: "row",
         gap: "2%",
         width: "90%",
-        maxHeight: "40px",
+        height: "40px",
       }}
     >
       <Box sx={{ width: "24%", height: "96%" }}>
@@ -85,17 +85,33 @@ const FlowFormBinary = ({
           defaultValue={condition.conditionValue ?? ""}
           name={`conditions.${blockIndex}.conditionValue`}
           render={({ field }) => (
-            <Select
-              {...field}
-              sx={{ width: "100%", height: "100%" }}
-              value={field.value ?? condition.conditionValue ?? ""}
-            >
-              {binaryOptions.map((opt) => (
-                <MenuItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </MenuItem>
-              ))}
-            </Select>
+            <FormControl fullWidth sx={{ height: "100%" }}>
+              <Select
+                {...field}
+                input={<OutlinedInput notched={false} sx={{ height: '100%', padding: 0 }} />}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  "& .MuiSelect-select": {
+                    display: "flex",
+                    alignItems: "center",
+                    height: "100%",
+                    padding: "0 14px",
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    height: "100%",
+                    padding: 0,
+                  },
+                }}
+                value={field.value ?? condition.conditionValue ?? ""}
+              >
+                {binaryOptions.map((opt) => (
+                  <MenuItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           )}
         />
       </Box>
