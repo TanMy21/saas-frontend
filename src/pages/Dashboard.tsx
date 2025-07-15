@@ -17,8 +17,6 @@ import useAuth from "../hooks/useAuth";
 import { useAppTheme } from "../theme/useAppTheme";
 import { ErrorData, Workspace } from "../utils/types";
 
-
-
 const Dashboard = () => {
   const { background } = useAppTheme();
   const dispatch = useDispatch<AppDispatch>();
@@ -37,7 +35,6 @@ const Dashboard = () => {
     error: workspaceError,
     isSuccess,
   } = useGetWorkspacesQuery("workspacesList", {
-    pollingInterval: 15000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
@@ -113,7 +110,6 @@ const Dashboard = () => {
           // border: "2px solid black",
         }}
       >
-       
         {isTourEnabled && (
           <DashboardTour
             stepIndex={stepIndex}

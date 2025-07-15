@@ -10,6 +10,7 @@ const initialState: AuthState = {
   email: null,
   isAdmin: false,
   accessToken: null,
+  sessionExpired: false,
   // isLoggedIn: false,
 };
 
@@ -19,7 +20,10 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (state, { payload }: PayloadAction<AuthState>) => {
       const { accessToken } = payload;
+
+      console.log("Setting credentials in authSlice", accessToken);
       state.token = accessToken;
+      console.log("Token state", state.token);
       state._id = payload._id;
       state.email = payload.email;
       state.isAdmin = payload.isAdmin;
@@ -31,10 +35,17 @@ const authSlice = createSlice({
       // state.isLoggedIn = false;
       localStorage.removeItem("persist");
     },
+
+    setSessionExpired: (state, action: PayloadAction<boolean>) => {
+      state.sessionExpired = action.payload;
+      if (action.payload) {
+        state.token = null;
+      }
+    },
   },
 });
 
-export const { setCredentials, logOut } = authSlice.actions;
+export const { setCredentials, logOut, setSessionExpired } = authSlice.actions;
 
 export default authSlice.reducer;
 

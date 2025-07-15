@@ -62,7 +62,7 @@ const SurveyBuilder = () => {
     refetch: refetchCanvas,
   } = useGetSurveyCanvasByIdQuery(surveyID, {
     skip: !surveyID,
-    pollingInterval: 200000,
+    // pollingInterval: 200000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });

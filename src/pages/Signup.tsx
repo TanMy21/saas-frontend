@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 import { useAddNewUserMutation } from "../app/slices/userApiSlice";
 import FormErrors from "../components/FormErrors";
 import { useAppTheme } from "../theme/useAppTheme";
-import { registerSchema } from "../utils/signupSchema";
+import { registerSchema } from "../utils/schema";
 import { ErrorData, RegisterFormData } from "../utils/types";
 
 const Signup = () => {

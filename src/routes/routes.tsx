@@ -4,6 +4,7 @@ import { createBrowserRouter } from "react-router-dom";
 import PersistLogin from "../app/slices/PersistLogin";
 import RequireAuth from "../components/RequireAuth";
 import SurveysListMain from "../components/Surveys/SurveysListMain";
+import RootLayout from "../layouts/RootLayout";
 import Dashboard from "../pages/Dashboard";
 import EmailNotVerified from "../pages/EmailNotVerified";
 import ErrorPage from "../pages/ErrorPage";
@@ -19,46 +20,52 @@ import SurveyResults from "../pages/SurveyResults";
 import VerifyUser from "../pages/VerifyUser";
 
 const router = createBrowserRouter([
-  { path: "/", element: <Homepage />, errorElement: <ErrorPage /> },
-  { path: "/register", element: <Signup /> },
-  { path: "/login", element: <Signin /> },
-  { path: "/forgot", element: <ForgotPassword /> },
-  { path: "/reset", element: <ResetPassword /> },
-  { path: "/verify/:verificationCode", element: <VerifyUser /> },
-  { path: "/not-verified", element: <EmailNotVerified /> },
   {
-    element: <PersistLogin />,
+    element: <RootLayout />,
     errorElement: <ErrorPage />,
     children: [
+      { path: "/", element: <Homepage />, errorElement: <ErrorPage /> },
+      { path: "/register", element: <Signup /> },
+      { path: "/login", element: <Signin /> },
+      { path: "/forgot", element: <ForgotPassword /> },
+      { path: "/reset", element: <ResetPassword /> },
+      { path: "/verify/:verificationCode", element: <VerifyUser /> },
+      { path: "/not-verified", element: <EmailNotVerified /> },
       {
-        element: <RequireAuth />,
+        element: <PersistLogin />,
+        errorElement: <ErrorPage />,
         children: [
           {
-            path: "/dash",
-            element: <Dashboard />,
+            element: <RequireAuth />,
             children: [
-              { path: "w/:workspaceId", element: <SurveysListMain /> },
+              {
+                path: "/dash",
+                element: <Dashboard />,
+                children: [
+                  { path: "w/:workspaceId", element: <SurveysListMain /> },
+                ],
+              },
+              {
+                path: "/survey/:surveyID",
+                element: <SurveyBuilder />,
+              },
+              {
+                path: "/s/flow/:surveyID",
+                element: (
+                  <ReactFlowProvider>
+                    <QuestionFlow />
+                  </ReactFlowProvider>
+                ),
+              },
+              {
+                path: "/s/results/:surveyID",
+                element: <SurveyResults />,
+              },
+              {
+                path: "/a/settings",
+                element: <Settings />,
+              },
             ],
-          },
-          {
-            path: "/survey/:surveyID",
-            element: <SurveyBuilder />,
-          },
-          {
-            path: "/s/flow/:surveyID",
-            element: (
-              <ReactFlowProvider>
-                <QuestionFlow />
-              </ReactFlowProvider>
-            ),
-          },
-          {
-            path: "/s/results/:surveyID",
-            element: <SurveyResults />,
-          },
-          {
-            path: "/a/settings",
-            element: <Settings />,
           },
         ],
       },

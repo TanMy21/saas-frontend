@@ -5,7 +5,7 @@ import type {
 } from "@reduxjs/toolkit/query/react";
 import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
 
-import { setCredentials, logOut } from "../slices/authSlice";
+import { setCredentials, logOut, setSessionExpired } from "../slices/authSlice";
 import { RootState } from "../store";
 
 const baseQuery = fetchBaseQuery({
@@ -16,6 +16,7 @@ const baseQuery = fetchBaseQuery({
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
     }
+    headers.set("x-no-csrf", `present`);
 
     return headers;
   },
@@ -48,8 +49,10 @@ const baseQueryWithReauth: BaseQueryFn<
         typeof refreshResult?.error?.status === "number" &&
         [403, 401, 500].includes(refreshResult?.error?.status)
       ) {
+        localStorage.setItem("authExp", "true");
         localStorage.removeItem("persist");
-        api.dispatch(logOut());
+        api.dispatch(setSessionExpired(true));
+        // api.dispatch(logOut());
         (refreshResult?.error?.data as { message: string }).message =
           "Your login has expired. Please Login again ";
       }

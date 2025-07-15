@@ -42,6 +42,7 @@ export interface AuthState {
   isAdmin?: boolean | null;
   accessToken?: string | null;
   isLoggedIn?: boolean;
+  sessionExpired?: boolean;
 }
 
 export interface AddElementMenuProps {
@@ -782,6 +783,11 @@ export interface SettingsFormData {
   responseLimit?: number;
   language: string;
   isTemplate?: boolean;
+}
+
+export interface SessionExpireModalProps {
+  open: boolean;
+  onConfirm: () => void;
 }
 
 export interface SurveyTitleAndDescription {

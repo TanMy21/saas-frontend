@@ -48,23 +48,27 @@ const PersistLogin = () => {
       }
     };
 
-    const checkTokenExpiration = () => {
-      const isExpired = isTokenExpired(token!);
-      if (isExpired) {
-        // console.log("Token expired, attempting to refresh...");
-        verifyRefreshToken();
-      }
-    };
+    if (persist && !token) {
+      verifyRefreshToken();
+    }
 
-    const intervalId = setInterval(checkTokenExpiration, 120000);
+    // const checkTokenExpiration = () => {
+    //   const isExpired = isTokenExpired(token!);
+    //   if (isExpired) {
+    //     // console.log("Token expired, attempting to refresh...");
+    //     verifyRefreshToken();
+    //   }
+    // };
 
-    // Check once immediately on component mount
-    checkTokenExpiration();
+    // const intervalId = setInterval(checkTokenExpiration, 120000);
 
-    return () => clearInterval(intervalId);
+    // // Check once immediately on component mount
+    // checkTokenExpiration();
+
+    // return () => clearInterval(intervalId);
 
     // eslint-disable-next-line
-  }, [refresh]);
+  }, [refresh, persist, token]);
 
   useEffect(() => {
     if (isError) {
