@@ -51,10 +51,11 @@ const baseQueryWithReauth: BaseQueryFn<
       ) {
         localStorage.setItem("authExp", "true");
         localStorage.removeItem("persist");
+        api.dispatch(logOut());
         api.dispatch(setSessionExpired(true));
-        // api.dispatch(logOut());
-        (refreshResult?.error?.data as { message: string }).message =
-          "Your login has expired. Please Login again ";
+        return { data: undefined as any };
+        // (refreshResult?.error?.data as { message: string }).message =
+        //   "Your login has expired. Please Login again ";
       }
       return refreshResult;
     }

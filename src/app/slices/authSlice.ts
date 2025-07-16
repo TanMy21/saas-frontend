@@ -40,6 +40,10 @@ const authSlice = createSlice({
       state.sessionExpired = action.payload;
       if (action.payload) {
         state.token = null;
+        state._id = null;
+        state.email = null;
+        state.isAdmin = false;
+        localStorage.removeItem("persist");
       }
     },
   },
