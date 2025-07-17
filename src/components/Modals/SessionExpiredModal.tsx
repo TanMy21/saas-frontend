@@ -6,6 +6,7 @@ export default function SessionExpiredModal({
   open,
   onConfirm,
 }: SessionExpireModalProps) {
+  console.log("SessionExpiredModal rendered");
   return (
     <Modal
       open={open}
@@ -14,6 +15,7 @@ export default function SessionExpiredModal({
       disableEscapeKeyDown
       disableAutoFocus
       sx={{
+        backgroundColor:"red",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -22,7 +24,7 @@ export default function SessionExpiredModal({
     >
       <Box
         sx={{
-          bgcolor: "background.paper",
+          bgcolor: "red",
           boxShadow: 24,
           p: 4,
           borderRadius: 2,

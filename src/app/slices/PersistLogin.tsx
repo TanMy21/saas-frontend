@@ -9,7 +9,7 @@ import { RootState } from "../store";
 import { useAppSelector } from "../typedReduxHooks";
 
 import { useRefreshMutation, useSendLogoutMutation } from "./authApiSlice";
-import { selectCurrentToken, logOut } from "./authSlice";
+import { selectCurrentToken, logOut, setSessionExpired } from "./authSlice";
 
 const PersistLogin = () => {
   const [persist] = usePersist();
@@ -50,6 +50,7 @@ const PersistLogin = () => {
       } catch (err) {
         console.error(err);
         if (!sessionExpired) {
+          dispatch(setSessionExpired(true));
           await logoutUser();
         }
       } finally {

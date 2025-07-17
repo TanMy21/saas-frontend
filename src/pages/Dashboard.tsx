@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 import { fetchUser, selectUser } from "../app/slices/userSlice";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
-import { AppDispatch } from "../app/store";
+import { AppDispatch, RootState } from "../app/store";
 import { DashBoardHeader } from "../components/DashBoardHeader";
 import DeleteWorkspaceModal from "../components/Modals/DeleteWorkspaceModal";
 import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";
@@ -38,7 +38,12 @@ const Dashboard = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-
+const sessionExpired = useSelector((state: RootState) => state.auth.sessionExpired);
+useEffect(() => {
+  if (sessionExpired) {
+    console.error("WARNING: Dashboard rendered while sessionExpired=true!");
+  }
+}, [sessionExpired]);
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace>();
 
   useEffect(() => {

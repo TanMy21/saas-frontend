@@ -45,6 +45,15 @@ const SurveyBuilder = () => {
   const [display, setDisplay] = useState<string | null>("desktop");
   const [loading, setLoading] = useState(false);
 
+  const sessionExpired = useSelector(
+    (state: RootState) => state.auth.sessionExpired
+  );
+  useEffect(() => {
+    if (sessionExpired) {
+      console.error("WARNING: builder rendered while sessionExpired=true!");
+    }
+  }, [sessionExpired]);
+
   const elements = useAppSelector(
     (state: RootState) => state.surveyBuilder.elements
   );

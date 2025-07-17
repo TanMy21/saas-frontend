@@ -1,10 +1,8 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useNavigate } from "react-router-dom";
 
 import { AppErrorBoundaryProps, ErrorFallbackProps } from "./utils/types";
 
 function ErrorFallback(props: ErrorFallbackProps) {
-  const navigate = useNavigate();
   const { error, resetErrorBoundary } = props;
 
   return (
@@ -19,7 +17,7 @@ function ErrorFallback(props: ErrorFallbackProps) {
       <button
         onClick={() => {
           resetErrorBoundary();
-          navigate("/dash");
+          window.location.href = "/dash";
         }}
         style={{ marginTop: "1rem" }}
       >

@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 
 import store from "./app/store";
 import AppErrorBoundary from "./AppErrorBoundary";
+import SessionExpired from "./components/SessionExpired";
 import router from "./routes/routes";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,6 +29,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             apiKey={import.meta.env.VITE_POSTHOG_KEY}
             options={options}
           >
+            <SessionExpired />
             <RouterProvider router={router} />
           </PostHogProvider>
         </ThemeProvider>

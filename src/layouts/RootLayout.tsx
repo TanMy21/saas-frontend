@@ -11,6 +11,7 @@ const RootLayout = () => {
   );
 
   if (sessionExpired) {
+   console.error("Session expired, redirecting to session expired page.");
     return <SessionExpired />;
   }
 
@@ -18,7 +19,7 @@ const RootLayout = () => {
     <>
       <SessionInitializer />
       {/* <SessionExpired /> */}
-      <Outlet />
+      {!sessionExpired && <Outlet />}
     </>
   );
 };
