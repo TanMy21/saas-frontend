@@ -38,12 +38,7 @@ const Dashboard = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-const sessionExpired = useSelector((state: RootState) => state.auth.sessionExpired);
-useEffect(() => {
-  if (sessionExpired) {
-    console.error("WARNING: Dashboard rendered while sessionExpired=true!");
-  }
-}, [sessionExpired]);
+
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace>();
 
   useEffect(() => {

@@ -200,7 +200,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   whiteSpace: "normal",
                   width: "100%",
                   maxWidth: "80ch",
-                  fontStyle: "italic",
+                  fontStyle: "normal",
                   fontFamily:
                     "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
                   fontSize:

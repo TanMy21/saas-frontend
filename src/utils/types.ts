@@ -42,7 +42,7 @@ export interface AuthState {
   isAdmin?: boolean | null;
   accessToken?: string | null;
   isLoggedIn?: boolean;
-  sessionExpired?: boolean;
+  restoringSession?: boolean;
 }
 
 export interface AddElementMenuProps {

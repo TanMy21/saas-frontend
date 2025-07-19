@@ -1,26 +1,62 @@
 import { useEffect } from "react";
 
-import { useSessionRestore } from "../src/hooks/useSessionRestore";
+import { CircularProgress } from "@mui/material";
 
-import { setSessionExpired } from "./app/slices/authSlice";
-import { useAppDispatch } from "./app/typedReduxHooks";
+import { useRefreshMutation } from "./app/slices/authApiSlice";
+import {
+  logOut,
+  selectCurrentToken,
+  setCredentials,
+  setRestoringSession,
+} from "./app/slices/authSlice";
+import { RootState } from "./app/store";
+import { useAppDispatch, useAppSelector } from "./app/typedReduxHooks";
 
-const SessionInitializer = () => {
-  useSessionRestore();
-
+const SessionInitializer = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
+  const token = useAppSelector(selectCurrentToken);
+  const restoringSession = useAppSelector(
+    (state: RootState) => state.auth.restoringSession
+  );
+
+  const [refresh] = useRefreshMutation();
 
   useEffect(() => {
-    const handler = (e: StorageEvent) => {
-      if (e.key === "authExp" && e.newValue === "true") {
-        dispatch(setSessionExpired(true));
-      }
-    };
-    window.addEventListener("storage", handler);
-    return () => window.removeEventListener("storage", handler);
-  }, [dispatch]);
+    const persist = localStorage.getItem("persist") === "true";
+    if (persist && !token) {
+      dispatch(setRestoringSession(true));
+      refresh()
+        .unwrap()
+        .then((data) => {
+          dispatch(setCredentials(data));
+          dispatch(setRestoringSession(false));
+        })
+        .catch(() => {
+          dispatch(logOut());
+          dispatch(setRestoringSession(false));
+        });
+    } else {
+      dispatch(setRestoringSession(false));
+    }
+    // eslint-disable-next-line
+  }, []);
 
-  return null;
+  if (restoringSession) {
+    // Fullscreen spinner or branded splash
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
+  return <>{children}</>;
 };
 
 export default SessionInitializer;

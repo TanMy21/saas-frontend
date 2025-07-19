@@ -1,29 +1,18 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-import { RootState } from "../app/store";
-import { useAppSelector } from "../app/typedReduxHooks";
 import useAuth from "../hooks/useAuth";
-
-import SessionExpired from "./SessionExpired";
 
 const RequireAuth = () => {
   const { isAuthenticated, isVerified, tokenExpired } = useAuth();
-  const sessionExpired = useAppSelector(
-    (state: RootState) => state.auth.sessionExpired
-  );
 
   console.log("RequireAuth", { isAuthenticated, isVerified, tokenExpired });
   const location = useLocation();
 
-  // if (sessionExpired) {
-  //   return <SessionExpired />;
-  // }
-
-  if (isAuthenticated && isVerified) {
+  if (isAuthenticated && isVerified && !tokenExpired) {
     return <Outlet />;
   }
 
-  if (isAuthenticated && !isVerified) {
+  if (isAuthenticated && !isVerified && !tokenExpired) {
     return <Navigate to="/not-verified" state={{ from: location }} replace />;
   }
 

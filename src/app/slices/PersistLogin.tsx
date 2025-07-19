@@ -5,19 +5,14 @@ import { useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import usePersist from "../../hooks/persist";
-import { RootState } from "../store";
 import { useAppSelector } from "../typedReduxHooks";
 
 import { useRefreshMutation, useSendLogoutMutation } from "./authApiSlice";
-import { selectCurrentToken, logOut, setSessionExpired } from "./authSlice";
+import { selectCurrentToken, logOut } from "./authSlice";
 
 const PersistLogin = () => {
   const [persist] = usePersist();
   const token = useAppSelector(selectCurrentToken);
-  const [authReady, setAuthReady] = useState(false);
-  const sessionExpired = useAppSelector(
-    (state: RootState) => state.auth.sessionExpired
-  );
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -49,19 +44,11 @@ const PersistLogin = () => {
         setTrueSuccess(true);
       } catch (err) {
         console.error(err);
-        if (!sessionExpired) {
-          dispatch(setSessionExpired(true));
-          await logoutUser();
-        }
-      } finally {
-        setAuthReady(true);
       }
     };
 
     if (persist && !token) {
       verifyRefreshToken();
-    } else {
-      setAuthReady(true);
     }
 
     // const checkTokenExpiration = () => {
@@ -83,15 +70,11 @@ const PersistLogin = () => {
   }, [refresh, persist, token]);
 
   // useEffect(() => {
-  //   if (isError && !sessionExpired) {
+  //   if (isError) {
   //     logoutUser();
   //   }
   //   // eslint-disable-next-line
-  // }, [isError, sessionExpired]);
-
-  if (!authReady) {
-    return <CircularProgress />;
-  }
+  // }, [isError]);
 
   let content;
   if (!persist) {

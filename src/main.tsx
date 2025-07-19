@@ -7,12 +7,12 @@ import { ToastContainer } from "react-toastify";
 
 import store from "./app/store";
 import AppErrorBoundary from "./AppErrorBoundary";
-import SessionExpired from "./components/SessionExpired";
 import router from "./routes/routes";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
 import "../src/utils/analytics";
 import "../src/utils/sentry";
+import SessionInitializer from "./SessionInitializer";
 import electricBlueLightTheme from "./theme/electricBlueLightTheme";
 
 const options = {
@@ -29,8 +29,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             apiKey={import.meta.env.VITE_POSTHOG_KEY}
             options={options}
           >
-            <SessionExpired />
-            <RouterProvider router={router} />
+            <SessionInitializer>
+              <RouterProvider router={router} />
+            </SessionInitializer>
           </PostHogProvider>
         </ThemeProvider>
       </AppErrorBoundary>

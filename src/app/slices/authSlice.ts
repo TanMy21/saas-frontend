@@ -10,7 +10,8 @@ const initialState: AuthState = {
   email: null,
   isAdmin: false,
   accessToken: null,
-  sessionExpired: false,
+  restoringSession: true,
+
   // isLoggedIn: false,
 };
 
@@ -33,23 +34,20 @@ const authSlice = createSlice({
     logOut: (state) => {
       state.token = null;
       // state.isLoggedIn = false;
+      state._id = null;
+      state.email = null;
+      state.isAdmin = false;
+      state.accessToken = null;
       localStorage.removeItem("persist");
     },
-
-    setSessionExpired: (state, action: PayloadAction<boolean>) => {
-      state.sessionExpired = action.payload;
-      if (action.payload) {
-        state.token = null;
-        state._id = null;
-        state.email = null;
-        state.isAdmin = false;
-        localStorage.removeItem("persist");
-      }
+    setRestoringSession: (state, { payload }: PayloadAction<boolean>) => {
+      state.restoringSession = payload;
     },
   },
 });
 
-export const { setCredentials, logOut, setSessionExpired } = authSlice.actions;
+export const { setCredentials, logOut, setRestoringSession } =
+  authSlice.actions;
 
 export default authSlice.reducer;
 

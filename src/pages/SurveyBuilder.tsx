@@ -45,14 +45,7 @@ const SurveyBuilder = () => {
   const [display, setDisplay] = useState<string | null>("desktop");
   const [loading, setLoading] = useState(false);
 
-  const sessionExpired = useSelector(
-    (state: RootState) => state.auth.sessionExpired
-  );
-  useEffect(() => {
-    if (sessionExpired) {
-      console.error("WARNING: builder rendered while sessionExpired=true!");
-    }
-  }, [sessionExpired]);
+
 
   const elements = useAppSelector(
     (state: RootState) => state.surveyBuilder.elements
@@ -162,7 +155,7 @@ const SurveyBuilder = () => {
           width: "100%",
           height: "100vh",
           overflow: "hidden",
-          border: "2px solid black",
+          // border: "2px solid black",
         }}
       >
         {/* Header */}
