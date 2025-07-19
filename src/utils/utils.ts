@@ -4,3 +4,5 @@ export const generateOptionLabel = (index: number, qType: string) => {
   }
   return `${index + 1}`;
 };
+
+ 

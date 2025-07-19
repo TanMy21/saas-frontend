@@ -20,11 +20,9 @@ const RequireAuth = () => {
   // Instead of navigating, print the call stack to the console.
   console.trace(">>> REQUIREAUTH: A redirect to /login would happen here!");
 
-  // You can return null or the Navigate component, but the trace is what matters.
-  // For the test, let's prevent the navigation entirely.
-  // return <h1 style={{ color: "red" }}>DEBUG: Redirect to /login Blocked</h1>;
-
-  return <Navigate to="/login" state={{ from: location }} replace />;
+  return (
+    <Navigate to="/login?session=expired" state={{ from: location }} replace />
+  );
 };
 
 export default RequireAuth;

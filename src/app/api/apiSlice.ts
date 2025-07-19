@@ -50,7 +50,8 @@ const baseQueryWithReauth: BaseQueryFn<
         [403, 401, 500].includes(refreshResult?.error?.status)
       ) {
         localStorage.removeItem("persist");
-        // api.dispatch(logOut());
+        localStorage.setItem("session_expired", "true");
+        window.location.replace("/login");
       }
 
       // return refreshResult;

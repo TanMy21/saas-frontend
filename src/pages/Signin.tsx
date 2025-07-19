@@ -27,9 +27,10 @@ import {
   useLazyGoogleAuthQuery,
   useLoginMutation,
 } from "../app/slices/authApiSlice";
-import { setCredentials } from "../app/slices/authSlice";
+import { logOut, setCredentials } from "../app/slices/authSlice";
 import FormErrors from "../components/FormErrors";
 import LogoLoader from "../components/Loaders/LogoLoader";
+import SessionExpiredModal from "../components/Modals/SessionExpiredModal";
 import usePersist from "../hooks/persist";
 import { useAppTheme } from "../theme/useAppTheme";
 import { loginSchema } from "../utils/schema";
@@ -45,6 +46,8 @@ const Signin = () => {
   const [persist, setPersist] = usePersist();
   const [showPassword, setShowPassword] = useState(false);
   // const [googleAuthClicked, setGoogleAuthClicked] = useState(false);
+  const params = new URLSearchParams(location.search);
+  const sessionExpired = params.get("session") === "expired";
 
   const [login, { isLoading, isError, error }] = useLoginMutation();
   const [
@@ -135,6 +138,11 @@ const Signin = () => {
     }
   };
 
+  const handleSessionExpired = () => {
+    dispatch(logOut());
+    navigate("/login", { replace: true });
+  };
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const isGoogleAuth = queryParams.get("auth") === "g";
@@ -145,9 +153,7 @@ const Signin = () => {
 
     if (googleAuthData) {
       const { accessToken } = googleAuthData;
-
       dispatch(setCredentials({ accessToken }));
-
       navigate("/dash");
     }
 
@@ -182,6 +188,10 @@ const Signin = () => {
     );
 
   document.body.style.overflowY = "hidden";
+
+  if (sessionExpired) {
+    return <SessionExpiredModal open={true} onConfirm={handleSessionExpired} />;
+  }
 
   return (
     <Container
