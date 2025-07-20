@@ -785,9 +785,10 @@ export interface SettingsFormData {
   isTemplate?: boolean;
 }
 
-export interface SessionExpireModalProps {
+export interface SessionExpireToastProps {
   open: boolean;
-  onConfirm: () => void;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSessionExpired: () => void;
 }
 
 export interface SurveyTitleAndDescription {

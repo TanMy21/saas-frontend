@@ -30,7 +30,7 @@ import {
 import { logOut, setCredentials } from "../app/slices/authSlice";
 import FormErrors from "../components/FormErrors";
 import LogoLoader from "../components/Loaders/LogoLoader";
-import SessionExpiredModal from "../components/Modals/SessionExpiredModal";
+import SessionExpiredToast from "../components/Modals/SessionExpiredToast";
 import usePersist from "../hooks/persist";
 import { useAppTheme } from "../theme/useAppTheme";
 import { loginSchema } from "../utils/schema";
@@ -44,7 +44,8 @@ const Signin = () => {
   const dispatch = useDispatch();
   //eslint-disable-next-line
   const [persist, setPersist] = usePersist();
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [openToast, setOpenToast] = useState<boolean>(true);
   // const [googleAuthClicked, setGoogleAuthClicked] = useState(false);
   const params = new URLSearchParams(location.search);
   const sessionExpired = params.get("session") === "expired";
@@ -190,7 +191,13 @@ const Signin = () => {
   document.body.style.overflowY = "hidden";
 
   if (sessionExpired) {
-    return <SessionExpiredModal open={true} onConfirm={handleSessionExpired} />;
+    return (
+      <SessionExpiredToast
+        open={openToast}
+        setOpen={setOpenToast}
+        handleSessionExpired={handleSessionExpired}
+      />
+    );
   }
 
   return (
