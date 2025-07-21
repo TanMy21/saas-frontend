@@ -256,7 +256,7 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
       sx={{
         display: "flex",
         margin: "1% auto",
-        width: "96%",
+        width: "98%",
         height: "92%",
         padding: 2,
         backgroundColor: "#F6F8FF",

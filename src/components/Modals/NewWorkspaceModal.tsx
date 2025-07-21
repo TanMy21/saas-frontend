@@ -56,7 +56,7 @@ const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
   }, [isSuccess, isError, error]);
 
   return (
-    <>
+  
       <Modal
         open={open}
         disableEnforceFocus
@@ -74,7 +74,7 @@ const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
             width: 400,
             height: 128,
             bgcolor: background.paper,
-            borderRadius: 3,
+            borderRadius: 2,
             p: 4,
           }}
         >
@@ -126,7 +126,7 @@ const NewWorkspaceModal = ({ open, setOpen }: NewWorkspaceModalProps) => {
           </Box>
         </Box>
       </Modal>
-    </>
+    
   );
 };
 export default NewWorkspaceModal;

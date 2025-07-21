@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import CloseIcon from "@mui/icons-material/Close";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 // import EmailIcon from "@mui/icons-material/Email";
 // import FacebookIcon from "@mui/icons-material/Facebook";
@@ -9,6 +10,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import {
   Box,
   Button,
+  IconButton,
   InputAdornment,
   // InputBase,
   Modal,
@@ -70,7 +72,7 @@ const ShareSurveyModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 500,
-          height: 220,
+          height: 200,
           bgcolor: background.paper,
           borderRadius: "16px",
           // border: "2px solid red",
@@ -83,13 +85,47 @@ const ShareSurveyModal = ({
             flexDirection: "row",
             padding: "2%",
             width: "96%",
+            height: "20%",
             alignItems: "center",
             gap: 2,
+            borderBottom: "2px solid #E0E0E0",
             // border: "2px solid green",
           }}
         >
-          <ShareIcon />
-          <Typography sx={textStyles.modalTitle}>Share your survey</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              width: "88%",
+              height: "98%",
+              gap: 2,
+              // border: "2px solid black",
+            }}
+          >
+            <ShareIcon />
+            <Typography sx={textStyles.modalTitle}>
+              Share your survey
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignSelf: "flex-end",
+              width: "12%",
+              height: "100%",
+              // border: "2px solid black",
+            }}
+          >
+            <IconButton
+              aria-label="more"
+              aria-controls="long-menu"
+              aria-haspopup="true"
+              onClick={handleClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
         </Box>
         {/* shareURL */}
         <Box
@@ -275,38 +311,6 @@ const ShareSurveyModal = ({
                 <img alt="QR Code" width={128} height={128} />
               </Box>
             </Box> */}
-        </Box>
-        {/* Footer */}
-        <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            height: "56px",
-            padding: "4px 0px",
-            justifyContent: "flex-end",
-            borderTop: "1px solid #f3f4f6",
-            // border: "2px solid red",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              margin: "auto",
-              width: "92%",
-              height: "92%",
-            }}
-          >
-            <Button
-              type="button"
-              onClick={() => setOpen(false)}
-              variant="cancelBtn"
-              size="medium"
-            >
-              Cancel
-            </Button>
-          </Box>
         </Box>
       </Box>
     </Modal>

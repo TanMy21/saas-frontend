@@ -24,7 +24,7 @@ const SurveySorter = ({ sortBy, setSortBy }: SurveySorterProps) => {
           width: "100%",
           height: "100%",
           mt: "1%",
-          borderRadius: 3,
+          borderRadius: 2,
         }}
       >
         <MenuItem value={"Date created"}>Date created</MenuItem>

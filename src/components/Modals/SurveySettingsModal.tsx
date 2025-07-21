@@ -194,7 +194,7 @@ const SurveySettingsModal = ({
                 display: "flex",
                 flexDirection: "column",
                 margin: "auto",
-                width: "99%",
+                width: "96%",
                 height: "99%",
                 backgroundColor: "#FFFFFF",
                 // border: "2px solid blue",

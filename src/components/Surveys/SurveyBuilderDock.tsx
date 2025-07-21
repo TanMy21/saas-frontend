@@ -55,7 +55,7 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
     {
       id: "edit-sruvey",
       icon: <MdEdit />,
-      label: "Edit survey",
+      label: "Edit survey title",
       action: () => setOpenEdit(true),
     },
     {

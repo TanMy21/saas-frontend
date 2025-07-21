@@ -58,78 +58,74 @@ const RenameWorkspaceModal = ({
   }, [isSuccess, isError, error]);
 
   return (
-    <>
-      <Modal
-        open={open}
-        onClose={onClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          height: 128,
+          width: 400,
+          bgcolor: background.paper,
+          borderRadius: 2,
+          p: 4,
+        }}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            height: 128,
-            width: 400,
-            bgcolor: background.paper,
-            borderRadius: 3,
-            p: 4,
-          }}
-        >
-          <Box>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Box>
-                <Typography sx={textStyles.strongH6}>
-                  Rename workspace
-                </Typography>
-              </Box>
+        <Box>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Box>
+              <Typography sx={textStyles.strongH6}>Rename workspace</Typography>
             </Box>
           </Box>
-          <Box>
-            <form onSubmit={handleSubmit(renameWorkspace)}>
-              <Box>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  size="small"
-                  defaultValue={name}
-                  id="workspaceName"
-                  autoComplete="Name of Workspace"
-                  autoFocus
-                  {...register("name")}
-                />
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                    alignItems: "flex-end",
-                    gap: 4,
-                    mt: 1,
-                    // border: "2px solid red",
-                  }}
-                >
-                  <Button
-                    type="button"
-                    onClick={onClose}
-                    variant="outlined"
-                    size="medium"
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" variant="submitBtn2" size="small">
-                    Rename
-                  </Button>
-                </Box>
-              </Box>
-            </form>
-          </Box>
         </Box>
-      </Modal>
-    </>
+        <Box>
+          <form onSubmit={handleSubmit(renameWorkspace)}>
+            <Box>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                size="small"
+                defaultValue={name}
+                id="workspaceName"
+                autoComplete="Name of Workspace"
+                autoFocus
+                {...register("name")}
+              />
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  alignItems: "flex-end",
+                  gap: 4,
+                  mt: 1,
+                  // border: "2px solid red",
+                }}
+              >
+                <Button
+                  type="button"
+                  onClick={onClose}
+                  variant="outlined"
+                  size="medium"
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" variant="submitBtn2" size="small">
+                  Rename
+                </Button>
+              </Box>
+            </Box>
+          </form>
+        </Box>
+      </Box>
+    </Modal>
   );
 };
 

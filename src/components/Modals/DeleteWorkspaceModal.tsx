@@ -80,7 +80,7 @@ const DeleteWorkspaceModal = ({
           width: 400,
           minHeight: 240,
           bgcolor: background.paper,
-          borderRadius: 3,
+          borderRadius: 1,
           p: 2,
         }}
       >

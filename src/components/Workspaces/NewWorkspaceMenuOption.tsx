@@ -18,22 +18,20 @@ const NewWorkspaceMenuOption = ({
   };
 
   return (
-    <>
-      <MenuItem
-        onClick={handleClick}
-        sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          color: primary.main,
-          fontWeight: "500",
-          gap: 1,
-        }}
-      >
-        <AddIcon fontSize="small" />
-        Create new workspace
-      </MenuItem>
-    </>
+    <MenuItem
+      onClick={handleClick}
+      sx={{
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        color: primary.main,
+        fontWeight: "500",
+        gap: 1,
+      }}
+    >
+      <AddIcon fontSize="small" />
+      Create new workspace
+    </MenuItem>
   );
 };
 
