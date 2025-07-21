@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 import { fetchUser, selectUser } from "../app/slices/userSlice";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
-import { AppDispatch, RootState } from "../app/store";
+import { AppDispatch } from "../app/store";
 import { DashBoardHeader } from "../components/DashBoardHeader";
 import DeleteWorkspaceModal from "../components/Modals/DeleteWorkspaceModal";
 import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 
 import { useRefreshMutation } from "./app/slices/authApiSlice";
 import {
@@ -42,10 +42,9 @@ const SessionInitializer = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   if (restoringSession) {
-    // Fullscreen spinner or branded splash
     return (
-      <div
-        style={{
+      <Box
+        sx={{
           minHeight: "100vh",
           display: "flex",
           alignItems: "center",
@@ -53,7 +52,7 @@ const SessionInitializer = ({ children }: { children: React.ReactNode }) => {
         }}
       >
         <CircularProgress />
-      </div>
+      </Box>
     );
   }
   return <>{children}</>;

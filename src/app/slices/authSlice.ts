@@ -11,8 +11,6 @@ const initialState: AuthState = {
   isAdmin: false,
   accessToken: null,
   restoringSession: true,
-
-  // isLoggedIn: false,
 };
 
 const authSlice = createSlice({
@@ -21,19 +19,14 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (state, { payload }: PayloadAction<AuthState>) => {
       const { accessToken } = payload;
-
-      console.log("Setting credentials in authSlice", accessToken);
       state.token = accessToken;
-      console.log("Token state", state.token);
       state._id = payload._id;
       state.email = payload.email;
       state.isAdmin = payload.isAdmin;
-      // state.isLoggedIn = true;
       localStorage.setItem("persist", "true");
     },
     logOut: (state) => {
       state.token = null;
-      // state.isLoggedIn = false;
       state._id = null;
       state.email = null;
       state.isAdmin = false;
@@ -52,4 +45,3 @@ export const { setCredentials, logOut, setRestoringSession } =
 export default authSlice.reducer;
 
 export const selectCurrentToken = (state: RootState) => state.auth.token;
-// export const selectLoggedInState = (state: RootState) => state.auth.isLoggedIn;

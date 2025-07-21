@@ -2,7 +2,7 @@ import { ReactFlowProvider } from "@xyflow/react";
 import { createBrowserRouter } from "react-router-dom";
 
 import PersistLogin from "../app/slices/PersistLogin";
-import RequireAuth from "../components/RequireAuth";
+import RequireAuth from "../components/auth/RequireAuth";
 import SurveysListMain from "../components/Surveys/SurveysListMain";
 import PublicGuard from "../layouts/PublicGuard";
 import RootLayout from "../layouts/RootLayout";

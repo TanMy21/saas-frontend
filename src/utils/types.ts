@@ -786,9 +786,9 @@ export interface SettingsFormData {
 }
 
 export interface SessionExpireToastProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  handleSessionExpired: () => void;
+  readonly open: boolean;
+  readonly setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  readonly handleSessionExpired: () => void;
 }
 
 export interface SurveyTitleAndDescription {

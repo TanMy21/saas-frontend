@@ -9,7 +9,6 @@ const usePersist = (): [
     return val ? JSON.parse(val) : false;
   });
 
-  // Update localStorage when persist changes
   useEffect(() => {
     if (persist) {
       localStorage.setItem("persist", JSON.stringify(true));

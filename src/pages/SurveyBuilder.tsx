@@ -16,6 +16,7 @@ import { fetchUser, selectUser } from "../app/slices/userSlice";
 import { RootState } from "../app/store";
 import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
 import CanvasConsole from "../components/CanvasConsole";
+import LogoLoader from "../components/Loaders/LogoLoader";
 import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
 import GenerateSurveyModal from "../components/Modals/GenerateSurveyModal";
 import ImportQuestionsModal from "../components/Modals/ImportQuestionsModal";
@@ -44,8 +45,6 @@ const SurveyBuilder = () => {
   const [questionId, setQuestionId] = useState<string | null>(null);
   const [display, setDisplay] = useState<string | null>("desktop");
   const [loading, setLoading] = useState(false);
-
-
 
   const elements = useAppSelector(
     (state: RootState) => state.surveyBuilder.elements
@@ -144,6 +143,22 @@ const SurveyBuilder = () => {
   if (import.meta.env.VITE_ENABLE_BUILDER_TOUR === "true") {
     isTourEnabled = !hasCompletedBuilderTour && !hasSkippedBuilderTour;
   }
+
+  if (isLoadingCanvas)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+          height: "100%",
+          margin: "auto",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <LogoLoader />
+      </Box>
+    );
 
   return (
     <>

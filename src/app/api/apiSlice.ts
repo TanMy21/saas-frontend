@@ -51,7 +51,7 @@ const baseQueryWithReauth: BaseQueryFn<
       ) {
         localStorage.removeItem("persist");
         localStorage.setItem("session_expired", "true");
-        window.location.replace("/login");
+        window.location.replace("/login?session=expired");
       }
 
       // return refreshResult;

@@ -28,7 +28,7 @@ const PersistLogin = () => {
     try {
       await sendLogout().unwrap();
       dispatch(logOut());
-      navigate("/login", { replace: true });
+      navigate("/login?session=expired", { replace: true });
     } catch (err) {
       console.error(err);
     }
@@ -43,6 +43,7 @@ const PersistLogin = () => {
         //const { accessToken } = response.data
         setTrueSuccess(true);
       } catch (err) {
+        // logoutUser();
         console.error(err);
       }
     };
@@ -50,21 +51,6 @@ const PersistLogin = () => {
     if (persist && !token) {
       verifyRefreshToken();
     }
-
-    // const checkTokenExpiration = () => {
-    //   const isExpired = isTokenExpired(token!);
-    //   if (isExpired) {
-    //     // console.log("Token expired, attempting to refresh...");
-    //     verifyRefreshToken();
-    //   }
-    // };
-
-    // const intervalId = setInterval(checkTokenExpiration, 120000);
-
-    // // Check once immediately on component mount
-    // checkTokenExpiration();
-
-    // return () => clearInterval(intervalId);
 
     // eslint-disable-next-line
   }, [refresh, persist, token]);

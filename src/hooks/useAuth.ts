@@ -18,9 +18,9 @@ const useAuth = () => {
 
     tokenExpired = exp! * 1000 < Date.now();
 
-    if (!tokenExpired) {
-      isAuthenticated = true;
-    }
+    // if (!tokenExpired) {
+    isAuthenticated = true;
+    // }
 
     if (verified) {
       isVerified = true;
