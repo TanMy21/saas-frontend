@@ -19,6 +19,7 @@ const ElementsListItem = ({
 
   return (
     <Box {...provided.droppableProps} ref={provided.innerRef}>
+      {/* {elements.map((element, index) => { */}
       {displayedQuestions.map((element, index) => {
         const isOrderOutOfRange =
           !element.order || element.order <= 0 || element.order > 9996;
@@ -163,7 +164,6 @@ const ElementsListItem = ({
                   }}
                 >
                   <ElementDropDownMenu
-                    
                     questionID={element.questionID}
                     setQuestionId={setQuestionId}
                   />

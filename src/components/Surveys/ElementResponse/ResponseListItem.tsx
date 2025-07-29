@@ -189,7 +189,7 @@ const ResponseListItem = ({
               onChange={(e) => setEditText(e.target.value)}
               autoFocus
               inputProps={{
-                maxLength: 60,
+                maxLength: 200,
               }}
               sx={{
                 width: display === "mobile" ? "100%" : "96%",

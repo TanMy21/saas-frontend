@@ -21,14 +21,13 @@ const QuestionBackgroundColor = ({
   const dispatch = useAppDispatch();
   const [updateQuestionBackgroundColor] =
     useUpdateQuestionBackgroundColorMutation();
-  const bgColor =
-    useAppSelector(
-      (state: RootState) =>
-        state.question.selectedQuestion?.questionPreferences
-          ?.questionBackgroundColor
-    ) || "#ffffff";
+  const bgColor = useAppSelector(
+    (state: RootState) =>
+      state.question.selectedQuestion?.questionPreferences
+        ?.questionBackgroundColor
+  );
 
-  const [localColor, setLocalColor] = useState(bgColor);
+  const [localColor, setLocalColor] = useState(bgColor || "#ffffff");
 
   const debouncedUpdateColor = debounce(async (colorHex: string) => {
     if (questionID) {
@@ -53,7 +52,8 @@ const QuestionBackgroundColor = ({
   };
 
   useEffect(() => {
-    setLocalColor(bgColor);
+    console.log("🔁 bgColor in QuestionBackgroundColor:", bgColor);
+    setLocalColor(bgColor || "#ffffff");
   }, [bgColor]);
 
   return (

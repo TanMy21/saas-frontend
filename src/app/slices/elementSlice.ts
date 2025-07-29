@@ -1,10 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-import { Element } from "../../utils/types";
-
-interface QuestionState {
-  selectedQuestion: Element | null;
-}
+import { Element, QuestionState } from "../../utils/types";
 
 const initialState: QuestionState = {
   selectedQuestion: null,
@@ -26,7 +22,7 @@ const questionSlice = createSlice({
         questionImageTemplateUrl: action.payload.url,
       };
     },
-    setBackgroundColor: (state, action: PayloadAction<string>) => {
+    setBackgroundColor: (state, action: PayloadAction<string | null>) => {
       if (!state.selectedQuestion?.questionPreferences) return;
 
       state.selectedQuestion.questionPreferences.questionBackgroundColor =
@@ -36,13 +32,7 @@ const questionSlice = createSlice({
     removeBackgroundColor: (state) => {
       if (!state.selectedQuestion?.questionPreferences) return;
 
-      state.selectedQuestion = {
-        ...state.selectedQuestion,
-        questionPreferences: {
-          ...state.selectedQuestion.questionPreferences,
-          questionBackgroundColor: undefined,
-        },
-      };
+      state.selectedQuestion.questionPreferences.questionBackgroundColor = null;
     },
     removeTemplateImage: (state) => {
       if (!state.selectedQuestion?.questionPreferences) return;

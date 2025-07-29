@@ -15,12 +15,15 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
+import { logOut } from "../app/slices/authSlice";
 import { useGetMeQuery } from "../app/slices/userApiSlice";
+import { useAppDispatch } from "../app/typedReduxHooks";
 import usePersist from "../hooks/persist";
 import { useAppTheme } from "../theme/useAppTheme";
 
 const HeaderIconMenu = () => {
   const { brand, borders } = useAppTheme();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [persist, setPersist] = usePersist();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -43,19 +46,20 @@ const HeaderIconMenu = () => {
     if (isSuccessLogout) navigate("/");
   }, [isSuccessLogout, navigate]);
 
-  const onLogoutClicked = () => {
+  const onLogoutClick = () => {
     handleClose();
     setPersist(false);
+    dispatch(logOut());
     sendLogout();
     navigate("/");
   };
 
-  const onSettingsClicked = () => {
+  const onSettingsClick = () => {
     handleClose();
     navigate("/a/settings");
   };
 
-  const onDashboardClicked = () => {
+  const onDashboardClick = () => {
     handleClose();
     navigate("/dash");
   };
@@ -165,7 +169,7 @@ const HeaderIconMenu = () => {
             ACCOUNT
           </Typography>
         </Box>
-        <MenuItem onClick={onSettingsClicked}>
+        <MenuItem onClick={onSettingsClick}>
           <Box
             sx={{
               display: "flex",
@@ -183,7 +187,7 @@ const HeaderIconMenu = () => {
         </MenuItem>
         <Divider />
         <MenuItem
-          onClick={onDashboardClicked}
+          onClick={onDashboardClick}
           sx={{
             display: "flex",
             justifyContent: "flex-start",
@@ -198,7 +202,7 @@ const HeaderIconMenu = () => {
           Dashboard
         </MenuItem>
         <MenuItem
-          onClick={onLogoutClicked}
+          onClick={onLogoutClick}
           sx={{
             display: "flex",
             justifyContent: "flex-start",

@@ -8,6 +8,7 @@ import {
   useUpdateElementTextMutation,
 } from "../../../app/slices/elementApiSlice";
 import { updateQuestionField } from "../../../app/slices/elementSlice";
+import { updateElementField } from "../../../app/slices/surveySlice";
 import { RootState } from "../../../app/store";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { ElementProps } from "../../../utils/types";
@@ -34,9 +35,9 @@ const ElementQuestionText = ({ display }: ElementProps) => {
     typographySettings.titleFontSizeMobile ??
     question?.questionPreferences?.titleFontSizeMobile ??
     28;
-  const titleFontColor =
-    typographySettings.titleFontColor ??
-    question?.questionPreferences?.titleFontColor ??
+  const titleTextColor =
+    typographySettings.titleTextColor ??
+    question?.questionPreferences?.titleTextColor ??
     "#000000";
   const descriptionFontSize =
     typographySettings.descriptionFontSize ??
@@ -46,9 +47,9 @@ const ElementQuestionText = ({ display }: ElementProps) => {
     typographySettings.descriptionFontSizeMobile ??
     question?.questionPreferences?.descriptionFontSizeMobile ??
     16;
-  const descriptionFontColor =
-    typographySettings.descriptionFontColor ??
-    question?.questionPreferences?.descriptionFontColor ??
+  const descriptionTextColor =
+    typographySettings.descriptionTextColor ??
+    question?.questionPreferences?.descriptionTextColor ??
     "#000000";
 
   const defaultFontSize = 20;
@@ -75,6 +76,15 @@ const ElementQuestionText = ({ display }: ElementProps) => {
 
   const handleChangeText = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(updateQuestionField({ key: "text", value: event.target.value }));
+    if (questionID) {
+      dispatch(
+        updateElementField({
+          questionID,
+          key: "text",
+          value: event.target.value,
+        })
+      );
+    }
   };
 
   const handleChangeDescription = (
@@ -206,7 +216,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   fontSize:
                     display === "mobile" ? titleFontSizeMobile : titleFontSize,
                   textAlign: "start",
-                  color: titleFontColor,
+                  color: titleTextColor,
                   lineHeight: 1.4,
                   overflowWrap: "break-word",
                   hyphens: "auto",
@@ -267,7 +277,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                     display === "mobile"
                       ? descriptionFontSizeMobile
                       : descriptionFontSize,
-                  color: descriptionFontColor,
+                  color: descriptionTextColor,
                 }}
               >
                 {description === "" ? "Description (optional)" : description}

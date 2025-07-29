@@ -9,6 +9,7 @@ import {
 import {
   removeBackgroundColor,
   removeTemplateImage,
+  setBackgroundColor,
 } from "../../app/slices/elementSlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
 import { ElementBackgroundPreferencesRemoveButtonsProps } from "../../utils/types";
@@ -62,6 +63,7 @@ const ElementBackgroundPreferencesRemoveButtons = ({
               position: "absolute",
               top: 8,
               left: "50%",
+              cursor: "grab",
               transform: "translateX(-50%)",
               zIndex: 2,
             }}

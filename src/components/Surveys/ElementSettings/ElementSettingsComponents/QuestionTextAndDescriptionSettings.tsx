@@ -16,6 +16,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { useUpdateScreenElementsMutation } from "../../../../app/slices/elementApiSlice";
 import { updateQuestionField } from "../../../../app/slices/elementSlice";
+import { updateElementField } from "../../../../app/slices/surveySlice";
 import { RootState } from "../../../../app/store";
 import {
   useAppDispatch,
@@ -189,6 +190,11 @@ const QuestionTextandDescriptionSettings = () => {
                     dispatch(
                       updateQuestionField({ key: "text", value: value })
                     );
+                    if (questionID) {
+                      dispatch(
+                        updateElementField({ questionID, key: "text", value })
+                      );
+                    }
                   }}
                 />
               )}

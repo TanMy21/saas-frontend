@@ -79,6 +79,8 @@ const PersistLogin = () => {
   } else if (token && isUninitialized) {
     //persist: yes, token: yes
     content = <Outlet />;
+  } else {
+    content = null;
   }
 
   return content;

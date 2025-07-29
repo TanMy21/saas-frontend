@@ -75,28 +75,9 @@ const AddElementMenu = ({
 
   const handleScreenElementAdd = async (type: string) => {
     try {
-      let order;
-
-      if (type === "WELCOME_SCREEN") {
-        order = -2;
-      }
-
-      if (type === "INSTRUCTIONS") {
-        order = -1;
-      }
-
-      if (type === "EMAIL_CONTACT") {
-        order = 0;
-      }
-
-      if (type === "END_SCREEN") {
-        order = 9999;
-      }
-
       const newScreenElement = await createScreenElement({
         surveyID,
         type,
-        order,
       }).unwrap();
       dispatch(addElement(newScreenElement));
     } catch (error) {

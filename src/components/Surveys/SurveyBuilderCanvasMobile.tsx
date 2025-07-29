@@ -1,3 +1,5 @@
+import { useRef } from "react";
+
 import { Box } from "@mui/material";
 import { shallowEqual } from "react-redux";
 
@@ -8,9 +10,10 @@ import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 
 const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion,
-    shallowEqual
+    (state: RootState) => state.question.selectedQuestion
+    // shallowEqual
   );
+  const canvasRef = useRef<HTMLDivElement | null>(null);
   const backgroundColor =
     question?.questionPreferences?.questionBackgroundColor;
 
@@ -39,8 +42,8 @@ const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
         boxShadow: " 0 4px 20px rgba(0, 0, 0, 0.08)",
         transition: "minWidth 1s ease-in-out, opacity 1s ease-in-out",
         position: "relative",
-        backgroundColor: backgroundColor,
-        backgroundImage: backgroundImage,
+        backgroundColor: backgroundColor || "#FFFFFF",
+        backgroundImage: backgroundImage || "none",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",

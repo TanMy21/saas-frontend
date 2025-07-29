@@ -5,10 +5,10 @@ import { TypographySettingsForm } from "../../utils/types";
 const defaultState: TypographySettingsForm = {
   titleFontSize: 36,
   titleFontSizeMobile: 28,
-  titleFontColor: "#000000",
+  titleTextColor: "#000000",
   descriptionFontSize: 16,
   descriptionFontSizeMobile: 16,
-  descriptionFontColor: "#000000",
+  descriptionTextColor: "#000000",
 };
 
 const elementTypographySlice = createSlice({

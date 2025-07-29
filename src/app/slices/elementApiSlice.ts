@@ -5,11 +5,22 @@ export const elementApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getElementsForSurvey: builder.query<Element[], string>({
       query: (surveyID) => `/q/all/${surveyID}`,
-      providesTags: ["Elements"],
+      providesTags: (result) =>
+        result
+          ? [
+              { type: "Elements", id: "LIST" },
+              ...result.map(({ questionID }) => ({
+                type: "Elements" as const,
+                id: questionID,
+              })),
+            ]
+          : [{ type: "Elements", id: "LIST" }],
     }),
     getElementByID: builder.query({
       query: (questionID) => `/q/${questionID}`,
-      providesTags: ["Elements"],
+      providesTags: (result, error, questionID) => [
+        { type: "Elements", id: questionID },
+      ],
     }),
     createElement: builder.mutation({
       query: (data) => ({
@@ -87,8 +98,8 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       query: ({
         questionID,
         titleFontSize,
-        titleFontColor,
-        descriptionFontColor,
+        titleTextColor,
+        descriptionTextColor,
         descriptionFontSize,
       }) => ({
         url: `/q/settings`,
@@ -96,8 +107,8 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         body: {
           questionID,
           titleFontSize,
-          titleFontColor,
-          descriptionFontColor,
+          titleTextColor,
+          descriptionTextColor,
           descriptionFontSize,
         },
       }),
@@ -165,7 +176,10 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { questionID, questionBackgroundColor },
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: (result, error, { questionID }) => [
+        { type: "Elements", id: questionID },
+        { type: "Elements", id: "LIST" },
+      ],
     }),
     uploadQuestionImage: builder.mutation({
       query: ({ formData, questionID }) => ({
@@ -181,7 +195,10 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body: formData,
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: (result, error, { questionID }) => [
+        { type: "Elements", id: questionID },
+        { type: "Elements", id: "LIST" },
+      ],
     }),
     toggleQuestionImageVisibility: builder.mutation({
       query: ({ questionID, questionImage }) => ({
@@ -217,7 +234,10 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         url: `/q/remove/template/${questionID}`,
         method: "POST",
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: (result, error, questionID) => [
+        { type: "Elements", id: questionID },
+        { type: "Elements", id: "LIST" },
+      ],
     }),
     removeQuestionBackgroundColor: builder.mutation({
       query: (questionID) => ({
@@ -225,7 +245,10 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { questionID },
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: (result, error, questionID) => [
+        { type: "Elements", id: questionID },
+        { type: "Elements", id: "LIST" },
+      ],
     }),
   }),
 });

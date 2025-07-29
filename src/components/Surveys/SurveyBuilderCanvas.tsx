@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Box } from "@mui/material";
 import { shallowEqual } from "react-redux";
@@ -13,15 +13,18 @@ import ElementBackgroundPreferencesRemoveButtons from "./ElementBackgroundPrefer
 import QuestionBackgroundColor from "./ElementSettings/ElementSettingsComponents/QuestionBackgroundColor";
 
 const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
-  const [colorAnchorEl, setColorAnchorEl] = useState<HTMLElement | null>(null);
+  const [colorAnchorEl, setColorAnchorEl] = useState<HTMLButtonElement | null>(
+    null
+  );
   const [refreshKey, setRefreshKey] = useState(false);
+  const canvasRef = useRef<HTMLDivElement | null>(null);
 
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion,
-    shallowEqual
+    (state: RootState) => state.question.selectedQuestion
+    // shallowEqual
   );
   const backgroundColor =
-    question?.questionPreferences?.questionBackgroundColor;
+    question?.questionPreferences?.questionBackgroundColor || "transparent";
 
   const templateUrl = question?.questionPreferences?.questionImageTemplateUrl;
   const templateImage = question?.questionPreferences?.questionImageTemplate;
@@ -31,18 +34,26 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
 
   const QuestionComponent =
     elementComponents[question?.type as QuestionTypeKey];
-  const boxKey = `${backgroundColor}_${backgroundImage}_${refreshKey}`;
-  useEffect(() => {
-    if (backgroundColor === null) {
-      setRefreshKey((prev) => !prev);
-    }
-    if (backgroundImage) {
-      setRefreshKey((prev) => !prev);
-    }
-  }, [backgroundColor, backgroundImage]);
+
+  // useEffect(() => {
+  //   console.log("🌀 Detected change in question or background");
+
+  //   setRefreshKey((prev) => !prev); // optional, could be removed
+
+  //   if (canvasRef.current) {
+  //     // Force clear old style and set new one via style override
+  //     canvasRef.current.style.backgroundColor =
+  //       backgroundColor || "transparent";
+  //     canvasRef.current.style.backgroundImage =
+  //       backgroundImage !== "none" ? backgroundImage : "none";
+  //   }
+  // }, [question?.questionID, backgroundColor, backgroundImage]);
+
+  // console.log("🟡 Rendered with backgroundColor:", backgroundColor);
+
   return (
     <Box
-      key={boxKey}
+      // ref={canvasRef}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -61,6 +72,13 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
         transition:
           "background-image 0.5s ease-in-out, background-color 0.5s ease-in-out, minWidth 1s ease-in-out , opacity 1s ease-in-out",
         position: "relative",
+        // ...(backgroundColor
+        //   ? { backgroundColor: backgroundColor }
+        //   : { backgroundColor: "transparent" }),
+
+        // ...(backgroundImage && backgroundImage !== "none"
+        //   ? { backgroundImage: backgroundImage }
+        //   : { backgroundImage: "none" }),
         backgroundColor: backgroundColor,
         backgroundImage: backgroundImage,
         backgroundSize: "cover",
@@ -79,6 +97,7 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
         colorAnchorEl={colorAnchorEl}
         setColorAnchorEl={setColorAnchorEl}
       />
+
       <ElementBackgroundPreferencesRemoveButtons
         questionID={question?.questionID!}
         templateImage={templateImage!}
@@ -86,6 +105,7 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
           question?.questionPreferences?.questionBackgroundColor!
         }
       />
+
       <QuestionBackgroundColor
         questionID={question?.questionID!}
         colorAnchorEl={colorAnchorEl}

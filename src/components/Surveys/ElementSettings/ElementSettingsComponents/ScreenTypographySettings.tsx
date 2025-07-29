@@ -53,10 +53,10 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
     useUpdateElementTypographyMobileViewMutation();
 
   const {
-    titleFontColor,
+    titleTextColor,
     titleFontSize,
     titleFontSizeMobile,
-    descriptionFontColor,
+    descriptionTextColor,
     descriptionFontSize,
     descriptionFontSizeMobile,
   } = typographySettings || {};
@@ -64,33 +64,56 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   const { handleSubmit, control, reset } = useForm<TypographySettingsForm>({
     resolver: zodResolver(TypographySettingsFormSchema),
     defaultValues: {
-      titleFontSize,
-      titleFontSizeMobile,
-      titleFontColor,
-      descriptionFontSize,
-      descriptionFontSizeMobile,
-      descriptionFontColor,
+      titleFontSize: titleFontSize ?? undefined,
+      titleFontSizeMobile: titleFontSizeMobile ?? undefined,
+      titleTextColor: titleTextColor ?? undefined,
+      descriptionFontSize: descriptionFontSize ?? undefined,
+      descriptionFontSizeMobile: descriptionFontSizeMobile ?? undefined,
+      descriptionTextColor: descriptionTextColor ?? undefined,
     },
   });
 
-  const watchedValues = useWatch({ control });
+  const watchedTitleFontSizeValues = useWatch({
+    control,
+    name: "titleFontSize",
+  });
+  const watchedTitleFontSizeMobileValues = useWatch({
+    control,
+    name: "titleFontSizeMobile",
+  });
+  const watchedTitleTextColor = useWatch({ control, name: "titleTextColor" });
+  const watchedDescriptionFontValues = useWatch({
+    control,
+    name: "descriptionFontSize",
+  });
+  const watchedDescriptionFontMobileValues = useWatch({
+    control,
+    name: "descriptionFontSizeMobile",
+  });
+  const watchedDescriptionTextColor = useWatch({
+    control,
+    name: "descriptionTextColor",
+  });
+
   const [formTouched, setFormTouched] = useState(false);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: TypographySettingsForm) => {
+    console.log("Submitting typography settings:", data);
+
     try {
       const {
         titleFontSize,
-        titleFontColor,
-        descriptionFontColor,
+        titleTextColor,
+        descriptionTextColor,
         descriptionFontSize,
       } = data;
 
       await updateElementTypography({
         questionID: qID,
         titleFontSize,
-        titleFontColor,
-        descriptionFontColor,
+        titleTextColor,
+        descriptionTextColor,
         descriptionFontSize,
       }).unwrap();
       setFormTouched(false);
@@ -101,6 +124,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
 
   const onSubmitMobile = async (data: TypographySettingsForm) => {
     try {
+      console.log("Submitting mobile typography settings:", data);
       const { titleFontSizeMobile, descriptionFontSizeMobile } = data;
 
       await updateElementTypographyMobileView({
@@ -115,43 +139,56 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   };
 
   const markFormTouched = () => {
-    if (!formTouched) setFormTouched(true);
+    if (!formTouched) {
+      console.log("[markFormTouched] marked as true");
+      setFormTouched(true);
+    }
   };
 
   useEffect(() => {
     if (!formTouched) return;
+
+    console.log("[useEffect] debounce triggered");
 
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      if (isDesktop) {
-        handleSubmit(onSubmit)();
-      } else {
-        handleSubmit(onSubmitMobile)();
-      }
+      console.log("[useEffect] timeout fired → submitting form");
+      handleSubmit(isDesktop ? onSubmit : onSubmitMobile, (errors) => {
+        console.error("[handleSubmit] validation failed:", errors);
+      })();
 
       setFormTouched(false);
     }, 2500);
-  }, [watchedValues, formTouched, handleSubmit]);
+  }, [
+    watchedTitleFontSizeValues,
+    watchedTitleFontSizeMobileValues,
+    watchedTitleTextColor,
+    watchedDescriptionFontValues,
+    watchedDescriptionFontMobileValues,
+    watchedDescriptionTextColor,
+    formTouched,
+    handleSubmit,
+  ]);
 
   useEffect(() => {
     reset({
-      titleFontSize,
-      titleFontSizeMobile,
-      titleFontColor,
-      descriptionFontSize,
-      descriptionFontSizeMobile,
-      descriptionFontColor,
+      titleFontSize: titleFontSize ?? undefined,
+      titleFontSizeMobile: titleFontSizeMobile ?? undefined,
+      titleTextColor: titleTextColor ?? undefined,
+      descriptionFontSize: descriptionFontSize ?? undefined,
+      descriptionFontSizeMobile: descriptionFontSizeMobile ?? undefined,
+      descriptionTextColor: descriptionTextColor ?? undefined,
     });
   }, [
     titleFontSize,
     titleFontSizeMobile,
-    titleFontColor,
+    titleTextColor,
     descriptionFontSize,
     descriptionFontSizeMobile,
-    descriptionFontColor,
+    descriptionTextColor,
     reset,
   ]);
 
@@ -301,7 +338,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                   }}
                 >
                   <Controller
-                    name="titleFontColor"
+                    name="titleTextColor"
                     control={control}
                     render={({ field }) => (
                       <>
@@ -312,7 +349,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                             markFormTouched();
                             dispatch(
                               updateTypographyField({
-                                key: "titleFontColor",
+                                key: "titleTextColor",
                                 value: color,
                               })
                             );
@@ -332,7 +369,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                             markFormTouched();
                             dispatch(
                               updateTypographyField({
-                                key: "titleFontColor",
+                                key: "titleTextColor",
                                 value: input,
                               })
                             );
@@ -455,7 +492,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                   }}
                 >
                   <Controller
-                    name="descriptionFontColor"
+                    name="descriptionTextColor"
                     control={control}
                     render={({ field }) => (
                       <>
@@ -466,7 +503,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                             markFormTouched();
                             dispatch(
                               updateTypographyField({
-                                key: "descriptionFontColor",
+                                key: "descriptionTextColor",
                                 value: color,
                               })
                             );
@@ -486,7 +523,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                             markFormTouched();
                             dispatch(
                               updateTypographyField({
-                                key: "descriptionFontColor",
+                                key: "descriptionTextColor",
                                 value: input,
                               })
                             );

@@ -617,8 +617,10 @@ export interface QuestionImageUploadProps {
 
 export interface ElementImageIconButtonsProps {
   questionID: string;
-  colorAnchorEl: null | HTMLElement;
-  setColorAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
+  colorAnchorEl: null | HTMLButtonElement;
+  setColorAnchorEl: React.Dispatch<
+    React.SetStateAction<HTMLButtonElement | null>
+  >;
 }
 
 export interface ElementBackgroundPreferencesRemoveButtonsProps {
@@ -660,8 +662,10 @@ export interface QuestionUIConfig {
 
 export interface QuestionBackgroundColorProps {
   questionID: string;
-  colorAnchorEl: null | HTMLElement;
-  setColorAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
+  colorAnchorEl: null | HTMLButtonElement;
+  setColorAnchorEl: React.Dispatch<
+    React.SetStateAction<HTMLButtonElement | null>
+  >;
 }
 
 export interface SurveyCanvasQuestionSettings {
@@ -671,14 +675,14 @@ export interface SurveyCanvasQuestionSettings {
   updaterId?: string;
   titleFontSize?: number;
   titleFontSizeMobile?: number;
-  titleFontColor?: string;
+  titleTextColor?: string;
   descriptionFontSize?: number;
   descriptionFontSizeMobile?: number;
-  descriptionFontColor?: string;
+  descriptionTextColor?: string;
   questionImageTemplate?: boolean;
   questionImageTemplateUrl?: string;
   questionImageTemplatePublicId?: string;
-  questionBackgroundColor?: string;
+  questionBackgroundColor?: string | null;
   required?: boolean;
   uiConfig?: QuestionUIConfig;
 }
@@ -723,6 +727,10 @@ export interface QuestionNodeData extends Record<string, unknown> {
   question: string;
   order: number;
   element: string;
+}
+
+export interface QuestionState {
+  selectedQuestion: Element | null;
 }
 
 export type QuestionNode = Node<QuestionNodeData>;
@@ -824,6 +832,10 @@ export interface Survey {
 export interface SurveyBuilderCanvasProps {
   display?: string | null;
   question?: Element | null;
+}
+
+export interface SurveyBuilderState {
+  elements: Element[];
 }
 
 export interface SurveyBuilderLeftSidebarProps {
@@ -984,10 +996,10 @@ export interface SurveyWelcomeElementProps {
 export interface TypographySettingsForm {
   titleFontSize?: number;
   titleFontSizeMobile?: number;
-  titleFontColor?: string;
+  titleTextColor?: string;
   descriptionFontSize?: number;
   descriptionFontSizeMobile?: number;
-  descriptionFontColor?: string;
+  descriptionTextColor?: string;
 }
 
 export interface TypographySettingsView {
