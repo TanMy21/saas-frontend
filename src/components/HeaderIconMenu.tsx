@@ -50,8 +50,11 @@ const HeaderIconMenu = () => {
     handleClose();
     setPersist(false);
     dispatch(logOut());
+
+    // setTimeout(() => {
     sendLogout();
-    navigate("/");
+    navigate("/?logout=success");
+    // }, 1000);
   };
 
   const onSettingsClick = () => {

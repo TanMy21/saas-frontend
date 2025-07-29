@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import { Box } from "@mui/material";
-import { shallowEqual } from "react-redux";
 
 import { RootState } from "../../app/store";
 import { useAppSelector } from "../../app/typedReduxHooks";
@@ -16,12 +15,9 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
   const [colorAnchorEl, setColorAnchorEl] = useState<HTMLButtonElement | null>(
     null
   );
-  const [refreshKey, setRefreshKey] = useState(false);
-  const canvasRef = useRef<HTMLDivElement | null>(null);
 
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion
-    // shallowEqual
   );
   const backgroundColor =
     question?.questionPreferences?.questionBackgroundColor || "transparent";
@@ -35,32 +31,14 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
   const QuestionComponent =
     elementComponents[question?.type as QuestionTypeKey];
 
-  // useEffect(() => {
-  //   console.log("🌀 Detected change in question or background");
-
-  //   setRefreshKey((prev) => !prev); // optional, could be removed
-
-  //   if (canvasRef.current) {
-  //     // Force clear old style and set new one via style override
-  //     canvasRef.current.style.backgroundColor =
-  //       backgroundColor || "transparent";
-  //     canvasRef.current.style.backgroundImage =
-  //       backgroundImage !== "none" ? backgroundImage : "none";
-  //   }
-  // }, [question?.questionID, backgroundColor, backgroundImage]);
-
-  // console.log("🟡 Rendered with backgroundColor:", backgroundColor);
-
   return (
-    <Box
-      // ref={canvasRef}
+    <Box 
       sx={{
         display: "flex",
         flexDirection: "column",
         margin: "auto",
         width: "96%",
-        height: { md: "70vh", xl: "72vh" },
-        // height: "auto",
+        height: { md: "70vh", xl: "72vh" },       
         flexGrow: 1,
         borderRadius: "24px",
         bgcolor: "#FFFFFF",
@@ -72,13 +50,6 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
         transition:
           "background-image 0.5s ease-in-out, background-color 0.5s ease-in-out, minWidth 1s ease-in-out , opacity 1s ease-in-out",
         position: "relative",
-        // ...(backgroundColor
-        //   ? { backgroundColor: backgroundColor }
-        //   : { backgroundColor: "transparent" }),
-
-        // ...(backgroundImage && backgroundImage !== "none"
-        //   ? { backgroundImage: backgroundImage }
-        //   : { backgroundImage: "none" }),
         backgroundColor: backgroundColor,
         backgroundImage: backgroundImage,
         backgroundSize: "cover",

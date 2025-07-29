@@ -809,6 +809,11 @@ export interface SnackbarAlertProps {
   handleCloseSnackbar: () => void;
 }
 
+export interface SuccessfullLogoutToastProps {
+  showLogoutAlert: boolean;
+  setShowLogoutAlert: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export interface Survey {
   createdAt: string;
   creatorId: string;

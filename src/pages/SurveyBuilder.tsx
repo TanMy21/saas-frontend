@@ -9,7 +9,10 @@ import {
   initializeTypography,
   resetTypography,
 } from "../app/slices/elementTypographySlice";
-import { setSurveyCanvas } from "../app/slices/surveyCanvasSlice";
+import {
+  clearSurveyCanvas,
+  setSurveyCanvas,
+} from "../app/slices/surveyCanvasSlice";
 import { useGetSurveyCanvasByIdQuery } from "../app/slices/surveysApiSlice";
 import { setElements } from "../app/slices/surveySlice";
 import { fetchUser, selectUser } from "../app/slices/userSlice";
@@ -83,6 +86,24 @@ const SurveyBuilder = () => {
       setLoading(true);
     }
   }, [isLoadingCanvas, isFetchingCanvas, questions]);
+
+  useEffect(() => {
+    if (!surveyID) return;
+
+    // 💥 Clear all Redux slices dependent on old survey
+    dispatch(clearSurveyCanvas());
+    dispatch(setElements([]));
+    dispatch(resetQuestion());
+    dispatch(resetTypography());
+
+    // 💡 Local state reset
+    setQuestionId(null);
+    setSurveyTitle("");
+    setDisplay("desktop");
+
+    // 🔁 Refetch new survey data
+    refetchCanvas();
+  }, [surveyID]);
 
   useEffect(() => {
     if (surveyCanvas) {
