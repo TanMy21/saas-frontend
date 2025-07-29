@@ -17,6 +17,7 @@ import { BiSolidSelectMultiple } from "react-icons/bi";
 import { useUpdateQuestionPreferenceUIConfigMutation } from "../../../../app/slices/elementApiSlice";
 import { RootState } from "../../../../app/store";
 import { useAppSelector } from "../../../../app/typedReduxHooks";
+import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionUIConfig } from "../../../../utils/types";
 
@@ -24,7 +25,7 @@ const MediaOptionSettings = () => {
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion
   );
-
+  const refetchCanvas = useSurveyCanvasRefetch();
   const [updateQuestionPreferenceUIConfig] =
     useUpdateQuestionPreferenceUIConfigMutation();
 
@@ -55,6 +56,7 @@ const MediaOptionSettings = () => {
         questionID,
         uiConfig,
       });
+      refetchCanvas();
       setFormTouched(false);
     } catch (error) {
       console.error(error);

@@ -86,7 +86,9 @@ const Signin = () => {
           position: "top-right",
         });
       } else if (errorData.status === 401) {
-        toast.error("Unauthorized", { position: "top-right" });
+        toast.error(errorData.data?.message || "Unauthorized", {
+          position: "top-right",
+        });
       } else {
         toast.error(errorData.data?.message || "An error occurred", {
           position: "top-right",

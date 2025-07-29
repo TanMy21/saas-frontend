@@ -56,7 +56,8 @@ const ElementQuestionText = ({ display }: ElementProps) => {
   const orderFontSize = titleFontSize * 0.6;
   const actualFontSize =
     display === "mobile" ? defaultFontSize : orderFontSize || defaultFontSize;
-  const circleSize = actualFontSize * 1.2;
+  const circleSizeXL = actualFontSize * 1.6;
+  const circleSizeMD = actualFontSize * 2;
 
   const nonOrderableTypes = [
     "WELCOME_SCREEN",
@@ -148,8 +149,8 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   flexDirection: "row",
                   justifyContent: "center",
                   alignItems: "center",
-                  width: `${circleSize}px`,
-                  height: `${circleSize}px`,
+                  width: { md: `${circleSizeMD}px`, xl: `${circleSizeXL}px` },
+                  height: { md: `${circleSizeMD}px`, xl: `${circleSizeXL}px` },
                   borderRadius: "50%",
                   backgroundColor: primary.light,
                   marginRight: 2,

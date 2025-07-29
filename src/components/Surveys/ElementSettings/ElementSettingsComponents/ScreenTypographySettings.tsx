@@ -22,6 +22,7 @@ import {
 } from "../../../../app/slices/elementApiSlice";
 import { updateTypographyField } from "../../../../app/slices/elementTypographySlice";
 import { RootState } from "../../../../app/store";
+import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
 import { TypographySettingsFormSchema } from "../../../../utils/schema";
 import {
   ScreenTypographySettingsProps,
@@ -33,6 +34,7 @@ import FontSizeControl from "./FontSizeControl";
 import FontSizeViewToggle from "./FontSizeViewToggle";
 
 const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
+  const refetchCanvas = useSurveyCanvasRefetch();
   const [fontSizeView, setFontSizeView] = useState<"desktop" | "mobile">(
     "desktop"
   );
@@ -116,6 +118,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
         descriptionTextColor,
         descriptionFontSize,
       }).unwrap();
+      refetchCanvas();
       setFormTouched(false);
     } catch (error) {
       console.error(error);

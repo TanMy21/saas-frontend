@@ -18,11 +18,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useUpdateQuestionRequiredPreferenceMutation } from "../../../../app/slices/elementApiSlice";
 import { toggleElementRequired } from "../../../../app/slices/elementSlice";
 import { RootState } from "../../../../app/store";
+import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionSetting } from "../../../../utils/types";
 
 const ValidationSettings = () => {
   const dispatch = useDispatch();
+  const refetchCanvas = useSurveyCanvasRefetch();
   const question = useSelector(
     (state: RootState) => state.question.selectedQuestion
   );
@@ -55,6 +57,8 @@ const ValidationSettings = () => {
         questionID,
         required,
       });
+
+      refetchCanvas();
     } catch (error) {
       console.error(error);
     }

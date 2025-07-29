@@ -79,11 +79,22 @@ const GridSurveyCard = ({
               // border: "2px solid blue",
             }}
           >
-            <Tooltip title={survey.title} placement="top" arrow>
-              <Typography sx={textStyles.cardSurveyTitle}>
-                {survey.title}
-              </Typography>
-            </Tooltip>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent:"flex-start",
+                alignItems:"center",
+                width: "98%",
+                height: "40px",
+                // border: "2px solid red",
+              }}
+            >
+              <Tooltip title={survey.title} placement="top" arrow>
+                <Typography sx={textStyles.cardSurveyTitle}>
+                  {survey.title}
+                </Typography>
+              </Tooltip>
+            </Box>
             <Typography
               sx={{ ...textStyles.cardSurveyCreatedAt, fontSize: { md: 16 } }}
             >

@@ -261,7 +261,8 @@ const NumberInputRangeSettings = () => {
                 justifyContent: "flex-end",
                 width: "100%",
                 height: "100%",
-                mb: { md: 1 },
+                mb: { md: 0.5 },
+                ml: { md: 0.5 },
               }}
             >
               <Controller

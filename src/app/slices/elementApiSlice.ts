@@ -87,8 +87,8 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       query: ({
         questionID,
         titleFontSize,
-        titleFontColor,
-        descriptionFontColor,
+        titleTextColor,
+        descriptionTextColor,
         descriptionFontSize,
       }) => ({
         url: `/q/settings`,
@@ -96,8 +96,8 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         body: {
           questionID,
           titleFontSize,
-          titleFontColor,
-          descriptionFontColor,
+          titleTextColor,
+          descriptionTextColor,
           descriptionFontSize,
         },
       }),

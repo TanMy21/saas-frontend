@@ -149,16 +149,22 @@ export const welcomeSettingsSchema = z.object({
 });
 
 export const TypographySettingsFormSchema = z.object({
-  titleFontSize: z.number().min(1),
+  titleFontSize: z.number().min(1).optional(),
   titleFontSizeMobile: z.number().min(1).optional(),
-  titleTextColor: z.string().regex(hexColorRegex, {
-    message: "Invalid hex color (expected format: #RRGGBB or #RGB)",
-  }),
-  descriptionFontSize: z.number().min(1),
+  titleTextColor: z
+    .string()
+    .regex(hexColorRegex, {
+      message: "Invalid hex color (expected format: #RRGGBB or #RGB)",
+    })
+    .optional(),
+  descriptionFontSize: z.number().min(1).optional(),
   descriptionFontSizeMobile: z.number().min(1).optional(),
-  descriptionTextColor: z.string().regex(hexColorRegex, {
-    message: "Invalid hex color (expected format: #RRGGBB or #RGB)",
-  }),
+  descriptionTextColor: z
+    .string()
+    .regex(hexColorRegex, {
+      message: "Invalid hex color (expected format: #RRGGBB or #RGB)",
+    })
+    .optional(),
 });
 
 export const binarySettingsSchema = z.object({

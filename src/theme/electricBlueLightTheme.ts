@@ -480,7 +480,8 @@ const electricBlueLightTheme = createTheme({
       fontWeight: "bold",
       color: "#272F3F",
       overflow: "hidden",
-      textOverflow: "ellipsis",
+      whiteSpace:"nowrap",
+      textOverflow: "clip",
     },
     cardSurveyCreatedAt: {
       fontSize: "14px",
