@@ -180,43 +180,58 @@ const ResponseList = ({
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: "83%",
-            height: "100%",
-            gap: 2,
-            margin: "1% auto",
-            marginBottom: "12%",
-            // border: "2px solid red",
+            alignItems: "center",
+            margin: "0 auto",
+            width: display === "mobile" ? "92%" : "100%",
+            // height: "100%",
+            padding: 1,
+            // border: "2px solid purple",
           }}
         >
-          <Button
-            onClick={addResponse}
-            variant="outlined"
-            disabled={(options?.length ?? 0) >= 10}
-            startIcon={<MdAdd fontSize={"24px"} />}
+          <Box
             sx={{
-              mt: 4,
-              py: 1.5,
-              borderRadius: 4,
-              border: "1px solid #E2E8F0",
-              width: "98%",
-              color: "#626B77",
-              fontWeight: "bold",
-              backgroundColor: "#f8f9fc",
-              justifyContent: "center",
-              textTransform: "none",
-              margin: "auto",
-              boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
-              ml: display === "mobile" ? 0 : 2,
-              "&:hover": {
-                color: "#626B77",
-                border: "1px solid #E2E8F0",
-                backgroundColor: "#f8f9fc",
-                boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
-              },
+              display: "flex",
+              flexDirection: "column",
+              justifyContent:"center",
+              alignItems:"center",
+              width: display === "mobile" ? "92%" : "80%",
+              height: "100%",
+              gap: 2,
+              margin: "1% auto",
+              marginBottom: "12%",
+              // border: "2px solid blue",
             }}
           >
-            Add new {optionText}
-          </Button>
+            <Button
+              onClick={addResponse}
+              variant="outlined"
+              disabled={(options?.length ?? 0) >= 10}
+              startIcon={<MdAdd fontSize={"24px"} />}
+              sx={{
+                mt: 4,
+                py: 1.5,
+                borderRadius: 4,
+                border: "1px solid #E2E8F0",
+                width: display === "mobile" ? "92%" : "60%",
+                color: "#626B77",
+                fontWeight: "bold",
+                backgroundColor: "#f8f9fc",
+                justifyContent: "center",
+                textTransform: "none",
+                margin: "auto",
+                boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
+                // ml: display === "mobile" ? 0 : 1,
+                "&:hover": {
+                  color: "#626B77",
+                  border: "1px solid #E2E8F0",
+                  backgroundColor: "#f8f9fc",
+                  boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
+                },
+              }}
+            >
+              Add new {optionText}
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

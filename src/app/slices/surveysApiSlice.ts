@@ -118,3 +118,7 @@ export const {
   useMoveSurveyMutation,
   useDeleteSurveyMutation,
 } = surveysApiSlice;
+
+export const {
+  endpoints: { getSurveyCanvasById },
+} = surveysApiSlice;

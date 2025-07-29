@@ -962,6 +962,11 @@ export interface SurveyBuilderHeaderTabsProps {
   workspaceName: string;
 }
 
+export interface SurveyCanvas {
+  getSurveyCanvas: any;
+  languages: any[];
+}
+
 export interface SurveyPreferencesPanelProps {
   questionId: string | null;
   question: Element | null;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton, Menu, MenuItem } from "@mui/material";
@@ -7,6 +7,7 @@ import { useDeleteElementMutation } from "../../../app/slices/elementApiSlice";
 import { deleteElementRedux } from "../../../app/slices/surveySlice";
 import { RootState } from "../../../app/store";
 import { useAppSelector, useAppDispatch } from "../../../app/typedReduxHooks";
+import { useSurveyCanvasRefetch } from "../../../context/BuilderRefetchCanvas";
 import { ElementDropDownMenuProps } from "../../../utils/types";
 
 const ElementDropDownMenu = ({
@@ -14,8 +15,11 @@ const ElementDropDownMenu = ({
   setQuestionId,
 }: ElementDropDownMenuProps) => {
   const dispatch = useAppDispatch();
+  const refetchCanvas = useSurveyCanvasRefetch();
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-
+  const [recentlyDeletedId, setRecentlyDeletedId] = useState<string | null>(
+    null
+  );
   const [deleteElement] = useDeleteElementMutation();
 
   const elements = useAppSelector(
@@ -30,32 +34,40 @@ const ElementDropDownMenu = ({
     setMenuAnchor(null);
   };
 
-  const handleDuplicateElement = () => {
+  const handleDuplicateElement = async () => {
     // console.log("Duplicate Element: ", questionID);
   };
 
   const handleDeleteElement = async () => {
     try {
-      await deleteElement(questionID).unwrap();
-      dispatch(deleteElementRedux(questionID));
       setMenuAnchor(null);
+      await deleteElement(questionID).unwrap();
+      setRecentlyDeletedId(questionID);
+      console.log("Element Deleted");
 
-      const index = elements.findIndex((e) => e.questionID === questionID);
-
-      if (index === 0 && elements.length > 1) {
-        // If the deleted element is the first one, select the next element
-        setQuestionId(elements[index + 1].questionID);
-      } else if (index > 0) {
-        // Select the previous element
-        setQuestionId(elements[index - 1].questionID);
-      } else {
-        // No more elements left
-        setQuestionId(null);
-      }
+      refetchCanvas();
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (!recentlyDeletedId || elements.length === 0) return;
+
+    const index = elements.findIndex((e) => e.questionID === recentlyDeletedId);
+
+    if (index === 0 && elements.length > 1) {
+      setQuestionId(elements[index + 1].questionID);
+    } else if (index > 0) {
+      setQuestionId(elements[index - 1].questionID);
+    } else {
+      setQuestionId(null);
+    }
+
+    // Dispatch to remove from Redux store (after confirmed refetch)
+    dispatch(deleteElementRedux(recentlyDeletedId));
+    setRecentlyDeletedId(null); // Reset
+  }, [elements, recentlyDeletedId, dispatch, setQuestionId]);
 
   return (
     <>

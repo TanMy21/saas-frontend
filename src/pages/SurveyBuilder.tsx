@@ -78,6 +78,7 @@ const SurveyBuilder = () => {
   );
   useEffect(() => {
     if (surveyCanvas) {
+      console.log("Updated elements:", surveyCanvas);
       dispatch(setSurveyCanvas(surveyCanvas));
     }
   }, [surveyCanvas, dispatch]);
@@ -106,100 +107,100 @@ const SurveyBuilder = () => {
   return (
     <>
       {/* <ScrollbarStyle /> */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          height: "100vh",
-          overflow: "hidden",
-          // border: "2px solid black",
-        }}
-      >
-        {/* Header */}
+      <SurveyCanvasRefetchContext.Provider value={refetchCanvas}>
         <Box
           sx={{
             display: "flex",
+            flexDirection: "column",
             width: "100%",
-            height: "6vh",
-            // border: "2px solid red",
-            flexShrink: 0,
-          }}
-        >
-          <SurveyBuilderHeader
-            survey={surveyCanvas}
-            workspaceId={workspaceId!}
-            workspaceName={workspaceName!}
-            title={title}
-          />
-        </Box>
-        {/* Builder */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-            minHeight: 0,
-            height: "calc(100vh - 64px)",
-            flexGrow: 1,
+            height: "100vh",
             overflow: "hidden",
+            // border: "2px solid black",
           }}
         >
+          {/* Header */}
           <Box
             sx={{
-              width: "16%",
-              height: "94vh",
+              display: "flex",
+              width: "100%",
+              height: "6vh",
+              // border: "2px solid red",
               flexShrink: 0,
-              backgroundColor: "white",
-              borderRight: "2px solid #E5E7EB",
             }}
           >
-            <SurveyBuilderLeftSidebar
-              surveyID={surveyID}
-              setQuestionId={setQuestionId}
-              elements={elements}
+            <SurveyBuilderHeader
+              survey={surveyCanvas}
+              workspaceId={workspaceId!}
+              workspaceName={workspaceName!}
+              title={title}
             />
           </Box>
+          {/* Builder */}
           <Box
             sx={{
-              width: { md: "64%", xl: "68%" },
-              height: "94vh",
-              flexShrink: 0,
+              display: "flex",
+              flexDirection: "row",
+              width: "100%",
+              minHeight: 0,
+              height: "calc(100vh - 64px)",
+              flexGrow: 1,
+              overflow: "hidden",
             }}
           >
-            <SurveyCanvasRefetchContext.Provider value={refetchCanvas}>
+            <Box
+              sx={{
+                width: "16%",
+                height: "94vh",
+                flexShrink: 0,
+                backgroundColor: "white",
+                borderRight: "2px solid #E5E7EB",
+              }}
+            >
+              <SurveyBuilderLeftSidebar
+                surveyID={surveyID}
+                setQuestionId={setQuestionId}
+                elements={elements}
+              />
+            </Box>
+            <Box
+              sx={{
+                width: { md: "64%", xl: "68%" },
+                height: "94vh",
+                flexShrink: 0,
+              }}
+            >
               <CanvasConsole
                 display={display}
                 setDisplay={setDisplay}
                 question={selectedQuestion}
                 noElements={noElements}
               />
-            </SurveyCanvasRefetchContext.Provider>
+            </Box>
+            <Box
+              sx={{
+                width: { md: "24%", xl: "16%" },
+                height: "100%",
+                flexShrink: 0,
+                backgroundColor: "white",
+                borderLeft: "2px solid #E5E7EB",
+                // border: "2px solid green",
+              }}
+            >
+              <SurveyPreferencesPanel
+                questionId={questionId}
+                question={selectedQuestion}
+              />
+            </Box>
           </Box>
-          <Box
-            sx={{
-              width: { md: "24%", xl: "16%" },
-              height: "100%",
-              flexShrink: 0,
-              backgroundColor: "white",
-              borderLeft: "2px solid #E5E7EB",
-              // border: "2px solid green",
-            }}
-          >
-            <SurveyPreferencesPanel
-              questionId={questionId}
-              question={selectedQuestion}
-            />
-          </Box>
+          <CreateNewSurveyModal
+            isOpen={isOpen}
+            surveyID={surveyID}
+            setSurveyTitle={setSurveyTitle}
+          />
+          <ImportQuestionsModal isOpen={isOpenImport} surveyID={surveyID} />
+          <GenerateSurveyModal openGenerate={isOpenGenerate} />
         </Box>
-        <CreateNewSurveyModal
-          isOpen={isOpen}
-          surveyID={surveyID}
-          setSurveyTitle={setSurveyTitle}
-        />
-        <ImportQuestionsModal isOpen={isOpenImport} surveyID={surveyID} />
-        <GenerateSurveyModal openGenerate={isOpenGenerate} />
-      </Box>
+      </SurveyCanvasRefetchContext.Provider>
     </>
   );
 };

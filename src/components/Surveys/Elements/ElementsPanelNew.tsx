@@ -9,7 +9,8 @@ import {
 } from "react-beautiful-dnd";
 
 import { useUpdateElementOrderMutation } from "../../../app/slices/elementApiSlice";
-import { RootState } from "../../../app/store";
+import { setElements } from "../../../app/slices/surveySlice";
+import { RootState, useAppDispatch } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { ElementsPanelProps, Element } from "../../../utils/types";
@@ -18,6 +19,7 @@ import ElementsListItem from "./ElementsListItem";
 
 const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
   const { scrollStyles } = useAppTheme();
+  const dispatch = useAppDispatch();
   const [updateElementOrder /*{ isError, error }*/] =
     useUpdateElementOrderMutation();
 
@@ -73,9 +75,23 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
       const orderedElements = newElements
         .filter((e: Element) => orderedElementTypes.includes(e.type))
         .map((e: Element, index: number) => ({ ...e, order: index + 1 }));
+
+      const startElements = newElements.filter((e: Element) =>
+        elementStartTypes.includes(e.type)
+      );
+
+      const endElements = newElements.filter(
+        (e: Element) => e.type === "END_SCREEN"
+      );
+
       updateElementOrder({ questions: orderedElements })
         .unwrap()
-        .then((response) => console.log("Order update response:", response))
+        .then((response) => {
+          console.log("Order update response:", response);
+          dispatch(
+            setElements([...startElements, ...orderedElements, ...endElements])
+          );
+        })
         .catch((error) => console.error("Order update error:", error));
     }, 500),
     [updateElementOrder]

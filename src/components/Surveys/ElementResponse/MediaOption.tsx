@@ -12,6 +12,7 @@ import {
   useUpdateOptionTextandValueMutation,
 } from "../../../app/slices/optionApiSlice";
 import { MediaOptionProps } from "../../../utils/types";
+import { getSquareImageURL } from "../../../utils/utils";
 import MediaElementCardIconBtns from "../../MediaElementCard/MediaElementCardIconBtns";
 import MediaElementImageUploadModal from "../../Modals/MediaElementImageUploadModal";
 
@@ -106,9 +107,14 @@ const MediaOption = ({ option }: MediaOptionProps) => {
         >
           {imageSrc ? (
             <img
-              src={imageSrc}
+              src={getSquareImageURL(imageSrc)}
               alt={option.value}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                backgroundColor: "#f1f1f1",
+              }}
             />
           ) : (
             <Box
@@ -254,8 +260,9 @@ const MediaOption = ({ option }: MediaOptionProps) => {
               color: "white",
               width: 24,
               height: 24,
-              fontSize: 12,
+              fontSize: 16,
               fontWeight: "bold",
+              mt:0.5,
             }}
           >
             {option.text}
@@ -313,7 +320,8 @@ const MediaOption = ({ option }: MediaOptionProps) => {
           ) : (
             <Typography
               sx={{
-                fontSize: "16px",
+                fontSize: "20px",
+                fontWeight: "bold",
                 wordBreak: "break-word",
                 // width: "96%",
                 padding: "4px",

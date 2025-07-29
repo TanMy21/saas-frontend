@@ -138,32 +138,35 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             // border: "2px solid green",
           }}
         >
-          {isNonOrderableType ? null : (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                width: `${circleSize}px`,
-                height: `${circleSize}px`,
-                borderRadius: "50%",
-                backgroundColor: primary.light,
-                marginRight: 2,
-              }}
-            >
-              <Typography
+          {!isNonOrderableType &&
+            typeof order === "number" &&
+            order > 0 &&
+            order < 9999 && (
+              <Box
                 sx={{
-                  fontWeight: "bold",
-                  color: "white",
-                  // fontSize: display === "mobile" ? "32px" : orderFontSize || 20,
-                  fontSize: orderFontSize || 20,
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: `${circleSize}px`,
+                  height: `${circleSize}px`,
+                  borderRadius: "50%",
+                  backgroundColor: primary.light,
+                  marginRight: 2,
                 }}
               >
-                {order}
-              </Typography>
-            </Box>
-          )}
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    color: "white",
+                    // fontSize: display === "mobile" ? "32px" : orderFontSize || 20,
+                    fontSize: orderFontSize || 20,
+                  }}
+                >
+                  {order}
+                </Typography>
+              </Box>
+            )}
           <Box
             onDoubleClick={handleDoubleClick}
             sx={{

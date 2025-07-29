@@ -20,7 +20,7 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
     (state: RootState) => state.question.selectedQuestion
   );
   const backgroundColor =
-    question?.questionPreferences?.questionBackgroundColor || "transparent";
+    question?.questionPreferences?.questionBackgroundColor || "white";
 
   const templateUrl = question?.questionPreferences?.questionImageTemplateUrl;
   const templateImage = question?.questionPreferences?.questionImageTemplate;
@@ -41,7 +41,7 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
         height: { md: "70vh", xl: "72vh" },       
         flexGrow: 1,
         borderRadius: "24px",
-        bgcolor: "#FFFFFF",
+        // back: "#FFFFFF",
         border: "3px solid #E0E0E0",
         boxShadow: " 0 4px 20px rgba(0, 0, 0, 0.08)",
         mt: "1%",

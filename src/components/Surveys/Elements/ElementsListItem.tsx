@@ -17,12 +17,22 @@ const ElementsListItem = ({
     (state: RootState) => state.surveyBuilder.elements
   );
 
+  const nonOrderableTypes = [
+    "WELCOME_SCREEN",
+    "INSTRUCTIONS",
+    "EMAIL_CONTACT",
+    "END_SCREEN",
+  ];
+
   return (
     <Box {...provided.droppableProps} ref={provided.innerRef}>
       {/* {elements.map((element, index) => { */}
       {displayedQuestions.map((element, index) => {
-        const isOrderOutOfRange =
-          !element.order || element.order <= 0 || element.order > 9996;
+        const shouldDisplayOrder =
+          !nonOrderableTypes.includes(element.type) &&
+          typeof element.order === "number" &&
+          element.order > 0 &&
+          element.order < 9999;
         return (
           <Draggable
             key={element.questionID}
@@ -95,7 +105,7 @@ const ElementsListItem = ({
                       // border: "2px solid green",
                     }}
                   >
-                    {!isOrderOutOfRange && (
+                    {shouldDisplayOrder && (
                       <Typography
                         color={"black"}
                         fontSize={"1.2rem"}
