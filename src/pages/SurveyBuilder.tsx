@@ -1,21 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Box } from "@mui/material";
-import { useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
-import { resetQuestion, setQuestion } from "../app/slices/elementSlice";
-import {
-  initializeTypography,
-  resetTypography,
-} from "../app/slices/elementTypographySlice";
-import {
-  clearSurveyCanvas,
-  setSurveyCanvas,
-} from "../app/slices/surveyCanvasSlice";
+import { setSurveyCanvas } from "../app/slices/surveyCanvasSlice";
 import { useGetSurveyCanvasByIdQuery } from "../app/slices/surveysApiSlice";
-import { setElements } from "../app/slices/surveySlice";
-import { fetchUser, selectUser } from "../app/slices/userSlice";
 import { RootState } from "../app/store";
 import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
 import CanvasConsole from "../components/CanvasConsole";
@@ -27,23 +16,28 @@ import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
 import SurveyPreferencesPanel from "../components/Surveys/SurveyPreferencesPanel";
 import { SurveyCanvasRefetchContext } from "../context/BuilderRefetchCanvas";
+// import useBuilderTourEnable from "../hooks/useBuilderTourEnable";
+import { useCanvasLoadingAndError } from "../hooks/useCanvasLoadingandError";
+import useFetchAuthenticatedUser from "../hooks/useFetchAuthenticatedUser";
+import useSelectedQuestion from "../hooks/useSelectedQuestion";
+import useSortElements from "../hooks/useSortElements";
+import useSurveyBuilderModalLocation from "../hooks/useSurveyBuilderModalLocation";
+import useSurveyBuilderStateReset from "../hooks/useSurveyBuilderStateReset";
+import useSyncQuestionsToElements from "../hooks/useSyncQuestionsToElements";
 import { Element, LocationStateProps } from "../utils/types";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
   const dispatch = useAppDispatch();
-  const user = useSelector(selectUser);
-  const navigate = useNavigate();
   const location = useLocation();
 
   const { workspaceId, workspaceName } =
     (location.state as LocationStateProps) || {};
 
-  const isOpen = location.state?.openModal || false;
-  const isOpenImport = location.state?.openModalImport || false;
-  const isOpenGenerate = location.state?.openModalGenerate || false;
+  const { isOpen, isOpenImport, isOpenGenerate } =
+    useSurveyBuilderModalLocation(location);
   // const [stepIndex, setStepIndex] = useState(0);
-  const [runTour, setRunTour] = useState(false);
+  // const isTourEnabled = useBuilderTourEnable(user);
   const [surveyTitle, setSurveyTitle] = useState<string>("");
   const [questionId, setQuestionId] = useState<string | null>(null);
   const [display, setDisplay] = useState<string | null>("desktop");
@@ -53,8 +47,9 @@ const SurveyBuilder = () => {
     (state: RootState) => state.surveyBuilder.elements
   );
 
-  const selectedQuestion =
-    elements?.find((q: Element) => q.questionID === questionId) || null;
+  const selectedQuestion = useMemo(() => {
+    return elements.find((q) => q.questionID === questionId) || null;
+  }, [elements, questionId]);
 
   const noElements = elements.length === 0;
   const {
@@ -73,97 +68,24 @@ const SurveyBuilder = () => {
   const { getSurveyCanvas } = surveyCanvas ?? {};
   const { questions = [] as Element[], title } = getSurveyCanvas ?? {};
 
-  useEffect(() => {
-    if (isErrorCanvas) {
-      navigate("/login");
-    }
-  }, [isErrorCanvas, errorCanvas, navigate]);
-
-  useEffect(() => {
-    if (!isLoadingCanvas && !isFetchingCanvas) {
-      setLoading(false);
-    } else {
-      setLoading(true);
-    }
-  }, [isLoadingCanvas, isFetchingCanvas, questions]);
-
-  useEffect(() => {
-    if (!surveyID) return;
-
-    // 💥 Clear all Redux slices dependent on old survey
-    dispatch(clearSurveyCanvas());
-    dispatch(setElements([]));
-    dispatch(resetQuestion());
-    dispatch(resetTypography());
-
-    // 💡 Local state reset
-    setQuestionId(null);
-    setSurveyTitle("");
-    setDisplay("desktop");
-
-    // 🔁 Refetch new survey data
-    refetchCanvas();
-  }, [surveyID]);
-
+  useFetchAuthenticatedUser();
+  useSurveyBuilderStateReset(surveyID, refetchCanvas);
+  useCanvasLoadingAndError(
+    isLoadingCanvas,
+    isFetchingCanvas,
+    isErrorCanvas,
+    setLoading
+  );
   useEffect(() => {
     if (surveyCanvas) {
       dispatch(setSurveyCanvas(surveyCanvas));
     }
   }, [surveyCanvas, dispatch]);
 
-  useEffect(() => {
-    if (questions && questions.length > 0) {
-      dispatch(setElements(questions));
-    }
-  }, [questions]);
+  useSyncQuestionsToElements(questions);
 
-  useEffect(() => {
-    if (elements && elements.length > 0) {
-      const sortedQuestions = [...elements].sort(
-        (a: Element, b: Element) => a.order! - b.order!
-      );
-
-      if (
-        !questionId ||
-        !sortedQuestions.find((q) => q.questionID === questionId)
-      ) {
-        setQuestionId(sortedQuestions[0].questionID);
-      }
-    }
-  }, [elements]);
-
-  useEffect(() => {
-    if (!user) {
-      dispatch(fetchUser());
-    }
-  }, [dispatch, user]);
-
-  useEffect(() => {
-    setRunTour(true);
-  }, []);
-
-  useEffect(() => {
-    if (selectedQuestion) {
-      dispatch(setQuestion(selectedQuestion));
-      dispatch(initializeTypography(selectedQuestion?.questionPreferences));
-    } else {
-      dispatch(resetQuestion());
-      dispatch(resetTypography());
-    }
-  }, [selectedQuestion?.questionID, dispatch]);
-
-  if (!user) {
-    return null;
-  }
-
-  const { tours } = user;
-  const { hasCompletedBuilderTour, hasSkippedBuilderTour } = tours;
-
-  let isTourEnabled = false;
-
-  if (import.meta.env.VITE_ENABLE_BUILDER_TOUR === "true") {
-    isTourEnabled = !hasCompletedBuilderTour && !hasSkippedBuilderTour;
-  }
+  useSortElements(elements, setQuestionId, questionId);
+  useSelectedQuestion(selectedQuestion, dispatch);
 
   if (isLoadingCanvas)
     return (
