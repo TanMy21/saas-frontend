@@ -129,7 +129,7 @@ const CreateNewSurveyCard = ({
       </Box>
       <NewSurveyModal
         open={open}
-        setOpen={setOpen}
+        onClose={() => setOpen(false)}
         workspaceId={workspaceId!}
         workspaceName={workspaceName!}
       />

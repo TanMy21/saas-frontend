@@ -17,22 +17,20 @@ const RenameWorkspaceMenuOption = ({
     }, 150);
   };
   return (
-    <>
-      <MenuItem
-        onClick={handleClick}
-        sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          color: primary.main,
-          fontWeight: "500",
-          gap: 1,
-        }}
-      >
-        <EditIcon fontSize="small" />
-        Rename workspace
-      </MenuItem>
-    </>
+    <MenuItem
+      onClick={handleClick}
+      sx={{
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        color: primary.main,
+        fontWeight: "500",
+        gap: 1,
+      }}
+    >
+      <EditIcon fontSize="small" />
+      Rename workspace
+    </MenuItem>
   );
 };
 

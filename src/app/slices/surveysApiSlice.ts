@@ -78,6 +78,13 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Surveys"],
     }),
+    publishSurvey: builder.mutation({
+      query: (data) => ({
+        url: `/s/publish`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
     copySurvey: builder.mutation({
       query: ({ surveyID, workspaceId }) => ({
         url: `/s/${surveyID}/copy/${workspaceId}`,
@@ -117,6 +124,7 @@ export const {
   useCopySurveyMutation,
   useMoveSurveyMutation,
   useDeleteSurveyMutation,
+  usePublishSurveyMutation,
 } = surveysApiSlice;
 
 export const {

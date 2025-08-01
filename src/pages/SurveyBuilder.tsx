@@ -66,7 +66,7 @@ const SurveyBuilder = () => {
     refetchOnMountOrArgChange: true,
   });
   const { getSurveyCanvas } = surveyCanvas ?? {};
-  const { questions = [] as Element[], title } = getSurveyCanvas ?? {};
+  const { questions = [] as Element[], title, shareID, published } = getSurveyCanvas ?? {};
 
   useFetchAuthenticatedUser();
   useSurveyBuilderStateReset(surveyID, refetchCanvas);
@@ -78,7 +78,6 @@ const SurveyBuilder = () => {
   );
   useEffect(() => {
     if (surveyCanvas) {
-      console.log("Updated elements:", surveyCanvas);
       dispatch(setSurveyCanvas(surveyCanvas));
     }
   }, [surveyCanvas, dispatch]);
@@ -174,6 +173,8 @@ const SurveyBuilder = () => {
                 setDisplay={setDisplay}
                 question={selectedQuestion}
                 noElements={noElements}
+                shareID={shareID}
+                published={published}
               />
             </Box>
             <Box

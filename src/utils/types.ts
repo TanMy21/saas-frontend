@@ -82,6 +82,8 @@ export interface CanvasConsoleProps {
   display: string | null;
   setDisplay: React.Dispatch<React.SetStateAction<string | null>>;
   question: Element | null;
+  shareID: string;
+  published: boolean;
   noElements: boolean;
 }
 
@@ -519,7 +521,7 @@ export interface NewPasswordFormProps {
 
 export interface NewSurveyModalProps {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose: () => void;
   workspaceId: string;
   workspaceName: string;
 }
@@ -552,6 +554,16 @@ export interface PasswordResetFormProps {
 export interface PasswordResetSuccessProps {
   submittedEmail: string;
   reset: () => void;
+}
+
+export interface PublishButtonProps {
+  surveyID: string;
+  published: boolean;
+}
+
+export interface PublishSurveyAlertProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type QuestionTypeKey =
@@ -913,6 +925,8 @@ export interface SurveyRenameProps {
   sID?: string;
   sTitle?: string;
   surveyTitle?: string;
+  confirmationText?: string;
+  expectedText?: string;
 }
 
 export interface ShareSurveyProps {
@@ -920,6 +934,7 @@ export interface ShareSurveyProps {
   setShareBtnSelected: React.Dispatch<React.SetStateAction<boolean>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   openSnackbar: boolean;
+  shareID: string;
   setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -936,6 +951,8 @@ export interface SurveyTitleEditModalProps {
 
 export interface SurveyIslandProps {
   setDisplay: React.Dispatch<React.SetStateAction<string | null>>;
+  shareID: string;
+  published: boolean;
 }
 
 export interface SurveyDropDownMenuProps {
@@ -1079,6 +1096,7 @@ export interface Workspace {
 export interface WorkspaceDelete {
   workspaceId: string;
   workspaceName: string;
+  confirmationText?: string;
 }
 
 export type WorkspaceConsoleProps = {
@@ -1181,7 +1199,7 @@ export interface WorkspaceSurveysListCountProps {
 
 export interface NewWorkspaceModalProps {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose: () => void;
 }
 
 export type GenerateSurveyFormData = z.infer<typeof generateSurveySchema>;

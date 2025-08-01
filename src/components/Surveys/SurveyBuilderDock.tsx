@@ -11,6 +11,7 @@ import { RiAiGenerate } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 
 import { DockItemProps, SurveyIslandProps } from "../../utils/types";
+import PublishSurveyAlert from "../alert/PublishSurveyAlert";
 import GenerateSurveyModal from "../Modals/GenerateSurveyModal";
 import ImportQuestionsModal from "../Modals/ImportQuestionsModal";
 import ShareSurveyModal from "../Modals/ShareSurveyModal";
@@ -22,9 +23,14 @@ const DOCK_HEIGHT = 36;
 const DEFAULT_ICON_SIZE = 36;
 const HOVER_ICON_SIZE = 64;
 
-const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
+const SurveyBuilderDock = ({
+  setDisplay,
+  shareID,
+  published,
+}: SurveyIslandProps) => {
   const { surveyID } = useParams();
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
   const [openShare, setOpenShare] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [openGenerate, setOpenGenerate] = useState(false);
@@ -50,7 +56,13 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
       id: "share",
       icon: <BsFillShareFill />,
       label: "Share survey",
-      action: () => setOpenShare(true),
+      action: () => {
+        if (!published) {
+          setOpenAlert(true);
+        } else {
+          setOpenShare(true);
+        }
+      },
     },
     {
       id: "edit-sruvey",
@@ -111,37 +123,33 @@ const SurveyBuilderDock = ({ setDisplay }: SurveyIslandProps) => {
           id={id}
         />
       ))}
-
       <ShareSurveyModal
         open={openShare}
         setOpen={setOpenShare}
         setShareBtnSelected={setShareBtnSelected}
         openSnackbar={openSnackbar}
         setOpenSnackbar={setOpenSnackbar}
+        shareID={shareID}
       />
-
       <SurveyTitleEditModal openEdit={openEdit} setOpenEdit={setOpenEdit} />
-
       <SurveySettingsModal
         surveyID={surveyID!}
         openSettings={openSettings}
         setOpenSettings={setOpenSettings}
       />
-
       <ImportQuestionsModal
         openImport={openImport}
         setOpenImport={setOpenImport}
       />
-
       <GenerateSurveyModal
         openGenerate={openGenerate}
         setOpenGenerate={setOpenGenerate}
       />
-
       <SnackbarAlert
         openSnackbar={openSnackbar}
         handleCloseSnackbar={() => setOpenSnackbar(false)}
       />
+      <PublishSurveyAlert open={openAlert} setOpen={setOpenAlert} />
     </Box>
   );
 };

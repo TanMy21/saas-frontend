@@ -1,15 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloseIcon from "@mui/icons-material/Close";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import DownloadIcon from "@mui/icons-material/Download";
 // import EmailIcon from "@mui/icons-material/Email";
 // import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkIcon from "@mui/icons-material/Link";
+import QrCodeIcon from "@mui/icons-material/QrCode";
 import ShareIcon from "@mui/icons-material/Share";
 // import XIcon from "@mui/icons-material/X";
 import {
   Box,
   Button,
+  CircularProgress,
   IconButton,
   InputAdornment,
   // InputBase,
@@ -17,6 +21,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import QRCode from "react-qr-code";
 import { useParams } from "react-router-dom";
 
 import { useAppTheme } from "../../theme/useAppTheme";
@@ -27,12 +32,25 @@ const ShareSurveyModal = ({
   setOpen,
   setShareBtnSelected,
   setOpenSnackbar,
+  shareID,
 }: ShareSurveyProps) => {
-  const { background, textStyles } = useAppTheme();
+  // const { background, textStyles } = useAppTheme();
   const [copied, setCopied] = useState(false);
+
+  const [copyLinkStatus, setCopyLinkStatus] = useState<"idle" | "copied">(
+    "idle"
+  );
+  const [copyQrStatus, setCopyQrStatus] = useState<
+    "idle" | "copying" | "copied"
+  >("idle");
+  const [downloadStatus, setDownloadStatus] = useState<
+    "idle" | "downloading" | "downloaded"
+  >("idle");
+  const qrContainerRef = useRef<HTMLDivElement>(null);
+
   const { surveyID } = useParams();
   const shareBaseURL = import.meta.env.VITE_SHARE_BASE_URL;
-  const shareURL = `${shareBaseURL}/${surveyID}`;
+  const shareURL = `${shareBaseURL}/${shareID}`;
 
   const handleCopyClick = async () => {
     try {
@@ -50,6 +68,69 @@ const ShareSurveyModal = ({
     setCopied(false);
   };
 
+  const handleCopyQR = () => {
+    setCopyQrStatus("copying");
+    try {
+      const svgNode = qrContainerRef.current?.querySelector("svg");
+      if (!svgNode) throw new Error("QR SVG not found");
+
+      // Convert SVG node to PNG blob for clipboard
+      const svgData = new XMLSerializer().serializeToString(svgNode);
+      const svgBlob = new Blob([svgData], { type: "image/svg+xml" });
+      const url = URL.createObjectURL(svgBlob);
+      const img = new window.Image();
+      img.onload = () => {
+        // Draw image to canvas
+        const canvas = document.createElement("canvas");
+        canvas.width = 200;
+        canvas.height = 200;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, 200, 200);
+        canvas.toBlob(async (blob) => {
+          if (!blob) return setCopyQrStatus("idle");
+          await navigator.clipboard.write([
+            new ClipboardItem({ "image/png": blob }),
+          ]);
+          setCopyQrStatus("copied");
+          setTimeout(() => setCopyQrStatus("idle"), 2000);
+        });
+        URL.revokeObjectURL(url);
+      };
+      img.onerror = () => setCopyQrStatus("idle");
+      img.src = url;
+    } catch {
+      setCopyQrStatus("idle");
+    }
+  };
+
+  // Download QR as PNG
+  const handleDownloadQR = () => {
+    setDownloadStatus("downloading");
+    const svgNode = qrContainerRef.current?.querySelector("svg");
+    if (!svgNode) return setDownloadStatus("idle");
+
+    const svgData = new XMLSerializer().serializeToString(svgNode);
+    const svgBlob = new Blob([svgData], { type: "image/svg+xml" });
+    const url = URL.createObjectURL(svgBlob);
+    const img = new window.Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 200;
+      canvas.height = 200;
+      const ctx = canvas.getContext("2d");
+      ctx?.drawImage(img, 0, 0, 200, 200);
+      const link = document.createElement("a");
+      link.download = "qr-code.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      URL.revokeObjectURL(url);
+      setDownloadStatus("downloaded");
+      setTimeout(() => setDownloadStatus("idle"), 2000);
+    };
+    img.onerror = () => setDownloadStatus("idle");
+    img.src = url;
+  };
+
   useEffect(() => {
     if (!open) {
       setCopied(false);
@@ -57,260 +138,222 @@ const ShareSurveyModal = ({
   }, [open]);
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
+    <Modal open={open} onClose={handleClose}>
       <Box
+        tabIndex={-1}
         sx={{
-          position: "absolute",
-          display: "flex",
-          flexDirection: "column",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 500,
-          height: 200,
-          bgcolor: background.paper,
-          borderRadius: "16px",
-          // border: "2px solid red",
+          outline: "none",
+          maxWidth: 500,
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          boxShadow: 24,
+          p: 0,
+          mx: "auto",
+          mt: { xs: 6, sm: 12 },
+          minHeight: 0,
+          position: "relative",
         }}
       >
-        {/* Modal title */}
+        {/* Header */}
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
-            padding: "2%",
-            width: "96%",
-            height: "20%",
             alignItems: "center",
-            gap: 2,
-            borderBottom: "2px solid #E0E0E0",
-            // border: "2px solid green",
+            justifyContent: "space-between",
+            borderBottom: 1,
+            borderColor: "divider",
+            px: 3,
+            py: 2,
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              width: "88%",
-              height: "98%",
-              gap: 2,
-              // border: "2px solid black",
-            }}
-          >
-            <ShareIcon />
-            <Typography sx={textStyles.modalTitle}>
-              Share your survey
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignSelf: "flex-end",
-              width: "12%",
-              height: "100%",
-              // border: "2px solid black",
-            }}
-          >
-            <IconButton
-              aria-label="more"
-              aria-controls="long-menu"
-              aria-haspopup="true"
-              onClick={handleClose}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </Box>
-        {/* shareURL */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "1%",
-            marginTop: "1%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            width: "92%",
-            height: "98%",
-            // border: "2px solid blue",
-          }}
-        >
-          {/* share survey link */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              padding: "1%",
-              width: "98%",
-              height: "80px",
-              // border: "2px solid orange",
-            }}
-          >
-            <Box>
-              <Typography
-                fontSize={16}
-                fontWeight={"bold"}
-                mb={1}
-                color="#37415C"
-              >
-                Survey Link
-              </Typography>
-            </Box>
-
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "flex-end",
-                width: "100%",
-                height: "48px",
-                gap: 4,
-                // border: "2px solid green",
+                justifyContent: "center",
+                alignItems: "center",
+                bgcolor: "#EFF6FF",
+                borderRadius: 2,
+                p: 1,
+                mr: 2,
               }}
             >
+              <ShareIcon sx={{ fontSize: 22, color: "#2563EB" }} />
+            </Box>
+            <Typography variant="h6" fontWeight={600}>
+              Share your survey
+            </Typography>
+          </Box>
+          <IconButton onClick={handleClose} sx={{ color: "#9CA3AF" }}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        {/* Content */}
+        <Box
+          sx={{ p: 3, pt: 2, gap: 3, display: "flex", flexDirection: "column" }}
+        >
+          {/* Share Link Section */}
+          <Box>
+            <Typography
+              variant="body2"
+              color="#374151"
+              sx={{ mb: 1, fontWeight: "bold" }}
+            >
+              Share Link
+            </Typography>
+            <Box sx={{ display: "flex", gap: 1 }}>
               <TextField
-                margin="normal"
-                required
                 fullWidth
-                id="share-link"
-                InputLabelProps={{ style: { color: "gray" } }}
                 value={shareURL}
-                variant="filled"
-                sx={{
-                  borderRadius: "12px",
-                  backgroundColor: "#F8F9FF",
-                  "& .MuiFilledInput-root": {
-                    height: "40px",
-                    borderRadius: "12px",
-                    backgroundColor: "#F8F9FF",
-                    borderBottom: "none !important",
-                    display: "flex",
-                    alignItems: "center",
-                    paddingTop: "0px",
-                    paddingBottom: "0px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                    "& input": {
-                      padding: 0,
-                      paddingLeft: "4px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    },
-                    "&:before, &:after": {
-                      display: "none",
-                    },
-                  },
-                }}
+                size="small"
                 InputProps={{
-                  startAdornment: (
-                    <InputAdornment
-                      position="start"
-                      sx={{ marginBottom: "16px" }}
-                    >
-                      <LinkIcon />
+                  readOnly: true,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        size="small"
+                        onClick={handleCopyClick}
+                        sx={{
+                          color:
+                            copyLinkStatus === "copied"
+                              ? "success.main"
+                              : "grey.600",
+                        }}
+                      >
+                        {copyLinkStatus === "copied" ? (
+                          <CheckCircleIcon fontSize="small" />
+                        ) : (
+                          <ContentCopyIcon fontSize="small" />
+                        )}
+                      </IconButton>
                     </InputAdornment>
                   ),
                 }}
+                sx={{
+                  bgcolor: "grey.50",
+                  borderRadius: 2,
+                  "& fieldset": { borderColor: "grey.200" },
+                  "&hover": { borderColor: "none" },
+                  pr: 0,
+                }}
               />
-              <Button
-                variant="submitBtn2"
-                onClick={handleCopyClick}
-                endIcon={<ContentCopyIcon />}
-                sx={{ mb: 1 }}
-              >
-                {copied ? "Copied!" : "Copy"}
-              </Button>
             </Box>
           </Box>
-
-          {/* Share Options */}
-          {/* <Box sx={{ border: "2px solid orange" }}>
+          {/* QR Code Section */}
+          <Box>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+              <QrCodeIcon sx={{ fontSize: 22, color: "#4B5563" }} />
               <Typography
                 variant="body2"
-                fontWeight={500}
-                mb={1}
-                color="text.secondary"
-              >
-                Share via
-              </Typography>
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
-                  gap: 1.5,
-                }}
-              >
-                {[
-                  {
-                    label: "Email",
-                    icon: <EmailIcon />,
-                  },
-                  {
-                    label: "X",
-                    icon: <XIcon />,
-                  },
-                  {
-                    label: "Facebook",
-                    icon: <FacebookIcon />,
-                  },
-                ].map(({ label, icon }) => (
-                  <Button
-                    key={label}
-                    variant="outlined"
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      gap: 1,
-                      py: 2,
-                      borderRadius: 2,
-                      borderColor: "#e5e7eb",
-                      color: "#4b5563",
-                      "&:hover": { backgroundColor: "#f9fafb" },
-                      textTransform: "none",
-                    }}
-                  >
-                    {icon}
-                    <Typography variant="caption">{label}</Typography>
-                  </Button>
-                ))}
-              </Box>
-            </Box> */}
-
-          {/* QR Code */}
-          {/* <Box sx={{ border: "2px solid purple" }}>
-              <Typography
-                variant="body2"
-                fontWeight={500}
-                mb={1}
-                color="text.secondary"
+                color="#394252"
+                sx={{ fontWeight: "600" }}
               >
                 QR Code
               </Typography>
+            </Box>
+            {/* QR Code Image */}
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 1 }}>
               <Box
+                ref={qrContainerRef}
                 sx={{
+                  p: 2,
+                  bgcolor: "background.paper",
+                  border: 2,
+                  borderColor: "#F3F4F6",
+                  borderRadius: 3,
+                  boxShadow: 1,
+                  minWidth: 192,
+                  minHeight: 192,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  p: 3,
-                  border: "1px solid #e5e7eb",
-                  borderRadius: 2,
-                  backgroundColor: "#f9fafb",
                 }}
               >
-                <img alt="QR Code" width={128} height={128} />
+                {shareURL ? (
+                  <QRCode
+                    value={shareURL}
+                    size={192}
+                    bgColor="#fff"
+                    fgColor="#222"
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      width: 192,
+                      height: 192,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <CircularProgress color="primary" />
+                  </Box>
+                )}
               </Box>
-            </Box> */}
+            </Box>
+            {/* Actions */}
+            <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+              <Button
+                onClick={handleCopyQR}
+                disabled={!shareURL || copyQrStatus === "copying"}
+                startIcon={
+                  copyQrStatus === "copying" ? (
+                    <CircularProgress size={18} color="inherit" />
+                  ) : copyQrStatus === "copied" ? (
+                    <CheckCircleIcon color="success" />
+                  ) : (
+                    <ContentCopyIcon />
+                  )
+                }
+                fullWidth
+                variant="outlined"
+                color={copyQrStatus === "copied" ? "success" : "inherit"}
+                sx={{
+                  backgroundColor: "#F3F4F6",
+                  borderColor: "transparent",
+                  color: "#3B4554",
+                  fontWeight: 600,
+                  borderRadius: 2,
+                  textTransform: "none",
+                }}
+              >
+                {copyQrStatus === "copying"
+                  ? "Copying..."
+                  : copyQrStatus === "copied"
+                    ? "Copied"
+                    : "Copy QR"}
+              </Button>
+              <Button
+                onClick={handleDownloadQR}
+                disabled={!shareURL}
+                startIcon={
+                  downloadStatus === "downloading" ? (
+                    <CircularProgress size={18} color="inherit" />
+                  ) : downloadStatus === "downloaded" ? (
+                    <CheckCircleIcon color="success" />
+                  ) : (
+                    <DownloadIcon />
+                  )
+                }
+                fullWidth
+                variant="contained"
+                color={downloadStatus === "downloaded" ? "primary" : "primary"}
+                sx={{
+                  backgroundColor: "#2563EB",
+                  fontWeight: 500,
+                  borderRadius: 2,
+                  py: 1,
+                  textTransform: "none",
+                }}
+              >
+                {downloadStatus === "downloading"
+                  ? "Downloading..."
+                  : downloadStatus === "downloaded"
+                    ? "Downloaded"
+                    : "Download QR"}
+              </Button>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Modal>

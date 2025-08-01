@@ -12,6 +12,8 @@ const CanvasConsole = ({
   setDisplay,
   question,
   noElements,
+  shareID,
+  published,
 }: CanvasConsoleProps) => {
   let content;
   if (noElements) {
@@ -27,7 +29,11 @@ const CanvasConsole = ({
         // border: "2px solid orange",
       }}
     >
-      <SurveyBuilderDock setDisplay={setDisplay} />
+      <SurveyBuilderDock
+        setDisplay={setDisplay}
+        shareID={shareID}
+        published={published}
+      />
       <Box
         sx={{
           marginLeft: "1%",

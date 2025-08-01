@@ -15,7 +15,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       query: (email) => ({
         url: "/u/verify",
         method: "POST",
-        body: { email },
+        body: email,
       }),
     }),
     addNewUser: builder.mutation({

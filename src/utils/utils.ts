@@ -1,3 +1,5 @@
+ 
+
 export const generateOptionLabel = (index: number, qType: string) => {
   if (qType === "RADIO" || qType === "MULTIPLE_CHOICE" || qType === "MEDIA") {
     return String.fromCharCode(65 + index);
@@ -7,3 +9,4 @@ export const generateOptionLabel = (index: number, qType: string) => {
 
 export const getSquareImageURL = (url: string) =>
   url.replace("/upload/", "/upload/w_250,h_250,c_fill,g_auto/");
+

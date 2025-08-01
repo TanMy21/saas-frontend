@@ -6,6 +6,7 @@ import AppBar from "@mui/material/AppBar";
 import { RootState } from "../../app/store";
 import { useAppSelector } from "../../app/typedReduxHooks";
 import { SurveyBuilderHeaderProps } from "../../utils/types";
+import PublishButton from "../Buttons/PublishButton";
 import HeaderIconMenu from "../HeaderIconMenu";
 
 import SurveyBuilderHeaderTabs from "./SurveyBuilderHeaders/SurveyBuilderHeaderTabs";
@@ -24,7 +25,7 @@ const SurveyBuilderHeader = ({
   );
 
   const { getSurveyCanvas } = surveyCanvas ?? {};
-  const { surveyID, title } = getSurveyCanvas ?? {};
+  const { surveyID, title, published } = getSurveyCanvas ?? {};
 
   useEffect(() => {
     if (location.pathname.includes("/results")) {
@@ -123,6 +124,7 @@ const SurveyBuilderHeader = ({
               // border: "2px solid orange",
             }}
           >
+            <PublishButton surveyID={surveyID} published={published} />
             <HeaderIconMenu />
           </Box>
         </Box>

@@ -30,7 +30,7 @@ import {
 import { logOut, setCredentials } from "../app/slices/authSlice";
 import FormErrors from "../components/FormErrors";
 import LogoLoader from "../components/Loaders/LogoLoader";
-import SessionExpiredToast from "../components/Modals/SessionExpiredToast";
+import SessionExpiredToast from "../components/alert/SessionExpiredToast";
 import usePersist from "../hooks/persist";
 import { useAppTheme } from "../theme/useAppTheme";
 import { loginSchema } from "../utils/schema";

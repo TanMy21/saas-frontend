@@ -1,27 +1,25 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-import EditIcon from "@mui/icons-material/Edit";
-import UploadIcon from "@mui/icons-material/Upload";
-import { Box, Button, Modal, Typography } from "@mui/material";
-import { RiAiGenerate } from "react-icons/ri";
+import CloseIcon from "@mui/icons-material/Close";
+import FiberNewIcon from "@mui/icons-material/FiberNew";
+import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
+import { ArrowRight, Edit3, Sparkles, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useCreateSurveyMutation } from "../../app/slices/surveysApiSlice";
-import { useAppTheme } from "../../theme/useAppTheme";
+// import { useAppTheme } from "../../theme/useAppTheme";
 import { ErrorData, NewSurveyModalProps } from "../../utils/types";
-import NewSurveyActionCard from "../ModalComponents/NewSurveyActionCard";
 
 const NewSurveyModal = ({
   open,
-  setOpen,
+  onClose,
   workspaceId,
   workspaceName,
 }: NewSurveyModalProps) => {
-  const { background } = useAppTheme();
+  // const { background } = useAppTheme();
   const navigate = useNavigate();
-
-  const handleClose = () => setOpen(false);
+  const [hoveredOption, setHoveredOption] = useState<string | null>(null);
   const openModal = true;
   const openModalImport = true;
   const openModalGenerate = true;
@@ -76,6 +74,41 @@ const NewSurveyModal = ({
     }
   };
 
+  const createSurveyOptions = [
+    {
+      id: "scratch",
+      icon: Edit3,
+      title: "Create from scratch",
+      description:
+        "Start with a blank canvas and build your survey from the ground up",
+      gradient: "linear-gradient(90deg,#3b82f6,#2563eb)",
+      bgColor: "#eff6ff",
+      iconColor: "#2563eb",
+      onClick: handleCreateFromScratch,
+    },
+    {
+      id: "upload",
+      icon: Upload,
+      title: "Upload questions",
+      description: "Import your existing questions from a file or document",
+      gradient: "linear-gradient(90deg,#10b981,#059669)",
+      bgColor: "#ecfdf5",
+      iconColor: "#059669",
+      onClick: handleImportQuestions,
+    },
+    {
+      id: "generate",
+      icon: Sparkles,
+      title: "AI-powered generation",
+      description:
+        "Let AI create intelligent questions based on your survey topic",
+      gradient: "linear-gradient(90deg,#a21caf,#7c3aed)",
+      bgColor: "#f5f3ff",
+      iconColor: "#7c3aed",
+      onClick: handleGenerateQuestions,
+    },
+  ];
+
   useEffect(() => {
     if (isError) {
       const errorData = error as ErrorData;
@@ -96,89 +129,271 @@ const NewSurveyModal = ({
   return (
     <Modal
       open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      onClose={onClose}
+      sx={{ zIndex: 1400 }}
+      slotProps={{
+        backdrop: {
+          style: {
+            background: "rgba(0,0,0,0.5)",
+            backdropFilter: "blur(6px)",
+          },
+        },
+      }}
     >
       <Box
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 480,
-          height: 360,
-          backgroundColor: background.paper,
-          borderRadius: 3,
-          p: 4,
+          outline: "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
         }}
       >
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box
+          sx={{
+            bgcolor: "#fff",
+            borderRadius: 4,
+            boxShadow: 12,
+            width: "100%",
+            maxWidth: 640,
+            p: 0,
+            overflow: "hidden",
+            m: 2,
+            outline: "none",
+          }}
+        >
+          {/* Header */}
           <Box
             sx={{
               display: "flex",
-              flexDirection: "column",
-              gap: 1,
-              width: "98%",
-              height: "20%",
+              alignItems: "center",
+              justifyContent: "space-between",
+              px: 3,
+              pt: 3,
+              pb: 2,
             }}
           >
-            <Typography variant="h5" component="h2">
-              Create a new survey
-            </Typography>
-            <Typography sx={{ fontSize: "16px", color: "#6F7683", ml: "2%" }}>
-              Choose how you'd like to start your survey
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "96%",
-              height: "68%",
-              margin: "0 auto",
-              gap: 2,
-            }}
-          >
-            <NewSurveyActionCard
-              icon={<EditIcon fontSize="medium" />}
-              onClickHandler={handleCreateFromScratch}
-              actionTitle={"Create from scratch"}
-              actionSubTitle={
-                "Start with a blank survey with your own questions"
-              }
-            />
-            <NewSurveyActionCard
-              icon={<UploadIcon fontSize="medium" />}
-              onClickHandler={handleImportQuestions}
-              actionTitle={"Upload questions"}
-              actionSubTitle={"Start with uploading your own questions"}
-            />
-            <NewSurveyActionCard
-              icon={<RiAiGenerate size={28} />}
-              onClickHandler={handleGenerateQuestions}
-              actionTitle={"Generate questions"}
-              actionSubTitle={"Start with generating questions"}
-            />
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              alignItems: "flex-end",
-              width: "98%",
-              height: "20%",
-            }}
-          >
-            <Button
-              type="button"
-              onClick={handleClose}
-              variant="outlined"
-              size="small"
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box
+                sx={{
+                  p: 1,
+                  backgroundColor: "#EFF6FF",
+                  borderRadius: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width:40,
+                  height:40,
+                }}
+              >
+                <FiberNewIcon
+                  style={{ width: 28, height: 28, color: "#2563EB" }}
+                />
+              </Box>
+              <Box>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, color: "grey.900" }}
+                >
+                  Create a new survey
+                </Typography>
+                <Typography variant="body2" sx={{ color: "grey.500", mt: 0.5 }}>
+                  Choose how you'd like to start building your survey
+                </Typography>
+              </Box>
+            </Box>
+            <IconButton
+              onClick={onClose}
+              sx={{
+                p: 1,
+                color: "grey.400",
+                transition: "all 0.2s",
+                "&:hover": {
+                  color: "grey.600",
+                  bgcolor: "grey.100",
+                },
+                borderRadius: 2,
+              }}
             >
-              Cancel
-            </Button>
+              <CloseIcon style={{ width: 28, height: 28 }} />
+            </IconButton>
+          </Box>
+          {/* <Box sx={{ position: "relative", p: 4, pb: 2 }}>
+            <IconButton
+              onClick={onClose}
+              sx={{
+                position: "absolute",
+                right: 16,
+                top: 16,
+                p: 1.2,
+                borderRadius: "50%",
+                "&:hover": { bgcolor: "#f3f4f6" },
+              }}
+            >
+              <CloseIcon style={{ width: 24, height: 24, color: "#6b7280" }} />
+            </IconButton>
+            <Box sx={{ textAlign: "center" }}>
+              <Typography
+                variant="h5"
+                fontWeight={700}
+                color="#111827"
+                mb={0.5}
+              >
+                Create a new survey
+              </Typography>
+              <Typography sx={{ color: "#6b7280", fontSize: 15 }}>
+                Choose how you'd like to start building your survey
+              </Typography>
+            </Box>
+          </Box> */}
+
+          {/* Options */}
+          <Box sx={{ px: 4, pb: 4, pt: 0 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              {createSurveyOptions.map((option) => {
+                const Icon = option.icon;
+                const isHovered = hoveredOption === option.id;
+                return (
+                  <Box
+                    key={option.id}
+                    onMouseEnter={() => setHoveredOption(option.id)}
+                    onMouseLeave={() => setHoveredOption(null)}
+                    onClick={option.onClick}
+                    sx={{
+                      cursor: "pointer",
+                      width: "100%",
+                      p: 0,
+                      border: "2px solid",
+                      borderColor: isHovered ? "#d1d5db" : "#e5e7eb",
+                      boxShadow: isHovered ? 8 : 1,
+                      transform: isHovered ? "scale(1.02)" : "scale(1)",
+                      background: isHovered ? option.gradient : "#fff",
+                      color: isHovered ? "#fff" : "#111827",
+                      borderRadius: 3,
+                      transition:
+                        "all 0.28s cubic-bezier(.4,0,.2,1), box-shadow 0.22s",
+                      mb: 1,
+                      "&:hover": {
+                        background: option.gradient,
+                        color: "#fff",
+                        borderColor: "#d1d5db",
+                        boxShadow: 8,
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "start",
+                        gap: 2,
+                        px: 3,
+                        py: 2.5,
+                        width: "100%",
+                        borderRadius: 3,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          p: 1.2,
+                          borderRadius: 2.5,
+                          background: isHovered
+                            ? "rgba(255,255,255,0.18)"
+                            : option.bgColor,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          minWidth: 40,
+                          minHeight: 40,
+                          transition: "background 0.3s",
+                        }}
+                      >
+                        <Icon
+                          style={{
+                            width: 24,
+                            height: 24,
+                            color: isHovered ? "#fff" : option.iconColor,
+                            transition: "color 0.2s",
+                          }}
+                        />
+                      </Box>
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography
+                            fontWeight={600}
+                            fontSize={18}
+                            sx={{
+                              color: isHovered ? "#fff" : "#111827",
+                              transition: "color 0.2s",
+                            }}
+                          >
+                            {option.title}
+                          </Typography>
+                          <ArrowRight
+                            style={{
+                              width: 20,
+                              height: 20,
+                              color: isHovered ? "#fff" : "#9ca3af",
+                              marginLeft: 6,
+                              opacity: isHovered ? 1 : 0,
+                              transform: isHovered ? "translateX(4px)" : "none",
+                              transition: "all 0.22s",
+                            }}
+                          />
+                        </Box>
+                        <Typography
+                          fontSize={15}
+                          mt={0.6}
+                          sx={{
+                            color: isHovered
+                              ? "rgba(255,255,255,0.90)"
+                              : "#6b7280",
+                            transition: "color 0.2s",
+                          }}
+                        >
+                          {option.description}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                );
+              })}
+            </Box>
+          </Box>
+
+          {/* Footer */}
+          <Box sx={{ px: 4, pb: 4, pt: 0 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                pt: 2,
+                borderTop: "1px solid #f3f4f6",
+              }}
+            >
+              <Button
+                onClick={onClose}
+                sx={{
+                  px: 2.2,
+                  py: 1.1,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: "#4b5563",
+                  borderRadius: 2,
+                  bgcolor: "#fff",
+                  "&:hover": { bgcolor: "#f3f4f6", color: "#1f2937" },
+                  transition: "all 0.16s",
+                }}
+              >
+                Cancel
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Box>

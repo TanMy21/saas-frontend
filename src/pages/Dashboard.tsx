@@ -180,7 +180,7 @@ const Dashboard = () => {
 
       <NewWorkspaceModal
         open={newWorkspaceModalOpen}
-        setOpen={setNewWorkspaceModalOpen}
+        onClose={() => setNewWorkspaceModalOpen(false)}
       />
 
       <RenameWorkspaceModal

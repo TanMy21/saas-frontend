@@ -1,6 +1,16 @@
 import { useRef, useState } from "react";
 
-import { Box, Button, Chip, Modal, TextField, Typography } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Modal,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { Hash, Plus, TagIcon } from "lucide-react";
 
 import { useUpdateSurveyTagsMutation } from "../../app/slices/surveysApiSlice";
 import { SurveyTagsModalProps } from "../../utils/types";
@@ -10,11 +20,11 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
   const [tags, setTags] = useState<string[]>(surveyTag || []);
   const [inputValue, setInputValue] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const MAX_TAGS = 5;
 
-  const [updateSurveyTags, { isLoading, isSuccess, error, isError }] =
-    useUpdateSurveyTagsMutation();
+  const [updateSurveyTags, { isLoading }] = useUpdateSurveyTagsMutation();
 
   const handleAddTag = () => {
     const trimmedValue = inputValue.trim().toLowerCase();
@@ -68,117 +78,372 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
     <Modal
       open={open}
       onClose={onClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      closeAfterTransition
+      sx={{ zIndex: 1500 }}
+      slotProps={{
+        backdrop: {
+          style: {
+            background: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(6px)",
+          },
+        },
+      }}
     >
       <Box
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 500,
-          bgcolor: "background.paper",
-          borderRadius: 2,
-          boxShadow: 24,
-          p: 4,
+          outline: "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+          p: 2,
         }}
       >
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          fontWeight="bold"
-          mb={2}
-        >
-          Survey Tags
-        </Typography>
-        <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-          <TextField
-            inputRef={inputRef}
-            fullWidth
-            size="small"
-            placeholder={
-              remainingTags > 0
-                ? `Add a tag (${remainingTags} remaining)`
-                : "Maximum tags reached"
-            }
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={tags.length >= MAX_TAGS}
-          />
-          <Button
-            variant="contained"
-            onClick={handleAddTag}
-            disabled={tags.length >= MAX_TAGS || !inputValue.trim()}
-            sx={{
-              width: "20%",
-              height: "80%",
-              p: 1,
-              backgroundColor: "#005BC4",
-              color: "white",
-              fontWeight: "bold",
-              "& .MuiButton-label": {
-                color: "white",
-              },
-              "& .MuiTypography-root": {
-                color: "white",
-              },
-              "&.MuiButton-root:hover": {
-                backgroundColor: "#005BC4",
-              },
-              textTransform: "capitalize",
-              borderRadius: "16px",
-            }}
-          >
-            Add
-          </Button>
-        </Box>
-
-        {errorMessage && (
-          <Typography variant="body2" color="error" mt={1} mb={1}>
-            {errorMessage}
-          </Typography>
-        )}
-
-        {tags.length > 0 ? (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5, mb: 2 }}>
-            {tags.map((tag, index) => (
-              <Chip
-                key={index}
-                label={tag}
-                onDelete={() => handleRemoveTag(index)}
-              />
-            ))}
-          </Box>
-        ) : (
-          <Typography variant="body2" color="text.secondary" mb={2}>
-            No tags added yet. You can add up to {MAX_TAGS} tags.
-          </Typography>
-        )}
-
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: 2,
-            mt: 1,
-            mb: "-4%",
+            bgcolor: "#fff",
+            borderRadius: 2,
+            boxShadow: 12,
+            width: "100%",
+            maxWidth: 640,
+            p: 0,
+            overflow: "hidden",
+            outline: "none",
+            transition: "box-shadow 0.25s, transform 0.2s",
           }}
         >
-          <Button variant="outlined" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="submitBtn2"
-            size="small"
-            disabled={isLoading}
-            onClick={handleSave}
-            sx={{ width: "160px" }}
+          {/* Header */}
+          <Box
+            sx={{
+              position: "relative",
+              px: 2,
+              py: 2,
+              borderBottom: "1px solid #f3f4f6",
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+            }}
           >
-            {isLoading ? "Saving Tags..." : "Save Tags"}
-          </Button>
+            <IconButton
+              onClick={onClose}
+              sx={{
+                position: "absolute",
+                right: 20,
+                top: 20,
+                p: 1.2,
+                borderRadius: "50%",
+                "&:hover": { bgcolor: "#f3f4f6" },
+              }}
+            >
+              <CloseIcon style={{ width: 28, height: 28, color: "#6b7280" }} />
+            </IconButton>
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: "#eff6ff",
+                borderRadius: 2.5,
+                mr: 2,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minWidth: 36,
+                minHeight: 36,
+              }}
+            >
+              <TagIcon style={{ width: 28, height: 28, color: "#2563eb" }} />
+            </Box>
+            <Box>
+              <Typography fontWeight={700} fontSize={24} color="#1e293b">
+                Survey Tags
+              </Typography>
+              <Typography
+                fontSize={15}
+                color="#64748b"
+                sx={{ mt: 0.5, fontWeight: 500 }}
+              >
+                Add tags to help organize and categorize your survey
+              </Typography>
+            </Box>
+          </Box>
+
+          {/* Content */}
+          <Box sx={{ px: 4, py: 2 }}>
+            {/* Input */}
+            <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+              <Box sx={{ flex: 1, position: "relative" }}>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    left: 12,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    zIndex: 2,
+                  }}
+                >
+                  <Hash style={{ width: 20, height: 20, color: "#94a3b8" }} />
+                </Box>
+                <TextField
+                  inputRef={inputRef}
+                  fullWidth
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onFocus={() => setIsInputFocused(true)}
+                  onBlur={() => setIsInputFocused(false)}
+                  onKeyDown={handleKeyDown}
+                  placeholder={
+                    remainingTags > 0
+                      ? `Add a tag (${remainingTags} remaining)`
+                      : "Maximum tags reached"
+                  }
+                  disabled={tags.length >= MAX_TAGS}
+                  InputProps={{
+                    sx: {
+                      height: "60px", // MATCH button height
+                      pl: 5,
+                      pr: 1,
+                      borderRadius: 3,
+                      fontSize: 16,
+                      bgcolor: "#fff",
+                      border: "2px solid",
+                      borderColor: isInputFocused ? "#3b82f6" : "#e5e7eb",
+                      boxShadow: isInputFocused
+                        ? "0 4px 24px 0 rgba(59,130,246,0.12)"
+                        : undefined,
+                      transition: "all 0.2s",
+                      "&:hover": {
+                        borderColor: "#d1d5db",
+                      },
+                      "&.Mui-disabled": {
+                        bgcolor: "#f3f4f6",
+                        opacity: 0.8,
+                      },
+                      // Remove top/bottom padding that cause input to shrink
+                      alignItems: "center",
+                    },
+                  }}
+                  inputProps={{
+                    style: {
+                      height: "100%", // Fill root
+                      padding: 0, // Remove default input padding
+                      boxSizing: "border-box",
+                      fontSize: 16,
+                      paddingLeft: 0, // The icon space is handled by root pl:5
+                    },
+                  }}
+                />
+              </Box>
+              <Button
+                onClick={handleAddTag}
+                disabled={!inputValue.trim() || tags.length >= MAX_TAGS}
+                sx={{
+                  width: "100px",
+                  height: "60px", // Button height
+                  minWidth: 0,
+                  px: 0,
+                  py: 0,
+                  bgcolor:
+                    !inputValue.trim() || tags.length >= MAX_TAGS
+                      ? "#e5e7eb"
+                      : "#2563eb",
+                  color:
+                    !inputValue.trim() || tags.length >= MAX_TAGS
+                      ? "#6b7280"
+                      : "#fff",
+                  fontWeight: 600,
+                  borderRadius: 3,
+                  boxShadow:
+                    !inputValue.trim() || tags.length >= MAX_TAGS
+                      ? "none"
+                      : "0 2px 10px 0 rgba(59,130,246,0.13)",
+                  transition: "all 0.19s",
+                  "&:hover": {
+                    bgcolor:
+                      !inputValue.trim() || tags.length >= MAX_TAGS
+                        ? "#e5e7eb"
+                        : "#1d4ed8",
+                  },
+                }}
+                disableElevation
+                startIcon={<Plus size={20} />}
+              >
+                Add
+              </Button>
+            </Box>
+
+            {/* Error */}
+            {errorMessage && (
+              <Typography
+                variant="body2"
+                color="error"
+                sx={{ mt: -1.5, mb: 2, ml: 1, fontWeight: 500 }}
+              >
+                {errorMessage}
+              </Typography>
+            )}
+
+            {/* Tags display */}
+            <Box sx={{ mb: 5, minHeight: 64 }}>
+              {tags.length > 0 ? (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
+                  {tags.map((tag, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        background:
+                          "linear-gradient(90deg,#eff6ff,#dbeafe 88%,#bae6fd 120%)",
+                        border: "1px solid #bfdbfe",
+                        borderRadius: 2.5,
+                        px: 2.5,
+                        py: 1,
+                        transition: "all 0.2s",
+                        "&:hover": {
+                          background: "linear-gradient(90deg,#dbeafe,#bae6fd)",
+                          borderColor: "#60a5fa",
+                        },
+                        cursor: "pointer",
+                        fontWeight: 500,
+                      }}
+                    >
+                      <Hash
+                        style={{
+                          width: 16,
+                          height: 16,
+                          color: "#2563eb",
+                          marginRight: 6,
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          color: "#1e40af",
+                          fontWeight: 600,
+                          mr: 0.5,
+                          fontSize: 15,
+                        }}
+                      >
+                        {tag}
+                      </Typography>
+                      <IconButton
+                        onClick={() => handleRemoveTag(index)}
+                        size="small"
+                        sx={{
+                          ml: 0.5,
+                          p: "3px",
+                          bgcolor: "transparent",
+                          color: "#2563eb",
+                          opacity: 0.4,
+                          transition: "opacity 0.18s",
+                          "&:hover": {
+                            bgcolor: "#e0e7ff",
+                            opacity: 1,
+                          },
+                        }}
+                      >
+                        <CloseIcon style={{ width: 14, height: 14 }} />
+                      </IconButton>
+                    </Box>
+                  ))}
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    py: 5,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 60,
+                      height: 60,
+                      background: "#f3f4f6",
+                      borderRadius: 4,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      mb: 2,
+                    }}
+                  >
+                    <TagIcon
+                      style={{ width: 32, height: 32, color: "#cbd5e1" }}
+                    />
+                  </Box>
+                  <Typography sx={{ color: "#64748b", fontSize: 15 }}>
+                    No tags added yet. You can add up to {MAX_TAGS} tags.
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Box>
+
+          {/* Footer */}
+          <Box
+            sx={{
+              px: 2,
+              py: 2,
+              bgcolor: "#f9fafb",
+              borderTop: "1px solid #f3f4f6",
+              borderRadius: "0 0 16px 16px",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography sx={{ fontSize: 13, color: "#64748b" }}>
+                Tags help organize and filter your surveys
+              </Typography>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Button
+                  onClick={onClose}
+                  sx={{
+                    px: 3,
+                    py: 1.7,
+                    color: "#334155",
+                    fontWeight: 600,
+                    borderRadius: 3,
+                    bgcolor: "transparent",
+                    transition: "background 0.15s",
+                    "&:hover": {
+                      bgcolor: "#e2e8f0",
+                      color: "#0f172a",
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSave}
+                  disabled={isLoading}
+                  sx={{
+                    px: 4,
+                    py: 1.7,
+                    bgcolor: "#2563eb",
+                    color: "#fff",
+                    fontWeight: 700,
+                    borderRadius: 3,
+                    boxShadow: isLoading
+                      ? "none"
+                      : "0 2px 10px 0 rgba(59,130,246,0.13)",
+                    "&:hover": {
+                      bgcolor: "#1d4ed8",
+                    },
+                    minWidth: 120,
+                  }}
+                >
+                  {isLoading ? (
+                    <CircularProgress size={18} sx={{ color: "#fff", mr: 1 }} />
+                  ) : null}
+                  {isLoading ? "Saving Tags..." : "Save Tags"}
+                </Button>
+              </Box>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Modal>
