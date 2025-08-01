@@ -26,6 +26,7 @@ const RenameWorkspaceModal = ({
   open,
   onClose,
   selectedWorkspace,
+  setSelectedWorkspace,
 }: WorkspaceRenameModalProps) => {
   // const { background, textStyles } = useAppTheme();
   const [updateWorkspaceName, { isLoading, isSuccess, isError, error }] =
@@ -41,7 +42,14 @@ const RenameWorkspaceModal = ({
 
   const renameWorkspace = async (data: WorkspaceRename) => {
     const { name } = data;
-    await updateWorkspaceName({ workspaceId, name });
+    const updated = await updateWorkspaceName({ workspaceId, name }).unwrap();
+
+    if (selectedWorkspace?.workspaceId === updated.workspaceId) {
+      setSelectedWorkspace((prev) =>
+        prev ? { ...prev, name: updated.name } : prev
+      );
+    }
+
     onClose();
   };
 

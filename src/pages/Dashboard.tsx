@@ -37,6 +37,7 @@ const Dashboard = () => {
   } = useGetWorkspacesQuery("workspacesList", {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
+    
   });
 
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace>();
@@ -187,6 +188,7 @@ const Dashboard = () => {
         open={renameWorkspaceModalOpen}
         onClose={() => setRenameWorkspaceModalOpen(false)}
         selectedWorkspace={selectedWorkspace!}
+        setSelectedWorkspace={setSelectedWorkspace}
       />
 
       <DeleteWorkspaceModal

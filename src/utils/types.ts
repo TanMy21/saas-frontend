@@ -1124,6 +1124,9 @@ export interface WorkspaceRenameModalProps {
   open: boolean;
   onClose: () => void;
   selectedWorkspace: Workspace;
+  setSelectedWorkspace: React.Dispatch<
+    React.SetStateAction<Workspace | undefined>
+  >;
 }
 
 export interface WorkspaceRename {
