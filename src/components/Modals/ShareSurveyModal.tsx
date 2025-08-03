@@ -22,8 +22,9 @@ import {
   Typography,
 } from "@mui/material";
 import QRCode from "react-qr-code";
-import { useParams } from "react-router-dom";
 
+import { setShareModalOpen } from "../../app/slices/surveySlice";
+import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { ShareSurveyProps } from "../../utils/types";
 
@@ -36,6 +37,10 @@ const ShareSurveyModal = ({
 }: ShareSurveyProps) => {
   // const { background, textStyles } = useAppTheme();
   const [copied, setCopied] = useState(false);
+  const dispatch = useAppDispatch();
+  const publishedOpen = useAppSelector(
+    (state) => state.surveyBuilder.isShareModalOpen
+  );
 
   const [copyLinkStatus, setCopyLinkStatus] = useState<"idle" | "copied">(
     "idle"
@@ -48,7 +53,6 @@ const ShareSurveyModal = ({
   >("idle");
   const qrContainerRef = useRef<HTMLDivElement>(null);
 
-  const { surveyID } = useParams();
   const shareBaseURL = import.meta.env.VITE_SHARE_BASE_URL;
   const shareURL = `${shareBaseURL}/${shareID}`;
 
@@ -66,6 +70,7 @@ const ShareSurveyModal = ({
     setShareBtnSelected(false);
     setOpen(false);
     setCopied(false);
+    dispatch(setShareModalOpen(false));
   };
 
   const handleCopyQR = () => {
@@ -120,7 +125,7 @@ const ShareSurveyModal = ({
       const ctx = canvas.getContext("2d");
       ctx?.drawImage(img, 0, 0, 200, 200);
       const link = document.createElement("a");
-      link.download = "qr-code.png";
+      link.download = `${shareID}-qr-code.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
       URL.revokeObjectURL(url);
@@ -138,7 +143,7 @@ const ShareSurveyModal = ({
   }, [open]);
 
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={Boolean(open) || Boolean(publishedOpen)} onClose={handleClose}>
       <Box
         tabIndex={-1}
         sx={{
@@ -232,8 +237,17 @@ const ShareSurveyModal = ({
                 sx={{
                   bgcolor: "grey.50",
                   borderRadius: 2,
-                  "& fieldset": { borderColor: "grey.200" },
-                  "&hover": { borderColor: "none" },
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      border: "none",
+                    },
+                    "&:hover fieldset": {
+                      border: "none",
+                    },
+                    "&.Mui-focused fieldset": {
+                      border: "none",
+                    },
+                  },
                   pr: 0,
                 }}
               />

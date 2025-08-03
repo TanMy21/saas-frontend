@@ -853,6 +853,8 @@ export interface SurveyBuilderCanvasProps {
 
 export interface SurveyBuilderState {
   elements: Element[];
+  isShareModalOpen?:boolean;
+  isGenerateModalOpen:boolean;
 }
 
 export interface SurveyBuilderLeftSidebarProps {

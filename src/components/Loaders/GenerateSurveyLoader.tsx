@@ -1,4 +1,6 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+
+import GenerateSurveyAnimation from "./GenerateSurveyAnimation";
 
 const GenerateSurveyLoader = () => {
   return (
@@ -22,12 +24,7 @@ const GenerateSurveyLoader = () => {
           gap: 2,
         }}
       >
-        <CircularProgress
-          size={100}
-          sx={{
-            color: "#6366F1",
-          }}
-        />
+        <GenerateSurveyAnimation />
         <Typography
           sx={{
             fontSize: "36px",
@@ -56,6 +53,7 @@ const GenerateSurveyLoader = () => {
             fontSize: "24px",
             color: "#71717A",
             marginTop: "8px",
+            marginBottom:"8%",
             opacity: 0,
             animation: "fadeIn 2s ease forwards",
             "@keyframes fadeIn": {

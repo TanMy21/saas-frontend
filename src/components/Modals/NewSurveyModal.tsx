@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useCreateSurveyMutation } from "../../app/slices/surveysApiSlice";
+import { setGenerateModalOpen } from "../../app/slices/surveySlice";
+import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 // import { useAppTheme } from "../../theme/useAppTheme";
 import { ErrorData, NewSurveyModalProps } from "../../utils/types";
 
@@ -19,10 +21,13 @@ const NewSurveyModal = ({
 }: NewSurveyModalProps) => {
   // const { background } = useAppTheme();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [hoveredOption, setHoveredOption] = useState<string | null>(null);
   const openModal = true;
   const openModalImport = true;
-  const openModalGenerate = true;
+  const openGenerate = useAppSelector(
+    (state) => state.surveyBuilder.isGenerateModalOpen
+  );
 
   const [createSurvey, { isError, error }] = useCreateSurveyMutation();
 
@@ -64,9 +69,11 @@ const NewSurveyModal = ({
         workspaceId,
       }).unwrap();
 
+      dispatch(setGenerateModalOpen(true));
+
       if (surveyCreated) {
         navigate(`/survey/${surveyCreated.surveyID}`, {
-          state: { workspaceId, workspaceName, openModalGenerate },
+          state: { workspaceId, workspaceName, openGenerate },
         });
       }
     } catch (error) {
@@ -182,8 +189,8 @@ const NewSurveyModal = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  width:40,
-                  height:40,
+                  width: 40,
+                  height: 40,
                 }}
               >
                 <FiberNewIcon

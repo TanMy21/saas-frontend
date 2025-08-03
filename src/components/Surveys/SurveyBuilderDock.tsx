@@ -10,6 +10,7 @@ import { MdEdit } from "react-icons/md";
 import { RiAiGenerate } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 
+import { useAppSelector } from "../../app/typedReduxHooks";
 import { DockItemProps, SurveyIslandProps } from "../../utils/types";
 import PublishSurveyAlert from "../alert/PublishSurveyAlert";
 import GenerateSurveyModal from "../Modals/GenerateSurveyModal";
@@ -29,11 +30,14 @@ const SurveyBuilderDock = ({
   published,
 }: SurveyIslandProps) => {
   const { surveyID } = useParams();
+  const openGenerateState = useAppSelector(
+    (state) => state.surveyBuilder.isGenerateModalOpen
+  );
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [openShare, setOpenShare] = useState(false);
   const [openImport, setOpenImport] = useState(false);
-  const [openGenerate, setOpenGenerate] = useState(false);
+  const [openGenerate, setOpenGenerate] = useState(openGenerateState);
   const [openEdit, setOpenEdit] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);

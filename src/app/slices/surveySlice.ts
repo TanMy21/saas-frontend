@@ -4,6 +4,8 @@ import { Element, SurveyBuilderState } from "../../utils/types";
 
 const initialState: SurveyBuilderState = {
   elements: [],
+  isShareModalOpen: false,
+  isGenerateModalOpen: false,
 };
 
 export const surveyBuilderSlice = createSlice({
@@ -12,6 +14,12 @@ export const surveyBuilderSlice = createSlice({
   reducers: {
     setElements: (state, action: PayloadAction<Element[]>) => {
       state.elements = action.payload;
+    },
+    setShareModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.isShareModalOpen = action.payload;
+    },
+    setGenerateModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.isGenerateModalOpen = action.payload;
     },
     addElement: (state, action: PayloadAction<Element>) => {
       state.elements.push(action.payload);
@@ -40,6 +48,8 @@ export const surveyBuilderSlice = createSlice({
 
 export const {
   setElements,
+  setShareModalOpen,
+  setGenerateModalOpen,
   addElement,
   deleteElementRedux,
   updateElementOrder,

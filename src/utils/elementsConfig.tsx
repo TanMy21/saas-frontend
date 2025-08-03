@@ -63,25 +63,82 @@ export const questionTypes: {
   label: string;
   type: string;
   icon: JSX.Element;
+  color: string;
+  bgColor: string;
+  borderColor: string;
 }[] = [
   {
     id: 1,
     label: "Binary",
     type: "BINARY",
+    color: "#7c3aed",
     icon: elementIcons.BINARY,
+    bgColor: "#f5f3ff",
+    borderColor: "#ddd6fe",
   },
   {
     id: 2,
     label: "Multiple Choice",
     type: "MULTIPLE_CHOICE",
+    color: "#2563eb",
     icon: elementIcons.MULTIPLE_CHOICE,
+    bgColor: "#eff6ff",
+    borderColor: "#dbeafe",
   },
-  { id: 3, label: "Choice", type: "RADIO", icon: elementIcons.RADIO },
-  { id: 4, label: "Text", type: "TEXT", icon: elementIcons.TEXT },
-  { id: 5, label: "Number", type: "NUMBER", icon: elementIcons.NUMBER },
-  { id: 6, label: "Scale", type: "RANGE", icon: elementIcons.RANGE },
-  { id: 7, label: "Rank", type: "RANK", icon: elementIcons.RANK },
-  { id: 8, label: "Media", type: "MEDIA", icon: elementIcons.MEDIA },
+  {
+    id: 3,
+    label: "Choice",
+    type: "RADIO",
+    icon: elementIcons.RADIO,
+    color: "#22c55e",
+    bgColor: "#f0fdf4",
+    borderColor: "#bbf7d0",
+  },
+  {
+    id: 4,
+    label: "Text",
+    type: "TEXT",
+    icon: elementIcons.TEXT,
+    color: "#ea580c",
+    bgColor: "#fff7ed",
+    borderColor: "#ffedd5",
+  },
+  {
+    id: 5,
+    label: "Number",
+    type: "NUMBER",
+    icon: elementIcons.NUMBER,
+    color: "#6366f1",
+    bgColor: "#eef2ff",
+    borderColor: "#c7d2fe",
+  },
+  {
+    id: 6,
+    label: "Scale",
+    type: "RANGE",
+    icon: elementIcons.RANGE,
+    color: "#14b8a6",
+    bgColor: "#f0fdfa",
+    borderColor: "#99f6e4",
+  },
+  {
+    id: 7,
+    label: "Rank",
+    type: "RANK",
+    icon: elementIcons.RANK,
+    color: "#e11d48",
+    bgColor: "#fff1f2",
+    borderColor: "#fecdd3",
+  },
+  {
+    id: 8,
+    label: "Media",
+    type: "MEDIA",
+    icon: elementIcons.MEDIA,
+    color: "#06b6d4",
+    bgColor: "#ecfeff",
+    borderColor: "#a5f3fc",
+  },
 ];
 
 export const chipTypeColors: Record<string, string> = {

@@ -5,6 +5,7 @@ import { useLocation, useParams } from "react-router-dom";
 
 import { setSurveyCanvas } from "../app/slices/surveyCanvasSlice";
 import { useGetSurveyCanvasByIdQuery } from "../app/slices/surveysApiSlice";
+import { setGenerateModalOpen } from "../app/slices/surveySlice";
 import { RootState } from "../app/store";
 import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
 import CanvasConsole from "../components/CanvasConsole";
@@ -66,7 +67,12 @@ const SurveyBuilder = () => {
     refetchOnMountOrArgChange: true,
   });
   const { getSurveyCanvas } = surveyCanvas ?? {};
-  const { questions = [] as Element[], title, shareID, published } = getSurveyCanvas ?? {};
+  const {
+    questions = [] as Element[],
+    title,
+    shareID,
+    published,
+  } = getSurveyCanvas ?? {};
 
   useFetchAuthenticatedUser();
   useSurveyBuilderStateReset(surveyID, refetchCanvas);
@@ -86,6 +92,13 @@ const SurveyBuilder = () => {
 
   useSortElements(elements, setQuestionId, questionId);
   useSelectedQuestion(selectedQuestion, dispatch);
+
+  useEffect(() => {
+    if (location.state?.openGenerate) {
+      dispatch(setGenerateModalOpen(true));
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   if (isLoadingCanvas)
     return (

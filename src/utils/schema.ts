@@ -51,15 +51,26 @@ export const registerSchema: ZodType<RegisterFormData> = z
     path: ["confirmPassword"],
   });
 
-export const settingsUpdateSchema = z.object({
-  startDate: z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), {
-    message: "Invalid start date",
-  }),
-  endDate: z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), {
-    message: "Invalid end date",
-  }),
-  language: z.string(),
-});
+export const settingsUpdateSchema = z
+  .object({
+    startDate: z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), {
+      message: "Start date is required",
+    }),
+    endDate: z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), {
+      message: "End date is required",
+    }),
+    language: z.string().min(1, "Please select a language"),
+  })
+  .refine(
+    (data) =>
+      data.startDate &&
+      data.endDate &&
+      dayjs(data.endDate).isSameOrAfter(dayjs(data.startDate), "day"),
+    {
+      message: "End date cannot be before start date",
+      path: ["endDate"],
+    }
+  );
 
 export const titleDescriptionUpdateSchema = z.object({
   title: z.string().min(1, "Title must be at least 1 character long"),

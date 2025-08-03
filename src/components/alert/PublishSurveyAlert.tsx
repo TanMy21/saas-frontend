@@ -14,7 +14,7 @@ const PublishSurveyAlert = ({ open, setOpen }: PublishSurveyAlertProps) => {
   return (
     <Snackbar
       open={open}
-      autoHideDuration={2000}
+      autoHideDuration={5000}
       onClose={handleClose}
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
     >
@@ -22,7 +22,13 @@ const PublishSurveyAlert = ({ open, setOpen }: PublishSurveyAlertProps) => {
         variant="filled"
         onClose={handleClose}
         severity="error"
-        sx={{ width: "100%", fontSize: 16, fontWeight: 600, color: "white" }}
+        sx={{
+          width: "100%",
+          fontSize: 16,
+          fontWeight: 600,
+          color: "white",
+          zIndex: 2500,
+        }}
       >
         Please publish the survey to generate a shareable link.
       </Alert>

@@ -159,7 +159,7 @@ const DeleteSurveyModal = ({
                     variant="h6"
                     sx={{ fontWeight: 600, color: "#111827" }}
                   >
-                    Delete this Workspace?
+                    Delete this survey?
                   </Typography>
                 </Box>
                 <IconButton
@@ -197,7 +197,7 @@ const DeleteSurveyModal = ({
                       fontWeight: 600,
                     }}
                   >
-                    You will lose all the data associated with this workspace.
+                    You will lose all the data associated with this survey
                   </Typography>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -220,7 +220,7 @@ const DeleteSurveyModal = ({
                         mb: 0.5,
                       }}
                     >
-                      Enter the workspace name to confirm
+                      Enter the survey name to confirm
                     </Typography>
                     <form
                       onSubmit={handleSubmit(handleDeleteSurvey)}
@@ -307,8 +307,8 @@ const DeleteSurveyModal = ({
                             }}
                           >
                             {confirmationMatch
-                              ? "Workspace name confirmed"
-                              : "Workspace name doesn't match"}
+                              ? "Survey name confirmed"
+                              : "Survey name doesn't match"}
                           </Typography>
                         </Box>
                       )}

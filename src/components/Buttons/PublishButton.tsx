@@ -1,20 +1,34 @@
 import { Button } from "@mui/material";
 
 import { usePublishSurveyMutation } from "../../app/slices/surveysApiSlice";
+import { setShareModalOpen } from "../../app/slices/surveySlice";
+import { useAppDispatch } from "../../app/store";
 import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
 import { PublishButtonProps } from "../../utils/types";
 
 const PublishButton = ({ surveyID, published }: PublishButtonProps) => {
   const refetchCanvas = useSurveyCanvasRefetch();
+  const dispatch = useAppDispatch();
   const [publishSurvey, { isLoading }] = usePublishSurveyMutation();
-  console.log("Publishe: ", published);
+
   const handlePublish = async () => {
+    if (published) {
+      dispatch(setShareModalOpen(false));
+    }
+
     try {
-      await publishSurvey({
+      const surveyPublished = await publishSurvey({
         surveyID,
         published: !published,
       });
-      refetchCanvas();
+      if (surveyPublished) {
+        refetchCanvas();
+        if (!published) {
+          setTimeout(() => {
+            dispatch(setShareModalOpen(true));
+          }, 1000);
+        }
+      }
     } catch (error) {
       console.error(error);
     }

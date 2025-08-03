@@ -5,11 +5,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
+  CircularProgress,
+  Divider,
   IconButton,
   Modal,
   TextField,
   Typography,
 } from "@mui/material";
+import { FileText } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -18,20 +21,19 @@ import {
   useGetSurveyByIdQuery,
   useUpdateSurveyTitleandDescriptionMutation,
 } from "../../app/slices/surveysApiSlice";
-import { useAppTheme } from "../../theme/useAppTheme";
+// import { useAppTheme } from "../../theme/useAppTheme";
 import { titleDescriptionUpdateSchema } from "../../utils/schema";
 import {
   ErrorData,
   SurveyTitleAndDescription,
   SurveyTitleEditModalProps,
 } from "../../utils/types";
-import FormErrors from "../FormErrors";
 
 const SurveyTitleEditModal = ({
   openEdit,
   setOpenEdit,
 }: SurveyTitleEditModalProps) => {
-  const { textStyles } = useAppTheme();
+  // const { textStyles } = useAppTheme();
   const { surveyID } = useParams();
   const { data: survey } = useGetSurveyByIdQuery(surveyID, {
     skip: !surveyID,
@@ -68,9 +70,7 @@ const SurveyTitleEditModal = ({
 
   const submitUpdateData = async (data: SurveyTitleAndDescription) => {
     try {
-      console.log("Submittedd");
       const { title, description } = data;
-      console.log(data);
       await updateSurveyTitleandDescription({ surveyID, title, description });
     } catch (error) {
       console.log("Error: ", error);
@@ -117,215 +117,201 @@ const SurveyTitleEditModal = ({
     <Modal
       open={openEdit}
       onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      aria-labelledby="edit-survey-modal-title"
+      aria-describedby="edit-survey-modal-description"
+      closeAfterTransition
     >
       <Box
         sx={{
           position: "absolute",
-          display: "flex",
-          flexDirection: "column",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          minHeight: 280,
-          width: 500,
-          bgcolor: "#FFFFFF",
-          borderRadius: "16px",
-          boxShadow: 24,
-          overflow: "hidden",
+          bgcolor: "#fff",
+          borderRadius:2,
+          boxShadow: 8,
+          width: "100%",
+          maxWidth: 500,
+          outline: "none",
         }}
       >
+        {/* Header */}
         <Box
           sx={{
             display: "flex",
-            width: "100%",
-            height: "16%",
-            margin: "auto",
-            borderBottom: "2px solid #E0E0E0",
+            alignItems: "center",
+            justifyContent: "space-between",
+            p: 3,
+            borderBottom: "1px solid #f3f4f6",
+            gap: 2,
           }}
         >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box sx={{ p: 1, bgcolor: "#EFF6FF", borderRadius: 2 }}>
+              <FileText size={20} color="#2563EB" />
+            </Box>
+            <Box>
+              <Typography
+                sx={{ fontSize: 20, fontWeight: 600, color: "#111827" }}
+              >
+                Edit Survey
+              </Typography>
+              <Typography sx={{ fontSize: 14, color: "#6B7280" }}>
+                Update your survey details
+              </Typography>
+            </Box>
+          </Box>
+          <IconButton
+            onClick={handleClose}
+            sx={{
+              p: 1,
+              color: "grey.400",
+              transition: "all 0.2s",
+              "&:hover": {
+                color: "grey.600",
+                bgcolor: "grey.100",
+              },
+              borderRadius: 2,
+            }}
+          >
+            <CloseIcon style={{ width: 28, height: 28 }} />
+          </IconButton>
+        </Box>
+
+        {/* Content */}
+        <form onSubmit={handleSubmit(submitUpdateData)}>
+          <Box sx={{ p: 3, pb: 2 }}>
+            {/* Title */}
+            <Box sx={{ mb: 2 }}>
+              <Typography
+                sx={{ fontSize: 14, fontWeight: 700, mb: 1, color: "#374151" }}
+              >
+                Survey Title
+              </Typography>
+              <TextField
+                id="title"
+                {...register("title")}
+                variant="outlined"
+                placeholder="Enter survey title..."
+                error={!!errors.title}
+                helperText={errors.title?.message}
+                fullWidth
+                sx={{
+                  bgcolor: "#F9FAFB",
+                  borderRadius: 2,
+                  height: "48px",
+                  "& .MuiInputBase-root": {
+                    borderRadius: 2,
+                    fontSize: 16,
+                    px: 2,
+                    py: 1,
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    minHeight: 48,
+                  },
+                }}
+              />
+            </Box>
+            {/* Description */}
+            <Box sx={{ mb: 1 }}>
+              <Typography
+                sx={{ fontSize: 14, fontWeight: 700, mb: 1, color: "#374151" }}
+              >
+                Description
+              </Typography>
+              <TextField
+                id="description"
+                {...register("description")}
+                variant="outlined"
+                multiline
+                minRows={4}
+                maxRows={5}
+                placeholder="Describe your survey purpose and goals..."
+                error={!!errors.description}
+                helperText={errors.description?.message}
+                fullWidth
+                sx={{
+                  bgcolor: "#F9FAFB",
+                  borderRadius: 2,
+                  "& .MuiInputBase-root": {
+                    borderRadius: 2,
+                    fontSize: 15,
+                    px: 2,
+                    py: 1,
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    minHeight: 90,
+                  },
+                }}
+              />
+            </Box>
+          </Box>
+
+          {/* Footer */}
+          <Divider />
           <Box
             sx={{
               display: "flex",
-              width: "98%",
-              height: "98%",
-              margin: "auto",
-              justifyContent: "space-between",
               alignItems: "center",
-              pl: 2,
-              pr: 1,
+              justifyContent: "flex-end",
+              gap: 2,
+              p: 1.5,
+              pt: 2,
+              bgcolor: "#F9FAFB",
+              borderRadius: "0 0 16px 16px",
             }}
           >
-            <Typography sx={textStyles.modalTitle}>Edit</Typography>
-            <IconButton
-              aria-label="more"
-              aria-controls="long-menu"
-              aria-haspopup="true"
+            <Button
+              type="button"
               onClick={handleClose}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "96%",
-            height: "84%",
-            margin: "auto",
-            gap: 1,
-            // border: "2px solid red",
-          }}
-        >
-          <form
-            onSubmit={handleSubmit(submitUpdateData)}
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Box
+              variant="outlined"
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                height: "100%",
-                gap: 1,
-                // border: "1px solid blue",
+                color: "grey.700",
+                bgcolor: "grey.100",
+                borderColor: "grey.200",
+                fontWeight: 600,
+                borderRadius: 2,
+                py: 1.5,
+                transition: "all 0.2s",
+                "&:hover": {
+                  bgcolor: "grey.200",
+                  transform: "scale(0.98)",
+                  border: "none",
+                },
+                "&:active": { transform: "scale(0.95)" },
               }}
             >
-              {/* --------------------- Title -------------------- */}
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  margin: "auto",
-                  gap: 2,
-                  width: "98%",
-                  height: "36%",
-                  // border: "2px solid orange",
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    fontStyle: "bold",
-                    color: "#272F3F",
-                  }}
-                >
-                  Title
-                </Typography>
-                <TextField
-                  id="title"
-                  {...register("title")}
-                  sx={{
-                    marginTop: "-2%",
-                    width: "100%",
-                    "& .MuiInputBase-root": {
-                      height: "48px",
-                      borderRadius: 2,
-                      border: "1px solid #e5e7eb",
-                      px: 0.5,
-                      py: 0.5,
-                      "&:hover": { borderColor: "#a3a3a3" },
-                      "&.Mui-focused": {
-                        borderColor: "transparent",
-                      },
-                    },
-                  }}
-                />
-                {errors.title && <FormErrors errors={errors.title.message} />}
-              </Box>
-              {/* --------------------- Description ----------------------- */}
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  margin: "auto",
-                  gap: 2,
-                  width: "98%",
-                  height: "36%",
-                  // border: "2px solid orange",
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    fontStyle: "bold",
-                    color: "#37416D",
-                  }}
-                >
-                  Description
-                </Typography>
-                <TextField
-                  id="description"
-                  autoFocus
-                  {...register("description")}
-                  sx={{
-                    marginTop: "-2%",
-                    width: "100%",
-                    "& .MuiInputBase-root": {
-                      height: "48px",
-                      borderRadius: 2,
-                      border: "1px solid #e5e7eb",
-                      px: 0.5,
-                      py: 0.5,
-                      "&:hover": { borderColor: "#a3a3a3" },
-                      "&.Mui-focused": {
-                        borderColor: "transparent",
-                      },
-                    },
-                  }}
-                />
-                {errors.description && (
-                  <FormErrors errors={errors.description.message} />
-                )}
-              </Box>
-              {/* Buttons */}
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  margin: "auto",
-                  gap: 2,
-                  width: "98%",
-                  height: "12%",
-                  // border: "2px solid orange",
-                  p: 0.5,
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    margin: "auto",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    gap: "12px",
-                    width: "98%",
-                    height: "92%",
-                  }}
-                >
-                  <Button onClick={handleClose} fullWidth variant="cancelBtn">
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="submitBtn2"
-                    sx={{ width: "100px" }}
-                  >
-                    {isLoading ? "Saving..." : "Save"}
-                  </Button>
-                </Box>
-              </Box>
-            </Box>
-          </form>
-        </Box>
+              Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                bgcolor: "#2563EB",
+                borderRadius: 2,
+                px: 4,
+                py: 1.25,
+                color: "#fff",
+                fontWeight: 600,
+                textTransform: "none",
+                boxShadow: "none",
+                "&:hover": { bgcolor: "#1d4ed8" },
+                minWidth: 120,
+              }}
+              disabled={isLoading}
+              startIcon={
+                isLoading && <CircularProgress size={18} color="inherit" />
+              }
+            >
+              {isLoading ? "Saving..." : "Save Changes"}
+            </Button>
+          </Box>
+        </form>
       </Box>
     </Modal>
   );
