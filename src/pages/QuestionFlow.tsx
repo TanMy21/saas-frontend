@@ -11,6 +11,7 @@ import { LocationStateProps } from "../utils/types";
 const QuestionFlow = () => {
   const location = useLocation();
   const params = useParams();
+
   const { headerProps } = (location.state as LocationStateProps) || {};
   const { survey, workspaceId, workspaceName } = headerProps || {};
 

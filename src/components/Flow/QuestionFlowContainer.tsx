@@ -63,9 +63,15 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
     setSelectedNode(node);
     setOpenConditions(true);
-    setConditions([]);
     setErrors(() => ({}));
     setIsValidArray(() => []);
+
+    const existingConditions =
+      questionConditions?.filter(
+        (cond: Condition) => cond.relatedQuestionID === node.id
+      ) ?? [];
+
+    setConditions(existingConditions);
 
     setEdgeFormData((prev) => ({
       ...prev,
@@ -140,6 +146,21 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
         target: Number(connection.target),
       }));
     }
+
+    const existingConditions =
+      questionConditions?.filter(
+        (cond: Condition) => cond.relatedQuestionID === connection.source
+      ) ?? [];
+
+    const newCondition = {
+      flowConditionID: "",
+      relatedQuestionID: connection.source ?? "",
+      goto_questionID: connection.target ?? "",
+      conditionType: "",
+      conditionValue: null,
+    };
+
+    setConditions([...existingConditions, newCondition]);
 
     setErrors({});
     setIsValidArray([]);

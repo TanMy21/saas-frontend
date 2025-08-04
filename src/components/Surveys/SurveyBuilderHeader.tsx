@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 import { Box, Toolbar } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
+import { useParams } from "react-router-dom";
 
-import { RootState } from "../../app/store";
-import { useAppSelector } from "../../app/typedReduxHooks";
+import { useGetSurveyCanvasByIdQuery } from "../../app/slices/surveysApiSlice";
 import { SurveyBuilderHeaderProps } from "../../utils/types";
 import PublishButton from "../Buttons/PublishButton";
 import HeaderIconMenu from "../HeaderIconMenu";
@@ -17,15 +17,22 @@ const SurveyBuilderHeader = ({
   workspaceId,
   workspaceName,
 }: SurveyBuilderHeaderProps) => {
-  const [surveyTitle, setSurveyTitle] = useState<string | undefined>("");
+  const { surveyID } = useParams();
   const [tabValue, setTabValue] = useState<string>("create");
 
-  const surveyCanvas = useAppSelector(
-    (state: RootState) => state.surveyCanvas.data
-  );
+  const { data: surveyCanvas, refetch: refetchCanvas } =
+    useGetSurveyCanvasByIdQuery(surveyID, {
+      skip: !surveyID,
 
+      refetchOnFocus: true,
+      refetchOnMountOrArgChange: true,
+    });
   const { getSurveyCanvas } = surveyCanvas ?? {};
-  const { surveyID, title, published } = getSurveyCanvas ?? {};
+  const {
+    title,
+
+    published,
+  } = getSurveyCanvas ?? {};
 
   useEffect(() => {
     if (location.pathname.includes("/results")) {
@@ -35,8 +42,16 @@ const SurveyBuilderHeader = ({
     } else if (location.pathname.includes("/survey")) {
       setTabValue("create");
     }
-    setSurveyTitle(title);
   }, [title, location.pathname]);
+
+  useEffect(() => {
+    if (surveyID) {
+      refetchCanvas();
+    }
+  }, [surveyID, refetchCanvas]);
+
+  console.log("Survey ID: ", surveyID);
+  console.log("Title: ", title);
 
   return (
     <AppBar
@@ -81,7 +96,7 @@ const SurveyBuilderHeader = ({
           >
             <SurveyNavigation
               survey={survey}
-              surveyTitle={surveyTitle}
+              surveyTitle={title}
               workspaceId={workspaceId}
               workspaceName={workspaceName}
             />
@@ -104,7 +119,7 @@ const SurveyBuilderHeader = ({
             <SurveyBuilderHeaderTabs
               tabValue={tabValue}
               setTabValue={setTabValue}
-              surveyID={surveyID}
+              surveyID={getSurveyCanvas?.surveyID}
               survey={survey}
               workspaceId={workspaceId}
               workspaceName={workspaceName}
@@ -124,7 +139,10 @@ const SurveyBuilderHeader = ({
               // border: "2px solid orange",
             }}
           >
-            <PublishButton surveyID={surveyID} published={published} />
+            <PublishButton
+              surveyID={getSurveyCanvas?.surveyID}
+              published={published}
+            />
             <HeaderIconMenu />
           </Box>
         </Box>
