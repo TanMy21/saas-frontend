@@ -1,7 +1,7 @@
 html {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
   height: 100%;
   width: 100%;
   /* For Firefox */
@@ -10,7 +10,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
   /* overflow-y: scroll; */
   height: 100%;
   width: 100%;
