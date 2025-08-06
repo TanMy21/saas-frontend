@@ -1,7 +1,5 @@
 import { BarChart3, Headphones, Shield, Smartphone, Users } from "lucide-react";
 
- 
-
 export const generateOptionLabel = (index: number, qType: string) => {
   if (qType === "RADIO" || qType === "MULTIPLE_CHOICE" || qType === "MEDIA") {
     return String.fromCharCode(65 + index);
@@ -16,7 +14,7 @@ export const features = [
   {
     id: 1,
     icon: BarChart3,
-    title: "Real-time Analytics",
+    title: "Survey Analytics",
     description:
       "Get instant insights with our advanced analytics dashboard. Track performance metrics, user behavior, and business growth in real-time.",
     image:
@@ -25,7 +23,7 @@ export const features = [
   {
     id: 2,
     icon: Users,
-    title: "Team Collaboration",
+    title: "Design",
     description:
       "Seamlessly collaborate with your team members. Share projects, assign tasks, and communicate effectively all in one place.",
     image:
@@ -34,7 +32,7 @@ export const features = [
   {
     id: 3,
     icon: Shield,
-    title: "Advanced Security",
+    title: "Flow",
     description:
       "Enterprise-grade security with end-to-end encryption, multi-factor authentication, and regular security audits.",
     image:
@@ -49,13 +47,18 @@ export const features = [
     image:
       "https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
+];
+
+export const navItems = [
   {
-    id: 5,
-    icon: Headphones,
-    title: "24/7 Support",
-    description:
-      "Our dedicated support team is available round the clock to help you succeed. Get expert assistance whenever you need it.",
-    image:
-      "https://images.pexels.com/photos/7887807/pexels-photo-7887807.jpeg?auto=compress&cs=tinysrgb&w=800",
+    name: "Platform",
+    hasDropdown: true,
+    items: ["Flow", "Customize", "True Insights", "Market Research"],
   },
+  {
+    name: "Resources",
+    hasDropdown: true,
+    items: ["Press Releases", "Blog", "Events", "Webinars"],
+  },
+  { name: "Company", hasDropdown: false },
 ];
