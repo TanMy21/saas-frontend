@@ -62,3 +62,17 @@ export const navItems = [
   },
   { name: "Company", hasDropdown: false },
 ];
+
+
+export const normalize = (s?: string | null) => (s ?? "").trim();
+
+export const isOrderable = (type?: string, order?: number) => {
+  if (!type || typeof order !== "number") return false;
+  const nonOrderableTypes = [
+    "WELCOME_SCREEN",
+    "INSTRUCTIONS",
+    "EMAIL_CONTACT",
+    "END_SCREEN",
+  ];
+  return !nonOrderableTypes.includes(type) && order > 0 && order < 9999;
+};

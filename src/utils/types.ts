@@ -211,6 +211,41 @@ interface ErrorMessage {
   message: string;
 }
 
+export type EditTarget = "none" | "title" | "description";
+
+export type EditControllerParams = {
+  questionID?: string;
+  text?: string;
+  description?: string;
+  updateElementText: (arg: { questionID?: string; text: string }) => void;
+  updateElementDescription: (arg: {
+    questionID?: string;
+    description: string;
+  }) => void;
+};
+
+export type OrderBadgeProps = {
+  show: boolean;
+  sizeMD: number;
+  sizeXL: number;
+  color: string;
+  fontSize: number;
+  value?: number;
+};
+
+export type EditableLineProps = {
+  active: boolean;
+  value?: string;
+  placeholder?: string;
+  onStartEdit: () => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
+  textFieldId: string;
+  typographySx: any;
+  textFieldSx: any;
+  cursorWhenActive?: "text" | "pointer";
+};
+
 export type ErrorFallbackProps = Readonly<{
   error: Error;
   resetErrorBoundary: () => void;
