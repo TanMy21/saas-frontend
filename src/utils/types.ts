@@ -224,6 +224,26 @@ export type EditControllerParams = {
   }) => void;
 };
 
+export interface Modal3DModelProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  title: string;
+}
+
+
+export interface FileUploadProps {
+  onFileSelect: (file: File) => void;
+}
+
+export interface UploadState {
+  isDragOver: boolean;
+  isUploading: boolean;
+  uploadProgress: number;
+  uploadedFile: File | null;
+  error: string | null;
+}
+
 export type OrderBadgeProps = {
   show: boolean;
   sizeMD: number;
