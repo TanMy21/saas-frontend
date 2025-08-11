@@ -1,3 +1,4 @@
+import { Box } from "lucide-react";
 import { AiOutlineFieldBinary } from "react-icons/ai";
 import { CiViewList } from "react-icons/ci";
 import { FaRankingStar, FaRegImage } from "react-icons/fa6";
@@ -23,6 +24,7 @@ import NumberElement from "../components/Surveys/Elements/NumberElement";
 import RankElement from "../components/Surveys/Elements/RankElement";
 import ScaleElement from "../components/Surveys/Elements/ScaleElement";
 import TextElement from "../components/Surveys/Elements/TextElement";
+import ThreeDElement from "../components/Surveys/Elements/ThreeDElement";
 import WelcomeScreenElement from "../components/Surveys/Elements/WelcomeScreenElement";
 import BinaryElementSettings from "../components/Surveys/ElementSettings/BinaryElementSettings";
 import CheckBoxElementSettings from "../components/Surveys/ElementSettings/CheckBoxElementSettings";
@@ -35,6 +37,7 @@ import NumberElementSettings from "../components/Surveys/ElementSettings/NumberE
 import RankElementSettings from "../components/Surveys/ElementSettings/RankElementSettings";
 import ScaleElementSettings from "../components/Surveys/ElementSettings/ScaleElementSettings";
 import TextElementSettings from "../components/Surveys/ElementSettings/TextElementSettings";
+import ThreeDElementSettings from "../components/Surveys/ElementSettings/ThreeDElementSettings";
 import WelcomeScreenElementSettings from "../components/Surveys/ElementSettings/WelcomeScreenElementSettings";
 import {
   ElementType,
@@ -44,6 +47,7 @@ import {
 } from "../utils/types";
 
 export const elementIcons: IconMapping = {
+  THREE_D: <Box color="#276c9bff" />,
   BINARY: <AiOutlineFieldBinary color="#033A67" />,
   EMAIL_CONTACT: <MdEmail color="#5CD6C8" />,
   END_SCREEN: <LuGalleryVerticalEnd color="#3C3737" />,
@@ -69,6 +73,15 @@ export const questionTypes: {
 }[] = [
   {
     id: 1,
+    label: "3D",
+    type: "THREE_D",
+    color: "#276c9bff",
+    icon: elementIcons.THREE_D,
+    bgColor: "#f5f3ff",
+    borderColor: "#ddd6fe",
+  },
+  {
+    id: 2,
     label: "Binary",
     type: "BINARY",
     color: "#7c3aed",
@@ -77,7 +90,7 @@ export const questionTypes: {
     borderColor: "#ddd6fe",
   },
   {
-    id: 2,
+    id: 3,
     label: "Multiple Choice",
     type: "MULTIPLE_CHOICE",
     color: "#2563eb",
@@ -86,7 +99,7 @@ export const questionTypes: {
     borderColor: "#dbeafe",
   },
   {
-    id: 3,
+    id: 4,
     label: "Choice",
     type: "RADIO",
     icon: elementIcons.RADIO,
@@ -95,7 +108,7 @@ export const questionTypes: {
     borderColor: "#bbf7d0",
   },
   {
-    id: 4,
+    id: 5,
     label: "Text",
     type: "TEXT",
     icon: elementIcons.TEXT,
@@ -104,7 +117,7 @@ export const questionTypes: {
     borderColor: "#ffedd5",
   },
   {
-    id: 5,
+    id: 6,
     label: "Number",
     type: "NUMBER",
     icon: elementIcons.NUMBER,
@@ -113,7 +126,7 @@ export const questionTypes: {
     borderColor: "#c7d2fe",
   },
   {
-    id: 6,
+    id: 7,
     label: "Scale",
     type: "RANGE",
     icon: elementIcons.RANGE,
@@ -122,7 +135,7 @@ export const questionTypes: {
     borderColor: "#99f6e4",
   },
   {
-    id: 7,
+    id: 8,
     label: "Rank",
     type: "RANK",
     icon: elementIcons.RANK,
@@ -131,7 +144,7 @@ export const questionTypes: {
     borderColor: "#fecdd3",
   },
   {
-    id: 8,
+    id: 9,
     label: "Media",
     type: "MEDIA",
     icon: elementIcons.MEDIA,
@@ -150,6 +163,7 @@ export const chipTypeColors: Record<string, string> = {
   MULTIPLE_CHOICE: "#369acc",
   RADIO: "#016023",
   TEXT: "#c45161",
+  THREE_D: "#276c9bff",
   NUMBER: "#d69e49",
   RANGE: "#036b82",
   RANK: "#ffa600",
@@ -170,6 +184,7 @@ export const elementComponents: {
   RANK: RankElement,
   RANGE: ScaleElement,
   TEXT: TextElement,
+  THREE_D: ThreeDElement,
   WELCOME_SCREEN: WelcomeScreenElement,
 };
 
@@ -187,10 +202,18 @@ export const elementSettingsComponents: {
   RANK: RankElementSettings,
   RANGE: ScaleElementSettings,
   TEXT: TextElementSettings,
+  THREE_D: ThreeDElementSettings,
   WELCOME_SCREEN: WelcomeScreenElementSettings,
 };
 
 export const elementTypes: { [key: string]: ElementType } = {
+  ThreeD: {
+    type: "Three_D",
+    icon: elementIcons.THREE_D,
+    text: "Your question here",
+    Element: ThreeDElement,
+    Settings: ThreeDElementSettings,
+  },
   Binary: {
     type: "Binary",
     icon: elementIcons.BINARY,

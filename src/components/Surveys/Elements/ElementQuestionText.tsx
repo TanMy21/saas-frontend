@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Box, TextField, Typography } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,6 +14,7 @@ import { useAppTheme } from "../../../theme/useAppTheme";
 import { ElementProps } from "../../../utils/types";
 
 const ElementQuestionText = ({ display }: ElementProps) => {
+  const DEBOUNCE_MS = 220;
   const { primary } = useAppTheme();
   const dispatch = useDispatch();
   const typographySettings = useSelector(
@@ -25,7 +26,10 @@ const ElementQuestionText = ({ display }: ElementProps) => {
   );
   const { questionID, order, text, description, type } = question || {};
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [editingTarget, setEditingTarget] = useState<
+    "none" | "title" | "description"
+  >("none");
+  const isEditing = editingTarget !== "none";
 
   const titleFontSize =
     typographySettings.titleFontSize ??
@@ -71,43 +75,127 @@ const ElementQuestionText = ({ display }: ElementProps) => {
   const [updateElementText] = useUpdateElementTextMutation();
   const [updateElementDescription] = useUpdateElementDescriptionMutation();
 
-  const handleDoubleClick = () => {
-    setIsEditing(true);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const initialRef = useRef<{ title: string; description: string }>({
+    title: "",
+    description: "",
+  });
+
+  const textTimerRef = useRef<number | null>(null);
+  const descTimerRef = useRef<number | null>(null);
+
+  const normalize = useCallback(
+    (s: string | undefined | null) => (s ?? "").trim(),
+    []
+  );
+
+  const handleEditClick = (target: "title" | "description") => {
+    initialRef.current = {
+      title: normalize(text),
+      description: normalize(description),
+    };
+    setEditingTarget(target);
   };
 
   const handleChangeText = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(updateQuestionField({ key: "text", value: event.target.value }));
-    if (questionID) {
-      dispatch(
-        updateElementField({
-          questionID,
-          key: "text",
-          value: event.target.value,
-        })
-      );
-    }
+    const next = event.target.value;
+    // ✅ Instant UI: update selectedQuestion slice immediately
+    dispatch(updateQuestionField({ key: "text", value: next }));
+
+    // ✅ Debounced: update element-level slice after user pauses typing
+    if (textTimerRef.current) window.clearTimeout(textTimerRef.current);
+    textTimerRef.current = window.setTimeout(() => {
+      if (questionID) {
+        dispatch(updateElementField({ questionID, key: "text", value: next }));
+      }
+    }, DEBOUNCE_MS) as unknown as number;
   };
 
   const handleChangeDescription = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    dispatch(
-      updateQuestionField({ key: "description", value: event.target.value })
-    );
+    const next = event.target.value;
+    // ✅ Instant UI
+    dispatch(updateQuestionField({ key: "description", value: next }));
+
+    // ✅ Debounced element update
+    if (descTimerRef.current) window.clearTimeout(descTimerRef.current);
+    descTimerRef.current = window.setTimeout(() => {
+      if (questionID) {
+        dispatch(
+          updateElementField({ questionID, key: "description", value: next })
+        );
+      }
+    }, DEBOUNCE_MS) as unknown as number;
   };
 
-  const handleBlur = () => {
-    updateElementText({ questionID, text });
-    setIsEditing(false);
+  const checkSaveTitle = useCallback(() => {
+    if (!questionID) return;
+    // ✅ Prevent empty titles
+    const next = normalize(text) || "Untitled"; // <-- change fallback text here if you prefer
+    const prev = normalize(initialRef.current.title); // ✅ Compare against snapshot taken at edit start
+    if (next !== prev) {
+      updateElementText({ questionID, text: next });
+    }
+  }, [questionID, text, normalize, updateElementText]);
+
+  const checkSaveDescription = useCallback(() => {
+    if (!questionID) return;
+    // ✅ Keep empty description so your UI shows placeholder.
+    // If you want to force a non-empty default, replace "" with "Description (optional)" below.
+    const next = normalize(description); /* || "Description (optional)" */ // ✅ Toggle if you want non-empty
+    const prev = normalize(initialRef.current.description);
+    if (next !== prev) {
+      updateElementDescription({ questionID, description: next });
+    }
+  }, [questionID, description, normalize, updateElementDescription]);
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Escape") {
+      setEditingTarget("none");
+    } else if (event.key === "Enter") {
+      if (questionID) {
+        if (editingTarget === "title") {
+          checkSaveTitle();
+        } else if (editingTarget === "description") {
+          checkSaveDescription();
+        }
+        setEditingTarget("none");
+        event.preventDefault();
+      }
+    }
   };
 
-  const handleBlurDescription = () => {
-    updateElementDescription({ questionID, description });
-    setIsEditing(false);
-  };
+  useEffect(() => {
+    if (!isEditing) return;
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (!rootRef.current) return;
+      const clickedInside = rootRef.current.contains(e.target as Node);
+      if (!clickedInside) {
+        // ✅ Outside click → save both (each with diff-check) and exit
+        checkSaveTitle();
+        checkSaveDescription();
+        setEditingTarget("none");
+      }
+    };
+
+    document.addEventListener("pointerdown", onPointerDown, true); // capture phase
+    return () =>
+      document.removeEventListener("pointerdown", onPointerDown, true);
+  }, [isEditing, checkSaveTitle, checkSaveDescription]);
+
+  // -- cleanup debounce timers on unmount -------------------------------------
+  useEffect(() => {
+    return () => {
+      if (textTimerRef.current) window.clearTimeout(textTimerRef.current); // ✅ Cleanup
+      if (descTimerRef.current) window.clearTimeout(descTimerRef.current); // ✅ Cleanup
+    };
+  }, []);
 
   return (
     <Box
+      ref={rootRef}
       sx={{
         transformOrigin: "bottom",
         display: "flex",
@@ -169,22 +257,25 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               </Box>
             )}
           <Box
-            onDoubleClick={handleDoubleClick}
+            onClick={!isEditing ? () => handleEditClick("title") : undefined}
             sx={{
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
+              cursor: editingTarget === "title" ? "text" : "pointer",
               // border: "2px solid orange",
             }}
           >
-            {isEditing ? (
+            {editingTarget === "title" ? (
               <TextField
+                autoFocus
                 id="outlined-basic"
                 type="text"
                 value={text}
                 onChange={handleChangeText}
-                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                onClick={(e) => e.stopPropagation()}
                 sx={{
                   backgroundColor: "transparent",
                   fontStyle: "italic",
@@ -244,15 +335,27 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             // border: "2px solid black",
           }}
         >
-          <Box onDoubleClick={handleDoubleClick}>
-            {isEditing ? (
+          <Box
+            onClick={
+              !isEditing ? () => handleEditClick("description") : undefined
+            }
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: editingTarget === "description" ? "text" : "pointer",
+            }}
+          >
+            {editingTarget === "description" ? (
               <TextField
                 id="outlined-basic"
                 variant="outlined"
                 type="text"
                 value={description}
                 onChange={handleChangeDescription}
-                onBlur={handleBlurDescription}
+                onKeyDown={handleKeyDown}
+                onClick={(e) => e.stopPropagation()}
                 sx={{
                   backgroundColor: "transparent",
                   "& .MuiInputBase-input": {
@@ -284,7 +387,9 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   color: descriptionTextColor,
                 }}
               >
-                {description === "" ? "Description (optional)" : description}
+                {normalize(description) === ""
+                  ? "Description (optional)"
+                  : description}
               </Typography>
             )}
           </Box>

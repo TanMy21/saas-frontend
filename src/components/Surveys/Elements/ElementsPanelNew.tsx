@@ -45,6 +45,7 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
     "RANGE",
     "RANK",
     "TEXT",
+    "THREE_D",
   ];
 
   const startElementTypeOrder: { [key: string]: number } = {

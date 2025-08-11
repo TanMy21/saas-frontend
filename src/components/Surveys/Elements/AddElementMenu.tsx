@@ -166,6 +166,19 @@ const AddElementMenu = ({
       >
         <Box display={"flex"} flexDirection={"row"}>
           <Box display={"flex"} flexDirection={"column"}>
+            <MenuItem onClick={() => handleElementAdd("THREE_D")}>
+              <Box display={"flex"} flexDirection={"row"} alignItems={"center"}>
+                <Typography
+                  sx={{ fontSize: "24px", color: "#086083ff" }}
+                  mt={1}
+                >
+                  {elementIcons.THREE_D}
+                </Typography>
+                <Typography sx={{ fontSize: "16px" }} ml={2}>
+                  3D
+                </Typography>
+              </Box>
+            </MenuItem>
             <MenuItem onClick={() => handleElementAdd("BINARY")}>
               <Box display={"flex"} flexDirection={"row"} alignItems={"center"}>
                 <Typography sx={{ fontSize: "24px", color: "#31029c" }} mt={1}>

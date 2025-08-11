@@ -577,6 +577,7 @@ export type QuestionTypeKey =
   | "RANK"
   | "RANGE"
   | "TEXT"
+  | "THREE_D"
   | "MULTIPLE_CHOICE"
   | "WELCOME_SCREEN";
 
