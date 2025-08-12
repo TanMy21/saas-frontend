@@ -1,6 +1,50 @@
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
+  overrides: [
+    // R3F JSX props (object/intensity/position/castShadow/etc.)
+    {
+      files: [
+        "src/**/3d/**/*.{ts,tsx}",
+        "src/**/r3f/**/*.{ts,tsx}",
+        "src/**/three/**/*.{ts,tsx}",
+        "src/**/Interactive3DModelViewer.tsx",
+      ],
+      rules: {
+        "react/no-unknown-property": [
+          "error",
+          {
+            ignore: [
+              // R3F/three generalized
+              "object",
+              "args",
+              "attach",
+              "position",
+              "rotation",
+              "scale",
+              "intensity",
+              "color",
+              "castShadow",
+              "receiveShadow",
+              "toneMapped",
+              "map",
+              "roughness",
+              "metalness",
+              "normalMap",
+              "envMap",
+              "transparent",
+              "opacity",
+            ],
+          },
+        ],
+      },
+    },
+
+    {
+      files: ["**/*.d.ts"],
+      rules: { "@typescript-eslint/no-empty-interface": "off" },
+    },
+  ],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",

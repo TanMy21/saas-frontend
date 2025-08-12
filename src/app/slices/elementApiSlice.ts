@@ -183,6 +183,14 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
+    upload3DModel: builder.mutation({
+      query: ({ formData, questionID }) => ({
+        url: `/q/u/model/${questionID}`,
+        method: "PATCH",
+        body: formData,
+      }),
+      invalidatesTags: ["Elements"],
+    }),
     toggleQuestionImageVisibility: builder.mutation({
       query: ({ questionID, questionImage }) => ({
         url: `/q/img/visibility`,
@@ -248,6 +256,7 @@ export const {
   useUpdateElementDescriptionMutation,
   useUploadQuestionImageMutation,
   useUploadQuestionTemplateImageMutation,
+  useUpload3DModelMutation,
   useRemoveQuestionImageMutation,
   useRemoveQuestionTemplateImageMutation,
   useRemoveQuestionBackgroundColorMutation,

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloseIcon from "@mui/icons-material/Close";
@@ -7,7 +7,6 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import {
   Alert,
-  Box,
   Button,
   Chip,
   IconButton,
@@ -17,9 +16,15 @@ import {
   Typography,
 } from "@mui/material";
 
+import { useUpload3DModelMutation } from "../../app/slices/elementApiSlice";
 import { FileUploadProps, UploadState } from "../../utils/types";
 
-const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
+const FileUpload3D = ({
+  questionID,
+  onFileSelect,
+  onUploadSuccess,
+  onUploadError,
+}: FileUploadProps) => {
   const [state, setState] = useState<UploadState>({
     isDragOver: false,
     isUploading: false,
@@ -28,21 +33,29 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
     error: null,
   });
 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [upload3DModel, { isLoading, isSuccess, isError, error, data }] =
+    useUpload3DModelMutation();
+
+  const handleUpload = useCallback(
+    async (file: File) => {
+      const formData = new FormData();
+      formData.append("modelFile", file);
+      formData.append("name", file.name);
+
+      try {
+        await upload3DModel({ formData, questionID }).unwrap();
+      } catch (e) {
+        console.error("Upload failed:", e);
+      }
+    },
+    [questionID, upload3DModel]
+  );
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const acceptedFormats = [
-    ".obj",
-    ".fbx",
-    ".gltf",
-    ".glb",
-    ".3ds",
-    ".dae",
-    ".blend",
-    ".max",
-    ".ma",
-    ".mb",
-  ];
-  const maxFileSize = 100 * 1024 * 1024; // 100MB
+  const acceptedFormats = [".gltf", ".glb"];
+  const maxFileSize = 10 * 1024 * 1024; // 100MB
 
   const validateFile = (file: File): string | null => {
     const extension = "." + file.name.split(".").pop()?.toLowerCase();
@@ -55,7 +68,7 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
     return null;
   };
 
-  // NOTE: kept your simulated upload for demo parity
+  const timerRef = useRef<number | null>(null);
   const simulateUpload = (file: File) => {
     setState((prev) => ({
       ...prev,
@@ -63,11 +76,12 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
       error: null,
       uploadProgress: 0,
     }));
-    const interval = setInterval(() => {
+    timerRef.current = window.setInterval(() => {
       setState((prev) => {
-        const newProgress = prev.uploadProgress + Math.random() * 15;
-        if (newProgress >= 100) {
-          clearInterval(interval);
+        const next = prev.uploadProgress + Math.random() * 15;
+        if (next >= 100) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          timerRef.current = null;
           return {
             ...prev,
             isUploading: false,
@@ -75,24 +89,34 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
             uploadedFile: file,
           };
         }
-        return { ...prev, uploadProgress: newProgress };
+        return { ...prev, uploadProgress: next };
       });
     }, 200);
   };
 
-  const handleFileSelect = useCallback(
-    (file: File) => {
-      const error = validateFile(file);
-      if (error) {
-        setState((prev) => ({ ...prev, error, uploadedFile: null }));
-        return;
-      }
-      onFileSelect(file); // ← unchanged
-      simulateUpload(file); // ← unchanged
+  useEffect(
+    () => () => {
+      if (timerRef.current) clearInterval(timerRef.current);
     },
-    [onFileSelect]
+    []
   );
 
+  const handleFileSelect = useCallback(
+    (file: File) => {
+      const err = validateFile(file);
+      if (err) {
+        setState((prev) => ({ ...prev, error: err, uploadedFile: null }));
+        setSelectedFile(null);
+        return;
+      }
+
+      setSelectedFile(file);
+      onFileSelect(file);
+      simulateUpload(file);
+      void handleUpload(file);
+    },
+    [handleUpload, onFileSelect]
+  );
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -124,13 +148,6 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
     [handleFileSelect]
   );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      handleFileSelect(files[0]);
-    }
-  };
-
   const resetUpload = () => {
     setState({
       isDragOver: false,
@@ -141,6 +158,20 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
     });
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      onUploadSuccess?.(data);
+    }
+  }, [isSuccess, data, onUploadSuccess]);
+
+  useEffect(() => {
+    if (isError) {
+      const msg = (error as any)?.data?.error || "Upload failed";
+      onUploadError?.(msg);
+      setState((prev) => ({ ...prev, isUploading: false, error: msg }));
+    }
+  }, [isError, error, onUploadError]);
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 Bytes";
@@ -155,21 +186,28 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
   // =======================
   if (state.uploadedFile && !state.isUploading) {
     return (
-      <Box textAlign="center" py={6}>
-        <Box
-          sx={{
-            width: 64,
-            height: 64,
+      <div
+        style={{
+          textAlign: "center",
+          paddingTop: "24px",
+          paddingBottom: "24px",
+        }}
+      >
+        <div
+          style={{
+            width: "64px",
+            height: "64px",
             borderRadius: "50%",
-            bgcolor: "success.100",
+            backgroundColor: "#E6F4EA", // success.100 equivalent
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            mb: 2,
+            marginBottom: "8px",
           }}
         >
-          <CheckCircleIcon sx={{ fontSize: 32, color: "success.main" }} />
-        </Box>
+          <CheckCircleIcon style={{ fontSize: "32px", color: "#2E7D32" }} />{" "}
+          {/* success.main equivalent */}
+        </div>
 
         <Typography variant="h6" fontWeight={700} mb={1}>
           Upload Successful!
@@ -194,14 +232,17 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
             justifyContent="center"
           >
             <InsertDriveFileIcon sx={{ color: "primary.main" }} />
-            <Box textAlign="left">
-              <Typography fontWeight={600}>
-                {state.uploadedFile.name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
+            <div style={{ textAlign: "left" }}>
+              <div style={{ fontWeight: 600 }}>{state.uploadedFile.name}</div>
+              <div
+                style={{
+                  fontSize: "0.875rem", // body2 equivalent
+                  color: "rgba(0,0,0,0.6)", // text.secondary
+                }}
+              >
                 {formatFileSize(state.uploadedFile.size)}
-              </Typography>
-            </Box>
+              </div>
+            </div>
           </Stack>
         </Paper>
 
@@ -214,7 +255,7 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
         >
           Upload Another File
         </Button>
-      </Box>
+      </div>
     );
   }
 
@@ -223,43 +264,75 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
   // =======================
   if (state.isUploading) {
     return (
-      <Box textAlign="center" py={6}>
-        <Box
-          sx={{
-            width: 64,
-            height: 64,
+      <div
+        style={{
+          textAlign: "center",
+          paddingTop: "24px",
+          paddingBottom: "24px",
+        }}
+      >
+        {/* Icon container */}
+        <div
+          style={{
+            width: "64px",
+            height: "64px",
             borderRadius: "50%",
-            bgcolor: "primary.100",
+            backgroundColor: "#BBDEFB", // primary.100
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            mb: 2,
+            marginBottom: "8px",
           }}
         >
-          <FileUploadIcon sx={{ fontSize: 32, color: "primary.main" }} />
-        </Box>
+          <FileUploadIcon style={{ fontSize: "32px", color: "#1976D2" }} />{" "}
+          {/* primary.main */}
+        </div>
 
-        <Typography variant="h6" fontWeight={700} mb={0.5}>
+        {/* Heading */}
+        <div
+          style={{
+            fontSize: "1.25rem", // matches h6
+            fontWeight: 700,
+            marginBottom: "4px",
+          }}
+        >
           Uploading...
-        </Typography>
-        <Typography variant="body2" color="text.secondary" mb={3}>
-          Please wait while we process your 3D model
-        </Typography>
+        </div>
 
-        <LinearProgress
-          variant="determinate"
-          // NOTE: MUI LinearProgress handles animation smoothly; replaces custom gradient bar
+        {/* Subtitle */}
+        <div
+          style={{
+            fontSize: "0.875rem", // body2
+            color: "rgba(0,0,0,0.6)", // text.secondary
+            marginBottom: "12px",
+          }}
+        >
+          Please wait while we process your 3D model
+        </div>
+
+        {/* Progress bar */}
+        <progress
           value={Math.round(state.uploadProgress)}
-          sx={{
-            height: 10,
-            borderRadius: 5,
-            mb: 1.5,
+          max={100}
+          style={{
+            width: "100%",
+            height: "10px",
+            borderRadius: "5px",
+            overflow: "hidden",
+            marginBottom: "6px",
+            appearance: "none",
           }}
         />
-        <Typography variant="caption" color="text.secondary">
+        {/* Percentage text */}
+        <div
+          style={{
+            fontSize: "0.75rem", // caption
+            color: "rgba(0,0,0,0.6)", // text.secondary
+          }}
+        >
           {Math.round(state.uploadProgress)}% complete
-        </Typography>
-      </Box>
+        </div>
+      </div>
     );
   }
 
@@ -271,11 +344,13 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
       {/* Upload Area */}
       <Paper
         elevation={0}
-        onDrop={handleDrop}
-        onDragOver={handleDrag}
-        onDragEnter={handleDragIn}
-        onDragLeave={handleDragOut}
-        onClick={() => fileInputRef.current?.click()}
+        onDrop={isLoading || state.isUploading ? undefined : handleDrop}
+        onDragOver={isLoading || state.isUploading ? undefined : handleDrag}
+        onDragEnter={isLoading || state.isUploading ? undefined : handleDragIn}
+        onDragLeave={isLoading || state.isUploading ? undefined : handleDragOut}
+        onClick={() =>
+          !isLoading && !state.isUploading && fileInputRef.current?.click()
+        }
         sx={{
           p: { xs: 3, sm: 4 },
           textAlign: "center",
@@ -284,6 +359,8 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
           borderRadius: 3,
           cursor: "pointer",
           transition: "all .3s ease",
+          opacity: isLoading || state.isUploading ? 0.7 : 1,
+          pointerEvents: isLoading || state.isUploading ? "none" : "auto",
           bgcolor: state.isDragOver ? "primary.50" : "background.paper",
           transform: state.isDragOver ? "scale(1.02)" : "none",
           "&:hover": {
@@ -296,49 +373,84 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
           ref={fileInputRef}
           type="file"
           accept={acceptedFormats.join(",")}
-          onChange={handleInputChange}
-          style={{ display: "none" }} // ← replaces className="hidden"
+          onChange={(e) => {
+            if (isLoading || state.isUploading) return;
+            const files = e.target.files;
+            if (files && files.length > 0) handleFileSelect(files[0]);
+          }}
+          style={{ display: "none" }}
         />
 
-        <Box
-          sx={{
+        <div
+          style={{
             transition: "transform .3s ease",
             transform: state.isDragOver ? "scale(1.05)" : "none",
+            textAlign: "center",
           }}
         >
-          <Box
-            sx={{
-              width: 80,
-              height: 80,
+          {/* Icon Circle */}
+          <div
+            style={{
+              width: "80px",
+              height: "80px",
               borderRadius: "50%",
-              bgcolor: "primary.100",
+              backgroundColor: "#BBDEFB", // primary.100
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              mb: 2,
+              marginBottom: "8px",
             }}
           >
-            <FileUploadIcon sx={{ fontSize: 40, color: "primary.main" }} />
-          </Box>
+            <FileUploadIcon style={{ fontSize: "40px", color: "#1976D2" }} />{" "}
+            {/* primary.main */}
+          </div>
 
-          <Typography variant="h6" fontWeight={800} mb={1}>
+          {/* Title */}
+          <div
+            style={{
+              fontSize: "1.25rem", // h6 equivalent
+              fontWeight: 800,
+              marginBottom: "8px",
+            }}
+          >
             {state.isDragOver ? "Drop your file here" : "Upload 3D Model"}
-          </Typography>
+          </div>
 
-          <Typography color="text.secondary" mb={2}>
+          {/* Subtitle */}
+          <div
+            style={{
+              color: "rgba(0,0,0,0.6)", // text.secondary
+              marginBottom: "16px",
+            }}
+          >
             {state.isDragOver
               ? "Release to upload your 3D model"
               : "Drag and drop your file here, or click to browse"}
-          </Typography>
+          </div>
 
-          <Button
-            variant="contained"
-            startIcon={<FileUploadIcon />}
-            sx={{ borderRadius: 2, px: 2.5, py: 1 }}
+          {/* Button */}
+          <button
+            disabled={isLoading || state.isUploading}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              backgroundColor: "#1976D2", // primary.main
+              color: "#fff",
+              border: "none",
+              borderRadius: "16px", // 2 * 8px
+              padding: "8px 20px", // py:1 (8px), px:2.5 (~20px)
+              fontSize: "0.875rem",
+              fontWeight: 500,
+              cursor:
+                isLoading || state.isUploading ? "not-allowed" : "pointer",
+              opacity: isLoading || state.isUploading ? 0.7 : 1,
+            }}
           >
+            <FileUploadIcon style={{ fontSize: "20px" }} />
             Choose File
-          </Button>
-        </Box>
+          </button>
+        </div>
       </Paper>
 
       {/* File Format Info */}
@@ -373,7 +485,7 @@ const FileUpload3D = ({ onFileSelect }: FileUploadProps) => {
         <Stack direction="row" alignItems="center" spacing={1}>
           <InsertDriveFileIcon fontSize="small" />
           <Typography variant="body2" color="text.secondary">
-            Maximum file size: 100MB
+            Maximum file size: 10MB
           </Typography>
         </Stack>
       </Paper>

@@ -144,6 +144,40 @@ export interface EdgeFormData {
   target: number;
 }
 
+export type Model3D = {
+  model3DID: string;
+  relatedQuestionID: string;
+  name: string;
+  fileUrl: string;
+  posterUrl: string;
+  public_id: string;
+  format: string;
+  sizeBytes: number;
+  polycount: number;
+  materialCount: number;
+  width: number;
+  height: number;
+  depth: number;
+  draco: boolean;
+  ktx2: boolean;
+};
+
+export interface ThreeDViewProps {
+  url: string;
+}
+
+export interface Interactive3DModelViewerProps  {
+  src: string;                 // GLB/GLTF URL (Model3D.fileUrl)
+  hdrEnvUrl?: string;          // optional HDR environment map
+  height?: number;             // canvas height (px)
+  background?: string;         // canvas background color
+  autoRotate?: boolean;        // auto-rotate model
+  autoRotateSpeed?: number;    // default 0.5
+  minDistance?: number;        // controls min zoom distance
+  maxDistance?: number;        // controls max zoom distance
+  maxPolarAngle?: number;      // prevent flipping under model
+}
+
 export interface Element {
   questionID: string;
   relatedSurveyId: string;
@@ -153,6 +187,7 @@ export interface Element {
   type: string;
   order?: number;
   questionPreferences: SurveyCanvasQuestionSettings;
+  Model3D?: Model3D;
   questionImage?: boolean;
   questionImageUrl?: string;
   questionImageAltTxt?: string;
@@ -225,15 +260,18 @@ export type EditControllerParams = {
 };
 
 export interface Modal3DModelProps {
+  questionID?: string;
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
   title: string;
 }
 
-
 export interface FileUploadProps {
+  questionID: string;
   onFileSelect: (file: File) => void;
+  onUploadSuccess?: (model: any) => void;
+  onUploadError?: (message: string) => void;
 }
 
 export interface UploadState {
@@ -909,8 +947,8 @@ export interface SurveyBuilderCanvasProps {
 
 export interface SurveyBuilderState {
   elements: Element[];
-  isShareModalOpen?:boolean;
-  isGenerateModalOpen:boolean;
+  isShareModalOpen?: boolean;
+  isGenerateModalOpen: boolean;
 }
 
 export interface SurveyBuilderLeftSidebarProps {

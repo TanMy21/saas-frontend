@@ -19,6 +19,8 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion
   );
+
+  const questionType = question?.type as QuestionTypeKey;
   const backgroundColor =
     question?.questionPreferences?.questionBackgroundColor || "white";
 
@@ -32,13 +34,13 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
     elementComponents[question?.type as QuestionTypeKey];
 
   return (
-    <Box 
+    <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         margin: "auto",
         width: "96%",
-        height: { md: "70vh", xl: "72vh" },       
+        height: { md: "70vh", xl: "72vh" },
         flexGrow: 1,
         borderRadius: "24px",
         // back: "#FFFFFF",
@@ -63,25 +65,29 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
         },
       }}
     >
-      <ElementBackgroundPreferencesButtons
-        questionID={question?.questionID!}
-        colorAnchorEl={colorAnchorEl}
-        setColorAnchorEl={setColorAnchorEl}
-      />
+      {questionType !== "THREE_D" && (
+        <>
+          <ElementBackgroundPreferencesButtons
+            questionID={question?.questionID!}
+            colorAnchorEl={colorAnchorEl}
+            setColorAnchorEl={setColorAnchorEl}
+          />
 
-      <ElementBackgroundPreferencesRemoveButtons
-        questionID={question?.questionID!}
-        templateImage={templateImage!}
-        questionBackgroundColor={
-          question?.questionPreferences?.questionBackgroundColor!
-        }
-      />
+          <ElementBackgroundPreferencesRemoveButtons
+            questionID={question?.questionID!}
+            templateImage={templateImage!}
+            questionBackgroundColor={
+              question?.questionPreferences?.questionBackgroundColor!
+            }
+          />
 
-      <QuestionBackgroundColor
-        questionID={question?.questionID!}
-        colorAnchorEl={colorAnchorEl}
-        setColorAnchorEl={setColorAnchorEl}
-      />
+          <QuestionBackgroundColor
+            questionID={question?.questionID!}
+            colorAnchorEl={colorAnchorEl}
+            setColorAnchorEl={setColorAnchorEl}
+          />
+        </>
+      )}
       <Box
         sx={{
           margin: "auto",
