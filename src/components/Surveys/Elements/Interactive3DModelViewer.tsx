@@ -19,6 +19,7 @@ import {
   SetInitialViewParams,
   ViewName,
 } from "../../../utils/types";
+import Model3dLoader from "../../Loaders/Model3dLoader";
 
 function setInitialView({
   camera,
@@ -228,6 +229,7 @@ export const Interactive3DModelViewer = ({
         <Suspense
           fallback={
             <Html center>
+              <Model3dLoader />
               <div
                 style={{
                   padding: "8px 12px",
@@ -237,7 +239,7 @@ export const Interactive3DModelViewer = ({
                   fontSize: 12,
                 }}
               >
-                Loading 3D…
+                Loading 3D model…
               </div>
             </Html>
           }
