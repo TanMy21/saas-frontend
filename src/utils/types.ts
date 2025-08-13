@@ -4,7 +4,7 @@ import type { JwtPayload } from "jwt-decode";
 import type { MRT_ColumnDef } from "material-react-table";
 import { type DroppableProvided } from "react-beautiful-dnd";
 import {
-  Control,
+  type Control,
   type FieldErrors,
   type UseFormRegister,
 } from "react-hook-form";
@@ -166,16 +166,16 @@ export interface ThreeDViewProps {
   url: string;
 }
 
-export interface Interactive3DModelViewerProps  {
-  src: string;                 // GLB/GLTF URL (Model3D.fileUrl)
-  hdrEnvUrl?: string;          // optional HDR environment map
-  height?: number;             // canvas height (px)
-  background?: string;         // canvas background color
-  autoRotate?: boolean;        // auto-rotate model
-  autoRotateSpeed?: number;    // default 0.5
-  minDistance?: number;        // controls min zoom distance
-  maxDistance?: number;        // controls max zoom distance
-  maxPolarAngle?: number;      // prevent flipping under model
+export interface Interactive3DModelViewerProps {
+  src: string; // GLB/GLTF URL (Model3D.fileUrl)
+  hdrEnvUrl?: string; // optional HDR environment map
+  height?: number; // canvas height (px)
+  background?: string; // canvas background color
+  autoRotate?: boolean; // auto-rotate model
+  autoRotateSpeed?: number; // default 0.5
+  minDistance?: number; // controls min zoom distance
+  maxDistance?: number; // controls max zoom distance
+  maxPolarAngle?: number; // prevent flipping under model
 }
 
 export interface Element {
@@ -837,6 +837,7 @@ export interface QuestionNodeData extends Record<string, unknown> {
 
 export interface QuestionState {
   selectedQuestion: Element | null;
+  is3DModelModalOpen: boolean;
 }
 
 export type QuestionNode = Node<QuestionNodeData>;
@@ -889,6 +890,14 @@ export interface ResponseListItemProps {
 
 export interface ResetPassword {
   code: string;
+}
+
+export interface Replace3DModelModalProps {
+  open: boolean;
+  onClose: () => void;
+  questionID: string;
+  currentFileName?: string;
+  onReplaced?: (file: File) => void;
 }
 
 export interface SettingsFormData {

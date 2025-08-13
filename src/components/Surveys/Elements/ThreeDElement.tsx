@@ -4,7 +4,9 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
 
+import { set3DModelModalOpen } from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
+import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import { ElementProps } from "../../../utils/types";
 import FileUpload3D from "../../ModalComponents/FileUpload3D";
 import Upload3DModelModal from "../../Modals/Upload3DModelModal";
@@ -12,7 +14,11 @@ import Upload3DModelModal from "../../Modals/Upload3DModelModal";
 import ThreeDView from "./ThreeDView";
 
 const ThreeDElement = ({ qID, display }: ElementProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const isOpen3DModel = useAppSelector(
+    (state) => state.question.is3DModelModalOpen
+  );
+  const dispatch = useAppDispatch();
+
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isReadyToView, setIsReadyToView] = useState(false);
 
@@ -30,7 +36,7 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
 
   const handleUploadSuccess = (_model: any) => {
     setIsReadyToView(true);
-    setIsModalOpen(false);
+    dispatch(set3DModelModalOpen(false));
   };
 
   const handleUploadError = (msg: string) => {
@@ -39,7 +45,7 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
+    dispatch(set3DModelModalOpen(false));
   };
 
   useEffect(() => {
@@ -69,7 +75,7 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
     <>
       <div style={{ textAlign: "center" }}>
         <Button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => dispatch(set3DModelModalOpen(true))}
           variant="contained"
           startIcon={<FileUploadIcon />}
           sx={{
@@ -95,7 +101,7 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
         </Button>
       </div>
       <Upload3DModelModal
-        isOpen={isModalOpen}
+        isOpen={isOpen3DModel}
         onClose={handleCloseModal}
         title="Upload 3D Model"
       >

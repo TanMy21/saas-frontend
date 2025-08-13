@@ -4,6 +4,7 @@ import { Element, QuestionState } from "../../utils/types";
 
 const initialState: QuestionState = {
   selectedQuestion: null,
+  is3DModelModalOpen: false,
 };
 
 const questionSlice = createSlice({
@@ -50,6 +51,9 @@ const questionSlice = createSlice({
       if (state.selectedQuestion) {
         state.selectedQuestion.questionImageHeight = action.payload;
       }
+    },
+    set3DModelModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.is3DModelModalOpen = action.payload;
     },
     setImageAltText: (state, action: PayloadAction<string>) => {
       if (state.selectedQuestion) {
@@ -138,6 +142,7 @@ export const {
   setQuestion,
   setTemplateImage,
   setBackgroundColor,
+  set3DModelModalOpen,
   removeBackgroundColor,
   removeTemplateImage,
   setImageHeight,
