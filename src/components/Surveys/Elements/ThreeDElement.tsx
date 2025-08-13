@@ -66,7 +66,7 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
           border: "2px solid blue",
         }}
       >
-        <ThreeDView url={url!} />
+        <ThreeDView url={url!} display={display}/>
       </div>
     );
   }

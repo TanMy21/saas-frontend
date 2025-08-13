@@ -11,7 +11,7 @@ import Replace3DModelModal from "../../Modals/Replace3DModelModal";
 
 import { Interactive3DModelViewer } from "./Interactive3DModelViewer";
 
-const ThreeDView = ({ url }: ThreeDViewProps) => {
+const ThreeDView = ({ url, display }: ThreeDViewProps) => {
   const [isOpenReplaceModal, setIsOpenReplaceModal] = useState(false);
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion
@@ -109,6 +109,7 @@ const ThreeDView = ({ url }: ThreeDViewProps) => {
             flexDirection: "column",
             width: "60%",
             height: "600px",
+            padding: "8px",
             border: "2px solid green",
           }}
         >
@@ -116,7 +117,7 @@ const ThreeDView = ({ url }: ThreeDViewProps) => {
             src={url}
             autoRotate
             autoRotateSpeed={0.4}
-            height={440}
+            height={600}
           />
         </div>
 

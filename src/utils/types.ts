@@ -10,6 +10,7 @@ import {
 } from "react-hook-form";
 import { type IconType } from "react-icons/lib";
 import { type NavigateFunction } from "react-router-dom";
+import * as THREE from "three";
 import { z } from "zod";
 
 import {
@@ -164,18 +165,21 @@ export type Model3D = {
 
 export interface ThreeDViewProps {
   url: string;
+  display?: string | null;
 }
 
 export interface Interactive3DModelViewerProps {
-  src: string; // GLB/GLTF URL (Model3D.fileUrl)
-  hdrEnvUrl?: string; // optional HDR environment map
-  height?: number; // canvas height (px)
-  background?: string; // canvas background color
-  autoRotate?: boolean; // auto-rotate model
-  autoRotateSpeed?: number; // default 0.5
-  minDistance?: number; // controls min zoom distance
-  maxDistance?: number; // controls max zoom distance
-  maxPolarAngle?: number; // prevent flipping under model
+  src: string;
+  hdrEnvUrl?: string;
+  height?: number;
+  background?: string;
+  autoRotate?: boolean;
+  autoRotateSpeed?: number;
+  minDistance?: number;
+  maxDistance?: number;
+  maxPolarAngle?: number;
+  initialView?: ViewName;
+  frontIsNegZ?: boolean;
 }
 
 export interface Element {
@@ -898,6 +902,31 @@ export interface Replace3DModelModalProps {
   questionID: string;
   currentFileName?: string;
   onReplaced?: (file: File) => void;
+}
+
+export type Model3DParams = {
+  src: string;
+  onReady?: (root: THREE.Object3D) => void;
+};
+
+export type ViewName = "front" | "back" | "left" | "right" | "top" | "bottom";
+
+export interface SetInitialViewParams {
+  camera: THREE.PerspectiveCamera;
+  controls: any;
+  object: THREE.Object3D;
+  view?: ViewName;
+  fov?: number;
+  aspect?: number;
+  padding?: number;
+  frontIsNegZ?: boolean;
+}
+
+export interface InitialViewParams {
+  object: THREE.Object3D | null;
+  initialView: ViewName;
+  frontIsNegZ: boolean;
+  controlsRef: React.RefObject<any>;
 }
 
 export interface SettingsFormData {
