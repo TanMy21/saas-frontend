@@ -11,7 +11,7 @@ import Replace3DModelModal from "../../Modals/Replace3DModelModal";
 
 import { Interactive3DModelViewer } from "./Interactive3DModelViewer";
 
-const ThreeDView = ({ url, display }: ThreeDViewProps) => {
+const ThreeDView = ({ url }: ThreeDViewProps) => {
   const [isOpenReplaceModal, setIsOpenReplaceModal] = useState(false);
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion

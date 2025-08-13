@@ -202,7 +202,7 @@ export const Interactive3DModelViewer = ({
   return (
     <div
       style={{
-        width: "100%",
+        width: "98%",
         height,
         borderRadius: 12,
         overflow: "hidden",

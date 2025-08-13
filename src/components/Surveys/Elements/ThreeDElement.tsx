@@ -11,6 +11,7 @@ import { ElementProps } from "../../../utils/types";
 import FileUpload3D from "../../ModalComponents/FileUpload3D";
 import Upload3DModelModal from "../../Modals/Upload3DModelModal";
 
+import ThreeDMobileView from "./ThreeDMobileView";
 import ThreeDView from "./ThreeDView";
 
 const ThreeDElement = ({ qID, display }: ElementProps) => {
@@ -18,7 +19,7 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
     (state) => state.question.is3DModelModalOpen
   );
   const dispatch = useAppDispatch();
-
+  const isMobile = display === "mobile";
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isReadyToView, setIsReadyToView] = useState(false);
 
@@ -61,12 +62,16 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
           flexDirection: "column",
           margin: "auto",
           width: "100%",
-          minHeight: "600px",
+          minHeight: isMobile ? "680px" : "600px",
           zIndex: 20,
           border: "2px solid blue",
         }}
       >
-        <ThreeDView url={url!} display={display}/>
+        {display === "mobile" ? (
+          <ThreeDMobileView url={url!} />
+        ) : (
+          <ThreeDView url={url!} />
+        )}
       </div>
     );
   }
