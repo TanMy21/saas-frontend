@@ -5,6 +5,7 @@ import { Element, QuestionState } from "../../utils/types";
 const initialState: QuestionState = {
   selectedQuestion: null,
   is3DModelModalOpen: false,
+  showQuestion: false,
 };
 
 const questionSlice = createSlice({
@@ -72,6 +73,11 @@ const questionSlice = createSlice({
     toggleShowImage: (state, action: PayloadAction<boolean>) => {
       if (state.selectedQuestion) {
         state.selectedQuestion.questionImage = action.payload;
+      }
+    },
+    toggleShowQuestionfor3dType: (state, action: PayloadAction<boolean>) => {
+      if (state.selectedQuestion) {
+        state.showQuestion = action.payload;
       }
     },
     updateQuestionField: <K extends keyof Element>(
@@ -150,6 +156,7 @@ export const {
   setImageAltText,
   toggleElementRequired,
   toggleShowImage,
+  toggleShowQuestionfor3dType,
   updateMinValue,
   updateMaxValue,
   updateUIButtonText,

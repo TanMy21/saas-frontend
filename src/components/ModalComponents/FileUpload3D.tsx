@@ -44,8 +44,14 @@ const FileUpload3D = ({
       formData.append("name", file.name);
 
       try {
-        await upload3DModel({ formData, questionID }).unwrap();
+        const result = await upload3DModel({ formData, questionID }).unwrap();
+        onUploadSuccess?.({
+          fileUrl: result.fileUrl,
+          name: result.name,
+          model3DID: result.model3DID,
+        });
       } catch (e) {
+        onUploadError?.("Upload failed");
         console.error("Upload failed:", e);
       }
     },

@@ -842,6 +842,7 @@ export interface QuestionNodeData extends Record<string, unknown> {
 export interface QuestionState {
   selectedQuestion: Element | null;
   is3DModelModalOpen: boolean;
+  showQuestion: boolean;
 }
 
 export type QuestionNode = Node<QuestionNodeData>;
@@ -905,8 +906,8 @@ export interface Replace3DModelModalProps {
 }
 
 export type Model3DParams = {
-  src: string;
-  onReady?: (root: THREE.Object3D) => void;
+  readonly src: string;
+  readonly onReady?: (root: THREE.Object3D) => void;
 };
 
 export type ViewName = "front" | "back" | "left" | "right" | "top" | "bottom";

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { set3DModelModalOpen } from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
+import { useSurveyCanvasRefetch } from "../../../context/BuilderRefetchCanvas";
 import { ElementProps } from "../../../utils/types";
 import FileUpload3D from "../../ModalComponents/FileUpload3D";
 import Upload3DModelModal from "../../Modals/Upload3DModelModal";
@@ -19,8 +20,10 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
     (state) => state.question.is3DModelModalOpen
   );
   const dispatch = useAppDispatch();
+  const refetchCanvas = useSurveyCanvasRefetch();
   const isMobile = display === "mobile";
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [overrideUrl, setOverrideUrl] = useState<string | null>(null);
   const [isReadyToView, setIsReadyToView] = useState(false);
 
   const question = useSelector(
@@ -29,14 +32,14 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
   const hasModel = !!question?.Model3D?.fileUrl;
   const url = question?.Model3D?.fileUrl;
 
-  console.log("ThreeDElement question:", question);
-
   const handleFileSelect = (file: File) => {
     setUploadedFile(file);
   };
 
-  const handleUploadSuccess = (_model: any) => {
+  const handleUploadSuccess = (model: any) => {
+    setOverrideUrl(model?.fileUrl);
     setIsReadyToView(true);
+    refetchCanvas();
     dispatch(set3DModelModalOpen(false));
   };
 
@@ -46,6 +49,7 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
   };
 
   const handleCloseModal = () => {
+    refetchCanvas();
     dispatch(set3DModelModalOpen(false));
   };
 
@@ -62,15 +66,15 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
           flexDirection: "column",
           margin: "auto",
           width: "100%",
-          minHeight: isMobile ? "680px" : "600px",
+          height: isMobile ? "680px" : "660px",
           zIndex: 20,
           border: "2px solid blue",
         }}
       >
         {display === "mobile" ? (
-          <ThreeDMobileView url={url!} />
+          <ThreeDMobileView url={overrideUrl ?? url!} />
         ) : (
-          <ThreeDView url={url!} />
+          <ThreeDView url={overrideUrl ?? url!} />
         )}
       </div>
     );

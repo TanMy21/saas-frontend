@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   OrbitControls,
@@ -63,7 +63,7 @@ function setInitialView({
   controls.update();
 }
 
-function Model({ src, onReady }: Model3DParams) {
+function Model({ src, onReady }: Readonly<Model3DParams>) {
   const { scene } = useGLTF(src, true);
 
   useEffect(() => {
@@ -75,12 +75,19 @@ function Model({ src, onReady }: Model3DParams) {
       }
     });
     onReady?.(scene);
-  }, [scene, onReady]);
+
+    return () => {
+      try {
+        (useGLTF as any).clear?.(src);
+      } catch (error) {
+        console.warn("Failed to clear GLTF cache:", error);
+      }
+    };
+  }, [scene, onReady, src]);
 
   return (
     <Bounds fit clip observe margin={1.1}>
       <primitive object={scene} />
-      {/* Buttons must live inside <Bounds> so they can call useBounds() */}
       <RefocusButtons />
     </Bounds>
   );
@@ -189,16 +196,44 @@ export const Interactive3DModelViewer = ({
   initialView = "front",
   frontIsNegZ = true,
 }: Interactive3DModelViewerProps) => {
-  // Optional: try to preload the model
-  useEffect(() => {
-    if ((useGLTF as any).preload) (useGLTF as any).preload(src);
+  const validSrc = useMemo(() => {
+    if (!src || typeof src !== "string") return null;
+    const s = src.trim();
+    if (!s) return null;
+    const lower = s.toLowerCase();
+    return lower.endsWith(".glb") || lower.endsWith(".gltf") ? s : null;
   }, [src]);
-
+  const [modelRoot, setModelRoot] = useState<THREE.Object3D | null>(null);
+  const controlsRef = useRef<any>(null);
   const dpr =
     typeof window !== "undefined" ? Math.min(window.devicePixelRatio, 2) : 1;
 
-  const [modelRoot, setModelRoot] = useState<THREE.Object3D | null>(null);
-  const controlsRef = useRef<any>(null);
+  useEffect(() => {
+    if (!validSrc) return;
+    try {
+      (useGLTF as any).preload?.(validSrc);
+    } catch (error) {
+      console.warn("Failed to preload GLTF model:", error);
+    }
+  }, [validSrc]);
+
+  if (!validSrc) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          background,
+        }}
+      >
+        <Model3dLoader />
+        Loading 3D model …
+      </div>
+    );
+  }
 
   return (
     <div
@@ -211,6 +246,7 @@ export const Interactive3DModelViewer = ({
       }}
     >
       <Canvas
+        key={validSrc}
         dpr={dpr}
         shadows
         gl={{ antialias: true, alpha: true }}
