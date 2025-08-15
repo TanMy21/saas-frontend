@@ -5,7 +5,6 @@ import { Element, QuestionState } from "../../utils/types";
 const initialState: QuestionState = {
   selectedQuestion: null,
   is3DModelModalOpen: false,
-  showQuestion: false,
 };
 
 const questionSlice = createSlice({
@@ -77,7 +76,7 @@ const questionSlice = createSlice({
     },
     toggleShowQuestionfor3dType: (state, action: PayloadAction<boolean>) => {
       if (state.selectedQuestion) {
-        state.showQuestion = action.payload;
+        state.selectedQuestion.Model3D.showQuestion = action.payload;
       }
     },
     updateQuestionField: <K extends keyof Element>(

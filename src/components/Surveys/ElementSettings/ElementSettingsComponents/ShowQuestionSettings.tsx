@@ -13,35 +13,35 @@ import {
   Typography,
 } from "@mui/material";
 import { Controller, useForm, useWatch } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
 
-import { useUpdateQuestionRequiredPreferenceMutation } from "../../../../app/slices/elementApiSlice";
-import { toggleElementRequired } from "../../../../app/slices/elementSlice";
+import { useToggle3DModelQuestionVisibilityMutation } from "../../../../app/slices/elementApiSlice";
+import { toggleShowQuestionfor3dType } from "../../../../app/slices/elementSlice";
 import { RootState } from "../../../../app/store";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionSetting } from "../../../../utils/types";
 
-const ValidationSettings = () => {
-  const dispatch = useDispatch();
+const ShowQuestionSettings = () => {
+  const dispatch = useAppDispatch();
   const refetchCanvas = useSurveyCanvasRefetch();
-  const question = useSelector(
+  const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion
   );
 
-  const { questionID, questionPreferences } = question || {};
+  const questionID = question?.questionID;
+  const showQuestion = question?.Model3D?.showQuestion;
 
-  const [updateQuestionRequiredPreference] =
-    useUpdateQuestionRequiredPreferenceMutation();
-
-  const { required } = questionPreferences || {
-    required: false,
-  };
+  const [toggle3DModelQuestionVisibility] =
+    useToggle3DModelQuestionVisibilityMutation();
 
   const { handleSubmit, control, reset } = useForm<QuestionSetting>({
     resolver: zodResolver(uiConfigPreferenceSchema),
     defaultValues: {
-      required,
+      showQuestion,
     },
   });
 
@@ -51,14 +51,15 @@ const ValidationSettings = () => {
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
-      const { required } = data;
+      const { showQuestion } = data;
 
-      await updateQuestionRequiredPreference({
+      const result = await toggle3DModelQuestionVisibility({
         questionID,
-        required,
+        showQuestion,
       });
-
-      refetchCanvas();
+      if (result) {
+        refetchCanvas();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -69,10 +70,10 @@ const ValidationSettings = () => {
   };
 
   useEffect(() => {
-    if (required !== undefined) {
-      reset({ required });
+    if (showQuestion !== undefined) {
+      reset({ showQuestion });
     }
-  }, [required, reset]);
+  }, [showQuestion, reset]);
 
   useEffect(() => {
     if (!formTouched) return;
@@ -126,8 +127,8 @@ const ValidationSettings = () => {
             <CheckCircleOutlineIcon
               sx={{ color: "#752FEC", fontSize: "20px" }}
             />
-            <Tooltip title="Set whether the response to question is required or not">
-              <Typography>Response required</Typography>
+            <Tooltip title="Set whether the question is shown or not">
+              <Typography>Show Question</Typography>
             </Tooltip>
           </Box>
         </AccordionSummary>
@@ -154,10 +155,12 @@ const ValidationSettings = () => {
                 height: "80%",
               }}
             >
-              <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>Required</Box>
+              <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>
+                Show question
+              </Box>
               <Box mt={1}>
                 <Controller
-                  name="required"
+                  name="showQuestion"
                   control={control}
                   render={({ field }) => (
                     <Switch
@@ -166,7 +169,7 @@ const ValidationSettings = () => {
                         const value = event.target.checked;
                         field.onChange(value);
                         markFormTouched();
-                        dispatch(toggleElementRequired(value));
+                        dispatch(toggleShowQuestionfor3dType(value));
                       }}
                     />
                   )}
@@ -180,4 +183,4 @@ const ValidationSettings = () => {
   );
 };
 
-export default ValidationSettings;
+export default ShowQuestionSettings;

@@ -8,7 +8,6 @@ import {
   useUpdateElementTextMutation,
 } from "../../../app/slices/elementApiSlice";
 import { updateQuestionField } from "../../../app/slices/elementSlice";
-import { updateElementField } from "../../../app/slices/surveySlice";
 import { RootState } from "../../../app/store";
 import { useDebouncedElementDispatch } from "../../../hooks/useDebouncedElementDispatch";
 import { useEditController } from "../../../hooks/useEditController";
@@ -63,6 +62,11 @@ const ElementQuestionText = ({ display }: ElementProps) => {
     display === "mobile" ? defaultFontSize : orderFontSize || defaultFontSize;
   const circleSizeXL = actualFontSize * 1.6;
   const circleSizeMD = actualFontSize * 2;
+
+  const textFontSize =
+    display === "mobile" ? titleFontSizeMobile : titleFontSize;
+  const descFontSize =
+    display === "mobile" ? descriptionFontSizeMobile : descriptionFontSize;
 
   const [updateElementText] = useUpdateElementTextMutation();
   const [updateElementDescription] = useUpdateElementDescriptionMutation();
@@ -175,9 +179,15 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             textFieldSx={{
               backgroundColor: "transparent",
               fontStyle: "italic",
-              fontSize: "3.75rem",
               width: "100%",
-              "& .MuiInputBase-input": { fontSize: "2rem" },
+              "& .MuiOutlinedInput-input": {
+                fontSize: textFontSize,
+                lineHeight: 1.4,
+                fontStyle: "italic",
+                fontFamily:
+                  "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+              },
+              "& .MuiInputBase-input": { fontSize: textFontSize },
               fontFamily:
                 "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
               "& .MuiOutlinedInput-root": {
@@ -192,8 +202,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               maxWidth: "80ch",
               fontFamily:
                 "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-              fontSize:
-                display === "mobile" ? titleFontSizeMobile : titleFontSize,
+              fontSize: textFontSize,
               textAlign: "start",
               color: titleTextColor,
               lineHeight: 1.4,
@@ -227,7 +236,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             cursorWhenActive="text"
             textFieldSx={{
               backgroundColor: "transparent",
-              "& .MuiInputBase-input": { fontSize: "1.6rem" },
+              "& .MuiInputBase-input": { fontSize: `${descFontSize}` },
               "& fieldset": { border: "none" },
               "&:hover fieldset": { border: "none" },
               "&.Mui-focused fieldset": { border: "none" },
@@ -238,10 +247,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                 "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
               whiteSpace: "normal",
               width: "fit-content",
-              fontSize:
-                display === "mobile"
-                  ? descriptionFontSizeMobile
-                  : descriptionFontSize,
+              fontSize: descFontSize,
               color: descriptionTextColor,
             }}
           />

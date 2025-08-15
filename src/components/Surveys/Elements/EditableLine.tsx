@@ -21,7 +21,7 @@ export function EditableLine({
       sx={{
         display: "flex",
         alignItems: "center",
-        cursor: active ? cursorWhenActive : "pointer",
+        cursor: active ? cursorWhenActive : "text",
       }}
     >
       {active ? (
@@ -32,7 +32,7 @@ export function EditableLine({
           value={value}
           onChange={onChange}
           onKeyDown={onKeyDown}
-          onClick={(e) => e.stopPropagation()} // prevent parent click
+          onClick={(e) => e.stopPropagation()}
           sx={textFieldSx}
         />
       ) : (

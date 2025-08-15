@@ -207,6 +207,14 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
+    toggle3DModelQuestionVisibility: builder.mutation({
+      query: ({ questionID, showQuestion }) => ({
+        url: `/q/3d/visibility`,
+        method: "PATCH",
+        body: { questionID, showQuestion },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
     duplicateElement: builder.mutation({
       query: (questionID) => ({
         url: `/q/duplicate/${questionID}`,
@@ -273,4 +281,5 @@ export const {
   useDeleteElementMutation,
   useImportQuestionsMutation,
   useToggleQuestionImageVisibilityMutation,
+  useToggle3DModelQuestionVisibilityMutation,
 } = elementApiSlice;

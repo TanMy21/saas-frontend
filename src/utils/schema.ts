@@ -229,6 +229,7 @@ export const uiConfigPreferenceSchema = z.object({
   maxValue: z.number().optional(),
   multipleSelection: z.boolean().optional(),
   required: z.boolean().optional(),
+  showQuestion: z.boolean().optional(),
 });
 
 export const instructionsSettingsSchema = z.object({

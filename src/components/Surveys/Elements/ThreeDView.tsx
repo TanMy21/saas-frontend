@@ -10,9 +10,10 @@ import { ThreeDViewProps } from "../../../utils/types";
 import Model3dLoader from "../../Loaders/Model3dLoader";
 import Replace3DModelModal from "../../Modals/Replace3DModelModal";
 
+import ElementQuestionText from "./ElementQuestionText";
 import { Interactive3DModelViewer } from "./Interactive3DModelViewer";
 
-const ThreeDView = ({ url }: ThreeDViewProps) => {
+const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
   const [isOpenReplaceModal, setIsOpenReplaceModal] = useState(false);
   const [viewerUrl, setViewerUrl] = useState<string | null>(url ?? null);
   const question = useAppSelector(
@@ -27,6 +28,8 @@ const ThreeDView = ({ url }: ThreeDViewProps) => {
     setViewerUrl(url ?? null);
   }, [url]);
 
+  console.log("ThreeDView showQuestion:", showQuestion);
+
   return (
     <>
       <div
@@ -36,7 +39,7 @@ const ThreeDView = ({ url }: ThreeDViewProps) => {
           alignItems: "center",
           width: "100%",
           height: "100%",
-          border: "2px solid red",
+          // border: "2px solid red",
           gap: "16px",
         }}
       >
@@ -44,17 +47,18 @@ const ThreeDView = ({ url }: ThreeDViewProps) => {
           style={{
             display: "flex",
             width: "98%",
-            height: "100px",
+            padding: "8px",
+            // height: "120px",
             gap: "16px",
-            border: "2px solid green",
+            // border: "2px solid green",
           }}
         >
           <div
             style={{
               display: "flex",
               width: "4%",
-              height: "98%",
-              border: "2px solid red",
+              // height: "98%",
+              // border: "2px solid red",
             }}
           >
             <IconButton
@@ -76,21 +80,27 @@ const ThreeDView = ({ url }: ThreeDViewProps) => {
               <Replace />
             </IconButton>
           </div>
-          <div
-            style={{
-              display: "flex",
-              width: "96%",
-              height: "98%",
-              border: "2px solid red",
-            }}
-          ></div>
+          {showQuestion && (
+            <div
+              style={{
+                display: "flex",
+                width: "96%",
+                height: "98%",
+                padding: "4px",
+                // border: "2px solid red",
+              }}
+            >
+              <ElementQuestionText display={display} />
+            </div>
+          )}
         </div>
         <div
           style={{
             display: "flex",
             width: "96%",
-            height: "480px",
-            border: "2px solid blue",
+            padding: "4px",
+            height: "400px",
+            // border: "2px solid blue",
           }}
         >
           <div
@@ -107,7 +117,7 @@ const ThreeDView = ({ url }: ThreeDViewProps) => {
                 src={viewerUrl}
                 autoRotate
                 autoRotateSpeed={0.4}
-                height={460}
+                height={400}
               />
             ) : (
               <div
@@ -133,7 +143,7 @@ const ThreeDView = ({ url }: ThreeDViewProps) => {
             display: "flex",
             width: "96%",
             height: "64px",
-            border: "2px solid green",
+            // border: "2px solid green",
           }}
         >
           <div
@@ -143,7 +153,7 @@ const ThreeDView = ({ url }: ThreeDViewProps) => {
               width: "32%",
               height: "80%",
               gap: "16px",
-              border: "2px solid red",
+              // border: "2px solid red",
             }}
           >
             <div
@@ -153,7 +163,7 @@ const ThreeDView = ({ url }: ThreeDViewProps) => {
                 // alignItems: "flex-end",
                 width: "48%",
                 height: "96%",
-                border: "2px solid red",
+                // border: "2px solid red",
               }}
             >
               <IconButton
@@ -180,7 +190,7 @@ const ThreeDView = ({ url }: ThreeDViewProps) => {
                 // alignItems: "center",
                 width: "48%",
                 height: "96%",
-                border: "2px solid green",
+                // border: "2px solid green",
               }}
             >
               <IconButton

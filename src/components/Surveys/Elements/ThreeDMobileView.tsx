@@ -2,11 +2,21 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { IconButton } from "@mui/material";
 import { X } from "lucide-react";
 
+import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
 import { ThreeDViewProps } from "../../../utils/types";
 
+import ElementQuestionText from "./ElementQuestionText";
 import { Interactive3DModelViewer } from "./Interactive3DModelViewer";
 
-const ThreeDMobileView = ({ url }: ThreeDViewProps) => {
+const ThreeDMobileView = ({ url, display }: ThreeDViewProps) => {
+  const showQuestion = useAppSelector(
+    (state: RootState) =>
+      state.question.selectedQuestion?.Model3D?.showQuestion ?? false
+  );
+
+  console.log("ThreeDMobileView showQuestion:", showQuestion);
+
   return (
     <div
       style={{
@@ -19,28 +29,25 @@ const ThreeDMobileView = ({ url }: ThreeDViewProps) => {
         gap: "16px",
       }}
     >
+      {showQuestion && (
+        <div
+          style={{
+            display: "flex",
+            width: "98%",
+            // height: "200px",
+            padding: "4px",
+            // border: "2px solid red",
+          }}
+        >
+          <ElementQuestionText display={display} />
+        </div>
+      )}
       <div
         style={{
           display: "flex",
           width: "98%",
-          height: "500px",
-          padding: "4px",
-          //   border: "2px solid red",
-        }}
-      >
-        <Interactive3DModelViewer
-          src={url}
-          autoRotate
-          autoRotateSpeed={0.4}
-          height={480}
-        />
-      </div>
-      <div
-        style={{
-          display: "flex",
-          width: "98%",
-          height: "100px",
-          //   border: "2px solid red",
+          height: "60px",
+          // border: "2px solid red",
         }}
       >
         <div
@@ -97,6 +104,22 @@ const ThreeDMobileView = ({ url }: ThreeDViewProps) => {
             <FavoriteIcon fontSize="medium" />
           </IconButton>
         </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          width: "98%",
+          height: "400px",
+          padding: "4px",
+          // border: "2px solid red",
+        }}
+      >
+        <Interactive3DModelViewer
+          src={url}
+          autoRotate
+          autoRotateSpeed={0.4}
+          height={showQuestion ? 360 : 500}
+        />
       </div>
     </div>
   );

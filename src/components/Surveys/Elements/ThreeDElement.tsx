@@ -15,7 +15,7 @@ import Upload3DModelModal from "../../Modals/Upload3DModelModal";
 import ThreeDMobileView from "./ThreeDMobileView";
 import ThreeDView from "./ThreeDView";
 
-const ThreeDElement = ({ qID, display }: ElementProps) => {
+const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
   const isOpen3DModel = useAppSelector(
     (state) => state.question.is3DModelModalOpen
   );
@@ -44,7 +44,6 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
   };
 
   const handleUploadError = (msg: string) => {
-    // optional toast/snackbar here
     console.error(msg);
   };
 
@@ -66,15 +65,23 @@ const ThreeDElement = ({ qID, display }: ElementProps) => {
           flexDirection: "column",
           margin: "auto",
           width: "100%",
-          height: isMobile ? "680px" : "660px",
+          minHeight: isMobile ? "680px" : "660px",
           zIndex: 20,
-          border: "2px solid blue",
+          // border: "2px solid blue",
         }}
       >
         {display === "mobile" ? (
-          <ThreeDMobileView url={overrideUrl ?? url!} />
+          <ThreeDMobileView
+            url={overrideUrl ?? url!}
+            display={display}
+            showQuestion={showQuestion}
+          />
         ) : (
-          <ThreeDView url={overrideUrl ?? url!} />
+          <ThreeDView
+            url={overrideUrl ?? url!}
+            display={display}
+            showQuestion={showQuestion}
+          />
         )}
       </div>
     );

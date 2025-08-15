@@ -161,11 +161,13 @@ export type Model3D = {
   depth: number;
   draco: boolean;
   ktx2: boolean;
+  showQuestion: boolean;
 };
 
 export interface ThreeDViewProps {
   url: string;
   display?: string | null;
+  showQuestion?: boolean;
 }
 
 export interface Interactive3DModelViewerProps {
@@ -191,7 +193,7 @@ export interface Element {
   type: string;
   order?: number;
   questionPreferences: SurveyCanvasQuestionSettings;
-  Model3D?: Model3D;
+  Model3D: Model3D;
   questionImage?: boolean;
   questionImageUrl?: string;
   questionImageAltTxt?: string;
@@ -220,6 +222,7 @@ export interface ElementProps {
   qDescription?: string;
   qType?: string;
   qImage?: boolean;
+  showQuestion?: boolean;
   display?: string | null;
   qID?: string;
   question?: Element | null;
@@ -827,6 +830,7 @@ export interface QuestionSetting {
   questionText?: string;
   questionDescription?: string;
   required?: boolean;
+  showQuestion?: boolean;
   superSize?: boolean;
   welcomeText?: string;
 }
@@ -842,7 +846,6 @@ export interface QuestionNodeData extends Record<string, unknown> {
 export interface QuestionState {
   selectedQuestion: Element | null;
   is3DModelModalOpen: boolean;
-  showQuestion: boolean;
 }
 
 export type QuestionNode = Node<QuestionNodeData>;

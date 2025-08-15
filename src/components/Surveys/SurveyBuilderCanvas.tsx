@@ -35,6 +35,8 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
 
   return (
     <Box
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={(e) => e.stopPropagation()}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -106,6 +108,7 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
             qImage={question?.questionImage}
             // qSettings={question?.config}
             display={display}
+            showQuestion={question?.Model3D?.showQuestion}
           />
         )}
       </Box>
