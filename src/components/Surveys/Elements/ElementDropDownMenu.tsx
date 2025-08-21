@@ -9,6 +9,7 @@ import { RootState } from "../../../app/store";
 import { useAppSelector, useAppDispatch } from "../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../context/BuilderRefetchCanvas";
 import { ElementDropDownMenuProps } from "../../../utils/types";
+import DeleteQuestionAlert from "../../alert/DeleteQuestionAlert";
 
 const ElementDropDownMenu = ({
   questionID,
@@ -20,7 +21,7 @@ const ElementDropDownMenu = ({
   const [recentlyDeletedId, setRecentlyDeletedId] = useState<string | null>(
     null
   );
-  const [deleteElement] = useDeleteElementMutation();
+  const [deleteElement, { isLoading }] = useDeleteElementMutation();
 
   const elements = useAppSelector(
     (state: RootState) => state.surveyBuilder.elements
@@ -98,6 +99,7 @@ const ElementDropDownMenu = ({
           Delete
         </MenuItem>
       </Menu>
+      <DeleteQuestionAlert open={isLoading} />
     </>
   );
 };

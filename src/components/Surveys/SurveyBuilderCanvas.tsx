@@ -35,8 +35,6 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
 
   return (
     <Box
-      onMouseDown={(e) => e.preventDefault()}
-      onClick={(e) => e.stopPropagation()}
       sx={{
         display: "flex",
         flexDirection: "column",

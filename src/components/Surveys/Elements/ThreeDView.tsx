@@ -28,8 +28,6 @@ const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
     setViewerUrl(url ?? null);
   }, [url]);
 
-  console.log("ThreeDView showQuestion:", showQuestion);
-
   return (
     <>
       <div
@@ -46,7 +44,7 @@ const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
         <div
           style={{
             display: "flex",
-            width: "98%",
+            width: "100%",
             padding: "8px",
             // height: "120px",
             gap: "16px",
@@ -66,9 +64,11 @@ const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
               onClick={() => setIsOpenReplaceModal(true)}
               sx={{
                 position: "absolute",
-                top: 24,
-                left: 20,
+                top: 16,
+                left: 4,
                 zIndex: 2,
+                width:48,
+                height:48,
                 backgroundColor: "#FFFFFF",
                 color: "#424242",
                 borderRadius: "50%",
@@ -77,7 +77,7 @@ const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
                 },
               }}
             >
-              <Replace />
+              <Replace style={{ fontWeight: "bold" }} />
             </IconButton>
           </div>
           {showQuestion && (

@@ -72,6 +72,17 @@ function Model({ src, onReady }: Readonly<Model3DParams>) {
       if ((mesh as any).isMesh) {
         mesh.castShadow = true;
         mesh.receiveShadow = true;
+
+        // NEW: gently boost how strongly the environment lights the material
+        const mat = (mesh as any).material;
+        const mats: THREE.Material[] = Array.isArray(mat) ? mat : [mat];
+        mats.forEach((m) => {
+          if (m && "envMapIntensity" in m) {
+            // 1.0 is default; 1.3–1.8 usually brightens dark assets nicely
+            (m as THREE.MeshStandardMaterial).envMapIntensity = 1.4;
+            m.needsUpdate = true;
+          }
+        });
       }
     });
     onReady?.(scene);
@@ -249,18 +260,32 @@ export const Interactive3DModelViewer = ({
         key={validSrc}
         dpr={dpr}
         shadows
-        gl={{ antialias: true, alpha: true }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+          toneMapping: THREE.ACESFilmicToneMapping,
+        }}
+        onCreated={({ gl }) => {
+          gl.toneMappingExposure = 1.15;
+          gl.outputColorSpace = THREE.SRGBColorSpace;
+        }}
         camera={{ position: [1.2, 1.1, 1.3], fov: 50, near: 0.01, far: 100 }}
       >
         {/* Lights */}
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[3, 5, 2]} intensity={0.8} castShadow />
+        <ambientLight intensity={0.4} />
+        <hemisphereLight args={["#ffffff", "#3d3d3d", 0.7]} />
+        <directionalLight position={[3, 5, 2]} intensity={1.1} castShadow />
+        <directionalLight position={[-3, 2, -2]} intensity={0.35} />
 
         {/* Optional HDRI for nicer reflections */}
         {hdrEnvUrl ? (
-          <Environment files={hdrEnvUrl} background={false} />
+          <Environment
+            files={hdrEnvUrl}
+            background={false}
+            backgroundIntensity={1.2}
+          />
         ) : null}
-
         {/* Model */}
         <Suspense
           fallback={
@@ -282,14 +307,12 @@ export const Interactive3DModelViewer = ({
         >
           <Model src={src} onReady={setModelRoot} />
         </Suspense>
-
         <InitialViewApplier
           object={modelRoot}
           initialView={initialView}
           frontIsNegZ={frontIsNegZ}
           controlsRef={controlsRef}
         />
-
         {/* Controls */}
         <OrbitControls
           ref={controlsRef}

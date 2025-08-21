@@ -186,7 +186,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
     upload3DModel: builder.mutation({
       query: ({ formData, questionID }) => ({
         url: `/q/u/model/${questionID}`,
-        method: "PATCH",
+        method: "POST",
         body: formData,
       }),
       invalidatesTags: ["Elements"],

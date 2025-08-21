@@ -136,6 +136,11 @@ export type DashboardTourProps = {
   setRunTour: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+export interface DeleteQuestionAlertProps{
+  open: boolean;
+}
+
+
 export interface EdgeFormData {
   sourceQuestionID: string;
   sourceQuestionOrder: number;

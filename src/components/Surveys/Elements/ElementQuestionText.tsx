@@ -149,6 +149,8 @@ const ElementQuestionText = ({ display }: ElementProps) => {
       >
         {/* Title row */}
         <Box
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={(e) => e.stopPropagation()}
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -216,6 +218,8 @@ const ElementQuestionText = ({ display }: ElementProps) => {
 
         {/* Description row */}
         <Box
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={(e) => e.stopPropagation()}
           sx={{
             display: "flex",
             flexDirection: "row",

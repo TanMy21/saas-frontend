@@ -47,6 +47,10 @@ const ResponseListItem = ({
   };
 
   const handleUpdateResponseText = async () => {
+    if (!editingID) {
+      setIsEditing(false);
+      return;
+    }
     if (editText.trim() !== response.text.trim()) {
       try {
         await updateOptionTextandValue({
@@ -66,6 +70,20 @@ const ResponseListItem = ({
   const handleClickAway = () => {
     if (isEditing) {
       handleUpdateResponseText();
+    }
+  };
+
+  const handleEditorKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleUpdateResponseText();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsEditing(false);
+      setEditingID(null);
+      setEditText(response.text);
     }
   };
 
@@ -186,6 +204,7 @@ const ResponseListItem = ({
           <ClickAwayListener onClickAway={handleClickAway}>
             <TextField
               value={editText}
+              onKeyDown={handleEditorKeyDown}
               onChange={(e) => setEditText(e.target.value)}
               autoFocus
               inputProps={{
@@ -200,7 +219,11 @@ const ResponseListItem = ({
           </ClickAwayListener>
         ) : (
           <Box
-            onClick={() => setIsEditing(true)}
+            onClick={() => {
+              setIsEditing(true);
+              setEditingID(response.optionID);
+              setEditText(response.text);
+            }}
             sx={{
               flex: 1,
               minWidth: 0,

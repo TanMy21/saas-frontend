@@ -61,7 +61,7 @@ const FileUpload3D = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const acceptedFormats = [".gltf", ".glb"];
-  const maxFileSize = 10 * 1024 * 1024; // 100MB
+  const maxFileSize = 10 * 1024 * 1024; // 10MB
 
   const validateFile = (file: File): string | null => {
     const extension = "." + file.name.split(".").pop()?.toLowerCase();
@@ -69,7 +69,7 @@ const FileUpload3D = ({
       return `Unsupported file format. Please use: ${acceptedFormats.join(", ")}`;
     }
     if (file.size > maxFileSize) {
-      return "File size exceeds 100MB limit.";
+      return "File size exceeds 10MB limit.";
     }
     return null;
   };
@@ -97,7 +97,7 @@ const FileUpload3D = ({
         }
         return { ...prev, uploadProgress: next };
       });
-    }, 200);
+    }, 180);
   };
 
   useEffect(
