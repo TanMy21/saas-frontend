@@ -154,19 +154,20 @@ const ResponseList = ({
                       index={index}
                     >
                       {(provided) => (
-                        <Box
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <ResponseListItem
-                            key={option.optionID}
-                            qType={qType}
-                            response={option}
-                            index={index}
-                            display={display}
-                          />
-                        </Box>
+                        // <Box
+                        //   ref={provided.innerRef}
+                        //   {...provided.draggableProps}
+                        //   {...provided.dragHandleProps}
+                        //   sx={{ border: "2px solid blue" }}
+                        // >
+                        <ResponseListItem
+                          key={option.optionID}
+                          qType={qType}
+                          response={option}
+                          index={index}
+                          display={display}
+                        />
+                        // </Box>
                       )}
                     </Draggable>
                   ))}
@@ -192,8 +193,8 @@ const ResponseList = ({
             sx={{
               display: "flex",
               flexDirection: "column",
-              justifyContent:"center",
-              alignItems:"center",
+              justifyContent: "center",
+              alignItems: "center",
               width: display === "mobile" ? "92%" : "80%",
               height: "100%",
               gap: 2,

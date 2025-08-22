@@ -1,3 +1,5 @@
+import { type SxProps, type Theme, type TooltipProps } from "@mui/material";
+import { type QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { type Edge, type Node } from "@xyflow/react";
 import { Dayjs } from "dayjs";
 import type { JwtPayload } from "jwt-decode";
@@ -136,10 +138,21 @@ export type DashboardTourProps = {
   setRunTour: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export interface DeleteQuestionAlertProps{
+export interface DeleteQuestionAlertProps {
   open: boolean;
 }
 
+export interface EnterToEditTooltipProps {
+  children: React.ReactElement;
+  open: boolean;
+  onOpenChange?: (next: boolean) => void;
+  title?: React.ReactNode;
+  placement?: TooltipProps["placement"];
+  tooltipSx?: SxProps<Theme>;
+  disableHoverListener?: boolean;
+  disableTouchListener?: boolean;
+  autoHideMs?: number;
+}
 
 export interface EdgeFormData {
   sourceQuestionID: string;
@@ -447,7 +460,7 @@ export interface FlowConditionModalProps {
     source: number;
     target: number;
   };
-
+  refetch: () => QueryActionCreatorResult<any>;
   Elements: Element[];
 }
 
@@ -696,6 +709,7 @@ export interface QuestionDetail {
 export interface QuestionFlowProps {
   surveyID: string;
   Elements: Element[];
+  refetch: () => QueryActionCreatorResult<any>;
 }
 
 export interface QuestionFlowCondition {

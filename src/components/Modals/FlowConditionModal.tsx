@@ -45,6 +45,7 @@ const FlowConditionModal = ({
   setEdges,
   setIsValidArray,
   Elements,
+  refetch,
 }: FlowConditionModalProps) => {
   const { primary, scrollStyles, grey } = useAppTheme();
   const questionID = selectedNode?.data?.questionID as string;
@@ -64,7 +65,6 @@ const FlowConditionModal = ({
       (Elements ?? []).filter(
         (element) =>
           element.type !== "WELCOME_SCREEN" &&
-          element.type !== "END_SCREEN" &&
           element.type !== "EMAIL_CONTACT" &&
           element.type !== "INSTRUCTIONS"
       ),
@@ -165,6 +165,7 @@ const FlowConditionModal = ({
 
       setErrors(() => ({}));
       setIsValidArray(() => []);
+      refetch();
     } catch (error) {
       console.log("Error: ", error);
     }

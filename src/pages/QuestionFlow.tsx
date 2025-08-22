@@ -23,7 +23,10 @@ const QuestionFlow = () => {
 
   const surveyID = flowSurveyID ?? params.surveyID;
 
-  const { data } = useGetElementsForSurveyQuery(surveyID);
+  const { data, refetch: refetchFlow } = useGetElementsForSurveyQuery(
+    surveyID,
+    { refetchOnMountOrArgChange: true }
+  );
 
   return (
     <Box
@@ -72,7 +75,7 @@ const QuestionFlow = () => {
           }}
         >
           {/* Main content area */}
-          <QuestionFlowContainer Elements={data!} surveyID={surveyID} />
+          <QuestionFlowContainer Elements={data!} surveyID={surveyID} refetch={refetchFlow}/>
         </Grid>
       </Grid>
     </Box>

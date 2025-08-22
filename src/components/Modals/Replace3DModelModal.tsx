@@ -29,6 +29,7 @@ import {
 } from "@mui/material";
 
 import { useReplace3DModelMutation } from "../../app/slices/elementApiSlice";
+import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
 import { Replace3DModelModalProps } from "../../utils/types";
 
 const Replace3DModelModal = ({
@@ -37,6 +38,7 @@ const Replace3DModelModal = ({
   questionID,
   currentFileName = "current_model.glb",
 }: Replace3DModelModalProps) => {
+  const refetchCanvas = useSurveyCanvasRefetch();
   const [isDragOver, setIsDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -44,7 +46,7 @@ const Replace3DModelModal = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const acceptedFormats = useMemo(() => [".gltf", ".glb"], []);
+  const acceptedFormats = useMemo(() => [".glb"], []);
   const maxFileSize = 10 * 1024 * 1024; // 10MB
 
   // RTK mutation
@@ -124,7 +126,7 @@ const Replace3DModelModal = ({
       try {
         await replace3DModel({ formData, questionID }).unwrap();
         setProgress(100); // finish the bar
-        // onReplaced?.(file);
+        refetchCanvas();
       } catch (e: any) {
         // Surface server error
         setError(

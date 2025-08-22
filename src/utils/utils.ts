@@ -1,4 +1,4 @@
-import { BarChart3, Headphones, Shield, Smartphone, Users } from "lucide-react";
+import { BarChart3, Shield, Smartphone, Users } from "lucide-react";
 
 export const generateOptionLabel = (index: number, qType: string) => {
   if (qType === "RADIO" || qType === "MULTIPLE_CHOICE" || qType === "MEDIA") {
@@ -63,7 +63,6 @@ export const navItems = [
   { name: "Company", hasDropdown: false },
 ];
 
-
 export const normalize = (s?: string | null) => (s ?? "").trim();
 
 export const isOrderable = (type?: string, order?: number) => {
@@ -76,3 +75,10 @@ export const isOrderable = (type?: string, order?: number) => {
   ];
   return !nonOrderableTypes.includes(type) && order > 0 && order < 9999;
 };
+
+
+export const mergeHandlers =
+  <E,>(...handlers: Array<((e: E) => void) | undefined>) =>
+  (e: E) => {
+    handlers.forEach((h) => h?.(e));
+  };

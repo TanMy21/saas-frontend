@@ -4,49 +4,60 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import ClearIcon from "@mui/icons-material/Clear";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
-import { Box, IconButton, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  ClickAwayListener,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { IoMoveSharp } from "react-icons/io5";
 
 import {
   useDeleteOptionMutation,
   useUpdateOptionTextandValueMutation,
 } from "../../../app/slices/optionApiSlice";
+import { useKeyboardEditableRow } from "../../../hooks/useKeyboardEdit";
 import { MediaOptionProps } from "../../../utils/types";
-import { getSquareImageURL } from "../../../utils/utils";
+import { getSquareImageURL, mergeHandlers } from "../../../utils/utils";
 import MediaElementCardIconBtns from "../../MediaElementCard/MediaElementCardIconBtns";
 import MediaElementImageUploadModal from "../../Modals/MediaElementImageUploadModal";
+import EnterToEditTooltip from "../../tooltip/EnterToEditTooltip";
 
 const MediaOption = ({ option }: MediaOptionProps) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: option.optionID });
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [tipOpen, setTipOpen] = useState(false);
   const [uploadImageModalOpen, setUploadImageModalOpen] =
     useState<boolean>(false);
-  const [editText, setEditText] = useState<string>(option.value);
   const imageSrc = option.image ? option.image : null;
 
   const [updateOptionTextandValue] = useUpdateOptionTextandValueMutation();
   const [deleteOption] = useDeleteOptionMutation();
 
-  const handleDoubleClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEditText(event.target.value);
-  };
-
-  const handleBlur = async () => {
-    await updateOptionTextandValue({
-      optionID: option.optionID,
-      value: editText,
-    });
-  };
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-  };
+  const {
+    isEditing,
+    text: editText,
+    setText: setEditText,
+    editProps,
+    editorProps,
+    enterEdit,
+    handleClickAway,
+  } = useKeyboardEditableRow({
+    initialText: option.value,
+    externalValue: option.value,
+    rowDataRole: "media-item",
+    siblingsSelector: '[data-role="media-item"]',
+    onSave: async (next) => {
+      if (next.trim() !== option.value.trim()) {
+        await updateOptionTextandValue({
+          optionID: option.optionID,
+          value: next,
+        }).unwrap?.();
+      }
+    },
+  });
 
   const deleteChoice = async () => {
     try {
@@ -165,6 +176,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
               <IconButton
                 {...attributes}
                 {...listeners}
+                tabIndex={-1}
                 sx={{
                   position: "absolute",
                   top: 4,
@@ -206,6 +218,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
             >
               <IconButton
                 onClick={deleteChoice}
+                tabIndex={-1}
                 sx={{
                   position: "absolute",
                   top: 4,
@@ -262,79 +275,106 @@ const MediaOption = ({ option }: MediaOptionProps) => {
               height: 24,
               fontSize: 16,
               fontWeight: "bold",
-              mt:0.5,
+              mt: 0.5,
             }}
           >
             {option.text}
           </Box>
         </Box>
-        <Box
-          onDoubleClick={handleDoubleClick}
-          sx={{
-            display: "flex",
-            flex: 1,
-            justifyContent: "flex-start",
-            alignItems: "flex-start",
-            // border: "2px solid red",
-            // width: "64%",
-            padding: "4px 8px",
-            paddingRight: "16px",
-            minHeight: 40,
-            height: "auto",
-            overflowWrap: "break-word",
-          }}
+        <EnterToEditTooltip
+          open={tipOpen && !isEditing}
+          onOpenChange={setTipOpen}
+          autoHideMs={1800}
         >
-          {isEditing ? (
-            <TextField
-              id="outlined-basic"
-              variant="outlined"
-              type="text"
-              value={editText}
-              multiline
-              minRows={1}
-              maxRows={4}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              autoFocus
-              InputProps={{
-                sx: {
-                  // height: "100%",
-                  padding: "0px",
-                  "& input": {
-                    padding: "4px 8px",
-                  },
-                },
-              }}
-              sx={{
-                backgroundColor: "transparent",
-                width: "100%",
-                // height: "100%",
-                "& .MuiOutlinedInput-root": {
-                  // height: "100%",
-                  "& fieldset": {
-                    border: "none",
-                  },
-                },
-              }}
-            />
-          ) : (
-            <Typography
-              sx={{
-                fontSize: "20px",
-                fontWeight: "bold",
-                wordBreak: "break-word",
-                // width: "96%",
-                padding: "4px",
-                // overflowWrap: "break-word",
-                whiteSpace: "pre-wrap",
-                lineHeight: 1.4,
-              }}
-              onClick={handleClick}
-            >
-              {option.value}
-            </Typography>
-          )}
-        </Box>
+          <Box
+            {...editProps}
+            tabIndex={0}
+            onDoubleClick={() => enterEdit()}
+            onFocus={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
+              (editProps as any).onFocus,
+              () => setTipOpen(true)
+            )}
+            onBlur={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
+              (editProps as any).onBlur,
+              () => setTipOpen(false)
+            )}
+            onKeyDownCapture={mergeHandlers<
+              React.KeyboardEvent<HTMLDivElement>
+            >((editProps as any).onKeyDownCapture, (e) => {
+              if (e.key === "Enter") setTipOpen(false);
+            })}
+            sx={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+              "&:focus": { outline: "2px solid #6366F1", outlineOffset: 2 },
+              padding: "4px 8px",
+              paddingRight: "16px",
+              minHeight: 40,
+              maxWidth:180,
+              height: "auto",
+              overflowWrap: "break-word",
+              // border:"2px solid red",
+            }}
+          >
+            {isEditing ? (
+              <ClickAwayListener onClickAway={handleClickAway}>
+                <TextField
+                  id="outlined-basic"
+                  variant="outlined"
+                  type="text"
+                  {...editorProps}
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  multiline
+                  minRows={1}
+                  maxRows={4}
+                  autoFocus
+                  InputProps={{
+                    sx: {
+                      // height: "100%",
+                      padding: "0px",
+                      "& input": {
+                        padding: "4px 8px",
+                      },
+                    },
+                  }}
+                  sx={{
+                    backgroundColor: "transparent",
+                    width: "100%",
+                    // height: "100%",
+                    "& .MuiOutlinedInput-root": {
+                      // height: "100%",
+                      "& fieldset": {
+                        border: "none",
+                      },
+                    },
+                  }}
+                />
+              </ClickAwayListener>
+            ) : (
+              <Typography
+                sx={{
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  wordBreak: "break-word",
+                  // width: "96%",
+                  padding: "4px",
+                  // overflowWrap: "break-word",
+                  whiteSpace: "pre-wrap",
+                  lineHeight: 1.4,
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  enterEdit();
+                }}
+              >
+                {option.value}
+              </Typography>
+            )}
+          </Box>
+        </EnterToEditTooltip>
       </Box>
     </Box>
   );

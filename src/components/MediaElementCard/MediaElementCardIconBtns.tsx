@@ -38,6 +38,7 @@ const MediaElementCardIconBtns = ({
     >
       <Tooltip title="Replace image">
         <IconButton
+          tabIndex={-1}
           onClick={() => setReplaceImageModalOpen(true)}
           sx={{
             backgroundColor: "white",
@@ -62,6 +63,7 @@ const MediaElementCardIconBtns = ({
       />
       <Tooltip title="Remove image">
         <IconButton
+          tabIndex={-1}
           onClick={handleRemoveImage}
           sx={{
             width: "28px",

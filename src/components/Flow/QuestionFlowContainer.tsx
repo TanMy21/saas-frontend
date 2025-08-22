@@ -39,7 +39,11 @@ const edgeTypes = {
   "bypass-edge": BypassEdge,
 };
 
-const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
+const QuestionFlowContainer = ({
+  Elements,
+  surveyID,
+  refetch,
+}: QuestionFlowProps) => {
   const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, _onEdgesChange] = useEdgesState<ICustomEdge>([]);
@@ -142,8 +146,8 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
         sourceQuestionOrder: Number(sourceNode.data?.order),
         sourceQuestionText: String(sourceNode.data?.question),
         sourceQuestionIcon: String(sourceNode.data?.element),
-        source: Number(sourceNode.id),
-        target: Number(connection.target),
+        source: sourceNode.id as unknown as any,
+        target: connection.target as unknown as any,
       }));
     }
 
@@ -154,8 +158,8 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
 
     const newCondition = {
       flowConditionID: "",
-      relatedQuestionID: connection.source ?? "",
-      goto_questionID: connection.target ?? "",
+      relatedQuestionID: String(connection.source ?? ""),
+      goto_questionID: String(connection.target ?? ""),
       conditionType: "",
       conditionValue: null,
     };
@@ -190,23 +194,51 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
 
     const filtered = Elements.filter(
       (q) =>
-        ![
-          "WELCOME_SCREEN",
-          "END_SCREEN",
-          "EMAIL_CONTACT",
-          "INSTRUCTIONS",
-        ].includes(q.type)
+        !["WELCOME_SCREEN", "EMAIL_CONTACT", "INSTRUCTIONS"].includes(q.type)
     );
 
-    const sorted = [...filtered].sort((a, b) => a.order! - b.order!);
+    const ends = filtered.filter((q) => q.type === "END_SCREEN");
+    const questions = filtered.filter((q) => q.type !== "END_SCREEN");
+
+    const sortedQuestions = [...questions].sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0)
+    );
+
+    const sorted = [...sortedQuestions, ...ends];
+
+    const maxQuestionOrder = sortedQuestions.length
+      ? Math.max(...sortedQuestions.map((q) => q.order ?? 0))
+      : 0;
+
+    const idToVirtualOrder = new Map<string, number>();
+    sorted.forEach((q, i) => {
+      const virt =
+        q.type === "END_SCREEN" ? maxQuestionOrder + 1 + i : (q.order ?? 0);
+      idToVirtualOrder.set(q.questionID, virt);
+    });
+
+    // 🔹 NEW: COMPACT the virtual orders to dense ranks 0..k-1 to remove gaps
+    const uniqueVirtuals = Array.from(
+      new Set(sorted.map((q) => idToVirtualOrder.get(q.questionID)!))
+    ).sort((a, b) => a - b);
+    const virtualToCompact = new Map<number, number>();
+    uniqueVirtuals.forEach((v, idx) => virtualToCompact.set(v, idx));
+
+    const idToCompactOrder = new Map<string, number>();
+    sorted.forEach((q) => {
+      idToCompactOrder.set(
+        q.questionID,
+        virtualToCompact.get(idToVirtualOrder.get(q.questionID)!)!
+      );
+    });
 
     const generatedNodes: Node[] = sorted.map((q) => ({
       id: q.questionID,
       data: {
-        label: q.order,
+        label: q.type === "END_SCREEN" ? "END" : q.order,
         questionID: q.questionID,
         question: q.text,
-        order: q.order,
+        order: idToCompactOrder.get(q.questionID)!,
         element: q.type,
       },
       type: "questionNode",
@@ -222,24 +254,33 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
       immutable: true,
     }));
 
-    const bypassEdges: Edge[] = (questionConditions ?? []).map(
-      (condition: Condition) => ({
-        id: `bypass-${condition.relatedQuestionID}-${condition.goto_questionID}`,
-        source: condition.relatedQuestionID,
-        target: condition.goto_questionID,
-        type: "bypass-edge",
-        data: {
-          bypass: true,
-          sourceOrder:
-            sorted.find((q) => q.questionID === condition.relatedQuestionID)
-              ?.order ?? 0,
-          targetOrder:
-            sorted.find((q) => q.questionID === condition.goto_questionID)
-              ?.order ?? 0,
-          flowConditionID: condition.flowConditionID,
-        },
+    const bypassEdges: Edge[] = (questionConditions ?? [])
+      .map((condition: Condition) => {
+        // skip edges whose endpoints don’t exist
+        if (
+          !idToCompactOrder.has(condition.relatedQuestionID) ||
+          !idToCompactOrder.has(condition.goto_questionID)
+        ) {
+          return null;
+        }
+
+        const sOrder = idToCompactOrder.get(condition.relatedQuestionID)!; // 🔹 compact
+        const tOrder = idToCompactOrder.get(condition.goto_questionID)!; // 🔹 compact
+
+        return {
+          id: `bypass-${condition.relatedQuestionID}-${condition.goto_questionID}`,
+          source: condition.relatedQuestionID,
+          target: condition.goto_questionID,
+          type: "bypass-edge",
+          data: {
+            bypass: tOrder - sOrder > 1, // 🔹 gap check on compact ranks
+            sourceOrder: sOrder,
+            targetOrder: tOrder,
+            flowConditionID: condition.flowConditionID,
+          },
+        } as Edge;
       })
-    );
+      .filter(Boolean) as Edge[];
 
     const allEdges = [...defaultEdges, ...bypassEdges];
     const layouted = layoutNodesWithBypasses(generatedNodes, allEdges);
@@ -324,6 +365,7 @@ const QuestionFlowContainer = ({ Elements, surveyID }: QuestionFlowProps) => {
         conditions={conditions}
         setConditions={setConditions}
         Elements={Elements}
+        refetch={refetch}
       />
     </Box>
   );
