@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@mui/material";
 import { PostHogProvider } from "posthog-js/react";
 import ReactDOM from "react-dom/client";
+import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -36,6 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </ThemeProvider>
       </AppErrorBoundary>
     </Provider>
+    <Toaster position="bottom-right" reverseOrder={false} />
     <ToastContainer />
   </>
   // </React.StrictMode>

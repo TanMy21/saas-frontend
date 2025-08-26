@@ -271,7 +271,42 @@ interface ErrorMessage {
   message: string;
 }
 
+export interface EdgeStyleProps {
+  value: EdgeStyle;
+  onChange: (v: EdgeStyle) => void;
+}
+
+export interface FlowLayoutViewMenuProps {
+  layout: LayoutMode;
+  setLayout: (m: LayoutMode) => void;
+  edgeStyle: EdgeStyle;
+  setEdgeStyle: (s: EdgeStyle) => void;
+}
+
+export interface LayoutSwitcherPanelProps {
+  value: LayoutMode;
+  onChange: (m: LayoutMode) => void;
+  modes?: LayoutMode[];
+}
+
+export interface ClusterOptions {
+  getGroupId?: (n: Node) => string | undefined;
+  padding?: number;
+}
+
+export type BypassInterval = { start: number; end: number };
+
 export type EditTarget = "none" | "title" | "description";
+
+export type LayoutMode = "sugiyama" | "vertical" | "swimlanes" | "clustered";
+
+export type EdgeStyle = "straight" | "step" | "smoothstep" | "bezier";
+
+export type LayoutResult = {
+  nodes: Node[];
+  edges: Edge[];
+  overlays?: Node[];
+};
 
 export type EditControllerParams = {
   questionID?: string;

@@ -25,12 +25,17 @@ import {
   QuestionFlowProps,
   NodeData,
 } from "../../utils/types";
+import { isConditionlessType } from "../../utils/utils";
 import FlowConditionModal from "../Modals/FlowConditionModal";
+import { toastInfo } from "../toast/toastUtils";
 
-import BypassEdge from "./BypassEdge";
-import CustomEdge from "./CustomEdge";
-import { layoutNodesWithBypasses } from "./customLayout";
+import BypassEdge from "./edges/BypassEdge";
+import CustomEdge from "./edges/CustomEdge";
+import { useEdgeStyle } from "./edges/useEdgeStyle";
+import { applyLayout } from "./layouts/layoutManager";
+import { useLayoutMode } from "./layouts/useLayoutMode";
 import QuestionNode from "./QuestionNode";
+import ViewMenu from "./ViewMenu";
 
 const nodeTypes = { questionNode: QuestionNode };
 
@@ -45,6 +50,8 @@ const QuestionFlowContainer = ({
   refetch,
 }: QuestionFlowProps) => {
   const { fitView } = useReactFlow();
+  const { layout, setLayout } = useLayoutMode(surveyID);
+  const { edgeStyle, setEdgeStyle } = useEdgeStyle(surveyID);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, _onEdgesChange] = useEdgesState<ICustomEdge>([]);
   const [conditions, setConditions] = useState<Condition[]>([]);
@@ -65,6 +72,13 @@ const QuestionFlowContainer = ({
     useGetAllConditionsForSurveyQuery(surveyID);
 
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
+    const qType = String(node.data?.element ?? "");
+
+    if (isConditionlessType(qType)) {
+      toastInfo("Conditions aren't available for this question type");
+      return;
+    }
+
     setSelectedNode(node);
     setOpenConditions(true);
     setErrors(() => ({}));
@@ -87,12 +101,24 @@ const QuestionFlowContainer = ({
   };
 
   const onConnect: OnConnect = (connection) => {
+    const sourceNode = nodes.find((n) => n.id === connection.source);
+    const targetNode = nodes.find((n) => n.id === connection.target);
+
+    if (!sourceNode || !targetNode) return;
+
+    const sourceType = String(sourceNode.data?.element ?? "");
+
+    if (isConditionlessType(sourceType)) {
+      toastInfo("Conditions aren't available for this question type");
+      return;
+    }
+
+    const exists = edges.some(
+      (e) => e.source === connection.source && e.target === connection.target
+    );
+    if (exists) return;
+
     setEdges((eds) => {
-      const sourceNode = nodes.find((n) => n.id === connection.source);
-      const targetNode = nodes.find((n) => n.id === connection.target);
-
-      if (!sourceNode || !targetNode) return eds;
-
       const sourceOrder = (sourceNode?.data as unknown as NodeData)?.order ?? 0;
       const targetOrder = (targetNode?.data as unknown as NodeData)?.order ?? 0;
       const isBypass = targetOrder - sourceOrder > 1;
@@ -102,16 +128,18 @@ const QuestionFlowContainer = ({
           edge.source === connection.source && edge.target === connection.target
       );
 
-      if (!exists && sourceNode && targetNode) {
+      if (!exists) {
         const newEdge: Edge = {
           id: `bypass-${connection.source}-${connection.target}`,
           ...connection,
           type: "bypass-edge",
+          label: `${sourceOrder} → ${targetOrder}`,
           data: {
             bypass: isBypass,
             sourceOrder: sourceOrder,
             targetOrder: targetOrder,
             flowConditionID: "",
+            edgeStyle,
           },
         };
 
@@ -128,28 +156,36 @@ const QuestionFlowContainer = ({
         ]);
 
         const updatedEdges = [...eds, newEdge];
-        const updatedNodes = layoutNodesWithBypasses(nodes, updatedEdges);
-        setNodes(updatedNodes); // re-layout nodes
-        return updatedEdges;
+
+        const {
+          nodes: relaidNodes,
+          edges: laidEdges,
+          overlays,
+        } = applyLayout(layout, nodes, updatedEdges);
+        const laidWithStyle = laidEdges.map((e) => ({
+          ...e,
+          data: { ...(e.data as any), edgeStyle },
+        }));
+
+        setNodes(
+          overlays?.length ? [...overlays, ...relaidNodes] : relaidNodes
+        );
+        setEdges(laidWithStyle);
       }
 
       return eds;
     });
 
-    const sourceNode = nodes.find((n) => n.id === connection.source);
-    if (sourceNode) {
-      setSelectedNode(sourceNode);
-
-      setEdgeFormData((prev) => ({
-        ...prev,
-        sourceQuestionID: String(sourceNode.data?.questionID),
-        sourceQuestionOrder: Number(sourceNode.data?.order),
-        sourceQuestionText: String(sourceNode.data?.question),
-        sourceQuestionIcon: String(sourceNode.data?.element),
-        source: sourceNode.id as unknown as any,
-        target: connection.target as unknown as any,
-      }));
-    }
+    setSelectedNode(sourceNode);
+    setEdgeFormData((prev) => ({
+      ...prev,
+      sourceQuestionID: String(sourceNode.data?.questionID),
+      sourceQuestionOrder: Number(sourceNode.data?.order),
+      sourceQuestionText: String(sourceNode.data?.question),
+      sourceQuestionIcon: String(sourceNode.data?.element),
+      source: sourceNode.id as unknown as any,
+      target: connection.target as unknown as any,
+    }));
 
     const existingConditions =
       questionConditions?.filter(
@@ -165,10 +201,8 @@ const QuestionFlowContainer = ({
     };
 
     setConditions([...existingConditions, newCondition]);
-
     setErrors({});
     setIsValidArray([]);
-
     setOpenConditions(true);
   };
 
@@ -187,6 +221,19 @@ const QuestionFlowContainer = ({
       return !change || change.type !== "remove";
     });
     setEdges(updatedEdges);
+
+    const {
+      nodes: relaidNodes,
+      edges: laidEdges,
+      overlays,
+    } = applyLayout(layout, nodes, updatedEdges);
+    const laidWithStyle = laidEdges.map((e) => ({
+      ...e,
+      data: { ...(e.data as any), edgeStyle },
+    }));
+
+    setNodes(overlays?.length ? [...overlays, ...relaidNodes] : relaidNodes);
+    setEdges(laidWithStyle);
   };
 
   useEffect(() => {
@@ -217,7 +264,7 @@ const QuestionFlowContainer = ({
       idToVirtualOrder.set(q.questionID, virt);
     });
 
-    // 🔹 NEW: COMPACT the virtual orders to dense ranks 0..k-1 to remove gaps
+    // Compact the virtual orders to dense ranks 0..k-1 to remove gaps
     const uniqueVirtuals = Array.from(
       new Set(sorted.map((q) => idToVirtualOrder.get(q.questionID)!))
     ).sort((a, b) => a - b);
@@ -250,7 +297,7 @@ const QuestionFlowContainer = ({
       source: q.questionID,
       target: sorted[i + 1].questionID,
       type: "custom-edge",
-      data: { bypass: false },
+      data: { bypass: false, edgeStyle },
       immutable: true,
     }));
 
@@ -264,36 +311,61 @@ const QuestionFlowContainer = ({
           return null;
         }
 
-        const sOrder = idToCompactOrder.get(condition.relatedQuestionID)!; // 🔹 compact
-        const tOrder = idToCompactOrder.get(condition.goto_questionID)!; // 🔹 compact
+        const sOrder = idToCompactOrder.get(condition.relatedQuestionID)!;
+        const tOrder = idToCompactOrder.get(condition.goto_questionID)!;
 
         return {
           id: `bypass-${condition.relatedQuestionID}-${condition.goto_questionID}`,
           source: condition.relatedQuestionID,
           target: condition.goto_questionID,
           type: "bypass-edge",
+          label: `${sOrder} → ${tOrder}`,
           data: {
-            bypass: tOrder - sOrder > 1, // 🔹 gap check on compact ranks
+            bypass: tOrder - sOrder > 1, //  gap check on compact ranks
             sourceOrder: sOrder,
             targetOrder: tOrder,
             flowConditionID: condition.flowConditionID,
+            edgeStyle,
           },
         } as Edge;
       })
       .filter(Boolean) as Edge[];
 
     const allEdges = [...defaultEdges, ...bypassEdges];
-    const layouted = layoutNodesWithBypasses(generatedNodes, allEdges);
 
-    setNodes(layouted);
-    setEdges(allEdges);
-  }, [Elements, questionConditions]);
+    // Selected layout
+    const {
+      nodes: laidNodes,
+      edges: laidEdges,
+      overlays,
+    } = applyLayout(layout, generatedNodes, allEdges, {
+      clusters: {
+        getGroupId: (n) => (n.data as any)?.sectionId,
+        padding: 24,
+      },
+    });
+
+    const laidWithStyle = laidEdges.map((e) => ({
+      ...e,
+      data: { ...(e.data as any), edgeStyle },
+    }));
+
+    setNodes(overlays?.length ? [...overlays, ...laidNodes] : laidNodes);
+    setEdges(laidWithStyle);
+  }, [Elements, questionConditions, layout, edgeStyle]);
 
   useEffect(() => {
     setTimeout(() => {
       fitView({ padding: 0.2 });
     }, 0);
-  }, [nodes]);
+  }, [nodes, layout]);
+
+  useEffect(() => {
+    // Rehydrate style on current edges
+    setEdges((eds) =>
+      eds.map((e) => ({ ...e, data: { ...(e.data as any), edgeStyle } }))
+    );
+  }, [edgeStyle, setEdges]);
 
   if (isLoading) {
     return (
@@ -344,9 +416,21 @@ const QuestionFlowContainer = ({
           onEdgesChange={handleEdgesChange}
           onNodeClick={handleNodeClick}
           onConnect={onConnect}
+          isValidConnection={(conn) => {
+            const src = nodes.find((n) => n.id === conn.source);
+            const srcType = String(src?.data?.element ?? "");
+            return !isConditionlessType(srcType);
+          }}
         >
           <Controls orientation="horizontal" />
           <Background variant={BackgroundVariant.Cross} gap={12} size={1} />
+
+          <ViewMenu
+            layout={layout}
+            setLayout={setLayout}
+            edgeStyle={edgeStyle}
+            setEdgeStyle={setEdgeStyle}
+          />
         </ReactFlow>
       </Box>
       <FlowConditionModal

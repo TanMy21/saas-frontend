@@ -1,4 +1,7 @@
 import { BarChart3, Shield, Smartphone, Users } from "lucide-react";
+import { type Transition } from "motion/react";
+
+import { EdgeStyle, LayoutMode } from "./types";
 
 export const generateOptionLabel = (index: number, qType: string) => {
   if (qType === "RADIO" || qType === "MULTIPLE_CHOICE" || qType === "MEDIA") {
@@ -76,9 +79,49 @@ export const isOrderable = (type?: string, order?: number) => {
   return !nonOrderableTypes.includes(type) && order > 0 && order < 9999;
 };
 
-
 export const mergeHandlers =
-  <E,>(...handlers: Array<((e: E) => void) | undefined>) =>
+  <E>(...handlers: Array<((e: E) => void) | undefined>) =>
   (e: E) => {
     handlers.forEach((h) => h?.(e));
   };
+
+export const NO_CONDITION_TYPES = new Set<string>(["RANK", "THREE_D"]);
+export const isConditionlessType = (t?: string) =>
+  !!t && NO_CONDITION_TYPES.has(t);
+
+export const LAYOUT_LABELS: Record<LayoutMode, string> = {
+  sugiyama: "Horizontal",
+  vertical: "Vertical",
+  swimlanes: "Swimlanes",
+  clustered: "Clustered",
+};
+
+export const ORDER: EdgeStyle[] = ["straight", "step", "smoothstep", "bezier"];
+
+export const EDGE_STYLE_LABELS: Record<EdgeStyle, string> = {
+  straight: "Straight",
+  step: "Step",
+  smoothstep: "Smooth",
+  bezier: "Bezier",
+};
+
+export const popVariants = {
+  initial: { opacity: 0, y: -6, scale: 0.98 },
+  animate: { opacity: 1, y: 6, scale: 1 },
+  exit: { opacity: 0, y: -6, scale: 0.98 },
+};
+
+export const popTransition: Transition = { duration: 0.16, ease: "easeOut" };
+
+export const LAYOUT_OPTIONS: LayoutMode[] = [
+  "sugiyama",
+  "vertical",
+  "swimlanes",
+  "clustered",
+];
+export const EDGE_OPTIONS: EdgeStyle[] = [
+  "straight",
+  "step",
+  "smoothstep",
+  "bezier",
+];

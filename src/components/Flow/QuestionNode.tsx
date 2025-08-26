@@ -4,12 +4,17 @@ import { PiFlowArrowBold } from "react-icons/pi";
 
 import { elementIcons } from "../../utils/elementsConfig";
 import { ElementType, IconMapping } from "../../utils/types";
+import { isConditionlessType } from "../../utils/utils";
+
 type StingNode = Node<
   { label: string; question: string; element: ElementType },
   "string"
 >;
 
 const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
+  const qType = String(data?.element ?? "");
+  const canConnect = !isConditionlessType(qType);
+
   return (
     <Box
       sx={{
@@ -111,7 +116,7 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
         <Handle
           type="source"
           position={Position.Right}
-          isConnectable={isConnectable}
+          isConnectableStart={canConnect}
           style={{
             width: "20px",
             height: "20px",

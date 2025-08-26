@@ -57,6 +57,7 @@ const FlowFormConditionBlock = ({
     NUMBER: FlowFormInput,
     RANGE: FlowFormInput,
     RANK: FlowFormNoCondition,
+    THREE_D: FlowFormNoCondition,
   };
 
   const [deleteCondition] = useDeleteConditionMutation();
@@ -69,10 +70,10 @@ const FlowFormConditionBlock = ({
   let noCondition = false;
 
   if (
-    edgeFormData.sourceQuestionIcon === "RANGE" ||
     edgeFormData.sourceQuestionIcon === "RANK" ||
-    selectedNode?.data.element === "RANGE" ||
-    selectedNode?.data.element === "RANK"
+    edgeFormData.sourceQuestionIcon === "THREE_D" ||
+    selectedNode?.data.element === "RANK" ||
+    selectedNode?.data.element === "THREE_D"
   ) {
     noCondition = true;
   }
