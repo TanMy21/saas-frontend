@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { fetchUser, selectUser } from "../app/slices/userSlice";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
 import { AppDispatch } from "../app/store";
+import SpinnerBackdrop from "../components/alert/SpinnerBackdrop";
 import { DashBoardHeader } from "../components/DashBoardHeader";
 import DeleteWorkspaceModal from "../components/Modals/DeleteWorkspaceModal";
 import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";
@@ -14,11 +15,13 @@ import RenameWorkspaceModal from "../components/Modals/RenameWorkspaceModal";
 import DashboardTour from "../components/Tour/DashboardTour";
 import WorkspaceConsole from "../components/Workspaces/WorkspaceConsole";
 import useAuth from "../hooks/useAuth";
+import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 import { useAppTheme } from "../theme/useAppTheme";
+import { LAST_WS_KEY } from "../utils/constants";
 import { ErrorData, Workspace } from "../utils/types";
 
 const Dashboard = () => {
-  const { background } = useAppTheme();
+  const { background, brand } = useAppTheme();
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector(selectUser);
   const { isAuthenticated } = useAuth();
@@ -37,9 +40,8 @@ const Dashboard = () => {
   } = useGetWorkspacesQuery("workspacesList", {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
-    
   });
-
+  useBodyScrollLock(true);
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace>();
 
   useEffect(() => {
@@ -57,23 +59,59 @@ const Dashboard = () => {
 
       if (Array.isArray(errorData.data.error)) {
         errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
+          toast.error(el.message, { position: "top-right" })
         );
       } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
+        toast.error(errorData.data.message, { position: "top-right" });
       }
     }
   }, [isErrorWorkspaces, workspaceError]);
 
   useEffect(() => {
-    if (isSuccess && workspaces?.length && !selectedWorkspace) {
+    if (!isSuccess || !workspaces?.length) return;
+
+    if (selectedWorkspace) return;
+
+    try {
+      const lastId = localStorage.getItem(LAST_WS_KEY);
+      if (lastId) {
+        const found = workspaces.find(
+          (w: Workspace) => w.workspaceId === lastId
+        );
+        if (found) {
+          setSelectedWorkspace(found);
+          return;
+        }
+      }
+
+      setSelectedWorkspace(workspaces[0]);
+    } catch {
       setSelectedWorkspace(workspaces[0]);
     }
   }, [isSuccess, workspaces, selectedWorkspace]);
+
+  useEffect(() => {
+    if (selectedWorkspace?.workspaceId) {
+      try {
+        localStorage.setItem(LAST_WS_KEY, selectedWorkspace.workspaceId);
+      } catch {
+        // ignore
+      }
+    }
+  }, [selectedWorkspace]);
+
+  useEffect(() => {
+    if (!workspaces || !workspaces.length) return;
+
+    if (!selectedWorkspace) return;
+
+    const stillExists = workspaces.some(
+      (w: Workspace) => w.workspaceId === selectedWorkspace.workspaceId
+    );
+    if (!stillExists) {
+      setSelectedWorkspace(workspaces[0]);
+    }
+  }, [workspaces, selectedWorkspace]);
 
   useEffect(() => {
     if (!user && isAuthenticated) {
@@ -109,6 +147,7 @@ const Dashboard = () => {
           width: "100%",
           height: "100%",
           // border: "2px solid black",
+          background: `linear-gradient(180deg, ${brand?.bgColor1 || "#f9fafb"} 0%, ${brand?.bgColor3 || "#F8F9FF"} 100%)`,
         }}
       >
         {isTourEnabled && (
@@ -127,6 +166,8 @@ const Dashboard = () => {
             top: "0",
             width: "100%",
             zIndex: "5",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
+            backdropFilter: "saturate(120%)",
           }}
         >
           <DashBoardHeader
@@ -164,10 +205,19 @@ const Dashboard = () => {
               sx={{
                 display: "flex",
                 margin: "auto",
-                marginTop: "1%",
-                width: { md: "92%", lg: "80%", xl: "80%" },
                 height: "96%",
                 // border: "2px solid green",
+                mt: { xs: "12px", sm: "1%" },
+                width: {
+                  xs: "94%",
+                  sm: "92%",
+                  md: "90%",
+                  lg: "84%",
+                  xl: "80%",
+                },
+                overflowX: "hidden",
+                overflowY: "hidden",
+                p: { xs: 1, sm: 1.5, md: 2 },
               }}
             >
               <WorkspaceConsole
@@ -196,6 +246,7 @@ const Dashboard = () => {
         onClose={() => setDeleteWorkspaceModalOpen(false)}
         selectedWorkspace={selectedWorkspace!}
       />
+      <SpinnerBackdrop />
     </>
   );
 };

@@ -149,7 +149,9 @@ const ElementQuestionText = ({ display }: ElementProps) => {
       >
         {/* Title row */}
         <Box
-          onMouseDown={(e) => e.preventDefault()}
+          onMouseDown={(e) => {
+            if (editingTarget !== "none") e.preventDefault();
+          }}
           onClick={(e) => e.stopPropagation()}
           sx={{
             display: "flex",
@@ -218,7 +220,9 @@ const ElementQuestionText = ({ display }: ElementProps) => {
 
         {/* Description row */}
         <Box
-          onMouseDown={(e) => e.preventDefault()}
+          onMouseDown={(e) => {
+            if (editingTarget !== "none") e.preventDefault();
+          }}
           onClick={(e) => e.stopPropagation()}
           sx={{
             display: "flex",

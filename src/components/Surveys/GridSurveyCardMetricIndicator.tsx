@@ -13,15 +13,16 @@ const GridSurveyCardMetricIndicator = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
         width: { md: "44%", xl: "48%" },
-        height: { md: "96%", xl: "100%" },
+        height: "80%",
         border: "none",
         backgroundColor: background.softGrey,
         borderRadius: 3,
         gap: 0.5,
         overflow: "hidden",
+        padding: { xs: 0.5, sm: 1},
       }}
     >
       <Box
@@ -29,10 +30,9 @@ const GridSurveyCardMetricIndicator = ({
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          margin: "auto",
+          margin: "0 auto",
           width: "96%",
           height: "68%",
-          paddingTop: "8px",
           // border: "2px solid red",
         }}
       >
@@ -43,10 +43,9 @@ const GridSurveyCardMetricIndicator = ({
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          margin: "auto",
+          margin: "0 auto",
           width: "96%",
           height: "32%",
-          paddingBottom: "10px",
           // border: "2px solid blue",
         }}
       >

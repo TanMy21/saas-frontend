@@ -43,7 +43,7 @@ export const DashBoardHeader = ({
         borderBottom: 1,
         borderColor: brand.borderColor1,
         width: "100%",
-        height: "48px",
+        height: { xs: 56, sm: 56, md: 60 },
       }}
     >
       <Box
@@ -51,8 +51,10 @@ export const DashBoardHeader = ({
           display: "flex",
           justifyContent: "space-between",
           margin: "auto",
-          width: "80%",
-          height: "98%",
+          width: { xs: "94%", sm: "90%", md: "86%", lg: "84%", xl: "84%" },
+          height: "100%",
+          alignItems: "center",
+          // border: "2px solid red",
         }}
       >
         <Box
@@ -66,15 +68,24 @@ export const DashBoardHeader = ({
             // border: "2px solid blue",
           }}
         >
-          <Typography sx={textStyles.greetingsText} ml={2}>
+          <Typography
+            sx={{
+              ...textStyles.greetingsText,
+              fontSize: { xs: "0.95rem", sm: "1rem" },
+              letterSpacing: "-0.015em",
+              color: "#0F1828",
+            }}
+            ml={{ xs: 0, sm: 1, xl: 2 }}
+          >
             {`${greeting}, ${firstname}`}
           </Typography>
           <Divider
             orientation="vertical"
             variant="middle"
             flexItem
-            sx={{ backgroundColor: brand.divider2 }}
+            sx={{ backgroundColor: brand.divider2, opacity: 0.8 }}
           />
+
           <WorkspacesDropDownMenu
             selectedWorkspace={selectedWorkspace}
             setSelectedWorkspace={setSelectedWorkspace}
@@ -96,8 +107,9 @@ export const DashBoardHeader = ({
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-              width: "40%",
               height: "100%",
+              width: { xs: "100%", sm: "70%", md: "60%", lg: "48%" },
+              pl: 1.5,
             }}
           >
             <HeaderIconMenu />
@@ -133,7 +145,7 @@ export const SettingsPageHeader = () => {
         borderBottom: 1,
         borderColor: brand.borderColor1,
         width: "100%",
-        height: "48px",
+        height: { xs: 56, sm: 56, md: 60 },
       }}
     >
       <Box
@@ -141,8 +153,9 @@ export const SettingsPageHeader = () => {
           display: "flex",
           justifyContent: "space-between",
           margin: "auto",
-          width: "80%",
-          height: "98%",
+          width: { xs: "94%", sm: "90%", md: "86%", lg: "84%", xl: "80%" },
+          height: "100%",
+          alignItems: "center",
         }}
       >
         <Box
@@ -156,7 +169,15 @@ export const SettingsPageHeader = () => {
             // border: "2px solid blue",
           }}
         >
-          <Typography sx={textStyles.greetingsText} ml={2}>
+          <Typography
+            sx={{
+              ...textStyles.greetingsText,
+              fontSize: { xs: "0.95rem", sm: "1rem" },
+              letterSpacing: "-0.015em",
+              color: "#0F1828",
+            }}
+            ml={{ xs: 0, sm: 1, xl: 2 }}
+          >
             {`${greeting}, ${firstname}`}
           </Typography>
         </Box>
@@ -173,8 +194,9 @@ export const SettingsPageHeader = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-              width: "40%",
               height: "100%",
+              width: { xs: "100%", sm: "70%", md: "60%", lg: "48%" },
+              pl: 1.5,
             }}
           >
             <HeaderIconMenu />

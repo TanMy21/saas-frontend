@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { SquarePlus } from 'lucide-react';
+import { SquarePlus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -30,8 +30,10 @@ const NewWorkspaceModal = ({ open, onClose }: NewWorkspaceModalProps) => {
   const {
     register,
     handleSubmit,
+    reset,
+    setFocus,
     formState: { errors },
-  } = useForm<WorkspaceDropDownMenu>();
+  } = useForm<WorkspaceDropDownMenu>({ defaultValues: { workspaceName: "" } });
 
   const createWorkspace = async (data: WorkspaceDropDownMenu) => {
     const { workspaceName } = data;
@@ -43,6 +45,13 @@ const NewWorkspaceModal = ({ open, onClose }: NewWorkspaceModalProps) => {
   };
 
   useEffect(() => {
+    if (open) {
+      reset({ workspaceName: "" });
+      setTimeout(() => setFocus("workspaceName"), 0);
+    }
+  }, [open, reset, setFocus]);
+
+  useEffect(() => {
     if (isSuccess) {
       toast.success("Workspace Created !", {
         position: "top-right",
@@ -50,6 +59,7 @@ const NewWorkspaceModal = ({ open, onClose }: NewWorkspaceModalProps) => {
         closeOnClick: true,
         theme: "colored",
       });
+      reset({ workspaceName: "" });
       onClose();
     }
 
@@ -67,7 +77,7 @@ const NewWorkspaceModal = ({ open, onClose }: NewWorkspaceModalProps) => {
         });
       }
     }
-  }, [isSuccess, isError, error]);
+  }, [isSuccess, isError, error, reset]);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -166,9 +176,10 @@ const NewWorkspaceModal = ({ open, onClose }: NewWorkspaceModalProps) => {
               type="text"
               fullWidth
               placeholder="Enter workspace name..."
+              autoFocus
+              autoComplete="off"
               inputProps={{
                 maxLength: 50,
-                autoFocus: true,
                 style: {
                   padding: "14px 16px",
                   background: "rgba(249,250,251,0.5)",
@@ -277,4 +288,5 @@ const NewWorkspaceModal = ({ open, onClose }: NewWorkspaceModalProps) => {
     </Modal>
   );
 };
+
 export default NewWorkspaceModal;

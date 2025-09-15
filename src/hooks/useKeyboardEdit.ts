@@ -29,6 +29,9 @@ export function useKeyboardEditableRow({
   const rowRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  // NEW: remember how we entered edit (typed seed vs plain enter/click)
+  const lastSeedRef = useRef<string | null>(null);
+
   // compute defaults
   const roleValue = rowDataRole ?? "editable-row";
   const selector = siblingsSelector ?? '[data-role="editable-row"]';
@@ -61,6 +64,7 @@ export function useKeyboardEditableRow({
   const enterEdit = useCallback(
     (seed?: string) => {
       setIsEditing(true);
+      lastSeedRef.current = typeof seed === "string" ? seed : null;
       setText(typeof seed === "string" ? seed : (externalValue ?? initialText));
       focusInputNextTick();
     },
@@ -86,6 +90,27 @@ export function useKeyboardEditableRow({
     },
     [externalValue, initialText, exitEdit]
   );
+
+  // NEW: once we’re in edit mode, select all (or place caret) after the input mounts
+  useEffect(() => {
+    if (!isEditing) return;
+    const id = requestAnimationFrame(() => {
+      const el = inputRef.current;
+      if (!el) return;
+      el.focus({ preventScroll: true });
+
+      if (lastSeedRef.current == null) {
+        // Enter/click/F2 path => select entire text
+        el.setSelectionRange(0, el.value.length);
+      } else {
+        // Typed a printable char to enter => caret at end (overwrite flow)
+        // If you want select-all here too, replace with the line above.
+        const end = el.value.length;
+        el.setSelectionRange(end, end);
+      }
+    });
+    return () => cancelAnimationFrame(id);
+  }, [isEditing]);
 
   // ---------- handlers ----------
   const handleRowKeyDown = useCallback(
@@ -202,7 +227,16 @@ export function useKeyboardEditableRow({
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         setText(e.target.value),
       onKeyDown: handleEditorKeyDown,
-      inputRef,
+      inputRef, // NEW: fallback—if focus arrives late, still select as intended
+      onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+        const el = e.currentTarget;
+        if (lastSeedRef.current == null) {
+          el.setSelectionRange(0, el.value.length);
+        } else {
+          const end = el.value.length;
+          el.setSelectionRange(end, end);
+        }
+      },
     }),
     [text, handleEditorKeyDown]
   );

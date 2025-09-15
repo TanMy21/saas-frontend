@@ -21,9 +21,8 @@ const SurveysCollection = ({
         margin: "auto",
         marginTop: { md: "2%", xl: "1%" },
         width: "98%",
-        height: { md: "72%", lg: layoutContainerHeightLG, xl: "84%" },
-        // border: "2px solid red",
-      }}
+        height: { md: "72%", lg: layoutContainerHeightLG, xl: "92%" },
+       }}
     >
       {viewMode === "grid" ? (
         <GridLayout

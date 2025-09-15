@@ -225,37 +225,9 @@ const NewSurveyModal = ({
               <CloseIcon style={{ width: 28, height: 28 }} />
             </IconButton>
           </Box>
-          {/* <Box sx={{ position: "relative", p: 4, pb: 2 }}>
-            <IconButton
-              onClick={onClose}
-              sx={{
-                position: "absolute",
-                right: 16,
-                top: 16,
-                p: 1.2,
-                borderRadius: "50%",
-                "&:hover": { bgcolor: "#f3f4f6" },
-              }}
-            >
-              <CloseIcon style={{ width: 24, height: 24, color: "#6b7280" }} />
-            </IconButton>
-            <Box sx={{ textAlign: "center" }}>
-              <Typography
-                variant="h5"
-                fontWeight={700}
-                color="#111827"
-                mb={0.5}
-              >
-                Create a new survey
-              </Typography>
-              <Typography sx={{ color: "#6b7280", fontSize: 15 }}>
-                Choose how you'd like to start building your survey
-              </Typography>
-            </Box>
-          </Box> */}
 
           {/* Options */}
-          <Box sx={{ px: 4, pb: 4, pt: 0 }}>
+          <Box sx={{ mt: 4, px: 4, pb: 4, pt: 0 }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               {createSurveyOptions.map((option) => {
                 const Icon = option.icon;

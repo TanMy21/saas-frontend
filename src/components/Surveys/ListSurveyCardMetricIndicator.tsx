@@ -15,15 +15,15 @@ const ListSurveyCardMetricIndicator = ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        width: "20%",
-        height: "96%",
+        textAlign: "center",
+        width: "48%",
+        height: "100%",
+        py: 0.5,
         // border: "2px solid red",
       }}
     >
-      <Typography sx={textStyles.listViewMetricLabelValue}>
-        {value}
-      </Typography>
-      <Typography sx={{ ...textStyles.listViewMetricLabelTitle, mb: "8px" }}>
+      <Typography sx={textStyles.listViewMetricLabelValue}>{value}</Typography>
+      <Typography sx={{ ...textStyles.listViewMetricLabelTitle }}>
         {title}
       </Typography>
     </Box>

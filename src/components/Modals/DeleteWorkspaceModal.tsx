@@ -34,15 +34,11 @@ const DeleteWorkspaceModal = ({
 
   const expectedText = name ?? "";
 
-  const {
-    register,
-    handleSubmit,
-
-    watch,
-  } = useForm<WorkspaceDelete>({
-    mode: "onChange",
-    defaultValues: { confirmationText: "" },
-  });
+  const { register, handleSubmit, reset, setFocus, watch } =
+    useForm<WorkspaceDelete>({
+      mode: "onChange",
+      defaultValues: { confirmationText: "" },
+    });
 
   const confirmationText = watch("confirmationText") ?? "";
 
@@ -60,8 +56,16 @@ const DeleteWorkspaceModal = ({
     } else {
       toast.error("Workspace name does not match", { position: "top-right" });
     }
+    reset({ confirmationText: "" });
     onClose();
   };
+
+  useEffect(() => {
+    if (open) {
+      reset({ confirmationText: "" });
+      setTimeout(() => setFocus("confirmationText"), 0);
+    }
+  }, [open, reset, setFocus]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -131,7 +135,7 @@ const DeleteWorkspaceModal = ({
               borderRadius: 2,
               boxShadow: 12,
               border: "1px solid",
-              borderColor: "#f3f4f6", // gray-100
+              borderColor: "#f3f4f6",
               overflow: "hidden",
               display: "flex",
               flexDirection: "column",
@@ -140,7 +144,7 @@ const DeleteWorkspaceModal = ({
             {/* Header */}
             <Box
               sx={{
-                px: 4,
+                px: 2,
                 pt: 4,
                 pb: 2,
                 borderBottom: "1px solid",
@@ -248,45 +252,60 @@ const DeleteWorkspaceModal = ({
                         type="text"
                         placeholder={expectedText}
                         autoFocus
+                        autoComplete="off"
                         size="small"
                         fullWidth
-                        // RHF now controls the value, so NO value or onChange here!
-                        InputProps={{
-                          sx: {
-                            px: 1.5,
-                            py: 1.2,
+                        sx={{
+                          "& .MuiOutlinedInput-root": {
                             borderRadius: 2,
+                            backgroundColor: "#fff",
                             fontFamily: "monospace",
                             fontSize: 14,
-                            background:
-                              confirmationText === ""
-                                ? "#fff"
-                                : confirmationMatch
-                                  ? "#f0fdf4"
-                                  : "#fef2f2",
-                            border: "2px solid",
-                            borderColor:
-                              confirmationText === ""
-                                ? "#e5e7eb"
-                                : confirmationMatch
-                                  ? "#86efac"
-                                  : "#fca5a5",
-                            transition: "all 0.2s",
-                            "&.Mui-focused": {
+                            height: 52,
+                            "& fieldset": {
+                              borderWidth: 2,
                               borderColor:
                                 confirmationText === ""
-                                  ? "#60a5fa"
+                                  ? "#e5e7eb"
                                   : confirmationMatch
                                     ? "#22c55e"
-                                    : "#dc2626",
-                              boxShadow:
-                                confirmationText === ""
-                                  ? "0 0 0 4px #dbeafe"
-                                  : confirmationMatch
-                                    ? "0 0 0 4px #bbf7d0"
-                                    : "0 0 0 4px #fee2e2",
-                              background: "#fff",
+                                    : "#ef4444",
                             },
+                            "&:hover fieldset": {
+                              borderColor:
+                                confirmationText === ""
+                                  ? "#9ca3af"
+                                  : confirmationMatch
+                                    ? "#22c55e"
+                                    : "#ef4444",
+                            },
+                            "&.Mui-focused": {
+                              boxShadow: "0 0 0 4px rgba(59,130,246,0.15)",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor:
+                                confirmationText === ""
+                                  ? "#3b82f6"
+                                  : confirmationMatch
+                                    ? "#22c55e"
+                                    : "#ef4444",
+                            },
+                            "&.Mui-error fieldset": { borderColor: "#ef4444" },
+                            "&.Mui-focused.Mui-error fieldset": {
+                              borderColor: "#ef4444",
+                            },
+                            "&.Mui-focused.Mui-success fieldset": {
+                              borderColor: "#22c55e",
+                            },
+
+                            "& input:-webkit-autofill": {
+                              WebkitTextFillColor: "inherit",
+                              transition: "background-color 99999s ease-out 0s",
+                            },
+                          },
+
+                          "& .MuiOutlinedInput-input::selection": {
+                            backgroundColor: "rgba(59,130,246,0.15)",
                           },
                         }}
                         inputProps={{
@@ -296,6 +315,7 @@ const DeleteWorkspaceModal = ({
                           },
                         }}
                       />
+
                       {confirmationText !== "" && (
                         <Box
                           sx={{

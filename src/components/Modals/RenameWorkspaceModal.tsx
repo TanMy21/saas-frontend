@@ -38,7 +38,7 @@ const RenameWorkspaceModal = ({
     formState: { errors },
   } = useForm<WorkspaceRename>();
 
-  const { workspaceId, name } = selectedWorkspace ?? {};
+  const { workspaceId } = selectedWorkspace ?? {};
 
   const renameWorkspace = async (data: WorkspaceRename) => {
     const { name } = data;

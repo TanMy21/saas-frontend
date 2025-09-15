@@ -124,7 +124,7 @@ const DeleteSurveyModal = ({
             {/* Header */}
             <Box
               sx={{
-                px: 4,
+                px: 2,
                 pt: 4,
                 pb: 2,
                 borderBottom: "1px solid",
@@ -234,32 +234,35 @@ const DeleteSurveyModal = ({
                         autoFocus
                         size="small"
                         fullWidth
-                        // RHF now controls the value, so NO value or onChange here!
-                        InputProps={{
-                          sx: {
+                        sx={{
+                          "& .MuiOutlinedInput-root": {
                             px: 1.5,
                             py: 1.2,
                             borderRadius: 2,
                             fontFamily: "monospace",
                             fontSize: 14,
-                            background:
-                              confirmationText === ""
-                                ? "#fff"
-                                : confirmationMatch
-                                  ? "#f0fdf4"
-                                  : "#fef2f2",
-                            border: "2px solid",
-                            borderColor:
-                              confirmationText === ""
-                                ? "#e5e7eb"
-                                : confirmationMatch
-                                  ? "#86efac"
-                                  : "#fca5a5",
                             transition: "all 0.2s",
-                            "&.Mui-focused": {
+                            "& fieldset": {
+                              borderWidth: 2,
                               borderColor:
                                 confirmationText === ""
-                                  ? "#60a5fa"
+                                  ? "#e5e7eb"
+                                  : confirmationMatch
+                                    ? "#22c55e"
+                                    : "#dc2626",
+                            },
+                            "&:hover fieldset": {
+                              borderColor:
+                                confirmationText === ""
+                                  ? "#d1d5db"
+                                  : confirmationMatch
+                                    ? "#16a34a"
+                                    : "#b91c1c",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor:
+                                confirmationText === ""
+                                  ? "#3b82f6"
                                   : confirmationMatch
                                     ? "#22c55e"
                                     : "#dc2626",
@@ -269,7 +272,6 @@ const DeleteSurveyModal = ({
                                   : confirmationMatch
                                     ? "0 0 0 4px #bbf7d0"
                                     : "0 0 0 4px #fee2e2",
-                              background: "#fff",
                             },
                           },
                         }}

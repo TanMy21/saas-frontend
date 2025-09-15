@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { Box, Fade, Grow, TextField, Typography } from "@mui/material";
+import { Box, Grow, TextField, Tooltip, Typography } from "@mui/material";
 
 import {
   useGetWorkspacesQuery,
   useUpdateWorkspaceNameMutation,
 } from "../../app/slices/workspaceApiSlice";
+import { useAppTheme } from "../../theme/useAppTheme";
 import { WorkspaceToolbarProps } from "../../utils/types";
 import SurveySearchBar from "../Surveys/SurveySearchBar";
 import SurveySorter from "../Surveys/SurveySorter";
@@ -30,6 +31,7 @@ const WorkspaceToolbar = ({
   selectedWorkspace,
   setSelectedWorkspace,
 }: WorkspaceToolbarProps) => {
+  const { primary } = useAppTheme();
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(workspaceName);
   const { refetch } = useGetWorkspacesQuery("workspacesList");
@@ -40,6 +42,11 @@ const WorkspaceToolbar = ({
   };
 
   const handleBlur = async () => {
+    if (text.trim() === "" || text === workspaceName) {
+      setIsEditing(false);
+      setText(workspaceName);
+      return;
+    }
     const updated = await updateWorkspaceName({
       workspaceId,
       name: text,
@@ -76,9 +83,10 @@ const WorkspaceToolbar = ({
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "center",
-          gap: 4,
+          gap: { xs: 2, md: 3, lg: 4 },
           width: "48%",
           height: "98%",
+          px: { xs: 0, md: 0.5 },
           // border: "2px solid green",
         }}
       >
@@ -93,28 +101,68 @@ const WorkspaceToolbar = ({
             autoFocus
             sx={{
               backgroundColor: "transparent",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+                backgroundColor: "transparent",
+                height: { xs: 44, md: 48 },
+                paddingRight: 1,
+                transition: "box-shadow 120ms ease, border-color 120ms ease",
+                "& fieldset": { borderColor: "transparent" }, // ✨ no box until hover/focus
+                "&:hover fieldset": { borderColor: "rgba(0,0,0,0.12)" },
+                "&.Mui-focused fieldset": { borderColor: "transparent" },
+                "&.Mui-focused": {
+                  boxShadow: `0 0 0 2px ${primary.main}33`, // ✨ soft focus ring
+                },
+              },
+              "& .MuiInputBase-input": {
+                fontWeight: 800, // ✨ title weight
+                fontSize: { xs: 22, md: 26, lg: 28 },
+                lineHeight: 1.2,
+                paddingY: 1,
+              },
             }}
           />
         ) : (
-          <Typography
-            onClick={() => setIsEditing(true)}
-            variant="h4"
-            component="h2"
-            sx={{
-              padding: "4px",
-              borderRadius: "4px",
-              transition: "all 0.1s ease",
-              "&:hover": {
-                border: "2px solid #9D9C9C",
-                cursor: "pointer",
-              },
-            }}
-          >
-            {workspaceName}
-          </Typography>
+          <Tooltip title="Click to rename" arrow placement="bottom">
+            <Typography
+              onClick={() => setIsEditing(true)}
+              variant="h4"
+              component="h2"
+              sx={{
+                fontWeight: 800,
+                lineHeight: 1.2,
+                padding: "6px 8px",
+                borderRadius: 2,
+                transition:
+                  "background-color 120ms ease, box-shadow 120ms ease",
+                cursor: "text",
+                color: "#080F1F",
+                // keep it on one line without jank; clip if ultra long
+                display: "inline-block",
+                whiteSpace: "nowrap",
+                maxWidth: { xs: "70vw", lg: "32vw" }, // ✨ prevent layout break
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                "&:hover": {
+                  backgroundColor: "rgba(2,43,103,0.06)", // ✨ soft hover tint
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4)",
+                },
+                "&:focus": {
+                  outline: "2px solid",
+                  outlineColor: "primary.main",
+                  outlineOffset: "2px",
+                },
+              }}
+            >
+              {workspaceName}
+            </Typography>
+          </Tooltip>
         )}
         <Box>
-          <WorkspaceDropDown selectedWorkspace={selectedWorkspace} />
+          <WorkspaceDropDown
+            selectedWorkspace={selectedWorkspace}
+            setSelectedWorkspace={setSelectedWorkspace}
+          />
         </Box>
       </Box>
       <Box
@@ -160,7 +208,7 @@ const WorkspaceToolbar = ({
             timeout={300}
             unmountOnExit
           >
-            <Box sx={{width: "80%", height: "100%"}}>
+            <Box data-ignore-pager sx={{ width: "80%", height: "100%" }}>
               <SurveySearchBar
                 search={search}
                 setSearch={setSearch}

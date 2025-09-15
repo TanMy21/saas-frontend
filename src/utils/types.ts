@@ -1,3 +1,5 @@
+import { RefObject } from "react";
+
 import { type SxProps, type Theme, type TooltipProps } from "@mui/material";
 import { type QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { type Edge, type Node } from "@xyflow/react";
@@ -1027,6 +1029,7 @@ export interface Survey {
   responseLimit: number;
   sharedLink: string;
   startDate: string;
+  published?: boolean;
   status: string;
   surveyID: string;
   surveyTag: string[];
@@ -1285,6 +1288,18 @@ export interface Workspace {
   workspaceId?: string;
 }
 
+export interface SurveyCollectionsScrollNavProps {
+  containerRef: RefObject<HTMLElement>;
+  enabled: boolean;
+  canGoPrev: boolean;
+  canGoNext: boolean;
+  onPrev: () => void;
+  onNext: () => void;
+  cooldownMs?: number;
+  wheelThreshold?: number;
+  touchThreshold?: number;
+}
+
 export interface WorkspaceDelete {
   workspaceId: string;
   workspaceName: string;
@@ -1365,6 +1380,9 @@ export interface WorkspaceDeleteModalProps {
 export interface WorkspaceDropDownMenu {
   selectedWorkspace: Workspace;
   workspaceName?: string;
+  setSelectedWorkspace: React.Dispatch<
+    React.SetStateAction<Workspace | undefined>
+  >;
 }
 
 export type WorkspaceDropdownOutletContextType = {

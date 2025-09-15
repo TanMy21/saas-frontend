@@ -11,30 +11,28 @@ const ListLayout = ({
   workspaceName,
 }: WorkspaceLayoutProps) => {
   return (
-    <>
-      <Box
-        sx={{
-          marginTop: "1%",
-          width: "100%",
-          height: { lg: "96%", xl: "96%" },
-        }}
-      >
-        <CreateNewSurveyCard
+    <Box
+      sx={{
+        marginTop: "1%",
+        width: "100%",
+        height: { lg: "96%", xl: "96%" },
+      }}
+    >
+      <CreateNewSurveyCard
+        workspaceId={workspaceId}
+        workspaceName={workspaceName}
+        viewMode={"list"}
+      />
+
+      {surveys.map((survey) => (
+        <SurveyListCard
+          key={survey.surveyID}
+          survey={survey}
           workspaceId={workspaceId}
           workspaceName={workspaceName}
-          viewMode={"list"}
         />
-        {/* Rows */}
-        {surveys.map((survey) => (
-          <SurveyListCard
-            key={survey.surveyID}
-            survey={survey}
-            workspaceId={workspaceId}
-            workspaceName={workspaceName}
-          />
-        ))}
-      </Box>
-    </>
+      ))}
+    </Box>
   );
 };
 

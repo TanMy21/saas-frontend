@@ -28,8 +28,8 @@ const WorkspaceSurveysPagination = ({
         height: "48px",
         marginTop:
           viewMode === "list"
-            ? { lg: "0%", xl: "0%" }
-            : { lg: "0%", xl: "0%" },
+            ? { lg: "-12%", xl: "0%" }
+            : { lg: "-8%", xl: "-2%" },
         // border: "2px solid blue",
       }}
     >
@@ -42,6 +42,7 @@ const WorkspaceSurveysPagination = ({
           gap: 0.4,
           width: "8%",
           height: "96%",
+          marginBottom: viewMode === "list" ? { lg: "1%", xl: "0%" } : null,
           // border: "2px solid green",
         }}
       >
@@ -66,6 +67,7 @@ const WorkspaceSurveysPagination = ({
           color: "#022B67",
           fontSize: 20,
           fontWeight: "bold",
+          marginBottom: viewMode === "list" ? { lg: "1%", xl: "0%" } : null,
           "&:hover": {
             backgroundColor: "transparent",
             border: "none",
@@ -88,6 +90,7 @@ const WorkspaceSurveysPagination = ({
           width: 32,
           height: 32,
           color: "#022B67",
+          marginBottom: viewMode === "list" ? { lg: "1%", xl: "0%" } : null,
 
           "&:hover": {
             backgroundColor: "transparent",

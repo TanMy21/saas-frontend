@@ -1,9 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Box, Grow, useMediaQuery, useTheme } from "@mui/material";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 import { useGetWorkspaceSurveysQuery } from "../../app/slices/workspaceApiSlice";
 import { useDebounce } from "../../hooks/useDebounce";
+import { useWheelPageNav } from "../../hooks/useSurveyCollectionScrollNav";
+import { VIEW_MODE_KEY } from "../../utils/constants";
 import { WorkspaceConsoleProps } from "../../utils/types";
 import SurveysCollection from "../Surveys/SurveysCollection";
 
@@ -19,7 +22,12 @@ const WorkspaceConsole = ({
   const isMD = useMediaQuery(theme.breakpoints.only("md"));
   const workspaceId = selectedWorkspace?.workspaceId;
   const workspaceName = selectedWorkspace?.name;
-  const [viewMode, setViewMode] = useState<"list" | "grid">("grid");
+  const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
+    if (typeof window === "undefined") return "grid";
+    const stored = window.localStorage.getItem(VIEW_MODE_KEY);
+    return stored === "list" || stored === "grid" ? stored : "grid";
+  });
+
   const [search, setSearch] = useState("");
   const [matchMode, setMatchMode] = useState<"AND" | "OR">("OR");
   const [tagOnly, setTagOnly] = useState(false);
@@ -27,7 +35,9 @@ const WorkspaceConsole = ({
   const [sortBy, setSortBy] = useState<
     "Date created" | "Date updated" | "Alphabetically"
   >("Date created");
+
   const debouncedSearch = useDebounce(search, 350);
+
   const limit =
     viewMode === "list" && isXL
       ? 6
@@ -36,15 +46,30 @@ const WorkspaceConsole = ({
         : viewMode === "grid" && isXL
           ? 8
           : 5;
+
+  const baseArgs = {
+    workspaceId: workspaceId!, // assert if you already guard with skipToken below
+    page,
+    limit,
+    matchMode,
+    tagOnly,
+    // ✅ only include `search` key when non-empty
+    ...(debouncedSearch.trim() ? { search: debouncedSearch } : {}),
+  };
+
   const { data } = useGetWorkspaceSurveysQuery(
-    {
-      workspaceId,
-      page,
-      limit,
-      search: debouncedSearch,
-      matchMode,
-      tagOnly,
-    },
+    // skipSearchCall
+    // ? skipToken
+    // :
+    // {
+    //   workspaceId,
+    //   page,
+    //   limit,
+    //   search: debouncedSearch,
+    //   matchMode,
+    //   tagOnly,
+    // },
+    workspaceId ? baseArgs : skipToken,
     {
       refetchOnMountOrArgChange: true,
       skip: !workspaceId,
@@ -53,6 +78,9 @@ const WorkspaceConsole = ({
 
   const surveys = data?.surveys || [];
   const total = data?.totalCount || 0;
+
+  const totalPages = Math.ceil(total / limit);
+  const pagerEnabled = totalPages > 1;
 
   const sortedSurveys = useMemo(() => {
     if (!Array.isArray(surveys)) return [];
@@ -81,6 +109,52 @@ const WorkspaceConsole = ({
       setSearch("");
     }
   }, [workspaceId]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(VIEW_MODE_KEY, viewMode);
+  }, [viewMode]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== VIEW_MODE_KEY) return;
+      const v =
+        e.newValue === "list" || e.newValue === "grid" ? e.newValue : "grid";
+      setViewMode(v);
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const goNextPage = () => {
+    setPage((p) => {
+      if (p >= totalPages) return p;
+
+      return p + 1;
+    });
+  };
+  const goPrevPage = () => {
+    setPage((p) => {
+      if (p <= 1) return p;
+
+      return p - 1;
+    });
+  };
+
+  useWheelPageNav({
+    containerRef,
+    enabled: pagerEnabled,
+    canGoPrev: page > 1,
+    canGoNext: page < totalPages,
+    onPrev: goPrevPage,
+    onNext: goNextPage,
+    cooldownMs: 600,
+    wheelThreshold: 100,
+    touchThreshold: 48,
+  });
 
   return (
     <Box
@@ -129,7 +203,10 @@ const WorkspaceConsole = ({
         />
       </Box>
       <Box
+        ref={containerRef}
         sx={{
+          position: "relative",
+          // overflow: "hidden",
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",

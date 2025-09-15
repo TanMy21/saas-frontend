@@ -175,6 +175,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
                   sx={{
                     position: "absolute",
                     left: 12,
+                    pt: 0.5,
                     top: "50%",
                     transform: "translateY(-50%)",
                     zIndex: 2,
@@ -196,38 +197,46 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
                       : "Maximum tags reached"
                   }
                   disabled={tags.length >= MAX_TAGS}
-                  InputProps={{
-                    sx: {
-                      height: "60px", // MATCH button height
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      height: 60,
                       pl: 5,
                       pr: 1,
-                      borderRadius: 3,
+                      borderRadius: 2,
                       fontSize: 16,
                       bgcolor: "#fff",
-                      border: "2px solid",
-                      borderColor: isInputFocused ? "#3b82f6" : "#e5e7eb",
-                      boxShadow: isInputFocused
-                        ? "0 4px 24px 0 rgba(59,130,246,0.12)"
-                        : undefined,
+                      alignItems: "center",
                       transition: "all 0.2s",
-                      "&:hover": {
-                        borderColor: "#d1d5db",
+
+                      // 🔹 Default border
+                      "& fieldset": {
+                        border: "2px solid #e5e7eb", // gray-200
                       },
+
+                      // 🔹 Hover border
+                      "&:hover fieldset": {
+                        borderColor: "#d1d5db", // gray-300
+                      },
+
+                      // 🔹 Focus border
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#3b82f6", // blue-500
+                        boxShadow: "0 4px 24px 0 rgba(59,130,246,0.12)",
+                      },
+
+                      // 🔹 Disabled look
                       "&.Mui-disabled": {
                         bgcolor: "#f3f4f6",
                         opacity: 0.8,
                       },
-                      // Remove top/bottom padding that cause input to shrink
-                      alignItems: "center",
                     },
                   }}
                   inputProps={{
                     style: {
-                      height: "100%", // Fill root
-                      padding: 0, // Remove default input padding
-                      boxSizing: "border-box",
+                      height: "100%",
+                      padding: 0,
                       fontSize: 16,
-                      paddingLeft: 0, // The icon space is handled by root pl:5
+                      boxSizing: "border-box",
                     },
                   }}
                 />
@@ -237,7 +246,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
                 disabled={!inputValue.trim() || tags.length >= MAX_TAGS}
                 sx={{
                   width: "100px",
-                  height: "60px", // Button height
+                  height: "60px",
                   minWidth: 0,
                   px: 0,
                   py: 0,
@@ -250,7 +259,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
                       ? "#6b7280"
                       : "#fff",
                   fontWeight: 600,
-                  borderRadius: 3,
+                  borderRadius: 2,
                   boxShadow:
                     !inputValue.trim() || tags.length >= MAX_TAGS
                       ? "none"
@@ -351,7 +360,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    py: 5,
+                    py: 1,
                   }}
                 >
                   <Box
@@ -406,7 +415,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
                     py: 1.7,
                     color: "#334155",
                     fontWeight: 600,
-                    borderRadius: 3,
+                    borderRadius: 2,
                     bgcolor: "transparent",
                     transition: "background 0.15s",
                     "&:hover": {
@@ -426,7 +435,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
                     bgcolor: "#2563eb",
                     color: "#fff",
                     fontWeight: 700,
-                    borderRadius: 3,
+                    borderRadius: 2,
                     boxShadow: isLoading
                       ? "none"
                       : "0 2px 10px 0 rgba(59,130,246,0.13)",
