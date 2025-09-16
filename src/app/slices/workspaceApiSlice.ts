@@ -20,6 +20,12 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
         { type: "Surveys", id: workspaceId },
       ],
     }),
+    getWorkspaceById: builder.query({
+      query: (workspaceId) => `/w/${workspaceId}`,
+      providesTags: (result, error, workspaceId) => [
+        { type: "Workspaces", id: workspaceId },
+      ],
+    }),
     createNewWorkspace: builder.mutation({
       query: (data) => ({
         url: "/w/create",
@@ -49,6 +55,7 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetWorkspacesQuery,
   useGetWorkspaceSurveysQuery,
+  useGetWorkspaceByIdQuery,
   useCreateNewWorkspaceMutation,
   useUpdateWorkspaceNameMutation,
   useDeleteWorkspaceMutation,

@@ -1159,8 +1159,8 @@ export interface SurveyDropDownMenuProps {
 
 export interface SurveyBuilderHeaderProps {
   survey: Survey;
-  workspaceId: string;
-  workspaceName: string;
+  workspaceId?: string;
+  workspaceName?: string;
   title?: string;
   surveyTitle?: string;
 }
@@ -1170,8 +1170,8 @@ export interface SurveyBuilderHeaderTabsProps {
   setTabValue: React.Dispatch<React.SetStateAction<string>>;
   survey: Survey;
   surveyID: string;
-  workspaceId: string;
-  workspaceName: string;
+  workspaceId?: string;
+  workspaceName?: string;
 }
 
 export interface SurveyCanvas {

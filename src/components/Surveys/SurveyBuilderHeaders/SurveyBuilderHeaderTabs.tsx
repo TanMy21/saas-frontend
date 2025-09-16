@@ -16,7 +16,9 @@ const SurveyBuilderHeaderTabs = ({
   workspaceName,
 }: SurveyBuilderHeaderTabsProps) => {
   const navigate = useNavigate();
+
   const { tabStyles } = useAppTheme();
+
   const headerProps = {
     tabValue,
     survey,
@@ -44,28 +46,25 @@ const SurveyBuilderHeaderTabs = ({
       value={tabValue}
       centered
       onChange={handleScreenChange}
-      sx={{
-        ...tabStyles.base,
-        "& .MuiTabs-indicator": {
-          height: "3px",
-          backgroundColor: tabStyles.indicatorColorMap[tabValue],
-        },
-      }}
+      sx={tabStyles.base}
     >
       <Tab
-        icon={<BorderColorIcon sx={{ fontSize: "24px" }} />}
+        icon={<BorderColorIcon sx={{ fontSize: 18 }} />}
+        iconPosition="start"
         label="Create"
         value="create"
         sx={tabStyles.createTab}
       />
       <Tab
-        icon={<PiFlowArrowBold size={24} />}
+        icon={<PiFlowArrowBold size={18} />}
+        iconPosition="start"
         label="Flow"
         value="flow"
         sx={tabStyles.flowTab}
       />
       <Tab
-        icon={<AssessmentIcon sx={{ fontSize: "24px" }} />}
+        icon={<AssessmentIcon sx={{ fontSize: 18 }} />}
+        iconPosition="start"
         label="Results"
         value="results"
         sx={tabStyles.resultsTab}

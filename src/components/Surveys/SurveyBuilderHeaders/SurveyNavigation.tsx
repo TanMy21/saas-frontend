@@ -1,6 +1,5 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { Box, IconButton, Tooltip } from "@mui/material";
-import { FaAngleRight } from "react-icons/fa6";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { useAppTheme } from "../../../theme/useAppTheme";
@@ -20,17 +19,29 @@ const SurveyNavigation = ({
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+        marginTop: { lg: "1%", xl: "0%" },
+        minWidth: 0,
+        gap: 1.5,
+      }}
+    >
       <Box
         sx={{
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
-          alignContent: "center",
           alignItems: "center",
-          width: "fit-content",
-          marginTop: { lg: "1%", xl: "0%" },
-          textOverflow: "clip",
+          width: "8%",
+          height: "98%",
+          // border: "2px solid green",
         }}
       >
         <IconButton
@@ -40,58 +51,103 @@ const SurveyNavigation = ({
             width: "32px",
             height: "32px",
             borderRadius: 2,
+            ml: 2,
             color: grey[931],
-            mr: 4,
+            boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06)",
+            transition: "transform 120ms ease, box-shadow 120ms ease",
             "&:hover": {
               backgroundColor: grey[100],
+              transform: "translateX(-1px)",
+              boxShadow:
+                "0 0 0 1px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.10)",
             },
+            "& .MuiSvgIcon-root": { fontSize: { xs: 22, md: 24 } },
           }}
         >
-          <ArrowBackIcon fontSize="medium" />
+          <ChevronLeftIcon fontSize="medium" />
         </IconButton>
-        <NavLink
-          to={`/dash/w/${workspaceId}`}
-          style={() => {
-            return {
-              display: "block",
-              color: text.primaryDark,
-              lineHeight: "20px",
-              fontWeight: "bold",
-              textDecoration: "none",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-            };
-          }}
-        >
-          {workspaceName} &nbsp;
-        </NavLink>
       </Box>
+      {/* Divider */}
       <Box
         sx={{
-          marginTop: { md: "2%", lg: "2%", xl: "1%" },
-          color: grey[600],
+          alignSelf: "stretch",
+          width: "1px",
+          backgroundColor: grey[200],
+          mx: 1,
+        }}
+      />
+
+      {/* Titles */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "80%",
+          height: "100%",
+          minWidth: 0,
+          gap: 1,
+          // border: "2px solid blue",
         }}
       >
-        <FaAngleRight />
-      </Box>
-      <Box sx={{ width: "68%" }}>
-        <Tooltip title={survey?.title}>
-          <Box
-            sx={{
-              fontSize: "16px",
-              fontWeight: 600,
-              textDecoration: "none",
-              color: grey[600],
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "clip",
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-end",
+            width: "98%",
+            height: "48%",
+            px: "2%",
+            // border: "2px solid orange",
+          }}
+        >
+          <NavLink
+            to={`/dash/w/${workspaceId}`}
+            style={() => {
+              return {
+                display: "block",
+                color: text.primaryDark,
+                lineHeight: "20px",
+                fontWeight: "bold",
+                textDecoration: "none",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                transition: "color 120ms ease",
+              };
             }}
           >
-            &nbsp; {surveyTitle ? surveyTitle : survey?.title}
-          </Box>
-        </Tooltip>
+            {workspaceName} &nbsp;
+          </NavLink>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-start",
+            width: "98%",
+            minWidth: 0,
+            height: "48%",
+            // border: "2px solid orange",
+          }}
+        >
+          <Tooltip title={survey?.title || ""} placement="bottom" arrow={false}>
+            <Box
+              sx={{
+                fontSize: "16px",
+                fontWeight: 600,
+                textDecoration: "none",
+                color: grey[600],
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "clip",
+              }}
+            >
+              &nbsp; {surveyTitle ? surveyTitle : survey?.title}
+            </Box>
+          </Tooltip>
+        </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 

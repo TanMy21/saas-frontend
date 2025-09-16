@@ -5,6 +5,8 @@ import AppBar from "@mui/material/AppBar";
 import { useParams } from "react-router-dom";
 
 import { useGetSurveyCanvasByIdQuery } from "../../app/slices/surveysApiSlice";
+import { useGetWorkspaceByIdQuery } from "../../app/slices/workspaceApiSlice";
+import { LAST_WS_KEY } from "../../utils/constants";
 import { SurveyBuilderHeaderProps } from "../../utils/types";
 import PublishButton from "../Buttons/PublishButton";
 import HeaderIconMenu from "../HeaderIconMenu";
@@ -12,18 +14,18 @@ import HeaderIconMenu from "../HeaderIconMenu";
 import SurveyBuilderHeaderTabs from "./SurveyBuilderHeaders/SurveyBuilderHeaderTabs";
 import SurveyNavigation from "./SurveyBuilderHeaders/SurveyNavigation";
 
-const SurveyBuilderHeader = ({
-  survey,
-  workspaceId,
-  workspaceName,
-}: SurveyBuilderHeaderProps) => {
+const SurveyBuilderHeader = ({ survey }: SurveyBuilderHeaderProps) => {
   const { surveyID } = useParams();
   const [tabValue, setTabValue] = useState<string>("create");
+  const workspaceId = localStorage.getItem(LAST_WS_KEY);
+
+  const { data: workspace } = useGetWorkspaceByIdQuery(workspaceId!, {
+    skip: !workspaceId,
+  });
 
   const { data: surveyCanvas, refetch: refetchCanvas } =
     useGetSurveyCanvasByIdQuery(surveyID, {
       skip: !surveyID,
-
       refetchOnFocus: true,
       refetchOnMountOrArgChange: true,
     });
@@ -49,9 +51,6 @@ const SurveyBuilderHeader = ({
       refetchCanvas();
     }
   }, [surveyID, refetchCanvas]);
-
-  console.log("Survey ID: ", surveyID);
-  console.log("Title: ", title);
 
   return (
     <AppBar
@@ -89,7 +88,7 @@ const SurveyBuilderHeader = ({
               top: "0px",
               marginTop: "0px",
               marginLeft: "-2%",
-              width: "36%",
+              width: "28%",
               height: "100%",
               // border: "2px solid red",
             }}
@@ -97,8 +96,7 @@ const SurveyBuilderHeader = ({
             <SurveyNavigation
               survey={survey}
               surveyTitle={title}
-              workspaceId={workspaceId}
-              workspaceName={workspaceName}
+              workspaceName={workspace?.name}
             />
           </Box>
           {/* ------------------- Tabs ----------------------------------------------- */}
@@ -107,11 +105,11 @@ const SurveyBuilderHeader = ({
             sx={{
               display: "flex",
               flexDirection: "row",
-              justifyContent: "center",
+              justifyContent: "flex-end",
               alignItems: "center",
               top: "0px",
               marginTop: "0px",
-              width: "36%",
+              width: {md:"35%",xl:"32%"},
               height: "100%",
               // border: "2px solid green",
             }}
@@ -121,8 +119,8 @@ const SurveyBuilderHeader = ({
               setTabValue={setTabValue}
               surveyID={getSurveyCanvas?.surveyID}
               survey={survey}
-              workspaceId={workspaceId}
-              workspaceName={workspaceName}
+              workspaceId={workspaceId!}
+              workspaceName={workspace?.name}
             />
           </Box>
           {/* ------------------- Header Icon ---------------------------------------- */}

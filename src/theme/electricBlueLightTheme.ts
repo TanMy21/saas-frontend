@@ -1,4 +1,6 @@
 import { createTheme } from "@mui/material/styles";
+import zIndex from "@mui/material/styles/zIndex";
+import { over } from "lodash";
 
 const shadows: [
   "none",
@@ -537,48 +539,99 @@ const electricBlueLightTheme = createTheme({
   },
   tabStyles: {
     base: {
-      height: "64px",
-      minHeight: "64px",
+      height: "80%",
+      minHeight: "40px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#F3F4F6",
+      borderRadius: "9999px",
+      px: "6px",
+      position: "relative",
+      overflow: "hidden",
       "& .MuiTabs-flexContainer": {
-        alignItems: "flex-end", // push tabs to bottom
+        gap: "8px",
+        alignItems: "center",
         height: "100%",
       },
       "& .MuiTab-root": {
-        minHeight: "auto",
-        paddingBottom: "4px", // THIS adds spacing between text & indicator
+        position: " relative",
+        zIndex: 1,
+        minHeight: "100%",
+        height: "100%",
+        textTransform: "none",
+        fontWeight: 500,
+        fontSize: "1rem",
+        borderRadius: "9999px",
+        transition: "color 200ms ease, background-color 200ms ease",
+        paddingInline: "20px",
       },
       "& .MuiTabs-indicator": {
-        height: "3px",
-        backgroundColor: "#6366F1",
+        display: "block",
+        top: 4,
+        bottom: 4,
+        height: "auto",
+        backgroundColor: "#FFFFFF",
+        borderRadius: "9999px",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.06)",
+        transition:
+          "left 220ms cubic-bezier(0.22,1,0.36,1), width 220ms cubic-bezier(0.22,1,0.36,1)",
+        willChange: "left, width",
+        zIndex: 0,
       },
     },
     createTab: {
       fontWeight: 600,
+      py: 1.6,
+      color: "grey.600",
       "&.Mui-selected": {
         color: "#6366F1",
+        // backgroundColor: "white",
+        // boxShadow: 1,
+        height: "98%",
         "& .MuiTab-iconWrapper": {
           color: "#6366F1",
         },
       },
+      "&:hover": {
+        backgroundColor: "rgba(255,255,255,0.8)",
+        color: "#6366F1",
+      },
     },
     flowTab: {
       fontWeight: 600,
-      color: "#1ABEBE",
+      py: 1.6,
+      color: "grey.600",
       "&.Mui-selected": {
         color: "#1ABEBE",
+        // backgroundColor: "white",
+        // boxShadow: 1,
+        height: "98%",
         "& .MuiTab-iconWrapper": {
           color: "#1ABEBE",
         },
       },
+      "&:hover": {
+        backgroundColor: "rgba(255,255,255,0.8)",
+        color: "#1ABEBE",
+      },
     },
     resultsTab: {
       fontWeight: 600,
-      color: "#B9A90B",
+      py: 1.6,
+      color: "grey.600",
       "&.Mui-selected": {
         color: "#B9A90B",
+        // backgroundColor: "white",
+        // boxShadow: 1,
+        height: "98%",
         "& .MuiTab-iconWrapper": {
           color: "#B9A90B",
         },
+      },
+      "&:hover": {
+        backgroundColor: "rgba(255,255,255,0.8)",
+        color: "#B9A90B",
       },
     },
     indicatorColorMap: {

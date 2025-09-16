@@ -20,6 +20,7 @@ import { SurveyCanvasRefetchContext } from "../context/BuilderRefetchCanvas";
 // import useBuilderTourEnable from "../hooks/useBuilderTourEnable";
 import { useCanvasLoadingAndError } from "../hooks/useCanvasLoadingandError";
 import useFetchAuthenticatedUser from "../hooks/useFetchAuthenticatedUser";
+import { usePersistedSelectedQuestion } from "../hooks/usePersistSelectedQuestion";
 import useSelectedQuestion from "../hooks/useSelectedQuestion";
 import useSortElements from "../hooks/useSortElements";
 import useSurveyBuilderModalLocation from "../hooks/useSurveyBuilderModalLocation";
@@ -40,7 +41,7 @@ const SurveyBuilder = () => {
   // const [stepIndex, setStepIndex] = useState(0);
   // const isTourEnabled = useBuilderTourEnable(user);
   const [surveyTitle, setSurveyTitle] = useState<string>("");
-  const [questionId, setQuestionId] = useState<string | null>(null);
+  // const [questionId, setQuestionId] = useState<string | null>(null);
   const [display, setDisplay] = useState<string | null>("desktop");
   const [loading, setLoading] = useState(false);
 
@@ -48,11 +49,17 @@ const SurveyBuilder = () => {
     (state: RootState) => state.surveyBuilder.elements
   );
 
+  const { questionId, setQuestionId } = usePersistedSelectedQuestion(
+    surveyID,
+    elements
+  );
+
   const selectedQuestion = useMemo(() => {
     return elements.find((q) => q.questionID === questionId) || null;
   }, [elements, questionId]);
 
   const noElements = elements.length === 0;
+
   const {
     data: surveyCanvas,
     isError: isErrorCanvas,
@@ -142,8 +149,8 @@ const SurveyBuilder = () => {
           >
             <SurveyBuilderHeader
               survey={surveyCanvas}
-              workspaceId={workspaceId!}
-              workspaceName={workspaceName!}
+              workspaceId={workspaceId}
+              workspaceName={workspaceName}
               title={title}
             />
           </Box>
