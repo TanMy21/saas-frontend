@@ -98,30 +98,40 @@ const ViewIconSegment = ({
         onClick={() => setVal("mobile")}
         sx={baseBtnSx(v === "mobile")}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+        <Tooltip
+          title={"Mobile view"}
+          arrow={false}
+          enterDelay={200}
+          leaveDelay={100}
+          PopperProps={{
+            modifiers: [{ name: "offset", options: { offset: [0, -12] } }],
           }}
         >
-          {/* Replaced react-icon with inline SVG */}
-          <svg
-            width="18"
-            height="18"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-            ></path>
-          </svg>
-        </Box>
+            {/* Replaced react-icon with inline SVG */}
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </Box>
+        </Tooltip>
       </IconButton>
 
       {/* Desktop */}
@@ -130,32 +140,42 @@ const ViewIconSegment = ({
         onClick={() => setVal("desktop")}
         sx={baseBtnSx(v === "desktop")}
       >
-        <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            height: "100%",
-            alignItems: "center",
-            justifyContent: "center",
+        <Tooltip
+          title={"Desktop view"}
+          arrow={false}
+          enterDelay={200}
+          leaveDelay={100}
+          PopperProps={{
+            modifiers: [{ name: "offset", options: { offset: [0, -12] } }],
           }}
         >
-          {/* Replaced react-icon with inline SVG */}
-          <svg
-            width="18"
-            height="18"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              height: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            ></path>
-          </svg>
-        </Box>
+            {/* Replaced react-icon with inline SVG */}
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </Box>
+        </Tooltip>
       </IconButton>
     </Box>
   );
@@ -179,7 +199,6 @@ const SurveyBuilderDock = ({
   );
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
   const [openShare, setOpenShare] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [openGenerate, setOpenGenerate] = useState(openGenerateState);
@@ -325,7 +344,7 @@ const DockItem = ({
   return (
     <Tooltip
       title={label}
-      arrow
+      arrow={false}
       enterDelay={200}
       leaveDelay={100}
       PopperProps={{

@@ -1,6 +1,4 @@
 import { createTheme } from "@mui/material/styles";
-import zIndex from "@mui/material/styles/zIndex";
-import { over } from "lodash";
 
 const shadows: [
   "none",

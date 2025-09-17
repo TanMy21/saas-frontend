@@ -9,7 +9,6 @@ import {
 import {
   removeBackgroundColor,
   removeTemplateImage,
-  setBackgroundColor,
 } from "../../app/slices/elementSlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
 import { ElementBackgroundPreferencesRemoveButtonsProps } from "../../utils/types";
@@ -65,7 +64,10 @@ const ElementBackgroundPreferencesRemoveButtons = ({
               left: "50%",
               cursor: "grab",
               transform: "translateX(-50%)",
-              zIndex: 2,
+              zIndex: 20,
+              "&:hover": {
+                backgroundColor: "#F5F5F5",
+              },
             }}
           >
             <FcRemoveImage />

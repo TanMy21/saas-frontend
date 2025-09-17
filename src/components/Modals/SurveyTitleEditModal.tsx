@@ -128,7 +128,7 @@ const SurveyTitleEditModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           bgcolor: "#fff",
-          borderRadius:2,
+          borderRadius: 2,
           boxShadow: 8,
           width: "100%",
           maxWidth: 500,
@@ -206,6 +206,9 @@ const SurveyTitleEditModal = ({
                     px: 2,
                     py: 1,
                   },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    border: "#0074EB",
+                  },
                 }}
                 InputProps={{
                   sx: {
@@ -240,6 +243,9 @@ const SurveyTitleEditModal = ({
                     fontSize: 15,
                     px: 2,
                     py: 1,
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    border: "#0074EB",
                   },
                 }}
                 InputProps={{

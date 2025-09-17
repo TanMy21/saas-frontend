@@ -336,6 +336,7 @@ const GenerateSurveyModal = ({
                               <Box
                                 key={questionType}
                                 sx={{
+                                  position: "relative",
                                   display: "inline-flex",
                                   alignItems: "center",
                                   gap: 1,
@@ -348,9 +349,47 @@ const GenerateSurveyModal = ({
                                   border: `1.5px solid ${type.borderColor}`,
                                   borderRadius: 1.5,
                                 }}
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                  if (
+                                    e.key === "Backspace" ||
+                                    e.key === "Delete"
+                                  ) {
+                                    toggleQuestionType(type.type);
+                                  }
+                                }}
+                                aria-label={`${type.label} selected. Press Backspace or Delete to remove.`}
                               >
                                 {type.icon}
                                 {type.label}
+
+                                <IconButton
+                                  aria-label={`Remove ${type.label}`}
+                                  size="small"
+                                  onClick={() => toggleQuestionType(type.type)}
+                                  sx={{
+                                    position: "absolute",
+                                    top: -8, // half outside vertically
+                                    right: -8, // half outside horizontally
+                                    width: 22,
+                                    height: 22,
+                                    p: 0,
+                                    borderRadius: "9999px",
+                                    bgcolor: "#b60b0bff",
+                                    border: "1px solid #e5e7eb",
+                                    boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    "&:hover": { bgcolor: "#b60b0bff" },
+                                    // make sure it floats over the chip
+                                    zIndex: 1,
+                                  }}
+                                >
+                                  <CloseIcon
+                                    sx={{ fontSize: 16, color: "#ffffffff" }}
+                                  />
+                                </IconButton>
                               </Box>
                             )
                           );

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import ImageIcon from "@mui/icons-material/Image";
 import SaveIcon from "@mui/icons-material/Save";
 import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
 import { FiUpload } from "react-icons/fi";
@@ -35,6 +36,7 @@ const QuestionTemplateImageUpload = ({
   ] = useUploadQuestionTemplateImageMutation();
 
   const handlePreviewImage = () => {
+    // UI reset only
     setSelectedFile(null);
     setPreview(null);
   };
@@ -96,14 +98,10 @@ const QuestionTemplateImageUpload = ({
       const errorData = errorUploadImage as ErrorData;
       if (Array.isArray(errorData.data.error)) {
         errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
+          toast.error(el.message, { position: "top-right" })
         );
       } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
+        toast.error(errorData.data.message, { position: "top-right" });
       }
     }
   }, [isErrorUploadImage, errorUploadImage, isSuccess]);
@@ -114,300 +112,337 @@ const QuestionTemplateImageUpload = ({
       onClose={() => setUploadImageModalOpen(false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      // 🔥 Backdrop now matches Tailwind modal (dark + slight blur)
       sx={{
         "& .MuiBackdrop-root": {
-          backgroundColor: "transparent",
+          backgroundColor: "rgba(0,0,0,0.6)",
+          backdropFilter: "blur(4px)",
         },
       }}
     >
       <Box
+        // 💳 Card container
         sx={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 800,
-          height: { md: 500, xl: 600 },
-          bgcolor: "#f4f6f8",
-          borderRadius: "2%",
-          boxShadow: 1,
+          width: 560, // tighter, focused dialog
+          bgcolor: "#ffffff",
+          borderRadius: 3,
+          boxShadow: "0 20px 45px rgba(0,0,0,0.2)",
+          overflow: "hidden",
         }}
       >
+        {/* 🧭 Header */}
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            height: "100%",
+            alignItems: "center",
+            justifyContent: "space-between",
+            px: 3,
+            py: 2.5,
+            borderBottom: "1px solid #F1F2F4",
           }}
         >
-          <Box
+          <Box>
+            <Typography
+              sx={{ fontSize: 18, fontWeight: 600, color: "#111827" }}
+            >
+              Upload Image
+            </Typography>
+            <Typography sx={{ fontSize: 13, color: "#6B7280", mt: 0.5 }}>
+              upload image to use as template background
+            </Typography>
+          </Box>
+          <IconButton
+            aria-label="close"
+            onClick={() => setUploadImageModalOpen(false)}
             sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-              height: { md: "10%", xl: "8%" },
-              borderBottom: "1px solid #E0E0E0",
+              p: 1,
+              "&:hover": { backgroundColor: "#F3F4F6" },
             }}
           >
+            <CloseIcon sx={{ fontSize: 24, color: "#6B7280" }} />
+          </IconButton>
+        </Box>
+
+        {/* 📤 Body */}
+        <Box sx={{ p: 3 }}>
+          {/* If no preview yet, show dashed drop zone look (browse still triggers input) */}
+          {!preview ? (
             <Box
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "96%",
-                height: "90%",
-                margin: "auto",
-                // border: "2px solid black",
+                position: "relative",
+                border: "2px dashed #D1D5DB",
+                borderRadius: 2.5,
+                p: 5,
+                textAlign: "center",
+                transition: "all 200ms ease",
+                "&:hover": {
+                  borderColor: "#9CA3AF",
+                  backgroundColor: "#F9FAFB",
+                },
               }}
             >
-              <Box>
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Upload Image
+              {/* Circular icon container */}
+              <Box
+                sx={{
+                  mx: "auto",
+                  width: 64,
+                  height: 64,
+                  borderRadius: "9999px",
+                  backgroundColor: "#F3F4F6",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mb: 2,
+                }}
+              >
+                {/* Keeping your FiUpload icon for consistency */}
+                <Typography sx={{ fontSize: 30, color: "#2563EB" }}>
+                  <FiUpload />
                 </Typography>
               </Box>
-              <Box>
-                <IconButton
-                  aria-label="more"
-                  aria-controls="long-menu"
-                  aria-haspopup="true"
-                  onClick={() => setUploadImageModalOpen(false)}
+
+              <Typography
+                sx={{ fontSize: 16, fontWeight: 600, color: "#111827" }}
+              >
+                Drop your image here
+              </Typography>
+
+              <Typography sx={{ color: "#6B7280", mt: 0.5 }}>
+                or{" "}
+                {/* 🔗 Styled browse label triggers the hidden input (same behavior) */}
+                <label
+                  htmlFor="img-ipload"
+                  style={{
+                    cursor: "pointer",
+                    color: "#2563EB",
+                    textDecoration: "underline",
+                    textUnderlineOffset: 3,
+                    fontWeight: 600,
+                  }}
                 >
-                  <CloseIcon />
-                </IconButton>
+                  browse files
+                </label>
+              </Typography>
+
+              {/* Constraints */}
+              <Box sx={{ mt: 2, color: "#9CA3AF", fontSize: 8 }}>
+                <Typography>Supported: JPEG, PNG</Typography>
+                <Typography>Maximum size: 5MB</Typography>
               </Box>
+
+              {/* Hidden input (unchanged behavior) */}
+              <input
+                type="file"
+                id="img-ipload"
+                onChange={handleFileChange}
+                disabled={isLoading}
+                accept="image/jpeg,image/png"
+                style={{ display: "none" }}
+              />
             </Box>
-          </Box>
-          <Box
-            sx={{
-              width: "100%",
-              height: {md:"400px",xl:"500px"},
-            }}
-          >
-            <Box
-              sx={{
-                width: "92%",
-                height: { md: "320px", xl: "440px" },
-                margin: "auto",
-                marginTop: "4%",
-                border: "2px dashed #7866E3",
-                borderRadius: "4%",
-                overflow: "hidden",
-              }}
-            >
-              {preview ? (
-                <>
-                  <img
-                    src={preview}
-                    style={{
-                      width: "100%",
-                      height: "98%",
-                      maxHeight: "98%",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <IconButton
-                    onClick={handlePreviewImage}
+          ) : (
+            // 🖼️ Preview state
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+              <Box
+                sx={{
+                  position: "relative",
+                  backgroundColor: "#F9FAFB",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  height: 220,
+                }}
+              >
+                <img
+                  src={preview}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+                {/* ⏳ Loading overlay (visual only) */}
+                {isLoading && (
+                  <Box
                     sx={{
-                      backgroundColor: "red",
                       position: "absolute",
-                      width: "24px",
-                      height: "24px",
-                      top: {
-                        // md: "24%",
-                        lg: "28%",
-                        xl: "20%",
-                      },
-                      right: {
-                        lg: "6%",
-                        xl: "6%",
-                      },
-                      color: "white",
-                      "&:hover": {
-                        backgroundColor: "red",
-                      },
+                      inset: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "rgba(0,0,0,0.2)",
                     }}
                   >
-                    <ClearIcon />
-                  </IconButton>
-                </>
-              ) : (
+                    <Box
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        border: "3px solid #2563EB",
+                        borderTopColor: "transparent",
+                        animation: "spin 1s linear infinite",
+                        "@keyframes spin": {
+                          "0%": { transform: "rotate(0deg)" },
+                          "100%": { transform: "rotate(360deg)" },
+                        },
+                        backgroundColor: "rgba(255,255,255,0.85)",
+                      }}
+                    />
+                  </Box>
+                )}
+
+                {/* ❌ Remove preview button */}
+                <IconButton
+                  onClick={handlePreviewImage}
+                  sx={{
+                    position: "absolute",
+                    top: 12,
+                    right: 12,
+                    width: 32,
+                    height: 32,
+                    borderRadius: "9999px",
+                    backgroundColor: "rgba(239, 68, 68, 0.95)",
+                    color: "#fff",
+                    boxShadow: "0 6px 14px rgba(239,68,68,0.3)",
+                    "&:hover": { backgroundColor: "rgba(220, 38, 38, 1)" },
+                  }}
+                >
+                  <ClearIcon sx={{ fontSize: 18 }} />
+                </IconButton>
+              </Box>
+
+              {/* 📄 File info row */}
+              {selectedFile && (
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    margin: "auto",
-                    marginTop: "16%",
-                    width: "92%",
-                    height: "60%",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    p: 1.25,
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 1.5,
+                    backgroundColor: "#fff",
                   }}
                 >
                   <Box
                     sx={{
                       display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
                       alignItems: "center",
-                      width: "70%",
-                      height: "50px",
-                      margin: "auto",
-                      marginTop: "2%",
+                      gap: 1.5,
+                      minWidth: 0,
                     }}
                   >
-                    <Typography
-                      sx={{
-                        marginTop: "8%",
-                        fontSize: "40px",
-                        color: "#7462E2",
-                      }}
-                    >
-                      <FiUpload />
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "90%",
-                      height: "80px",
-                      margin: "auto",
-                      marginTop: "2%",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        fontSize: "20px",
-                        color: "black",
-                        fontWeight: "bolder",
-                      }}
-                    >
-                      Drop your image here
-                    </Typography>
                     <Box
                       sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 1.25,
+                        backgroundColor: "#DBEAFE",
                         display: "flex",
-                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
                       }}
                     >
-                      <Box>
-                        <Typography
-                          sx={{
-                            fontSize: "20px",
-                            color: "black",
-                            fontWeight: "bolder",
-                          }}
-                        >
-                          or &nbsp;
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <input
-                          type="file"
-                          id="img-ipload"
-                          onChange={handleFileChange}
-                          disabled={isLoading}
-                          style={{ display: "none" }}
-                        />
-                        <label
-                          htmlFor="img-ipload"
-                          style={{
-                            cursor: "pointer",
-                            fontSize: "20px",
-                            color: "#FE834E",
-                            fontWeight: "bolder",
-                          }}
-                        >
-                          Browse
-                        </label>
-                      </Box>
+                      {/* Simple image glyph using MUI icon */}
+                      <ImageIcon sx={{ fontSize: 20, color: "#2563EB" }} />
+                    </Box>
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: 600,
+                          color: "#111827",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: 240,
+                        }}
+                        title={selectedFile.name}
+                      >
+                        {selectedFile.name}
+                      </Typography>
+                      <Typography sx={{ fontSize: 12, color: "#6B7280" }}>
+                        {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                      </Typography>
                     </Box>
                   </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "90%",
-                      height: "60px",
-                      margin: "auto",
-                      marginTop: "-4%",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        fontSize: "16px",
-                        color: "#656F87",
-                      }}
-                    >
-                      Supported Files: JPEG, PNG
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "16px",
-                        color: "#656F87",
-                      }}
-                    >
-                      Max Size: 5MB
-                    </Typography>
+
+                  {/* Status text (driven by your existing isLoading flag) */}
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    {isLoading ? (
+                      <Typography
+                        sx={{ fontSize: 12, fontWeight: 600, color: "#2563EB" }}
+                      >
+                        Uploading…
+                      </Typography>
+                    ) : (
+                      <Typography
+                        sx={{ fontSize: 12, fontWeight: 600, color: "#059669" }}
+                      >
+                        Ready
+                      </Typography>
+                    )}
                   </Box>
                 </Box>
               )}
             </Box>
-          </Box>
-          <Box
-            sx={{
-              width: "100%",
-              height: "12%",
-              borderTop: "1px solid #E0E0E0",
-            }}
-          >
-            <Box
+          )}
+        </Box>
+
+        {/* 🧯 Footer actions */}
+        <Box
+          sx={{
+            px: 3,
+            py: 2,
+            borderTop: "1px solid #F1F2F4",
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 1.5,
+          }}
+        >
+          {/* Secondary action: choose different (only shows if preview exists) */}
+          {preview && (
+            <Button
+              onClick={handlePreviewImage}
+              variant="outlined"
+              disabled={isLoading}
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                marginTop: "1%",
-                pr: "4%",
-                // border: "2px solid black",
+                textTransform: "none",
+                borderRadius: 2,
+                px: 2.5,
+                borderColor: "#E5E7EB",
+                color: "#374151",
+                "&:hover": {
+                  borderColor: "#D1D5DB",
+                  backgroundColor: "#F9FAFB",
+                },
               }}
             >
-              <Box>
-                <Button
-                  onClick={handleUpload}
-                  component="label"
-                  role={undefined}
-                  variant="submitBtn2"
-                  size="medium"
-                  tabIndex={-1}
-                  startIcon={isLoading ? <SaveIcon /> : <CloudUploadIcon />}
-                  sx={{
-                    borderRadius: 5,
-                    width: "200px",
+              Choose Different
+            </Button>
+          )}
 
-                    textTransform: "none",
-                    backgroundColor: primary.main,
-                    "&:hover": {
-                      backgroundColor: primary.main,
-                    },
-                  }}
-                >
-                  {isLoading ? "Saving image ..." : "Upload image"}
-                </Button>
-              </Box>
-            </Box>
-          </Box>
+          {/* Primary: Upload */}
+          <Button
+            onClick={handleUpload}
+            role={undefined}
+            variant="contained"
+            size="medium"
+            tabIndex={-1}
+            startIcon={isLoading ? <SaveIcon /> : <CloudUploadIcon />}
+            disabled={!selectedFile || isLoading}
+            sx={{
+              textTransform: "none",
+              borderRadius: 2,
+              px: 2.5,
+              backgroundColor: primary.main,
+              boxShadow: "0 6px 16px rgba(37, 99, 235, 0.25)",
+              "&:hover": { backgroundColor: primary.main },
+              "&.Mui-disabled": { backgroundColor: "#9CA3AF", color: "#FFF" },
+            }}
+          >
+            {isLoading ? "Saving image ..." : "Upload image"}
+          </Button>
         </Box>
       </Box>
     </Modal>

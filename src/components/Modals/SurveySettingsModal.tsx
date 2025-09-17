@@ -420,13 +420,15 @@ const SurveySettingsModal = ({
               <Box
                 sx={{
                   display: "flex",
+                  width: "100%",
                   alignItems: "center",
                   justifyContent: "flex-end",
                   gap: 2,
                   pt: 2,
                   pb: 1,
+                  zIndex: 10,
                   borderTop: "1px solid #f3f4f6",
-                  bgcolor: "rgba(249,250,251,0.7)",
+                  bgcolor: "rgba(255, 255, 255, 0.7)",
                 }}
               >
                 <Button
