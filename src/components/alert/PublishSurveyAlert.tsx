@@ -17,6 +17,7 @@ const PublishSurveyAlert = ({ open, setOpen }: PublishSurveyAlertProps) => {
       autoHideDuration={5000}
       onClose={handleClose}
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      sx={{ zIndex: 10}}
     >
       <Alert
         variant="filled"
@@ -27,7 +28,7 @@ const PublishSurveyAlert = ({ open, setOpen }: PublishSurveyAlertProps) => {
           fontSize: 16,
           fontWeight: 600,
           color: "white",
-          zIndex: 2500,
+          // zIndex: 1100,
         }}
       >
         Please publish the survey to generate a shareable link.

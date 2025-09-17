@@ -101,74 +101,63 @@ const ElementsListItem = ({
                       }),
                 }}
               >
-                {/* === TOP ROW: icon, number, menu === */}
                 <Box
                   sx={{
-                    display: "flex",
-                    flexDirection: "row",
+                    display: "grid",
+                    gridTemplateColumns: "28px 28px 1fr auto", // handle / type / content / menu
+                    gridTemplateRows: "28px auto", // top row / bottom row
                     alignItems: "center",
+                    columnGap: 1,
+                    rowGap: 1,
                     width: "100%",
-                    minHeight: 28, // compact top row
-                    // border: "2px solid green",
                   }}
                 >
+                  {/* Drag handle (col 1, row 1) */}
                   <Box
                     {...provided.dragHandleProps}
                     sx={{
+                      gridColumn: "1 / 2",
+                      gridRow: "1 / 2",
                       display: "flex",
-                      justifyContent: "center",
                       alignItems: "center",
-                      color: isSelected ? "#2563eb" : "#9CA3AF", // blue if selected, gray otherwise
-                      mr: 1,
+                      justifyContent: "center",
+                      color: isSelected ? "#2563eb" : "#9CA3AF",
                       cursor: "grab",
                       "&:active": { cursor: "grabbing" },
+                      // larger hit area helps
+                      width: 28,
+                      height: 28,
                     }}
                   >
-                    <Tooltip
-                      title="Drag to reorder"
-                      placement="top"
-                      arrow={false}
-                    >
-                      <GripVertical />
+                    <Tooltip title="Drag to reorder" placement="top" arrow={false}>
+                      <GripVertical fontSize="small" />
                     </Tooltip>
                   </Box>
 
-                  {/* Icon + Number group */}
-                  <Box
+                  {/* Type icon (col 2, row 1) */}
+                  <Typography
                     sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 1, // space between icon and number
-                      flexShrink: 0, // prevent squish
-                      // border: "2px solid blue",
+                      gridColumn: "2 / 3",
+                      gridRow: "1 / 2",
+                      fontSize: "1.6rem",
+                      lineHeight: 1,
+                      mt: 0.25,
+                      opacity: isSelected ? 1 : 0.9,
                     }}
                   >
-                    {/* Element type icon */}
-                    <Typography
-                      sx={{
-                        fontSize: "1.6rem",
-                        lineHeight: 1,
-                        mt: 0.25,
-                        opacity: isSelected ? 1 : 0.8,
-                      }}
-                    >
-                      {elementIcons[element.type as keyof IconMapping]}
-                    </Typography>
-                  </Box>
+                    {elementIcons[element.type as keyof IconMapping]}
+                  </Typography>
 
-                  {/* Spacer */}
-                  <Box sx={{ ml: "auto" }} />
-
-                  {/* Right-aligned menu button (unchanged functionality) */}
+                  {/* Menu (col 4, row 1) */}
                   <Box
                     sx={{
+                      gridColumn: "4 / 5",
+                      gridRow: "1 / 2",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      height: "100%",
-                      flexShrink: 0,
-                      // border: "2px solid amber",
+                      height: 28,
+                      ml: 1,
                     }}
                   >
                     <ElementDropDownMenu
@@ -176,54 +165,56 @@ const ElementsListItem = ({
                       setQuestionId={setQuestionId}
                     />
                   </Box>
-                </Box>
 
-                {/* === BOTTOM ROW: question text (truncated) === */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    minHeight: 24,
-                    width: "92%",
-                    gap: 1,
-                    px: 0.5,
-                  }}
-                >
-                  {/* Order (if applicable) */}
-                  {shouldDisplayOrder && (
-                    <Typography
-                      sx={{
-                        fontSize: "1.25rem",
-                        fontWeight: 700,
-                        color: isSelected ? "#4f46e5" : "#374151",
-                        lineHeight: 1,
-                        // border: "2px solid green",
-                      }}
-                    >
-                      {element.order}
-                    </Typography>
-                  )}
+                  {/* Content: order + text (col 2-4, row 2) */}
+                  <Box
+                    sx={{
+                      gridColumn: "2 / 4", // starts under the type icon, ends before menu
+                      gridRow: "2 / 3",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      minHeight: 24,
+                      pr: 0.5,
+                    }}
+                  >
+                    {shouldDisplayOrder && (
+                      <Typography
+                        sx={{
+                          gridColumn: "1 / 2",
+                          gridRow: "2 / 3",
+                          justifySelf: "center", // centered under handle
+                          textAlign: "center",
+                          fontSize: "1.1rem",
+                          fontWeight: 700,
+                          lineHeight: 1,
+                          color: isSelected ? "#4f46e5" : "#374151",
+                        }}
+                      >
+                        {element.order}
+                      </Typography>
+                    )}
 
-                  <Tooltip title={element.text} placement="top">
-                    <Typography
-                      // STYLE-ONLY: better truncation & readability
-                      noWrap
-                      sx={{
-                        width: "100%",
-                        color: isSelected ? "#4f46e5" : "#374151",
-                        fontSize: "0.95rem",
-                        fontWeight: 600,
-                        mt: 0.1,
-                        textTransform: "capitalize",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        "&:hover": { cursor: "pointer" },
-                      }}
-                    >
-                      {element.text}
-                    </Typography>
-                  </Tooltip>
+                    <Tooltip title={element.text} placement="top">
+                      <Typography
+                        noWrap
+                        sx={{
+                          gridColumn: "2 / 4", // starts exactly under the type icon
+                          gridRow: "2 / 3",
+                          color: isSelected ? "#4f46e5" : "#374151",
+                          fontSize: "0.95rem",
+                          fontWeight: 600,
+                          textTransform: "capitalize",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          "&:hover": { cursor: "pointer" },
+                        }}
+                      >
+                        {element.text}
+                      </Typography>
+                    </Tooltip>
+                  </Box>
                 </Box>
               </Box>
             )}

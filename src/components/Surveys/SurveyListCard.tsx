@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import FeedIcon from "@mui/icons-material/Feed";
 import { Avatar, Box, ButtonBase, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +27,16 @@ const SurveyListCard = ({
       state: { workspaceId, workspaceName },
     });
   };
+
+  const questionCount = useMemo(() => {
+    return elements.filter(
+      (el) =>
+        el.type !== "WELCOME_SCREEN" &&
+        el.type !== "END_SCREEN" &&
+        el.type !== "INSTRUCTIONS" &&
+        el.type !== "EMAIL_CONTACT"
+    ).length;
+  }, [elements]);
 
   return (
     <>
@@ -136,7 +148,7 @@ const SurveyListCard = ({
             }}
           >
             <ListSurveyCardMetricIndicator
-              value={`${elements.length}`}
+              value={`${questionCount}`}
               title={"Questions"}
             />
             <ListSurveyCardMetricIndicator value={`0`} title={"Responses"} />

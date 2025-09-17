@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { Box, ButtonBase, Tooltip, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -24,6 +26,16 @@ const GridSurveyCard = ({
       state: { workspaceId, workspaceName, viewMode },
     });
   };
+
+  const questionCount = useMemo(() => {
+    return elements.filter(
+      (el) =>
+        el.type !== "WELCOME_SCREEN" &&
+        el.type !== "END_SCREEN" &&
+        el.type !== "INSTRUCTIONS" &&
+        el.type !== "EMAIL_CONTACT"
+    ).length;
+  }, [elements]);
 
   return (
     <Box
@@ -174,7 +186,7 @@ const GridSurveyCard = ({
             }}
           >
             <GridSurveyCardMetricIndicator
-              value={`${elements.length}`}
+              value={`${questionCount}`}
               title={"Questions"}
             />
             <GridSurveyCardMetricIndicator value={"0"} title={"Responses"} />

@@ -3,9 +3,16 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 interface UIState {
   overlayOpen: boolean;
   overlayMessage?: string;
+  publishAlertOpen?: boolean;
+  shareModalOpen?: boolean;
 }
 
-const initialState: UIState = { overlayOpen: false };
+const initialState: UIState = {
+  overlayOpen: false,
+  overlayMessage: "",
+  publishAlertOpen: false,
+  shareModalOpen: false,
+};
 
 const overlaySlice = createSlice({
   name: "overlayUI",
@@ -19,8 +26,31 @@ const overlaySlice = createSlice({
       s.overlayOpen = false;
       s.overlayMessage = undefined;
     },
+    openPublishAlert: (s) => {
+      s.publishAlertOpen = true;
+    },
+    closePublishAlert: (s) => {
+      s.publishAlertOpen = false;
+    },
+
+    openShareModal: (s) => {
+      s.shareModalOpen = true;
+    },
+    closeShareModal: (s) => {
+      s.shareModalOpen = false;
+    },
   },
 });
 
-export const { showOverlay, hideOverlay } = overlaySlice.actions;
+export const {
+  showOverlay,
+  hideOverlay,
+  openPublishAlert,
+  closePublishAlert,
+  openShareModal,
+  closeShareModal,
+} = overlaySlice.actions;
+
+
+
 export default overlaySlice.reducer;

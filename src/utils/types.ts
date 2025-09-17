@@ -119,6 +119,7 @@ export interface DockItemProps {
   isHovered: boolean;
   setHovered: React.Dispatch<React.SetStateAction<string | null>>;
   id: string;
+  withDividerLeft?: boolean;
 }
 
 export interface Condition {
@@ -1010,7 +1011,10 @@ export interface SurveyTitleAndDescription {
 
 export interface SnackbarAlertProps {
   openSnackbar: boolean;
-  handleCloseSnackbar: () => void;
+  handleCloseSnackbar: (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => void;
 }
 
 export interface SuccessfullLogoutToastProps {
