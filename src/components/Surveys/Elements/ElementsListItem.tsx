@@ -1,4 +1,5 @@
 import { Box, Tooltip, Typography } from "@mui/material";
+import { GripVertical } from "lucide-react";
 import { Draggable } from "react-beautiful-dnd";
 
 import { RootState } from "../../../app/store";
@@ -17,6 +18,10 @@ const ElementsListItem = ({
     (state: RootState) => state.surveyBuilder.elements
   );
 
+  const selectedQuestionId = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion?.questionID
+  );
+
   const nonOrderableTypes = [
     "WELCOME_SCREEN",
     "INSTRUCTIONS",
@@ -26,20 +31,22 @@ const ElementsListItem = ({
 
   return (
     <Box {...provided.droppableProps} ref={provided.innerRef}>
-      {/* {elements.map((element, index) => { */}
       {displayedQuestions.map((element, index) => {
         const shouldDisplayOrder =
           !nonOrderableTypes.includes(element.type) &&
           typeof element.order === "number" &&
           element.order > 0 &&
           element.order < 9999;
+
+        const isSelected = element.questionID === selectedQuestionId;
+
         return (
           <Draggable
             key={element.questionID}
             draggableId={element?.questionID}
             index={index}
           >
-            {(provided) => (
+            {(provided, snapshot) => (
               <Box
                 key={element.questionID}
                 onClick={() =>
@@ -49,134 +56,174 @@ const ElementsListItem = ({
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
                 sx={{
+                  // --- container ---
                   display: "flex",
-                  flexDirection: "row",
-                  position: "relative",
-                  backgroundColor: "transparent",
-                  transition: "background-color 0.2s ease-in-out",
+                  flexDirection: "column",
+                  gap: 0.5,
+                  position: "relative", // needed for ::before on selected
+                  px: 1.5,
+                  py: 1,
+                  // borderRadius: 3, // ~rounded-xl
+                  cursor: snapshot.isDragging ? "grabbing" : "grab",
+                  userSelect: "none",
+                  transition:
+                    "background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+
+                  // --- shared hover (bg stays blue when selected) ---
                   "&:hover": {
-                    backgroundColor: "#f9fafb",
+                    backgroundColor: isSelected ? "#EFF6FF" : "#F9FAFB",
+                    boxShadow: isSelected
+                      ? "none"
+                      : "0 1px 6px rgba(16, 24, 40, 0.06)",
+                    borderColor: isSelected ? "#93c5fd" : "#E5E7EB",
                   },
-                  width: { md: "100%", lg: "100%", xl: "100%" },
-                  height: "64px",
-                  // marginLeft: "1%",
-                  borderBottom: "1px solid #F3F4F6",
-                  "&:hover .close-button": {
-                    cursor: "pointer",
-                    visibility: "visible",
-                  },
+
+                  // --- conditional states ---
+                  ...(isSelected
+                    ? {
+                        // selected (Tailwind: bg-blue-50 text-blue-900 border-l-4 border-blue-600)
+                        backgroundColor: "#EFF6FF",
+                        color: "#1e3a8a",
+                        border: "1px solid #bfdbfe",
+
+                        borderLeft: isSelected ? "8px solid #4C6FFF" : "",
+                        borderTopLeftRadius: isSelected ? "20px" : "",
+                        borderBottomLeftRadius: isSelected ? "20px" : "",
+                      }
+                    : {
+                        // unselected
+                        backgroundColor:
+                          index % 2 === 0 ? "#FFFFFF" : "#FCFCFD",
+                        color: "#374151",
+                        border: "1px solid #EEF2F7",
+
+                        // no ::before at all for unselected
+                      }),
                 }}
               >
+                {/* === TOP ROW: icon, number, menu === */}
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "flex-end",
-                    width: "12%",
-                    height: "98%",
-                    //   border: "2px solid red",
-                  }}
-                >
-                  <Typography fontSize={"1.4rem"} mt={1}>
-                    {elementIcons[element.type as keyof IconMapping]}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
+                    flexDirection: "row",
                     alignItems: "center",
-                    width: "68%",
-                    height: "98%",
-                    pl: 2,
-                    //   border: "2px solid red",
+                    width: "100%",
+                    minHeight: 28, // compact top row
+                    // border: "2px solid green",
                   }}
                 >
+                  <Box
+                    {...provided.dragHandleProps}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      color: isSelected ? "#2563eb" : "#9CA3AF", // blue if selected, gray otherwise
+                      mr: 1,
+                      cursor: "grab",
+                      "&:active": { cursor: "grabbing" },
+                    }}
+                  >
+                    <Tooltip
+                      title="Drag to reorder"
+                      placement="top"
+                      arrow={false}
+                    >
+                      <GripVertical />
+                    </Tooltip>
+                  </Box>
+
+                  {/* Icon + Number group */}
                   <Box
                     sx={{
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
-                      margin: "auto",
-                      width: "98%",
-                      height: "48%",
-                      // border: "2px solid green",
+                      gap: 1, // space between icon and number
+                      flexShrink: 0, // prevent squish
+                      // border: "2px solid blue",
                     }}
                   >
-                    {shouldDisplayOrder && (
-                      <Typography
-                        color={"black"}
-                        fontSize={"1.2rem"}
-                        fontWeight={"bold"}
-                      >
-                        {element.order}
-                      </Typography>
-                    )}
-                    <Tooltip title={element.text} placement="top">
-                      <Typography
-                        ml={1}
-                        sx={{
-                          color: "black",
-                          fontSize: "16px",
-                          whiteSpace: "nowrap",
-                          textTransform: "capitalize",
-                          textOverflow: "clip",
-                          overflow: "hidden",
-                          fontWeight: "bold",
-                          width: "96%",
-                          "&:hover": {
-                            cursor: "pointer",
-                          },
-                        }}
-                      >
-                        {element.text}
-                      </Typography>
-                    </Tooltip>
+                    {/* Element type icon */}
+                    <Typography
+                      sx={{
+                        fontSize: "1.6rem",
+                        lineHeight: 1,
+                        mt: 0.25,
+                        opacity: isSelected ? 1 : 0.8,
+                      }}
+                    >
+                      {elementIcons[element.type as keyof IconMapping]}
+                    </Typography>
                   </Box>
-                  {/* <Box
+
+                  {/* Spacer */}
+                  <Box sx={{ ml: "auto" }} />
+
+                  {/* Right-aligned menu button (unchanged functionality) */}
+                  <Box
                     sx={{
                       display: "flex",
-                      flexDirection: "row",
-                      alignItems: "flex-start",
-                      margin: "auto",
-                      width: "98%",
-                      height: "48%",
-                      // border: "2px solid green",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      flexShrink: 0,
+                      // border: "2px solid amber",
                     }}
                   >
-                    <Chip
-                      label={element.type.replace(/_/g, " ")}
-                      sx={{
-                        backgroundColor:
-                          chipTypeColors[element.type] || "#eceff1",
-                        color: "white",
-                        fontSize: "12px",
-                        fontWeight: "bold",
-                        height: "20px",
-                        width: "auto",
-                        px: 1.5,
-                        py: 1,
-                      }}
+                    <ElementDropDownMenu
+                      questionID={element.questionID}
+                      setQuestionId={setQuestionId}
                     />
-                  </Box> */}
+                  </Box>
                 </Box>
+
+                {/* === BOTTOM ROW: question text (truncated) === */}
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
                     alignItems: "center",
-                    width: "12%",
-                    height: "98%",
-                    //   border: "2px solid red",
+                    minHeight: 24,
+                    width: "92%",
+                    gap: 1,
+                    px: 0.5,
                   }}
                 >
-                  <ElementDropDownMenu
-                    questionID={element.questionID}
-                    setQuestionId={setQuestionId}
-                  />
+                  {/* Order (if applicable) */}
+                  {shouldDisplayOrder && (
+                    <Typography
+                      sx={{
+                        fontSize: "1.25rem",
+                        fontWeight: 700,
+                        color: isSelected ? "#4f46e5" : "#374151",
+                        lineHeight: 1,
+                        // border: "2px solid green",
+                      }}
+                    >
+                      {element.order}
+                    </Typography>
+                  )}
+
+                  <Tooltip title={element.text} placement="top">
+                    <Typography
+                      // STYLE-ONLY: better truncation & readability
+                      noWrap
+                      sx={{
+                        width: "100%",
+                        color: isSelected ? "#4f46e5" : "#374151",
+                        fontSize: "0.95rem",
+                        fontWeight: 600,
+                        mt: 0.1,
+                        textTransform: "capitalize",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        "&:hover": { cursor: "pointer" },
+                      }}
+                    >
+                      {element.text}
+                    </Typography>
+                  </Tooltip>
                 </Box>
               </Box>
             )}

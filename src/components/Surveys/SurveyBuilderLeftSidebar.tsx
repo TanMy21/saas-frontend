@@ -56,7 +56,7 @@ const SurveyBuilderLeftSidebar = ({
           alignItems: "center",
           margin: "2% auto",
           width: "100%",
-          height: "48px",
+          height: "64px",
           marginTop: { md: "8%", xl: "4%" },
           borderBottom: "2px solid #F3F4F6",
         }}
@@ -69,8 +69,9 @@ const SurveyBuilderLeftSidebar = ({
             justifyContent: "space-between",
             alignItems: "center",
             margin: { md: "6% auto", xl: "0 auto" },
+            py: { md: 0, xl: 3 },
             width: "92%",
-            height: "98%",
+            height: "100%",
           }}
         >
           <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
