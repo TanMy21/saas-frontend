@@ -1,11 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-interface UIState {
-  overlayOpen: boolean;
-  overlayMessage?: string;
-  publishAlertOpen?: boolean;
-  shareModalOpen?: boolean;
-}
+import { UIState } from "../../utils/types";
 
 const initialState: UIState = {
   overlayOpen: false,
@@ -50,7 +45,5 @@ export const {
   openShareModal,
   closeShareModal,
 } = overlaySlice.actions;
-
-
 
 export default overlaySlice.reducer;

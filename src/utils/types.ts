@@ -722,6 +722,13 @@ export interface PublishSurveyAlertProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export interface UIState {
+  overlayOpen: boolean;
+  overlayMessage?: string;
+  publishAlertOpen?: boolean;
+  shareModalOpen?: boolean;
+}
+
 export type QuestionTypeKey =
   | "BINARY"
   | "EMAIL_CONTACT"

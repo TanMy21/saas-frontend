@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
 import { CanvasConsoleProps } from "../utils/types";
 
 import PublishSurveyAlert from "./alert/PublishSurveyAlert";
-import SnackbarAlert from "./SnackbarAlert";
 import SurveyWelcomeElement from "./Surveys/Elements/SurveyWelcomeElement";
 import SurveyBuilderCanvas from "./Surveys/SurveyBuilderCanvas";
 import SurveyBuilderCanvasMobile from "./Surveys/SurveyBuilderCanvasMobile";
@@ -26,9 +25,7 @@ const CanvasConsole = ({
   published,
 }: CanvasConsoleProps) => {
   const dispatch = useAppDispatch();
-  const publishOpen = useAppSelector(
-    (state: RootState) => state.overlayUI.publishAlertOpen
-  );
+
   let content;
 
   const publishAlertOpen = useAppSelector(
@@ -46,20 +43,13 @@ const CanvasConsole = ({
         if (next) dispatch(openPublishAlert());
         else dispatch(closePublishAlert());
       },
-      [dispatch, publishOpen]
+      [dispatch, publishAlertOpen]
     );
-
-  const handlePublishClose = (
-    _event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") return;
-    dispatch(closePublishAlert());
-  };
 
   if (noElements) {
     content = <SurveyWelcomeElement display={display} />;
   }
+
   return (
     <Box
       sx={{
@@ -91,10 +81,6 @@ const CanvasConsole = ({
           <SurveyBuilderCanvas question={question} display={display} />
         )}
       </Box>
-      <SnackbarAlert
-        openSnackbar={publishOpen!}
-        handleCloseSnackbar={handlePublishClose}
-      />
       <PublishSurveyAlert open={publishAlertOpen!} setOpen={setPublishOpen} />
     </Box>
   );

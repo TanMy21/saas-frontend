@@ -14,10 +14,6 @@ const ElementsListItem = ({
   provided,
   setQuestionId,
 }: ElementListItemProps) => {
-  const elements = useAppSelector(
-    (state: RootState) => state.surveyBuilder.elements
-  );
-
   const selectedQuestionId = useAppSelector(
     (state: RootState) => state.question.selectedQuestion?.questionID
   );
@@ -56,20 +52,16 @@ const ElementsListItem = ({
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
                 sx={{
-                  // --- container ---
                   display: "flex",
                   flexDirection: "column",
                   gap: 0.5,
-                  position: "relative", // needed for ::before on selected
+                  position: "relative",
                   px: 1.5,
                   py: 1,
-                  // borderRadius: 3, // ~rounded-xl
                   cursor: snapshot.isDragging ? "grabbing" : "grab",
                   userSelect: "none",
                   transition:
                     "background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
-
-                  // --- shared hover (bg stays blue when selected) ---
                   "&:hover": {
                     backgroundColor: isSelected ? "#EFF6FF" : "#F9FAFB",
                     boxShadow: isSelected
@@ -77,42 +69,34 @@ const ElementsListItem = ({
                       : "0 1px 6px rgba(16, 24, 40, 0.06)",
                     borderColor: isSelected ? "#93c5fd" : "#E5E7EB",
                   },
-
-                  // --- conditional states ---
                   ...(isSelected
                     ? {
-                        // selected (Tailwind: bg-blue-50 text-blue-900 border-l-4 border-blue-600)
                         backgroundColor: "#EFF6FF",
                         color: "#1e3a8a",
                         border: "1px solid #bfdbfe",
-
                         borderLeft: isSelected ? "8px solid #4C6FFF" : "",
                         borderTopLeftRadius: isSelected ? "20px" : "",
                         borderBottomLeftRadius: isSelected ? "20px" : "",
                       }
                     : {
-                        // unselected
                         backgroundColor:
                           index % 2 === 0 ? "#FFFFFF" : "#FCFCFD",
                         color: "#374151",
                         border: "1px solid #EEF2F7",
-
-                        // no ::before at all for unselected
                       }),
                 }}
               >
                 <Box
                   sx={{
                     display: "grid",
-                    gridTemplateColumns: "28px 28px 1fr auto", // handle / type / content / menu
-                    gridTemplateRows: "28px auto", // top row / bottom row
+                    gridTemplateColumns: "28px 28px 1fr auto",
+                    gridTemplateRows: "28px auto",
                     alignItems: "center",
                     columnGap: 1,
                     rowGap: 1,
                     width: "100%",
                   }}
                 >
-                  {/* Drag handle (col 1, row 1) */}
                   <Box
                     {...provided.dragHandleProps}
                     sx={{
@@ -124,22 +108,23 @@ const ElementsListItem = ({
                       color: isSelected ? "#2563eb" : "#9CA3AF",
                       cursor: "grab",
                       "&:active": { cursor: "grabbing" },
-                      // larger hit area helps
                       width: 28,
                       height: 28,
                     }}
                   >
-                    <Tooltip title="Drag to reorder" placement="top" arrow={false}>
+                    <Tooltip
+                      title="Drag to reorder"
+                      placement="top"
+                      arrow={false}
+                    >
                       <GripVertical fontSize="small" />
                     </Tooltip>
                   </Box>
-
-                  {/* Type icon (col 2, row 1) */}
                   <Typography
                     sx={{
                       gridColumn: "2 / 3",
                       gridRow: "1 / 2",
-                      fontSize: "1.6rem",
+                      fontSize: "1.4rem",
                       lineHeight: 1,
                       mt: 0.25,
                       opacity: isSelected ? 1 : 0.9,
@@ -147,8 +132,6 @@ const ElementsListItem = ({
                   >
                     {elementIcons[element.type as keyof IconMapping]}
                   </Typography>
-
-                  {/* Menu (col 4, row 1) */}
                   <Box
                     sx={{
                       gridColumn: "4 / 5",
@@ -165,17 +148,16 @@ const ElementsListItem = ({
                       setQuestionId={setQuestionId}
                     />
                   </Box>
-
-                  {/* Content: order + text (col 2-4, row 2) */}
                   <Box
                     sx={{
-                      gridColumn: "2 / 4", // starts under the type icon, ends before menu
+                      gridColumn: { xs: "2 / 4", md: "2 / -1" },
                       gridRow: "2 / 3",
                       display: "flex",
                       alignItems: "center",
                       gap: 1,
                       minHeight: 24,
                       pr: 0.5,
+                      // border: "2px solid red",
                     }}
                   >
                     {shouldDisplayOrder && (
@@ -183,7 +165,7 @@ const ElementsListItem = ({
                         sx={{
                           gridColumn: "1 / 2",
                           gridRow: "2 / 3",
-                          justifySelf: "center", // centered under handle
+                          justifySelf: "center",
                           textAlign: "center",
                           fontSize: "1.1rem",
                           fontWeight: 700,
@@ -199,7 +181,7 @@ const ElementsListItem = ({
                       <Typography
                         noWrap
                         sx={{
-                          gridColumn: "2 / 4", // starts exactly under the type icon
+                          gridColumn: "2 / 4",
                           gridRow: "2 / 3",
                           color: isSelected ? "#4f46e5" : "#374151",
                           fontSize: "0.95rem",

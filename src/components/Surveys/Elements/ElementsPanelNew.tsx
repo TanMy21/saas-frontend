@@ -109,7 +109,6 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
     const newElements = Array.from(displayedQuestions);
     const [moved] = newElements.splice(source.index, 1);
     newElements.splice(destination.index, 0, moved);
-    // setElements(newElements);
 
     // Reorder elements
     const reorderedElements = newElements.map((el, index) => {

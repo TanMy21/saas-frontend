@@ -41,7 +41,6 @@ const SurveyBuilder = () => {
   // const [stepIndex, setStepIndex] = useState(0);
   // const isTourEnabled = useBuilderTourEnable(user);
   const [surveyTitle, setSurveyTitle] = useState<string>("");
-  // const [questionId, setQuestionId] = useState<string | null>(null);
   const [display, setDisplay] = useState<string | null>("desktop");
   const [loading, setLoading] = useState(false);
 
@@ -63,13 +62,11 @@ const SurveyBuilder = () => {
   const {
     data: surveyCanvas,
     isError: isErrorCanvas,
-    error: errorCanvas,
     isLoading: isLoadingCanvas,
     isFetching: isFetchingCanvas,
     refetch: refetchCanvas,
   } = useGetSurveyCanvasByIdQuery(surveyID, {
     skip: !surveyID,
-    // pollingInterval: 200000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });

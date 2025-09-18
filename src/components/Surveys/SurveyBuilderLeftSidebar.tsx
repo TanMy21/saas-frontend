@@ -58,34 +58,67 @@ const SurveyBuilderLeftSidebar = ({
           width: "100%",
           height: "64px",
           marginTop: { md: "8%", xl: "4%" },
-          borderBottom: "2px solid #F3F4F6",
+          // borderBottom: "2px solid #F3F4F6",
         }}
       >
         {/* Menu */}
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
             alignItems: "center",
-            margin: { md: "6% auto", xl: "0 auto" },
-            py: { md: 0, xl: 3 },
-            width: "92%",
-            height: "100%",
+            justifyContent: "space-between",
+            gap: 2,
+            py: { xs: 1.25, md: 1.5 },
+            px: { xs: 1.5, md: 2 },
+            width: "100%",
+            maxWidth: 1200,
+            mx: "auto",
           }}
         >
-          <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
-            {`Questions (${questionCount})`}
-          </Typography>
           <Box
-            id="add-element-menu"
             sx={{
               display: "flex",
-              justifyContent: "center",
               alignItems: "center",
-              width: "15%",
-              height: "38px",
-              // border: "2px solid red",
+              gap: 1.25,
+              minWidth: 0,
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 700,
+                letterSpacing: 0.1,
+                fontSize: { xs: 18, md: 20 },
+                color: "#0F172A",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              Questions
+            </Typography>
+            <Box
+              aria-label={`question count ${questionCount}`}
+              sx={{
+                px: 1,
+                py: 0.25,
+                borderRadius: 999,
+                fontSize: 20,
+                fontWeight: 600,
+                lineHeight: 1,
+                color: "#1F2937",
+                bgcolor: "#F3F4F6",
+                border: "1px solid #E5E7EB",
+              }}
+            >
+              {questionCount}
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
             }}
           >
             <AddElementMenu

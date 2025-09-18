@@ -6,7 +6,6 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DownloadIcon from "@mui/icons-material/Download";
 // import EmailIcon from "@mui/icons-material/Email";
 // import FacebookIcon from "@mui/icons-material/Facebook";
-import LinkIcon from "@mui/icons-material/Link";
 import QrCodeIcon from "@mui/icons-material/QrCode";
 import ShareIcon from "@mui/icons-material/Share";
 // import XIcon from "@mui/icons-material/X";
@@ -23,9 +22,6 @@ import {
 } from "@mui/material";
 import QRCode from "react-qr-code";
 
-import { setShareModalOpen } from "../../app/slices/surveySlice";
-import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
-import { useAppTheme } from "../../theme/useAppTheme";
 import { ShareSurveyProps } from "../../utils/types";
 
 const ShareSurveyModal = ({
@@ -36,13 +32,9 @@ const ShareSurveyModal = ({
   shareID,
 }: ShareSurveyProps) => {
   // const { background, textStyles } = useAppTheme();
-  const [copied, setCopied] = useState(false);
-  const dispatch = useAppDispatch();
-  const publishedOpen = useAppSelector(
-    (state) => state.surveyBuilder.isShareModalOpen
-  );
+  const [_copied, setCopied] = useState(false);
 
-  const [copyLinkStatus, setCopyLinkStatus] = useState<"idle" | "copied">(
+  const [copyLinkStatus, _setCopyLinkStatus] = useState<"idle" | "copied">(
     "idle"
   );
   const [copyQrStatus, setCopyQrStatus] = useState<
@@ -68,9 +60,8 @@ const ShareSurveyModal = ({
 
   const handleClose = () => {
     setShareBtnSelected(false);
-    setOpen(false);
     setCopied(false);
-    dispatch(setShareModalOpen(false));
+    setOpen(false);
   };
 
   const handleCopyQR = () => {
@@ -79,13 +70,13 @@ const ShareSurveyModal = ({
       const svgNode = qrContainerRef.current?.querySelector("svg");
       if (!svgNode) throw new Error("QR SVG not found");
 
-      // Convert SVG node to PNG blob for clipboard
+      // Convert SVG to PNG
       const svgData = new XMLSerializer().serializeToString(svgNode);
       const svgBlob = new Blob([svgData], { type: "image/svg+xml" });
       const url = URL.createObjectURL(svgBlob);
       const img = new window.Image();
       img.onload = () => {
-        // Draw image to canvas
+        // Draw image
         const canvas = document.createElement("canvas");
         canvas.width = 200;
         canvas.height = 200;
@@ -108,7 +99,6 @@ const ShareSurveyModal = ({
     }
   };
 
-  // Download QR as PNG
   const handleDownloadQR = () => {
     setDownloadStatus("downloading");
     const svgNode = qrContainerRef.current?.querySelector("svg");
@@ -143,7 +133,7 @@ const ShareSurveyModal = ({
   }, [open]);
 
   return (
-    <Modal open={Boolean(open) || Boolean(publishedOpen)} onClose={handleClose}>
+    <Modal open={Boolean(open)} onClose={handleClose}>
       <Box
         tabIndex={-1}
         sx={{

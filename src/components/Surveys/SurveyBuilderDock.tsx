@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import UploadIcon from "@mui/icons-material/Upload";
 import { Box, IconButton, Tooltip } from "@mui/material";
@@ -9,6 +9,8 @@ import { RiAiGenerate } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 
 import {
+  closePublishAlert,
+  closeShareModal,
   openPublishAlert,
   openShareModal,
 } from "../../app/slices/overlaySlice";
@@ -20,15 +22,16 @@ import ImportQuestionsModal from "../Modals/ImportQuestionsModal";
 import ShareSurveyModal from "../Modals/ShareSurveyModal";
 import SurveySettingsModal from "../Modals/SurveySettingsModal";
 import SurveyTitleEditModal from "../Modals/SurveyTitleEditModal";
+import SnackbarAlert from "../SnackbarAlert";
 
 const DOCK_HEIGHT = 36;
 const DEFAULT_ICON_SIZE = 24;
 const DEFAULT_BUTTON_SIZE = 24;
 const HOVER_BUTTON_SIZE = 48;
 
-const SEG_SIZE = 36; // square button & thumb
-const SEG_GAP = 4; // space between buttons
-const SEG_PAD = 4; // outer pill padding
+const SEG_SIZE = 36;
+const SEG_GAP = 4;
+const SEG_PAD = 4;
 
 type ViewValue = "mobile" | "desktop";
 
@@ -114,7 +117,6 @@ const ViewIconSegment = ({
               justifyContent: "center",
             }}
           >
-            {/* Replaced react-icon with inline SVG */}
             <svg
               width="18"
               height="18"
@@ -158,7 +160,6 @@ const ViewIconSegment = ({
               justifyContent: "center",
             }}
           >
-            {/* Replaced react-icon with inline SVG */}
             <svg
               width="18"
               height="18"
@@ -186,36 +187,46 @@ const SurveyBuilderDock = ({
   shareID,
   published,
 }: SurveyIslandProps) => {
+  const dispatch = useAppDispatch();
   const { surveyID } = useParams();
+  const prevPublishedRef = useRef<boolean | null>(null);
+
   const openGenerateState = useAppSelector(
     (state: RootState) => state.surveyBuilder.isGenerateModalOpen
   );
 
-  const dispatch = useAppDispatch();
-
-  // If your ShareSurveyModal already reads Redux, great:
   const shareOpen = useAppSelector(
     (state: RootState) => state.overlayUI.shareModalOpen
   );
 
+  const setShareOpen: React.Dispatch<React.SetStateAction<boolean>> = (val) => {
+    const next = typeof val === "function" ? val(shareOpen!) : val;
+    if (next) dispatch(openShareModal());
+    else dispatch(closeShareModal());
+  };
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [openShare, setOpenShare] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [openGenerate, setOpenGenerate] = useState(openGenerateState);
   const [openEdit, setOpenEdit] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
-  const [shareBtnSelected, setShareBtnSelected] = useState(false);
+  const [_shareBtnSelected, setShareBtnSelected] = useState(false);
 
   const items = [
-    // removed "mobile" & "desktop" from this array; handled by ViewTogglePill
     {
       id: "share",
       icon: <BsFillShareFill />,
       label: "Share survey",
       action: () => {
-        if (!published) dispatch(openPublishAlert());
-        else dispatch(openShareModal());
+        if (!published) {
+          setOpenSnackbar(false);
+          dispatch(closeShareModal());
+          dispatch(openPublishAlert());
+        } else {
+          dispatch(closePublishAlert());
+          dispatch(openShareModal());
+        }
       },
     },
     {
@@ -244,89 +255,98 @@ const SurveyBuilderDock = ({
     },
   ];
 
+  useEffect(() => {
+    const prev = prevPublishedRef.current;
+    if (prev === false && published === true) {
+      setOpenSnackbar(false);
+      dispatch(closePublishAlert());
+      dispatch(openShareModal());
+    }
+    prevPublishedRef.current = published ?? null;
+  }, [published, dispatch]);
+
   return (
-    <Box
-      sx={{
-        position: "sticky",
-        left: 0,
-        right: 0,
-        mx: "auto",
-        mt: { md: "5%", xl: "2%" },
-        backgroundColor: "rgba(255,255,255,0.8)",
-        borderRadius: 5,
-        border: "1px solid rgba(0,0,0,0.06)",
-        // Subtle glass & shadow
-        backdropFilter: "saturate(160%) blur(8px)",
-        WebkitBackdropFilter: "saturate(160%) blur(8px)",
-        boxShadow:
-          "0 6px 24px rgba(16,24,40,0.06), 0 2px 8px rgba(16,24,40,0.04)",
-        px: 1.5,
-        py: 0.75,
-        display: "flex",
-        alignItems: "center",
-        gap: 1,
-        width: "fit-content",
-        minHeight: DOCK_HEIGHT,
-        zIndex: 20,
-
-        // Reduce motion
-        "@media (prefers-reduced-motion: reduce)": {
-          "& *": { transition: "none !important" },
-        },
-      }}
-    >
-      {/* ⬇️ NEW: Pill toggle for just the view */}
-      <ViewIconSegment onChange={(val) => setDisplay(val)} />
-
-      {/* ⬇️ A soft divider before the rest of the icons */}
+    <>
       <Box
         sx={{
-          width: 1,
-          height: 28,
-          mx: 0.5,
-          borderRight: "1px solid #E5E7EB",
+          position: "sticky",
+          left: 0,
+          right: 0,
+          mx: "auto",
+          mt: { md: "5%", xl: "2%" },
+          backgroundColor: "rgba(255,255,255,0.8)",
+          borderRadius: 5,
+          border: "1px solid rgba(0,0,0,0.06)",
+          backdropFilter: "saturate(160%) blur(8px)",
+          WebkitBackdropFilter: "saturate(160%) blur(8px)",
+          boxShadow:
+            "0 6px 24px rgba(16,24,40,0.06), 0 2px 8px rgba(16,24,40,0.04)",
+          px: 1.5,
+          py: 0.75,
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          width: "fit-content",
+          minHeight: DOCK_HEIGHT,
+          zIndex: 20,
+          "@media (prefers-reduced-motion: reduce)": {
+            "& *": { transition: "none !important" },
+          },
         }}
-      />
+      >
+        <ViewIconSegment onChange={(val) => setDisplay(val)} />
 
-      {/* Existing actions (unchanged behavior) */}
-      {items.map(({ id, icon, label, action }) => (
-        <DockItem
-          key={id}
-          action={action}
-          icon={icon}
-          label={label}
-          isHovered={hovered === id}
-          setHovered={setHovered}
-          id={id}
-          withDividerLeft={id === "import"} // 👈 add this
+        <Box
+          sx={{
+            width: 1,
+            height: 28,
+            mx: 0.5,
+            borderRight: "1px solid #E5E7EB",
+          }}
         />
-      ))}
 
-      {/* Modals & alerts (unchanged) */}
-      <ShareSurveyModal
-        open={shareOpen!}
-        setOpen={setOpenShare}
-        setShareBtnSelected={setShareBtnSelected}
+        {items.map(({ id, icon, label, action }) => (
+          <DockItem
+            key={id}
+            action={action}
+            icon={icon}
+            label={label}
+            isHovered={hovered === id}
+            setHovered={setHovered}
+            id={id}
+            withDividerLeft={id === "import"}
+          />
+        ))}
+
+        <ShareSurveyModal
+          open={shareOpen!}
+          setOpen={setShareOpen}
+          setShareBtnSelected={setShareBtnSelected}
+          openSnackbar={openSnackbar}
+          setOpenSnackbar={setOpenSnackbar}
+          shareID={shareID}
+        />
+        <SurveyTitleEditModal openEdit={openEdit} setOpenEdit={setOpenEdit} />
+        <SurveySettingsModal
+          surveyID={surveyID!}
+          openSettings={openSettings}
+          setOpenSettings={setOpenSettings}
+        />
+
+        <ImportQuestionsModal
+          openImport={openImport}
+          setOpenImport={setOpenImport}
+        />
+        <GenerateSurveyModal
+          openGenerate={openGenerate}
+          setOpenGenerate={setOpenGenerate}
+        />
+      </Box>
+      <SnackbarAlert
         openSnackbar={openSnackbar}
-        setOpenSnackbar={setOpenSnackbar}
-        shareID={shareID}
+        handleCloseSnackbar={() => setOpenSnackbar(false)}
       />
-      <SurveyTitleEditModal openEdit={openEdit} setOpenEdit={setOpenEdit} />
-      <SurveySettingsModal
-        surveyID={surveyID!}
-        openSettings={openSettings}
-        setOpenSettings={setOpenSettings}
-      />
-
-      <ImportQuestionsModal
-        openImport={openImport}
-        setOpenImport={setOpenImport}
-      />
-      <GenerateSurveyModal
-        openGenerate={openGenerate}
-        setOpenGenerate={setOpenGenerate}
-      />
-    </Box>
+    </>
   );
 };
 
@@ -357,7 +377,7 @@ const DockItem = ({
         onMouseLeave={() => setHovered(null)}
         aria-label={label}
         sx={{
-          position: "relative", // 👈 required for ::before
+          position: "relative",
           width: size,
           height: size,
           borderRadius: 2,
@@ -365,8 +385,7 @@ const DockItem = ({
             "transform 140ms ease, background-color 140ms ease, width 200ms ease, height 200ms ease",
           backgroundColor: "transparent",
           mx: 1.5,
-          pl: withDividerLeft ? 1.5 : 0, // space after divider
-          // vertical divider
+          pl: withDividerLeft ? 1.5 : 0,
           ...(withDividerLeft && {
             "&::before": {
               content: '""',
