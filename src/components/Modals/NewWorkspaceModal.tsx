@@ -129,7 +129,10 @@ const NewWorkspaceModal = ({ open, onClose }: NewWorkspaceModalProps) => {
               >
                 Create new workspace
               </Typography>
-              <Typography variant="body2" sx={{ color: "grey.500", mt: 0.5 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "grey.500", mt: 0.5, ml: 0.5 }}
+              >
                 Choose a name for your workspace
               </Typography>
             </Box>

@@ -20,7 +20,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
   const [tags, setTags] = useState<string[]>(surveyTag || []);
   const [inputValue, setInputValue] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isInputFocused, setIsInputFocused] = useState(false);
+  const [_isInputFocused, setIsInputFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const MAX_TAGS = 5;
 
@@ -207,24 +207,17 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
                       bgcolor: "#fff",
                       alignItems: "center",
                       transition: "all 0.2s",
-
-                      // 🔹 Default border
                       "& fieldset": {
-                        border: "2px solid #e5e7eb", // gray-200
+                        border: "2px solid #e5e7eb",
                       },
-
-                      // 🔹 Hover border
                       "&:hover fieldset": {
-                        borderColor: "#d1d5db", // gray-300
+                        borderColor: "#d1d5db",
                       },
 
-                      // 🔹 Focus border
                       "&.Mui-focused fieldset": {
-                        borderColor: "#3b82f6", // blue-500
+                        borderColor: "#3b82f6",
                         boxShadow: "0 4px 24px 0 rgba(59,130,246,0.12)",
                       },
-
-                      // 🔹 Disabled look
                       "&.Mui-disabled": {
                         bgcolor: "#f3f4f6",
                         opacity: 0.8,
@@ -290,7 +283,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
               </Typography>
             )}
 
-            {/* Tags display */}
+            {/* Tags */}
             <Box sx={{ mb: 5, minHeight: 64 }}>
               {tags.length > 0 ? (
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>

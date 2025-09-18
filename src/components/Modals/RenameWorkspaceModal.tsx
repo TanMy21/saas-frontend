@@ -129,7 +129,10 @@ const RenameWorkspaceModal = ({
               >
                 Rename workspace
               </Typography>
-              <Typography variant="body2" sx={{ color: "grey.500", mt: 0.5 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "grey.500", mt: 0.5, ml: 0.5 }}
+              >
                 Choose a new name for your workspace
               </Typography>
             </Box>
@@ -151,7 +154,7 @@ const RenameWorkspaceModal = ({
           </IconButton>
         </Box>
 
-        {/* Form (React Hook Form) */}
+        {/* Form */}
         <Box
           component="form"
           onSubmit={handleSubmit(renameWorkspace)}

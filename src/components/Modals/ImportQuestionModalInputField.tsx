@@ -29,7 +29,6 @@ const ImportQuestionModalInputField = ({
   const handleImport = async () => {
     try {
       setImportBtnClicked(true);
-      // const questionsGenerated =
 
       if (importText.trim().length === 0) {
         return;
@@ -39,6 +38,7 @@ const ImportQuestionModalInputField = ({
         surveyID,
         value: importText,
       }).unwrap();
+
       setImportText("");
       refetchCanvas();
       handleClose();
@@ -78,7 +78,6 @@ const ImportQuestionModalInputField = ({
           value={importText}
           onChange={handleChange}
           multiline
-          // minRows={16}
           variant="outlined"
           fullWidth
           placeholder=""

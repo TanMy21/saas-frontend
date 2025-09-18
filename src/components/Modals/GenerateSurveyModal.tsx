@@ -103,8 +103,7 @@ const GenerateSurveyModal = ({
       }
     }
   }, [isError, error]);
-  console.log("Errors: ", errors);
-  console.log("close", openGenerate);
+
   return (
     <Modal open={!!openGenerate} onClose={handleClose} disableEnforceFocus>
       <Box
@@ -369,8 +368,8 @@ const GenerateSurveyModal = ({
                                   onClick={() => toggleQuestionType(type.type)}
                                   sx={{
                                     position: "absolute",
-                                    top: -8, // half outside vertically
-                                    right: -8, // half outside horizontally
+                                    top: -8,
+                                    right: -8,
                                     width: 22,
                                     height: 22,
                                     p: 0,
@@ -382,8 +381,7 @@ const GenerateSurveyModal = ({
                                     alignItems: "center",
                                     justifyContent: "center",
                                     "&:hover": { bgcolor: "#b60b0bff" },
-                                    // make sure it floats over the chip
-                                    zIndex: 1,
+                                    zIndex: 10,
                                   }}
                                 >
                                   <CloseIcon

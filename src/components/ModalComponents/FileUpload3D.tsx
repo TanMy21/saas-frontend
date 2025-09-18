@@ -10,7 +10,6 @@ import {
   Button,
   Chip,
   IconButton,
-  LinearProgress,
   Paper,
   Stack,
   Typography,
@@ -33,7 +32,7 @@ const FileUpload3D = ({
     error: null,
   });
 
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [_selectedFile, setSelectedFile] = useState<File | null>(null);
   const [upload3DModel, { isLoading, isSuccess, isError, error, data }] =
     useUpload3DModelMutation();
 
@@ -188,7 +187,7 @@ const FileUpload3D = ({
   };
 
   // =======================
-  // Success view (unchanged behavior; MUI styling)
+  // Success view
   // =======================
   if (state.uploadedFile && !state.isUploading) {
     return (
@@ -204,15 +203,14 @@ const FileUpload3D = ({
             width: "64px",
             height: "64px",
             borderRadius: "50%",
-            backgroundColor: "#E6F4EA", // success.100 equivalent
+            backgroundColor: "#E6F4EA",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
             marginBottom: "8px",
           }}
         >
-          <CheckCircleIcon style={{ fontSize: "32px", color: "#2E7D32" }} />{" "}
-          {/* success.main equivalent */}
+          <CheckCircleIcon style={{ fontSize: "32px", color: "#2E7D32" }} />
         </div>
 
         <Typography variant="h6" fontWeight={700} mb={1}>
@@ -242,8 +240,8 @@ const FileUpload3D = ({
               <div style={{ fontWeight: 600 }}>{state.uploadedFile.name}</div>
               <div
                 style={{
-                  fontSize: "0.875rem", // body2 equivalent
-                  color: "rgba(0,0,0,0.6)", // text.secondary
+                  fontSize: "0.875rem",
+                  color: "rgba(0,0,0,0.6)",
                 }}
               >
                 {formatFileSize(state.uploadedFile.size)}
@@ -266,7 +264,7 @@ const FileUpload3D = ({
   }
 
   // =======================
-  // Uploading view (unchanged behavior; MUI styling)
+  // Uploading view
   // =======================
   if (state.isUploading) {
     return (
@@ -277,13 +275,12 @@ const FileUpload3D = ({
           paddingBottom: "24px",
         }}
       >
-        {/* Icon container */}
         <div
           style={{
             width: "64px",
             height: "64px",
             borderRadius: "50%",
-            backgroundColor: "#BBDEFB", // primary.100
+            backgroundColor: "#BBDEFB",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -291,13 +288,12 @@ const FileUpload3D = ({
           }}
         >
           <FileUploadIcon style={{ fontSize: "32px", color: "#1976D2" }} />{" "}
-          {/* primary.main */}
         </div>
 
         {/* Heading */}
         <div
           style={{
-            fontSize: "1.25rem", // matches h6
+            fontSize: "1.25rem",
             fontWeight: 700,
             marginBottom: "4px",
           }}
@@ -308,8 +304,8 @@ const FileUpload3D = ({
         {/* Subtitle */}
         <div
           style={{
-            fontSize: "0.875rem", // body2
-            color: "rgba(0,0,0,0.6)", // text.secondary
+            fontSize: "0.875rem",
+            color: "rgba(0,0,0,0.6)",
             marginBottom: "12px",
           }}
         >
@@ -324,16 +320,18 @@ const FileUpload3D = ({
             width: "100%",
             height: "10px",
             borderRadius: "5px",
+            backgroundColor: "#0074EB",
+            color: "#0074EB",
             overflow: "hidden",
             marginBottom: "6px",
             appearance: "none",
           }}
         />
-        {/* Percentage text */}
+
         <div
           style={{
-            fontSize: "0.75rem", // caption
-            color: "rgba(0,0,0,0.6)", // text.secondary
+            fontSize: "0.75rem",
+            color: "rgba(0,0,0,0.6)",
           }}
         >
           {Math.round(state.uploadProgress)}% complete
@@ -343,7 +341,7 @@ const FileUpload3D = ({
   }
 
   // =======================
-  // Default view (drag & drop + click)
+  // Default view
   // =======================
   return (
     <Stack spacing={3}>
@@ -394,27 +392,27 @@ const FileUpload3D = ({
             textAlign: "center",
           }}
         >
-          {/* Icon Circle */}
           <div
             style={{
               width: "80px",
               height: "80px",
               borderRadius: "50%",
-              backgroundColor: "#BBDEFB", // primary.100
+              backgroundColor: "#BBDEFB",
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
               marginBottom: "8px",
             }}
           >
-            <FileUploadIcon style={{ fontSize: "40px", color: "#1976D2" }} />{" "}
-            {/* primary.main */}
+            <FileUploadIcon
+              style={{ fontSize: "40px", color: "#1976D2" }}
+            />{" "}
           </div>
 
           {/* Title */}
           <div
             style={{
-              fontSize: "1.25rem", // h6 equivalent
+              fontSize: "1.25rem",
               fontWeight: 800,
               marginBottom: "8px",
             }}
@@ -425,7 +423,7 @@ const FileUpload3D = ({
           {/* Subtitle */}
           <div
             style={{
-              color: "rgba(0,0,0,0.6)", // text.secondary
+              color: "rgba(0,0,0,0.6)",
               marginBottom: "16px",
             }}
           >
@@ -441,11 +439,11 @@ const FileUpload3D = ({
               display: "inline-flex",
               alignItems: "center",
               gap: "8px",
-              backgroundColor: "#1976D2", // primary.main
+              backgroundColor: "#1976D2",
               color: "#fff",
               border: "none",
-              borderRadius: "16px", // 2 * 8px
-              padding: "8px 20px", // py:1 (8px), px:2.5 (~20px)
+              borderRadius: "16px",
+              padding: "8px 20px",
               fontSize: "0.875rem",
               fontWeight: 500,
               cursor:
@@ -459,7 +457,6 @@ const FileUpload3D = ({
         </div>
       </Paper>
 
-      {/* File Format Info */}
       <Paper
         variant="outlined"
         sx={{

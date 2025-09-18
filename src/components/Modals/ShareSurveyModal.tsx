@@ -243,7 +243,7 @@ const ShareSurveyModal = ({
               />
             </Box>
           </Box>
-          {/* QR Code Section */}
+          {/* QR Code */}
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
               <QrCodeIcon sx={{ fontSize: 22, color: "#4B5563" }} />

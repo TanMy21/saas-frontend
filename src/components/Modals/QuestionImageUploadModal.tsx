@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import ClearIcon from "@mui/icons-material/Clear";
-import CloseIcon from "@mui/icons-material/Close";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import SaveIcon from "@mui/icons-material/Save";
-import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
-import { FiUpload } from "react-icons/fi";
+import {
+  Box,
+  Button,
+  IconButton,
+  Modal,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { ImageIcon, Loader2, Trash2, Upload, X } from "lucide-react";
 import { toast } from "react-toastify";
 
 import { useUploadQuestionImageMutation } from "../../app/slices/elementApiSlice";
@@ -18,6 +21,7 @@ const QuestionImageUploadModal = ({
 }: QuestionImageUploadModalProps) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const [
     uploadQuestionImage,
@@ -29,21 +33,64 @@ const QuestionImageUploadModal = ({
     },
   ] = useUploadQuestionImageMutation();
 
-  const handlePreviewImage = () => {
+  const handleRemoveImage = () => {
     setSelectedFile(null);
     setPreview(null);
   };
 
-  const handleUpload = () => {
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append("imgFile", selectedFile);
-
-      uploadQuestionImage({ formData, questionID });
+  const processFile = (file: File) => {
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
     }
+
+    // Validate file size (5MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("File size must be less than 10MB");
+      return;
+    }
+
+    setSelectedFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDragEnter = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      processFile(files[0]);
+    }
+  }, []);
+
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+    // optionID: string
+  ) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
 
@@ -53,6 +100,15 @@ const QuestionImageUploadModal = ({
         setPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUpload = () => {
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("imgFile", selectedFile);
+
+      uploadQuestionImage({ formData, questionID });
     }
   };
 
@@ -97,297 +153,258 @@ const QuestionImageUploadModal = ({
     >
       <Box
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 300,
-          height: 400,
-          bgcolor: "background.paper",
-          borderRadius: "2%",
-          boxShadow: 1,
+          position: "fixed",
+          inset: 0,
+          zIndex: 50,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          p: 2,
         }}
       >
+        {/* Modal content box */}
         <Box
           sx={{
+            position: "relative",
+            bgcolor: "common.white",
+            borderRadius: 4,
+            boxShadow: 24,
+            width: "100%",
+            maxWidth: 480,
+            mx: "auto",
+            transform: "scale(1)",
+            opacity: 1,
+            transition: "all 300ms",
             display: "flex",
             flexDirection: "column",
-            width: "100%",
-            height: "100%",
           }}
         >
+          {/* Header */}
           <Box
             sx={{
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
               alignItems: "center",
-              width: "100%",
-              height: "10%",
-              borderBottom: "1px solid #E0E0E0",
+              justifyContent: "space-between",
+              p: 3,
+              borderBottom: "1px solid",
+              borderColor: "grey.100",
             }}
           >
-            <Box
+            <Stack direction="row" spacing={1.5} alignItems="center">
+              <Box sx={{ p: 1, bgcolor: "blue.50", borderRadius: 2 }}>
+                <ImageIcon size={28} color="#2563eb" />
+              </Box>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, color: "grey.900" }}
+              >
+                Upload Image
+              </Typography>
+            </Stack>
+
+            <IconButton
+              onClick={() => setUploadImageModalOpen(false)}
+              disabled={isLoading}
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "90%",
-                height: "90%",
-                margin: "auto",
-                // border: "2px solid black",
+                p: 1,
+                borderRadius: 2,
+                color: "grey.500",
+                "&:hover": { bgcolor: "grey.100" },
+                "&.Mui-disabled": { opacity: 0.5, cursor: "not-allowed" },
               }}
             >
-              <Box>
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Upload Image
-                </Typography>
-              </Box>
-              <Box>
-                <IconButton
-                  aria-label="more"
-                  aria-controls="long-menu"
-                  aria-haspopup="true"
-                  onClick={() => setUploadImageModalOpen(false)}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-            </Box>
+              <X size={28} />
+            </IconButton>
           </Box>
-          <Box
-            sx={{
-              width: "100%",
-              height: "480px",
-            }}
-          >
-            <Box
-              sx={{
-                width: "92%",
-                height: "280px",
-                margin: "auto",
-                marginTop: "4%",
-                border: "2px dashed #7866E3",
-                borderRadius: "4%",
-              }}
-            >
-              {preview ? (
-                <>
-                  <img
-                    src={preview}
-                    style={{
-                      width: "100%",
-                      height: "98%",
-                      maxHeight: "98%",
-                      objectFit: "contain",
-                    }}
-                  />
-                  <IconButton
-                    onClick={handlePreviewImage}
-                    sx={{
-                      backgroundColor: "red",
-                      position: "absolute",
-                      width: "24px",
-                      height: "24px",
-                      top: {
-                        // md: "24%",
-                        lg: "28%",
-                        xl: "27%",
-                      },
-                      right: {
-                        lg: "6%",
-                        xl: "6%",
-                      },
-                      color: "white",
-                      "&:hover": {
-                        backgroundColor: "red",
-                      },
-                    }}
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </>
-              ) : (
+
+          {/* Content */}
+          <Box sx={{ p: 3 }}>
+            {preview ? (
+              <Box>
                 <Box
                   sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    margin: "auto",
-                    marginTop: "4%",
-                    width: "92%",
-                    height: "92%",
+                    position: "relative",
+                    overflow: "hidden",
+                    borderRadius: 3,
+                    border: "2px solid",
+                    borderColor: "grey.200",
+                    bgcolor: "grey.50",
                   }}
                 >
                   <Box
+                    component="img"
+                    src={preview}
+                    alt="Preview"
+                    sx={{ width: "100%", height: 256, objectFit: "contain" }}
+                  />
+                  <IconButton
+                    onClick={handleRemoveImage}
+                    disabled={isLoading}
                     sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "70%",
-                      height: "50px",
-                      margin: "auto",
-                      marginTop: "2%",
+                      position: "absolute",
+                      top: 12,
+                      right: 12,
+                      p: 1,
+                      bgcolor: "error.main",
+                      color: "white",
+                      borderRadius: "50%",
+                      boxShadow: 3,
+                      transition: "all 200ms",
+                      "&:hover": {
+                        bgcolor: "error.dark",
+                        transform: "scale(1.05)",
+                      },
+                      "&.Mui-disabled": {
+                        opacity: 0.5,
+                        cursor: "not-allowed",
+                      },
                     }}
                   >
-                    <Typography
-                      sx={{
-                        marginTop: "12%",
-                        fontSize: "40px",
-                        color: "#7462E2",
-                      }}
-                    >
-                      <FiUpload />
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "90%",
-                      height: "80px",
-                      margin: "auto",
-                      marginTop: "2%",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        fontSize: "20px",
-                        color: "black",
-                        fontWeight: "bolder",
-                      }}
-                    >
-                      Drop your image here
-                    </Typography>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <Box>
-                        <Typography
-                          sx={{
-                            fontSize: "20px",
-                            color: "black",
-                            fontWeight: "bolder",
-                          }}
-                        >
-                          or &nbsp;
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <input
-                          type="file"
-                          id="img-ipload"
-                          onChange={handleFileChange}
-                          disabled={isLoading}
-                          style={{ display: "none" }}
-                        />
-                        <label
-                          htmlFor="img-ipload"
-                          style={{
-                            cursor: "pointer",
-                            fontSize: "20px",
-                            color: "#FE834E",
-                            fontWeight: "bolder",
-                          }}
-                        >
-                          Browse
-                        </label>
-                      </Box>
-                    </Box>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "90%",
-                      height: "60px",
-                      margin: "auto",
-                      marginTop: "-8%",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        fontSize: "16px",
-                        color: "#656F87",
-                      }}
-                    >
-                      Supported Files: JPEG, PNG
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "16px",
-                        color: "#656F87",
-                      }}
-                    >
-                      Max Size: 5MB
-                    </Typography>
-                  </Box>
+                    <Trash2 size={16} />
+                  </IconButton>
                 </Box>
-              )}
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              width: "100%",
-              height: "20%",
-              borderTop: "1px solid #E0E0E0",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                marginTop: "4%",
-                // border: "2px solid black",
-              }}
-            >
-              <Box>
-                <Button
-                  onClick={handleUpload}
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  size="small"
-                  tabIndex={-1}
-                  startIcon={isLoading ? <SaveIcon /> : <CloudUploadIcon />}
-                >
-                  {isLoading ? "saving image ..." : "Upload Image"}
-                </Button>
+                <Box sx={{ mt: 2, textAlign: "center", color: "grey.600" }}>
+                  <Typography fontWeight={500}>{selectedFile?.name}</Typography>
+                  <Typography variant="body2">
+                    {((selectedFile?.size || 0) / 1024 / 1024).toFixed(2)} MB
+                  </Typography>
+                </Box>
               </Box>
+            ) : (
               <Box
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onClick={() => document.getElementById("file-input")?.click()}
                 sx={{
-                  marginLeft: "4%",
-                  marginRight: "4%",
+                  position: "relative",
+                  border: "2px dashed",
+                  borderRadius: 3,
+                  p: 6,
+                  textAlign: "center",
+                  cursor: "pointer",
+                  transition: "all 200ms",
+                  borderColor: isDragOver ? "blue.400" : "grey.300",
+                  bgcolor: isDragOver ? "blue.50" : "background.paper",
+                  "&:hover": {
+                    borderColor: "grey.400",
+                    bgcolor: "grey.50",
+                  },
                 }}
               >
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => setUploadImageModalOpen(false)}
-                  sx={{
-                    textTransform: "capitalize",
-                    color: "black",
-                  }}
-                >
-                  Close
-                </Button>
+                <input
+                  type="file"
+                  id="file-input"
+                  onChange={handleFileChange}
+                  disabled={isLoading}
+                  accept="image/*"
+                  hidden
+                />
+
+                <Stack spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      p: 2,
+                      borderRadius: "50%",
+                      bgcolor: isDragOver ? "blue.100" : "grey.100",
+                      display: "inline-flex",
+                    }}
+                  >
+                    <Upload
+                      size={32}
+                      color={isDragOver ? "#2563eb" : "#6b7280"}
+                    />
+                  </Box>
+                  <Box>
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: 600, color: "grey.900", mb: 1 }}
+                    >
+                      {isDragOver
+                        ? "Drop your image here"
+                        : "Drag & drop your image"}
+                    </Typography>
+                    <Typography sx={{ color: "grey.600" }}>
+                      or{" "}
+                      <Typography
+                        component="span"
+                        sx={{
+                          color: "blue.600",
+                          fontWeight: 500,
+                          "&:hover": { color: "blue.700" },
+                        }}
+                      >
+                        click to browse
+                      </Typography>
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      fontSize: 14,
+                      color: "grey.500",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Typography>Supported formats: JPEG, PNG, WebP</Typography>
+                    <Typography>Maximum size: 5MB</Typography>
+                  </Box>
+                </Stack>
               </Box>
-            </Box>
+            )}
+          </Box>
+
+          {/* Footer */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 1.5,
+              p: 3,
+              borderTop: "1px solid",
+              borderColor: "grey.100",
+            }}
+          >
+            <Button
+              onClick={() => setUploadImageModalOpen(false)}
+              disabled={isLoading}
+              sx={{
+                px: 2,
+                py: 1,
+                fontWeight: 500,
+                color: "grey.700",
+                borderRadius: 2,
+                "&:hover": { bgcolor: "grey.100" },
+                "&.Mui-disabled": { opacity: 0.5, cursor: "not-allowed" },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpload}
+              disabled={!selectedFile || isLoading}
+              variant="contained"
+              sx={{
+                px: 3,
+                py: 1,
+                fontWeight: 500,
+                borderRadius: 2,
+                bgcolor: selectedFile && !isLoading ? "blue.600" : "grey.300",
+                "&:hover": {
+                  bgcolor: selectedFile && !isLoading ? "blue.700" : "grey.300",
+                },
+                "&.Mui-disabled": { cursor: "not-allowed" },
+              }}
+              startIcon={
+                isLoading ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  <Upload size={16} />
+                )
+              }
+            >
+              {isLoading ? "Uploading..." : "Upload"}
+            </Button>
           </Box>
         </Box>
       </Box>

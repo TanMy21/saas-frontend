@@ -112,7 +112,6 @@ const QuestionTemplateImageUpload = ({
       onClose={() => setUploadImageModalOpen(false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-      // 🔥 Backdrop now matches Tailwind modal (dark + slight blur)
       sx={{
         "& .MuiBackdrop-root": {
           backgroundColor: "rgba(0,0,0,0.6)",
@@ -121,7 +120,6 @@ const QuestionTemplateImageUpload = ({
       }}
     >
       <Box
-        // 💳 Card container
         sx={{
           position: "absolute",
           top: "50%",
@@ -134,7 +132,7 @@ const QuestionTemplateImageUpload = ({
           overflow: "hidden",
         }}
       >
-        {/* 🧭 Header */}
+        {/* Header */}
         <Box
           sx={{
             display: "flex",
@@ -151,7 +149,9 @@ const QuestionTemplateImageUpload = ({
             >
               Upload Image
             </Typography>
-            <Typography sx={{ fontSize: 13, color: "#6B7280", mt: 0.5 }}>
+            <Typography
+              sx={{ fontSize: 13, color: "#6B7280", mt: 0.5, ml: 0.5 }}
+            >
               upload image to use as template background
             </Typography>
           </Box>
@@ -167,9 +167,8 @@ const QuestionTemplateImageUpload = ({
           </IconButton>
         </Box>
 
-        {/* 📤 Body */}
+        {/* Body */}
         <Box sx={{ p: 3 }}>
-          {/* If no preview yet, show dashed drop zone look (browse still triggers input) */}
           {!preview ? (
             <Box
               sx={{
@@ -185,7 +184,6 @@ const QuestionTemplateImageUpload = ({
                 },
               }}
             >
-              {/* Circular icon container */}
               <Box
                 sx={{
                   mx: "auto",
@@ -199,7 +197,6 @@ const QuestionTemplateImageUpload = ({
                   mb: 2,
                 }}
               >
-                {/* Keeping your FiUpload icon for consistency */}
                 <Typography sx={{ fontSize: 30, color: "#2563EB" }}>
                   <FiUpload />
                 </Typography>
@@ -212,16 +209,16 @@ const QuestionTemplateImageUpload = ({
               </Typography>
 
               <Typography sx={{ color: "#6B7280", mt: 0.5 }}>
-                or{" "}
-                {/* 🔗 Styled browse label triggers the hidden input (same behavior) */}
+                or
                 <label
                   htmlFor="img-ipload"
                   style={{
                     cursor: "pointer",
                     color: "#2563EB",
-                    textDecoration: "underline",
+                    textDecoration: "none",
                     textUnderlineOffset: 3,
                     fontWeight: 600,
+                    marginLeft: 6,
                   }}
                 >
                   browse files
@@ -234,7 +231,7 @@ const QuestionTemplateImageUpload = ({
                 <Typography>Maximum size: 5MB</Typography>
               </Box>
 
-              {/* Hidden input (unchanged behavior) */}
+              {/* file input */}
               <input
                 type="file"
                 id="img-ipload"
@@ -245,7 +242,6 @@ const QuestionTemplateImageUpload = ({
               />
             </Box>
           ) : (
-            // 🖼️ Preview state
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
               <Box
                 sx={{
@@ -260,7 +256,7 @@ const QuestionTemplateImageUpload = ({
                   src={preview}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
-                {/* ⏳ Loading overlay (visual only) */}
+
                 {isLoading && (
                   <Box
                     sx={{
@@ -290,7 +286,7 @@ const QuestionTemplateImageUpload = ({
                   </Box>
                 )}
 
-                {/* ❌ Remove preview button */}
+                {/* Remove preview button */}
                 <IconButton
                   onClick={handlePreviewImage}
                   sx={{
@@ -310,7 +306,7 @@ const QuestionTemplateImageUpload = ({
                 </IconButton>
               </Box>
 
-              {/* 📄 File info row */}
+              {/* File info */}
               {selectedFile && (
                 <Box
                   sx={{
@@ -367,7 +363,6 @@ const QuestionTemplateImageUpload = ({
                     </Box>
                   </Box>
 
-                  {/* Status text (driven by your existing isLoading flag) */}
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     {isLoading ? (
                       <Typography
@@ -389,7 +384,7 @@ const QuestionTemplateImageUpload = ({
           )}
         </Box>
 
-        {/* 🧯 Footer actions */}
+        {/* Footer actions */}
         <Box
           sx={{
             px: 3,
@@ -400,7 +395,6 @@ const QuestionTemplateImageUpload = ({
             gap: 1.5,
           }}
         >
-          {/* Secondary action: choose different (only shows if preview exists) */}
           {preview && (
             <Button
               onClick={handlePreviewImage}
@@ -422,7 +416,7 @@ const QuestionTemplateImageUpload = ({
             </Button>
           )}
 
-          {/* Primary: Upload */}
+          {/*  Upload */}
           <Button
             onClick={handleUpload}
             role={undefined}

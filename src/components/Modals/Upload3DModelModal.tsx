@@ -1,13 +1,7 @@
 import { useEffect } from "react";
 
 import Close from "@mui/icons-material/Close";
-import {
-  type BackdropProps,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-} from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 
 import { Modal3DModelProps } from "../../utils/types";
 
@@ -48,7 +42,7 @@ const Upload3DModelModal = ({
             backdropFilter: "blur(4px)",
             backgroundColor: "rgba(0,0,0,0.5)",
           },
-        } as BackdropProps,
+        },
       }}
       PaperProps={{
         sx: {

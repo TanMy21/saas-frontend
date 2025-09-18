@@ -44,7 +44,7 @@ const ImportQuestionsModal = ({
           width: 800,
           height: 680,
           bgcolor: "#FAFAFA",
-          borderRadius: "16px",
+          borderRadius: "20px",
           overflow: "hidden",
         }}
       >
@@ -63,7 +63,7 @@ const ImportQuestionsModal = ({
             sx={{
               display: "flex",
               width: "100%",
-              height: "6%",
+              height: "8%",
               justifyContent: "space-between",
               p: 1,
               // border: "2px solid red",
@@ -74,7 +74,7 @@ const ImportQuestionsModal = ({
               sx={{
                 fontSize: "20px",
                 fontWeight: "bold",
-                marginTop: "1%",
+                marginTop: "2%",
                 marginLeft: "2%",
               }}
             >
@@ -98,7 +98,7 @@ const ImportQuestionsModal = ({
                 aria-haspopup="true"
                 onClick={handleClose}
               >
-                <CloseIcon />
+                <CloseIcon sx={{ width: 28, height: 28 }} />
               </IconButton>
             </Box>
           </Box>

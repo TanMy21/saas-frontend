@@ -193,7 +193,7 @@ const DeleteWorkspaceModal = ({
                     "&:hover": { bgcolor: "#f3f4f6" },
                   }}
                 >
-                  <CloseIcon sx={{ width: 24, height: 24 }} />
+                  <CloseIcon sx={{ width: 28, height: 28 }} />
                 </IconButton>
               </Box>
             </Box>

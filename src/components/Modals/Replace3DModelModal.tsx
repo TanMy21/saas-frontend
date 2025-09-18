@@ -49,13 +49,11 @@ const Replace3DModelModal = ({
   const acceptedFormats = useMemo(() => [".glb"], []);
   const maxFileSize = 10 * 1024 * 1024; // 10MB
 
-  // RTK mutation
   const [
     replace3DModel,
     { isLoading, isSuccess, error: mutationError, reset },
   ] = useReplace3DModelMutation();
 
-  // ---- Helpers ----
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
@@ -75,12 +73,11 @@ const Replace3DModelModal = ({
     return null;
   };
 
-  // Simulate progress while the network call runs (fetch doesn't expose progress)
   const startSimulatedProgress = useCallback(() => {
     setProgress(0);
     let current = 0;
     const id = setInterval(() => {
-      current = Math.min(95, current + Math.random() * 12); // cap at 95% until server responds
+      current = Math.min(95, current + Math.random() * 12);
       setProgress(current);
     }, 180);
     return () => clearInterval(id);
@@ -94,20 +91,19 @@ const Replace3DModelModal = ({
     if (inputRef.current) {
       inputRef.current.value = "";
     }
-    reset(); // reset RTK mutation state
+    reset();
   }, [reset]);
 
-  // Close handler (blocked while uploading)
   const handleRequestClose = useCallback(() => {
-    if (isLoading) return; // prevent closing mid-upload
+    if (isLoading) return;
     resetLocal();
     onClose();
   }, [isLoading, onClose, resetLocal]);
 
-  // File select -> validate -> upload
   const handleFileSelect = useCallback(
     async (file: File) => {
       const validation = validateFile(file);
+
       if (validation) {
         setError(validation);
         setSelectedFile(null);
@@ -117,18 +113,16 @@ const Replace3DModelModal = ({
       setError(null);
       setSelectedFile(file);
 
-      // Build form data (⚠️ change 'file' key if your backend expects a different field)
       const formData = new FormData();
       formData.append("modelFile", file);
 
-      // simulate progress while awaiting the PUT
       const stop = startSimulatedProgress();
+
       try {
         await replace3DModel({ formData, questionID }).unwrap();
-        setProgress(100); // finish the bar
+        setProgress(100);
         refetchCanvas();
       } catch (e: any) {
-        // Surface server error
         setError(
           typeof e?.data === "string"
             ? e.data
@@ -142,7 +136,6 @@ const Replace3DModelModal = ({
     [questionID, replace3DModel, startSimulatedProgress]
   );
 
-  // ---- Drag & Drop ----
   const onDragOver = useCallback<DragEventHandler<HTMLDivElement>>((e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -207,6 +200,8 @@ const Replace3DModelModal = ({
           p: 2,
         },
         "& .MuiPaper-root": {
+          bgcolor: "#ffffff",
+          backgroundImage: "none",
           borderRadius: 4,
           boxShadow: 24,
         },
@@ -256,7 +251,7 @@ const Replace3DModelModal = ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                bgcolor: "success.light",
+                bgcolor: "#81C7841F",
                 color: "success.main",
               }}
             >
@@ -368,7 +363,7 @@ const Replace3DModelModal = ({
               </Box>
             ) : (
               // Idle (choose file)
-              <Stack spacing={3}>
+              <Stack spacing={3} sx={{ mt: 2 }}>
                 {/* Current file warning */}
                 <Paper
                   variant="outlined"
@@ -383,16 +378,19 @@ const Replace3DModelModal = ({
                     <ErrorIcon sx={{ color: "warning.main" }} />
                     <Box>
                       <Typography
-                        sx={{ fontWeight: 600, color: "warning.dark" }}
+                        sx={{ fontWeight: 600, color: "text.primary" }}
                       >
                         Current Model
                       </Typography>
                       <Typography
                         variant="body2"
-                        sx={{ color: "warning.main" }}
+                        sx={{ color: "text.secondary" }}
                       >
                         You are about to replace:{" "}
-                        <Box component="span" sx={{ fontWeight: 600 }}>
+                        <Box
+                          component="span"
+                          sx={{ fontWeight: 600, color: "text.primary" }}
+                        >
                           {currentFileName}
                         </Box>
                       </Typography>
@@ -458,7 +456,7 @@ const Replace3DModelModal = ({
                     variant="contained"
                     startIcon={<BackupIcon />}
                     component="label"
-                    sx={{ mt: 1 }}
+                    sx={{ mt: 1, borderRadius: 4 }}
                   >
                     Choose Replacement File
                     <input

@@ -115,7 +115,7 @@ const DeleteSurveyModal = ({
               borderRadius: 2,
               boxShadow: 12,
               border: "1px solid",
-              borderColor: "#f3f4f6", // gray-100
+              borderColor: "#f3f4f6", 
               overflow: "hidden",
               display: "flex",
               flexDirection: "column",
@@ -173,7 +173,7 @@ const DeleteSurveyModal = ({
                     "&:hover": { bgcolor: "#f3f4f6" },
                   }}
                 >
-                  <CloseIcon sx={{ width: 24, height: 24 }} />
+                  <CloseIcon sx={{ width: 28, height: 28 }} />
                 </IconButton>
               </Box>
             </Box>
