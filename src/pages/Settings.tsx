@@ -1,25 +1,40 @@
 import { useState } from "react";
 
-import { Box, Grid, Paper, Tab, Tabs } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 
 import { SettingsPageHeader } from "../components/DashBoardHeader";
 import ScrollbarStyle from "../components/ScrollbarStyle";
-import UpdateInfo from "../components/Settings/UpdateInfo";
-import UpdatePassword from "../components/Settings/UpdatePassword";
+import BillingTab from "../components/Settings/BillingsTab";
+import AccountSettingsGeneral from "../components/Settings/GeneralSettings";
+import GlassCard from "../components/Settings/GlassCard";
+// import NotificationsTab from "../components/Settings/NotificationsTab";
+import SaveBar from "../components/Settings/SaveBar";
+import SecurityTab from "../components/Settings/SecurityTab";
+import SidebarNav from "../components/Settings/SideBarNav";
 import { useAppTheme } from "../theme/useAppTheme";
+import { TabId } from "../utils/types";
 
 const Settings = () => {
-  const { scrollStyles, borders, background, palette } = useAppTheme();
-  const [tabIndex, setTabIndex] = useState(0);
+  const { scrollStyles } = useAppTheme();
+  const [activeTab, setActiveTab] = useState<TabId>("general");
 
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabIndex(newValue);
+  const [isLoading, setIsLoading] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    await new Promise((r) => setTimeout(r, 1000));
+    setIsLoading(false);
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 3000);
   };
+
+  const showSaveBar = activeTab === "notifications";
 
   return (
     <>
-      <ScrollbarStyle />
-      <Box sx={scrollStyles.custom1}>
+      {/* <ScrollbarStyle /> */}
+      <Box>
         <Grid container>
           <Grid
             item
@@ -47,89 +62,60 @@ const Settings = () => {
             }}
           >
             {/* content area */}
-            <Paper
-              elevation={4}
+            <Box
               sx={{
-                display: "flex",
-                margin: "auto",
-                flexDirection: "column",
-                alignItems: "center",
-                width: "64%",
-                height: "72%",
-                maxHeight: "80%",
-                borderRadius: "8px",
+                height: "100%",
+                width: "100%",
+                background: "transparent",
+                px: { xs: 2, sm: 3, lg: 6 },
+                py: 4,
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 2,
-                  margin: "auto",
-                  width: "96%",
-                  height: "100%",
-                  // border: "2px solid black",
-                }}
-              >
-                {/* sidebar */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "20%",
-                    height: "96%",
-                    p: 1,
-                    backgroundColor: background.paper,
-                    // border: "2px solid red",
-                  }}
-                >
-                  <Tabs
-                    orientation="vertical"
-                    value={tabIndex}
-                    onChange={handleTabChange}
-                    aria-label="User settings sections"
-                    sx={{
-                      ".MuiTab-root": {
-                        height: "24px",
-                        textTransform: "capitalize",
-                        borderRight: "none",
-                        color: palette.text.tabRoot,
-                      },
-                      ".Mui-selected": {
-                        backgroundColor: background.soft2,
-                        fontWeight: "bold",
-                        color: palette.text.tabSelected,
-                        borderRadius: "0 16px 16px 0",
-                      },
-                      ".MuiTabs-indicator": {
-                        left: 0,
-                        right: "auto",
-                        width: "4px",
-                        backgroundColor: background.soft3,
-                        borderRadius: "0 16px 16px 0",
-                      },
-                    }}
-                  >
-                    <Tab label="General" />
-                    <Tab label="Security" />
-                  </Tabs>
-                </Box>
-                {/* settings */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "80%",
-                    height: "100%",
-                    borderLeft: borders.strong,
-                    backgroundColor: background.paper,
-                  }}
-                >
-                  {tabIndex === 0 && <UpdateInfo />}
-                  {tabIndex === 1 && <UpdatePassword />}
-                </Box>
+              <Box sx={{ maxWidth: 1280, mx: "auto" }}>
+                <Grid container spacing={{ xs: 2, lg: 3 }}>
+                  {/* Sidebar */}
+                  <Grid item xs={12} lg={3}>
+                    <GlassCard>
+                      <SidebarNav
+                        activeTab={activeTab}
+                        onChange={setActiveTab}
+                      />
+                    </GlassCard>
+                  </Grid>
+
+                  {/* Main */}
+                  <Grid item xs={12} lg={9}>
+                    <GlassCard>
+                      {/* Tabs */}
+                      {activeTab === "general" && <AccountSettingsGeneral />}
+
+                      {activeTab === "security" && <SecurityTab />}
+
+                      {/* {activeTab === "notifications" && (
+                        <NotificationsTab
+                          value={notifications}
+                          onToggle={handleNotificationToggle}
+                        />
+                      )} */}
+
+                      {activeTab === "subscription" && <BillingTab />}
+
+                      {/* Save Bar  */}
+                      {showSaveBar && (
+                        <SaveBar
+                          loading={isLoading}
+                          success={saveSuccess}
+                          onSave={handleSave}
+                          onCancel={() => {
+                            // restore initial state here if needed
+                          }}
+                        />
+                      )}
+                    </GlassCard>
+                  </Grid>
+                </Grid>
               </Box>
-            </Paper>
+            </Box>
           </Box>
         </Grid>
       </Box>

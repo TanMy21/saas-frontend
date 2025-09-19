@@ -70,6 +70,21 @@ export interface BuilderSpaceProps {
   noElements: boolean;
 }
 
+export type AccountSettingsFormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
+export type NotificationSettings = {
+  emailNotifications: boolean;
+  pushNotifications: boolean;
+  marketingEmails: boolean;
+  securityAlerts: boolean;
+};
+
+export type TabId = "general" | "security" | "notifications" | "subscription";
+
 export interface BinaryResponseProps {
   questionID?: string;
   buttonTextYes?: string;
