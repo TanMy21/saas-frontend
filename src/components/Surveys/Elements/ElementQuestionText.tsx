@@ -22,6 +22,7 @@ import { OrderBadge } from "./OrderBadge";
 const ElementQuestionText = ({ display }: ElementProps) => {
   const { primary } = useAppTheme();
   const dispatch = useDispatch();
+
   const typographySettings = useSelector(
     (state: RootState) => state.elementTypography
   );
@@ -92,16 +93,16 @@ const ElementQuestionText = ({ display }: ElementProps) => {
 
   const rootRef = useRef<HTMLDivElement | null>(null);
 
-  const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const next = e.target.value;
-    dispatch(updateQuestionField({ key: "text", value: next }));
-    debouncedUpdate("text", next);
+  /** CHANGED EARLIER: accept HTML from contentEditable and store as-is (rich) */
+  const handleChangeTitle = (nextHTML: string) => {
+    dispatch(updateQuestionField({ key: "text", value: nextHTML }));
+    debouncedUpdate("text", nextHTML);
   };
 
-  const handleChangeDesc = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const next = e.target.value;
-    dispatch(updateQuestionField({ key: "description", value: next }));
-    debouncedUpdate("description", next);
+  /** CHANGED EARLIER: accept HTML from contentEditable and store as-is (rich) */
+  const handleChangeDesc = (nextHTML: string) => {
+    dispatch(updateQuestionField({ key: "description", value: nextHTML }));
+    debouncedUpdate("description", nextHTML);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -117,6 +118,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
     }
   };
 
+  // Save changes if user clicks outside
   useOutsideSave(Boolean(editingTarget !== "none"), rootRef, () => {
     clearTimers();
     saveTitleIfChanged();
@@ -132,7 +134,6 @@ const ElementQuestionText = ({ display }: ElementProps) => {
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        // border: "2px dashed orange",
       }}
     >
       <Box
@@ -142,9 +143,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
           justifyContent: "center",
           alignItems: "flex-end",
           margin: "auto",
-          // marginTop: "12%",
           width: display === "mobile" ? "92%" : "98%",
-          // border: "2px solid green",
         }}
       >
         {/* Title row */}
@@ -159,45 +158,51 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             justifyContent: "center",
             alignItems: "center",
             margin: "auto",
-            width: "100%",
+            width: "80%",
           }}
         >
-          <OrderBadge
-            show={isOrderable(type, order)}
-            sizeMD={circleSizeMD}
-            sizeXL={circleSizeXL}
-            color={primary.light}
-            fontSize={orderFontSize || 20}
-            value={order}
-          />
+          <Box
+            sx={{
+              display: "flex",
+              width: "8%",
+              height: "98%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <OrderBadge
+              show={isOrderable(type, order)}
+              sizeMD={circleSizeMD}
+              sizeXL={circleSizeXL}
+              color={primary.light}
+              fontSize={orderFontSize || 20}
+              value={order}
+            />
+          </Box>
 
           <EditableLine
             active={editingTarget === "title"}
             value={text}
             placeholder={undefined}
             onStartEdit={() => beginEdit("title")}
-            onChange={handleChangeTitle}
+            onChange={handleChangeTitle} // receives HTML
             onKeyDown={handleKeyDown}
             textFieldId="title-input"
             cursorWhenActive="text"
+            // ensure descendants inherit your typography
             textFieldSx={{
               backgroundColor: "transparent",
               fontStyle: "italic",
               width: "100%",
-              "& .MuiOutlinedInput-input": {
-                fontSize: textFontSize,
-                lineHeight: 1.4,
-                fontStyle: "italic",
-                fontFamily:
-                  "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-              },
-              "& .MuiInputBase-input": { fontSize: textFontSize },
               fontFamily:
                 "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": { border: "none" },
-                "&:hover fieldset": { border: "none" },
-                "&.Mui-focused fieldset": { border: "none" },
+              fontSize: textFontSize,
+              lineHeight: 1.4,
+              letterSpacing: "0.01em",
+              "& *": {
+                fontFamily: "inherit",
+                fontSize: "inherit",
+                lineHeight: "inherit",
               },
             }}
             typographySx={{
@@ -214,6 +219,11 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               hyphens: "auto",
               letterSpacing: "0.01em",
               wordSpacing: "0.05em",
+              "& *": {
+                fontFamily: "inherit",
+                fontSize: "inherit",
+                lineHeight: "inherit",
+              },
             }}
           />
         </Box>
@@ -229,7 +239,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-            width: "100%",
+            width: "80%",
             margin: display === "mobile" ? "8% auto" : "1% auto",
           }}
         >
@@ -238,16 +248,21 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             value={description}
             placeholder="Description (optional)"
             onStartEdit={() => beginEdit("description")}
-            onChange={handleChangeDesc}
+            onChange={handleChangeDesc} // receives HTML
             onKeyDown={handleKeyDown}
             textFieldId="description-input"
             cursorWhenActive="text"
             textFieldSx={{
               backgroundColor: "transparent",
-              "& .MuiInputBase-input": { fontSize: `${descFontSize}` },
-              "& fieldset": { border: "none" },
-              "&:hover fieldset": { border: "none" },
-              "&.Mui-focused fieldset": { border: "none" },
+              fontFamily:
+                "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+              fontSize: descFontSize,
+              lineHeight: 1.5,
+              "& *": {
+                fontFamily: "inherit",
+                fontSize: "inherit",
+                lineHeight: "inherit",
+              },
             }}
             typographySx={{
               fontStyle: "italic",
@@ -257,6 +272,11 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               width: "fit-content",
               fontSize: descFontSize,
               color: descriptionTextColor,
+              "& *": {
+                fontFamily: "inherit",
+                fontSize: "inherit",
+                lineHeight: "inherit",
+              },
             }}
           />
         </Box>

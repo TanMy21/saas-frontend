@@ -8,7 +8,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -22,8 +21,14 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
+import {
+  convertHtmlToPlainText,
+  htmlToPlainText,
+} from "../../../../utils/richTextUtils";
 import { textAndDescriptionSettingsSchema } from "../../../../utils/schema";
 import { QuestionSetting } from "../../../../utils/types";
+
+import { RichTextField } from "./RichTextField";
 
 const QuestionTextandDescriptionSettings = () => {
   const dispatch = useAppDispatch();
@@ -86,7 +91,7 @@ const QuestionTextandDescriptionSettings = () => {
         questionDescription: description,
       });
     }
-  }, [text, description, reset]);
+  }, [questionID, text, description, reset]);
 
   return (
     <Accordion
@@ -141,61 +146,30 @@ const QuestionTextandDescriptionSettings = () => {
               name="questionText"
               control={control}
               render={({ field }) => (
-                <TextField
-                  type="text"
-                  variant="standard"
+                <RichTextField
+                  key={questionID} // remount on record switch
+                  contentKey={`${questionID}|${field.value ?? ""}`} // reseed when RHF pushes value
+                  id="settings-question-text"
+                  value={field.value} // HTML in / out
                   placeholder="Enter your question"
-                  fullWidth
-                  InputProps={{
-                    disableUnderline: true,
-                  }}
-                  sx={{
-                    "& .MuiInputBase-input": {
-                      lineHeight: "1.5",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
-                      fontWeight: 500,
-                    },
-                    "& .MuiInputBase-root": {
-                      borderRadius: "8px",
-                      height: "42px",
-                      width: { md: "98%" },
-                      fontSize: "15px",
-                      backgroundColor: "#F3F4F6",
-                      fontWeight: 500,
-                      color: "#1F2937",
-                      px: 1.5,
-                      transition: "background-color 0.2s ease",
-                      "&:hover": {
-                        backgroundColor: "#E5E7EB",
-                      },
-                      "&.Mui-focused": {
-                        backgroundColor: "#E0E7FF",
-                      },
-                    },
-                    "& input::placeholder": {
-                      color: "#9CA3AF",
-                      opacity: 1,
-                      fontWeight: 400,
-                    },
-                    mb: 2,
-                  }}
-                  {...field}
-                  onChange={(event) => {
-                    const value = event.target.value;
-                    field.onChange(value);
+                  onChange={(nextHTML) => {
+                    field.onChange(nextHTML);
                     markFormTouched();
                     dispatch(
-                      updateQuestionField({ key: "text", value: value })
+                      updateQuestionField({ key: "text", value: nextHTML })
                     );
                     if (questionID) {
                       dispatch(
-                        updateElementField({ questionID, key: "text", value })
+                        updateElementField({
+                          questionID,
+                          key: "text",
+                          value: nextHTML,
+                        })
                       );
                     }
                   }}
+                  height={42}
+                  sx={{ mb: 2 }}
                 />
               )}
             />
@@ -210,58 +184,40 @@ const QuestionTextandDescriptionSettings = () => {
               name="questionDescription"
               control={control}
               render={({ field }) => (
-                <TextField
-                  type="text"
-                  variant="standard"
-                  multiline
-                  fullWidth
-                  maxRows={4}
-                  InputProps={{
-                    disableUnderline: true,
-                  }}
-                  sx={{
-                    "& .MuiInputBase-root": {
-                      borderRadius: "8px",
-                      height: "42px",
-                      width: { md: "98%" },
-                      fontSize: "15px",
-                      backgroundColor: "#F3F4F6",
-                      color: "#1F2937",
-                      px: 1.5,
-                      fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
-                      fontWeight: 500,
-                      transition: "background-color 0.2s ease",
-                      "&:hover": {
-                        backgroundColor: "#E5E7EB",
-                      },
-                      "&.Mui-focused": {
-                        backgroundColor: "#E0E7FF",
-                      },
-                    },
-                    "& input::placeholder": {
-                      color: "#9CA3AF",
-                      opacity: 1,
-                      fontWeight: 400,
-                    },
-                    "& .MuiInputBase-input": {
-                      lineHeight: "1.5",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    },
-                  }}
-                  {...field}
-                  value={
-                    field.value === "" ? "Description (optional)" : field.value
-                  }
-                  onChange={(event) => {
-                    const value = event.target.value;
-                    field.onChange(value);
+                <RichTextField
+                  key={`${questionID}-desc`} // remount on record switch
+                  contentKey={`${questionID}|${field.value ?? ""}`} // reseed on RHF change
+                  id="settings-question-desc"
+                  value={field.value} // HTML in / out
+                  placeholder="Description (optional)"
+                  onChange={(nextHTML) => {
+                    field.onChange(nextHTML);
                     markFormTouched();
                     dispatch(
-                      updateQuestionField({ key: "description", value: value })
+                      updateQuestionField({
+                        key: "description",
+                        value: nextHTML,
+                      })
                     );
+                    if (questionID) {
+                      dispatch(
+                        updateElementField({
+                          questionID,
+                          key: "description",
+                          value: nextHTML,
+                        })
+                      );
+                    }
                   }}
+                  height="auto"
+                  sx={{
+                    mb: 2,
+                    alignItems: "flex-start",
+                    py: 0.75,
+                    minHeight: 42,
+                  }}
+                  // If you want multiline Enter behavior here:
+                  // blockEnter={false}
                 />
               )}
             />

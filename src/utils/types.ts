@@ -374,13 +374,27 @@ export type EditableLineProps = {
   value?: string;
   placeholder?: string;
   onStartEdit: () => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (value: string) => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
   textFieldId: string;
   typographySx: any;
   textFieldSx: any;
   cursorWhenActive?: "text" | "pointer";
+  contentKey?: string | number;
 };
+
+export interface RichTextFieldProps {
+  value?: string | null;
+  onChange?: (html: string) => void;
+  placeholder?: string;
+  height?: number | string;
+  sx?: SxProps;
+  inputSx?: SxProps;
+  id?: string;
+  autoFocus?: boolean;
+    contentKey?: string | number;       
+  blockEnter?: boolean;              
+}
 
 export type ErrorFallbackProps = Readonly<{
   error: Error;

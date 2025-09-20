@@ -2,8 +2,6 @@ import { Box, Typography } from "@mui/material";
 
 import { OrderBadgeProps } from "../../../utils/types";
 
-
-
 export function OrderBadge({
   show,
   sizeMD,

@@ -5,6 +5,7 @@ import { Draggable } from "react-beautiful-dnd";
 import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
 import { elementIcons } from "../../../utils/elementsConfig";
+import { htmlToPlainText } from "../../../utils/richTextUtils";
 import { ElementListItemProps, IconMapping } from "../../../utils/types";
 
 import ElementDropDownMenu from "./ElementDropDownMenu";
@@ -177,7 +178,10 @@ const ElementsListItem = ({
                       </Typography>
                     )}
 
-                    <Tooltip title={element.text} placement="top">
+                    <Tooltip
+                      title={htmlToPlainText(element.text)}
+                      placement="top"
+                    >
                       <Typography
                         noWrap
                         sx={{
@@ -193,7 +197,7 @@ const ElementsListItem = ({
                           "&:hover": { cursor: "pointer" },
                         }}
                       >
-                        {element.text}
+                        {htmlToPlainText(element.text)}
                       </Typography>
                     </Tooltip>
                   </Box>

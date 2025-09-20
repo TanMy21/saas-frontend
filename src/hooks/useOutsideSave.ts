@@ -15,6 +15,7 @@ export function useOutsideSave(
     };
 
     document.addEventListener("pointerdown", onPointerDown, true);
-    return () => document.removeEventListener("pointerdown", onPointerDown, true);
+    return () =>
+      document.removeEventListener("pointerdown", onPointerDown, true);
   }, [active, rootRef, onSaveBoth]);
 }
