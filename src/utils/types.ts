@@ -369,19 +369,33 @@ export type OrderBadgeProps = {
   value?: number;
 };
 
-export type EditableLineProps = {
+export interface EditableLineProps {
   active: boolean;
   value?: string;
   placeholder?: string;
   onStartEdit: () => void;
   onChange?: (value: string) => void;
+  onFormatted?: (nextHTML: string) => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
   textFieldId: string;
   typographySx: any;
   textFieldSx: any;
   cursorWhenActive?: "text" | "pointer";
   contentKey?: string | number;
-};
+  showFormatBar?: boolean;
+}
+
+export type FormatTagType = "strong" | "em" | "u";
+
+export interface EditablePlainTextProps {
+  value: string;
+  placeholder?: string;
+  onChange?: (nextPlain: string) => void;
+  onEnter?: () => void;
+  id?: string;
+  sx?: any;
+  blockEnter?: boolean;
+}
 
 export interface RichTextFieldProps {
   value?: string | null;
@@ -392,8 +406,9 @@ export interface RichTextFieldProps {
   inputSx?: SxProps;
   id?: string;
   autoFocus?: boolean;
-    contentKey?: string | number;       
-  blockEnter?: boolean;              
+  contentKey?: string | number;
+  blockEnter?: boolean;
+  plainOnly?: boolean;
 }
 
 export type ErrorFallbackProps = Readonly<{

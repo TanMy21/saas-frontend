@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 
+import { normalizeHtml } from "../utils/richTextUtils";
 import { EditControllerParams, EditTarget } from "../utils/types";
-import { normalize } from "../utils/utils";
 
 export function useEditController({
   questionID,
@@ -21,8 +21,8 @@ export function useEditController({
     (target: EditTarget) => {
       if (target === "none") return;
       initialRef.current = {
-        title: normalize(text),
-        description: normalize(description),
+        title: normalizeHtml(text),
+        description: normalizeHtml(description),
       };
       setEditingTarget(target);
     },
@@ -31,15 +31,15 @@ export function useEditController({
 
   const saveTitleIfChanged = useCallback(() => {
     if (!questionID) return;
-    const next = normalize(text) || "Untitled";
-    const prev = normalize(initialRef.current.title);
+    const next = normalizeHtml(text) || "Untitled";
+    const prev = normalizeHtml(initialRef.current.title);
     if (next !== prev) updateElementText({ questionID, text: next });
   }, [questionID, text, updateElementText]);
 
   const saveDescriptionIfChanged = useCallback(() => {
     if (!questionID) return;
-    const next = normalize(description);
-    const prev = normalize(initialRef.current.description);
+    const next = normalizeHtml(description);
+    const prev = normalizeHtml(initialRef.current.description);
     if (next !== prev)
       updateElementDescription({ questionID, description: next });
   }, [questionID, description, updateElementDescription]);

@@ -6,7 +6,6 @@ import {
   getSelectionIn,
   insertPlainTextAtSelection,
   isEmptyHTML,
-  selectionFullyInsideTag,
   selectionHasTag,
   unwrapSelectionTag,
   wrapSelectionWithTag,
@@ -19,6 +18,7 @@ export function EditableLine({
   placeholder,
   onStartEdit,
   onChange,
+  onFormatted,
   onKeyDown,
   textFieldId,
   typographySx,
@@ -26,9 +26,9 @@ export function EditableLine({
   cursorWhenActive = "text",
   contentKey,
 }: EditableLineProps) {
-  const containerRef = useRef<HTMLDivElement>(null); // common root (view + edit)
-  const editableRef = useRef<HTMLDivElement>(null); // edit node
-  const displayRef = useRef<HTMLDivElement>(null); // view node
+  const containerRef = useRef<HTMLDivElement>(null);
+  const editableRef = useRef<HTMLDivElement>(null);
+  const displayRef = useRef<HTMLDivElement>(null);
   const lastContentKeyRef = useRef<EditableLineProps["contentKey"]>(undefined);
 
   const [html, setHtml] = useState<string>(value || "");
@@ -38,13 +38,12 @@ export function EditableLine({
     left: 0,
   });
 
-  // Keep state in sync with external value, but avoid clobbering while active
+  // Keep state in sync with external value
   useEffect(() => {
     if (!active) setHtml(value || "");
   }, [value, active]);
 
-  /** INIT CONTENT (IMPORTANT): when entering edit mode, seed DOM once.
-   * Do NOT keep re-setting innerHTML while typing, or caret will jump. */
+  /*Seed DOM once.Do NOT keep re-setting innerHTML while typing, or caret will jump. */
   useEffect(() => {
     if (active && editableRef.current) {
       editableRef.current.innerHTML = html || "";
@@ -62,7 +61,7 @@ export function EditableLine({
       });
       return () => cancelAnimationFrame(rAF);
     }
-  }, [active]); // deliberately not depending on `html` here
+  }, [active]);
 
   useEffect(() => {
     if (!editableRef.current) {
@@ -70,9 +69,8 @@ export function EditableLine({
       return;
     }
     if (contentKey !== lastContentKeyRef.current) {
-      // Use the latest prop `value` to re-seed the DOM
       editableRef.current.innerHTML = value ?? "";
-      // Place caret at end and hide pill
+      // Caret at end and hide pill
       const el = editableRef.current;
       const sel = window.getSelection();
       const range = document.createRange();
@@ -85,7 +83,7 @@ export function EditableLine({
     }
   }, [contentKey, value]);
 
-  /** Compute pill position relative to container (works in both modes) */
+  /*Pill position relative to container  */
   const updateBarPosition = useCallback(() => {
     const root = containerRef.current;
     if (!root) return;
@@ -103,7 +101,7 @@ export function EditableLine({
     });
   }, []);
 
-  /** Show/hide pill based on selection inside container (both modes) */
+  /* Show/hide pill based on selection inside container */
   const handleSelectionChange = useCallback(() => {
     const root = containerRef.current;
     if (!root) return;
@@ -113,9 +111,12 @@ export function EditableLine({
       setShowBar(false);
       return;
     }
+
+    if (!active) onStartEdit?.();
+
     updateBarPosition();
     setShowBar(true);
-  }, [updateBarPosition]);
+  }, [updateBarPosition, active, onStartEdit]);
 
   useEffect(() => {
     document.addEventListener("selectionchange", handleSelectionChange);
@@ -128,16 +129,16 @@ export function EditableLine({
     };
   }, [handleSelectionChange, updateBarPosition]);
 
-  /** Apply formatting (works in both modes) */
+  /* Apply formatting */
   const applyTag = (tagName: "strong" | "em" | "u") => {
     const root = containerRef.current;
     if (!root) return;
 
     if (selectionHasTag(root, tagName)) {
-      // Toggle OFF only this tag in the selection (keeps other formats)
+      // Toggle OFF
       unwrapSelectionTag(root, tagName);
     } else {
-      // Toggle ON for the whole selection
+      // Toggle ON
       wrapSelectionWithTag(root, tagName);
     }
 
@@ -148,10 +149,11 @@ export function EditableLine({
         : displayRef.current?.innerHTML) ?? html;
     setHtml(next);
     onChange?.(next);
+    queueMicrotask(() => onFormatted?.(next));
     updateBarPosition();
   };
 
-  /** Keyboard shortcuts — only in edit mode */
+  /* Keyboard shortcuts for formatting*/
   const onEditorKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     onKeyDown?.(e);
     if (!(e.ctrlKey || e.metaKey)) return;
@@ -168,15 +170,13 @@ export function EditableLine({
     }
   };
 
-  /** On input (edit mode): update state & emit, but DO NOT re-render innerHTML */
   const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
     const next = (e.currentTarget as HTMLDivElement).innerHTML;
     setHtml(next); // keep state for view mode
-    onChange?.(next); // bubble up to Redux
-    // React will NOT overwrite DOM because we are not using dangerouslySetInnerHTML here
+    onChange?.(next);
   };
 
-  /** View mode: selection vs click */
+  /* View mode: selection vs click */
   const handleViewMouseUp = useCallback(
     (_e: React.MouseEvent) => {
       if (active) return;
@@ -187,6 +187,7 @@ export function EditableLine({
       const hasSelection = !!ctx && !ctx.sel.isCollapsed;
 
       if (hasSelection) {
+        onStartEdit?.();
         updateBarPosition();
         setShowBar(true);
       } else {
@@ -244,7 +245,6 @@ export function EditableLine({
               fontSize: textFieldSx?.fontSize,
             },
           }}
-          // NOTE: no dangerouslySetInnerHTML while active (prevents caret jumps)
         />
       ) : (
         <Typography

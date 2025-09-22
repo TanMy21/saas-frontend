@@ -1,3 +1,5 @@
+import { FormatTagType } from "./types";
+
 export const isEmptyHTML = (html?: string | null) => {
   if (!html) return true;
   const stripped = html
@@ -8,7 +10,6 @@ export const isEmptyHTML = (html?: string | null) => {
   return stripped.length === 0;
 };
 
-/** --- NEW: Selection helpers (no execCommand). --- */
 export function getSelectionIn(root: HTMLElement) {
   const sel = window.getSelection();
   if (!sel || sel.rangeCount === 0) return null;
@@ -32,10 +33,8 @@ export function closestTag(node: Node, tagName: string, root: HTMLElement) {
   return null;
 }
 
-/** --- NEW: Strip a specific tag by replacing it with its children. --- */
 export function unwrapTag(el: HTMLElement, tagName: string) {
   const t = tagName.toUpperCase();
-  // Walk all descendants and unwrap matching tags
   const walker = document.createTreeWalker(el, NodeFilter.SHOW_ELEMENT, null);
   const toUnwrap: HTMLElement[] = [];
   let cur = walker.currentNode as HTMLElement | null;
@@ -66,38 +65,48 @@ export function unwrapTags(el: HTMLElement, tagNames: string[]) {
   });
 }
 
-/** --- NEW: Wrap the current selection contents with a given tag. --- */
 export function wrapSelectionWithTag(
   root: HTMLElement,
-  tagName: "strong" | "em" | "u"
+  tagName: FormatTagType
 ) {
   const ctx = getSelectionIn(root);
   if (!ctx) return;
   const { sel, range } = ctx;
   if (sel.isCollapsed) return;
 
-  // Extract current selection contents
-  const frag = range.cloneContents();
-
-  // Create wrapper and append extracted content
   const wrapper = document.createElement(tagName);
-  wrapper.appendChild(frag);
 
-  // Replace selection with the wrapped fragment
+  try {
+    range.surroundContents(wrapper);
+
+    sel.removeAllRanges();
+    const r = document.createRange();
+    r.selectNodeContents(wrapper);
+    sel.addRange(r);
+
+    wrapper.parentElement?.normalize();
+    return;
+  } catch (error) {
+    console.error(error);
+  }
+
+  const frag = range.cloneContents();
+  wrapper.appendChild(frag);
   range.deleteContents();
   range.insertNode(wrapper);
 
-  // Reselect wrapped content for good UX
+  const parent = wrapper.parentElement;
+  parent?.normalize();
+
   sel.removeAllRanges();
   const newRange = document.createRange();
   newRange.selectNodeContents(wrapper);
   sel.addRange(newRange);
 }
 
-/** --- NEW: Check whether both ends of selection are already inside the tag. --- */
 export function selectionFullyInsideTag(
   root: HTMLElement,
-  tagName: "strong" | "em" | "u"
+  tagName: FormatTagType
 ) {
   const ctx = getSelectionIn(root);
   if (!ctx) return false;
@@ -108,18 +117,15 @@ export function selectionFullyInsideTag(
   return startInside && endInside;
 }
 
-/** --- NEW: Insert plain text at caret/selection (used for paste). --- */
 export function insertPlainTextAtSelection(root: HTMLElement, text: string) {
   const ctx = getSelectionIn(root);
   if (!ctx) return;
   const { sel, range } = ctx;
 
-  // Remove selection if any, then insert text node
   range.deleteContents();
   const textNode = document.createTextNode(text);
   range.insertNode(textNode);
 
-  // Move caret to end of inserted text
   const newRange = document.createRange();
   newRange.setStartAfter(textNode);
   newRange.collapse(true);
@@ -131,32 +137,33 @@ export function htmlToPlainText(html?: string | null): string {
   if (!html) return "";
   const div = document.createElement("div");
   div.innerHTML = html;
-  // normalize whitespace a bit (optional)
+
   const text = div.textContent || "";
-  return text.replace(/\u00A0/g, " "); // &nbsp; → space
+  return text.replace(/\u00A0/g, " ");
 }
 
 export function convertHtmlToPlainText(html?: string | null): string {
   if (!html) return "";
-  // normalize line breaks before parsing
+
   const withBreaks = html
     .replace(/<br\s*\/?>/gi, "\n")
     .replace(/<\/(p|div|li|h[1-6])>/gi, "\n");
   const div = document.createElement("div");
   div.innerHTML = withBreaks;
   const text = div.textContent || "";
-  return text.replace(/\u00A0/g, " ").replace(/\n{3,}/g, "\n\n").trim();
+  return text
+    .replace(/\u00A0/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
-/** If you need to go the other way for plain-only inputs -> safe HTML (no formatting) */
 export function plainTextToSafeHtml(text: string): string {
-  // escape <,>,& then keep newlines if you allow multiline
   const escaped = text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
-  // if single-line inputs, just return escaped; if multiline, convert \n to <br>
-  return escaped; // or: escaped.replace(/\n/g, "<br>")
+
+  return escaped;
 }
 
 export function closestTagAny(
@@ -179,7 +186,6 @@ export function closestTagAny(
   return null;
 }
 
-/** After deleting the selection, ensure the insertion point is NOT inside a removable tag. */
 export function liftCollapsedRangeOutOfTags(
   range: Range,
   tags: string[],
@@ -188,7 +194,6 @@ export function liftCollapsedRangeOutOfTags(
   let container: Node = range.startContainer;
   let ancestor = closestTagAny(container, tags, root);
   while (ancestor && ancestor.parentNode) {
-    // Move the caret to AFTER that ancestor so insertion won't be re-wrapped by it
     range.setStartAfter(ancestor);
     range.collapse(true);
     container = range.startContainer;
@@ -205,7 +210,6 @@ export function unwrapSelectionTag(
   const { sel, range } = ctx;
   if (sel.isCollapsed) return;
 
-  // Canonical + aliases
   const tagsToUnwrap =
     tagName === "strong"
       ? ["strong", "b"]
@@ -213,23 +217,18 @@ export function unwrapSelectionTag(
         ? ["em", "i"]
         : ["u"];
 
-  // 1) Extract the selection (removes it from DOM and collapses range)
   const extracted = range.extractContents();
 
-  // 2) Clean the extracted fragment by unwrapping target tags
   const temp = document.createElement("div");
   temp.appendChild(extracted);
   unwrapTags(temp, tagsToUnwrap);
 
-  // 3) IMPORTANT: lift the collapsed caret OUT of any remaining target ancestors
   liftCollapsedRangeOutOfTags(range, tagsToUnwrap, root);
 
-  // 4) Reinsert cleaned content at the (now safe) insertion point
   const cleanedFrag = document.createDocumentFragment();
   while (temp.firstChild) cleanedFrag.appendChild(temp.firstChild);
   range.insertNode(cleanedFrag);
 
-  // Leave selection collapsed at end of inserted content (optional to restore selection)
   sel.removeAllRanges();
 }
 
@@ -239,9 +238,8 @@ export function selectionHasTag(
 ) {
   const ctx = getSelectionIn(root);
   if (!ctx) return false;
-  const { sel, range } = ctx;
+  const { range } = ctx;
 
-  // Check ancestors at boundaries
   const tags =
     tagName === "strong"
       ? ["strong", "b"]
@@ -253,9 +251,62 @@ export function selectionHasTag(
   const endInside = closestTagAny(range.endContainer, tags, root);
   if (startInside || endInside) return true;
 
-  // Also check the selected subtree (e.g. selection spans multiple nodes)
   const frag = range.cloneContents();
   const tmp = document.createElement("div");
   tmp.appendChild(frag);
   return !!tmp.querySelector(tags.join(","));
 }
+
+export function rewriteHtmlTextPreserveInlineTags(
+  oldHtml: string,
+  newPlain: string
+): string {
+  const normalized = (newPlain ?? "").replace(/\u00A0/g, " ");
+  const host = document.createElement("div");
+  host.innerHTML = oldHtml || "";
+
+  const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT, null);
+  const nodes: Text[] = [];
+  let node = walker.nextNode();
+  while (node) {
+    nodes.push(node as Text);
+    node = walker.nextNode();
+  }
+
+  if (nodes.length === 0) {
+    host.textContent = normalized;
+    return host.innerHTML;
+  }
+
+  let cursor = 0;
+  const total = normalized.length;
+
+  nodes.forEach((t, i) => {
+    if (cursor >= total) {
+      t.textContent = "";
+      return;
+    }
+    const isLast = i === nodes.length - 1;
+    if (isLast) {
+      t.textContent = normalized.slice(cursor);
+      cursor = total;
+    } else {
+      const keep = Math.min(t.textContent?.length ?? 0, total - cursor);
+      t.textContent = normalized.slice(cursor, cursor + keep);
+      cursor += keep;
+    }
+  });
+
+  if (cursor < total) {
+    const last = nodes[nodes.length - 1];
+    last.textContent = (last.textContent || "") + normalized.slice(cursor);
+  }
+
+  return host.innerHTML;
+}
+
+export const normalizeHtml = (s?: string | null) =>
+  (s ?? "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();

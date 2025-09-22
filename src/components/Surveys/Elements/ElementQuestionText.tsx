@@ -93,13 +93,13 @@ const ElementQuestionText = ({ display }: ElementProps) => {
 
   const rootRef = useRef<HTMLDivElement | null>(null);
 
-  /** CHANGED EARLIER: accept HTML from contentEditable and store as-is (rich) */
+  /* HTML from contentEditable and store as-is (rich) */
   const handleChangeTitle = (nextHTML: string) => {
     dispatch(updateQuestionField({ key: "text", value: nextHTML }));
     debouncedUpdate("text", nextHTML);
   };
 
-  /** CHANGED EARLIER: accept HTML from contentEditable and store as-is (rich) */
+  /* HTML from contentEditable and store as-is (rich) */
   const handleChangeDesc = (nextHTML: string) => {
     dispatch(updateQuestionField({ key: "description", value: nextHTML }));
     debouncedUpdate("description", nextHTML);
@@ -185,11 +185,13 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             value={text}
             placeholder={undefined}
             onStartEdit={() => beginEdit("title")}
-            onChange={handleChangeTitle} // receives HTML
+            onChange={handleChangeTitle}
+            onFormatted={() => {
+              saveTitleIfChanged();
+            }}
             onKeyDown={handleKeyDown}
             textFieldId="title-input"
             cursorWhenActive="text"
-            // ensure descendants inherit your typography
             textFieldSx={{
               backgroundColor: "transparent",
               fontStyle: "italic",
@@ -248,7 +250,10 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             value={description}
             placeholder="Description (optional)"
             onStartEdit={() => beginEdit("description")}
-            onChange={handleChangeDesc} // receives HTML
+            onChange={handleChangeDesc}
+            onFormatted={() => {
+              saveDescriptionIfChanged();
+            }}
             onKeyDown={handleKeyDown}
             textFieldId="description-input"
             cursorWhenActive="text"

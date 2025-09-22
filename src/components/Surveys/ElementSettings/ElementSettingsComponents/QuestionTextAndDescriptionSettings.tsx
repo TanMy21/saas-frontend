@@ -22,8 +22,8 @@ import {
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
 import {
-  convertHtmlToPlainText,
   htmlToPlainText,
+  rewriteHtmlTextPreserveInlineTags,
 } from "../../../../utils/richTextUtils";
 import { textAndDescriptionSettingsSchema } from "../../../../utils/schema";
 import { QuestionSetting } from "../../../../utils/types";
@@ -147,23 +147,26 @@ const QuestionTextandDescriptionSettings = () => {
               control={control}
               render={({ field }) => (
                 <RichTextField
-                  key={questionID} // remount on record switch
-                  contentKey={`${questionID}|${field.value ?? ""}`} // reseed when RHF pushes value
+                  key={questionID}
                   id="settings-question-text"
-                  value={field.value} // HTML in / out
+                  value={htmlToPlainText(field.value)}
                   placeholder="Enter your question"
-                  onChange={(nextHTML) => {
-                    field.onChange(nextHTML);
+                  onChange={(nextPlain) => {
+                    const mergedHtml = rewriteHtmlTextPreserveInlineTags(
+                      field.value ?? "",
+                      nextPlain
+                    );
+                    field.onChange(mergedHtml); // RHF value = HTML
                     markFormTouched();
                     dispatch(
-                      updateQuestionField({ key: "text", value: nextHTML })
+                      updateQuestionField({ key: "text", value: mergedHtml })
                     );
                     if (questionID) {
                       dispatch(
                         updateElementField({
                           questionID,
                           key: "text",
-                          value: nextHTML,
+                          value: mergedHtml,
                         })
                       );
                     }
@@ -185,18 +188,21 @@ const QuestionTextandDescriptionSettings = () => {
               control={control}
               render={({ field }) => (
                 <RichTextField
-                  key={`${questionID}-desc`} // remount on record switch
-                  contentKey={`${questionID}|${field.value ?? ""}`} // reseed on RHF change
+                  key={`${questionID}-desc`}
                   id="settings-question-desc"
-                  value={field.value} // HTML in / out
+                  value={htmlToPlainText(field.value)}
                   placeholder="Description (optional)"
-                  onChange={(nextHTML) => {
-                    field.onChange(nextHTML);
+                  onChange={(nextPlain) => {
+                    const mergedHtml = rewriteHtmlTextPreserveInlineTags(
+                      field.value ?? "",
+                      nextPlain
+                    );
+                    field.onChange(mergedHtml);
                     markFormTouched();
                     dispatch(
                       updateQuestionField({
                         key: "description",
-                        value: nextHTML,
+                        value: mergedHtml,
                       })
                     );
                     if (questionID) {
@@ -204,7 +210,7 @@ const QuestionTextandDescriptionSettings = () => {
                         updateElementField({
                           questionID,
                           key: "description",
-                          value: nextHTML,
+                          value: mergedHtml,
                         })
                       );
                     }
@@ -216,8 +222,6 @@ const QuestionTextandDescriptionSettings = () => {
                     py: 0.75,
                     minHeight: 42,
                   }}
-                  // If you want multiline Enter behavior here:
-                  // blockEnter={false}
                 />
               )}
             />
