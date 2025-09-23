@@ -46,7 +46,10 @@ const SurveyBuilderHeaderTabs = ({
       value={tabValue}
       centered
       onChange={handleScreenChange}
-      sx={tabStyles.base}
+      sx={{
+        ...tabStyles.base,
+        marginLeft: { md: "-12%", xl: "0%" },
+      }}
     >
       <Tab
         icon={<BorderColorIcon sx={{ fontSize: 18 }} />}

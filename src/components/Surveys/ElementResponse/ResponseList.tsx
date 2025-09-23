@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { Box, Button } from "@mui/material";
+import { Box, IconButton, TextField, Typography } from "@mui/material";
 import {
   DragDropContext,
   Draggable,
@@ -15,8 +15,8 @@ import {
   useGetOptionsOfQuestionQuery,
   useUpdateOptionOrderMutation,
 } from "../../../app/slices/optionApiSlice";
-import { ErrorData, OptionType, ResponseListProps } from "../../../utils/types";
-import { generateOptionLabel } from "../../../utils/utils";
+import { OptionType, ResponseListProps } from "../../../utils/types";
+import { MAX_OPTIONS } from "../../../utils/utils";
 
 import ResponseListItem from "./ResponseListItem";
 
@@ -34,25 +34,50 @@ const ResponseList = ({
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
   const [updateOptionOrder] = useUpdateOptionOrderMutation();
 
-  const addResponse = async () => {
-    const order = localOptions ? localOptions.length + 1 : 1;
+  // ---- minimal "text add" input (blends with parent) ----
+  const [inputValue, setInputValue] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // auto-resize the multiline input
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [inputValue]);
+
+  // Always send options as an array (even if single line)
+  const handleAddOptions = async () => {
+    const lines = inputValue
+      .split("\n")
+      .map((l) => l.trim())
+      .filter(Boolean);
+
+    if (lines.length === 0) return;
+
+    const available = MAX_OPTIONS - (localOptions?.length ?? 0);
+    if (available <= 0) {
+      toast.info("Limit reached (10 options).");
+      return;
+    }
+
+    const batch = lines
+      .slice(0, available)
+      .map((text) => ({ text, value: text }));
 
     try {
-      if ((localOptions?.length ?? 0) < 10) {
-        const label = generateOptionLabel(localOptions?.length ?? 0, qType!);
-
-        await createNewOption({
-          questionID: qID,
-          text: `${optionText} ${label}`,
-          value: `${optionText} ${label}`,
-          order,
-        }).unwrap();
+      await createNewOption({ questionID: qID, options: batch }).unwrap();
+      setInputValue("");
+      if (lines.length > available) {
+        toast.info(`Only ${available} option(s) added (limit reached).`);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("Add options error:", err);
+      toast.error("Failed to add options.");
     }
   };
 
+  // DnD reorder (unchanged)
   const handleDragEnd = async (result: DropResult) => {
     const { source, destination } = result;
     if (!destination || source.index === destination.index) return;
@@ -61,7 +86,6 @@ const ResponseList = ({
     const [moved] = reordered.splice(source.index, 1);
     reordered.splice(destination.index, 0, moved);
 
-    // Update order locally
     const reorderedWithOrder = reordered.map((option, idx) => ({
       ...option,
       order: idx + 1,
@@ -71,30 +95,28 @@ const ResponseList = ({
 
     await updateOptionOrder({ options: reorderedWithOrder })
       .unwrap()
-      .then()
       .catch((err) => console.error("Order update error:", err));
   };
 
+  // sync RTK → local
   useEffect(() => {
     setLocalOptions(options);
   }, [options]);
 
+  // existing error surfacing
   useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
+    if (!isError) return;
+    const errData: any = error;
+    if (Array.isArray(errData?.data?.error)) {
+      errData.data.error.forEach((el: any) =>
+        toast.error(el.message, { position: "top-right" })
+      );
+    } else if (errData?.data?.message) {
+      toast.error(errData.data.message, { position: "top-right" });
+    } else {
+      toast.error("Something went wrong.", { position: "top-right" });
     }
-  }, [isError, error, options]);
+  }, [isError, error]);
 
   return (
     <Box
@@ -103,7 +125,6 @@ const ResponseList = ({
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        // border: "2px dashed red",
       }}
     >
       <Box
@@ -113,13 +134,12 @@ const ResponseList = ({
           justifyContent: "center",
           alignItems: "center",
           width: display === "mobile" ? "100%" : "80%",
-          // height: "100%",
           margin: "auto",
           padding: display === "mobile" ? 0 : 2,
           gap: 2,
-          // border: "2px solid green",
         }}
       >
+        {/* LIST */}
         <Box
           sx={{
             display: "flex",
@@ -127,9 +147,7 @@ const ResponseList = ({
             alignItems: "center",
             margin: "0 auto",
             width: display === "mobile" ? "92%" : "100%",
-            // height: "100%",
             padding: 1,
-            // border: "2px solid purple",
           }}
         >
           <DragDropContext onDragEnd={handleDragEnd}>
@@ -142,9 +160,7 @@ const ResponseList = ({
                     display: "flex",
                     flexDirection: "column",
                     width: display === "mobile" ? "92%" : "80%",
-                    // height: "100%",
                     gap: 2,
-                    // border: "2px solid red",
                   }}
                 >
                   {localOptions?.map((option, index) => (
@@ -154,20 +170,31 @@ const ResponseList = ({
                       index={index}
                     >
                       {(provided) => (
-                        // <Box
-                        //   ref={provided.innerRef}
-                        //   {...provided.draggableProps}
-                        //   {...provided.dragHandleProps}
-                        //   sx={{ border: "2px solid blue" }}
-                        // >
-                        <ResponseListItem
-                          key={option.optionID}
-                          qType={qType}
-                          response={option}
-                          index={index}
-                          display={display}
-                        />
-                        // </Box>
+                        <Box
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          sx={{
+                            outline: "none",
+                            border: "none",
+                            "&:focus": {
+                              outline: "none",
+                              border: "none",
+                            },
+                            "&:focus-visible": {
+                              outline: "none",
+                              border: "none",
+                            },
+                          }}
+                        >
+                          <ResponseListItem
+                            key={option.optionID}
+                            qType={qType}
+                            response={option}
+                            index={index}
+                            display={display}
+                          />
+                        </Box>
                       )}
                     </Draggable>
                   ))}
@@ -177,6 +204,8 @@ const ResponseList = ({
             </Droppable>
           </DragDropContext>
         </Box>
+
+        {/* TEXT ADD (blends into parent; no borders/extra styles) */}
         <Box
           sx={{
             display: "flex",
@@ -184,54 +213,83 @@ const ResponseList = ({
             alignItems: "center",
             margin: "0 auto",
             width: display === "mobile" ? "92%" : "100%",
-            // height: "100%",
             padding: 1,
-            // border: "2px solid purple",
           }}
         >
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
+              position: "relative",
               width: display === "mobile" ? "92%" : "80%",
-              height: "100%",
-              gap: 2,
-              margin: "1% auto",
-              marginBottom: "12%",
-              // border: "2px solid blue",
+              // no border, bg, or shadow to blend with parent
+              px: 0,
+              pt: 0.5,
+              pb: 0.5,
             }}
           >
-            <Button
-              onClick={addResponse}
-              variant="outlined"
-              disabled={(options?.length ?? 0) >= 10}
-              startIcon={<MdAdd fontSize={"24px"} />}
+            <TextField
+              multiline
+              minRows={1}
+              inputRef={textareaRef}
+              placeholder="Type an option, press Enter for another…"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              disabled={(localOptions?.length ?? 0) >= MAX_OPTIONS}
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+                sx: {
+                  bgcolor: "transparent",
+                  lineHeight: 1.6,
+                  fontSize: 16,
+                  color: "inherit", // inherit to blend
+                  px: 0, // remove paddings to blend
+                },
+              }}
               sx={{
-                mt: 4,
-                py: 1.5,
-                borderRadius: 4,
-                border: "1px solid #E2E8F0",
-                width: display === "mobile" ? "92%" : "60%",
-                color: "#626B77",
-                fontWeight: "bold",
-                backgroundColor: "#f8f9fc",
-                justifyContent: "center",
-                textTransform: "none",
-                margin: "auto",
-                boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
-                // ml: display === "mobile" ? 0 : 1,
-                "&:hover": {
-                  color: "#626B77",
-                  border: "1px solid #E2E8F0",
-                  backgroundColor: "#f8f9fc",
-                  boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
+                width: "100%",
+                "& .MuiInputBase-root": {
+                  bgcolor: "transparent",
+                },
+              }}
+            />
+
+            {/* Only styled element: Add icon button */}
+            <IconButton
+              onClick={handleAddOptions}
+              disabled={
+                (localOptions?.length ?? 0) >= MAX_OPTIONS ||
+                inputValue.trim() === ""
+              }
+              aria-label="Add options"
+              sx={{
+                position: "absolute",
+                right: 0,
+                bottom: -6,
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                bgcolor: "#4F46E5",
+                color: "white",
+                boxShadow: "0 6px 16px rgba(79,70,229,0.25)",
+                "&:hover": { bgcolor: "#4338CA" },
+                "&.Mui-disabled": {
+                  bgcolor: "#CBD5E1",
+                  color: "white",
                 },
               }}
             >
-              Add new {optionText}
-            </Button>
+              <MdAdd size={20} />
+            </IconButton>
+          </Box>
+
+          {/* Count line */}
+          <Box sx={{ width: display === "mobile" ? "92%" : "80%", mt: "2%" }}>
+            <Typography
+              variant="body2"
+              sx={{ color: "#64748B", textAlign: "right" }}
+            >
+              {localOptions?.length ?? 0}/{MAX_OPTIONS} options
+            </Typography>
           </Box>
         </Box>
       </Box>

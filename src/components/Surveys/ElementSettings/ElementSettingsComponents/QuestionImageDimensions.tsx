@@ -36,7 +36,7 @@ const QuestionImageDimensions = () => {
     useForm<QuestionImageDimensionsFormProps>({
       resolver: zodResolver(questionImageSettingsSchema),
       defaultValues: {
-        questionImageHeight: questionImageHeight ?? 250,
+        questionImageHeight: questionImageHeight ?? 300,
         questionImageWidth: questionImageWidth ?? 200,
       },
     });
@@ -220,7 +220,7 @@ const QuestionImageDimensions = () => {
                     markFormTouched();
                     dispatch(setImageHeight(value));
                   }}
-                  inputProps={{ min: 120, max: 240 }}
+                  inputProps={{ min: 120, max: 300 }}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment
@@ -267,7 +267,7 @@ const QuestionImageDimensions = () => {
               render={({ field }) => (
                 <Slider
                   min={120}
-                  max={240}
+                  max={300}
                   value={field.value}
                   onChange={(_, val) => {
                     const numericValue = Array.isArray(val) ? val[0] : val;

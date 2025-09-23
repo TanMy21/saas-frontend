@@ -9,7 +9,6 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   Box,
   Button,
-  Container,
   Divider,
   IconButton,
   InputAdornment,
@@ -28,9 +27,9 @@ import {
   useLoginMutation,
 } from "../app/slices/authApiSlice";
 import { logOut, setCredentials } from "../app/slices/authSlice";
+import SessionExpiredToast from "../components/alert/SessionExpiredToast";
 import FormErrors from "../components/FormErrors";
 import LogoLoader from "../components/Loaders/LogoLoader";
-import SessionExpiredToast from "../components/alert/SessionExpiredToast";
 import usePersist from "../hooks/persist";
 import { useAppTheme } from "../theme/useAppTheme";
 import { loginSchema } from "../utils/schema";
@@ -43,7 +42,7 @@ const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //eslint-disable-next-line
-  const [persist, setPersist] = usePersist();
+  const [_persist, setPersist] = usePersist();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [openToast, setOpenToast] = useState<boolean>(true);
   // const [googleAuthClicked, setGoogleAuthClicked] = useState(false);
@@ -203,10 +202,15 @@ const Signin = () => {
   }
 
   return (
-    <Container
+    <Box
       component="main"
-      maxWidth="xl"
-      sx={{ overflowY: "hidden", overflowX: "hidden" }}
+      sx={{
+        width: "100%",
+        overflowY: "hidden",
+        overflowX: "hidden",
+        background:
+          "radial-gradient(125% 125% at 50% 10%, #fff 40%, #0074EB 100%)",
+      }}
     >
       <Box
         sx={{
@@ -426,7 +430,7 @@ const Signin = () => {
           </Paper>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
 

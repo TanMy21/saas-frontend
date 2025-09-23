@@ -125,3 +125,5 @@ export const EDGE_OPTIONS: EdgeStyle[] = [
   "smoothstep",
   "bezier",
 ];
+
+export const MAX_OPTIONS = 10;

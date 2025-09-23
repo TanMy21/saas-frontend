@@ -69,27 +69,22 @@ const SurveyBuilderHeader = ({ survey }: SurveyBuilderHeaderProps) => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: "row",
             alignItems: "center",
-            gap: "2%",
+            justifyContent: "space-between",
             margin: "auto",
             width: "96%",
             height: "92%",
             // border: "2px solid black",
           }}
         >
-          {/* ------------------- workspace name and survey title -------------------- */}
+          {/* -------------------   Workspace name and survey title ------------------- */}
+
           <Box
             sx={{
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-start",
               alignItems: "center",
-              top: "0px",
-              marginTop: "0px",
-              marginLeft: "-2%",
-              width: "28%",
-              height: "100%",
+              justifyContent: "flex-start",
+              flex: 1,
               // border: "2px solid red",
             }}
           >
@@ -99,18 +94,16 @@ const SurveyBuilderHeader = ({ survey }: SurveyBuilderHeaderProps) => {
               workspaceName={workspace?.name}
             />
           </Box>
-          {/* ------------------- Tabs ----------------------------------------------- */}
+
+          {/* -------------------   Tabs ------------------------------------------- */}
+
           <Box
             id="survey-builder-tabs"
             sx={{
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-end",
               alignItems: "center",
-              top: "0px",
-              marginTop: "0px",
-              width: {md:"35%",xl:"32%"},
-              height: "100%",
+              justifyContent: "center",
+              flex: 1,
               // border: "2px solid green",
             }}
           >
@@ -123,17 +116,15 @@ const SurveyBuilderHeader = ({ survey }: SurveyBuilderHeaderProps) => {
               workspaceName={workspace?.name}
             />
           </Box>
-          {/* ------------------- Header Icon ---------------------------------------- */}
+
+          {/* -------------------  Header icon and publish button ------------------- */}
+
           <Box
             sx={{
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-end",
               alignItems: "center",
-              top: "0px",
-              marginTop: "0px",
-              width: "32%",
-              height: "100%",
+              justifyContent: "flex-end",
+              flex: 1,
               // border: "2px solid orange",
             }}
           >

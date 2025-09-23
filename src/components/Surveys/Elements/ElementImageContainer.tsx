@@ -33,7 +33,7 @@ const ElementImageContainer = () => {
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: "250px",
+        height: "340px",
         margin: "0 auto",
         mb: 5,
         // border: "2px solid red",

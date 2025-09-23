@@ -12,7 +12,7 @@ const TextElement = ({ display, qImage }: ElementProps) => {
   if (display === "mobile") {
     questionMarginTop = qImage ? "24%" : "52%";
   } else {
-    questionMarginTop = qImage ? "8%" : "20%";
+    questionMarginTop = qImage ? "-5%" : "20%";
   }
   return (
     <Box
@@ -29,6 +29,24 @@ const TextElement = ({ display, qImage }: ElementProps) => {
         gap: 2,
       }}
     >
+      {/* Image container */}
+      {qImage && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            px: 2,
+            py: 1,
+            maxHeight: "360px",
+            marginBottom: { xl: 1 },
+            marginTop: { xl: "8%" },
+          }}
+        >
+          <ElementImageContainer />
+        </Box>
+      )}
       {/* question section */}
       <Box
         sx={{
@@ -46,23 +64,6 @@ const TextElement = ({ display, qImage }: ElementProps) => {
       >
         <ElementQuestionText display={display} />
       </Box>
-      {/* Image container */}
-      {qImage && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            px: 2,
-            py: 1,
-            maxHeight: "280px",
-            marginBottom: { xl: 3 },
-          }}
-        >
-          <ElementImageContainer />
-        </Box>
-      )}
       <Box
         sx={{
           display: "flex",
