@@ -6,6 +6,7 @@ import { RootState } from "../../app/store";
 import { useAppSelector } from "../../app/typedReduxHooks";
 import { elementComponents } from "../../utils/elementsConfig";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
+import DevicePreview from "../DevicePreview";
 
 import ElementBackgroundPreferencesButtons from "./ElementBackgroundPreferencesButtons";
 import ElementBackgroundPreferencesRemoveButtons from "./ElementBackgroundPreferencesRemoveButtons";
@@ -65,51 +66,53 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
         },
       }}
     >
-      {questionType !== "THREE_D" && (
-        <>
-          <ElementBackgroundPreferencesButtons
-            questionID={question?.questionID!}
-            colorAnchorEl={colorAnchorEl}
-            setColorAnchorEl={setColorAnchorEl}
-          />
+      <DevicePreview display={display}>
+        {questionType !== "THREE_D" && (
+          <>
+            <ElementBackgroundPreferencesButtons
+              questionID={question?.questionID!}
+              colorAnchorEl={colorAnchorEl}
+              setColorAnchorEl={setColorAnchorEl}
+            />
 
-          <ElementBackgroundPreferencesRemoveButtons
-            questionID={question?.questionID!}
-            templateImage={templateImage!}
-            questionBackgroundColor={
-              question?.questionPreferences?.questionBackgroundColor!
-            }
-          />
+            <ElementBackgroundPreferencesRemoveButtons
+              questionID={question?.questionID!}
+              templateImage={templateImage!}
+              questionBackgroundColor={
+                question?.questionPreferences?.questionBackgroundColor!
+              }
+            />
 
-          <QuestionBackgroundColor
-            questionID={question?.questionID!}
-            colorAnchorEl={colorAnchorEl}
-            setColorAnchorEl={setColorAnchorEl}
-          />
-        </>
-      )}
-      <Box
-        sx={{
-          margin: "auto",
-          width: "96%",
-          // height: "100%",
-        }}
-      >
-        {/* Element view */}
-        {question?.type && (
-          <QuestionComponent
-            qID={question?.questionID}
-            qNO={question?.order?.toString()}
-            qText={question?.text}
-            qDescription={question?.description}
-            qType={question?.type}
-            qImage={question?.questionImage}
-            // qSettings={question?.config}
-            display={display}
-            showQuestion={question?.Model3D?.showQuestion}
-          />
+            <QuestionBackgroundColor
+              questionID={question?.questionID!}
+              colorAnchorEl={colorAnchorEl}
+              setColorAnchorEl={setColorAnchorEl}
+            />
+          </>
         )}
-      </Box>
+        <Box
+          sx={{
+            margin: "auto",
+            width: "96%",
+            // height: "100%",
+          }}
+        >
+          {/* Element view */}
+          {question?.type && (
+            <QuestionComponent
+              qID={question?.questionID}
+              qNO={question?.order?.toString()}
+              qText={question?.text}
+              qDescription={question?.description}
+              qType={question?.type}
+              qImage={question?.questionImage}
+              // qSettings={question?.config}
+              display={display}
+              showQuestion={question?.Model3D?.showQuestion}
+            />
+          )}
+        </Box>
+      </DevicePreview>
     </Box>
   );
 };

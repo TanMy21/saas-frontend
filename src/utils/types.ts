@@ -65,7 +65,7 @@ export interface RowData {
 export interface BuilderSpaceProps {
   questionId: string | null;
   Elements?: Element[];
-  display: string | null;
+  display: "desktop" | "mobile";
   setDisplay: React.Dispatch<React.SetStateAction<string | null>>;
   noElements: boolean;
 }
@@ -90,7 +90,7 @@ export interface BinaryResponseProps {
   buttonTextYes?: string;
   buttonTextNo?: string;
   index?: number;
-  display?: string | null;
+  display?: "desktop" | "mobile";
 }
 
 export interface ColorPickerProps {
@@ -99,7 +99,7 @@ export interface ColorPickerProps {
 }
 
 export interface CanvasConsoleProps {
-  display: string | null;
+  display: "desktop" | "mobile";
   setDisplay: React.Dispatch<React.SetStateAction<string | null>>;
   question: Element | null;
   shareID: string;
@@ -202,7 +202,7 @@ export type Model3D = {
 
 export interface ThreeDViewProps {
   url: string;
-  display?: string | null;
+  display?: "desktop" | "mobile";
   showQuestion?: boolean;
 }
 
@@ -259,7 +259,7 @@ export interface ElementProps {
   qType?: string;
   qImage?: boolean;
   showQuestion?: boolean;
-  display?: string | null;
+  display?: "mobile" | "desktop";
   qID?: string;
   question?: Element | null;
   qOptions?: OptionType[];
@@ -386,6 +386,13 @@ export interface EditableLineProps {
 }
 
 export type FormatTagType = "strong" | "em" | "u";
+
+export interface ScreenLayoutProps {
+  children: React.ReactNode;
+  className?: string;
+  display?: "mobile" | "desktop";
+  targetHeight?: number;
+}
 
 export interface EditablePlainTextProps {
   value: string;
@@ -665,7 +672,7 @@ export interface InsightCardProps {
 export interface InputResponseProps {
   inputPlaceholder: string;
   submitButtonText: string;
-  display?: string | null;
+  display?: "desktop" | "mobile";
 }
 
 export interface Language {
@@ -698,7 +705,7 @@ export interface MediaElementMediaProps {
 
 export interface MediaOptionsContainerProps {
   qID: string;
-  display?: string | null;
+  display?: "desktop" | "mobile";
 }
 
 export interface MediaOptionProps {
@@ -994,14 +1001,14 @@ export interface ResponseListProps {
   qID: string;
   qType?: string;
   optionText: string;
-  display?: string | null;
+  display?: "desktop" | "mobile";
 }
 
 export interface ResponseListItemProps {
   qType?: string;
   response: OptionType;
   index: number;
-  display?: string | null;
+  display?: "desktop" | "mobile";
 }
 
 export interface ResetPassword {
@@ -1095,7 +1102,7 @@ export interface Survey {
 }
 
 export interface SurveyBuilderCanvasProps {
-  display?: string | null;
+  display?: "desktop" | "mobile";
   question?: Element | null;
 }
 
@@ -1146,7 +1153,7 @@ export interface OptionType {
   order: number;
 }
 export interface ScaleResponseProps {
-  display?: string | null;
+  display?: "desktop" | "mobile";
 }
 
 export interface ScreenSettingsProps {
@@ -1267,7 +1274,7 @@ export interface SurveyViewModeProps {
 }
 
 export interface SurveyWelcomeElementProps {
-  display: string | null;
+  display: "desktop" | "mobile";
 }
 
 export interface TypographySettingsForm {

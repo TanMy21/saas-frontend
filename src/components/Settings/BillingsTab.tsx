@@ -1,6 +1,12 @@
 import { Box, Stack, Typography, Chip, Grid, Button } from "@mui/material";
 
+import { useGetMeQuery } from "../../app/slices/userApiSlice";
+
 export default function BillingTab() {
+  const { data: user } = useGetMeQuery("User", {
+    refetchOnMountOrArgChange: true,
+  });
+
   return (
     <Box sx={{ p: 4 }}>
       <Box sx={{ mb: 3 }}>
@@ -24,7 +30,7 @@ export default function BillingTab() {
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
           <Box>
             <Typography fontWeight={700}>Current Plan</Typography>
-            <Typography color="text.secondary">Free tier</Typography>
+            <Typography color="text.secondary">{user.tier}</Typography>
           </Box>
           <Chip label="Active" color="primary" variant="outlined" />
         </Stack>
@@ -35,7 +41,7 @@ export default function BillingTab() {
               Plan Type:
             </Typography>
             <Typography component="span" sx={{ fontWeight: 600, ml: 1 }}>
-              Free
+              {user.tier}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -43,7 +49,7 @@ export default function BillingTab() {
               Amount:
             </Typography>
             <Typography component="span" sx={{ fontWeight: 600, ml: 1 }}>
-              $0.00/month
+              {user.tier === "FREE" ? "$0.00/month" : "$29.00/month"}
             </Typography>
           </Grid>
         </Grid>

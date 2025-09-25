@@ -16,6 +16,8 @@ import "../src/utils/sentry";
 import SessionInitializer from "./SessionInitializer";
 import electricBlueLightTheme from "./theme/electricBlueLightTheme";
 
+import 'react-device-frameset/lib/css/marvel-devices.min.css'
+
 const options = {
   api_host: import.meta.env.VITE_POSTHOG_HOST,
 };

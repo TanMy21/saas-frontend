@@ -5,6 +5,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { ElementProps } from "../../../utils/types";
+import CenteredStack from "../../screen-layout/CenteredStack";
+import ResponseContainer from "../../screen-layout/ResponseContainer";
+import ScreenRoot from "../../screen-layout/ScreenRoot";
 
 import ElementQuestionText from "./ElementQuestionText";
 
@@ -21,62 +24,25 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
   };
 
   return (
-    <Box
-      sx={{
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        // margin: display === "mobile" ? "36% auto" : "0 auto",
-        // width: display === "mobile" ? "92%" : "98%",
-        margin: "auto",
-        width: "98%",
-        minHeight: "700px",
-        zIndex: 20,
-      }}
-    >
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: { md: "56%", xl: "50%" },
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "flex-end",
-          width: "100%",
-          margin: "8% auto",
-          zIndex: 2,
-          mb: 5,
-          // border: "2px solid blue",
-        }}
-      >
+    <ScreenRoot>
+      <CenteredStack display={display}>
         <ElementQuestionText display={display} />
-      </Box>
-      <Box
-        sx={{
-          position: "absolute",
-          top: { md: "44%", xl: "50%" },
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "start",
-          alignItems: "center",
-          width: "100%",
-          height: "60%",
-          margin: "auto",
-          // border: "2px solid blue",
-        }}
-      >
+      </CenteredStack>
+
+      <ResponseContainer display={display}>
         <Box
           sx={{
             transformOrigin: "bottom",
             display: "flex",
             flexDirection: "column",
-            // width: "100%",
+            alignItems: "center",
+            width: "100%",
             // border: "2px dashed red",
           }}
         >
           <Button
             sx={{
-              borderRadius: 8,
+              borderRadius: 4,
               backgroundColor: primary.dark,
               textTransform: "unset",
               padding: display === "mobile" ? "8px 12px" : "16px 24px",
@@ -92,8 +58,8 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
             {buttonText}
           </Button>
         </Box>
-      </Box>
-    </Box>
+      </ResponseContainer>
+    </ScreenRoot>
   );
 };
 

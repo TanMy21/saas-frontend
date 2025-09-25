@@ -43,6 +43,7 @@ const Settings = () => {
             xs={12}
             sx={{
               overflowY: "hidden",
+              overflowX:"hidden",
               position: "sticky",
               top: "0",
               width: "100%",

@@ -67,10 +67,13 @@ const CanvasConsole = ({
       />
       <Box
         sx={{
+          display: "flex",
+          justifyContent: "center",
           marginLeft: "1%",
           marginTop: "1%",
           maxWidth: "98%",
           minHeight: "84%",
+          // border: "2px solid green",
         }}
       >
         {noElements ? (
