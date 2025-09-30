@@ -34,7 +34,7 @@ const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
           flexDirection: "column",
           // margin: "auto",
           width: "100%",
-          height: "100%",
+          minHeight: "82vh",
           // border: "3px solid #E0E0E0",
           // borderRadius: "24px",
           // mt: "1%",
@@ -43,12 +43,14 @@ const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
           // boxShadow: " 0 4px 20px rgba(0, 0, 0, 0.08)",
           transition: "minWidth 1s ease-in-out, opacity 1s ease-in-out",
           position: "relative",
+          border: "2px solid blue",
           backgroundColor: backgroundColor || "#FFFFFF",
           backgroundImage: backgroundImage || "none",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           overflow: "hidden",
+          // overflowY: "scroll",
           scrollbarWidth: "none",
           "&::-webkit-scrollbar": {
             display: "none",
@@ -59,6 +61,7 @@ const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
           sx={{
             margin: "auto",
             width: "96%",
+            overflow: "hidden",
             // height: "100%",
           }}
         >

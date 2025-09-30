@@ -32,6 +32,8 @@ const ElementQuestionText = ({ display }: ElementProps) => {
   );
   const { questionID, order, text, description, type } = question || {};
 
+  const show = isOrderable(type, order);
+
   const titleFontSize =
     typographySettings.titleFontSize ??
     question?.questionPreferences?.titleFontSize ??
@@ -127,166 +129,390 @@ const ElementQuestionText = ({ display }: ElementProps) => {
   });
 
   return (
-    <Box
-      ref={rootRef}
-      sx={{
-        transformOrigin: "bottom",
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "flex-end",
-          margin: "auto",
-          width: display === "mobile" ? "92%" : "98%",
-        }}
-      >
-        {/* Title row */}
+    <>
+      {display === "desktop" ? (
         <Box
-          onMouseDown={(e) => {
-            if (editingTarget !== "none") e.preventDefault();
-          }}
-          onClick={(e) => e.stopPropagation()}
+          ref={rootRef}
           sx={{
+            transformOrigin: "bottom",
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: "auto",
-            width: "80%",
+            flexDirection: "column",
+            width: "100%",
+            border: "2px solid green",
           }}
         >
           <Box
             sx={{
               display: "flex",
-              width: "8%",
-              height: "98%",
-              justifyContent: "center",
-              alignItems: "center",
+              flexDirection: "column",
+              marginX: "auto",
+              width: "100%",
+              border: "2px solid blue",
             }}
           >
-            <OrderBadge
-              show={isOrderable(type, order)}
-              sizeMD={circleSizeMD}
-              sizeXL={circleSizeXL}
-              color={primary.light}
-              fontSize={orderFontSize || 20}
-              value={order}
-            />
+            {/* Title row */}
+            <Box
+              onMouseDown={(e) => {
+                if (editingTarget !== "none") e.preventDefault();
+              }}
+              onClick={(e) => e.stopPropagation()}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                mx: "auto",
+                width: "98%",
+                border: "2px solid black",
+              }}
+            >
+              {show && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flex: `0 0 ${show ? "16%" : "24%"}`,
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    width: show ? "16%" : "24%",
+                    minWidth: 0,
+                    border: "2px solid red",
+                  }}
+                >
+                  <OrderBadge
+                    show={isOrderable(type, order)}
+                    sizeMD={circleSizeMD}
+                    sizeXL={circleSizeXL}
+                    color={primary.light}
+                    fontSize={orderFontSize || 20}
+                    value={order}
+                  />
+                </Box>
+              )}
+              <Box
+                sx={{
+                  ...(show
+                    ? {
+                        display: "flex",
+                        width: "max-content",
+                      }
+                    : {
+                        display: "flex",
+                        flex: "0 0 98%",
+                        width: "98%",
+                      }),
+                  flexDirection: "row",
+                  maxWidth: show
+                    ? "unset"
+                    : { xs: "100%", md: "min(72ch, 100%)" },
+                  minWidth: 0,
+                  justifyContent: "center",
+                  border: "2px solid purple",
+                }}
+              >
+                <Box
+                  sx={{
+                    ...(show
+                      ? {
+                          display: "flex",
+                          justifyContent: "center",
+                          width: "100%",
+                        }
+                      : {
+                          display: "block",
+                          width: "fit-content",
+                          maxWidth: { xs: "100%", md: "min(72ch, 100%)" },
+                        }),
+                    textAlign: "left",
+                    whiteSpace: "normal",
+                    border: "2px solid yellow",
+                  }}
+                >
+                  <EditableLine
+                    active={editingTarget === "title"}
+                    value={text}
+                    onStartEdit={() => beginEdit("title")}
+                    onChange={handleChangeTitle}
+                    onFormatted={saveTitleIfChanged}
+                    onKeyDown={handleKeyDown}
+                    textFieldId="title-input"
+                    cursorWhenActive="text"
+                    textFieldSx={{
+                      ...(show
+                        ? {
+                            display: "inline-block",
+                            width: "max-content",
+                            maxWidth: "none",
+                          }
+                        : {
+                            display: "block",
+                            width: "100%",
+                          }),
+                      textAlign: "left",
+                      backgroundColor: "transparent",
+                      fontFamily:
+                        'Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif',
+                      fontWeight: 700,
+                      fontStyle: "normal",
+                      fontSize: textFontSize,
+                      lineHeight: 1.25,
+                      letterSpacing: "-0.01em",
+                      "& *": {
+                        fontFamily: "inherit",
+                        fontSize: "inherit",
+                        lineHeight: "inherit",
+                      },
+                      border: "2px solid green",
+                    }}
+                    typographySx={{
+                      ...(show
+                        ? {
+                            display: "inline-block",
+                            width: "max-content",
+                            maxWidth: "none",
+                          }
+                        : {
+                            display: "block",
+                            width: "100%",
+                            maxWidth: { xs: "100%", md: "min(72ch, 100%)" },
+                          }),
+                      textAlign: "left",
+                      whiteSpace: "normal",
+                      overflowWrap: "break-word",
+                      fontFamily:
+                        'Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif',
+                      fontWeight: 700,
+                      fontSize: textFontSize,
+                      color: titleTextColor,
+                      lineHeight: 1.25,
+                      letterSpacing: "-0.01em",
+                    }}
+                  />
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Description row */}
+            <Box
+              onMouseDown={(e) => {
+                if (editingTarget !== "none") e.preventDefault();
+              }}
+              onClick={(e) => e.stopPropagation()}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "60%",
+                margin: "1% auto",
+                border: "2px solid blue",
+              }}
+            >
+              <EditableLine
+                active={editingTarget === "description"}
+                value={description}
+                placeholder="Description (optional)"
+                onStartEdit={() => beginEdit("description")}
+                onChange={handleChangeDesc}
+                onFormatted={() => {
+                  saveDescriptionIfChanged();
+                }}
+                onKeyDown={handleKeyDown}
+                textFieldId="description-input"
+                cursorWhenActive="text"
+                textFieldSx={{
+                  backgroundColor: "transparent",
+                  fontFamily:
+                    "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                  fontSize: descFontSize,
+                  lineHeight: 1.5,
+                  "& *": {
+                    fontFamily: "inherit",
+                    fontSize: "inherit",
+                    lineHeight: "inherit",
+                  },
+                }}
+                typographySx={{
+                  fontStyle: "italic",
+                  fontFamily:
+                    "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+                  whiteSpace: "normal",
+                  width: "fit-content",
+                  fontSize: descFontSize,
+                  color: descriptionTextColor,
+                  "& *": {
+                    fontFamily: "inherit",
+                    fontSize: "inherit",
+                    lineHeight: "inherit",
+                  },
+                }}
+              />
+            </Box>
           </Box>
-
-          <EditableLine
-            active={editingTarget === "title"}
-            value={text}
-            placeholder={undefined}
-            onStartEdit={() => beginEdit("title")}
-            onChange={handleChangeTitle}
-            onFormatted={() => {
-              saveTitleIfChanged();
-            }}
-            onKeyDown={handleKeyDown}
-            textFieldId="title-input"
-            cursorWhenActive="text"
-            textFieldSx={{
-              backgroundColor: "transparent",
-              fontStyle: "italic",
-              width: "100%",
-              fontFamily:
-                "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-              fontSize: textFontSize,
-              lineHeight: 1.4,
-              letterSpacing: "0.01em",
-              "& *": {
-                fontFamily: "inherit",
-                fontSize: "inherit",
-                lineHeight: "inherit",
-              },
-            }}
-            typographySx={{
-              whiteSpace: "normal",
-              width: "100%",
-              maxWidth: "80ch",
-              fontFamily:
-                "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-              fontSize: textFontSize,
-              textAlign: "start",
-              color: titleTextColor,
-              lineHeight: 1.4,
-              overflowWrap: "break-word",
-              hyphens: "auto",
-              letterSpacing: "0.01em",
-              wordSpacing: "0.05em",
-              "& *": {
-                fontFamily: "inherit",
-                fontSize: "inherit",
-                lineHeight: "inherit",
-              },
-            }}
-          />
         </Box>
-
-        {/* Description row */}
+      ) : (
         <Box
-          onMouseDown={(e) => {
-            if (editingTarget !== "none") e.preventDefault();
-          }}
-          onClick={(e) => e.stopPropagation()}
+          ref={rootRef}
           sx={{
+            transformOrigin: "bottom",
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "80%",
-            margin: display === "mobile" ? "8% auto" : "1% auto",
+            flexDirection: "column",
+            width: "100%",
+            border: "2px solid green",
           }}
         >
-          <EditableLine
-            active={editingTarget === "description"}
-            value={description}
-            placeholder="Description (optional)"
-            onStartEdit={() => beginEdit("description")}
-            onChange={handleChangeDesc}
-            onFormatted={() => {
-              saveDescriptionIfChanged();
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              marginX: "auto",
+              width: "100%",
+              border: "2px solid blue",
             }}
-            onKeyDown={handleKeyDown}
-            textFieldId="description-input"
-            cursorWhenActive="text"
-            textFieldSx={{
-              backgroundColor: "transparent",
-              fontFamily:
-                "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-              fontSize: descFontSize,
-              lineHeight: 1.5,
-              "& *": {
-                fontFamily: "inherit",
-                fontSize: "inherit",
-                lineHeight: "inherit",
-              },
-            }}
-            typographySx={{
-              fontStyle: "italic",
-              fontFamily:
-                "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-              whiteSpace: "normal",
-              width: "fit-content",
-              fontSize: descFontSize,
-              color: descriptionTextColor,
-              "& *": {
-                fontFamily: "inherit",
-                fontSize: "inherit",
-                lineHeight: "inherit",
-              },
-            }}
-          />
+          >
+            {/* Title row */}
+            <Box
+              onMouseDown={(e) => {
+                if (editingTarget !== "none") e.preventDefault();
+              }}
+              onClick={(e) => e.stopPropagation()}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                mx: "auto",
+                width: "98%",
+                border: "2px solid black",
+              }}
+            >
+              {show && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flex: `0 0 ${show ? "16%" : "24%"}`,
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    width: show ? "16%" : "24%",
+                    minWidth: 0,
+                    border: "2px solid red",
+                  }}
+                >
+                  <OrderBadge
+                    show={isOrderable(type, order)}
+                    sizeMD={circleSizeMD}
+                    sizeXL={circleSizeXL}
+                    color={primary.light}
+                    fontSize={orderFontSize || 20}
+                    value={order}
+                  />
+                </Box>
+              )}
+              <Box
+                sx={{
+                  ...(show
+                    ? {
+                        display: "flex",
+                        width: "max-content",
+                      }
+                    : {
+                        display: "flex",
+                        flex: "0 0 98%",
+                        width: "98%",
+                      }),
+                  flexDirection: "row",
+                  maxWidth: "98%",
+                  minWidth: 0,
+                  justifyContent: "center",
+                  border: "2px solid purple",
+                }}
+              >
+                <Box
+                  sx={{
+                    ...(show
+                      ? {
+                          display: "flex",
+                          justifyContent: "center",
+                          width: "100%",
+                        }
+                      : {
+                          display: "block",
+                          width: "fit-content",
+                          maxWidth: { xs: "100%", md: "min(72ch, 100%)" },
+                        }),
+                    textAlign: "left",
+                    whiteSpace: "normal",
+                    border: "2px solid yellow",
+                  }}
+                >
+                  <EditableLine
+                    active={editingTarget === "title"}
+                    value={text}
+                    onStartEdit={() => beginEdit("title")}
+                    onChange={handleChangeTitle}
+                    onFormatted={saveTitleIfChanged}
+                    onKeyDown={handleKeyDown}
+                    textFieldId="title-input"
+                    cursorWhenActive="text"
+                    textFieldSx={{
+                      ...(show
+                        ? {
+                            display: "inline-block",
+                            width: "max-content",
+                            maxWidth: "none",
+                          }
+                        : {
+                            display: "block",
+                            width: "100%",
+                          }),
+                      textAlign: "left",
+                      backgroundColor: "transparent",
+                      fontFamily:
+                        'Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif',
+                      fontWeight: 700,
+                      fontStyle: "normal",
+                      fontSize: textFontSize,
+                      lineHeight: 1.25,
+                      letterSpacing: "-0.01em",
+                      "& *": {
+                        fontFamily: "inherit",
+                        fontSize: "inherit",
+                        lineHeight: "inherit",
+                      },
+                      border: "2px solid green",
+                    }}
+                    typographySx={{
+                      ...(show
+                        ? {
+                            display: "inline-block",
+                            width: "max-content",
+                            maxWidth: "none",
+                          }
+                        : {
+                            display: "block",
+                            width: "100%",
+                            maxWidth: { xs: "100%", md: "min(72ch, 100%)" },
+                          }),
+                      textAlign: "left",
+                      whiteSpace: "normal",
+                      overflowWrap: "break-word",
+                      fontFamily:
+                        'Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif',
+                      fontWeight: 700,
+                      fontSize: textFontSize,
+                      color: titleTextColor,
+                      lineHeight: 1.25,
+                      letterSpacing: "-0.01em",
+                    }}
+                  />
+                </Box>
+              </Box>
+            </Box>
+          </Box>
         </Box>
-      </Box>
-    </Box>
+      )}
+    </>
   );
 };
 

@@ -392,6 +392,8 @@ export interface ScreenLayoutProps {
   className?: string;
   display?: "mobile" | "desktop";
   targetHeight?: number;
+  widthOverride?: string;
+  marginBottomOveride?:string;
 }
 
 export interface EditablePlainTextProps {

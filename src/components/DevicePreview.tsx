@@ -14,31 +14,30 @@ export default function DevicePreview({
     <div
       style={{
         display: "flex",
-        justifyContent: "center", // center horizontally
-        // alignItems: "center", // center vertically (within the 700px box)
+        justifyContent: "center",
         width: "32%",
-        height: "100%", // fixed height 700
+        height: display === "mobile" ? "92vh" : "100%",
+        overflow: "hidden",
         // border:"2px solid red",
       }}
     >
       <div
         style={{
-          height: "85%",  
-          aspectRatio: aspect,  
+          height: "85%",
+          aspectRatio: aspect,
           maxWidth: "100%",
           maxHeight: "100%",
+          minHeight: 0,
           overflow: "hidden",
           borderRadius: 16,
-          border: "2px solid red",
+          // border: "2px solid red",
           background: "#fff",
           display: "flex",
           flexDirection: "column",
         }}
       >
         {/* Fill the mobile viewport */}
-        <div style={{ width: "100%", height: "100%", overflow: "auto" }}>
-          {children}
-        </div>
+        <div className="scrollArea">{children}</div>
       </div>
     </div>
   );

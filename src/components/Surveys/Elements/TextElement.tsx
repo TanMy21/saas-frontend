@@ -1,6 +1,9 @@
 import { Box } from "@mui/material";
 
 import { ElementProps } from "../../../utils/types";
+import CenteredStack from "../../screen-layout/CenteredStack";
+import ResponseContainer from "../../screen-layout/ResponseContainer";
+import ScreenRoot from "../../screen-layout/ScreenRoot";
 import InputResponse from "../ElementResponse/InputResponse";
 
 import ElementImageContainer from "./ElementImageContainer";
@@ -48,40 +51,33 @@ const TextElement = ({ display, qImage }: ElementProps) => {
         </Box>
       )}
       {/* question section */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column-reverse",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          px: 2,
-          minHeight: "30%",
-          overflow: "visible",
-          width: "100%",
-          margin: "0% auto",
-          marginTop: questionMarginTop,
-        }}
-      >
-        <ElementQuestionText display={display} />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          width: "100%",
-          px: 2,
-          minHeight: "30%",
-          overflow: "visible",
-        }}
-      >
-        <InputResponse
-          inputPlaceholder={"Type your answer here..."}
-          submitButtonText={"Ok"}
+      <ScreenRoot>
+        <CenteredStack
           display={display}
-        />
-      </Box>
+          widthOverride={display === "mobile" ? "98%" : "72%"}
+        >
+          <ElementQuestionText display={display} />
+        </CenteredStack>
+        <ResponseContainer display={display}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "start",
+              alignItems: "center",
+              width: display === "mobile" ? "98%" : "80%",
+              height: "48%",
+              margin: "2% auto",
+            }}
+          >
+            <InputResponse
+              inputPlaceholder={"Type your answer here..."}
+              submitButtonText={"Ok"}
+              display={display}
+            />
+          </Box>
+        </ResponseContainer>
+      </ScreenRoot>
     </Box>
   );
 };

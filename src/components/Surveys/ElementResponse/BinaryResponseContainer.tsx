@@ -26,10 +26,10 @@ const BinaryResponseContainer = ({ display }: BinaryResponseProps) => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        width: "80%",
+        width: display === "mobile" ? "98%" : "80%",
         height: "100%",
         margin: "auto",
-        padding: 2,
+        padding: display === "mobile" ? 0 : 2,
         gap: 2,
         // border: "2px solid green",
       }}

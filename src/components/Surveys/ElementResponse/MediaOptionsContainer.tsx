@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import {
   DndContext,
@@ -26,6 +26,7 @@ import {
   MediaOptionsContainerProps,
   OptionType,
 } from "../../../utils/types";
+import { MAX_OPTIONS } from "../../../utils/utils";
 
 import MediaOption from "./MediaOption";
 
@@ -41,23 +42,35 @@ const MediaOptionsContainer = ({
 
   const sensors = useSensors(useSensor(PointerSensor));
 
+  const [inputValue, setInputValue] = useState("");
+
+  const disableInput = options.length >= MAX_OPTIONS;
+
   const addMedia = async () => {
-    const order = options ? options.length + 1 : 1;
+    if (options.length >= MAX_OPTIONS) {
+      toast.info("Limit reached (10 options).");
+      return;
+    }
+
+    console.log("add clicked");
+    console.log("ID", qID);
+
+    const nextCharCode = "A".charCodeAt(0) + options.length;
+    const nextChoiceLetter = String.fromCharCode(nextCharCode);
 
     try {
-      if (options.length < 10) {
-        const nextCharCode = "A".charCodeAt(0) + options.length;
-        const nextChoiceLetter = String.fromCharCode(nextCharCode);
+      await createNewOption({
+        questionID: qID,
+        options: [
+          { text: `${nextChoiceLetter}`, value: `Choice ${nextChoiceLetter}` },
+        ],
+      }).unwrap();
 
-        await createNewOption({
-          questionID: qID,
-          text: `${nextChoiceLetter}`,
-          value: `Choice ${nextChoiceLetter}`,
-          order,
-        });
-      }
-    } catch (error) {
-      console.error(error);
+      setInputValue("");
+      await refetch();
+    } catch (err) {
+      console.error("Add media option error:", err);
+      toast.error("Failed to add option.");
     }
   };
 
@@ -76,28 +89,21 @@ const MediaOptionsContainer = ({
       })),
     })
       .unwrap()
-      .then(() => {
-        refetch();
-      })
+      .then(() => refetch())
       .catch((err) => console.error("Order update error:", err));
   };
 
-  const disable = options.length >= 9;
-
   useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
+    if (!isError) return;
+    const errorData = error as unknown as ErrorData;
+    if (Array.isArray(errorData?.data?.error)) {
+      errorData.data.error.forEach((el) =>
+        toast.error(el.message, { position: "top-right" })
+      );
+    } else {
+      toast.error(errorData?.data?.message || "Something went wrong.", {
+        position: "top-right",
+      });
     }
   }, [isError, error, options]);
 
@@ -121,11 +127,10 @@ const MediaOptionsContainer = ({
             },
             alignItems: "stretch",
             gap: { xs: 2, sm: 3, md: 4 },
-            width: {md:"96%",xl:"80%"},
+            width: { md: "96%", xl: "80%" },
             height: "auto",
             margin: "0 auto",
             padding: 1,
-            // border: "2px solid green",
             "@media (max-width: 900px)": {
               gridTemplateColumns: "repeat(2, 1fr)", // tablet
             },
@@ -139,7 +144,7 @@ const MediaOptionsContainer = ({
           ))}
           <Box
             component="button"
-            onClick={disable ? undefined : addMedia}
+            onClick={addMedia}
             sx={{
               border: "2px dashed #d0d5ff",
               borderRadius: "16px",
@@ -166,7 +171,7 @@ const MediaOptionsContainer = ({
             <AddIcon sx={{ fontSize: 24 }} />
             <span>Add Option</span>
           </Box>
-        </Box>{" "}
+        </Box>
       </SortableContext>
     </DndContext>
   );

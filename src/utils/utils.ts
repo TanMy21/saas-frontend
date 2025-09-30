@@ -1,7 +1,7 @@
 import { BarChart3, Shield, Smartphone, Users } from "lucide-react";
 import { type Transition } from "motion/react";
 
-import { EdgeStyle, LayoutMode } from "./types";
+import { EdgeStyle, ElementType, LayoutMode } from "./types";
 
 export const generateOptionLabel = (index: number, qType: string) => {
   if (qType === "RADIO" || qType === "MULTIPLE_CHOICE" || qType === "MEDIA") {

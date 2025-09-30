@@ -137,6 +137,7 @@ const ResponseList = ({
           margin: "auto",
           padding: display === "mobile" ? 0 : 2,
           gap: 2,
+          border: "2px solid green",
         }}
       >
         {/* LIST */}
@@ -145,9 +146,9 @@ const ResponseList = ({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            margin: "0 auto",
-            width: display === "mobile" ? "92%" : "100%",
-            padding: 1,
+            marginX: "auto",
+            width: "98%",
+            border: "2px solid black",
           }}
         >
           <DragDropContext onDragEnd={handleDragEnd}>
@@ -159,8 +160,10 @@ const ResponseList = ({
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    width: display === "mobile" ? "92%" : "80%",
+                    marginX:"auto",
+                    width: display === "mobile" ? "98%" : "84%",
                     gap: 2,
+                    border: "2px solid purple",
                   }}
                 >
                   {localOptions?.map((option, index) => (
@@ -211,19 +214,21 @@ const ResponseList = ({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            margin: "0 auto",
-            width: display === "mobile" ? "92%" : "100%",
+            marginX: "auto",
+            width: display === "mobile" ? "92%" : "98%",
             padding: 1,
+            border: "2px solid black",
           }}
         >
           <Box
             sx={{
               position: "relative",
-              width: display === "mobile" ? "92%" : "80%",
+              width: display === "mobile" ? "92%" : "76%",
               // no border, bg, or shadow to blend with parent
-              px: 0,
+              px: 1,
               pt: 0.5,
               pb: 0.5,
+              border: "2px solid red",
             }}
           >
             <TextField
@@ -264,7 +269,7 @@ const ResponseList = ({
               sx={{
                 position: "absolute",
                 right: 0,
-                bottom: -6,
+                bottom: 2,
                 width: 36,
                 height: 36,
                 borderRadius: "50%",
