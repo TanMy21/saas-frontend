@@ -14,6 +14,8 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
       <CenteredStack
         display={display}
         widthOverride={display === "mobile" ? "98%" : "72%"}
+        marginBottomOveride={display === "mobile" ? "32px" : "1px"}
+        marginTopOveride={display === "mobile" ? "32%" : "16%"}
       >
         <ElementQuestionText display={display} />
       </CenteredStack>
@@ -26,7 +28,7 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
             alignItems: "center",
             width: display === "mobile" ? "98%" : "90%",
             margin: "0 auto",
-            border: "2px solid blue",
+            // border: "2px solid blue",
           }}
         >
           <ResponseList

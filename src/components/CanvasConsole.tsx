@@ -74,7 +74,7 @@ const CanvasConsole = ({
           maxWidth: "98%",
           height: "80vh",
           overflow:"hidden",
-          border: "2px solid green",
+          // border: "2px solid green",
         }}
       >
         {noElements ? (

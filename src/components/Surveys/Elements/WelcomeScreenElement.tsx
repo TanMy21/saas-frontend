@@ -28,11 +28,15 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
       <CenteredStack
         display={display}
         widthOverride={display === "mobile" ? "98%" : "72%"}
+        marginBottomOveride={display === "mobile" ? "32px" : "1px"}
       >
         <ElementQuestionText display={display} />
       </CenteredStack>
 
-      <ResponseContainer display={display}>
+      <ResponseContainer
+        display={display}
+        widthOverride={display === "mobile" ? "98%" : "8px"}
+      >
         <Box
           sx={{
             transformOrigin: "bottom",
@@ -40,7 +44,8 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
             flexDirection: "column",
             alignItems: "center",
             width: "100%",
-            // border: "2px dashed red",
+            height: "100px",
+            // border: "2px dashed green",
           }}
         >
           <Button
@@ -48,23 +53,23 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: 2, // ~0.5rem * 2 = 8px * 2 = 16px
-              borderRadius: "9999px", // fully rounded
+              gap: 2,
+              borderRadius: "9999px",
               bgcolor: "#005BC4",
               px: 3,
               py: 1,
-              fontSize: "1.125rem", // text-lg
+              fontSize: "1.125rem",
               fontWeight: "bold",
               color: "#fff",
-              textTransform: "none", // prevent uppercase
+              textTransform: "none",
               transition: "all 0.3s ease-in-out",
               "&:hover": {
                 bgcolor: "#004aa0",
                 "& .hover-span": {
-                  marginRight: "0.25rem", // animate span shifting
+                  marginRight: "0.25rem",
                 },
                 "& .hover-icon": {
-                  width: "1.5rem", // 6
+                  width: "1.5rem",
                   opacity: 1,
                 },
               },
@@ -74,7 +79,7 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
               },
               "&:focus-visible": {
                 outline: "none",
-                boxShadow: "0 0 0 2px #005BC4, 0 0 0 4px #1a1a1a", // focus:ring simulation
+                boxShadow: "0 0 0 2px #005BC4, 0 0 0 4px #1a1a1a",
               },
             }}
           >
@@ -96,12 +101,11 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
                 opacity: 0,
                 transition: "all 0.3s ease-in-out",
                 display: "flex",
+                color: "white",
                 alignItems: "center",
               }}
             >
-              <MoveRight
-                style={{ width: "1.5rem", height: "1.5rem", color: "white" }}
-              />
+              <MoveRight color="white" size={24} />
             </Box>
           </Button>
         </Box>

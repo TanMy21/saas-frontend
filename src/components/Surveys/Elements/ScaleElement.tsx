@@ -10,7 +10,7 @@ import ElementQuestionText from "./ElementQuestionText";
 
 const ScaleElement = ({ display }: ElementProps) => {
   return (
-    <ScreenRoot>
+    <ScreenRoot display={display}>
       <CenteredStack display={display} widthOverride={display === "mobile" ? "98%" : "72%"}>
         <ElementQuestionText display={display} />
       </CenteredStack>

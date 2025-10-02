@@ -13,6 +13,7 @@ const EndScreenElement = ({ display }: ElementProps) => {
         display={display}
         widthOverride={display === "mobile" ? "98%" : "72%"}
         marginBottomOveride={display === "mobile" ? "48%" : "24%"}
+        marginTopOveride={display === "mobile" ? "32%" : "16%"}
       >
         <ElementQuestionText display={display} />
       </CenteredStack>

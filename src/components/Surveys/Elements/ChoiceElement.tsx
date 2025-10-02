@@ -10,10 +10,11 @@ import ElementQuestionText from "./ElementQuestionText";
 
 const ChoiceElement = ({ qID, display }: ElementProps) => {
   return (
-    <ScreenRoot>
+    <ScreenRoot display={display}>
       <CenteredStack
         display={display}
         widthOverride={display === "mobile" ? "98%" : "72%"}
+        marginTopOveride={display === "mobile" ? "32%" : "16%"}
       >
         <ElementQuestionText display={display} />
       </CenteredStack>

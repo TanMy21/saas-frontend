@@ -6,21 +6,21 @@ const CenteredStack = ({
   children,
   widthOverride,
   marginBottomOveride,
+  marginTopOveride,
   className = "",
 }: ScreenLayoutProps) => {
   return (
     <Box
       sx={{
-        // position:"absolute",
         display: "flex",
         marginX: "auto",
         flexDirection: "row",
-        mt: "clamp(16px, 18vh, 160px)",
+        mt: marginTopOveride ?? "1px",
         flexShrink: 0,
         marginBottom: marginBottomOveride ?? "2%",
         width: widthOverride ?? "98%",
         zIndex: 10,
-        border: "2px solid red",
+        // border: "2px solid red",
       }}
     >
       {children}

@@ -11,7 +11,7 @@ import ElementQuestionText from "./ElementQuestionText";
 const BinaryElement = ({ display }: ElementProps) => {
   return (
     <ScreenRoot>
-      <CenteredStack display={display}>
+      <CenteredStack display={display}  marginTopOveride={display === "mobile" ? "32%" : "16%"}>
         <ElementQuestionText display={display} />
       </CenteredStack>
       <ResponseContainer display={display}>
@@ -24,7 +24,7 @@ const BinaryElement = ({ display }: ElementProps) => {
             width: display === "mobile" ? "98%" : "80%",
             height: "48%",
             margin: "2% auto",
-            border: "2px solid blue",
+            // border: "2px solid blue",
           }}
         >
           <BinaryResponseContainer display={display} />

@@ -51,7 +51,7 @@ const TextElement = ({ display, qImage }: ElementProps) => {
         </Box>
       )}
       {/* question section */}
-      <ScreenRoot>
+      <ScreenRoot display={display}>
         <CenteredStack
           display={display}
           widthOverride={display === "mobile" ? "98%" : "72%"}

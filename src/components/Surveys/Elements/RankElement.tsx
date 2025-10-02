@@ -10,7 +10,7 @@ import ElementQuestionText from "./ElementQuestionText";
 
 const RankElement = ({ qID, display }: ElementProps) => {
   return (
-    <ScreenRoot>
+    <ScreenRoot display={display}>
       <CenteredStack
         display={display}
         widthOverride={display === "mobile" ? "98%" : "72%"}

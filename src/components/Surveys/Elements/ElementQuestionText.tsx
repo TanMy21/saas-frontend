@@ -152,10 +152,12 @@ const ElementQuestionText = ({ display }: ElementProps) => {
           >
             {/* Title row */}
             <Box
-              onMouseDown={(e) => {
+              onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
                 if (editingTarget !== "none") e.preventDefault();
               }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: React.MouseEvent<HTMLDivElement>) =>
+                e.stopPropagation()
+              }
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -163,7 +165,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                 alignItems: "flex-start",
                 mx: "auto",
                 width: "98%",
-                border: "2px solid black",
+                // border: "2px solid black",
               }}
             >
               {show && (
@@ -171,12 +173,13 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   sx={{
                     display: "flex",
                     flexDirection: "row",
-                    flex: `0 0 ${show ? "16%" : "24%"}`,
+                    flex: `0 0 ${show ? "8%" : "8%"}`,
                     justifyContent: "flex-end",
                     alignItems: "center",
-                    width: show ? "16%" : "24%",
+                    width: show ? "8%" : "8%",
+                    mt:0.5,
                     minWidth: 0,
-                    border: "2px solid red",
+                    // border: "2px solid red",
                   }}
                 >
                   <OrderBadge
@@ -207,7 +210,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                     : { xs: "100%", md: "min(72ch, 100%)" },
                   minWidth: 0,
                   justifyContent: "center",
-                  border: "2px solid purple",
+                  // border: "2px solid purple",
                 }}
               >
                 <Box
@@ -225,7 +228,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                         }),
                     textAlign: "left",
                     whiteSpace: "normal",
-                    border: "2px solid yellow",
+                    // border: "2px solid yellow",
                   }}
                 >
                   <EditableLine
@@ -262,7 +265,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                         fontSize: "inherit",
                         lineHeight: "inherit",
                       },
-                      border: "2px solid green",
+                      // border: "2px solid green",
                     }}
                     typographySx={{
                       ...(show
@@ -294,10 +297,12 @@ const ElementQuestionText = ({ display }: ElementProps) => {
 
             {/* Description row */}
             <Box
-              onMouseDown={(e) => {
+              onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
                 if (editingTarget !== "none") e.preventDefault();
               }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: React.MouseEvent<HTMLDivElement>) =>
+                e.stopPropagation()
+              }
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -305,7 +310,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                 alignItems: "center",
                 width: "60%",
                 margin: "1% auto",
-                border: "2px solid blue",
+                // border: "2px solid blue",
               }}
             >
               <EditableLine
@@ -358,7 +363,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             display: "flex",
             flexDirection: "column",
             width: "100%",
-            border: "2px solid green",
+            // border: "2px solid green",
           }}
         >
           <Box
@@ -367,15 +372,17 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               flexDirection: "column",
               marginX: "auto",
               width: "100%",
-              border: "2px solid blue",
+              // border: "2px solid blue",
             }}
           >
             {/* Title row */}
             <Box
-              onMouseDown={(e) => {
+              onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
                 if (editingTarget !== "none") e.preventDefault();
               }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: React.MouseEvent<HTMLDivElement>) =>
+                e.stopPropagation()
+              }
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -383,7 +390,8 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                 alignItems: "center",
                 mx: "auto",
                 width: "98%",
-                border: "2px solid black",
+                gap:"8%",
+                // border: "2px solid black",
               }}
             >
               {show && (
@@ -396,7 +404,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                     alignItems: "center",
                     width: show ? "16%" : "24%",
                     minWidth: 0,
-                    border: "2px solid red",
+                    // border: "2px solid red",
                   }}
                 >
                   <OrderBadge
@@ -425,7 +433,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   maxWidth: "98%",
                   minWidth: 0,
                   justifyContent: "center",
-                  border: "2px solid purple",
+                  // border: "2px solid purple",
                 }}
               >
                 <Box
@@ -443,7 +451,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                         }),
                     textAlign: "left",
                     whiteSpace: "normal",
-                    border: "2px solid yellow",
+                    // border: "2px solid yellow",
                   }}
                 >
                   <EditableLine

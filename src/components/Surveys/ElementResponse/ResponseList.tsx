@@ -137,7 +137,7 @@ const ResponseList = ({
           margin: "auto",
           padding: display === "mobile" ? 0 : 2,
           gap: 2,
-          border: "2px solid green",
+          // border: "2px solid green",
         }}
       >
         {/* LIST */}
@@ -148,7 +148,7 @@ const ResponseList = ({
             alignItems: "center",
             marginX: "auto",
             width: "98%",
-            border: "2px solid black",
+            // border: "2px solid black",
           }}
         >
           <DragDropContext onDragEnd={handleDragEnd}>
@@ -160,10 +160,10 @@ const ResponseList = ({
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    marginX:"auto",
+                    marginX: "auto",
                     width: display === "mobile" ? "98%" : "84%",
                     gap: 2,
-                    border: "2px solid purple",
+                    // border: "2px solid purple",
                   }}
                 >
                   {localOptions?.map((option, index) => (
@@ -217,7 +217,7 @@ const ResponseList = ({
             marginX: "auto",
             width: display === "mobile" ? "92%" : "98%",
             padding: 1,
-            border: "2px solid black",
+            // border: "2px solid black",
           }}
         >
           <Box
@@ -228,7 +228,7 @@ const ResponseList = ({
               px: 1,
               pt: 0.5,
               pb: 0.5,
-              border: "2px solid red",
+              // border: "2px solid red",
             }}
           >
             <TextField
