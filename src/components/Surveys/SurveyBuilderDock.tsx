@@ -229,12 +229,12 @@ const SurveyBuilderDock = ({
         }
       },
     },
-    {
-      id: "edit-sruvey",
-      icon: <MdEdit />,
-      label: "Edit survey title",
-      action: () => setOpenEdit(true),
-    },
+    // {
+    //   id: "edit-sruvey",
+    //   icon: <MdEdit />,
+    //   label: "Edit survey title",
+    //   action: () => setOpenEdit(true),
+    // },
     {
       id: "settings",
       icon: <IoMdSettings />,
@@ -326,7 +326,7 @@ const SurveyBuilderDock = ({
           setOpenSnackbar={setOpenSnackbar}
           shareID={shareID}
         />
-        <SurveyTitleEditModal openEdit={openEdit} setOpenEdit={setOpenEdit} />
+        {/* <SurveyTitleEditModal openEdit={openEdit} setOpenEdit={setOpenEdit} /> */}
         <SurveySettingsModal
           surveyID={surveyID!}
           openSettings={openSettings}

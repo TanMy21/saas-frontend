@@ -11,6 +11,7 @@ import {
   MenuItem,
   Modal,
   Select,
+  TextField,
   Typography,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -51,6 +52,7 @@ const SurveySettingsModal = ({
   };
 
   const {
+    register,
     control,
     handleSubmit,
     formState: { errors },
@@ -58,6 +60,8 @@ const SurveySettingsModal = ({
   } = useForm<SettingsFormData>({
     resolver: zodResolver(settingsUpdateSchema),
     defaultValues: {
+      title: "",
+      description: "",
       startDate: null,
       endDate: null,
       language: "",
@@ -66,9 +70,11 @@ const SurveySettingsModal = ({
 
   const submitUpdateData = async (data: SettingsFormData) => {
     try {
-      const { startDate, endDate, language } = data;
+      const { startDate, endDate, language, title, description } = data;
 
       await updateSurvey({
+        title,
+        description,
         surveyID,
         startDate,
         endDate,
@@ -111,6 +117,8 @@ const SurveySettingsModal = ({
       const { startDate, endDate, Language } = surveySettings;
 
       reset({
+        title: getSurveyCanvas.title,
+        description: getSurveyCanvas.description,
         startDate: startDate ? dayjs(startDate) : null,
         endDate: endDate ? dayjs(endDate) : null,
         language: Language.code ?? "",
@@ -204,6 +212,90 @@ const SurveySettingsModal = ({
           {/* Content */}
           <Box sx={{ px: 4, py: 2, flex: 1, overflowY: "auto" }}>
             <form onSubmit={handleSubmit(submitUpdateData)}>
+              {/* Title */}
+              <Box sx={{ mb: 2 }}>
+                <Typography
+                  sx={{
+                    fontSize: 14,
+                    fontWeight: 700,
+                    mb: 1,
+                    color: "#374151",
+                  }}
+                >
+                  Survey Title
+                </Typography>
+                <TextField
+                  id="title"
+                  {...register("title")}
+                  variant="outlined"
+                  placeholder="Enter survey title..."
+                  error={!!errors.title}
+                  helperText={errors.title?.message}
+                  fullWidth
+                  sx={{
+                    bgcolor: "#F9FAFB",
+                    borderRadius: 2,
+                    height: "48px",
+                    "& .MuiInputBase-root": {
+                      borderRadius: 2,
+                      fontSize: 16,
+                      px: 2,
+                      py: 1,
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      border: "#0074EB",
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      minHeight: 48,
+                    },
+                  }}
+                />
+              </Box>
+              {/* Description */}
+              <Box sx={{ mb: 1 }}>
+                <Typography
+                  sx={{
+                    fontSize: 14,
+                    fontWeight: 700,
+                    mb: 1,
+                    color: "#374151",
+                  }}
+                >
+                  Description
+                </Typography>
+                <TextField
+                  id="description"
+                  {...register("description")}
+                  variant="outlined"
+                  multiline
+                  minRows={4}
+                  maxRows={5}
+                  placeholder="Describe your survey purpose and goals..."
+                  error={!!errors.description}
+                  helperText={errors.description?.message}
+                  fullWidth
+                  sx={{
+                    bgcolor: "#F9FAFB",
+                    borderRadius: 2,
+                    "& .MuiInputBase-root": {
+                      borderRadius: 2,
+                      fontSize: 15,
+                      px: 2,
+                      py: 1,
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      border: "#0074EB",
+                    },
+                  }}
+                  InputProps={{
+                    sx: {
+                      minHeight: 90,
+                    },
+                  }}
+                />
+              </Box>
               {/* Survey Period */}
               <Box sx={{ mb: 2 }}>
                 <Typography

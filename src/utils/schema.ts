@@ -53,19 +53,41 @@ export const registerSchema: ZodType<RegisterFormData> = z
 
 export const settingsUpdateSchema = z
   .object({
-    startDate: z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), {
-      message: "Start date is required",
-    }),
-    endDate: z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), {
-      message: "End date is required",
-    }),
+    title: z.string().min(1, "Title must be at least 1 character long"),
+    description: z.string(),
+    startDate: z
+      .custom<Dayjs>((val) => !val || (dayjs.isDayjs(val) && val.isValid()), {
+        message: "Invalid start date",
+      })
+      .optional(),
+    endDate: z
+      .custom<Dayjs>((val) => !val || (dayjs.isDayjs(val) && val.isValid()), {
+        message: "Invalid end date",
+      })
+      .optional(),
     language: z.string().min(1, "Please select a language"),
   })
+
   .refine(
-    (data) =>
-      data.startDate &&
-      data.endDate &&
-      dayjs(data.endDate).isSameOrAfter(dayjs(data.startDate), "day"),
+    (data) => {
+      if (data.startDate && !data.endDate) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "End date is required when start date is provided",
+      path: ["endDate"],
+    }
+  )
+
+  .refine(
+    (data) => {
+      if (data.startDate && data.endDate) {
+        return dayjs(data.endDate).isSameOrAfter(dayjs(data.startDate), "day");
+      }
+      return true;
+    },
     {
       message: "End date cannot be before start date",
       path: ["endDate"],

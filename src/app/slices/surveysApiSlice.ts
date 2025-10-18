@@ -51,10 +51,19 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Surveys"],
     }),
     updateSurvey: builder.mutation({
-      query: ({ surveyID, startDate, endDate, language }) => ({
+      query: ({
+        title,
+        description,
+        surveyID,
+        startDate,
+        endDate,
+        language,
+      }) => ({
         url: `/s/settings/${surveyID}`,
         method: "PUT",
         body: {
+          title,
+          description,
           surveyID,
           startDate,
           endDate,

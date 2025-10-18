@@ -1053,6 +1053,8 @@ export interface InitialViewParams {
 }
 
 export interface SettingsFormData {
+  title?: string;
+  description?: string;
   startDate: Dayjs | null;
   endDate: Dayjs | null;
   responseLimit?: number;
