@@ -85,7 +85,7 @@ export const mergeHandlers =
     handlers.forEach((h) => h?.(e));
   };
 
-export const NO_CONDITION_TYPES = new Set<string>(["RANK", "THREE_D"]);
+export const NO_CONDITION_TYPES = new Set<string>(["RANK", "END_SCREEN"]);
 export const isConditionlessType = (t?: string) =>
   !!t && NO_CONDITION_TYPES.has(t);
 

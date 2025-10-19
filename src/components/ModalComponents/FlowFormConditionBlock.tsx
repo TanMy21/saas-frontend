@@ -24,6 +24,7 @@ import {
   IconMapping,
 } from "../../utils/types";
 
+import { FlowForm3D } from "./FlowForm3D";
 import FlowFormBinary from "./FlowFormBinary";
 import FlowFormInput from "./FlowFormInput";
 import FlowFormNoCondition from "./FlowFormNoCondition";
@@ -57,7 +58,7 @@ const FlowFormConditionBlock = ({
     NUMBER: FlowFormInput,
     RANGE: FlowFormInput,
     RANK: FlowFormNoCondition,
-    THREE_D: FlowFormNoCondition,
+    THREE_D: FlowForm3D,
   };
 
   const [deleteCondition] = useDeleteConditionMutation();
