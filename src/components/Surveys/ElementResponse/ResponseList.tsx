@@ -20,12 +20,7 @@ import { MAX_OPTIONS } from "../../../utils/utils";
 
 import ResponseListItem from "./ResponseListItem";
 
-const ResponseList = ({
-  qID,
-  qType,
-  optionText,
-  display,
-}: ResponseListProps) => {
+const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
   const { data: options = [] as OptionType[] } =
     useGetOptionsOfQuestionQuery(qID);
 
@@ -34,11 +29,9 @@ const ResponseList = ({
   const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
   const [updateOptionOrder] = useUpdateOptionOrderMutation();
 
-  // ---- minimal "text add" input (blends with parent) ----
   const [inputValue, setInputValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // auto-resize the multiline input
   useEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
@@ -46,7 +39,6 @@ const ResponseList = ({
     el.style.height = `${el.scrollHeight}px`;
   }, [inputValue]);
 
-  // Always send options as an array (even if single line)
   const handleAddOptions = async () => {
     const lines = inputValue
       .split("\n")
@@ -77,7 +69,6 @@ const ResponseList = ({
     }
   };
 
-  // DnD reorder (unchanged)
   const handleDragEnd = async (result: DropResult) => {
     const { source, destination } = result;
     if (!destination || source.index === destination.index) return;
@@ -98,12 +89,10 @@ const ResponseList = ({
       .catch((err) => console.error("Order update error:", err));
   };
 
-  // sync RTK → local
   useEffect(() => {
     setLocalOptions(options);
   }, [options]);
 
-  // existing error surfacing
   useEffect(() => {
     if (!isError) return;
     const errData: any = error;
@@ -208,7 +197,6 @@ const ResponseList = ({
           </DragDropContext>
         </Box>
 
-        {/* TEXT ADD (blends into parent; no borders/extra styles) */}
         <Box
           sx={{
             display: "flex",
@@ -224,7 +212,6 @@ const ResponseList = ({
             sx={{
               position: "relative",
               width: display === "mobile" ? "92%" : "76%",
-              // no border, bg, or shadow to blend with parent
               px: 1,
               pt: 0.5,
               pb: 0.5,
@@ -246,8 +233,8 @@ const ResponseList = ({
                   bgcolor: "transparent",
                   lineHeight: 1.6,
                   fontSize: 16,
-                  color: "inherit", // inherit to blend
-                  px: 0, // remove paddings to blend
+                  color: "inherit",
+                  px: 0,
                 },
               }}
               sx={{
@@ -258,7 +245,6 @@ const ResponseList = ({
               }}
             />
 
-            {/* Only styled element: Add icon button */}
             <IconButton
               onClick={handleAddOptions}
               disabled={

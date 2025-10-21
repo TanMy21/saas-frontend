@@ -389,12 +389,12 @@ const QuestionFlowContainer = ({
     <Box
       sx={{
         display: "flex",
-        margin: "1% auto",
+        margin: "0% auto",
         width: "98%",
-        height: "92%",
+        height: "96%",
         padding: 2,
         backgroundColor: "#F6F8FF",
-        borderRadius: "12px",
+        // borderRadius: "12px",
         boxShadow: "inset 0 4px 8px rgba(0, 0, 0, 0.06)",
         border: "1px solid #E0E4FF",
         // background: "linear-gradient(145deg, #f0f3ff, #dfe3f2)",

@@ -107,47 +107,49 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
           {data.question}
         </Typography>
       </Box>
-      <Box
-        sx={{
-          position: "absolute",
-          right: "-1px",
-          top: "50%",
-          transform: "translateY(-50%)",
-        }}
-      >
-        <Handle
-          type="source"
-          position={Position.Right}
-          isConnectableStart={canConnect}
-          style={{
-            width: "20px",
-            height: "20px",
-            borderRadius: "50%",
-            backgroundColor: "#6366F1",
-            zIndex: 1,
-          }}
-        />
+      {qType === "END_SCREEN" ? null : (
         <Box
           sx={{
             position: "absolute",
-            right: "-6px",
+            right: "-1px",
             top: "50%",
             transform: "translateY(-50%)",
-            width: "12px",
-            height: "12px",
-            backgroundColor: "#6366F1",
-            borderRadius: "50%",
-            color: "white",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "12px",
-            zIndex: 2,
           }}
         >
-          <PiFlowArrowBold size={12} />
+          <Handle
+            type="source"
+            position={Position.Right}
+            isConnectableStart={canConnect}
+            style={{
+              width: "20px",
+              height: "20px",
+              borderRadius: "50%",
+              backgroundColor: "#6366F1",
+              zIndex: 1,
+            }}
+          />
+          <Box
+            sx={{
+              position: "absolute",
+              right: "-6px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: "12px",
+              height: "12px",
+              backgroundColor: "#6366F1",
+              borderRadius: "50%",
+              color: "white",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "12px",
+              zIndex: 2,
+            }}
+          >
+            <PiFlowArrowBold size={12} />
+          </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };

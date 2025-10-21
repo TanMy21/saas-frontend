@@ -8,16 +8,15 @@ const ScreenRoot = ({ children, display }: ScreenLayoutProps) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
         alignItems: "center",
-        paddingTop: display === "mobile" ? "16%" : null,
-        gap: "1%",
+        justifyContent: "center",
+        p: display === "mobile" ? 0 : 0,
+        transition: "all 300ms ease",
         margin: "auto",
-        width: "98%",
-        // height:"82vh",
+        width: display === "mobile" ? "98%" : "96%",
         minHeight: "700px",
         zIndex: 20,
-        // border: "2px solid black",
+        border: "2px solid red",
       }}
     >
       {children}

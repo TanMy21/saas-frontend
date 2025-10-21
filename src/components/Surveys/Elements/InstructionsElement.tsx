@@ -20,7 +20,7 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
         <ElementQuestionText display={display} />
       </CenteredStack>
       <ResponseContainer display={display}>
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -28,9 +28,9 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
             alignItems: "center",
             width: display === "mobile" ? "98%" : "90%",
             margin: "0 auto",
-            // border: "2px solid blue",
+            border: "2px solid blue",
           }}
-        >
+        > */}
           <ResponseList
             key={qID}
             qID={qID!}
@@ -38,7 +38,7 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
             optionText={"Instruction"}
             display={display}
           />
-        </Box>
+        {/* </Box> */}
       </ResponseContainer>
     </ScreenRoot>
   );

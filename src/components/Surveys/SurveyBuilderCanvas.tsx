@@ -49,7 +49,7 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
         boxShadow: " 0 4px 20px rgba(0, 0, 0, 0.08)",
         mt: "1%",
         mb: "2%",
-        p: 2,
+        p: display === "mobile" ? 0.5 : 2,
         transition:
           "background-image 0.5s ease-in-out, background-color 0.5s ease-in-out, minWidth 1s ease-in-out , opacity 1s ease-in-out",
         position: "relative",

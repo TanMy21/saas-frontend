@@ -399,10 +399,10 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   sx={{
                     display: "flex",
                     flexDirection: "row",
-                    flex: `0 0 ${show ? "16%" : "24%"}`,
+                    flex: `0 0 ${show ? "24%" : "28%"}`,
                     justifyContent: "flex-end",
                     alignItems: "center",
-                    width: show ? "16%" : "24%",
+                    width: show ? "24%" : "28%",
                     minWidth: 0,
                     // border: "2px solid red",
                   }}

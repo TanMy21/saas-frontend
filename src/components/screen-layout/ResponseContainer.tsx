@@ -4,21 +4,22 @@ import { ScreenLayoutProps } from "../../utils/types";
 
 const ResponseContainer = ({
   children,
-  marginTopOveride,
-  className = "",
+  marginTopOveride,display,
+  // className = "",
 }: ScreenLayoutProps) => {
   return (
     <Box
       sx={{
-        display: "flex",
-        // flex: 1,
-        marginX: "auto",
-        flexDirection: "row",
-        marginTop: marginTopOveride ?? "2%",
-        marginBottom: "4%",
-        width: "98%",
-        zIndex: 10,
-        // border: "2px solid red",
+        width: display === "desktop" ? "80%" : "96%",
+        maxWidth: display === "desktop" ? "80%" : "92%",
+        mx: "auto",
+        mt: marginTopOveride ?? "2%",
+        mb: "4%",
+        borderRadius: 2,
+        border: "1px solid",
+        borderColor: "divider",
+        px: { xs: 2, md: 1 },
+        py: { xs: 2, md: 1 },
       }}
     >
       {children}
