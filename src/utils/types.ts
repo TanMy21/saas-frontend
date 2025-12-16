@@ -1100,6 +1100,7 @@ export interface Survey {
   published?: boolean;
   status: string;
   surveyID: string;
+  shareID: string;
   surveyTag: string[];
   title: string;
   updatedAt: string;

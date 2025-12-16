@@ -35,7 +35,7 @@ const InputResponse = ({
           variant="standard"
           sx={{
             margin: "0 auto",
-            width: display === "mobile" ? "92%" : "56%",
+            width: display === "mobile" ? "92%" : "64%",
             "& .MuiInputBase-input": {
               whiteSpace: "noWrap",
               height: "64px",

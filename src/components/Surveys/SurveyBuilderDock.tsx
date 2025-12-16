@@ -4,7 +4,6 @@ import UploadIcon from "@mui/icons-material/Upload";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import { BsFillShareFill } from "react-icons/bs";
 import { IoMdSettings } from "react-icons/io";
-import { MdEdit } from "react-icons/md";
 import { RiAiGenerate } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 
@@ -21,7 +20,6 @@ import GenerateSurveyModal from "../Modals/GenerateSurveyModal";
 import ImportQuestionsModal from "../Modals/ImportQuestionsModal";
 import ShareSurveyModal from "../Modals/ShareSurveyModal";
 import SurveySettingsModal from "../Modals/SurveySettingsModal";
-import SurveyTitleEditModal from "../Modals/SurveyTitleEditModal";
 import SnackbarAlert from "../SnackbarAlert";
 
 const DOCK_HEIGHT = 36;
@@ -208,7 +206,6 @@ const SurveyBuilderDock = ({
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [openGenerate, setOpenGenerate] = useState(openGenerateState);
-  const [openEdit, setOpenEdit] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
   const [_shareBtnSelected, setShareBtnSelected] = useState(false);
@@ -229,12 +226,6 @@ const SurveyBuilderDock = ({
         }
       },
     },
-    // {
-    //   id: "edit-sruvey",
-    //   icon: <MdEdit />,
-    //   label: "Edit survey title",
-    //   action: () => setOpenEdit(true),
-    // },
     {
       id: "settings",
       icon: <IoMdSettings />,

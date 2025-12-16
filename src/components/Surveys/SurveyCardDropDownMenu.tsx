@@ -39,12 +39,12 @@ const SurveyCardDropDownMenu = ({
   workspaceId,
   workspaceName,
 }: SurveyDropDownMenuProps) => {
-  const { surveyID } = survey;
+  const { shareID, surveyID } = survey;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const shareBaseURL = import.meta.env.VITE_SHARE_BASE_URL;
-  const shareURL = `${shareBaseURL}/${surveyID}`;
+  const shareURL = `${shareBaseURL}/${shareID}`;
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [isPublished, setIsPublished] = useState<boolean>(survey?.published!);

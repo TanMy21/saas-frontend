@@ -82,7 +82,7 @@ const BinaryResponseYes = ({
           pl: 4,
           backgroundColor: "#f8f9fc",
           border: "1px solid #E2E8F0",
-          borderRadius: 6,
+          borderRadius:"16px",
           mb: 1.5,
           transition: "box-shadow 0.2s ease-in-out",
           boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",

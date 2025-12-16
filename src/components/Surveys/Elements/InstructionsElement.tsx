@@ -1,5 +1,3 @@
-import { Box } from "@mui/material";
-
 import { ElementProps } from "../../../utils/types";
 import CenteredStack from "../../screen-layout/CenteredStack";
 import ResponseContainer from "../../screen-layout/ResponseContainer";
@@ -20,17 +18,6 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
         <ElementQuestionText display={display} />
       </CenteredStack>
       <ResponseContainer display={display}>
-        {/* <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            width: display === "mobile" ? "98%" : "90%",
-            margin: "0 auto",
-            border: "2px solid blue",
-          }}
-        > */}
           <ResponseList
             key={qID}
             qID={qID!}
@@ -38,7 +25,6 @@ const InstructionsElement = ({ qID, display }: ElementProps) => {
             optionText={"Instruction"}
             display={display}
           />
-        {/* </Box> */}
       </ResponseContainer>
     </ScreenRoot>
   );
