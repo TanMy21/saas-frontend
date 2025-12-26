@@ -2,7 +2,8 @@ import { useState } from "react";
 
 import { AppBar, Box, Tab, Tabs } from "@mui/material";
 
-import ResultInsights from "./ResultInsights";
+import { SurveyInsights } from "../Insights/SurveyInsights";
+
 import ResultResponses from "./ResultResponses";
 
 const Results = () => {
@@ -15,7 +16,7 @@ const Results = () => {
   let content;
 
   if (value === 0) {
-    content = <ResultInsights />;
+    content = <SurveyInsights />;
   } else if (value === 1) {
     content = <ResultResponses />;
   }

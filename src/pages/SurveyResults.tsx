@@ -37,8 +37,8 @@ const SurveyResults = () => {
             <SurveyBuilderHeader
               tabValue={tabValue}
               survey={survey!}
-              workspaceId={workspaceId!}
-              workspaceName={workspaceName!}
+              workspaceId={workspaceId}
+              workspaceName={workspaceName}
               title={title}
             />
           </Grid>

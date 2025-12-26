@@ -127,3 +127,48 @@ export const EDGE_OPTIONS: EdgeStyle[] = [
 ];
 
 export const MAX_OPTIONS = 10;
+
+export const severitySx = (rate: number) => {
+  if (rate >= 25)
+    return { color: "#b91c1c", bgcolor: "#fef2f2", borderColor: "#fee2e2" };
+  if (rate >= 10)
+    return { color: "#b45309", bgcolor: "#fffbeb", borderColor: "#fde68a" };
+  return { color: "#047857", bgcolor: "#ecfdf5", borderColor: "#a7f3d0" };
+};
+
+export const calculateDropOff = (reached: number, answered: number) => {
+  const dropped = reached - answered;
+  const rate = reached ? (dropped / reached) * 100 : 0;
+  return { dropped, rate };
+};
+
+
+
+export const generateTrendData = (days = 30) => {
+  const data = [];
+  const today = new Date();
+
+  for (let i = days; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+    data.push({
+      date: date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      }),
+      starts: Math.floor(40 + Math.random() * 50),
+      completionRate: 65 + Math.random() * 20,
+      dropOffRate: 15 + Math.random() * 10,
+    });
+  }
+
+  return data;
+};
+
+export const TREND_DATA = generateTrendData();
+
+export const getBarColor = (rate: number) => {
+  if (rate >= 25) return "bg-red-500";
+  if (rate >= 10) return "bg-amber-400";
+  return "bg-emerald-500";
+};
