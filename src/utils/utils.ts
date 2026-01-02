@@ -1,7 +1,9 @@
+import { ReactNode } from "react";
+
 import { BarChart3, Shield, Smartphone, Users } from "lucide-react";
 import { type Transition } from "motion/react";
 
-import { EdgeStyle, ElementType, LayoutMode } from "./types";
+import { EdgeStyle, LayoutMode } from "./types";
 
 export const generateOptionLabel = (index: number, qType: string) => {
   if (qType === "RADIO" || qType === "MULTIPLE_CHOICE" || qType === "MEDIA") {
@@ -142,8 +144,6 @@ export const calculateDropOff = (reached: number, answered: number) => {
   return { dropped, rate };
 };
 
-
-
 export const generateTrendData = (days = 30) => {
   const data = [];
   const today = new Date();
@@ -172,3 +172,86 @@ export const getBarColor = (rate: number) => {
   if (rate >= 10) return "bg-amber-400";
   return "bg-emerald-500";
 };
+
+export const formatChartValue = (
+  value: unknown,
+  displayMode: "count" | "percentage"
+): ReactNode => {
+  // Numbers → formatted
+  if (typeof value === "number") {
+    return displayMode === "percentage"
+      ? `${value.toFixed(1)}%`
+      : value.toLocaleString();
+  }
+
+  // Strings → safe to render
+  if (typeof value === "string") {
+    return value;
+  }
+
+  // null / undefined / objects → render nothing
+  return "";
+};
+
+export const formatChartLabelValue = (
+  value: unknown,
+  displayMode: "count" | "percentage"
+): string | number | undefined => {
+  if (typeof value !== "number") return undefined;
+
+  return displayMode === "percentage"
+    ? `${value.toFixed(0)}%`
+    : value.toLocaleString();
+};
+
+export function timeAgo(date: Date): string {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+
+  const intervals: [number, Intl.RelativeTimeFormatUnit][] = [
+    [60, 'second'],
+    [60, 'minute'],
+    [24, 'hour'],
+    [7, 'day'],
+    [4.345, 'week'],
+    [12, 'month'],
+    [Number.POSITIVE_INFINITY, 'year'],
+  ];
+
+  let count = seconds;
+  let unit: Intl.RelativeTimeFormatUnit = 'second';
+
+  for (const [limit, nextUnit] of intervals) {
+    if (count < limit) break;
+    count /= limit;
+    unit = nextUnit;
+  }
+
+  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  return rtf.format(-Math.floor(count), unit);
+}
+
+
+export function getCssColor(variable: string) {
+  if (typeof window === "undefined") return "#000";
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(variable)
+    .trim();
+}
+
+
+/**
+ * Formats date like: "Sep 5, 3:42 PM"
+ * Replacement for date-fns format(date, 'MMM d, h:mm a')
+ */
+export function formatDateTime(date: Date) {
+  // Ensure we always work with a Date instance
+  const d = date instanceof Date ? date : new Date(date);
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",   // MMM
+    day: "numeric",   // d
+    hour: "numeric",  // h
+    minute: "2-digit",
+    hour12: true,     // a (AM/PM)
+  }).format(d);
+}

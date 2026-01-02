@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { AppBar, Box, Tab, Tabs } from "@mui/material";
 
+import { BehaviorInsights } from "../Insights/BehaviorInsights";
+import { SummaryContainer } from "../Insights/SummaryContainer";
 import { SurveyInsights } from "../Insights/SurveyInsights";
 
 import ResultResponses from "./ResultResponses";
@@ -19,6 +21,10 @@ const Results = () => {
     content = <SurveyInsights />;
   } else if (value === 1) {
     content = <ResultResponses />;
+  } else if (value === 2) {
+    content = <SummaryContainer />;
+  } else if (value === 3) {
+    content = <BehaviorInsights />;
   }
 
   return (
@@ -99,6 +105,28 @@ const Results = () => {
                 <Tab
                   label="Responses"
                   value={1}
+                  sx={{
+                    fontWeight: 600,
+                    color: "black",
+                    "& .MuiTab-iconWrapper": {
+                      color: "black",
+                    },
+                  }}
+                />
+                <Tab
+                  label="Summary"
+                  value={2}
+                  sx={{
+                    fontWeight: 600,
+                    color: "black",
+                    "& .MuiTab-iconWrapper": {
+                      color: "black",
+                    },
+                  }}
+                />
+                <Tab
+                  label="Behavior"
+                  value={3}
                   sx={{
                     fontWeight: 600,
                     color: "black",
