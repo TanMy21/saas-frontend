@@ -33,10 +33,8 @@ const Results = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          // gap: "1%",
           width: "100%",
           height: "100%",
-          // border: "2px solid black",
         }}
       >
         <Box sx={{ width: "100%", height: "48px" }}>
@@ -88,7 +86,6 @@ const Results = () => {
                   "& .MuiTab-root": {
                     textTransform: "capitalize",
                   },
-                  // border: "2px solid blue",
                 }}
               >
                 <Tab
@@ -96,9 +93,16 @@ const Results = () => {
                   value={0}
                   sx={{
                     fontWeight: 600,
-                    color: "black",
+                    color: "#718096",
                     "& .MuiTab-iconWrapper": {
-                      color: "black",
+                      color: "#718096",
+                    },
+                    "&.Mui-selected": {
+                      color: "#111827",
+                    },
+
+                    "&.Mui-selected .MuiTab-iconWrapper": {
+                      color: "#111827",
                     },
                   }}
                 />
@@ -107,9 +111,16 @@ const Results = () => {
                   value={1}
                   sx={{
                     fontWeight: 600,
-                    color: "black",
+                    color: "#718096",
                     "& .MuiTab-iconWrapper": {
-                      color: "black",
+                      color: "#718096",
+                    },
+                    "&.Mui-selected": {
+                      color: "#111827",
+                    },
+
+                    "&.Mui-selected .MuiTab-iconWrapper": {
+                      color: "#111827",
                     },
                   }}
                 />
@@ -118,9 +129,16 @@ const Results = () => {
                   value={2}
                   sx={{
                     fontWeight: 600,
-                    color: "black",
+                    color: "#718096",
                     "& .MuiTab-iconWrapper": {
-                      color: "black",
+                      color: "#718096",
+                    },
+                    "&.Mui-selected": {
+                      color: "#111827",
+                    },
+
+                    "&.Mui-selected .MuiTab-iconWrapper": {
+                      color: "#111827",
                     },
                   }}
                 />
@@ -129,9 +147,16 @@ const Results = () => {
                   value={3}
                   sx={{
                     fontWeight: 600,
-                    color: "black",
+                    color: "#718096",
                     "& .MuiTab-iconWrapper": {
-                      color: "black",
+                      color: "#718096",
+                    },
+                    "&.Mui-selected": {
+                      color: "#111827",
+                    },
+
+                    "&.Mui-selected .MuiTab-iconWrapper": {
+                      color: "#111827",
                     },
                   }}
                 />
@@ -141,9 +166,9 @@ const Results = () => {
         </Box>
         <Box
           sx={{
-            top: "8%",
-            width: "100%",
-            height: "96vh",
+            minHeight: 0,
+            flex: 1,
+            overflowY: "auto",
             backgroundColor: "#FBFBFB" /* border: "2px solid red"*/,
           }}
         >

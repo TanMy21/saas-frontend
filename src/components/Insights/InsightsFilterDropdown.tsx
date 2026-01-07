@@ -1,30 +1,94 @@
-import { ChevronDown } from "lucide-react";
+import { Box, FormControl, MenuItem, Select } from "@mui/material";
 
-export const InsightsFilterDropdown = ({
-  label,
+import { InsightsFilterDropdownProps } from "../../utils/insightTypes";
+
+export const InsightsFilterDropdown = <T extends string>({
   value,
   options,
   onChange,
   icon: Icon,
-}: any) => (
-  <div>
-    <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">
-      {label}
-    </label>
-    <div className="relative">
-      <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-      <select
+}: InsightsFilterDropdownProps<T>) => {
+  return (
+    <FormControl
+      size="small"
+      sx={{
+        position: "relative",
+        width: 180,
+      }}
+    >
+      <Select
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="appearance-none w-full bg-white border border-gray-200 py-2 pl-9 pr-8 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500/20"
+        onChange={(e) => onChange(e.target.value as T)}
+        displayEmpty
+        sx={{
+          height: 44,
+          pl: 4.5,
+          pr: 2,
+          borderRadius: 2,
+          fontSize: 14,
+          fontWeight: 500,
+          backgroundColor: "background.paper",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "divider",
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "primary.main",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "primary.main",
+            borderWidth: 1,
+          },
+        }}
+        MenuProps={{
+          PaperProps: {
+            sx: {
+              mt: 1,
+              borderRadius: 2,
+              border: "1px solid",
+              borderColor: "divider",
+              boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+            },
+          },
+        }}
       >
-        {options.map((o: any) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
+        {options.map((option) => (
+          <MenuItem
+            key={option.value}
+            value={option.value}
+            sx={{
+              borderRadius: 1,
+              mx: 0.5,
+              my: 0.25,
+              fontSize: 14,
+              fontWeight: 500,
+              "&.Mui-selected": {
+                backgroundColor: "primary.main",
+                color: "primary.contrastText",
+              },
+              "&.Mui-selected:hover": {
+                backgroundColor: "primary.dark",
+              },
+            }}
+          >
+            {option.label}
+          </MenuItem>
         ))}
-      </select>
-      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-    </div>
-  </div>
-);
+      </Select>
+
+      {/* Left icon */}
+      <Box
+        sx={{
+          position: "absolute",
+          left: 14,
+          top: "50%",
+          transform: "translateY(-50%)",
+          color: "text.secondary",
+          pointerEvents: "none",
+        }}
+      >
+        <Icon size={16} />
+      </Box>
+    </FormControl>
+  );
+};

@@ -1,20 +1,56 @@
+import { type TableCellProps } from "@mui/material";
+import { type LucideIcon } from "lucide-react";
+
 import { Question } from "./types";
 
-type MockQuestionTemp = {
-  id: number;
+type DistributionItem = { label: string; percent: number };
+
+export type GetInsightsArgs = {
+  surveyID: string;
+  time: "all" | "week" | "month";
+  device: "all" | "mobile" | "desktop" | "tablet";
+};
+
+export type TimeFilter = "all" | "week" | "month";
+export type DeviceFilter = "all" | "mobile" | "desktop" | "tablet";
+
+export type InsightsFilters = {
+  time: TimeFilter;
+  device: DeviceFilter;
+};
+
+export type InsightTableColumnConfig = {
+  label: string;
+  icon?: LucideIcon;
+  align?: TableCellProps["align"];
+};
+
+export type InsightQuestionRow = {
+  id: string;
   number: string;
   text: string;
   type: string;
   reached: number;
   answered: number;
-  distribution: { label: string; percent: number }[];
+
+  dropped?: number;
+  dropOffRate?: number;
+  avgTimeMs?: number;
+
+  distribution?: DistributionItem[];
 };
 
-export interface SurveyInsightTable {
-  questions: MockQuestionTemp[];
-  onSelect: (question: Question) => void;
+export interface InsightsFilterDropdownProps<T extends string> {
+  label: string;
+  value: T;
+  options: { label: string; value: T }[];
+  onChange: (value: T) => void;
+  icon: React.ComponentType<any>;
 }
 
+export interface SurveyInsightTable {
+  questions: InsightQuestionRow[];
+}
 
 export interface SummaryHeaderProps {
   title: string;
@@ -35,13 +71,11 @@ export interface SingleChoiceChartProps {
   displayMode: "count" | "percentage";
 }
 
-
-
 export interface MockQuestionBeh {
   id: string;
   number: number;
   text: string;
-  type: 'multiple_choice' | 'text' | 'rating' | 'scale';
+  type: "multiple_choice" | "text" | "rating" | "scale";
   responseRate: number;
   dropOffRate: number;
   avgTimeSpent: number;
@@ -57,13 +91,21 @@ export interface BehavioralSignals {
 }
 
 export interface SegmentComparison {
-  segment: 'completed' | 'dropped' | 'mobile' | 'desktop' | 'fast' | 'slow';
+  segment: "completed" | "dropped" | "mobile" | "desktop" | "fast" | "slow";
   signals: BehavioralSignals;
 }
 
 export interface BehaviorEvent {
   timestamp: number;
-  type: 'question_start' | 'first_interaction' | 'pause' | 'blur' | 'focus' | 'backtrack' | 'answer' | 'idle';
+  type:
+    | "question_start"
+    | "first_interaction"
+    | "pause"
+    | "blur"
+    | "focus"
+    | "backtrack"
+    | "answer"
+    | "idle";
   duration?: number;
   details?: string;
 }
@@ -72,9 +114,9 @@ export interface Participant {
   id: string;
   startedAt: Date;
   completedAt?: Date;
-  status: 'completed' | 'dropped' | 'in_progress';
-  device: 'mobile' | 'desktop';
-  responseTime: 'fast' | 'average' | 'slow';
+  status: "completed" | "dropped" | "in_progress";
+  device: "mobile" | "desktop";
+  responseTime: "fast" | "average" | "slow";
   questionsAnswered: number;
   totalQuestions: number;
   droppedAtQuestion?: number;

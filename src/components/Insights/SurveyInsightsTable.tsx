@@ -2,28 +2,41 @@ import { useState } from "react";
 
 import {
   Box,
-  Card,
+  Button,
   Chip,
-  Divider,
   IconButton,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { SurveyInsightTable } from "../../utils/insightTypes";
-import { calculateDropOff, severitySx } from "../../utils/utils";
+import {
+  InsightTableColumnConfig,
+  SurveyInsightTable,
+} from "../../utils/insightTypes";
+import { convertHtmlToPlainText } from "../../utils/richTextUtils";
+import { severitySx } from "../../utils/utils";
 
-const SurveyInsightsTable = ({
-  questions,
-  onSelect,
-}: SurveyInsightTable) => {
+const ITEMS_PER_PAGE = 5;
+
+const INSIGHTS_COLUMNS: InsightTableColumnConfig[] = [
+  { label: "  " },
+  { label: "Question" },
+  { label: "Reached", align: "right" },
+  { label: "Answered", align: "right" },
+  { label: "Dropped", align: "right" },
+  { label: "Drop Rate", align: "right" },
+  { label: "Avg. Time", align: "right" },
+];
+
+export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
   const [page, setPage] = useState(1);
-  const ITEMS_PER_PAGE = 5;
 
   const totalPages = Math.ceil(questions.length / ITEMS_PER_PAGE);
   const questionsSlice = questions.slice(
@@ -31,118 +44,187 @@ const SurveyInsightsTable = ({
     page * ITEMS_PER_PAGE
   );
 
- 
-
-  const barColor = (rate: number) => {
-    if (rate >= 25) return "#ef4444";
-    if (rate >= 10) return "#f59e0b";
-    return "#10b981";
-  };
+  const startItem = (page - 1) * ITEMS_PER_PAGE + 1;
+  const endItem = Math.min(page * ITEMS_PER_PAGE, questions.length);
 
   return (
-    <Card>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>#</TableCell>
-            <TableCell>Question</TableCell>
-            <TableCell align="right">Friction</TableCell>
-            <TableCell align="right">Reached</TableCell>
-            <TableCell align="right">Answered</TableCell>
-            <TableCell align="right">Dropped</TableCell>
-            <TableCell align="right">Rate</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {questions.map((q) => {
-            const { dropped, rate } = calculateDropOff(q.reached, q.answered);
-
-            const fillColor = barColor(rate);
-            return (
-              <TableRow
-                key={q.id}
-                hover
-                sx={{ cursor: "pointer" }}
-                onClick={() => onSelect(q)}
-              >
-                <TableCell>{q.number}</TableCell>
-                <TableCell>
-                  <Typography fontWeight={500}>{q.text}</Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {q.type}
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">
-                  {/* Outer track */}
+    <Box
+      sx={{
+        width: "100%",
+        overflow: "hidden",
+        borderRadius: 2,
+        border: "1px solid",
+        borderColor: "divider",
+        bgcolor: "background.paper",
+        boxShadow: 1,
+      }}
+    >
+      {/* Table */}
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow sx={{ bgcolor: "#F3F4F6" }}>
+              {INSIGHTS_COLUMNS.map((col, i) => (
+                <TableCell
+                  key={i}
+                  align={col.align ?? "left"}
+                  sx={{
+                    px: 3,
+                    py: 2,
+                    textTransform: "uppercase",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "text.secondary",
+                  }}
+                >
                   <Box
                     sx={{
-                      height: 8,
-                      width: "100%",
-                      bgcolor: "#f3f4f6",
-                      borderRadius: 999,
-                      overflow: "hidden",
-                      position: "relative",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent:
+                        col.align === "right" ? "flex-end" : "flex-start",
+                      gap: 1,
                     }}
                   >
-                    {/* Filled bar */}
-                    <Box
-                      sx={{
-                        height: "100%",
-                        width: `${Math.max(2, rate)}%`, // ✅ same as your Tailwind
-                        bgcolor: fillColor, // ✅ green/yellow/red
-                        borderRadius: 999,
-                        transition: "width 700ms ease-out",
-                      }}
-                    />
+                    {col.label}
                   </Box>
                 </TableCell>
-                <TableCell align="right">{q.reached}</TableCell>
-                <TableCell align="right">{q.answered}</TableCell>
-                <TableCell align="right">-{dropped}</TableCell>
-                <TableCell align="right">
+              ))}
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {questionsSlice.map((q, index) => (
+              <TableRow
+                key={q.id}
+                sx={{
+                  bgcolor: index % 2 === 0 ? "background.paper" : "#F8FAFC",
+                  transition: "background-color 150ms",
+                  "&:hover": {
+                    bgcolor: "action.selected",
+                  },
+                }}
+              >
+                <TableCell sx={{ px: 3, fontWeight: 600 }}>
+                  {q.number}
+                </TableCell>
+
+                <TableCell sx={{ px: 3, maxWidth: 420 }}>
+                  <Tooltip
+                    title={convertHtmlToPlainText(q.text)}
+                    placement="top-start"
+                    arrow
+                  >
+                    <Typography fontWeight={500} noWrap>
+                      {convertHtmlToPlainText(q.text)}
+                    </Typography>
+                  </Tooltip>
                   <Chip
-                    label={`${rate.toFixed(1)}%`}
+                    label={q.type}
+                    size="small"
                     sx={{
-                      fontWeight: 700,
-                      border: "1px solid",
-                      ...severitySx(rate),
+                      mt: 0.5,
+                      bgcolor: "#EDE9FE",
+                      color: "#4C1D95",
+                      fontWeight: 600,
+                      opacity: 0.85,
                     }}
                   />
                 </TableCell>
+
+                <NumericCell>{q.reached}</NumericCell>
+                <NumericCell>{q.answered}</NumericCell>
+                <NumericCell>{q?.dropped!}</NumericCell>
+
+                <TableCell align="right" sx={{ px: 3 }}>
+                  <Box
+                    sx={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      px: 2,
+                      py: 0.5,
+                      minWidth: 60,
+                      borderRadius: 999,
+                      border: "1px solid",
+                      fontFamily: "monospace",
+                      fontWeight: 600,
+                      fontVariantNumeric: "tabular-nums",
+                      ...severitySx(q?.dropOffRate!),
+                    }}
+                  >
+                    {q.dropOffRate?.toFixed(1)}%
+                  </Box>
+                </TableCell>
+
+                <TableCell align="right" sx={{ px: 3 }}>
+                  <Typography
+                    fontFamily="monospace"
+                    fontWeight={600}
+                    color="text.secondary"
+                  >
+                    {(q?.avgTimeMs! / 1000).toFixed(1)}s
+                  </Typography>
+                </TableCell>
               </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-      <Divider />
-
+      {/* Pagination */}
       <Box
         sx={{
-          p: 2,
+          px: 3,
+          py: 2,
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
+          justifyContent: "space-between",
+          borderTop: "1px solid",
+          borderColor: "divider",
+          bgcolor: "#F3F4F6",
         }}
       >
-        <Typography variant="caption">
-          Page {page} of {totalPages}
+        <Typography variant="body2" color="text.secondary">
+          Showing <b>{startItem}</b> to <b>{endItem}</b> of{" "}
+          <b>{questions.length}</b> questions
         </Typography>
 
-        <Box>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton disabled={page === 1} onClick={() => setPage(page - 1)}>
-            <ChevronLeft />
+            <ChevronLeft size={18} />
           </IconButton>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <Button
+              key={p}
+              size="small"
+              onClick={() => setPage(p)}
+              variant={p === page ? "contained" : "text"}
+            >
+              {p}
+            </Button>
+          ))}
+
           <IconButton
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
           >
-            <ChevronRight />
+            <ChevronRight size={18} />
           </IconButton>
         </Box>
       </Box>
-    </Card>
+    </Box>
   );
 };
+
+// helper component for numeric cells
+const NumericCell = ({ children }: { children: number }) => (
+  <TableCell align="right" sx={{ px: 3 }}>
+    <Typography fontFamily="monospace" fontWeight={600}>
+      {children.toLocaleString()}
+    </Typography>
+  </TableCell>
+);
 
 export default SurveyInsightsTable;

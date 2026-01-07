@@ -861,6 +861,44 @@ export interface ElementBackgroundPreferencesRemoveButtonsProps {
   questionBackgroundColor: string;
 }
 
+
+export interface InsightsResponse {
+  meta: {
+    surveyID: string;
+    surveyTitle: string;
+    totalParticipants: number;
+  };
+  summary: {
+    starts: number;
+    completed: number;
+    completionRate: number;
+    dropOffRate: number;
+    biggestDropOff: {
+      questionID: string;
+      text: string;
+      order: number;
+      dropOffRate: number;
+    };
+  };
+  trends: {
+    series: Array<{ date: string; value: number }>;
+  };
+  dropOffTable: Array<{
+    questionID: string;
+    order: number;
+    text: string;
+    type: string;
+    reached: number;
+    answered: number;
+    dropped: number;
+    dropOffRate: number;
+    avgTimeMs: number;
+  }>;
+  questionDetails: Record<string, any>;
+}
+
+
+
 export interface QuestionImageUploadModalProps {
   uploadImageModalOpen: boolean;
   setUploadImageModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -1231,6 +1269,7 @@ export interface SurveyBuilderHeaderProps {
   workspaceId?: string;
   workspaceName?: string;
   title?: string;
+  tabValue?: string;
   surveyTitle?: string;
 }
 
@@ -1485,3 +1524,6 @@ export interface NewWorkspaceModalProps {
 }
 
 export type GenerateSurveyFormData = z.infer<typeof generateSurveySchema>;
+
+
+

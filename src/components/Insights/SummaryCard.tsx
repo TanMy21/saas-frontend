@@ -6,6 +6,7 @@ export const SummaryCard = ({
   subtext,
   icon: Icon,
   alert,
+  success,
 }: any) => (
   <Card
     sx={{
@@ -23,7 +24,12 @@ export const SummaryCard = ({
       <Typography variant="caption" fontWeight={700} color="text.secondary">
         {label}
       </Typography>
-      {Icon && <Icon size={18} color={alert ? "#dc2626" : "#9ca3af"} />}
+      {Icon && (
+        <Icon
+          size={24}
+          color={alert ? "#dc2626" : success ? "#16a34a" : "#9ca3af"}
+        />
+      )}
     </Box>
 
     <Box>
@@ -31,7 +37,17 @@ export const SummaryCard = ({
         {value}
       </Typography>
       {subtext && (
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            whiteSpace: "nowrap",  
+            overflow: "hidden",  
+            textOverflow: "ellipsis", 
+            maxWidth: "100%", 
+          }}
+          title={typeof subtext === "string" ? subtext : undefined}
+        >
           {subtext}
         </Typography>
       )}

@@ -1,4 +1,5 @@
-import { ResultsResponse } from "../../utils/types";
+import { GetInsightsArgs } from "../../utils/insightTypes";
+import { InsightsResponse, ResultsResponse } from "../../utils/types";
 import { apiSlice } from "../api/apiSlice";
 
 export const resultsApiSlice = apiSlice.injectEndpoints({
@@ -17,7 +18,23 @@ export const resultsApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: ["Results"],
     }),
+    getInsights: builder.query<InsightsResponse, GetInsightsArgs>({
+      query: ({ surveyID, time, device }) => ({
+        url: `/insights/${surveyID}`,
+        params: {
+          time,
+          device,
+        },
+      }),
+
+      transformResponse: (response: {
+        success: boolean;
+        data: InsightsResponse;
+      }) => response.data,
+
+      providesTags: ["Results"],
+    }),
   }),
 });
 
-export const { useGetResultsQuery } = resultsApiSlice;
+export const { useGetResultsQuery, useGetInsightsQuery } = resultsApiSlice;

@@ -8,169 +8,192 @@ import {
   Calendar,
   Smartphone,
 } from "lucide-react";
+import { useParams } from "react-router-dom";
 
-import { calculateDropOff, TREND_DATA } from "../../utils/utils";
+import { useGetInsightsQuery } from "../../app/slices/resultsApiSlice";
+import {
+  DeviceFilter,
+  InsightsFilters,
+  TimeFilter,
+} from "../../utils/insightTypes";
+import { SurveyInsightsSkeleton } from "../LoadingSkeletons/SurveyInsightsSkeleton";
 
-import { DetailDrawer } from "./DetailDrawer";
 import { InsightsFilterDropdown } from "./InsightsFilterDropdown";
 import { SummaryCard } from "./SummaryCard";
-import { SurveyInsightsHeader } from "./SurveyInsightsHeader";
-import SurveyInsightsTable from "./SurveyInsightsTable";
+import { SurveyInsightsTable } from "./SurveyInsightsTable";
 import { SurveyTrendsChart } from "./SurveyTrendsChart";
 
-/* ------------------------------------
-   MOCK DATA
------------------------------------- */
-
-const MOCK_METRICS = {
-  started: 1240,
-  completed: 890,
-  avgTime: "3m 12s",
-};
-
-const MOCK_QUESTIONS = [
-  {
-    id: 1,
-    number: "Q1",
-    text: "What best describes your role?",
-    type: "Multiple Choice",
-    reached: 1240,
-    answered: 1215,
-    distribution: [
-      { label: "Founder", percent: 45 },
-      { label: "Product Manager", percent: 30 },
-      { label: "Engineer", percent: 15 },
-      { label: "Other", percent: 10 },
-    ],
-  },
-  {
-    id: 2,
-    number: "Q2",
-    text: "How large is your company?",
-    type: "Multiple Choice",
-    reached: 1215,
-    answered: 1180,
-    distribution: [
-      { label: "1-10", percent: 60 },
-      { label: "11-50", percent: 25 },
-      { label: "50+", percent: 15 },
-    ],
-  },
-  {
-    id: 3,
-    number: "Q3",
-    text: "Which features are you most interested in?",
-    type: "Checkbox",
-    reached: 1180,
-    answered: 1120,
-    distribution: [
-      { label: "Analytics", percent: 80 },
-      { label: "Export", percent: 50 },
-      { label: "Integration", percent: 30 },
-    ],
-  },
-  {
-    id: 4,
-    number: "Q4",
-    text: "What is your monthly budget for tools?",
-    type: "Currency Input",
-    reached: 1120,
-    answered: 761,
-    distribution: [
-      { label: "< $50", percent: 20 },
-      { label: "$50 - $200", percent: 40 },
-      { label: "$200+", percent: 40 },
-    ],
-  },
-  {
-    id: 5,
-    number: "Q5",
-    text: "How did you hear about us?",
-    type: "Open Text",
-    reached: 761,
-    answered: 740,
-    distribution: [
-      { label: "Answered", percent: 98 },
-      { label: "Skipped", percent: 2 },
-    ],
-  },
-];
-
-/* ------------------------------------
-   MAIN PAGE COMPONENT
------------------------------------- */
-
 export const SurveyInsights = () => {
-  const [selected, setSelected] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [filters, setFilters] = useState({ time: "all", device: "all" });
-  const [metric, setMetric] = useState("starts");
-  const [page, setPage] = useState(1);
+  const { surveyID } = useParams();
+  const [filters, setFilters] = useState<InsightsFilters>({
+    time: "all",
+    device: "all",
+  });
+  const [metric, setMetric] = useState<
+    "starts" | "completionRate" | "dropOffRate"
+  >("starts");
 
+  const { data, isLoading } = useGetInsightsQuery({
+    surveyID: surveyID!,
+    time: filters.time,
+    device: filters.device,
+  });
+
+  /**
+   * Summary card metrics
+   */
   const metrics = useMemo(() => {
-    const completionRate = Math.round(
-      (MOCK_METRICS.completed / MOCK_METRICS.started) * 100
-    );
-    return {
-      starts: MOCK_METRICS.started,
-      completionRate,
-      dropOffRate: 100 - completionRate,
-    };
-  }, []);
+    if (!data) return null;
 
-  const biggestDrop = useMemo(() => {
-    return [...MOCK_QUESTIONS].sort(
-      (a, b) =>
-        calculateDropOff(b.reached, b.answered).rate -
-        calculateDropOff(a.reached, a.answered).rate
-    )[0];
-  }, []);
+    return {
+      starts: data.summary.starts,
+      completionRate: data.summary.completionRate,
+      dropOffRate: data.summary.dropOffRate,
+      completed: data.summary.completed,
+      biggestDropOff: data.summary.biggestDropOff,
+    };
+  }, [data]);
+
+  /**
+   * drop-off table
+   */
+  const tableQuestions = useMemo(() => {
+    if (!data) return [];
+
+    return data.dropOffTable.map((q: any) => ({
+      id: q.questionID,
+      number: `Q${q.order}`,
+      text: q.text,
+      type: q.type,
+      reached: q.reached,
+      answered: q.answered,
+      dropped: q.dropOffCount,
+      dropOffRate: q.dropOffRate,
+      avgTimeMs: q.avgTimeMs,
+    }));
+  }, [data]);
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          p: { xs: 2, sm: 4 },
+          pb: 10,
+        }}
+      >
+        <SurveyInsightsSkeleton />
+      </Box>
+    );
+  }
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "#f9fafb", p: { xs: 2, sm: 4 } }}>
-      <Box sx={{ maxWidth: 1100, mx: "auto" }}>
-        <SurveyInsightsHeader
-          isLoading={isLoading}
-          onRefresh={() => {
-            setIsLoading(true);
-            setTimeout(() => setIsLoading(false), 1500);
-          }}
-        />
+    <Box sx={{ bgcolor: "#f9fafb", p: { xs: 2, sm: 3 }, pb: 10 }}>
+      <Box sx={{ maxWidth: 1200, mx: "auto" }}>
+        <Box sx={{ py: 1, mb: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 2,
+              flexWrap: "wrap",
+            }}
+          >
+            {/* LEFT: Filters */}
+            <Box
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <InsightsFilterDropdown<TimeFilter>
+                label="Time Range"
+                value={filters.time}
+                onChange={(v) => setFilters((f) => ({ ...f, time: v }))}
+                options={[
+                  { value: "all", label: "All time" },
+                  { value: "month", label: "Past month" },
+                  { value: "week", label: "Past week" },
+                ]}
+                icon={Calendar}
+              />
 
-        <Box
-          sx={{
-            backgroundColor: "#ffffff", // bg-white
-            borderTop: "1px solid #e5e7eb", // border-y border-gray-200
-            borderBottom: "1px solid #e5e7eb",
-            px: 3, // px-6 (6 * 4px = 24px)
-            py: 2, // py-4 (4 * 4px = 16px)
-            mb: 4, // mb-8 (8 * 4px = 32px)
-            display: "flex", // flex
-            gap: 2, // gap-4 (4 * 4px = 16px)
-          }}
-        >
-          <InsightsFilterDropdown
-            label="Time Range"
-            value={filters.time}
-            onChange={(v: string) => setFilters((f) => ({ ...f, time: v }))}
-            options={[
-              { value: "all", label: "All time" },
-              { value: "month", label: "Past month" },
-            ]}
-            icon={Calendar}
-          />
+              <InsightsFilterDropdown<DeviceFilter>
+                label="Device"
+                value={filters.device}
+                onChange={(v) => setFilters((f) => ({ ...f, device: v }))}
+                options={[
+                  { value: "all", label: "All devices" },
+                  { value: "mobile", label: "Mobile" },
+                  { value: "desktop", label: "Desktop" },
+                  { value: "tablet", label: "Tablet" },
+                ]}
+                icon={Smartphone}
+              />
+            </Box>
 
-          <InsightsFilterDropdown
-            label="Device"
-            value={filters.device}
-            onChange={(v: string) => setFilters((f) => ({ ...f, device: v }))}
-            options={[
-              { value: "all", label: "All devices" },
-              { value: "mobile", label: "Mobile" },
-              { value: "desktop", label: "Desktop" },
-            ]}
-            icon={Smartphone}
-          />
+            {/* RIGHT: Active filter context + clear */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+              }}
+            >
+              {/* Active filter text */}
+              {(filters.time !== "all" || filters.device !== "all") && (
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: "#6b7280",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Showing:&nbsp;
+                  {filters.time !== "all" && (
+                    <strong>
+                      {filters.time === "week"
+                        ? "Past week"
+                        : filters.time === "month"
+                          ? "Past month"
+                          : "All time"}
+                    </strong>
+                  )}
+                  {filters.time !== "all" && filters.device !== "all" && " · "}
+                  {filters.device !== "all" && (
+                    <strong>
+                      {filters.device.charAt(0).toUpperCase() +
+                        filters.device.slice(1)}
+                    </strong>
+                  )}
+                </Typography>
+              )}
+
+              {/* Clear filters */}
+              {(filters.time !== "all" || filters.device !== "all") && (
+                <Button
+                  size="small"
+                  onClick={() =>
+                    setFilters({
+                      time: "all",
+                      device: "all",
+                    })
+                  }
+                  sx={{
+                    fontSize: 12,
+                    textTransform: "none",
+                    color: "#6b7280",
+                    "&:hover": {
+                      backgroundColor: "#f3f4f6",
+                    },
+                  }}
+                >
+                  Clear filters
+                </Button>
+              )}
+            </Box>
+          </Box>
         </Box>
 
         <Box
@@ -183,19 +206,27 @@ export const SurveyInsights = () => {
         >
           <SummaryCard
             label="Total Started"
-            value={metrics.starts}
+            value={metrics?.starts}
             icon={Users}
           />
           <SummaryCard
             label="Completion Rate"
-            value={`${metrics.completionRate}%`}
-            subtext={`${MOCK_METRICS.completed} submissions`}
+            value={`${metrics?.completionRate}%`}
+            subtext={`${metrics?.completed} submissions`}
             icon={CheckCircle2}
+            success
           />
           <SummaryCard
             label="Biggest Drop-off"
-            value={`${metrics.dropOffRate}%`}
-            subtext={biggestDrop.text}
+            value={`${metrics?.biggestDropOff.dropOffRate}%`}
+            subtext={
+              metrics?.biggestDropOff && (
+                <>
+                  <strong>{`Q${metrics.biggestDropOff.order}. `}</strong>
+                  {metrics.biggestDropOff.text}
+                </>
+              )
+            }
             icon={ArrowDownRight}
             alert
           />
@@ -203,11 +234,11 @@ export const SurveyInsights = () => {
 
         <Box
           sx={{
-            backgroundColor: "#ffffff", // bg-white
-            border: "1px solid #e5e7eb", // border border-gray-200
-            borderRadius: 3, // rounded-xl
-            p: 3, // p-6
-            mb: 6, // mb-12
+            backgroundColor: "#ffffff",
+            border: "1px solid #e5e7eb",
+            borderRadius: 3,
+            p: 3,
+            mb: 6,
           }}
         >
           {/* Header */}
@@ -215,15 +246,15 @@ export const SurveyInsights = () => {
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              mb: 2, // mb-4
+              mb: 2,
               gap: 2,
               flexWrap: "wrap",
             }}
           >
             <Typography
               sx={{
-                fontWeight: 700, // font-bold
-                color: "#111827", // text-gray-900
+                fontWeight: 700,
+                color: "#111827",
                 fontSize: "1rem",
               }}
             >
@@ -234,9 +265,9 @@ export const SurveyInsights = () => {
             <Box
               sx={{
                 display: "flex",
-                backgroundColor: "#f3f4f6", // bg-gray-100
-                borderRadius: 2, // rounded-lg
-                p: 0.5, // p-1
+                backgroundColor: "#f3f4f6",
+                borderRadius: 2,
+                p: 0.5,
               }}
             >
               {["starts", "completionRate", "dropOffRate"].map((m) => {
@@ -245,16 +276,16 @@ export const SurveyInsights = () => {
                 return (
                   <Button
                     key={m}
-                    onClick={() => setMetric(m)}
+                    onClick={() => setMetric(m as typeof metric)}
                     disableRipple
                     sx={{
-                      px: 1.5, // px-3
-                      py: 0.75, // py-1.5
+                      px: 1.5,
+                      py: 0.75,
                       minWidth: "auto",
-                      fontSize: 12, // text-xs
+                      fontSize: 12,
                       fontWeight: 500,
                       textTransform: "none",
-                      borderRadius: 1.5, // rounded-md
+                      borderRadius: 1.5,
                       color: isActive ? "#111827" : "#6b7280",
                       backgroundColor: isActive ? "#ffffff" : "transparent",
                       boxShadow: isActive
@@ -280,7 +311,7 @@ export const SurveyInsights = () => {
 
           {/* Chart */}
           <SurveyTrendsChart
-            data={TREND_DATA}
+            data={data?.trends.series ?? []}
             metric={metric}
             color={
               metric === "starts"
@@ -290,22 +321,18 @@ export const SurveyInsights = () => {
                   : "#f43f5e"
             }
           />
+
+          {data?.trends.series?.length === 1 && (
+            <Typography variant="caption" sx={{ color: "#6b7280", mt: 1 }}>
+              Trend will appear as more responses come in.
+            </Typography>
+          )}
         </Box>
 
-        <Box>
-          <SurveyInsightsTable
-            questions={MOCK_QUESTIONS}
-            onSelect={setSelected}
-          />
+        <Box sx={{ mb: 8 }}>
+          <SurveyInsightsTable questions={tableQuestions} />
         </Box>
       </Box>
-
-      <DetailDrawer
-        open={Boolean(selected)}
-        question={selected}
-        totalStarts={MOCK_METRICS.started}
-        onClose={() => setSelected(null)}
-      />
     </Box>
   );
 };
