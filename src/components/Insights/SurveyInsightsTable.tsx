@@ -70,7 +70,7 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
                   align={col.align ?? "left"}
                   sx={{
                     px: 3,
-                    py: 2,
+                    py: 1.5,
                     textTransform: "uppercase",
                     fontSize: 14,
                     fontWeight: 700,
@@ -201,6 +201,14 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
               size="small"
               onClick={() => setPage(p)}
               variant={p === page ? "contained" : "text"}
+              sx={{
+                minWidth: 0,
+                width: 32,
+                height: 32,
+                borderRadius: "50%",
+                padding: 0,
+                fontWeight: 600,
+              }}
             >
               {p}
             </Button>

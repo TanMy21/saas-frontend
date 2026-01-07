@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { AppBar, Box, Tab, Tabs } from "@mui/material";
 
+import { useAppTheme } from "../../theme/useAppTheme";
 import { BehaviorInsights } from "../Insights/BehaviorInsights";
 import { SummaryContainer } from "../Insights/SummaryContainer";
 import { SurveyInsights } from "../Insights/SurveyInsights";
@@ -10,6 +11,7 @@ import ResultResponses from "./ResultResponses";
 
 const Results = () => {
   const [value, setValue] = useState(0);
+  const { scrollStyles } = useAppTheme();
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -169,7 +171,9 @@ const Results = () => {
             minHeight: 0,
             flex: 1,
             overflowY: "auto",
-            backgroundColor: "#FBFBFB" /* border: "2px solid red"*/,
+            backgroundColor: "#FBFBFB",
+            ...scrollStyles.elementsPanel,
+            /* border: "2px solid red"*/
           }}
         >
           {content}

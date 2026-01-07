@@ -93,6 +93,8 @@ const Signup = () => {
         width: "100%",
         height: "100vh",
         overflowY: "auto",
+        background:
+          "radial-gradient(125% 125% at 50% 10%, #fff 40%, #0074EB 100%)",
         // border: "3px solid red",
       }}
     >
@@ -107,7 +109,7 @@ const Signup = () => {
           margin: "auto",
           p: { xs: 0, sm: 0, md: 1 },
           flexShrink: 0,
-          backgroundColor: "#F8F9FF",
+          // backgroundColor: "#F8F9FF",
           // border: "2px solid green",
         }}
       >

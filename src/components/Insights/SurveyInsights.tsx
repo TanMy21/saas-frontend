@@ -133,7 +133,7 @@ export const SurveyInsights = () => {
               />
             </Box>
 
-            {/* RIGHT: Active filter context + clear */}
+            {/* RIGHT: Active filter context & clear filter*/}
             <Box
               sx={{
                 display: "flex",
