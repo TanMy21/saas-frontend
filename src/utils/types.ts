@@ -59,7 +59,8 @@ export interface AddElementMenuProps {
   handleElementAdd?: (menuOption: string) => void;
 }
 export interface RowData {
-  [key: string]: string;
+  participantID: string;
+  [questionID: string]: unknown;
 }
 
 export interface BuilderSpaceProps {
@@ -861,7 +862,6 @@ export interface ElementBackgroundPreferencesRemoveButtonsProps {
   questionBackgroundColor: string;
 }
 
-
 export interface InsightsResponse {
   meta: {
     surveyID: string;
@@ -896,8 +896,6 @@ export interface InsightsResponse {
   }>;
   questionDetails: Record<string, any>;
 }
-
-
 
 export interface QuestionImageUploadModalProps {
   uploadImageModalOpen: boolean;
@@ -1012,6 +1010,8 @@ export interface QuestionResponse {
   relatedQuestionID: string;
   relatedOptionID: string;
   participantID: string;
+  participant: any;
+  relatedParticipantID?: string;
   response: Record<string, string>;
   createdAt: string;
   updatedAt: string;
@@ -1034,8 +1034,14 @@ export interface RegisterFormData {
   organization: string;
 }
 
+export interface Participant {
+  participantID: string;
+  email?: string;
+}
+
 export interface ResultsResponse {
   surveyID: string;
+  participants: Participant[];
   questions: Question[];
 }
 
@@ -1524,6 +1530,3 @@ export interface NewWorkspaceModalProps {
 }
 
 export type GenerateSurveyFormData = z.infer<typeof generateSurveySchema>;
-
-
-

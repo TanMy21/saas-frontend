@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 
 import { Box, IconButton, Tooltip } from "@mui/material";
 import {
-  MRT_Icons,
   MRT_ShowHideColumnsButton,
   MRT_ToggleDensePaddingButton,
   MRT_ToggleFiltersButton,
@@ -10,7 +9,12 @@ import {
   MRT_ToggleGlobalFilterButton,
   MaterialReactTable,
 } from "material-react-table";
-import type { MRT_TableInstance } from "material-react-table";
+import type {
+  MRT_TableInstance,
+  MRT_Icons,
+  MRT_Cell,
+  MRT_ColumnDef,
+} from "material-react-table";
 import { BiShow, BiSolidHide } from "react-icons/bi";
 import { FaFilter, FaFilterCircleXmark } from "react-icons/fa6";
 import { HiDownload } from "react-icons/hi";
@@ -18,22 +22,12 @@ import { useParams } from "react-router-dom";
 
 import { useGetResultsQuery } from "../../app/slices/resultsApiSlice";
 import { RowData } from "../../utils/types";
+import { formatResponse } from "../../utils/utils";
 import DownloadResponsesModal from "../Modals/DownloadResponsesModal";
-
-//   import { mkConfig, generateCsv, download } from 'export-to-csv'; //or use your library of choice here
-
-// const columnHelper = createMRTColumnHelper();
-
-// const csvConfig = mkConfig({
-//   fieldSeparator: ",",
-//   decimalSeparator: ".",
-//   useKeysAsHeaders: true,
-// });
 
 const CustomIcons: Partial<MRT_Icons> = {
   FilterListIcon: () => <FaFilter />,
   FilterListOffIcon: () => <FaFilterCircleXmark />,
-
   ViewColumnIcon: () => <BiShow />,
   VisibilityOffIcon: () => <BiSolidHide />,
 };
@@ -60,21 +54,7 @@ const ResponsesTable = () => {
   );
 
   const questions = results?.questions ?? [];
-
-  //   const handleExportRows = (rows: MRT_Row<Person>[]) => {
-  //     const rowData = rows.map((row) => row.original);
-  //     const csv = generateCsv(csvConfig)(rowData);
-  //     download(csvConfig)(csv);
-  //   };
-
-  //   const handleExportData = () => {
-  //     const csv = generateCsv(csvConfig)(data);
-  //     download(csvConfig)(csv);
-  //   };
-
-  // console.log("surveyID Results: ", surveyID);
-  // console.log("Results: ", results);
-  // console.log("Questions : ", questions);
+  const participants = results?.participants ?? [];
 
   const handleDownload = (table: MRT_TableInstance<RowData>) => {
     handleOpen();
@@ -84,89 +64,46 @@ const ResponsesTable = () => {
     setRowData(selectedRows);
   };
 
-  const columns = useMemo(() => {
-    if (!questions) return [];
-    const colData = questions.map((question) => ({
+  const columns = useMemo<MRT_ColumnDef<RowData>[]>(() => {
+    return questions.map((question) => ({
       accessorKey: question.questionID,
       header: question.text,
-      size: 150,
+      size: question.type === "RANK" ? 500 : 180,
+      Cell: ({ cell }: { cell: MRT_Cell<RowData> }) =>
+        formatResponse(cell.getValue(), question.type),
     }));
-    // console.log("Columns: ", colData);
-    return colData;
   }, [questions]);
 
-  const rows = useMemo(() => {
-    if (!questions) return [];
-    const numRows = questions[0]?.response.length || 0;
-    const rowData = Array.from({ length: numRows }, (_, rowIndex) => {
-      const row: { [key: string]: string } = {};
+  const rows = useMemo<RowData[]>(() => {
+    if (!participants.length) return [];
+
+    return participants.map((participant) => {
+      const row: RowData = {
+        participantID: participant.participantID,
+      };
+
+      // Fill each question's response for this participant
       questions.forEach((question) => {
-        const response = question.response[rowIndex]?.response;
-        row[question.questionID] = response ? response.toString() : "";
+        // EMAIL_CONTACT → comes directly from participant
+        if (question.type === "EMAIL_CONTACT") {
+          row[question.questionID] = participant.email ?? "";
+          return;
+        }
+
+        // Find matching response for this participant
+        const resp = question.response.find(
+          (r) => r.relatedParticipantID === participant.participantID
+        );
+
+        row[question?.questionID] = resp?.response ?? null;
       });
-      // console.log("Row: ", row);
+
       return row;
     });
-    // console.log("Row Array: ", rowData);
-    return rowData;
-  }, [questions]);
+  }, [participants, questions]);
 
-  // if (isLoading) return <CircularProgress />;
-
-  // const table = useMaterialReactTable({
-  //   columns,
-  //   data: rows,
-  //   enableRowSelection: true,
-  //   columnFilterDisplayMode: "popover",
-  //   paginationDisplayMode: "pages",
-  //   positionToolbarAlertBanner: "bottom",
-  //   renderTopToolbarCustomActions: ({ table }) => (
-  //     <Box
-  //       sx={{
-  //         display: "flex",
-  //         gap: "16px",
-  //         padding: "8px",
-  //         flexWrap: "wrap",
-  //       }}
-  //     >
-  //       <Button
-  //         //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-  //         //   onClick={handleExportData}
-  //         startIcon={<FileDownloadIcon />}
-  //       >
-  //         Export All Data
-  //       </Button>
-  //       <Button
-  //         disabled={table.getPrePaginationRowModel().rows.length === 0}
-  //         //export all rows, including from the next page, (still respects filtering and sorting)
-  //         //   onClick={() =>
-  //         //     handleExportRows(table.getPrePaginationRowModel().rows)
-  //         //   }
-  //         startIcon={<FileDownloadIcon />}
-  //       >
-  //         Export All Rows
-  //       </Button>
-  //       <Button
-  //         disabled={table.getRowModel().rows.length === 0}
-  //         //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-  //         //   onClick={() => handleExportRows(table.getRowModel().rows)}
-  //         startIcon={<FileDownloadIcon />}
-  //       >
-  //         Export Page Rows
-  //       </Button>
-  //       <Button
-  //         disabled={
-  //           !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-  //         }
-  //         //only export selected rows
-  //         //   onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
-  //         startIcon={<FileDownloadIcon />}
-  //       >
-  //         Export Selected Rows
-  //       </Button>
-  //     </Box>
-  //   ),
-  // });
+  console.log("Responses BE: ", results);
+  console.log("Rows: ", rows);
 
   return (
     <>
@@ -213,18 +150,18 @@ const ResponsesTable = () => {
         muiTableProps={{
           sx: {
             borderRadius: "24px",
-            border: "1px solid #F3F3F3", // Show column and row borders
+            border: "1px solid #F3F3F3",
             "& .MuiTableCell-root": {
-              border: "1px solid #F3F3F3", // Add border to table cells
+              border: "1px solid #F3F3F3",
             },
             "& .MuiCheckbox-root": {
-              transform: "scale(1.2)", // Increase size of select checkbox
+              transform: "scale(1.2)",
             },
             "&::-webkit-scrollbar": {
-              width: "8px", // Custom scrollbar width
+              width: "8px",
             },
             "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "#0A86DA", // Custom scrollbar color
+              backgroundColor: "#0A86DA",
               borderRadius: "12px",
             },
             "&::-webkit-scrollbar-thumb:hover": {

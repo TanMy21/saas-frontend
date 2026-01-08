@@ -208,17 +208,17 @@ export function timeAgo(date: Date): string {
   const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
 
   const intervals: [number, Intl.RelativeTimeFormatUnit][] = [
-    [60, 'second'],
-    [60, 'minute'],
-    [24, 'hour'],
-    [7, 'day'],
-    [4.345, 'week'],
-    [12, 'month'],
-    [Number.POSITIVE_INFINITY, 'year'],
+    [60, "second"],
+    [60, "minute"],
+    [24, "hour"],
+    [7, "day"],
+    [4.345, "week"],
+    [12, "month"],
+    [Number.POSITIVE_INFINITY, "year"],
   ];
 
   let count = seconds;
-  let unit: Intl.RelativeTimeFormatUnit = 'second';
+  let unit: Intl.RelativeTimeFormatUnit = "second";
 
   for (const [limit, nextUnit] of intervals) {
     if (count < limit) break;
@@ -226,10 +226,9 @@ export function timeAgo(date: Date): string {
     unit = nextUnit;
   }
 
-  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
   return rtf.format(-Math.floor(count), unit);
 }
-
 
 export function getCssColor(variable: string) {
   if (typeof window === "undefined") return "#000";
@@ -237,7 +236,6 @@ export function getCssColor(variable: string) {
     .getPropertyValue(variable)
     .trim();
 }
-
 
 /**
  * Formats date like: "Sep 5, 3:42 PM"
@@ -248,10 +246,47 @@ export function formatDateTime(date: Date) {
   const d = date instanceof Date ? date : new Date(date);
 
   return new Intl.DateTimeFormat("en-US", {
-    month: "short",   // MMM
-    day: "numeric",   // d
-    hour: "numeric",  // h
+    month: "short", // MMM
+    day: "numeric", // d
+    hour: "numeric", // h
     minute: "2-digit",
-    hour12: true,     // a (AM/PM)
+    hour12: true, // a (AM/PM)
   }).format(d);
+}
+
+export function formatResponse(
+  response: unknown,
+  questionType: string
+): string {
+  if (response === null || response === undefined) {
+    return "";
+  }
+
+  if (questionType === "EMAIL_CONTACT") {
+    return typeof response === "string" ? response : "";
+  }
+
+  if (questionType === "RANK" && Array.isArray(response)) {
+    return [...response]
+      .sort((a, b) => a.rank - b.rank)
+      .map((r) => `${r.rank}. ${r.value}`)
+      .join(", ");
+  }
+
+  if (
+    (questionType === "MEDIA" || questionType === "MULTIPLE_CHOICE") &&
+    Array.isArray(response)
+  ) {
+    return response.join(", ");
+  }
+
+  if (questionType === "RANGE" || questionType === "NUMBER") {
+    return response.toString();
+  }
+
+  if (typeof response === "string" || typeof response === "number") {
+    return response.toString();
+  }
+
+  return "";
 }
