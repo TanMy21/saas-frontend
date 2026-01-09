@@ -69,8 +69,29 @@ const ResponsesTable = () => {
       accessorKey: question.questionID,
       header: question.text,
       size: question.type === "RANK" ? 500 : 180,
-      Cell: ({ cell }: { cell: MRT_Cell<RowData> }) =>
-        formatResponse(cell.getValue(), question.type),
+
+      Cell: ({ cell }: { cell: MRT_Cell<RowData> }) => {
+        const value = formatResponse(cell.getValue(), question.type);
+
+        if (!value) {
+          return (
+            <Box
+              sx={{
+                color: "#9ca3af",
+                backgroundColor: "#9ca3af",
+                fontStyle: "italic",
+                textAlign: "center",
+              }}
+            >
+              <span style={{ color: "#9ca3af", fontSize: 12 }}>
+                No response
+              </span>
+            </Box>
+          );
+        }
+
+        return <>{value}</>;
+      },
     }));
   }, [questions]);
 
@@ -110,6 +131,13 @@ const ResponsesTable = () => {
       <MaterialReactTable
         columns={columns}
         data={rows}
+        initialState={{
+          pagination: {
+            pageSize: 10,
+            pageIndex: 0,
+          },
+          density: "compact",
+        }}
         enableRowSelection={true}
         columnFilterDisplayMode={"subheader"}
         paginationDisplayMode={"pages"}
@@ -169,6 +197,26 @@ const ResponsesTable = () => {
             },
           },
         }}
+        muiTableHeadCellProps={({ column }) => ({
+          sx: {
+            ...(column.id === "mrt-row-numbers" && {
+              position: "sticky",
+              left: 0,
+              zIndex: 4,
+              backgroundColor: "#f8fafc",
+            }),
+          },
+        })}
+        muiTableBodyCellProps={({ column }) => ({
+          sx: {
+            ...(column.id === "mrt-row-numbers" && {
+              position: "sticky",
+              left: 0,
+              zIndex: 3,
+              backgroundColor: "#ffffff",
+            }),
+          },
+        })}
       />
       <DownloadResponsesModal
         rowData={rowData}

@@ -259,7 +259,7 @@ export function formatResponse(
   questionType: string
 ): string {
   if (response === null || response === undefined) {
-    return "";
+    return "No Response";
   }
 
   if (questionType === "EMAIL_CONTACT") {
