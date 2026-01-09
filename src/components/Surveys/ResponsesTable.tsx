@@ -77,10 +77,15 @@ const ResponsesTable = () => {
           return (
             <Box
               sx={{
-                color: "#9ca3af",
-                backgroundColor: "#9ca3af",
+                display: "inline-flex",
+                alignItems: "center",
+                px: 1,
+                py: 0.25,
+                borderRadius: "6px",
+                fontSize: "12px",
+                color: "#6b7280",
+                backgroundColor: "#f3f4f6",
                 fontStyle: "italic",
-                textAlign: "center",
               }}
             >
               <span style={{ color: "#9ca3af", fontSize: 12 }}>
@@ -146,77 +151,226 @@ const ResponsesTable = () => {
         enableSorting={true}
         enableRowNumbers={true}
         enableColumnResizing={true}
+        enableColumnOrdering={true}
+        enablePinning={true}
+        layoutMode="grid"
+        enableStickyHeader={true}
+        enableRowVirtualization={rows.length > 100}
         icons={CustomIcons}
-        renderToolbarInternalActions={({ table }) => {
-          return (
-            <>
-              <MRT_ToggleGlobalFilterButton table={table} />
-              <Box>
-                {/* add custom button to print table  */}
-                <Tooltip title="Download Responses">
-                  <IconButton onClick={() => handleDownload(table)}>
-                    <HiDownload />
-                  </IconButton>
-                </Tooltip>
+        renderToolbarInternalActions={({ table }) => (
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            {/* Search */}
+            <MRT_ToggleGlobalFilterButton table={table} />
 
-                {/* along-side built-in buttons in whatever order you want them */}
+            {/* Divider */}
+            <Box
+              sx={{
+                width: "1px",
+                height: "24px",
+                bgcolor: "divider",
+                mx: 0.5,
+              }}
+            />
 
-                <MRT_ToggleFiltersButton table={table} />
-                <MRT_ShowHideColumnsButton table={table} />
-                <MRT_ToggleDensePaddingButton table={table} />
-                <MRT_ToggleFullScreenButton table={table} />
-                {/* <MRT_ExpandAllButton table={table} /> */}
-              </Box>
-            </>
-          );
-        }}
+            {/* Export Action */}
+            <Tooltip title="Download Responses" arrow placement="top">
+              <IconButton
+                onClick={() => handleDownload(table)}
+                sx={{
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    bgcolor: "primary.main",
+                    color: "white",
+                    transform: "translateY(-2px)",
+                    boxShadow: 2,
+                  },
+                }}
+              >
+                <HiDownload />
+              </IconButton>
+            </Tooltip>
+
+            {/* Divider */}
+            <Box
+              sx={{
+                width: "1px",
+                height: "24px",
+                bgcolor: "divider",
+                mx: 0.5,
+              }}
+            />
+
+            {/* View Controls */}
+            <MRT_ToggleFiltersButton table={table} />
+            <MRT_ShowHideColumnsButton table={table} />
+            <MRT_ToggleDensePaddingButton table={table} />
+            <MRT_ToggleFullScreenButton table={table} />
+          </Box>
+        )}
+        // Loading states
         state={{
-          isLoading: isDataLoading ? true : false,
-          showProgressBars: isDataLoading ? true : false,
-          showSkeletons: isDataLoading ? true : false,
+          isLoading: isDataLoading,
+          showProgressBars: isDataLoading,
+          showSkeletons: isDataLoading,
         }}
+        // Enhanced table styling
         muiTableProps={{
           sx: {
-            borderRadius: "24px",
-            border: "1px solid #F3F3F3",
-            "& .MuiTableCell-root": {
-              border: "1px solid #F3F3F3",
+            borderRadius: "16px",
+            overflow: "hidden",
+            minWidth: "max-content",
+            boxShadow:
+              "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+            border: "1px solid #E5E7EB",
+          },
+        }}
+        // Paper container styling
+        muiTablePaperProps={{
+          elevation: 0,
+          sx: {
+            borderRadius: "16px",
+            overflow: "hidden",
+          },
+        }}
+        // Header styling
+        muiTableHeadCellProps={{
+          sx: {
+            bgcolor: "#F9FAFB",
+            fontWeight: 600,
+            fontSize: "0.875rem",
+            color: "#374151",
+            borderBottom: "2px solid #E5E7EB",
+            "&:hover": {
+              bgcolor: "#F3F4F6",
             },
-            "& .MuiCheckbox-root": {
+            transition: "background-color 0.2s ease",
+          },
+        }}
+        // Body cell styling
+        muiTableBodyCellProps={{
+          sx: {
+            fontSize: "0.875rem",
+            borderBottom: "1px solid #F3F4F6",
+            transition: "background-color 0.15s ease",
+          },
+        }}
+        // Row styling with hover effect
+        muiTableBodyRowProps={({ row }) => ({
+          sx: {
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+            "&:hover": {
+              bgcolor: "#F0F9FF",
+              transform: "scale(1.001)",
+              boxShadow: "0 2px 8px rgba(10, 134, 218, 0.1)",
+            },
+            "&:last-child td": {
+              borderBottom: "none",
+            },
+          },
+        })}
+        // Enhanced checkbox styling
+        muiSelectCheckboxProps={{
+          sx: {
+            transform: "scale(1.1)",
+            transition: "all 0.2s ease",
+            "&:hover": {
               transform: "scale(1.2)",
             },
-            "&::-webkit-scrollbar": {
-              width: "8px",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "#0A86DA",
-              borderRadius: "12px",
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              backgroundColor: "#0A86DA",
+            "& .MuiSvgIcon-root": {
+              borderRadius: "4px",
             },
           },
         }}
-        muiTableHeadCellProps={({ column }) => ({
+        // Pagination styling
+        muiPaginationProps={{
           sx: {
-            ...(column.id === "mrt-row-numbers" && {
-              position: "sticky",
-              left: 0,
-              zIndex: 4,
-              backgroundColor: "#f8fafc",
-            }),
+            "& .MuiPaginationItem-root": {
+              borderRadius: "8px",
+              transition: "all 0.2s ease",
+              "&:hover": {
+                bgcolor: "#F0F9FF",
+                transform: "translateY(-1px)",
+              },
+              "&.Mui-selected": {
+                bgcolor: "#0A86DA",
+                color: "white",
+                "&:hover": {
+                  bgcolor: "#0974C1",
+                },
+              },
+            },
           },
-        })}
-        muiTableBodyCellProps={({ column }) => ({
+        }}
+        // Toolbar styling
+        muiTopToolbarProps={{
           sx: {
-            ...(column.id === "mrt-row-numbers" && {
-              position: "sticky",
-              left: 0,
-              zIndex: 3,
-              backgroundColor: "#ffffff",
-            }),
+            bgcolor: "#FAFBFC",
+            borderBottom: "1px solid #E5E7EB",
+            "& .MuiIconButton-root": {
+              transition: "all 0.2s ease",
+              "&:hover": {
+                transform: "scale(1.05)",
+              },
+            },
           },
-        })}
+        }}
+        // Bottom toolbar styling
+        muiBottomToolbarProps={{
+          sx: {
+            bgcolor: "#FAFBFC",
+            borderTop: "1px solid #E5E7EB",
+          },
+        }}
+        // Custom scrollbar
+        muiTableContainerProps={{
+          sx: {
+            maxHeight: "70vh",
+            "&::-webkit-scrollbar": {
+              width: "10px",
+              height: "10px",
+            },
+            "&::-webkit-scrollbar-track": {
+              bgcolor: "#F3F4F6",
+              borderRadius: "10px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              bgcolor: "#0A86DA",
+              borderRadius: "10px",
+              border: "2px solid #F3F4F6",
+              transition: "background-color 0.2s ease",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              bgcolor: "#0974C1",
+            },
+            "&::-webkit-scrollbar-corner": {
+              bgcolor: "transparent",
+            },
+            overflowX: "auto",
+            overflowY: "auto",
+          },
+        }}
+        // Display column options
+        displayColumnDefOptions={{
+          "mrt-row-numbers": {
+            size: 60,
+            muiTableHeadCellProps: {
+              sx: {
+                bgcolor: "#F9FAFB",
+              },
+            },
+          },
+          "mrt-row-select": {
+            size: 60,
+          },
+        }}
       />
       <DownloadResponsesModal
         rowData={rowData}
