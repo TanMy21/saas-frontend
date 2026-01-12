@@ -14,6 +14,7 @@ import type {
   MRT_Icons,
   MRT_Cell,
   MRT_ColumnDef,
+  MRT_Column,
 } from "material-react-table";
 import { BiShow, BiSolidHide } from "react-icons/bi";
 import { FaFilter, FaFilterCircleXmark } from "react-icons/fa6";
@@ -142,6 +143,7 @@ const ResponsesTable = () => {
             pageIndex: 0,
           },
           density: "compact",
+          columnPinning: { left: ["mrt-row-numbers"] },
         }}
         enableRowSelection={true}
         columnFilterDisplayMode={"subheader"}
@@ -157,39 +159,23 @@ const ResponsesTable = () => {
         enableStickyHeader={true}
         enableRowVirtualization={rows.length > 100}
         icons={CustomIcons}
+        renderTopToolbarCustomActions={({ table }) => (
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <MRT_ToggleDensePaddingButton table={table} />
+            <MRT_ToggleFiltersButton table={table} />
+            <MRT_ShowHideColumnsButton table={table} />
+          </Box>
+        )}
         renderToolbarInternalActions={({ table }) => (
-          <Box
-            sx={{
-              display: "flex",
-              gap: 1,
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            {/* Search */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MRT_ToggleGlobalFilterButton table={table} />
-
-            {/* Divider */}
-            <Box
-              sx={{
-                width: "1px",
-                height: "24px",
-                bgcolor: "divider",
-                mx: 0.5,
-              }}
-            />
-
-            {/* Export Action */}
-            <Tooltip title="Download Responses" arrow placement="top">
+            <Tooltip title="Download Responses">
               <IconButton
                 onClick={() => handleDownload(table)}
                 sx={{
-                  transition: "all 0.2s ease",
+                  borderRadius: "8px",
                   "&:hover": {
-                    bgcolor: "primary.main",
-                    color: "white",
-                    transform: "translateY(-2px)",
-                    boxShadow: 2,
+                    bgcolor: "#F1F1EF",
                   },
                 }}
               >
@@ -197,20 +183,6 @@ const ResponsesTable = () => {
               </IconButton>
             </Tooltip>
 
-            {/* Divider */}
-            <Box
-              sx={{
-                width: "1px",
-                height: "24px",
-                bgcolor: "divider",
-                mx: 0.5,
-              }}
-            />
-
-            {/* View Controls */}
-            <MRT_ToggleFiltersButton table={table} />
-            <MRT_ShowHideColumnsButton table={table} />
-            <MRT_ToggleDensePaddingButton table={table} />
             <MRT_ToggleFullScreenButton table={table} />
           </Box>
         )}
@@ -223,51 +195,81 @@ const ResponsesTable = () => {
         // Enhanced table styling
         muiTableProps={{
           sx: {
-            borderRadius: "16px",
-            overflow: "hidden",
             minWidth: "max-content",
-            boxShadow:
-              "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-            border: "1px solid #E5E7EB",
+            borderRadius: "12px",
+            border: "1px solid #E9E9E7",
+            boxShadow: "none",
+            // overflow: "hidden",
+            backgroundColor: "#fff",
           },
         }}
         // Paper container styling
         muiTablePaperProps={{
           elevation: 0,
           sx: {
-            borderRadius: "16px",
+            borderRadius: "12px",
             overflow: "hidden",
+            boxShadow: "none",
+            border: "none",
+            backgroundColor: "transparent",
           },
         }}
         // Header styling
-        muiTableHeadCellProps={{
+        muiTableHeadCellProps={({
+          column,
+        }: {
+          column: MRT_Column<RowData>;
+        }) => ({
           sx: {
-            bgcolor: "#F9FAFB",
+            backgroundColor: "#F5F5F5",
             fontWeight: 600,
-            fontSize: "0.875rem",
-            color: "#374151",
-            borderBottom: "2px solid #E5E7EB",
-            "&:hover": {
-              bgcolor: "#F3F4F6",
-            },
-            transition: "background-color 0.2s ease",
+            color: "#61615D",
+
+            // 👇 vertical separator
+            boxShadow: "inset -1px 0 0 #E5E7EB",
+
+            ...(column.id === "mrt-row-numbers" && {
+              position: "sticky",
+              left: 0,
+              zIndex: 5,
+              backgroundColor: "#fbfbfc",
+              boxShadow: "inset -1px 0 0 #E5E7EB, 2px 0 0 rgba(0,0,0,0.04)",
+            }),
           },
-        }}
+        })}
         // Body cell styling
-        muiTableBodyCellProps={{
+        muiTableBodyCellProps={({
+          column,
+        }: {
+          column: MRT_Column<RowData>;
+        }) => ({
           sx: {
-            fontSize: "0.875rem",
-            borderBottom: "1px solid #F3F4F6",
-            transition: "background-color 0.15s ease",
+            backgroundColor: "#ffffff",
+            fontWeight: 600,
+            color: "#61615D",
+
+            // 👇 vertical separator
+            boxShadow: "inset -1px 0 0 #E5E7EB",
+
+            ...(column.id === "mrt-row-numbers" && {
+              position: "sticky",
+              left: 0,
+              zIndex: 5,
+              backgroundColor: "#fbfbfc",
+
+              // stronger edge for pinned column
+              boxShadow: "inset -1px 0 0 #E5E7EB, 2px 0 0 rgba(0,0,0,0.04)",
+            }),
           },
-        }}
+        })}
         // Row styling with hover effect
         muiTableBodyRowProps={({ row }) => ({
           sx: {
+            backgroundColor: "#fff",
             cursor: "pointer",
             transition: "all 0.2s ease",
             "&:hover": {
-              bgcolor: "#F0F9FF",
+              bgcolor: "#F7F7F5",
               transform: "scale(1.001)",
               boxShadow: "0 2px 8px rgba(10, 134, 218, 0.1)",
             },
@@ -293,6 +295,7 @@ const ResponsesTable = () => {
         muiPaginationProps={{
           sx: {
             "& .MuiPaginationItem-root": {
+              backgroundColor: "transparent",
               borderRadius: "8px",
               transition: "all 0.2s ease",
               "&:hover": {
@@ -312,12 +315,14 @@ const ResponsesTable = () => {
         // Toolbar styling
         muiTopToolbarProps={{
           sx: {
-            bgcolor: "#FAFBFC",
-            borderBottom: "1px solid #E5E7EB",
+            bgcolor: "#FBFBFB",
+            borderBottom: "1px solid #FBFBFB",
+            px: 1,
             "& .MuiIconButton-root": {
-              transition: "all 0.2s ease",
+              borderRadius: "8px",
+              color: "#6B6B6B",
               "&:hover": {
-                transform: "scale(1.05)",
+                bgcolor: "#F1F1EF",
               },
             },
           },
@@ -325,8 +330,7 @@ const ResponsesTable = () => {
         // Bottom toolbar styling
         muiBottomToolbarProps={{
           sx: {
-            bgcolor: "#FAFBFC",
-            borderTop: "1px solid #E5E7EB",
+            bgcolor: "#FBFBFB",
           },
         }}
         // Custom scrollbar
