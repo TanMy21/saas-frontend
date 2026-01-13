@@ -182,62 +182,66 @@ const ResponsesTable = () => {
                 <HiDownload />
               </IconButton>
             </Tooltip>
-
             <MRT_ToggleFullScreenButton table={table} />
           </Box>
         )}
-        // Loading states
         state={{
           isLoading: isDataLoading,
           showProgressBars: isDataLoading,
           showSkeletons: isDataLoading,
         }}
-        // Enhanced table styling
         muiTableProps={{
           sx: {
             minWidth: "max-content",
-            borderRadius: "12px",
-            border: "1px solid #E9E9E7",
-            boxShadow: "none",
-            // overflow: "hidden",
-            backgroundColor: "#fff",
+            borderRadius: "16px",
+            border: "1px solid rgba(0, 0, 0, 0.06)",
+            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.02)",
+            backgroundColor: "#ffffff",
+            fontFamily:
+              "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           },
         }}
-        // Paper container styling
         muiTablePaperProps={{
           elevation: 0,
           sx: {
-            borderRadius: "12px",
+            borderRadius: "16px",
             overflow: "hidden",
-            boxShadow: "none",
-            border: "none",
-            backgroundColor: "transparent",
+            boxShadow:
+              "0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02)",
+            border: "1px solid rgba(0, 0, 0, 0.04)",
+            backgroundColor: "#ffffff",
           },
         }}
-        // Header styling
         muiTableHeadCellProps={({
           column,
         }: {
           column: MRT_Column<RowData>;
         }) => ({
           sx: {
-            backgroundColor: "#F5F5F5",
+            backgroundColor: "#fafafa",
             fontWeight: 600,
-            color: "#61615D",
+            fontSize: "14px",
+            color: "#18181b",
+            paddingY: "14px",
 
-            // 👇 vertical separator
-            boxShadow: "inset -1px 0 0 #E5E7EB",
+            // 👇 vertical separator (RIGHT)
+            boxShadow: "inset -1px 0 0 rgba(0, 0, 0, 0.08)",
+
+            // 👇 bottom separator
+            borderBottom: "1px solid rgba(0, 0, 0, 0.06)",
 
             ...(column.id === "mrt-row-numbers" && {
               position: "sticky",
               left: 0,
-              zIndex: 5,
-              backgroundColor: "#fbfbfc",
-              boxShadow: "inset -1px 0 0 #E5E7EB, 2px 0 0 rgba(0,0,0,0.04)",
+              zIndex: 6,
+              backgroundColor: "#fafafa",
+
+              // 👇 pinned column edge
+              boxShadow:
+                "inset -1px 0 0 rgba(0, 0, 0, 0.16), 2px 0 4px rgba(0, 0, 0, 0.04)",
             }),
           },
         })}
-        // Body cell styling
         muiTableBodyCellProps={({
           column,
         }: {
@@ -246,128 +250,154 @@ const ResponsesTable = () => {
           sx: {
             backgroundColor: "#ffffff",
             fontWeight: 600,
-            color: "#61615D",
+            fontSize: "14px",
+            color: "#27272a",
+            paddingY: "12px",
 
-            // 👇 vertical separator
-            boxShadow: "inset -1px 0 0 #E5E7EB",
+            // 👇 vertical column separator (RIGHT)
+            boxShadow: "inset -1px 0 0 rgba(0, 0, 0, 0.06)",
+
+            // 👇 bottom row separator
+            borderBottom: "1px solid rgba(0, 0, 0, 0.04)",
 
             ...(column.id === "mrt-row-numbers" && {
               position: "sticky",
               left: 0,
               zIndex: 5,
-              backgroundColor: "#fbfbfc",
+              backgroundColor: "#fafafa",
+              fontWeight: 600,
+              color: "#71717a",
 
-              // stronger edge for pinned column
-              boxShadow: "inset -1px 0 0 #E5E7EB, 2px 0 0 rgba(0,0,0,0.04)",
+              // 👇 stronger separator + depth cue
+              boxShadow:
+                "inset -1px 0 0 rgba(0, 0, 0, 0.12), 2px 0 4px rgba(0, 0, 0, 0.04)",
             }),
           },
         })}
-        // Row styling with hover effect
         muiTableBodyRowProps={({ row }) => ({
           sx: {
-            backgroundColor: "#fff",
+            backgroundColor: "#ffffff",
             cursor: "pointer",
-            transition: "all 0.2s ease",
+            transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
             "&:hover": {
-              bgcolor: "#F7F7F5",
-              transform: "scale(1.001)",
-              boxShadow: "0 2px 8px rgba(10, 134, 218, 0.1)",
+              backgroundColor: "#f9fafb",
+              "& td": {
+                backgroundColor: "#f9fafb",
+              },
+              "& td[data-column-id='mrt-row-numbers']": {
+                backgroundColor: "#f4f4f5",
+              },
             },
             "&:last-child td": {
               borderBottom: "none",
             },
           },
         })}
-        // Enhanced checkbox styling
         muiSelectCheckboxProps={{
           sx: {
-            transform: "scale(1.1)",
-            transition: "all 0.2s ease",
+            color: "#a1a1aa",
+            "&.Mui-checked": {
+              color: "#0ea5e9",
+            },
             "&:hover": {
-              transform: "scale(1.2)",
+              backgroundColor: "rgba(14, 165, 233, 0.08)",
             },
             "& .MuiSvgIcon-root": {
+              fontSize: "20px",
               borderRadius: "4px",
             },
           },
         }}
-        // Pagination styling
         muiPaginationProps={{
           sx: {
             "& .MuiPaginationItem-root": {
               backgroundColor: "transparent",
               borderRadius: "8px",
-              transition: "all 0.2s ease",
+              fontSize: "14px",
+              fontWeight: 500,
+              color: "#52525b",
+              minWidth: "36px",
+              height: "36px",
+              margin: "0 2px",
+              transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+              border: "1px solid transparent",
               "&:hover": {
-                bgcolor: "#F0F9FF",
-                transform: "translateY(-1px)",
+                backgroundColor: "#f4f4f5",
+                borderColor: "rgba(0, 0, 0, 0.08)",
               },
               "&.Mui-selected": {
-                bgcolor: "#0A86DA",
-                color: "white",
+                backgroundColor: "#0ea5e9",
+                color: "#ffffff",
+                fontWeight: 600,
+                border: "1px solid #0ea5e9",
+                boxShadow: "0 1px 2px rgba(14, 165, 233, 0.2)",
                 "&:hover": {
-                  bgcolor: "#0974C1",
+                  backgroundColor: "#0284c7",
+                  borderColor: "#0284c7",
                 },
               },
             },
           },
         }}
-        // Toolbar styling
         muiTopToolbarProps={{
           sx: {
-            bgcolor: "#FBFBFB",
-            borderBottom: "1px solid #FBFBFB",
-            px: 1,
+            backgroundColor: "#FBFBFB",
+            borderTop: "1px solid #FBFBFB",
+            paddingX: 2,
+            paddingY: 1.5,
             "& .MuiIconButton-root": {
               borderRadius: "8px",
-              color: "#6B6B6B",
+              color: "#52525b",
+              width: "36px",
+              height: "36px",
+              transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
               "&:hover": {
-                bgcolor: "#F1F1EF",
+                backgroundColor: "#f4f4f5",
+                color: "#18181b",
               },
             },
           },
         }}
-        // Bottom toolbar styling
         muiBottomToolbarProps={{
           sx: {
-            bgcolor: "#FBFBFB",
+            backgroundColor: "#ffffff",
+            borderTop: "1px solid rgba(0, 0, 0, 0.06)",
+            paddingY: 1.5,
           },
         }}
-        // Custom scrollbar
         muiTableContainerProps={{
           sx: {
             maxHeight: "70vh",
             "&::-webkit-scrollbar": {
-              width: "10px",
-              height: "10px",
+              width: "12px",
+              height: "12px",
             },
             "&::-webkit-scrollbar-track": {
-              bgcolor: "#F3F4F6",
-              borderRadius: "10px",
+              backgroundColor: "#f4f4f5",
+              borderRadius: "6px",
             },
             "&::-webkit-scrollbar-thumb": {
-              bgcolor: "#0A86DA",
-              borderRadius: "10px",
-              border: "2px solid #F3F4F6",
+              backgroundColor: "#d4d4d8",
+              borderRadius: "6px",
+              border: "3px solid #f4f4f5",
               transition: "background-color 0.2s ease",
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              bgcolor: "#0974C1",
+              "&:hover": {
+                backgroundColor: "#a1a1aa",
+              },
             },
             "&::-webkit-scrollbar-corner": {
-              bgcolor: "transparent",
+              backgroundColor: "transparent",
             },
             overflowX: "auto",
             overflowY: "auto",
           },
         }}
-        // Display column options
         displayColumnDefOptions={{
           "mrt-row-numbers": {
             size: 60,
             muiTableHeadCellProps: {
               sx: {
-                bgcolor: "#F9FAFB",
+                backgroundColor: "#fafafa",
               },
             },
           },
