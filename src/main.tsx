@@ -1,4 +1,6 @@
 import { ThemeProvider } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { PostHogProvider } from "posthog-js/react";
 import ReactDOM from "react-dom/client";
 import { Toaster } from "react-hot-toast";
@@ -16,7 +18,7 @@ import "../src/utils/sentry";
 import SessionInitializer from "./SessionInitializer";
 import electricBlueLightTheme from "./theme/electricBlueLightTheme";
 
-import 'react-device-frameset/lib/css/marvel-devices.min.css'
+import "react-device-frameset/lib/css/marvel-devices.min.css";
 
 const options = {
   api_host: import.meta.env.VITE_POSTHOG_HOST,
@@ -28,19 +30,21 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <Provider store={store}>
       <AppErrorBoundary>
         <ThemeProvider theme={electricBlueLightTheme}>
-          <PostHogProvider
-            apiKey={import.meta.env.VITE_POSTHOG_KEY}
-            options={options}
-          >
-            <SessionInitializer>
-              <RouterProvider router={router} />
-            </SessionInitializer>
-          </PostHogProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <PostHogProvider
+              apiKey={import.meta.env.VITE_POSTHOG_KEY}
+              options={options}
+            >
+              <SessionInitializer>
+                <RouterProvider router={router} />
+              </SessionInitializer>
+            </PostHogProvider>
+          </LocalizationProvider>
         </ThemeProvider>
       </AppErrorBoundary>
     </Provider>
     <Toaster position="bottom-right" reverseOrder={false} />
     <ToastContainer />
-  </>
+  </>,
   // </React.StrictMode>
 );

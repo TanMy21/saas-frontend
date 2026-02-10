@@ -13,6 +13,15 @@ import {
 } from "react-icons/md";
 import { RxCardStack } from "react-icons/rx";
 
+import { BinaryChart } from "../components/Insights/visualizations/BinaryChart";
+import { MediaOptionsViz } from "../components/Insights/visualizations/MediaOptionsViz";
+import { MultipleChoiceChart } from "../components/Insights/visualizations/MultipleChoiceChart";
+import { NumericChart } from "../components/Insights/visualizations/NumericChart";
+import { RankingChart } from "../components/Insights/visualizations/RankingChart";
+import { ScaleChart } from "../components/Insights/visualizations/ScaleChart";
+import { SingleChoiceChart } from "../components/Insights/visualizations/SingleChart";
+import { TextResponses } from "../components/Insights/visualizations/TextResponses";
+import { ThreeDOptionChart } from "../components/Insights/visualizations/ThreeDOptionChart";
 import BinaryElement from "../components/Surveys/Elements/BinaryElement";
 import CheckBoxElement from "../components/Surveys/Elements/CheckBoxElement";
 import ChoiceElement from "../components/Surveys/Elements/ChoiceElement";
@@ -45,6 +54,8 @@ import {
   ElementProps,
   QuestionTypeKey,
 } from "../utils/types";
+
+import { SummaryQuestion } from "./insightTypes";
 
 export const elementIcons: IconMapping = {
   THREE_D: <Box color="#276c9bff" />,
@@ -152,7 +163,12 @@ export const questionTypes: {
     bgColor: "#ecfeff",
     borderColor: "#a5f3fc",
   },
-];
+] as const;
+
+// for insights question type badge
+export const questionTypeMap = Object.fromEntries(
+  questionTypes.map((q) => [q.type, q]),
+);
 
 export const chipTypeColors: Record<string, string> = {
   WELCOME_SCREEN: "#3C3737",
@@ -298,4 +314,21 @@ export const elementTypes: { [key: string]: ElementType } = {
     Element: WelcomeScreenElement,
     Settings: WelcomeScreenElementSettings,
   },
+};
+
+// Summary Insights Visualization registry
+
+export const summaryVisualizationMap: Record<
+  SummaryQuestion["type"],
+  React.FC<{ question: any }>
+> = {
+  BINARY: BinaryChart,
+  THREE_D: ThreeDOptionChart,
+  RADIO: SingleChoiceChart,
+  MULTIPLE_CHOICE: MultipleChoiceChart,
+  MEDIA: MediaOptionsViz,
+  RANGE: ScaleChart,
+  NUMBER: NumericChart,
+  RANK: RankingChart,
+  TEXT: TextResponses,
 };

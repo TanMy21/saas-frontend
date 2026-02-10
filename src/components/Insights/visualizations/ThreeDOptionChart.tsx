@@ -1,64 +1,54 @@
-import { Box, Typography } from '@mui/material';
-import { ThumbsDown, ThumbsUp } from 'lucide-react';
+import { Box, Typography } from "@mui/material";
+import { ThumbsDown, ThumbsUp } from "lucide-react";
 
-interface ThreeDOptionChartProps {
-  like: number;
-  dislike: number;
-  displayMode: 'count' | 'percentage';
-}
+import { BinaryChartProps } from "../../../utils/insightTypes";
 
-export function ThreeDOptionChart({
-  like,
-  dislike,
-  displayMode,
-}: ThreeDOptionChartProps) {
-  const total = like + dislike;
-  const likePercentage = total > 0 ? (like / total) * 100 : 0;
-  const dislikePercentage = total > 0 ? (dislike / total) * 100 : 0;
+export const ThreeDOptionChart = ({ question }: BinaryChartProps) => {
+  const { meta, result } = question;
 
-  const formatValue = (count: number, percentage: number) => {
-    if (displayMode === 'percentage') {
-      return `${percentage.toFixed(1)}%`;
-    }
-    return count.toLocaleString();
-  };
+  const total = meta.totalResponses;
+
+  const likePercentage = total > 0 ? (result.left.count / total) * 100 : 0;
+  const dislikePercentage = total > 0 ? (result.right.count / total) * 100 : 0;
+
+  const formatValue = (count: number, pct: number) =>
+    `${count.toLocaleString()} (${pct.toFixed(1)}%)`;
 
   return (
     <Box display="flex" flexDirection="column" gap={3}>
       {/* ───────────────── Visual split ───────────────── */}
       <Box
         sx={{
-          display: 'flex',
+          display: "flex",
           height: 96,
-          overflow: 'hidden',
-          borderRadius: 2,
+          overflow: "hidden",
+          borderRadius: 9999,
         }}
       >
         {/* Like */}
         <Box
           sx={{
             width: `${likePercentage}%`,
-            bgcolor: 'success.main',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
+            bgcolor: "success.main",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
             gap: 0.5,
-            transition: 'width 0.5s ease',
+            transition: "width 0.5s ease",
           }}
         >
           {likePercentage > 20 && (
             <>
-              <ThumbsUp
-                size={24}
-                color="var(--mui-palette-success-contrastText)"
-              />
+              <Box sx={{ color: "success.contrastText" }}>
+                <ThumbsUp size={24} />
+              </Box>
               <Typography
                 fontSize={14}
                 fontWeight={600}
                 color="success.contrastText"
               >
-                {formatValue(like, likePercentage)}
+                {formatValue(result.left.count, likePercentage)}
               </Typography>
             </>
           )}
@@ -68,27 +58,26 @@ export function ThreeDOptionChart({
         <Box
           sx={{
             width: `${dislikePercentage}%`,
-            bgcolor: 'error.main',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
+            bgcolor: "error.main",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
             gap: 0.5,
-            transition: 'width 0.5s ease',
+            transition: "width 0.5s ease",
           }}
         >
           {dislikePercentage > 20 && (
             <>
-              <ThumbsDown
-                size={24}
-                color="var(--mui-palette-error-contrastText)"
-              />
+              <Box sx={{ color: "error.contrastText" }}>
+                <ThumbsDown size={24} />
+              </Box>
               <Typography
                 fontSize={14}
                 fontWeight={600}
                 color="error.contrastText"
               >
-                {formatValue(dislike, dislikePercentage)}
+                {formatValue(result.right.count, dislikePercentage)}
               </Typography>
             </>
           )}
@@ -104,21 +93,23 @@ export function ThreeDOptionChart({
               width: 40,
               height: 40,
               borderRadius: 2,
-              bgcolor: 'success.main',
-              opacity: 0.1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              bgcolor: "#22C55E",
+              opacity: 0.5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <ThumbsUp size={20} color="var(--mui-palette-success-main)" />
+            <Box sx={{ color: "#1A202C", opacity: 1 }}>
+              <ThumbsUp size={24} />
+            </Box>
           </Box>
           <Box>
             <Typography fontSize={14} color="text.secondary">
               Like
             </Typography>
             <Typography fontSize={18} fontWeight={600}>
-              {formatValue(like, likePercentage)}
+              {formatValue(result.left.count, likePercentage)}
             </Typography>
           </Box>
         </Box>
@@ -130,25 +121,27 @@ export function ThreeDOptionChart({
               width: 40,
               height: 40,
               borderRadius: 2,
-              bgcolor: 'error.main',
-              opacity: 0.1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              bgcolor: "#EF4444",
+              opacity: 0.5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <ThumbsDown size={20} color="var(--mui-palette-error-main)" />
+            <Box sx={{ color: "error.contrastText" }}>
+              <ThumbsDown size={24} />
+            </Box>
           </Box>
           <Box>
             <Typography fontSize={14} color="text.secondary">
               Dislike
             </Typography>
             <Typography fontSize={18} fontWeight={600}>
-              {formatValue(dislike, dislikePercentage)}
+              {formatValue(result.right.count, dislikePercentage)}
             </Typography>
           </Box>
         </Box>
       </Box>
     </Box>
   );
-}
+};

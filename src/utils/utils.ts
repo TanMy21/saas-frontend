@@ -3,6 +3,18 @@ import { ReactNode } from "react";
 import { BarChart3, Shield, Smartphone, Users } from "lucide-react";
 import { type Transition } from "motion/react";
 
+import {
+  BinaryResult,
+  MediaResult,
+  MultipleChoiceResult,
+  NumberResult,
+  RangeResult,
+  RankOption,
+  ResponsesSummaryQuestion,
+  SingleChoiceResult,
+  SummaryQuestion,
+  TextResponseItem,
+} from "./insightTypes";
 import { EdgeStyle, LayoutMode } from "./types";
 
 export const generateOptionLabel = (index: number, qType: string) => {
@@ -175,27 +187,26 @@ export const getBarColor = (rate: number) => {
 
 export const formatChartValue = (
   value: unknown,
-  displayMode: "count" | "percentage"
+  displayMode: "count" | "percentage",
 ): ReactNode => {
-  // Numbers → formatted
+  // formate numbers with locale and optional % sign
   if (typeof value === "number") {
     return displayMode === "percentage"
       ? `${value.toFixed(1)}%`
       : value.toLocaleString();
   }
 
-  // Strings → safe to render
   if (typeof value === "string") {
     return value;
   }
 
-  // null / undefined / objects → render nothing
+  // null / undefined / objects > render nothing
   return "";
 };
 
 export const formatChartLabelValue = (
   value: unknown,
-  displayMode: "count" | "percentage"
+  displayMode: "count" | "percentage",
 ): string | number | undefined => {
   if (typeof value !== "number") return undefined;
 
@@ -237,12 +248,10 @@ export function getCssColor(variable: string) {
     .trim();
 }
 
-/**
- * Formats date like: "Sep 5, 3:42 PM"
- * Replacement for date-fns format(date, 'MMM d, h:mm a')
- */
+// Replacement for date-fns format(date, 'MMM d, h:mm a')
+
 export function formatDateTime(date: Date) {
-  // Ensure we always work with a Date instance
+  // Ensure Date instance
   const d = date instanceof Date ? date : new Date(date);
 
   return new Intl.DateTimeFormat("en-US", {
@@ -256,7 +265,7 @@ export function formatDateTime(date: Date) {
 
 export function formatResponse(
   response: unknown,
-  questionType: string
+  questionType: string,
 ): string {
   if (response === null || response === undefined) {
     return "No Response";
@@ -289,4 +298,108 @@ export function formatResponse(
   }
 
   return "";
+}
+
+export function normalizeQuestion(
+  q: ResponsesSummaryQuestion,
+): SummaryQuestion {
+  const base = {
+    questionID: q.questionID,
+    order: q.order,
+    text: q.text,
+    meta: q.meta,
+  };
+
+  switch (q.type) {
+    case "BINARY":
+    case "THREE_D":
+      return {
+        ...base,
+        type: q.type,
+        result: q.result as BinaryResult,
+      };
+
+    case "RADIO":
+      return {
+        ...base,
+        type: "RADIO",
+        result: q.result as SingleChoiceResult,
+      };
+
+    case "MULTIPLE_CHOICE": {
+      const result = q.result as MultipleChoiceResult;
+
+      return {
+        ...base,
+        type: "MULTIPLE_CHOICE",
+        result,
+      };
+    }
+
+    case "MEDIA": {
+      const result = q.result as MediaResult;
+
+      return {
+        ...base,
+        type: "MEDIA",
+        result,
+      };
+    }
+
+    case "NUMBER":
+      return {
+        ...base,
+        type: "NUMBER",
+        result: q.result as NumberResult,
+      };
+
+    case "RANGE": {
+      const result = q.result as RangeResult;
+
+      return {
+        ...base,
+        type: "RANGE",
+        result,
+      };
+    }
+
+    case "RANK":
+      return {
+        ...base,
+        type: "RANK",
+        options: (q.result as { options: RankOption[] }).options,
+      };
+
+    case "TEXT": {
+      const result = q.result as {
+        total: number;
+        page: number;
+        pageSize: number;
+        responses: TextResponseItem[];
+      };
+
+      return {
+        ...base,
+        type: "TEXT",
+        total: result.total,
+        page: result.page,
+        pageSize: result.pageSize,
+        responses: result.responses,
+      };
+    }
+
+    default:
+      throw new Error(`Unhandled question type`);
+  }
+}
+
+export function formatRangeLabel(min: number, max: number) {
+  const isIntegerRange = Number.isInteger(min) && Number.isInteger(max);
+
+  if (isIntegerRange) {
+    return `${Math.round(min)}–${Math.round(max)}`;
+  }
+
+  // fallback for decimal data
+  return `${min.toFixed(1)}–${max.toFixed(1)}`;
 }

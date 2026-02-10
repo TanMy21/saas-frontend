@@ -1,40 +1,53 @@
 import { useState } from "react";
 
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { skipToken } from "@reduxjs/toolkit/query/react";
+import { useParams } from "react-router-dom";
 
-import { mockQuestions, surveyMetadata } from "../../utils/MockData";
+import { useGetResponsesSummaryQuery } from "../../app/slices/resultsApiSlice";
+import { InsightsFilters } from "../../utils/insightTypes";
+import { normalizeQuestion } from "../../utils/utils";
+import { SummarySkeleton } from "../LoadingSkeletons/SummarySkeleton";
 
 import { QuestionSection } from "./QuestionSection";
 import { SummaryControls } from "./SummaryControls";
-import { SummaryHeader } from "./SummaryHeader";
 
 export const SummaryContainer = () => {
-  const [displayMode, setDisplayMode] = useState<"count" | "percentage">(
-    "percentage"
-  );
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const { surveyID } = useParams();
+
+  const [filters, setFilters] = useState<InsightsFilters>({
+    time: "all",
+    device: "all",
+  });
+
+  // Custom date range validation
+  const isCustomRangeValid =
+    filters.time !== "custom" ||
+    (filters.from && filters.to && filters.from <= filters.to);
+
+  // query args only when valid
+  const queryArgs = isCustomRangeValid
+    ? {
+        surveyID: surveyID!,
+        range: filters.time,
+        from: filters.from,
+        to: filters.to,
+        deviceType: filters.device,
+      }
+    : skipToken;
+
+  const { data, isLoading, isFetching, error } =
+    useGetResponsesSummaryQuery(queryArgs);
+
+  const normalizedQuestions = data?.questions.map(normalizeQuestion) ?? [];
+
+  // Render helpers
+  const showEmptyState =
+    !isLoading && !isFetching && data && normalizedQuestions.length === 0;
 
   return (
     <Box minHeight="100vh" bgcolor="background.default">
-      <SummaryHeader
-        title={surveyMetadata.title}
-        totalResponses={surveyMetadata.totalResponses}
-        completionRate={surveyMetadata.completionRate}
-      />
-
-      <SummaryControls
-        displayMode={displayMode}
-        onDisplayModeChange={setDisplayMode}
-        onFilterClick={() => setIsFilterOpen(true)}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-      />
-
-      {/* <FilterPanel
-        isOpen={isFilterOpen}
-        onClose={() => setIsFilterOpen(false)}
-      /> */}
+      <SummaryControls filters={filters} setFilters={setFilters} />
 
       <Box component="main" px={{ xs: 3, lg: 4 }} py={4}>
         <Box
@@ -44,14 +57,85 @@ export const SummaryContainer = () => {
           flexDirection="column"
           gap={3}
         >
-          {mockQuestions.map((question) => (
-            <QuestionSection
-              key={question.id}
-              question={question}
-              displayMode={displayMode}
-              searchQuery={searchQuery}
-            />
-          ))}
+          {/* ───────────── Invalid custom range ───────────── */}
+          {!isCustomRangeValid && (
+            <Box
+              p={3}
+              borderRadius={2}
+              border="1px dashed"
+              borderColor="warning.main"
+              bgcolor="warning.light"
+            >
+              <Typography fontWeight={600}>Invalid date range</Typography>
+              <Typography variant="body2" color="text.secondary">
+                “From” date must be earlier than or equal to “To” date.
+              </Typography>
+            </Box>
+          )}
+
+          {/* ───────────── Initial loading ───────────── */}
+          {isLoading && (
+            <>
+              <SummarySkeleton />
+              <SummarySkeleton />
+              <SummarySkeleton />
+            </>
+          )}
+
+          {/* ───────────── Error state ───────────── */}
+          {error && !isLoading && (
+            <Box p={3}>
+              <Typography color="error.main" fontWeight={600}>
+                Failed to load responses
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Please try again or adjust filters.
+              </Typography>
+            </Box>
+          )}
+
+          {/* ───────────── Empty state ───────────── */}
+          {showEmptyState && (
+            <Box
+              p={6}
+              borderRadius={3}
+              border="1px dashed"
+              borderColor="divider"
+              textAlign="center"
+            >
+              <Typography fontSize={18} fontWeight={600}>
+                No responses yet
+              </Typography>
+              <Typography mt={1} variant="body2" color="text.secondary">
+                Responses will appear here once participants start answering
+                this survey.
+              </Typography>
+            </Box>
+          )}
+
+          {/* ───────────── Data loaded ───────────── */}
+          {!isLoading &&
+            normalizedQuestions.map((question) => (
+              <QuestionSection key={question.questionID} question={question} />
+            ))}
+
+          {/* ───────────── Background refetch indicator ───────────── */}
+          {isFetching && !isLoading && (
+            <Box
+              position="fixed"
+              bottom={24}
+              right={24}
+              px={2}
+              py={1}
+              borderRadius={999}
+              bgcolor="background.paper"
+              boxShadow="0 4px 12px rgba(0,0,0,0.12)"
+            >
+              <Typography fontSize={12} color="text.secondary">
+                Updating…
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

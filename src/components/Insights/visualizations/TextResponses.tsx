@@ -3,30 +3,20 @@ import { useState } from "react";
 import { Box, Typography, IconButton, InputBase } from "@mui/material";
 import { Grid, List, Search } from "lucide-react";
 
+import { TextResponsesProps } from "../../../utils/insightTypes";
 import { timeAgo } from "../../../utils/utils";
 
-interface Response {
-  id: number;
-  text: string;
-  timestamp: string;
-}
-
-interface TextResponsesProps {
-  responses: Response[];
-  searchQuery: string;
-}
-
-export function TextResponses({ responses, searchQuery }: TextResponsesProps) {
+export const TextResponses = ({ question }: TextResponsesProps) => {
   const [viewMode, setViewMode] = useState<"cards" | "list">("cards");
   const [localSearch, setLocalSearch] = useState("");
 
-  const combinedSearch = searchQuery || localSearch;
+  const combinedSearch = localSearch;
 
   const filteredResponses = combinedSearch
-    ? responses.filter((r) =>
-        r.text.toLowerCase().includes(combinedSearch.toLowerCase())
+    ? question.responses.filter((r) =>
+        r.text.toLowerCase().includes(combinedSearch.toLowerCase()),
       )
-    : responses;
+    : question.responses;
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
@@ -97,7 +87,8 @@ export function TextResponses({ responses, searchQuery }: TextResponsesProps) {
 
       {/* ───────────────── Count ───────────────── */}
       <Typography fontSize={14} color="text.secondary">
-        Showing {filteredResponses.length} of {responses.length} responses
+        Showing {filteredResponses.length} of {question.responses.length}{" "}
+        responses
       </Typography>
 
       {/* ───────────────── Responses ───────────────── */}
@@ -117,7 +108,7 @@ export function TextResponses({ responses, searchQuery }: TextResponsesProps) {
       >
         {filteredResponses.map((response) => (
           <Box
-            key={response.id}
+            key={response.responseID}
             sx={{
               ...(viewMode === "cards"
                 ? {
@@ -135,7 +126,7 @@ export function TextResponses({ responses, searchQuery }: TextResponsesProps) {
             <Typography fontSize={14}>{response.text}</Typography>
 
             <Typography fontSize={12} color="text.secondary" mt={1}>
-              {timeAgo(new Date(response.timestamp))}
+              {timeAgo(new Date(response.createdAt))}
             </Typography>
           </Box>
         ))}
@@ -150,4 +141,4 @@ export function TextResponses({ responses, searchQuery }: TextResponsesProps) {
       </Box>
     </Box>
   );
-}
+};

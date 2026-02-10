@@ -7,15 +7,16 @@ import {
 } from "./insightTypes";
 
 export type QuestionType =
-  | "binary"
-  | "text"
-  | "numeric"
-  | "single-choice"
-  | "multiple-choice"
-  | "ranking"
-  | "rating"
-  | "media"
-  | "3d-option";
+  | "BINARY"
+  | "TEXT"
+  | "NUMBER"
+  | "RADIO"
+  | "MULTIPLE_CHOICE"
+  | "RANK"
+  | "RANGE"
+  | "MEDIA"
+  | "THREE_D";
+
 
 export interface QuestionResult {
   id: string;
@@ -32,7 +33,7 @@ export const mockQuestions: QuestionResult[] = [
     id: "1",
     number: 1,
     text: "Would you recommend our product to a friend or colleague?",
-    type: "binary",
+    type: "BINARY",
     totalResponses: 248,
     skipped: 3,
     data: {
@@ -44,7 +45,7 @@ export const mockQuestions: QuestionResult[] = [
     id: "2",
     number: 2,
     text: "What is your primary reason for using our product?",
-    type: "single-choice",
+    type: "RADIO",
     totalResponses: 245,
     skipped: 6,
     data: {
@@ -61,7 +62,7 @@ export const mockQuestions: QuestionResult[] = [
     id: "3",
     number: 3,
     text: "Which features do you use most frequently?",
-    type: "multiple-choice",
+    type: "MULTIPLE_CHOICE",
     totalResponses: 242,
     skipped: 9,
     data: {
@@ -79,7 +80,7 @@ export const mockQuestions: QuestionResult[] = [
     id: "4",
     number: 4,
     text: "How would you rate your overall experience?",
-    type: "rating",
+    type: "RANGE",
     totalResponses: 247,
     skipped: 4,
     data: {
@@ -100,7 +101,7 @@ export const mockQuestions: QuestionResult[] = [
     id: "5",
     number: 5,
     text: "Please rank the following features by importance",
-    type: "ranking",
+    type: "RANK",
     totalResponses: 238,
     skipped: 13,
     data: {
@@ -117,7 +118,7 @@ export const mockQuestions: QuestionResult[] = [
     id: "6",
     number: 6,
     text: "How many hours per week do you spend using our product?",
-    type: "numeric",
+    type: "NUMBER",
     totalResponses: 241,
     skipped: 10,
     data: {
@@ -140,7 +141,7 @@ export const mockQuestions: QuestionResult[] = [
     id: "7",
     number: 7,
     text: "What improvements would you like to see?",
-    type: "text",
+    type: "TEXT",
     totalResponses: 186,
     skipped: 65,
     data: {

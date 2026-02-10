@@ -1,153 +1,124 @@
+import { useEffect, useState } from "react";
+
 import { Box, Typography } from "@mui/material";
-import { Check, X } from "lucide-react";
 
-interface BinaryChartProps {
-  yes: number;
-  no: number;
-  displayMode: "count" | "percentage";
-}
+import { BinaryChartProps } from "../../../utils/insightTypes";
 
-interface BinaryChartProps {
-  yes: number;
-  no: number;
-  displayMode: "count" | "percentage";
-}
+export const BinaryChart = ({ question }: BinaryChartProps) => {
+  const [animate, setAnimate] = useState(false);
 
-export function BinaryChart({ yes, no, displayMode }: BinaryChartProps) {
-  const total = yes + no;
-  const yesPercentage = total > 0 ? (yes / total) * 100 : 0;
-  const noPercentage = total > 0 ? (no / total) * 100 : 0;
+  const { result } = question;
 
-  const formatValue = (count: number, percentage: number) => {
-    if (displayMode === "percentage") {
-      return `${percentage.toFixed(1)}%`;
-    }
-    return count.toLocaleString();
-  };
+  // animation on mount/change
+  useEffect(() => {
+    const t = setTimeout(() => setAnimate(true), 80);
+    return () => clearTimeout(t);
+  }, [result?.left?.count, result?.right?.count]);
+
+  const total = result?.left?.count + result?.right?.count || 0;
+
+  const yesPercent = total > 0 ? (result?.left?.count / total) * 100 : 0;
+  const noPercent = total > 0 ? (result?.right?.count / total) * 100 : 0;
+
+  // Singular or plural
+  const responseLabel = (count: number) =>
+    count === 1 ? "response" : "responses";
+
+  // Edge-case: 100% domination
+  const yesWidth = yesPercent === 100 ? "100%" : `${yesPercent}%`;
+  const noWidth = noPercent === 100 ? "100%" : `${noPercent}%`;
 
   return (
-    <Box display="flex" flexDirection="column" gap={3}>
-      {/* ───────────────── Visual split ───────────────── */}
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: 720,
+        padding: 3,
+        mx: "auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2.5,
+        // border:"2px solid black",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
-          height: 96,
+          height: 88,
+          borderRadius: 999,
           overflow: "hidden",
-          borderRadius: 2,
+          bgcolor: "grey.100",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
         }}
       >
-        {/* Yes */}
+        {/* YES */}
         <Box
           sx={{
-            width: `${yesPercentage}%`,
-            bgcolor: "success.main",
+            width: animate ? yesWidth : "50%",
+            transition: "width 0.9s cubic-bezier(0.2,0.8,0.2,1)",
+            bgcolor: "primary.main",
+            color: "primary.contrastText",
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            gap: 0.5,
-            transition: "width 0.5s ease",
           }}
         >
-          {yesPercentage > 20 && (
-            <>
-              <Check
-                size={24}
-                color="var(--mui-palette-success-contrastText)"
-              />
-              <Typography
-                fontSize={14}
-                fontWeight={600}
-                color="success.contrastText"
-              >
-                {formatValue(yes, yesPercentage)}
-              </Typography>
-            </>
+          {yesPercent >= 15 && (
+            <Typography fontSize={22} fontWeight={700}>
+              {yesPercent.toFixed(1)}%
+            </Typography>
           )}
         </Box>
 
-        {/* No */}
+        {/* NO */}
         <Box
           sx={{
-            width: `${noPercentage}%`,
-            bgcolor: "error.main",
+            width: animate ? noWidth : "50%",
+            transition: "width 0.9s cubic-bezier(0.2,0.8,0.2,1)",
+            bgcolor: "error.light",
+            color: "error.main",
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            gap: 0.5,
-            transition: "width 0.5s ease",
           }}
         >
-          {noPercentage > 20 && (
-            <>
-              <X size={24} color="var(--mui-palette-error-contrastText)" />
-              <Typography
-                fontSize={14}
-                fontWeight={600}
-                color="error.contrastText"
-              >
-                {formatValue(no, noPercentage)}
-              </Typography>
-            </>
+          {noPercent >= 15 && (
+            <Typography fontSize={22} fontWeight={700}>
+              {noPercent.toFixed(1)}%
+            </Typography>
           )}
         </Box>
       </Box>
 
-      {/* ───────────────── Legend ───────────────── */}
-      <Box display="flex" justifyContent="center" gap={6}>
-        {/* Yes */}
-        <Box display="flex" alignItems="center" gap={2}>
-          <Box
-            sx={{
-              width: 40,
-              height: 40,
-              borderRadius: 2,
-              bgcolor: "success.main",
-              opacity: 0.1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Check size={20} color="var(--mui-palette-success-main)" />
-          </Box>
-          <Box>
-            <Typography fontSize={14} color="text.secondary">
-              Yes
-            </Typography>
-            <Typography fontSize={18} fontWeight={600}>
-              {formatValue(yes, yesPercentage)}
-            </Typography>
-          </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          px: 1,
+        }}
+      >
+        {/* Yes legend */}
+        <Box>
+          <Typography fontSize={14} fontWeight={600}>
+            {result?.left?.label || "Yes"}
+          </Typography>
+          <Typography fontSize={12} color="text.secondary">
+            {result?.left?.count.toLocaleString()}{" "}
+            {responseLabel(result?.left?.count)} ({Math.round(yesPercent)}%)
+          </Typography>
         </Box>
 
-        {/* No */}
-        <Box display="flex" alignItems="center" gap={2}>
-          <Box
-            sx={{
-              width: 40,
-              height: 40,
-              borderRadius: 2,
-              bgcolor: "error.main",
-              opacity: 0.1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <X size={20} color="var(--mui-palette-error-main)" />
-          </Box>
-          <Box>
-            <Typography fontSize={14} color="text.secondary">
-              No
-            </Typography>
-            <Typography fontSize={18} fontWeight={600}>
-              {formatValue(no, noPercentage)}
-            </Typography>
-          </Box>
+        {/* No legend */}
+        <Box textAlign="right">
+          <Typography fontSize={14} fontWeight={600}>
+            {result?.right?.label || "No"}
+          </Typography>
+          <Typography fontSize={12} color="text.secondary">
+            {result?.right?.count.toLocaleString()}{" "}
+            {responseLabel(result?.right?.count)} ({Math.round(noPercent)}%)
+          </Typography>
         </Box>
       </Box>
     </Box>
   );
-}
+};

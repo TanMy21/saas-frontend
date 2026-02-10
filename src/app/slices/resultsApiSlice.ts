@@ -1,6 +1,12 @@
-import { GetInsightsArgs } from "../../utils/insightTypes";
+import {
+  GetInsightsArgs,
+  GetResponsesSummaryArgs,
+  ResponsesSummaryResponse,
+} from "../../utils/insightTypes";
 import { InsightsResponse, ResultsResponse } from "../../utils/types";
 import { apiSlice } from "../api/apiSlice";
+
+import { normalizeResponsesSummary } from "./normalizeResponseSummary";
 
 export const resultsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,8 +16,8 @@ export const resultsApiSlice = apiSlice.injectEndpoints({
         const filteredResponse = response.questions.filter(
           (question) =>
             !["WELCOME_SCREEN", "END_SCREEN", "INSTRUCTIONS"].includes(
-              question.type
-            )
+              question.type,
+            ),
         );
 
         return { ...response, questions: filteredResponse };
@@ -34,7 +40,49 @@ export const resultsApiSlice = apiSlice.injectEndpoints({
 
       providesTags: ["Results"],
     }),
+    getResponsesSummary: builder.query<
+      ResponsesSummaryResponse,
+      GetResponsesSummaryArgs
+    >({
+      query: ({
+        surveyID,
+        deviceType = "all",
+        range = "all",
+        from,
+        to,
+        q,
+        page = 1,
+        pageSize = 25,
+      }) => ({
+        url: `/summary/${surveyID}`,
+        params: {
+          deviceType,
+          range,
+          from,
+          to,
+          q,
+          page,
+          pageSize,
+        },
+      }),
+
+      transformResponse: (response: {
+        success: boolean;
+        data: ResponsesSummaryResponse;
+      }) => ({
+        ...response.data,
+        questions: normalizeResponsesSummary(response.data),
+      }),
+
+      providesTags: (_result, _err, arg) => [
+        { type: "Results", id: arg.surveyID },
+      ],
+    }),
   }),
 });
 
-export const { useGetResultsQuery, useGetInsightsQuery } = resultsApiSlice;
+export const {
+  useGetResultsQuery,
+  useGetInsightsQuery,
+  useGetResponsesSummaryQuery,
+} = resultsApiSlice;

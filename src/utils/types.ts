@@ -800,6 +800,17 @@ export type QuestionTypeKey =
   | "MULTIPLE_CHOICE"
   | "WELCOME_SCREEN";
 
+export type QuestionType =
+  | "BINARY"
+  | "MEDIA"
+  | "NUMBER"
+  | "RADIO"
+  | "RANK"
+  | "RANGE"
+  | "TEXT"
+  | "THREE_D"
+  | "MULTIPLE_CHOICE"
+
 export interface QuestionDetail {
   questionID: string;
   type: QuestionTypeKey;

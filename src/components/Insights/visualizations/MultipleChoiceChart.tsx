@@ -10,43 +10,17 @@ import {
   LabelList,
 } from "recharts";
 
-import { formatChartLabelValue, formatChartValue } from "../../../utils/utils";
+import { OPTION_COLORS, ROW_HEIGHT } from "../../../utils/constants";
+import { MultipleChoiceChartProps } from "../../../utils/insightTypes";
 
-interface Option {
-  label: string;
-  count: number;
-  percentage: number;
-}
+import { MultipleChoiceTooltip } from "./MultipleChoiceTooltip";
 
-interface MultipleChoiceChartProps {
-  options: Option[];
-  totalResponses: number;
-  displayMode: "count" | "percentage";
-}
-
-const ROW_HEIGHT = 44;
-
-const OPTION_COLORS = [
-  "#1976d2",
-  "#2e7d32",
-  "#ed6c02",
-  "#0288d1",
-  "#d32f2f",
-  "#9c27b0",
-  "#7c3aed",
-  "#059669",
-  "#dc2626",
-  "#0284c7",
-];
-
-export function MultipleChoiceChart({
-  options,
-  displayMode,
-}: MultipleChoiceChartProps) {
-  const data = options.map((opt, index) => ({
+export const MultipleChoiceChart = ({ question }: MultipleChoiceChartProps) => {
+  const data = question.result.options.map((opt, index) => ({
     label: opt.label,
     count: opt.count,
     percentage: opt.percentage,
+    display: `${opt.count.toLocaleString()} (${Math.round(opt.percentage)}%)`,
     color: OPTION_COLORS[index % OPTION_COLORS.length],
   }));
 
@@ -69,12 +43,12 @@ export function MultipleChoiceChart({
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "30% 68%",
+          gridTemplateColumns: "32% 68%",
           columnGap: "2%",
           width: "100%",
         }}
       >
-        {/* Labels (30%) */}
+        {/* Labels */}
         <Box>
           {data.map((item) => (
             <Box
@@ -97,24 +71,21 @@ export function MultipleChoiceChart({
           ))}
         </Box>
 
-        {/* Bars (68%) */}
+        {/* Bars */}
         <Box sx={{ height }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
               layout="vertical"
-              margin={{ top: 4, right: 32, left: 0, bottom: 4 }}
+              margin={{ top: 4, right: 80, left: 0, bottom: 4 }}
+              style={{ overflow: "visible" }}
             >
-              <XAxis
-                type="number"
-                hide
-                domain={[0, displayMode === "percentage" ? 100 : "dataMax"]}
-              />
+              <XAxis type="number" hide domain={[0, 100]} />
 
               <YAxis type="category" dataKey="label" hide />
 
               <Bar
-                dataKey={displayMode === "percentage" ? "percentage" : "count"}
+                dataKey={"count"}
                 radius={[6, 6, 6, 6]}
                 isAnimationActive
                 activeBar={{
@@ -129,14 +100,10 @@ export function MultipleChoiceChart({
 
                 {/* Value after bar */}
                 <LabelList
-                  dataKey={
-                    displayMode === "percentage" ? "percentage" : "count"
-                  }
+                  dataKey={"display"}
                   position="right"
                   offset={8}
-                  formatter={(value) =>
-                    formatChartLabelValue(value, displayMode)
-                  }
+                  formatter={(value) => value}
                   style={{
                     fill: "var(--mui-palette-text-secondary)",
                     fontSize: 12,
@@ -147,11 +114,7 @@ export function MultipleChoiceChart({
 
               <Tooltip
                 cursor={{ fill: "rgba(0,0,0,0.04)" }}
-                formatter={(value) => formatChartValue(value, displayMode)}
-                contentStyle={{
-                  fontSize: 12,
-                  borderRadius: 8,
-                }}
+                content={<MultipleChoiceTooltip />}
               />
             </BarChart>
           </ResponsiveContainer>

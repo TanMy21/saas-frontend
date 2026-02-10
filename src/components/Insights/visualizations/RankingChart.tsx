@@ -9,33 +9,21 @@ import {
   Cell,
 } from "recharts";
 
-interface Option {
-  label: string;
-  avgRank: number;
-}
+import {
+  BAR_COLOR,
+  medalColors,
+  MIN_BAR_PERCENT,
+  ROW_HEIGHT_RANK,
+} from "../../../utils/constants";
+import { RankingChartProps } from "../../../utils/insightTypes";
 
-interface RankingChartProps {
-  options: Option[];
-}
+export const RankingChart = ({ question }: RankingChartProps) => {
+  const sortedOptions = [...question.options].sort(
+    (a, b) => a.avgRank - b.avgRank,
+  );
 
-const ROW_HEIGHT = 48;
-
-// Minimum visible bar width (UX fix)
-const MIN_BAR_PERCENT = 8;
-
-const BAR_COLOR = "#1976d2"; // primary
-
-const medalColors = [
-  "#ed6c02", // gold
-  "#9e9e9e", // silver
-  "#8d6e63", // bronze
-];
-
-export function RankingChart({ options }: RankingChartProps) {
-  const sortedOptions = [...options].sort((a, b) => a.avgRank - b.avgRank);
-
-  const maxRank = Math.max(...options.map((o) => o.avgRank));
-  const minRank = Math.min(...options.map((o) => o.avgRank));
+  const maxRank = Math.max(...question.options.map((o) => o.avgRank));
+  const minRank = Math.min(...question.options.map((o) => o.avgRank));
   const range = maxRank - minRank || 1;
 
   return (
@@ -44,10 +32,10 @@ export function RankingChart({ options }: RankingChartProps) {
         Ranked by average position (1 = highest priority)
       </Typography>
 
-      {/* Scroll container to support up to 10 options */}
+      {/* Scroll container */}
       <Box
         sx={{
-          maxHeight: ROW_HEIGHT * 6, // show ~6 rows, scroll for more
+          maxHeight: ROW_HEIGHT_RANK * 6,
           overflowY: "auto",
           pr: 1,
         }}
@@ -68,7 +56,7 @@ export function RankingChart({ options }: RankingChartProps) {
                 gridTemplateColumns: "32px 1fr 60px",
                 alignItems: "center",
                 columnGap: 16,
-                height: ROW_HEIGHT,
+                height: ROW_HEIGHT_RANK,
               }}
             >
               {/* ───── Rank / Medal ───── */}
@@ -88,7 +76,7 @@ export function RankingChart({ options }: RankingChartProps) {
 
               {/* ───── Label + Bar ───── */}
               <Box>
-                {/* Label ABOVE bar */}
+                {/* Label  */}
                 <Typography fontSize={14} fontWeight={500} mb={0.5} noWrap>
                   {option.label}
                 </Typography>
@@ -129,4 +117,4 @@ export function RankingChart({ options }: RankingChartProps) {
       </Box>
     </Box>
   );
-}
+};

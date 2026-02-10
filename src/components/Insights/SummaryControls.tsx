@@ -1,39 +1,26 @@
-import { useState } from "react";
+import { Box } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import { Calendar, Smartphone } from "lucide-react";
 
+import { filterInputSx } from "../../utils/constants";
 import {
-  Box,
-  Button,
-  InputBase,
-  Menu,
-  MenuItem,
-  ToggleButton,
-  ToggleButtonGroup,
-} from "@mui/material";
-import { Calendar, ChevronDown, Filter, Download, Search } from "lucide-react";
+  DeviceFilter,
+  SummaryControlsProps,
+  TimeFilter,
+} from "../../utils/insightTypes";
 
-import { SummaryControlsProps } from "../../utils/insightTypes";
+import { InsightsFilterDropdown } from "./InsightsFilterDropdown";
 
-export function SummaryControls({
-  displayMode,
-  onDisplayModeChange,
-  onFilterClick,
-  searchQuery,
-  onSearchChange,
-}: SummaryControlsProps) {
-  const [dateFilter, setDateFilter] = useState("all");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+export function SummaryControls({ filters, setFilters }: SummaryControlsProps) {
   return (
     <Box
-      position="sticky"
+      position="relative"
       top={0}
       zIndex={10}
-      borderBottom={1}
-      borderColor="divider"
-      bgcolor="background.paper"
-      sx={{ backdropFilter: "blur(8px)" }}
+      bgcolor="transparent"
       px={{ xs: 3, lg: 4 }}
-      py={2}
+      py={2.5}
     >
       <Box
         maxWidth={960}
@@ -43,82 +30,94 @@ export function SummaryControls({
         gap={2}
         justifyContent="space-between"
       >
-        {/* Left */}
-        <Box display="flex" gap={2} alignItems="center">
-          <ToggleButtonGroup
-            exclusive
-            size="small"
-            value={displayMode}
-            onChange={(_, v) => v && onDisplayModeChange(v)}
-          >
-            <ToggleButton value="count">#</ToggleButton>
-            <ToggleButton value="percentage">%</ToggleButton>
-          </ToggleButtonGroup>
+        <Box
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <InsightsFilterDropdown<TimeFilter>
+            label="Time Range"
+            value={filters.time}
+            onChange={(v) =>
+              setFilters((f) => ({
+                ...f,
+                time: v,
+                ...(v !== "custom" ? { from: undefined, to: undefined } : {}),
+              }))
+            }
+            options={[
+              { value: "all", label: "All time" },
+              { value: "month", label: "Past month" },
+              { value: "week", label: "Past week" },
+              { value: "custom", label: "Custom range" },
+            ]}
+            icon={Calendar}
+          />
 
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<Calendar size={16} />}
-            endIcon={<ChevronDown size={14} />}
-            onClick={(e) => setAnchorEl(e.currentTarget)}
-          >
-            {dateFilter === "all"
-              ? "All time"
-              : dateFilter === "month"
-                ? "Past month"
-                : "Custom"}
-          </Button>
+          {filters.time === "custom" && (
+            <Box display="flex" gap={4} mt={1}>
+              <DatePicker
+                value={filters.from ? dayjs(filters.from) : null}
+                onChange={(value) =>
+                  setFilters((f) => ({
+                    ...f,
+                    from: value ? value.format("YYYY-MM-DD") : undefined,
+                  }))
+                }
+                slotProps={{
+                  textField: {
+                    size: "small",
+                    placeholder: "From date",
+                    sx: {
+                      width: 200,
+                      ...filterInputSx,
+                      "& .MuiInputAdornment-root": {
+                        mt: 0.5,
+                      },
+                    },
+                  },
+                }}
+              />
 
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={() => setAnchorEl(null)}
-          >
-            <MenuItem onClick={() => setDateFilter("all")}>All time</MenuItem>
-            <MenuItem onClick={() => setDateFilter("month")}>
-              Past month
-            </MenuItem>
-            <MenuItem onClick={() => setDateFilter("custom")}>
-              Custom range…
-            </MenuItem>
-          </Menu>
+              <DatePicker
+                value={filters.to ? dayjs(filters.to) : null}
+                onChange={(value) =>
+                  setFilters((f) => ({
+                    ...f,
+                    to: value ? value.format("YYYY-MM-DD") : undefined,
+                  }))
+                }
+                slotProps={{
+                  textField: {
+                    size: "small",
+                    placeholder: "To date",
+                    sx: {
+                      width: 200,
+                      ...filterInputSx,
+                      "& .MuiInputAdornment-root": {
+                        mt: 0.5,
+                      },
+                    },
+                  },
+                }}
+              />
+            </Box>
+          )}
 
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<Filter size={16} />}
-            onClick={onFilterClick}
-          >
-            Filters
-          </Button>
-        </Box>
-
-        {/* Right */}
-        <Box display="flex" gap={2} alignItems="center">
-          <Box
-            display="flex"
-            alignItems="center"
-            border={1}
-            borderColor="divider"
-            borderRadius={1}
-            px={1}
-          >
-            <Search size={16} />
-            <InputBase
-              placeholder="Search responses…"
-              value={searchQuery}
-              onChange={(e) => onSearchChange(e.target.value)}
-              sx={{ ml: 1 }}
-            />
-          </Box>
-
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<Download size={16} />}
-          >
-            Export
-          </Button>
+          <InsightsFilterDropdown<DeviceFilter>
+            label="Device"
+            value={filters.device}
+            onChange={(v) => setFilters((f) => ({ ...f, device: v }))}
+            options={[
+              { value: "all", label: "All devices" },
+              { value: "mobile", label: "Mobile" },
+              { value: "desktop", label: "Desktop" },
+              { value: "tablet", label: "Tablet" },
+            ]}
+            icon={Smartphone}
+          />
         </Box>
       </Box>
     </Box>
