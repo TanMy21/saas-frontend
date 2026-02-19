@@ -79,6 +79,7 @@ export const apiSlice = createApi({
     "Flow",
     "Options",
     "Results",
+    "Behavior",
     "Insights",
     "QuestionPreferences",
   ],

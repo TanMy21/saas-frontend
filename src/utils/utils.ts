@@ -250,7 +250,7 @@ export function getCssColor(variable: string) {
 
 // Replacement for date-fns format(date, 'MMM d, h:mm a')
 
-export function formatDateTime(date: Date) {
+export function formatDateTime(date: Date | string): string {
   // Ensure Date instance
   const d = date instanceof Date ? date : new Date(date);
 
@@ -402,4 +402,19 @@ export function formatRangeLabel(min: number, max: number) {
 
   // fallback for decimal data
   return `${min.toFixed(1)}–${max.toFixed(1)}`;
+}
+
+export function formatTimestamp(ms?: number) {
+  if (!ms && ms !== 0) return "-";
+
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+}
+
+export function formatDuration(ms?: number) {
+  if (!ms) return null;
+  return `${(ms / 1000).toFixed(1)}s`;
 }

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AppBar, Box, Tab, Tabs } from "@mui/material";
 
 import { useAppTheme } from "../../theme/useAppTheme";
-import { BehaviorInsights } from "../Insights/BehaviorInsights";
+import { BehaviorInsights } from "../Behavior/BehaviorInsights";
 import { SummaryContainer } from "../Insights/SummaryContainer";
 import { SurveyInsights } from "../Insights/SurveyInsights";
 

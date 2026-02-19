@@ -1,4 +1,18 @@
-import { CreditCard, Shield, User } from "lucide-react";
+import {
+  CheckCircle,
+  Clock,
+  CreditCard,
+  Eye,
+  EyeOff,
+  Hand,
+  Pause,
+  PauseCircle,
+  Play,
+  RotateCcw,
+  Shield,
+  TimerOff,
+  User,
+} from "lucide-react";
 
 import { NotificationSettings, TabId } from "./types";
 
@@ -147,3 +161,76 @@ export const filterInputSx = {
     fontWeight: 500,
   },
 };
+
+export const surveyStatusConfig = {
+  PAUSED: {
+    label: "Paused",
+    icon: PauseCircle,
+    sx: {
+      color: "#92400E",
+      bgcolor: "#FEF3C7",
+      borderColor: "#F59E0B",
+    },
+  },
+  ACTIVE: {
+    label: "Active",
+    icon: Clock,
+    sx: {
+      color: "#1E3A8A",
+      bgcolor: "#DBEAFE",
+      borderColor: "#3B82F6",
+    },
+  },
+  COMPLETED: {
+    label: "Completed",
+    icon: CheckCircle,
+    sx: {
+      color: "#065F46",
+      bgcolor: "#D1FAE5",
+      borderColor: "#10B981",
+    },
+  },
+} as const;
+
+export const behaviorEventConfig = {
+  QUESTION_STARTED: {
+    icon: Play,
+    label: "Question Started",
+    sx: { bgcolor: "#2563EB", color: "#FFFFFF" },
+  },
+  FIRST_INTERACTION: {
+    icon: Hand,
+    label: "First Interaction",
+    sx: { bgcolor: "#0EA5E9", color: "#FFFFFF" },
+  },
+  HESITATION: {
+    icon: Pause,
+    label: "Hesitation",
+    sx: { bgcolor: "#F59E0B", color: "#FFFFFF" },
+  },
+  FOCUS_LOST: {
+    icon: EyeOff,
+    label: "Lost Focus",
+    sx: { bgcolor: "#F97316", color: "#FFFFFF" },
+  },
+  FOCUS_GAINED: {
+    icon: Eye,
+    label: "Regained Focus",
+    sx: { bgcolor: "#10B981", color: "#FFFFFF" },
+  },
+  BACKTRACKED: {
+    icon: RotateCcw,
+    label: "Backtracked",
+    sx: { bgcolor: "#8B5CF6", color: "#FFFFFF" },
+  },
+  ANSWERED: {
+    icon: CheckCircle,
+    label: "Answered",
+    sx: { bgcolor: "#16A34A", color: "#FFFFFF" },
+  },
+  IDLE: {
+    icon: TimerOff,
+    label: "Idle",
+    sx: { bgcolor: "#6B7280", color: "#FFFFFF" },
+  },
+} as const;

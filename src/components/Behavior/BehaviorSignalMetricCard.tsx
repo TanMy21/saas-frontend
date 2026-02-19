@@ -1,22 +1,8 @@
 import { Box, Typography, Tooltip, IconButton } from "@mui/material";
 import { HelpCircle } from "lucide-react";
 
-interface MetricCardProps {
-  label: string;
-  value: string | number;
-  unit?: string;
-  tooltip?: string;
-  icon?: React.ReactNode;
-  trend?: "up" | "down" | "neutral";
-  trendValue?: string;
-  variant?: "default" | "signal" | "comparison";
-  className?: string;
-}
+import { BehaviorMetricCardProps } from "../../types/behaviorTypes";
 
-/**
- * MetricCard
- * UI-only conversion from Tailwind + shadcn Tooltip to MUI sx
- */
 export function BehaviorSignalMetricCard({
   label,
   value,
@@ -27,40 +13,35 @@ export function BehaviorSignalMetricCard({
   trendValue,
   variant = "default",
   className,
-}: MetricCardProps) {
-  /**
-   * Variant → background / border mapping
-   * Mirrors original Tailwind intent exactly
-   */
+}: BehaviorMetricCardProps) {
   const variantStyles = {
     default: {},
     signal: {
-      bgcolor: "primary.light", // bg-primary-muted/30 feel
+      bgcolor: "primary.light",
       borderColor: "primary.main",
       opacity: 0.9,
     },
     comparison: {
-      bgcolor: "secondary.light", // bg-accent-muted/30 feel
+      bgcolor: "secondary.light",
       borderColor: "secondary.main",
       opacity: 0.9,
     },
   }[variant];
 
   return (
-    // Root container
     <Box
       className={className}
       sx={{
         position: "relative",
-        borderRadius: 1, // rounded-lg
+        borderRadius: 1,
         border: 1,
-        borderColor: "divider", // border-border-subtle
-        bgcolor: "background.paper", // bg-card
-        p: 2, // p-4
+        borderColor: "divider",
+        bgcolor: "background.paper",
+        p: 2,
         transition: "all 0.2s ease",
         "&:hover": {
           borderColor: "divider",
-          boxShadow: 1, // hover:shadow-card
+          boxShadow: 1,
         },
         ...variantStyles,
       }}
