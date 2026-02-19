@@ -73,11 +73,13 @@ const WorkspaceConsole = ({
     {
       refetchOnMountOrArgChange: true,
       skip: !workspaceId,
-    }
+    },
   );
 
   const surveys = data?.surveys || [];
   const total = data?.totalCount || 0;
+
+  console.log("WorkspaceConsole render", surveys);
 
   const totalPages = Math.ceil(total / limit);
   const pagerEnabled = totalPages > 1;
@@ -89,12 +91,12 @@ const WorkspaceConsole = ({
       case "Date created":
         return [...surveys].sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
       case "Date updated":
         return [...surveys].sort(
           (a, b) =>
-            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
         );
       case "Alphabetically":
         return [...surveys].sort((a, b) => a.title.localeCompare(b.title));

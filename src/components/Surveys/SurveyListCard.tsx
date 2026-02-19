@@ -1,10 +1,7 @@
-import { useMemo } from "react";
-
 import FeedIcon from "@mui/icons-material/Feed";
 import { Avatar, Box, ButtonBase, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { formatDate } from "../../utils/formatDate";
 import { SurveyListCardProps } from "../../utils/types";
@@ -20,23 +17,12 @@ const SurveyListCard = ({
   const { brand, background, primary, textStyles, borders, iconStyle } =
     useAppTheme();
   const navigate = useNavigate();
-  const { data: elements = [] } = useGetElementsForSurveyQuery(survey.surveyID);
 
   const goToSurvey = (surveyID: string) => {
     navigate(`/survey/${surveyID}`, {
       state: { workspaceId, workspaceName },
     });
   };
-
-  const questionCount = useMemo(() => {
-    return elements.filter(
-      (el) =>
-        el.type !== "WELCOME_SCREEN" &&
-        el.type !== "END_SCREEN" &&
-        el.type !== "INSTRUCTIONS" &&
-        el.type !== "EMAIL_CONTACT"
-    ).length;
-  }, [elements]);
 
   return (
     <Box
@@ -145,10 +131,13 @@ const SurveyListCard = ({
           }}
         >
           <ListSurveyCardMetricIndicator
-            value={`${questionCount}`}
+            value={`${survey._count.questions}`}
             title={"Questions"}
           />
-          <ListSurveyCardMetricIndicator value={`0`} title={"Responses"} />
+          <ListSurveyCardMetricIndicator
+            value={`${survey._count.behaviorSessions}`}
+            title={"Responses"}
+          />
         </Box>
         <Box sx={{ flexShrink: 0 }}>
           <SurveyCardDropDownMenu

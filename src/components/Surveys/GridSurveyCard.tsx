@@ -1,9 +1,6 @@
-import { useMemo } from "react";
-
 import { Box, ButtonBase, Tooltip, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { formatDate } from "../../utils/formatDate";
 import { GridSurveyCardProps } from "../../utils/types";
@@ -19,23 +16,12 @@ const GridSurveyCard = ({
 }: GridSurveyCardProps) => {
   const { grey, shadows, background, textStyles } = useAppTheme();
   const navigate = useNavigate();
-  const { data: elements = [] } = useGetElementsForSurveyQuery(survey.surveyID);
 
   const goToSurvey = (surveyID: string) => {
     navigate(`/survey/${surveyID}`, {
       state: { workspaceId, workspaceName, viewMode },
     });
   };
-
-  const questionCount = useMemo(() => {
-    return elements.filter(
-      (el) =>
-        el.type !== "WELCOME_SCREEN" &&
-        el.type !== "END_SCREEN" &&
-        el.type !== "INSTRUCTIONS" &&
-        el.type !== "EMAIL_CONTACT"
-    ).length;
-  }, [elements]);
 
   return (
     <Box
@@ -186,10 +172,13 @@ const GridSurveyCard = ({
             }}
           >
             <GridSurveyCardMetricIndicator
-              value={`${questionCount}`}
+              value={`${survey._count.questions} `}
               title={"Questions"}
             />
-            <GridSurveyCardMetricIndicator value={"0"} title={"Responses"} />
+            <GridSurveyCardMetricIndicator
+              value={`${survey._count.behaviorSessions} `}
+              title={"Responses"}
+            />
           </ButtonBase>
         </Box>
       </Box>

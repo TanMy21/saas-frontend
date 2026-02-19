@@ -809,7 +809,7 @@ export type QuestionType =
   | "RANGE"
   | "TEXT"
   | "THREE_D"
-  | "MULTIPLE_CHOICE"
+  | "MULTIPLE_CHOICE";
 
 export interface QuestionDetail {
   questionID: string;
@@ -1132,7 +1132,7 @@ export interface SnackbarAlertProps {
   openSnackbar: boolean;
   handleCloseSnackbar: (
     event?: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => void;
 }
 
@@ -1158,6 +1158,10 @@ export interface Survey {
   shareID: string;
   surveyTag: string[];
   title: string;
+  _count: {
+    questions: number;
+    behaviorSessions: number;
+  };
   updatedAt: string;
   visibility: string;
   workspaceId: string;
