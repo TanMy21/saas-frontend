@@ -7,7 +7,7 @@ type DistributionItem = { label: string; percent: number };
 
 export type GetInsightsArgs = {
   surveyID: string;
-  time: "all" | "week" | "month";
+  time: "all" | "week" | "month" | "custom";
   device: "all" | "mobile" | "desktop" | "tablet";
 };
 

@@ -143,3 +143,8 @@ export interface BehaviorMetricCardProps {
   variant?: "default" | "signal" | "comparison";
   className?: string;
 }
+
+
+export interface NoResultsProps {
+  onClearFilters: () => void;
+}

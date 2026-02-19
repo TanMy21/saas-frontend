@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { Box, Typography } from "@mui/material";
+import { Calendar, Smartphone } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import {
@@ -8,7 +9,9 @@ import {
   useGetParticipantsBehaviorQuery,
 } from "../../app/slices/behaviorApiSlice";
 import { ParticipantBehaviorRowWithSerial } from "../../types/behaviorTypes";
-import { MockQuestionBeh } from "../../utils/insightTypes";
+import { InsightsFilterDropdown } from "../Insights/InsightsFilterDropdown";
+import { EmptyState } from "../States/EmptyState";
+import { NoResults } from "../States/NoResults";
 
 import { BehaviorParticipantDetailDrawer } from "./BehaviorParticipantDetailDrawer";
 import { BehaviorParticipantsTable } from "./BehaviorParticipantsTable";
@@ -16,12 +19,12 @@ import { BehaviorParticipantsTable } from "./BehaviorParticipantsTable";
 export const BehaviorInsights = () => {
   const { surveyID } = useParams();
 
-  const [preset, setPreset] = useState<
-    "last_week" | "last_month" | "custom" | undefined
-  >(undefined);
+  const [preset, setPreset] = useState<"last_week" | "last_month" | undefined>(
+    undefined,
+  );
 
   const [device, setDevice] = useState<
-    "mobile" | "desktop" | "tablet" | "unknown" | undefined
+    "mobile" | "desktop" | "tablet" | undefined
   >(undefined);
 
   const [page, setPage] = useState(1);
@@ -34,9 +37,7 @@ export const BehaviorInsights = () => {
     preset,
     device,
   });
-  // Selected entities
-  const [selectedQuestion, setSelectedQuestion] =
-    useState<MockQuestionBeh | null>(null);
+
   const [selectedParticipant, setSelectedParticipant] =
     useState<ParticipantBehaviorRowWithSerial | null>(null);
 
@@ -57,6 +58,12 @@ export const BehaviorInsights = () => {
       },
     );
 
+  const totalRows = data?.meta?.totalRows ?? 0;
+  const hasFilters = !!preset || !!device;
+
+  const showEmptySurvey = !isLoading && totalRows === 0 && !hasFilters;
+  const showFilteredEmpty = !isLoading && totalRows === 0 && hasFilters;
+
   console.log("Detail Data:", detailData);
 
   return (
@@ -71,6 +78,34 @@ export const BehaviorInsights = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          {/* FILTERS */}
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <InsightsFilterDropdown<"all" | "last_week" | "last_month">
+              label="Time Range"
+              value={preset ?? "all"}
+              onChange={(v) => setPreset(v === "all" ? undefined : v)}
+              options={[
+                { value: "all", label: "All time" },
+                { value: "last_week", label: "Past week" },
+                { value: "last_month", label: "Past month" },
+              ]}
+              icon={Calendar}
+            />
+
+            <InsightsFilterDropdown<"all" | "mobile" | "desktop" | "tablet">
+              label="Device Type"
+              value={device ?? "all"}
+              onChange={(v) => setDevice(v === "all" ? undefined : v)}
+              options={[
+                { value: "all", label: "All devices" },
+                { value: "mobile", label: "Mobile" },
+                { value: "desktop", label: "Desktop" },
+                { value: "tablet", label: "Tablet" },
+              ]}
+              icon={Smartphone}
+            />
+          </Box>
+
           <Box
             sx={{
               display: "flex",
@@ -97,19 +132,30 @@ export const BehaviorInsights = () => {
               </Typography>
             </Box>
 
-            <BehaviorParticipantsTable
-              rows={data?.rows ?? []}
-              meta={
-                data?.meta ?? {
-                  page: 1,
-                  pageSize: 25,
-                  totalRows: 0,
-                  totalPages: 1,
+            {isLoading ? null : showEmptySurvey ? (
+              <EmptyState />
+            ) : showFilteredEmpty ? (
+              <NoResults
+                onClearFilters={() => {
+                  setPreset(undefined);
+                  setDevice(undefined);
+                }}
+              />
+            ) : (
+              <BehaviorParticipantsTable
+                rows={data?.rows ?? []}
+                meta={
+                  data?.meta ?? {
+                    page: 1,
+                    pageSize: 25,
+                    totalRows: 0,
+                    totalPages: 1,
+                  }
                 }
-              }
-              onPageChange={(newPage) => setPage(newPage)}
-              onViewBehavior={handleParticipantClick}
-            />
+                onPageChange={(newPage) => setPage(newPage)}
+                onViewBehavior={handleParticipantClick}
+              />
+            )}
           </Box>
         </Box>
       </Box>

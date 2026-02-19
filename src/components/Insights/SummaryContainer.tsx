@@ -8,6 +8,7 @@ import { useGetResponsesSummaryQuery } from "../../app/slices/resultsApiSlice";
 import { InsightsFilters } from "../../utils/insightTypes";
 import { normalizeQuestion } from "../../utils/utils";
 import { SummarySkeleton } from "../LoadingSkeletons/SummarySkeleton";
+import { EmptyState } from "../States/EmptyState";
 
 import { QuestionSection } from "./QuestionSection";
 import { SummaryControls } from "./SummaryControls";
@@ -103,13 +104,7 @@ export const SummaryContainer = () => {
               borderColor="divider"
               textAlign="center"
             >
-              <Typography fontSize={18} fontWeight={600}>
-                No responses yet
-              </Typography>
-              <Typography mt={1} variant="body2" color="text.secondary">
-                Responses will appear here once participants start answering
-                this survey.
-              </Typography>
+              <EmptyState />
             </Box>
           )}
 
