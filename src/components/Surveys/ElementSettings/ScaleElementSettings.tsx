@@ -1,14 +1,19 @@
 import { Box } from "@mui/material";
 
-import { ElementSettingsProps } from "../../../utils/types";
+import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
 
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
 import ScaleRangeSettings from "./ElementSettingsComponents/ScaleRangeSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
-const ScaleElementSettings = ({ qID, question }: ElementSettingsProps) => {
-  const { text, description, questionPreferences } = question || {};
+const ScaleElementSettings = () => {
+  const question = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
+  );
+
+  const { questionID } = question || {};
 
   return (
     <Box
@@ -19,14 +24,10 @@ const ScaleElementSettings = ({ qID, question }: ElementSettingsProps) => {
         heigh: "100%",
       }}
     >
-      <QuestionTextandDescriptionSettings
-        qID={qID}
-        qText={text}
-        qDescription={description}
-      />
-      <ScreenTypographySettings key={qID} qID={qID} />
+      <QuestionTextandDescriptionSettings />
+      <ScreenTypographySettings key={questionID} qID={questionID!} />
       <ScaleRangeSettings />
-      <ValidationSettings qID={qID} questionPreferences={questionPreferences}/>
+      <ValidationSettings />
     </Box>
   );
 };

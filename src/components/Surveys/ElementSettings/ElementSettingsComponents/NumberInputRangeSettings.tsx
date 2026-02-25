@@ -31,16 +31,22 @@ const NumberInputRangeSettings = () => {
   const { questionID, questionPreferences } = question || {};
 
   const { minValue, maxValue } = questionPreferences?.uiConfig || {
-    minValue: 0,
-    maxValue: 0,
+    minValue: undefined,
+    maxValue: undefined,
   };
 
-  const { handleSubmit, control, reset } = useForm<QuestionUIConfig>({
-    resolver: zodResolver(uiConfigPreferenceSchema),
-    defaultValues: {
-      minValue: questionPreferences?.uiConfig?.minValue,
-      maxValue: questionPreferences?.uiConfig?.maxValue,
-    },
+  const { handleSubmit, control, reset, setValue, getValues } =
+    useForm<QuestionUIConfig>({
+      resolver: zodResolver(uiConfigPreferenceSchema),
+      defaultValues: {
+        minValue,
+        maxValue,
+      },
+    });
+
+  const watchedMin = useWatch({
+    control,
+    name: "minValue",
   });
 
   const watchedValues = useWatch({ control });
@@ -49,13 +55,22 @@ const NumberInputRangeSettings = () => {
 
   const onSubmit = async (data: QuestionUIConfig) => {
     try {
-      const { minValue, maxValue } = data;
+      if (
+        data.minValue !== undefined &&
+        data.maxValue !== undefined &&
+        data.minValue > data.maxValue
+      ) {
+        return;
+      }
 
-      const uiConfig = { minValue, maxValue };
       await updateQuestionPreferenceUIConfig({
         questionID,
-        uiConfig,
+        uiConfig: {
+          minValue: data.minValue,
+          maxValue: data.maxValue,
+        },
       });
+
       setFormTouched(false);
     } catch (error) {
       console.error(error);
@@ -82,11 +97,24 @@ const NumberInputRangeSettings = () => {
   useEffect(() => {
     if (minValue !== undefined && maxValue !== undefined) {
       reset({
-        minValue: minValue,
-        maxValue: maxValue,
+        minValue,
+        maxValue,
       });
     }
   }, [minValue, maxValue, reset]);
+
+  // 🔒 Auto adjust max if min becomes greater
+  useEffect(() => {
+    const currentMax = getValues("maxValue");
+
+    if (
+      watchedMin !== undefined &&
+      currentMax !== undefined &&
+      watchedMin > currentMax
+    ) {
+      setValue("maxValue", watchedMin);
+    }
+  }, [watchedMin]);
 
   return (
     <Accordion
@@ -125,6 +153,7 @@ const NumberInputRangeSettings = () => {
           </Tooltip>
         </Box>
       </AccordionSummary>
+
       <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
         <Box
           mt={1}
@@ -134,10 +163,9 @@ const NumberInputRangeSettings = () => {
             height: "100%",
             width: "96%",
             marginLeft: "1%",
-            // border: "2px solid red",
           }}
         >
-          {/* min value */}
+          {/* MIN */}
           <Box
             mt={1}
             sx={{
@@ -165,6 +193,7 @@ const NumberInputRangeSettings = () => {
             >
               Min number
             </Box>
+
             <Box
               sx={{
                 display: "flex",
@@ -227,7 +256,8 @@ const NumberInputRangeSettings = () => {
               />
             </Box>
           </Box>
-          {/* max value */}
+
+          {/* MAX */}
           <Box
             mt={1}
             sx={{
@@ -255,6 +285,7 @@ const NumberInputRangeSettings = () => {
             >
               Max number
             </Box>
+
             <Box
               sx={{
                 display: "flex",
@@ -275,6 +306,9 @@ const NumberInputRangeSettings = () => {
                     fullWidth
                     InputProps={{
                       disableUnderline: true,
+                      inputProps: {
+                        min: watchedMin ?? undefined,
+                      },
                     }}
                     sx={{
                       "& .MuiInputBase-input": {
@@ -326,5 +360,6 @@ const NumberInputRangeSettings = () => {
     </Accordion>
   );
 };
+
 
 export default NumberInputRangeSettings;

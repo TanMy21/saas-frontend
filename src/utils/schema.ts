@@ -78,7 +78,7 @@ export const settingsUpdateSchema = z
     {
       message: "End date is required when start date is provided",
       path: ["endDate"],
-    }
+    },
   )
 
   .refine(
@@ -91,7 +91,7 @@ export const settingsUpdateSchema = z
     {
       message: "End date cannot be before start date",
       path: ["endDate"],
-    }
+    },
   );
 
 export const titleDescriptionUpdateSchema = z.object({
@@ -231,28 +231,42 @@ export const questionImageSettingsSchema = z.object({
   questionImageAltTxt: z.string().optional(),
 });
 
-export const uiConfigPreferenceSchema = z.object({
-  buttonText: z
-    .string()
-    .min(1, "Button text must be at least 1 character long")
-    .max(24, "Button text must be at most 24 characters long")
-    .optional(),
-  buttonTextYes: z
-    .string()
-    .min(1, "Button text must be at least 1 character long")
-    .max(24, "Button text must be at most 24 characters long")
-    .optional(),
-  buttonTextNo: z
-    .string()
-    .min(1, "Button text must be at least 1 character long")
-    .max(24, "Button text must be at most 24 characters long")
-    .optional(),
-  minValue: z.number().min(0, "Minimum value must be at least 0").optional(),
-  maxValue: z.number().optional(),
-  multipleSelection: z.boolean().optional(),
-  required: z.boolean().optional(),
-  showQuestion: z.boolean().optional(),
-});
+export const uiConfigPreferenceSchema = z
+  .object({
+    buttonText: z
+      .string()
+      .min(1, "Button text must be at least 1 character long")
+      .max(24, "Button text must be at most 24 characters long")
+      .optional(),
+    buttonTextYes: z
+      .string()
+      .min(1, "Button text must be at least 1 character long")
+      .max(24, "Button text must be at most 24 characters long")
+      .optional(),
+    buttonTextNo: z
+      .string()
+      .min(1, "Button text must be at least 1 character long")
+      .max(24, "Button text must be at most 24 characters long")
+      .optional(),
+    minValue: z.number().min(0, "Minimum value must be at least 0").optional(),
+    maxValue: z.number().optional(),
+    multipleSelection: z.boolean().optional(),
+    required: z.boolean().optional(),
+    showQuestion: z.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (
+      data.minValue !== undefined &&
+      data.maxValue !== undefined &&
+      data.minValue > data.maxValue
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Minimum cannot be greater than maximum",
+        path: ["maxValue"],
+      });
+    }
+  });
 
 export const instructionsSettingsSchema = z.object({
   instructionsTitle: z

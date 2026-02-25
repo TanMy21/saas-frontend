@@ -31,7 +31,7 @@ import { QuestionUIConfig } from "../../../../utils/types";
 const ScaleRangeSettings = () => {
   const dispatch = useAppDispatch();
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
   const [updateQuestionPreferenceUIConfig] =
@@ -40,16 +40,22 @@ const ScaleRangeSettings = () => {
   const { questionID, questionPreferences } = question || {};
 
   const { minValue, maxValue } = questionPreferences?.uiConfig || {
-    minValue: 0,
-    maxValue: 0,
+    minValue: undefined,
+    maxValue: undefined,
   };
 
-  const { handleSubmit, control, reset } = useForm<QuestionUIConfig>({
-    resolver: zodResolver(uiConfigPreferenceSchema),
-    defaultValues: {
-      minValue: questionPreferences?.uiConfig?.minValue,
-      maxValue: questionPreferences?.uiConfig?.maxValue,
-    },
+  const { handleSubmit, control, reset, setValue, getValues } =
+    useForm<QuestionUIConfig>({
+      resolver: zodResolver(uiConfigPreferenceSchema),
+      defaultValues: {
+        minValue,
+        maxValue,
+      },
+    });
+
+  const watchedMin = useWatch({
+    control,
+    name: "minValue",
   });
 
   const watchedValues = useWatch({ control });
@@ -58,13 +64,22 @@ const ScaleRangeSettings = () => {
 
   const onSubmit = async (data: QuestionUIConfig) => {
     try {
-      const { minValue, maxValue } = data;
+      if (
+        data.minValue !== undefined &&
+        data.maxValue !== undefined &&
+        data.minValue > data.maxValue
+      ) {
+        return;
+      }
 
-      const uiConfig = { minValue, maxValue };
       await updateQuestionPreferenceUIConfig({
         questionID,
-        uiConfig,
+        uiConfig: {
+          minValue: data.minValue,
+          maxValue: data.maxValue,
+        },
       });
+
       setFormTouched(false);
     } catch (error) {
       console.error(error);
@@ -89,13 +104,27 @@ const ScaleRangeSettings = () => {
   }, [watchedValues, formTouched, handleSubmit]);
 
   useEffect(() => {
-    if (minValue !== undefined && maxValue !== undefined) {
-      reset({
-        minValue: minValue,
-        maxValue: maxValue,
-      });
-    }
+    reset({
+      minValue,
+      maxValue,
+    });
   }, [minValue, maxValue, reset]);
+
+  useEffect(() => {
+    const currentMax = getValues("maxValue");
+
+    if (
+      watchedMin !== undefined &&
+      currentMax !== undefined &&
+      watchedMin > currentMax
+    ) {
+      setValue("maxValue", watchedMin);
+      dispatch(updateMaxValue(watchedMin));
+    }
+  }, [watchedMin]);
+
+  const rangeOptions = Array.from({ length: 10 }, (_, i) => i + 1);
+
   return (
     <Accordion
       sx={{
@@ -120,7 +149,6 @@ const ScaleRangeSettings = () => {
             alignItems: "center",
             gap: 2,
             fontWeight: 500,
-            // pl: "4%",
             color: "#453F46",
           }}
         >
@@ -130,6 +158,7 @@ const ScaleRangeSettings = () => {
           </Tooltip>
         </Box>
       </AccordionSummary>
+
       <AccordionDetails>
         <Box
           sx={{
@@ -140,6 +169,7 @@ const ScaleRangeSettings = () => {
             marginTop: "8%",
           }}
         >
+          {/* MIN */}
           <Box>
             <Controller
               name="minValue"
@@ -187,7 +217,7 @@ const ScaleRangeSettings = () => {
                     markFormTouched();
                   }}
                 >
-                  {Array.from({ length: 10 }, (_, i) => i + 1).map((option) => (
+                  {rangeOptions.map((option) => (
                     <MenuItem key={option} value={option}>
                       {option}
                     </MenuItem>
@@ -196,6 +226,7 @@ const ScaleRangeSettings = () => {
               )}
             />
           </Box>
+
           <Box
             sx={{
               fontSize: "20px",
@@ -206,6 +237,8 @@ const ScaleRangeSettings = () => {
           >
             to
           </Box>
+
+          {/* MAX */}
           <Box>
             <Controller
               name="maxValue"
@@ -217,6 +250,7 @@ const ScaleRangeSettings = () => {
                   fullWidth
                   displayEmpty
                   disableUnderline
+                  disabled={!watchedMin}
                   sx={{
                     borderRadius: "8px",
                     height: "42px",
@@ -253,11 +287,16 @@ const ScaleRangeSettings = () => {
                     markFormTouched();
                   }}
                 >
-                  {Array.from({ length: 10 }, (_, i) => i + 1).map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
+                  {rangeOptions
+                    .filter(
+                      (option) =>
+                        watchedMin === undefined || option >= watchedMin,
+                    )
+                    .map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
                 </Select>
               )}
             />
