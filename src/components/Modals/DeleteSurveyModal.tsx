@@ -309,7 +309,7 @@ const DeleteSurveyModal = ({
                             }}
                           >
                             {confirmationMatch
-                              ? "Survey name confirmed"
+                              ? "Survey name matched"
                               : "Survey name doesn't match"}
                           </Typography>
                         </Box>

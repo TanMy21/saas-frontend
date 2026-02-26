@@ -101,7 +101,7 @@ export interface ColorPickerProps {
 
 export interface CanvasConsoleProps {
   display: "desktop" | "mobile";
-  setDisplay: React.Dispatch<React.SetStateAction<string | null>>;
+  setDisplay: React.Dispatch<React.SetStateAction<"desktop" | "mobile">>;
   question: Element | null;
   shareID: string;
   published: boolean;
@@ -650,6 +650,7 @@ export interface ICustomePayload extends JwtPayload {
 
 export interface ImportQuestionProps {
   isOpen?: boolean;
+  onClose?: () => void;
   openImport?: boolean;
   setOpenImport?: React.Dispatch<React.SetStateAction<boolean>>;
   surveyID?: string;
@@ -1193,6 +1194,7 @@ export interface SurveyListCardProps {
 
 export interface SurveyNameProps {
   isOpen: boolean;
+  onClose: () => void;
   workspaceId?: string;
   surveyID?: string;
   surveyName?: string;
@@ -1273,7 +1275,7 @@ export interface SurveyTitleEditModalProps {
 }
 
 export interface SurveyIslandProps {
-  setDisplay: React.Dispatch<React.SetStateAction<string | null>>;
+  setDisplay: React.Dispatch<React.SetStateAction<"desktop" | "mobile">>;
   shareID: string;
   published: boolean;
 }

@@ -41,16 +41,18 @@ const SurveyBuilder = () => {
   // const [stepIndex, setStepIndex] = useState(0);
   // const isTourEnabled = useBuilderTourEnable(user);
   const [surveyTitle, setSurveyTitle] = useState<string>("");
-  const [display, setDisplay] = useState<string | null>("desktop");
+  const [display, setDisplay] = useState<"desktop" | "mobile">("desktop");
   const [loading, setLoading] = useState(false);
+  const [openScratch, setOpenScratch] = useState(isOpen);
+  const [openImportLocal, setOpenImportLocal] = useState(false);
 
   const elements = useAppSelector(
-    (state: RootState) => state.surveyBuilder.elements
+    (state: RootState) => state.surveyBuilder.elements,
   );
 
   const { questionId, setQuestionId } = usePersistedSelectedQuestion(
     surveyID,
-    elements
+    elements,
   );
 
   const selectedQuestion = useMemo(() => {
@@ -84,7 +86,7 @@ const SurveyBuilder = () => {
     isLoadingCanvas,
     isFetchingCanvas,
     isErrorCanvas,
-    setLoading
+    setLoading,
   );
   useEffect(() => {
     if (surveyCanvas) {
@@ -103,6 +105,12 @@ const SurveyBuilder = () => {
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
+
+  useEffect(() => {
+    if (isOpenImport) {
+      setOpenImportLocal(true);
+    }
+  }, [isOpenImport]);
 
   if (isLoadingCanvas)
     return (
@@ -211,11 +219,16 @@ const SurveyBuilder = () => {
             </Box>
           </Box>
           <CreateNewSurveyModal
-            isOpen={isOpen}
+            isOpen={openScratch}
+            onClose={() => setOpenScratch(false)}
             surveyID={surveyID}
             setSurveyTitle={setSurveyTitle}
           />
-          <ImportQuestionsModal isOpen={isOpenImport} surveyID={surveyID} />
+          <ImportQuestionsModal
+            isOpen={openImportLocal}
+            surveyID={surveyID}
+            onClose={() => setOpenImportLocal(false)}
+          />
           <GenerateSurveyModal openGenerate={isOpenGenerate} />
         </Box>
       </SurveyCanvasRefetchContext.Provider>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -19,17 +19,13 @@ import { ErrorData, SurveyNameProps } from "../../utils/types";
 const CreateNewSurveyModal = ({
   isOpen,
   surveyID,
+  onClose,
   setSurveyTitle,
 }: SurveyNameProps) => {
   const { register, handleSubmit } = useForm<SurveyNameProps>();
-  const [open, setOpen] = useState(isOpen);
 
   const [updateSurveyTitleandDescription, { isSuccess, isError, error }] =
     useUpdateSurveyTitleandDescriptionMutation();
-
-  const onClose = () => {
-    setOpen(false);
-  };
 
   const handleNameSurvey = async (data: SurveyNameProps) => {
     const { surveyName, surveyDescription } = data;
@@ -44,7 +40,7 @@ const CreateNewSurveyModal = ({
         setSurveyTitle(surveyCreated.title);
       }
 
-      setOpen(false);
+      onClose();
     } catch (error) {
       console.error(error);
     }
@@ -66,7 +62,7 @@ const CreateNewSurveyModal = ({
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
@@ -77,7 +73,7 @@ const CreateNewSurveyModal = ({
   }, [isSuccess, isError, error]);
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={isOpen} onClose={onClose}>
       <Box
         sx={{
           position: "absolute",

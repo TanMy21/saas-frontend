@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
-import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Modal,
+  Typography,
+} from "@mui/material";
 import { ArrowRight, Edit3, Sparkles, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -23,15 +29,16 @@ const NewSurveyModal = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [hoveredOption, setHoveredOption] = useState<string | null>(null);
-  const openModal = true;
-  const openModalImport = true;
   const openGenerate = useAppSelector(
-    (state) => state.surveyBuilder.isGenerateModalOpen
+    (state) => state.surveyBuilder.isGenerateModalOpen,
   );
 
-  const [createSurvey, { isError, error }] = useCreateSurveyMutation();
+  const [createSurvey, { isError, error, isLoading }] =
+    useCreateSurveyMutation();
 
   const handleCreateFromScratch = async () => {
+    if (isLoading) return;
+
     try {
       const surveyCreated = await createSurvey({
         workspaceId,
@@ -39,7 +46,7 @@ const NewSurveyModal = ({
 
       if (surveyCreated) {
         navigate(`/survey/${surveyCreated.surveyID}`, {
-          state: { workspaceId, workspaceName, openModal },
+          state: { workspaceId, workspaceName, openScratch: true },
         });
       }
     } catch (error) {
@@ -55,7 +62,7 @@ const NewSurveyModal = ({
 
       if (surveyCreated) {
         navigate(`/survey/${surveyCreated.surveyID}`, {
-          state: { workspaceId, workspaceName, openModalImport },
+          state: { workspaceId, workspaceName, openImport: true },
         });
       }
     } catch (error) {
@@ -123,7 +130,7 @@ const NewSurveyModal = ({
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
@@ -237,9 +244,11 @@ const NewSurveyModal = ({
                     key={option.id}
                     onMouseEnter={() => setHoveredOption(option.id)}
                     onMouseLeave={() => setHoveredOption(null)}
-                    onClick={option.onClick}
+                    onClick={isLoading ? undefined : option.onClick}
                     sx={{
-                      cursor: "pointer",
+                      cursor: isLoading ? "not-allowed" : "pointer",
+                      opacity: isLoading ? 0.6 : 1,
+                      pointerEvents: isLoading ? "none" : "auto",
                       width: "100%",
                       p: 0,
                       border: "2px solid",
@@ -313,6 +322,7 @@ const NewSurveyModal = ({
                           >
                             {option.title}
                           </Typography>
+
                           <ArrowRight
                             style={{
                               width: 20,

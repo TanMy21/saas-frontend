@@ -12,28 +12,27 @@ import ImportQuestionModalInputField from "./ImportQuestionModalInputField";
 
 const ImportQuestionsModal = ({
   isOpen,
-  openImport,
+  onClose,
   setOpenImport,
 }: ImportQuestionProps) => {
   const { surveyID } = useParams();
-  const [open, setOpen] = useState(isOpen);
   const [importText, setImportText] = useState("");
   const [importBtnClicked, setImportBtnClicked] = useState(false);
 
   const [importQuestions, { isLoading }] = useImportQuestionsMutation();
 
   const handleClose = () => {
-    setOpen(false);
+    onClose!();
     setOpenImport!(false);
     setImportBtnClicked(false);
   };
 
   return (
     <Modal
-      open={Boolean(open) || Boolean(openImport)}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      open={isOpen!}
+      onClose={onClose}
+      aria-labelledby="Import questions modal"
+      aria-describedby="Import questions to your survey by pasting them in the text area"
     >
       <Box
         sx={{
