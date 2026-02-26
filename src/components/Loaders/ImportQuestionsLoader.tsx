@@ -1,69 +1,122 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 
-const ImportQuestionsLoader = () => {
+import { Box, Typography } from "@mui/material";
+import { WiStars } from "react-icons/wi";
+
+import ImportLoaderAnimation from "./ImportLoaderAnimation";
+
+export const ImportQuestionsLoader = () => {
+  const messages = [
+    "Analyzing your input...",
+    "Identifying questions and options...",
+    "Preparing your survey...",
+    "Finalizing your survey...",
+  ];
+
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % messages.length);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Box
       sx={{
+        width: "100%",
+        height: "100%",
         display: "flex",
-        flexDirection: "row",
         justifyContent: "center",
-        alignContent: "center",
         alignItems: "center",
-        width: "96%",
-        height: "96%",
       }}
     >
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
           gap: 2,
         }}
       >
-        <CircularProgress
-          size={100}
+        <Box
           sx={{
-            color: "#6366F1",
-          }}
-        />
-        <Typography
-          sx={{
-            fontSize: "36px",
-            fontWeight: "bold",
-            background: "linear-gradient(90deg, #4B5563, #D1D5DB, #4B5563)",
-            backgroundSize: "200% auto",
-            marginTop: "2%",
-            color: "transparent",
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            animation: "shimmer 4s linear infinite",
-            "@keyframes shimmer": {
-              "0%": {
-                backgroundPosition: "200% center",
-              },
-              "100%": {
-                backgroundPosition: "-200% center",
-              },
-            },
+            marginX: "auto",
+            width: 100,
+            height: 100,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          Composing your questions
+          <WiStars size={80} color="#6366F1" />
+        </Box>
+
+        {/* Main Title */}
+        <Typography
+          sx={{
+            fontSize: 26,
+            fontWeight: 600,
+            color: "#111827",
+            letterSpacing: "-0.3px",
+          }}
+        >
+          Composing your survey...
         </Typography>
+
+        {/* Rotating intelligent status */}
         <Typography
+          key={index}
           sx={{
-            fontSize: "24px",
-            color: "#71717A",
-            marginTop: "8px",
-            opacity: 0,
-            animation: "fadeIn 2s ease forwards",
+            fontSize: 18,
+            color: "#6B7280",
+            transition: "opacity 0.4s ease",
+            animation: "fadeIn 0.4s ease",
             "@keyframes fadeIn": {
-              "to": { opacity: 1 },
+              from: { opacity: 0, transform: "translateY(4px)" },
+              to: { opacity: 1, transform: "translateY(0px)" },
             },
           }}
         >
-          This may take up to a minute.
+          {messages[index]}
+        </Typography>
+
+        {/* Animated Icon + Glow Ring */}
+        <Box
+          sx={{
+            position: "relative",
+            width: 110,
+            height: 110,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {/* Soft Pulsing Glow */}
+          <Box
+            sx={{
+              position: "absolute",
+              width: 110,
+              height: 110,
+              borderRadius: "50%",
+            }}
+          />
+
+          {/* Circular Progress Ring */}
+          <ImportLoaderAnimation />
+        </Box>
+
+        {/* Calm microcopy */}
+        <Typography
+          sx={{
+            fontSize: 20,
+            color: "#9CA3AF",
+            mt: 1,
+          }}
+        >
+          Large imports may take a little longer.
         </Typography>
       </Box>
     </Box>

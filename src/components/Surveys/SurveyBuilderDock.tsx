@@ -17,7 +17,6 @@ import { RootState } from "../../app/store";
 import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import { DockItemProps, SurveyIslandProps } from "../../utils/types";
 import GenerateSurveyModal from "../Modals/GenerateSurveyModal";
-import ImportQuestionsModal from "../Modals/ImportQuestionsModal";
 import ShareSurveyModal from "../Modals/ShareSurveyModal";
 import SurveySettingsModal from "../Modals/SurveySettingsModal";
 import SnackbarAlert from "../SnackbarAlert";
@@ -184,17 +183,18 @@ const SurveyBuilderDock = ({
   setDisplay,
   shareID,
   published,
+  onOpenImport,
 }: SurveyIslandProps) => {
   const dispatch = useAppDispatch();
   const { surveyID } = useParams();
   const prevPublishedRef = useRef<boolean | null>(null);
 
   const openGenerateState = useAppSelector(
-    (state: RootState) => state.surveyBuilder.isGenerateModalOpen
+    (state: RootState) => state.surveyBuilder.isGenerateModalOpen,
   );
 
   const shareOpen = useAppSelector(
-    (state: RootState) => state.overlayUI.shareModalOpen
+    (state: RootState) => state.overlayUI.shareModalOpen,
   );
 
   const setShareOpen: React.Dispatch<React.SetStateAction<boolean>> = (val) => {
@@ -236,7 +236,7 @@ const SurveyBuilderDock = ({
       id: "import",
       icon: <UploadIcon />,
       label: "Import questions",
-      action: () => setOpenImport(true),
+      action: () => onOpenImport(),
     },
     {
       id: "generate",
@@ -324,10 +324,6 @@ const SurveyBuilderDock = ({
           setOpenSettings={setOpenSettings}
         />
 
-        <ImportQuestionsModal
-          openImport={openImport}
-          setOpenImport={setOpenImport}
-        />
         <GenerateSurveyModal
           openGenerate={openGenerate}
           setOpenGenerate={setOpenGenerate}

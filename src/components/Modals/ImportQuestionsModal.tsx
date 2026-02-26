@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 
 import { useImportQuestionsMutation } from "../../app/slices/elementApiSlice";
 import { ImportQuestionProps } from "../../utils/types";
-import ImportQuestionsLoader from "../Loaders/ImportQuestionsLoader";
+import { ImportQuestionsLoader } from "../Loaders/ImportQuestionsLoader";
 
 import ImportQuestionModalInputField from "./ImportQuestionModalInputField";
 
@@ -113,7 +113,11 @@ const ImportQuestionsModal = ({
             }}
           >
             {importBtnClicked && importText.trim().length === 0 && (
-              <Alert severity="error" sx={{ mb: 2 }}>
+              <Alert
+                severity="error"
+                sx={{ mb: 2 }}
+                onClose={() => setImportBtnClicked(false)}  
+              >
                 You need to add some questions before importing
               </Alert>
             )}
