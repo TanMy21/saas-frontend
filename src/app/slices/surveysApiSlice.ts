@@ -26,13 +26,39 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Surveys"],
     }),
-    generateSurvey: builder.mutation({
-      query: ({ surveyID, inputText, numberOfQuestions, questionTypes }) => ({
+    generateSurvey: builder.mutation<
+      {
+        message: string;
+        generatedCount: number;
+        totalQuestionCount: number;
+        mode: string;
+      },
+      {
+        surveyID: string;
+        inputText?: string;
+        numberOfQuestions?: number;
+        questionTypes: string[];
+        mode?: "INITIAL" | "APPEND" | "REPLACE";
+      }
+    >({
+      query: ({
+        surveyID,
+        inputText,
+        numberOfQuestions,
+        questionTypes,
+        mode,
+      }) => ({
         url: `/s/generate`,
         method: "POST",
-        body: { surveyID, inputText, numberOfQuestions, questionTypes },
+        body: {
+          surveyID,
+          inputText,
+          numberOfQuestions,
+          questionTypes,
+          ...(mode ? { mode } : {}), // only send if present
+        },
       }),
-      invalidatesTags: ["Surveys"],
+      invalidatesTags: ["Surveys", "Elements"],
     }),
     updateSurveyTitleandDescription: builder.mutation({
       query: ({ surveyID, title, description }) => ({

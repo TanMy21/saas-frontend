@@ -1,6 +1,7 @@
 import { RefObject } from "react";
 
 import { type SxProps, type Theme, type TooltipProps } from "@mui/material";
+import { type SerializedError } from "@reduxjs/toolkit";
 import { type QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { type Edge, type Node } from "@xyflow/react";
 import { Dayjs } from "dayjs";
@@ -23,6 +24,7 @@ import {
   useSendLogoutMutation,
 } from "../app/slices/authApiSlice";
 import { useImportQuestionsMutation } from "../app/slices/elementApiSlice";
+import { useGenerateSurveyMutation } from "../app/slices/surveysApiSlice";
 import { useResendVerificationEmailMutation } from "../app/slices/userApiSlice";
 
 import { generateSurveySchema } from "./schema";
@@ -600,9 +602,12 @@ export interface GenerateSurveyModalProps {
 }
 
 export interface GenerateSurveyFormProps {
-  surveyID: string;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onGenerate: () => void;
+  generateSurvey: ReturnType<typeof useGenerateSurveyMutation>[0];
+  setOpenGenerate?: React.Dispatch<React.SetStateAction<boolean>>;
   handleClose: () => void;
+  isError: boolean; 
+  error: ReturnType<typeof useGenerateSurveyMutation>[1]["error"]; 
 }
 
 export interface LocationStateProps {

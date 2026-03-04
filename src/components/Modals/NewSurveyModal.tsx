@@ -2,13 +2,7 @@ import { useEffect, useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
-import {
-  Box,
-  Button,
-  IconButton,
-  Modal,
-  Typography,
-} from "@mui/material";
+import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
 import { ArrowRight, Edit3, Sparkles, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -116,9 +110,10 @@ const NewSurveyModal = ({
       title: "AI-powered generation",
       description:
         "Let AI create intelligent questions based on your survey topic",
-      gradient: "linear-gradient(90deg,#a21caf,#7c3aed)",
-      bgColor: "#f5f3ff",
-      iconColor: "#7c3aed",
+      gradient: "linear-gradient(90deg,#1e3a8a,#1d4ed8)",
+      bgColor: " #eff6ff",
+      iconColor: "#1d4ed8",
+      hoverGradient: "linear-gradient(90deg,#1e40af,#1e3a8a)",
       onClick: handleGenerateQuestions,
     },
   ];

@@ -16,7 +16,7 @@ import {
 import { RootState } from "../../app/store";
 import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import { DockItemProps, SurveyIslandProps } from "../../utils/types";
-import GenerateSurveyModal from "../Modals/GenerateSurveyModal";
+import GenerateSurveyModal from "../GenerateSurveyModal/GenerateSurveyModal";
 import ShareSurveyModal from "../Modals/ShareSurveyModal";
 import SurveySettingsModal from "../Modals/SurveySettingsModal";
 import SnackbarAlert from "../SnackbarAlert";

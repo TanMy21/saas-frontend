@@ -234,3 +234,12 @@ export const behaviorEventConfig = {
     sx: { bgcolor: "#6B7280", color: "#FFFFFF" },
   },
 } as const;
+
+
+export enum GenerateSurveyState {
+  INITIAL_CONFIG = "INITIAL_CONFIG",
+  TOOLS = "TOOLS",
+  APPEND_CONFIG = "APPEND_CONFIG",
+  REPLACE_CONFIRM = "REPLACE_CONFIRM",
+  LOADING = "LOADING",
+}
