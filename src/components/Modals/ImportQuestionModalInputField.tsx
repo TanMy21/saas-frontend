@@ -1,33 +1,40 @@
 import { useState } from "react";
 
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Tooltip } from "@mui/material";
+import { ReplaceAll, SquarePlus } from "lucide-react";
 
 import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
 import { ImportQuestionModalInputFieldProps } from "../../utils/types";
+import { ReplaceImportQuestionsDialog } from "../ModalComponents/ReplaceImportQuestionsDialog";
 
 import ImportQuestionModalPlaceholderTxt from "./ImportQuestionModalPlaceholderTxt";
 
 const ImportQuestionModalInputField = ({
   surveyID,
   isLoading,
+  existingQuestionsCount,
   importQuestions,
   importText,
   setImportText,
   setImportBtnClicked,
+  setAttemptedMode,
   handleClose,
 }: ImportQuestionModalInputFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [confirmReplaceOpen, setConfirmReplaceOpen] = useState(false);
+
   const refetchCanvas = useSurveyCanvasRefetch();
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setImportText(event.target.value);
   };
 
-  const handleImport = async () => {
+  const handleImport = async (mode: "INITIAL" | "APPEND" | "REPLACE") => {
     try {
+      setAttemptedMode(mode);
       setImportBtnClicked(true);
 
       if (importText.trim().length === 0) {
@@ -36,7 +43,8 @@ const ImportQuestionModalInputField = ({
 
       await importQuestions({
         surveyID,
-        value: importText,
+        inputText: importText,
+        mode,
       }).unwrap();
 
       setImportText("");
@@ -126,31 +134,97 @@ const ImportQuestionModalInputField = ({
           right: 8,
         }}
       >
-        <Button
-          onClick={handleImport}
-          type="submit"
-          disabled={isLoading}
-          sx={{
-            borderRadius: "50%",
-            backgroundColor: "#005BC4",
-            color: "#FFFFFF",
-            position: "absolute",
-            bottom: "16px",
-            right: "16px",
-            width: "36px",
-            height: "36px",
-            minWidth: "36px",
-            transition: "all 0.2s ease",
-            "&:hover": {
+        {existingQuestionsCount > 0 ? (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+              }}
+            >
+              {/* Replace */}
+              <Button
+                onClick={() => setConfirmReplaceOpen(true)}
+                disabled={isLoading}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  borderRadius: "8px",
+                  border: "1px solid #E2E8F0",
+                  color: "#475569",
+                  px: 2,
+                  height: 36,
+                  fontWeight: 600,
+                  textTransform: "none",
+                  backgroundColor: "#E2E8F0",
+                  "&:hover": {
+                    backgroundColor: "#CBD5E1",
+                    borderColor: "#CBD5E1",
+                  },
+                }}
+              >
+                <ReplaceAll size={18} />
+                Replace
+              </Button>
+
+              {/* Append */}
+              <Tooltip title="Append questions to survey" arrow>
+                <Button
+                  onClick={() => handleImport("APPEND")}
+                  disabled={isLoading}
+                  sx={{
+                    minWidth: 40,
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    backgroundColor: "#2563EB",
+                    color: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "#1D4ED8",
+                      transform: "scale(1.15)",
+                    },
+                  }}
+                >
+                  <SquarePlus size={20} />
+                </Button>
+              </Tooltip>
+              <ReplaceImportQuestionsDialog
+                open={confirmReplaceOpen}
+                questionCount={existingQuestionsCount}
+                onClose={() => setConfirmReplaceOpen(false)}
+                onConfirm={() => {
+                  setConfirmReplaceOpen(false);
+                  handleImport("REPLACE");
+                }}
+              />
+            </Box>
+          </>
+        ) : (
+          <Button
+            onClick={() => handleImport("INITIAL")}
+            disabled={isLoading}
+            sx={{
+              borderRadius: "50%",
               backgroundColor: "#005BC4",
               color: "#FFFFFF",
-              transform: "scale(1.2)",
-            },
-          }}
-          aria-label="upload file"
-        >
-          <ArrowUpwardIcon fontSize="small" />
-        </Button>
+              width: 36,
+              height: 36,
+              minWidth: 36,
+              "&:hover": {
+                backgroundColor: "#005BC4",
+                transform: "scale(1.15)",
+              },
+            }}
+          >
+            <ArrowUpwardIcon fontSize="small" />
+          </Button>
+        )}
       </Box>
     </Box>
   );

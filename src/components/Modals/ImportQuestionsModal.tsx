@@ -4,7 +4,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Alert, Box, IconButton, Modal, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 
-import { useImportQuestionsMutation } from "../../app/slices/elementApiSlice";
+import {
+  useGetElementsForSurveyQuery,
+  useImportQuestionsMutation,
+} from "../../app/slices/elementApiSlice";
 import { ImportQuestionProps } from "../../utils/types";
 import { ImportQuestionsLoader } from "../Loaders/ImportQuestionsLoader";
 
@@ -18,8 +21,28 @@ const ImportQuestionsModal = ({
   const { surveyID } = useParams();
   const [importText, setImportText] = useState("");
   const [importBtnClicked, setImportBtnClicked] = useState(false);
+  const [attemptedMode, setAttemptedMode] = useState<
+    "INITIAL" | "APPEND" | "REPLACE" | null
+  >(null);
+  const { data: elements = [] } = useGetElementsForSurveyQuery(surveyID!);
+  const existingQuestionsCount = elements.length;
 
   const [importQuestions, { isLoading }] = useImportQuestionsMutation();
+
+  const getEmptyTextMessage = () => {
+    if (!attemptedMode) return "";
+
+    switch (attemptedMode) {
+      case "INITIAL":
+        return "Add some questions before importing.";
+      case "APPEND":
+        return "Add some questions to append them to the survey.";
+      case "REPLACE":
+        return "Add some questions before replacing the existing ones.";
+      default:
+        return "Add some questions before importing.";
+    }
+  };
 
   const handleClose = () => {
     onClose!();
@@ -116,9 +139,9 @@ const ImportQuestionsModal = ({
               <Alert
                 severity="error"
                 sx={{ mb: 2 }}
-                onClose={() => setImportBtnClicked(false)}  
+                onClose={() => setImportBtnClicked(false)}
               >
-                You need to add some questions before importing
+                {getEmptyTextMessage()}
               </Alert>
             )}
             {isLoading ? (
@@ -131,7 +154,9 @@ const ImportQuestionsModal = ({
                 importText={importText}
                 setImportText={setImportText}
                 setImportBtnClicked={setImportBtnClicked}
+                setAttemptedMode={setAttemptedMode}
                 handleClose={handleClose}
+                existingQuestionsCount={existingQuestionsCount}
               />
             )}
           </Box>

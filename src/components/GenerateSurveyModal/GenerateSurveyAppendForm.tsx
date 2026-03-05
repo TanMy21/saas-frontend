@@ -102,7 +102,7 @@ export const GenerateSurveyAppendForm = ({
                 },
               }}
               inputProps={{
-                min: 4,
+                min: 1,
                 max: 50,
                 step: 1,
                 style: { fontSize: 16 },

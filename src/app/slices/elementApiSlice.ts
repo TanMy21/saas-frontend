@@ -19,13 +19,28 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
-    importQuestions: builder.mutation({
-      query: ({ surveyID, value }) => ({
-        url: "/q/generate",
+    importQuestions: builder.mutation<
+      {
+        message: string;
+        count: number;
+        mode: string;
+      },
+      {
+        surveyID: string;
+        inputText: string;
+        mode?: "INITIAL" | "APPEND" | "REPLACE";
+      }
+    >({
+      query: ({ surveyID, inputText, mode }) => ({
+        url: `/q/import`,
         method: "POST",
-        body: { surveyID, value },
+        body: {
+          surveyID,
+          inputText,
+          ...(mode ? { mode } : {}), // only if provided
+        },
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: ["Surveys", "Elements"],
     }),
     createScreenElement: builder.mutation({
       query: (data) => ({
@@ -59,7 +74,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(
         { questionID, description },
-        { dispatch, queryFulfilled }
+        { dispatch, queryFulfilled },
       ) {
         const patchResult = dispatch(
           elementApiSlice.util.updateQueryData(
@@ -67,13 +82,13 @@ export const elementApiSlice = apiSlice.injectEndpoints({
             questionID,
             (draft) => {
               const element = draft.find(
-                (e: Element) => e.questionID === questionID
+                (e: Element) => e.questionID === questionID,
               );
               if (element) {
                 element.description = description;
               }
-            }
-          )
+            },
+          ),
         );
         try {
           await queryFulfilled;

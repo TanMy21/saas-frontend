@@ -666,9 +666,11 @@ export interface ImportQuestionModalInputFieldProps {
   surveyID: string;
   isLoading: boolean;
   importText: string;
+  existingQuestionsCount: number;
   setImportText: React.Dispatch<React.SetStateAction<string>>;
   setImportBtnClicked: React.Dispatch<React.SetStateAction<boolean>>;
   importQuestions: ReturnType<typeof useImportQuestionsMutation>[0];
+  setAttemptedMode: React.Dispatch<React.SetStateAction<"INITIAL" | "APPEND" | "REPLACE" | null>>;
   handleClose: () => void;
 }
 
