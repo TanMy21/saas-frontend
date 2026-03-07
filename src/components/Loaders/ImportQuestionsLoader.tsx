@@ -5,7 +5,7 @@ import { WiStars } from "react-icons/wi";
 
 import ImportLoaderAnimation from "./ImportLoaderAnimation";
 
-export const ImportQuestionsLoader = () => {
+export const ImportQuestionsLoader = ({ slow }: { slow?: boolean }) => {
   const messages = [
     "Analyzing your input...",
     "Identifying questions and options...",
@@ -17,7 +17,7 @@ export const ImportQuestionsLoader = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % messages.length);
+      setIndex((prev) => (prev < messages.length - 1 ? prev + 1 : prev));
     }, 2500);
 
     return () => clearInterval(interval);
@@ -38,9 +38,10 @@ export const ImportQuestionsLoader = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 2,
+          gap: 3,
         }}
       >
+        {/* Icon */}
         <Box
           sx={{
             marginX: "auto",
@@ -49,12 +50,18 @@ export const ImportQuestionsLoader = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            animation: "pulse 2.5s ease-in-out infinite",
+            "@keyframes pulse": {
+              "0%": { transform: "scale(1)", opacity: 0.85 },
+              "50%": { transform: "scale(1.08)", opacity: 1 },
+              "100%": { transform: "scale(1)", opacity: 0.85 },
+            },
           }}
         >
           <WiStars size={80} color="#6366F1" />
         </Box>
 
-        {/* Main Title */}
+        {/* Title */}
         <Typography
           sx={{
             fontSize: 26,
@@ -66,24 +73,35 @@ export const ImportQuestionsLoader = () => {
           Composing your survey...
         </Typography>
 
-        {/* Rotating intelligent status */}
-        <Typography
-          key={index}
+        {/* Step Progress */}
+        <Box
           sx={{
-            fontSize: 18,
-            color: "#6B7280",
-            transition: "opacity 0.4s ease",
-            animation: "fadeIn 0.4s ease",
-            "@keyframes fadeIn": {
-              from: { opacity: 0, transform: "translateY(4px)" },
-              to: { opacity: 1, transform: "translateY(0px)" },
-            },
+            display: "flex",
+            flexDirection: "column",
+            gap: 0.8,
+            alignItems: "flex-start",
+            minHeight: 100,
           }}
         >
-          {messages[index]}
-        </Typography>
+          {messages.slice(0, index + 1).map((msg, i) => (
+            <Typography
+              key={i}
+              sx={{
+                fontSize: 17,
+                color: i === index ? "#374151" : "#9CA3AF",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                fontWeight: i === index ? 500 : 400,
+                transition: "all 0.3s ease",
+              }}
+            >
+              {i < index ? "✓" : "⏳"} {msg}
+            </Typography>
+          ))}
+        </Box>
 
-        {/* Animated Icon + Glow Ring */}
+        {/* Loader animation  */}
         <Box
           sx={{
             position: "relative",
@@ -94,33 +112,23 @@ export const ImportQuestionsLoader = () => {
             alignItems: "center",
           }}
         >
-          {/* Soft Pulsing Glow */}
-          <Box
-            sx={{
-              position: "absolute",
-              width: 110,
-              height: 110,
-              borderRadius: "50%",
-            }}
-          />
-
-          {/* Circular Progress Ring */}
           <ImportLoaderAnimation />
         </Box>
 
-        {/* Calm microcopy */}
+        {/* state message */}
         <Typography
           sx={{
             fontSize: 20,
-            color: "#9CA3AF",
+            color: slow ? "#EF4444" : "#9CA3AF",
             mt: 1,
+            transition: "all 0.3s ease",
           }}
         >
-          Large imports may take a little longer.
+          {slow
+            ? "This is taking longer than usual..."
+            : "Large imports may take a little longer."}
         </Typography>
       </Box>
     </Box>
   );
 };
-
-export default ImportQuestionsLoader;

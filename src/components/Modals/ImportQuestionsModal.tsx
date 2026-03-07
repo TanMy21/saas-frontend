@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { Alert, Box, IconButton, Modal, Typography } from "@mui/material";
+import { toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
 import {
@@ -21,6 +22,9 @@ const ImportQuestionsModal = ({
   const { surveyID } = useParams();
   const [importText, setImportText] = useState("");
   const [importBtnClicked, setImportBtnClicked] = useState(false);
+  const [showSlowMessage, setShowSlowMessage] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const warningRef = useRef<NodeJS.Timeout | null>(null);
   const [attemptedMode, setAttemptedMode] = useState<
     "INITIAL" | "APPEND" | "REPLACE" | null
   >(null);
@@ -42,6 +46,23 @@ const ImportQuestionsModal = ({
       default:
         return "Add some questions before importing.";
     }
+  };
+
+  const startTimeouts = () => {
+    warningRef.current = setTimeout(() => {
+      setShowSlowMessage(true);
+    }, 45000);
+
+    timeoutRef.current = setTimeout(() => {
+      toast.error("Import is taking longer than expected. Please try again.");
+
+      handleClose();
+    }, 61000);
+  };
+
+  const clearTimeouts = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (warningRef.current) clearTimeout(warningRef.current);
   };
 
   const handleClose = () => {
@@ -145,7 +166,7 @@ const ImportQuestionsModal = ({
               </Alert>
             )}
             {isLoading ? (
-              <ImportQuestionsLoader />
+              <ImportQuestionsLoader slow={showSlowMessage} />
             ) : (
               <ImportQuestionModalInputField
                 importQuestions={importQuestions}
@@ -156,6 +177,8 @@ const ImportQuestionsModal = ({
                 setImportBtnClicked={setImportBtnClicked}
                 setAttemptedMode={setAttemptedMode}
                 handleClose={handleClose}
+                startTimeouts={startTimeouts}
+                clearTimeouts={clearTimeouts}
                 existingQuestionsCount={existingQuestionsCount}
               />
             )}

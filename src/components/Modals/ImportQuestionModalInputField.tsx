@@ -3,6 +3,7 @@ import { useState } from "react";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { Box, Button, TextField, Tooltip } from "@mui/material";
 import { ReplaceAll, SquarePlus } from "lucide-react";
+import toast from "react-hot-toast";
 
 import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
 import { ImportQuestionModalInputFieldProps } from "../../utils/types";
@@ -20,6 +21,8 @@ const ImportQuestionModalInputField = ({
   setImportBtnClicked,
   setAttemptedMode,
   handleClose,
+  startTimeouts,
+  clearTimeouts,
 }: ImportQuestionModalInputFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [confirmReplaceOpen, setConfirmReplaceOpen] = useState(false);
@@ -34,6 +37,8 @@ const ImportQuestionModalInputField = ({
 
   const handleImport = async (mode: "INITIAL" | "APPEND" | "REPLACE") => {
     try {
+       startTimeouts();
+
       setAttemptedMode(mode);
       setImportBtnClicked(true);
 
@@ -49,8 +54,11 @@ const ImportQuestionModalInputField = ({
 
       setImportText("");
       refetchCanvas();
+        toast.success("Questions imported successfully");
       handleClose();
     } catch (error) {
+      clearTimeouts();
+      toast.error("Failed to import questions.");
       console.error(error);
     }
   };

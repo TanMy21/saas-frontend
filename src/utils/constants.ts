@@ -14,6 +14,8 @@ import {
   User,
 } from "lucide-react";
 
+import { LoaderMode } from "../types/modalTypes";
+
 import { NotificationSettings, TabId } from "./types";
 
 export const LAST_WS_KEY = "lWSID";
@@ -235,7 +237,6 @@ export const behaviorEventConfig = {
   },
 } as const;
 
-
 export enum GenerateSurveyState {
   INITIAL_CONFIG = "INITIAL_CONFIG",
   TOOLS = "TOOLS",
@@ -243,3 +244,32 @@ export enum GenerateSurveyState {
   REPLACE_CONFIRM = "REPLACE_CONFIRM",
   LOADING = "LOADING",
 }
+
+export const loaderMessages: Record<LoaderMode, string[]> = {
+  INITIAL: [
+    "Analyzing your input...",
+    "Designing question structure...",
+    "Generating your survey...",
+    "Finalizing survey setup...",
+  ],
+
+  APPEND: [
+    "Reviewing existing questions...",
+    "Generating additional questions...",
+    "Integrating new questions...",
+    "Updating survey flow...",
+  ],
+
+  REPLACE: [
+    "Preparing to replace questions...",
+    "Generating a new question set...",
+    "Rebuilding survey structure...",
+    "Finalizing replacement...",
+  ],
+};
+
+export const loaderTitles: Record<LoaderMode, string> = {
+  INITIAL: "Generating your survey...",
+  APPEND: "Adding questions to your survey...",
+  REPLACE: "Replacing your survey questions...",
+};

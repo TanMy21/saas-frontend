@@ -671,8 +671,11 @@ export interface ImportQuestionModalInputFieldProps {
   setImportBtnClicked: React.Dispatch<React.SetStateAction<boolean>>;
   importQuestions: ReturnType<typeof useImportQuestionsMutation>[0];
   setAttemptedMode: React.Dispatch<React.SetStateAction<"INITIAL" | "APPEND" | "REPLACE" | null>>;
+  startTimeouts: () => void;
+  clearTimeouts: () => void;
   handleClose: () => void;
 }
+  
 
 export interface InsightCardProps {
   type: string;

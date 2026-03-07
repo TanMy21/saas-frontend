@@ -2,17 +2,25 @@ import { useEffect, useState } from "react";
 
 import { Box, Typography } from "@mui/material";
 
+import { LoaderMode } from "../../types/modalTypes";
+import { loaderMessages, loaderTitles } from "../../utils/constants";
+
 import GenerateSurveyAnimation from "./GenerateSurveyAnimation";
+import { GenerateSurveyAppendAnimation } from "./GenerateSurveyAppendAnimation";
+import { GenerateSurveyReplaceAnimation } from "./GenerateSurveyReplaceAnimation";
 
-const statusMessages = [
-  "Analyzing your input...",
-  "Generating question set...",
-  "Generating survey content...",
-  "Finalizing your survey...",
-];
+type GenerateSurveyLoaderProps = {
+  showTimeoutWarning: boolean;
+  mode: LoaderMode;
+};
 
-const GenerateSurveyLoader = () => {
+const GenerateSurveyLoader = ({
+  showTimeoutWarning,
+  mode,
+}: GenerateSurveyLoaderProps) => {
   const [index, setIndex] = useState(0);
+  const statusMessages = loaderMessages[mode];
+  const title = loaderTitles[mode];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -64,25 +72,39 @@ const GenerateSurveyLoader = () => {
             },
           }}
         >
-          Generating your survey...
+          {title}
         </Typography>
 
         {/* Rotating Status Message */}
-        <Typography
-          key={index}
-          sx={{
-            fontSize: "18px",
-            color: "#6B7280",
-            minHeight: 28,
-            animation: "fadeUp 0.4s ease",
-            "@keyframes fadeUp": {
-              from: { opacity: 0, transform: "translateY(6px)" },
-              to: { opacity: 1, transform: "translateY(0px)" },
-            },
-          }}
-        >
-          {statusMessages[index]}
-        </Typography>
+        {!showTimeoutWarning ? (
+          <Typography
+            key={index}
+            sx={{
+              fontSize: "18px",
+              color: "#6B7280",
+              minHeight: 28,
+              animation: "fadeUp 0.4s ease",
+              "@keyframes fadeUp": {
+                from: { opacity: 0, transform: "translateY(6px)" },
+                to: { opacity: 1, transform: "translateY(0px)" },
+              },
+            }}
+          >
+            {statusMessages[index]}
+          </Typography>
+        ) : (
+          <Typography
+            sx={{
+              fontSize: "18px",
+              color: "#DC2626",
+              fontWeight: 500,
+              minHeight: 28,
+              animation: "fadeUp 0.4s ease",
+            }}
+          >
+            This is taking longer than expected. Please wait...
+          </Typography>
+        )}
 
         {/* Animation */}
         <Box
@@ -98,7 +120,13 @@ const GenerateSurveyLoader = () => {
             alignItems: "center",
           }}
         >
-          <GenerateSurveyAnimation />
+          {
+            {
+              INITIAL: <GenerateSurveyAnimation />,
+              APPEND: <GenerateSurveyAppendAnimation />,
+              REPLACE: <GenerateSurveyReplaceAnimation />,
+            }[mode]
+          }
         </Box>
 
         {/* footer text  */}

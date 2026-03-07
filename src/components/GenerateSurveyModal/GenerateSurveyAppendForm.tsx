@@ -13,12 +13,14 @@ type Props = {
   onBack: () => void;
   onGenerate: () => void;
   generateSurvey: any;
+  setOpenGenerate?: (open: boolean) => void;
 };
 
 export const GenerateSurveyAppendForm = ({
   onBack,
   onGenerate,
   generateSurvey,
+  setOpenGenerate,
 }: Props) => {
   const { surveyID } = useParams();
 
@@ -40,6 +42,7 @@ export const GenerateSurveyAppendForm = ({
         questionTypes: [], //let the backend decide question types for append.
         mode: "APPEND",
       }).unwrap();
+      setOpenGenerate?.(false);
     } catch (error) {
       console.error("Append generation failed", error);
     }
