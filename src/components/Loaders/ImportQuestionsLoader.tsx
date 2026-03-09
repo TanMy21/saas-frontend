@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import { Box, Typography } from "@mui/material";
-import { WiStars } from "react-icons/wi";
 
 import ImportLoaderAnimation from "./ImportLoaderAnimation";
 
@@ -41,26 +40,6 @@ export const ImportQuestionsLoader = ({ slow }: { slow?: boolean }) => {
           gap: 3,
         }}
       >
-        {/* Icon */}
-        <Box
-          sx={{
-            marginX: "auto",
-            width: 100,
-            height: 100,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            animation: "pulse 2.5s ease-in-out infinite",
-            "@keyframes pulse": {
-              "0%": { transform: "scale(1)", opacity: 0.85 },
-              "50%": { transform: "scale(1.08)", opacity: 1 },
-              "100%": { transform: "scale(1)", opacity: 0.85 },
-            },
-          }}
-        >
-          <WiStars size={80} color="#6366F1" />
-        </Box>
-
         {/* Title */}
         <Typography
           sx={{

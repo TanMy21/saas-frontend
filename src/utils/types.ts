@@ -670,9 +670,7 @@ export interface ImportQuestionModalInputFieldProps {
   setImportText: React.Dispatch<React.SetStateAction<string>>;
   setImportBtnClicked: React.Dispatch<React.SetStateAction<boolean>>;
   importQuestions: ReturnType<typeof useImportQuestionsMutation>[0];
-  setAttemptedMode: React.Dispatch<React.SetStateAction<"INITIAL" | "APPEND" | "REPLACE" | null>>;
-  startTimeouts: () => void;
-  clearTimeouts: () => void;
+  setAttemptedMode: React.Dispatch<React.SetStateAction<"INITIAL" | "APPEND" | "REPLACE" | null>>; 
   handleClose: () => void;
 }
   
