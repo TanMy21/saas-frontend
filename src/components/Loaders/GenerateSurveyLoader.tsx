@@ -24,8 +24,8 @@ const GenerateSurveyLoader = ({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % statusMessages.length);
-    }, 2800);
+      setIndex((prev) => (prev < statusMessages.length - 1 ? prev + 1 : prev));
+    }, 4000);
 
     return () => clearInterval(interval);
   }, []);

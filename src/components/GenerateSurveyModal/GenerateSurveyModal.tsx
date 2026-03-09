@@ -55,7 +55,8 @@ const GenerateSurveyModal = ({
   const [showTimeoutWarning, setShowTimeoutWarning] = useState(false);
   const [loaderMode, setLoaderMode] = useState<LoaderMode>("INITIAL");
 
-  const [generateSurvey, { isError, error }] = useGenerateSurveyMutation();
+  const [generateSurvey, { isError, error, isLoading }] =
+    useGenerateSurveyMutation();
 
   const handleClose = () => {
     setOpenGenerate?.(false);
@@ -94,8 +95,9 @@ const GenerateSurveyModal = ({
   }, [openGenerate, questionCount]);
 
   useEffect(() => {
-    if (state !== GenerateSurveyState.LOADING) return;
+    if (!openGenerate || state !== GenerateSurveyState.LOADING) return;
 
+    // reset timer state
     setElapsedTime(0);
     setShowTimeoutWarning(false);
     timeoutTriggeredRef.current = false;
@@ -109,8 +111,8 @@ const GenerateSurveyModal = ({
           setShowTimeoutWarning(true);
         }
 
-        // hard timeout
-        if (next >= 60 && !timeoutTriggeredRef.current) {
+        // hard timeout only if request still loading
+        if (next >= 60 && !timeoutTriggeredRef.current && isLoading) {
           timeoutTriggeredRef.current = true;
 
           toast.error("Survey generation timed out.", {
@@ -125,9 +127,13 @@ const GenerateSurveyModal = ({
       });
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [state]);
+    // stop timer if request finishes
+    if (!isLoading) {
+      timeoutTriggeredRef.current = true;
+    }
 
+    return () => clearInterval(interval);
+  }, [state, isLoading]);
   return (
     <Modal open={openGenerate} onClose={handleClose}>
       <Box sx={modalOverlaySx}>
@@ -158,7 +164,7 @@ const GenerateSurveyModal = ({
               onBack={() => setState(GenerateSurveyState.TOOLS)}
               onGenerate={() => handleStartLoading("APPEND")}
               generateSurvey={generateSurvey}
-                setOpenGenerate={setOpenGenerate}
+              setOpenGenerate={setOpenGenerate}
             />
           ) : state === GenerateSurveyState.REPLACE_CONFIRM ? (
             <GenerateSurveyReplaceConfirm
