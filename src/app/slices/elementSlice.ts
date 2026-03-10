@@ -79,9 +79,23 @@ const questionSlice = createSlice({
         state.selectedQuestion.Model3D.showQuestion = action.payload;
       }
     },
+
+    updateSelectedQuestion3DModel: (state, action: PayloadAction<any>) => {
+      if (!state.selectedQuestion) return;
+
+      if (!state.selectedQuestion.Model3D) {
+        state.selectedQuestion.Model3D = action.payload;
+      } else {
+        state.selectedQuestion.Model3D = {
+          ...state.selectedQuestion.Model3D,
+          ...action.payload,
+        };
+      }
+    },
+
     updateQuestionField: <K extends keyof Element>(
       state: QuestionState,
-      action: PayloadAction<{ key: K; value: Element[K] }>
+      action: PayloadAction<{ key: K; value: Element[K] }>,
     ) => {
       if (state.selectedQuestion) {
         state.selectedQuestion[action.payload.key] = action.payload.value;
@@ -162,6 +176,7 @@ export const {
   updateBinaryButtonTextYes,
   updateBinaryButtonTextNo,
   updateQuestionField,
+  updateSelectedQuestion3DModel,
   resetQuestion,
 } = questionSlice.actions;
 

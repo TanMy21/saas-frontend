@@ -4,7 +4,9 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
 
-import { set3DModelModalOpen } from "../../../app/slices/elementSlice";
+import {
+  set3DModelModalOpen,
+} from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../context/BuilderRefetchCanvas";
@@ -17,7 +19,7 @@ import ThreeDView from "./ThreeDView";
 
 const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
   const isOpen3DModel = useAppSelector(
-    (state) => state.question.is3DModelModalOpen
+    (state) => state.question.is3DModelModalOpen,
   );
   const dispatch = useAppDispatch();
   const refetchCanvas = useSurveyCanvasRefetch();
@@ -27,10 +29,12 @@ const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
   const [isReadyToView, setIsReadyToView] = useState(false);
 
   const question = useSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
   const hasModel = !!question?.Model3D?.fileUrl;
-  const url = question?.Model3D?.fileUrl;
+  const url = question?.Model3D?.fileUrl
+    ? `${question.Model3D.fileUrl}?v=${question.Model3D.updatedAt}`
+    : null;
 
   const handleFileSelect = (file: File) => {
     setUploadedFile(file);
@@ -54,7 +58,7 @@ const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
 
   useEffect(() => {
     setIsReadyToView(hasModel);
-  }, [hasModel, question?.questionID]);
+  }, [question?.Model3D?.fileUrl]);
 
   if (isReadyToView) {
     return (

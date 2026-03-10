@@ -212,7 +212,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: formData,
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: ["Elements", "Surveys"],
     }),
     toggleQuestionImageVisibility: builder.mutation({
       query: ({ questionID, questionImage }) => ({

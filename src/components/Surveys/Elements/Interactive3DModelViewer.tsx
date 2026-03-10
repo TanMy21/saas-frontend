@@ -211,7 +211,8 @@ export const Interactive3DModelViewer = ({
     if (!src || typeof src !== "string") return null;
     const s = src.trim();
     if (!s) return null;
-    const lower = s.toLowerCase();
+
+    const lower = s.split("?")[0].toLowerCase();
     return lower.endsWith(".glb") || lower.endsWith(".gltf") ? s : null;
   }, [src]);
   const [modelRoot, setModelRoot] = useState<THREE.Object3D | null>(null);

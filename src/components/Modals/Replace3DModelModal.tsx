@@ -29,6 +29,8 @@ import {
 } from "@mui/material";
 
 import { useReplace3DModelMutation } from "../../app/slices/elementApiSlice";
+import { updateSelectedQuestion3DModel } from "../../app/slices/elementSlice";
+import { useAppDispatch } from "../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
 import { Replace3DModelModalProps } from "../../utils/types";
 
@@ -39,6 +41,7 @@ const Replace3DModelModal = ({
   currentFileName = "current_model.glb",
 }: Replace3DModelModalProps) => {
   const refetchCanvas = useSurveyCanvasRefetch();
+  const dispatch = useAppDispatch();
   const [isDragOver, setIsDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -119,21 +122,26 @@ const Replace3DModelModal = ({
       const stop = startSimulatedProgress();
 
       try {
-        await replace3DModel({ formData, questionID }).unwrap();
+        const replaced = await replace3DModel({
+          formData,
+          questionID,
+        }).unwrap();
+
+        dispatch(updateSelectedQuestion3DModel(replaced));
         setProgress(100);
         refetchCanvas();
       } catch (e: any) {
         setError(
           typeof e?.data === "string"
             ? e.data
-            : e?.data?.message || e?.error || "Failed to replace the model."
+            : e?.data?.message || e?.error || "Failed to replace the model.",
         );
         setProgress(0);
       } finally {
         stop();
       }
     },
-    [questionID, replace3DModel, startSimulatedProgress]
+    [questionID, replace3DModel, startSimulatedProgress],
   );
 
   const onDragOver = useCallback<DragEventHandler<HTMLDivElement>>((e) => {
@@ -161,7 +169,7 @@ const Replace3DModelModal = ({
       const f = e.dataTransfer.files?.[0];
       if (f) handleFileSelect(f);
     },
-    [handleFileSelect]
+    [handleFileSelect],
   );
 
   const onInputChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
@@ -169,7 +177,7 @@ const Replace3DModelModal = ({
       const f = e.target.files?.[0];
       if (f) handleFileSelect(f);
     },
-    [handleFileSelect]
+    [handleFileSelect],
   );
 
   useEffect(() => {

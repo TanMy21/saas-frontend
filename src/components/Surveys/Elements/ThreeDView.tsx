@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { IconButton } from "@mui/material";
@@ -15,18 +15,13 @@ import { Interactive3DModelViewer } from "./Interactive3DModelViewer";
 
 const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
   const [isOpenReplaceModal, setIsOpenReplaceModal] = useState(false);
-  const [viewerUrl, setViewerUrl] = useState<string | null>(url ?? null);
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
-
+  const viewerUrl = url;
   const questionID = question?.questionID;
   const modelFileName = question?.Model3D?.name;
   const ready = !!viewerUrl;
-
-  useEffect(() => {
-    setViewerUrl(url ?? null);
-  }, [url]);
 
   return (
     <>
@@ -67,8 +62,8 @@ const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
                 top: 16,
                 left: 4,
                 zIndex: 2,
-                width:48,
-                height:48,
+                width: 48,
+                height: 48,
                 backgroundColor: "#FFFFFF",
                 color: "#424242",
                 borderRadius: "50%",
@@ -142,6 +137,7 @@ const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
           style={{
             display: "flex",
             width: "96%",
+            marginTop: "4%",
             height: "64px",
             // border: "2px solid green",
           }}
@@ -150,7 +146,7 @@ const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
             style={{
               display: "flex",
               margin: "auto",
-              width: "32%",
+              width: "64%",
               height: "80%",
               gap: "16px",
               // border: "2px solid red",

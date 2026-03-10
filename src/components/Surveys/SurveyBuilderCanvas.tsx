@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import { Box } from "@mui/material";
 
-import { RootState } from "../../app/store";
-import { useAppSelector } from "../../app/typedReduxHooks";
+// import { RootState } from "../../app/store";
+// import { useAppSelector } from "../../app/typedReduxHooks";
 import { elementComponents } from "../../utils/elementsConfig";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 import DevicePreview from "../DevicePreview";
@@ -12,14 +12,17 @@ import ElementBackgroundPreferencesButtons from "./ElementBackgroundPreferencesB
 import ElementBackgroundPreferencesRemoveButtons from "./ElementBackgroundPreferencesRemoveButtons";
 import QuestionBackgroundColor from "./ElementSettings/ElementSettingsComponents/QuestionBackgroundColor";
 
-const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
+const SurveyBuilderCanvas = ({
+  display,
+  question,
+}: SurveyBuilderCanvasProps) => {
   const [colorAnchorEl, setColorAnchorEl] = useState<HTMLButtonElement | null>(
-    null
+    null,
   );
 
-  const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion
-  );
+  // const question = useAppSelector(
+  //   (state: RootState) => state.question.selectedQuestion
+  // );
 
   const questionType = question?.type as QuestionTypeKey;
   const backgroundColor =
@@ -100,6 +103,7 @@ const SurveyBuilderCanvas = ({ display }: SurveyBuilderCanvasProps) => {
           {/* Element view */}
           {question?.type && (
             <QuestionComponent
+              key={question?.questionID}
               qID={question?.questionID}
               qNO={question?.order?.toString()}
               qText={question?.text}

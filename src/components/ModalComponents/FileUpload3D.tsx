@@ -43,18 +43,13 @@ const FileUpload3D = ({
       formData.append("name", file.name);
 
       try {
-        const result = await upload3DModel({ formData, questionID }).unwrap();
-        onUploadSuccess?.({
-          fileUrl: result.fileUrl,
-          name: result.name,
-          model3DID: result.model3DID,
-        });
+        await upload3DModel({ formData, questionID }).unwrap();
       } catch (e) {
         onUploadError?.("Upload failed");
         console.error("Upload failed:", e);
       }
     },
-    [questionID, upload3DModel]
+    [questionID, upload3DModel],
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -103,7 +98,7 @@ const FileUpload3D = ({
     () => () => {
       if (timerRef.current) clearInterval(timerRef.current);
     },
-    []
+    [],
   );
 
   const handleFileSelect = useCallback(
@@ -120,7 +115,7 @@ const FileUpload3D = ({
       simulateUpload(file);
       void handleUpload(file);
     },
-    [handleUpload, onFileSelect]
+    [handleUpload, onFileSelect],
   );
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -150,7 +145,7 @@ const FileUpload3D = ({
         handleFileSelect(files[0]);
       }
     },
-    [handleFileSelect]
+    [handleFileSelect],
   );
 
   const resetUpload = () => {

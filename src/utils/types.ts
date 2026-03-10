@@ -202,6 +202,7 @@ export type Model3D = {
   draco: boolean;
   ktx2: boolean;
   showQuestion: boolean;
+  updatedAt: string;
 };
 
 export interface ThreeDViewProps {
@@ -606,8 +607,8 @@ export interface GenerateSurveyFormProps {
   generateSurvey: ReturnType<typeof useGenerateSurveyMutation>[0];
   setOpenGenerate?: React.Dispatch<React.SetStateAction<boolean>>;
   handleClose: () => void;
-  isError: boolean; 
-  error: ReturnType<typeof useGenerateSurveyMutation>[1]["error"]; 
+  isError: boolean;
+  error: ReturnType<typeof useGenerateSurveyMutation>[1]["error"];
 }
 
 export interface LocationStateProps {
@@ -670,10 +671,11 @@ export interface ImportQuestionModalInputFieldProps {
   setImportText: React.Dispatch<React.SetStateAction<string>>;
   setImportBtnClicked: React.Dispatch<React.SetStateAction<boolean>>;
   importQuestions: ReturnType<typeof useImportQuestionsMutation>[0];
-  setAttemptedMode: React.Dispatch<React.SetStateAction<"INITIAL" | "APPEND" | "REPLACE" | null>>; 
+  setAttemptedMode: React.Dispatch<
+    React.SetStateAction<"INITIAL" | "APPEND" | "REPLACE" | null>
+  >;
   handleClose: () => void;
 }
-  
 
 export interface InsightCardProps {
   type: string;
