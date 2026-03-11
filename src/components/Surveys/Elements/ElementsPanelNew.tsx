@@ -28,24 +28,9 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const displayedQuestions = useMemo(() => {
-    const sorted = [...elements].sort(
-      (a, b) => (a.order ?? 0) - (b.order ?? 0),
-    );
-
-    let questionCounter = 1;
-
-    return sorted.map((el) => {
-      if (nonOrderableTypes.includes(el.type)) {
-        return el;
-      }
-
-      return {
-        ...el,
-        order: questionCounter++,
-      };
-    });
-  }, [elements, nonOrderableTypes]);
+const displayedQuestions = useMemo(() => {
+  return [...elements].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+}, [elements]);
 
   // Accelerated auto-scroll while dragging
   useEffect(() => {
@@ -154,6 +139,8 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
         console.error("Order update error:", err);
       });
   };
+
+  console.log("Elements: ", elements);
 
   return (
     <>

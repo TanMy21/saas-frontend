@@ -45,7 +45,6 @@ const ElementDropDownMenu = ({
       setMenuAnchor(null);
       await deleteElement(questionID).unwrap();
       setRecentlyDeletedId(questionID);
-      console.log("Element Deleted");
 
       refetchCanvas();
     } catch (error) {
