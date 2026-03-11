@@ -1,7 +1,6 @@
-import { useCallback } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import { Box } from "@mui/material";
-import debounce from "lodash/debounce";
 import {
   DragDropContext,
   Droppable,
@@ -13,140 +12,189 @@ import { setElements } from "../../../app/slices/surveySlice";
 import { RootState, useAppDispatch } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
 import { useAppTheme } from "../../../theme/useAppTheme";
-import { ElementsPanelProps, Element } from "../../../utils/types";
+import { nonOrderableTypes } from "../../../utils/constants";
+import { ElementsPanelProps } from "../../../utils/types";
 
-import ElementsListItem from "./ElementsListItem";
+import { ElementsListItem } from "./ElementsListItem";
 
 const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
   const { scrollStyles } = useAppTheme();
   const dispatch = useAppDispatch();
-  const [updateElementOrder /*{ isError, error }*/] =
-    useUpdateElementOrderMutation();
+  const [updateElementOrder] = useUpdateElementOrderMutation();
 
   const elements = useAppSelector(
-    (state: RootState) => state.surveyBuilder.elements
+    (state: RootState) => state.surveyBuilder.elements,
   );
 
-  const nonOrderableTypes = [
-    "WELCOME_SCREEN",
-    "END_SCREEN",
-    "INSTRUCTIONS",
-    "EMAIL_CONTACT",
-  ];
-  let isNonOrderableType;
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const elementStartTypes = ["WELCOME_SCREEN", "INSTRUCTIONS", "EMAIL_CONTACT"];
-  const orderedElementTypes = [
-    "BINARY",
-    "MEDIA",
-    "MULTIPLE_CHOICE",
-    "NUMBER",
-    "RADIO",
-    "RANGE",
-    "RANK",
-    "TEXT",
-    "THREE_D",
-  ];
-
-  const startElementTypeOrder: { [key: string]: number } = {
-    "WELCOME_SCREEN": 1,
-    "INSTRUCTIONS": 2,
-    "EMAIL_CONTACT": 3,
-  };
-
-  const startElements = elements
-    .filter((q) => elementStartTypes.includes(q.type))
-    .sort(
-      (a, b) => startElementTypeOrder[a.type] - startElementTypeOrder[b.type]
+  const displayedQuestions = useMemo(() => {
+    const sorted = [...elements].sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0),
     );
-  const orderedElements = elements
-    .filter((e) => orderedElementTypes.includes(e.type))
-    .sort((a, b) => a.order! - b.order!);
 
-  const endElements = elements.filter((e) => e.type === "END_SCREEN");
+    let questionCounter = 1;
 
-  const displayedQuestions = [
-    ...startElements,
-    ...orderedElements,
-    ...endElements,
-  ];
+    return sorted.map((el) => {
+      if (nonOrderableTypes.includes(el.type)) {
+        return el;
+      }
 
-  const debounceUpdateOrder = useCallback(
-    debounce((newElements) => {
-      const orderedElements = newElements
-        .filter((e: Element) => orderedElementTypes.includes(e.type))
-        .map((e: Element, index: number) => ({ ...e, order: index + 1 }));
+      return {
+        ...el,
+        order: questionCounter++,
+      };
+    });
+  }, [elements, nonOrderableTypes]);
 
-      const startElements = newElements.filter((e: Element) =>
-        elementStartTypes.includes(e.type)
-      );
+  // Accelerated auto-scroll while dragging
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
 
-      const endElements = newElements.filter(
-        (e: Element) => e.type === "END_SCREEN"
-      );
+    let raf: number | null = null;
 
-      updateElementOrder({ questions: orderedElements })
-        .unwrap()
-        .then((response) => {
-          console.log("Order update response:", response);
-          dispatch(
-            setElements([...startElements, ...orderedElements, ...endElements])
-          );
-        })
-        .catch((error) => console.error("Order update error:", error));
-    }, 500),
-    [updateElementOrder]
-  );
+    const handleMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+
+      const edge = 80;
+      const maxSpeed = 22;
+
+      let speed = 0;
+
+      if (e.clientY < rect.top + edge) {
+        const dist = rect.top + edge - e.clientY;
+        speed = -Math.min(maxSpeed, dist / 2.5);
+      }
+
+      if (e.clientY > rect.bottom - edge) {
+        const dist = e.clientY - (rect.bottom - edge);
+        speed = Math.min(maxSpeed, dist / 2.5);
+      }
+
+      if (speed !== 0) el.scrollTop += speed;
+
+      raf = requestAnimationFrame(() => handleMove(e));
+    };
+
+    const start = (e: MouseEvent) => {
+      if (raf === null) {
+        raf = requestAnimationFrame(() => handleMove(e));
+      }
+    };
+
+    const stop = () => {
+      if (raf !== null) {
+        cancelAnimationFrame(raf);
+        raf = null;
+      }
+    };
+
+    window.addEventListener("dragover", start);
+    window.addEventListener("drop", stop);
+    window.addEventListener("mouseup", stop);
+
+    return () => {
+      window.removeEventListener("dragover", start);
+      window.removeEventListener("drop", stop);
+      window.removeEventListener("mouseup", stop);
+    };
+  }, []);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
-    if (!destination) {
-      return;
-    }
-    if (source.index === destination.index) {
-      return;
-    }
-    const newElements = Array.from(displayedQuestions);
-    const [moved] = newElements.splice(source.index, 1);
-    newElements.splice(destination.index, 0, moved);
 
-    // Reorder elements
-    const reorderedElements = newElements.map((el, index) => {
-      if (orderedElementTypes.includes(el.type)) {
-        return { ...el, order: index + 1 };
-      }
-      return el;
-    });
+    if (!destination) return;
+    if (source.index === destination.index) return;
 
-    debounceUpdateOrder(reorderedElements);
+    const questions = displayedQuestions.filter(
+      (el) => !nonOrderableTypes.includes(el.type),
+    );
+
+    const dragged = displayedQuestions[source.index];
+    const target = displayedQuestions[destination.index];
+
+    if (!dragged || !target) return;
+    if (nonOrderableTypes.includes(dragged.type)) return;
+    if (nonOrderableTypes.includes(target.type)) return;
+
+    const sourceIndex = questions.findIndex(
+      (q) => q.questionID === dragged.questionID,
+    );
+
+    const destinationIndex = questions.findIndex(
+      (q) => q.questionID === target.questionID,
+    );
+
+    if (sourceIndex === -1 || destinationIndex === -1) return;
+
+    const reordered = [...questions];
+    const [moved] = reordered.splice(sourceIndex, 1);
+    reordered.splice(destinationIndex, 0, moved);
+
+    const updatedQuestions = reordered.map((q, index) => ({
+      ...q,
+      order: index + 1,
+    }));
+
+    updateElementOrder({ questions: updatedQuestions })
+      .unwrap()
+      .then(() => {
+        const systemElements = elements.filter((el) =>
+          nonOrderableTypes.includes(el.type),
+        );
+
+        const updated = [...systemElements, ...updatedQuestions].sort(
+          (a, b) => (a.order ?? 0) - (b.order ?? 0),
+        );
+
+        dispatch(setElements(updated));
+      })
+      .catch((err) => {
+        console.error("Order update error:", err);
+      });
   };
 
   return (
-    <Box
-      sx={{
-        overflowY: "auto",
-        overflowX: "hidden",
-        maxWidth: { md: "100%", lg: "100%", xl: "100%" },
-        maxHeight: "98%",
-        ...scrollStyles.elementsPanel,
-      }}
-    >
+    <>
       {elements.length === 0 ? null : (
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="elements">
-            {(provided) => (
-              <ElementsListItem
-                provided={provided}
-                setQuestionId={setQuestionId!}
-                displayedQuestions={displayedQuestions}
-                nonOrderableTypes={nonOrderableTypes}
-              />
+            {(provided, snapshot) => (
+              <Box
+                ref={(node: HTMLDivElement | null) => {
+                  provided.innerRef(node);
+                  scrollRef.current = node;
+                }}
+                {...provided.droppableProps}
+                sx={{
+                  overflowY: "auto",
+                  overflowX: "hidden",
+                  maxWidth: { md: "100%", lg: "100%", xl: "100%" },
+                  maxHeight: "98%",
+                  backgroundColor: snapshot.isDraggingOver
+                    ? "#F8FAFF"
+                    : "transparent",
+                  transition: "background-color 0.2s ease",
+                  minHeight: snapshot.isDraggingOver
+                    ? displayedQuestions.length * 56 + 40
+                    : undefined,
+                  ...scrollStyles.elementsPanel,
+                }}
+              >
+                <ElementsListItem
+                  setQuestionId={setQuestionId!}
+                  displayedQuestions={displayedQuestions}
+                  nonOrderableTypes={nonOrderableTypes}
+                />
+
+                {provided.placeholder}
+              </Box>
             )}
           </Droppable>
         </DragDropContext>
       )}
-    </Box>
+    </>
   );
 };
-
 export default ElementsPanel;

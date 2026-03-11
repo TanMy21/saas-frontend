@@ -4,33 +4,28 @@ import { Draggable } from "react-beautiful-dnd";
 
 import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
+import { nonOrderableTypes } from "../../../utils/constants";
 import { elementIcons } from "../../../utils/elementsConfig";
 import { htmlToPlainText } from "../../../utils/richTextUtils";
 import { ElementListItemProps, IconMapping } from "../../../utils/types";
 
 import ElementDropDownMenu from "./ElementDropDownMenu";
 
-const ElementsListItem = ({
+export const ElementsListItem = ({
   displayedQuestions,
-  provided,
   setQuestionId,
 }: ElementListItemProps) => {
   const selectedQuestionId = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion?.questionID
+    (state: RootState) => state.question.selectedQuestion?.questionID,
   );
 
-  const nonOrderableTypes = [
-    "WELCOME_SCREEN",
-    "INSTRUCTIONS",
-    "EMAIL_CONTACT",
-    "END_SCREEN",
-  ];
-
   return (
-    <Box {...provided.droppableProps} ref={provided.innerRef}>
+    <Box>
       {displayedQuestions.map((element, index) => {
+        const isSystemScreen = nonOrderableTypes.includes(element.type);
+
         const shouldDisplayOrder =
-          !nonOrderableTypes.includes(element.type) &&
+          !isSystemScreen &&
           typeof element.order === "number" &&
           element.order > 0 &&
           element.order < 9999;
@@ -40,44 +35,72 @@ const ElementsListItem = ({
         return (
           <Draggable
             key={element.questionID}
-            draggableId={element?.questionID}
+            draggableId={element.questionID}
             index={index}
+            isDragDisabled={isSystemScreen}
           >
             {(provided, snapshot) => (
               <Box
                 key={element.questionID}
+                ref={provided.innerRef}
+                {...provided.draggableProps}
                 onClick={() =>
                   element?.questionID && setQuestionId?.(element?.questionID)
                 }
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
                 sx={{
                   display: "flex",
                   flexDirection: "column",
                   gap: 0.5,
+
                   position: "relative",
+                  zIndex: snapshot.isDragging ? 2000 : "auto",
+
                   px: 1.5,
                   py: 1,
-                  cursor: snapshot.isDragging ? "grabbing" : "grab",
+                  minHeight: 52,
+
+                  cursor: isSystemScreen
+                    ? "default"
+                    : snapshot.isDragging
+                      ? "grabbing"
+                      : "default",
+
                   userSelect: "none",
+
+                  transform: provided.draggableProps.style?.transform,
+
+                  /** GPU acceleration */
+                  willChange: "transform",
+                  backfaceVisibility: "hidden",
+
+                  /** smooth reorder animation */
                   transition:
-                    "background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+                    "transform 180ms cubic-bezier(.2,0,0,1), background-color 0.2s ease, box-shadow 0.2s ease",
+
+                  opacity: snapshot.isDragging ? 0.98 : 1,
+
+                  /** floating drag item */
+                  boxShadow: snapshot.isDragging
+                    ? "0 20px 40px rgba(0,0,0,0.22)"
+                    : "none",
+
                   "&:hover": {
                     backgroundColor: isSelected ? "#EFF6FF" : "#F9FAFB",
-                    boxShadow: isSelected
-                      ? "none"
-                      : "0 1px 6px rgba(16, 24, 40, 0.06)",
-                    borderColor: isSelected ? "#93c5fd" : "#E5E7EB",
+                    boxShadow: "0 4px 12px rgba(16, 24, 40, 0.08)",
+                    transform: "translateY(-1px)",
                   },
+
                   ...(isSelected
                     ? {
                         backgroundColor: "#EFF6FF",
                         color: "#1e3a8a",
                         border: "1px solid #bfdbfe",
-                        borderLeft: isSelected ? "8px solid #4C6FFF" : "",
-                        borderTopLeftRadius: isSelected ? "20px" : "",
-                        borderBottomLeftRadius: isSelected ? "20px" : "",
+                        borderLeft: "8px solid #4C6FFF",
+                        borderTopLeftRadius: "20px",
+                        borderBottomLeftRadius: "20px",
+                        boxShadow:
+                          "0 4px 12px rgba(76,111,255,0.15), 0 0 0 1px rgba(76,111,255,0.05)",
+                        transform: "translateY(-1px)",
                       }
                     : {
                         backgroundColor:
@@ -85,45 +108,73 @@ const ElementsListItem = ({
                         color: "#374151",
                         border: "1px solid #EEF2F7",
                       }),
+                  ...(isSystemScreen && {
+                    opacity: 0.9,
+                    backgroundColor: "#F8FAFC",
+                    borderStyle: "dashed",
+                    cursor: "default",
+
+                    "&:hover": {
+                      backgroundColor: "#F8FAFC",
+                      boxShadow: "none",
+                      transform: "none",
+                    },
+                  }),
                 }}
               >
+                {/* Drop target indicator */}
+                {snapshot.isDragging && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      left: 0,
+                      right: 0,
+                      top: -2,
+                      height: 2,
+                      backgroundColor: "#3B82F6",
+                      borderRadius: 2,
+                    }}
+                  />
+                )}
+
                 <Box
                   sx={{
                     display: "grid",
-                    gridTemplateColumns: "28px 28px 1fr auto",
-                    gridTemplateRows: "28px auto",
+                    gridTemplateColumns: isSystemScreen
+                      ? "28px minmax(0,1fr) auto"
+                      : "28px 28px minmax(0,1fr) auto",
+                    gridTemplateRows: isSystemScreen ? "28px" : "28px auto",
                     alignItems: "center",
                     columnGap: 1,
                     rowGap: 1,
                     width: "100%",
                   }}
                 >
-                  <Box
-                    {...provided.dragHandleProps}
-                    sx={{
-                      gridColumn: "1 / 2",
-                      gridRow: "1 / 2",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: isSelected ? "#2563eb" : "#9CA3AF",
-                      cursor: "grab",
-                      "&:active": { cursor: "grabbing" },
-                      width: 28,
-                      height: 28,
-                    }}
-                  >
-                    <Tooltip
-                      title="Drag to reorder"
-                      placement="top"
-                      arrow={false}
+                  {!isSystemScreen ? (
+                    <Box
+                      {...provided.dragHandleProps}
+                      sx={{
+                        gridColumn: "1 / 2",
+                        gridRow: "1 / 2",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: isSelected ? "#2563eb" : "#9CA3AF",
+                        cursor: "grab",
+                        "&:active": { cursor: "grabbing" },
+                        width: 28,
+                        height: 28,
+                      }}
                     >
-                      <GripVertical fontSize="small" />
-                    </Tooltip>
-                  </Box>
+                      <Tooltip title="Drag to reorder">
+                        <GripVertical fontSize="small" />
+                      </Tooltip>
+                    </Box>
+                  ) : null}
+
                   <Typography
                     sx={{
-                      gridColumn: "2 / 3",
+                      gridColumn: isSystemScreen ? "1 / 2" : "2 / 3",
                       gridRow: "1 / 2",
                       fontSize: "1.4rem",
                       lineHeight: 1,
@@ -133,13 +184,16 @@ const ElementsListItem = ({
                   >
                     {elementIcons[element.type as keyof IconMapping]}
                   </Typography>
+
                   <Box
                     sx={{
-                      gridColumn: "4 / 5",
+                      gridColumn: isSystemScreen ? "3 / 4" : "4 / 5",
                       gridRow: "1 / 2",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      width: 32,
+                      flexShrink: 0,
                       height: 28,
                       ml: 1,
                     }}
@@ -149,25 +203,24 @@ const ElementsListItem = ({
                       setQuestionId={setQuestionId}
                     />
                   </Box>
+
                   <Box
                     sx={{
-                      gridColumn: { xs: "2 / 4", md: "2 / -1" },
-                      gridRow: "2 / 3",
+                      gridColumn: isSystemScreen
+                        ? "2 / 3"
+                        : { xs: "2 / 4", md: "2 / -1" },
+                      gridRow: isSystemScreen ? "1 / 2" : "2 / 3",
                       display: "flex",
                       alignItems: "center",
                       gap: 1,
                       minHeight: 24,
+                      minWidth: 0,
                       pr: 0.5,
-                      // border: "2px solid red",
                     }}
                   >
                     {shouldDisplayOrder && (
                       <Typography
                         sx={{
-                          gridColumn: "1 / 2",
-                          gridRow: "2 / 3",
-                          justifySelf: "center",
-                          textAlign: "center",
                           fontSize: "1.1rem",
                           fontWeight: 700,
                           lineHeight: 1,
@@ -181,12 +234,12 @@ const ElementsListItem = ({
                     <Tooltip
                       title={htmlToPlainText(element.text)}
                       placement="top"
+                      enterDelay={500}
+                      leaveDelay={100}
                     >
                       <Typography
                         noWrap
                         sx={{
-                          gridColumn: "2 / 4",
-                          gridRow: "2 / 3",
                           color: isSelected ? "#4f46e5" : "#374151",
                           fontSize: "0.95rem",
                           fontWeight: 600,
@@ -194,7 +247,6 @@ const ElementsListItem = ({
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
-                          "&:hover": { cursor: "pointer" },
                         }}
                       >
                         {htmlToPlainText(element.text)}
@@ -207,9 +259,6 @@ const ElementsListItem = ({
           </Draggable>
         );
       })}
-      {provided.placeholder}
     </Box>
   );
 };
-
-export default ElementsListItem;

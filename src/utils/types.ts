@@ -1,13 +1,11 @@
 import { RefObject } from "react";
 
-import { type SxProps, type Theme, type TooltipProps } from "@mui/material";
-import { type SerializedError } from "@reduxjs/toolkit";
+import { type SxProps, type Theme, type TooltipProps } from "@mui/material"; 
 import { type QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { type Edge, type Node } from "@xyflow/react";
 import { Dayjs } from "dayjs";
 import type { JwtPayload } from "jwt-decode";
-import type { MRT_ColumnDef } from "material-react-table";
-import { type DroppableProvided } from "react-beautiful-dnd";
+import type { MRT_ColumnDef } from "material-react-table"; 
 import {
   type Control,
   type FieldErrors,
@@ -251,7 +249,6 @@ export interface Element {
 export interface ElementListItemProps {
   elements?: Element[];
   displayedQuestions: Element[];
-  provided: DroppableProvided;
   nonOrderableTypes: string[];
   setQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
 }

@@ -273,3 +273,25 @@ export const loaderTitles: Record<LoaderMode, string> = {
   APPEND: "Adding questions to your survey...",
   REPLACE: "Replacing your survey questions...",
 };
+
+
+  export const nonOrderableTypes = [
+    "WELCOME_SCREEN",
+    "END_SCREEN",
+    "INSTRUCTIONS",
+    "EMAIL_CONTACT",
+  ];
+
+  export const elementStartTypes = ["WELCOME_SCREEN", "INSTRUCTIONS", "EMAIL_CONTACT"];
+
+  export const orderedElementTypes = [
+    "BINARY",
+    "MEDIA",
+    "MULTIPLE_CHOICE",
+    "NUMBER",
+    "RADIO",
+    "RANGE",
+    "RANK",
+    "TEXT",
+    "THREE_D",
+  ];
