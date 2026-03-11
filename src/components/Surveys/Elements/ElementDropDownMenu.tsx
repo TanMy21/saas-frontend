@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 
-import { useDeleteElementMutation } from "../../../app/slices/elementApiSlice";
+import {
+  useDeleteElementMutation,
+  useDuplicateElementMutation,
+} from "../../../app/slices/elementApiSlice";
 import { deleteElementRedux } from "../../../app/slices/surveySlice";
 import { RootState } from "../../../app/store";
 import { useAppSelector, useAppDispatch } from "../../../app/typedReduxHooks";
@@ -22,6 +25,8 @@ const ElementDropDownMenu = ({
   const [recentlyDeletedId, setRecentlyDeletedId] = useState<string | null>(
     null,
   );
+
+  const [duplicateQuestion] = useDuplicateElementMutation();
   const [deleteElement, { isLoading }] = useDeleteElementMutation();
 
   const elements = useAppSelector(
@@ -37,7 +42,17 @@ const ElementDropDownMenu = ({
   };
 
   const handleDuplicateElement = async () => {
-    // console.log("Duplicate Element: ", questionID);
+    try {
+      setMenuAnchor(null);
+
+      const newQuestion = await duplicateQuestion(questionID).unwrap();
+
+      refetchCanvas();
+
+      setQuestionId(newQuestion.questionID);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleDeleteElement = async () => {

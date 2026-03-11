@@ -231,7 +231,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Elements"],
     }),
     duplicateElement: builder.mutation({
-      query: (questionID) => ({
+      query: (questionID: string) => ({
         url: `/q/duplicate/${questionID}`,
         method: "POST",
       }),

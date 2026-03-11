@@ -140,7 +140,6 @@ const displayedQuestions = useMemo(() => {
       });
   };
 
-  console.log("Elements: ", elements);
 
   return (
     <>
