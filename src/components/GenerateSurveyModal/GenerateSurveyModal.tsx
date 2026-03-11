@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
 import { useGenerateSurveyMutation } from "../../app/slices/surveysApiSlice";
 import { LoaderMode } from "../../types/modalTypes";
-import { GenerateSurveyState } from "../../utils/constants";
+import { GenerateSurveyState, nonOrderableTypes } from "../../utils/constants";
 import { GenerateSurveyModalProps } from "../../utils/types";
 import GenerateSurveyLoader from "../Loaders/GenerateSurveyLoader";
 
@@ -46,7 +46,9 @@ const GenerateSurveyModal = ({
 }: GenerateSurveyModalProps) => {
   const { surveyID } = useParams();
   const { data: elements = [] } = useGetElementsForSurveyQuery(surveyID!);
-  const questionCount = elements.length;
+  const questionCount = elements.filter(
+    (el) => el.type && !nonOrderableTypes.includes(el.type),
+  ).length;
   const timeoutTriggeredRef = useRef(false);
   const [state, setState] = useState<GenerateSurveyState>(
     GenerateSurveyState.LOADING,
@@ -134,6 +136,7 @@ const GenerateSurveyModal = ({
 
     return () => clearInterval(interval);
   }, [state, isLoading]);
+
   return (
     <Modal open={openGenerate} onClose={handleClose}>
       <Box sx={modalOverlaySx}>

@@ -9,6 +9,7 @@ import {
   useGetElementsForSurveyQuery,
   useImportQuestionsMutation,
 } from "../../app/slices/elementApiSlice";
+import { nonOrderableTypes } from "../../utils/constants";
 import { ImportQuestionProps } from "../../utils/types";
 import { ImportQuestionsLoader } from "../Loaders/ImportQuestionsLoader";
 
@@ -27,7 +28,9 @@ const ImportQuestionsModal = ({
     "INITIAL" | "APPEND" | "REPLACE" | null
   >(null);
   const { data: elements = [] } = useGetElementsForSurveyQuery(surveyID!);
-  const existingQuestionsCount = elements.length;
+  const existingQuestionsCount = elements.filter(
+    (el) => el.type && !nonOrderableTypes.includes(el.type),
+  ).length;
 
   const [importQuestions, { isLoading }] = useImportQuestionsMutation();
 
