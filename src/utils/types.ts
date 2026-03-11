@@ -1,11 +1,11 @@
 import { RefObject } from "react";
 
-import { type SxProps, type Theme, type TooltipProps } from "@mui/material"; 
+import { type SxProps, type Theme, type TooltipProps } from "@mui/material";
 import { type QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { type Edge, type Node } from "@xyflow/react";
 import { Dayjs } from "dayjs";
 import type { JwtPayload } from "jwt-decode";
-import type { MRT_ColumnDef } from "material-react-table"; 
+import type { MRT_ColumnDef } from "material-react-table";
 import {
   type Control,
   type FieldErrors,
@@ -273,7 +273,7 @@ export interface ElementProps {
 export interface ElementDropDownMenuProps {
   questionID: string;
   elements?: Element[];
-
+  isSystemScreen: boolean;
   setQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 

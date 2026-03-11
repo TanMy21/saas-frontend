@@ -201,6 +201,7 @@ export const ElementsListItem = ({
                     <ElementDropDownMenu
                       questionID={element.questionID}
                       setQuestionId={setQuestionId}
+                      isSystemScreen={isSystemScreen}
                     />
                   </Box>
 

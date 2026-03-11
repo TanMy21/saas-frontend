@@ -14,17 +14,18 @@ import DeleteQuestionAlert from "../../alert/DeleteQuestionAlert";
 const ElementDropDownMenu = ({
   questionID,
   setQuestionId,
+  isSystemScreen,
 }: ElementDropDownMenuProps) => {
   const dispatch = useAppDispatch();
   const refetchCanvas = useSurveyCanvasRefetch();
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [recentlyDeletedId, setRecentlyDeletedId] = useState<string | null>(
-    null
+    null,
   );
   const [deleteElement, { isLoading }] = useDeleteElementMutation();
 
   const elements = useAppSelector(
-    (state: RootState) => state.surveyBuilder.elements
+    (state: RootState) => state.surveyBuilder.elements,
   );
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -94,9 +95,11 @@ const ElementDropDownMenu = ({
           top: "-4%",
         }}
       >
-        <MenuItem onClick={handleDuplicateElement}>Duplicate</MenuItem>
+        {!isSystemScreen && (
+          <MenuItem onClick={handleDuplicateElement}>Duplicate</MenuItem>
+        )}
         <MenuItem onClick={handleDeleteElement} sx={{ color: "red" }}>
-          Delete
+          {isSystemScreen ? "Remove Screen" : "Delete"}
         </MenuItem>
       </Menu>
       <DeleteQuestionAlert open={isLoading} />
