@@ -20,7 +20,7 @@ import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { elementIcons } from "../../../utils/elementsConfig";
-import { AddElementMenuProps, Element, ErrorData } from "../../../utils/types";
+import { AddElementMenuProps, ErrorData } from "../../../utils/types";
 
 const AddElementMenu = ({
   surveyID,
@@ -31,48 +31,23 @@ const AddElementMenu = ({
 }: AddElementMenuProps) => {
   const { primary } = useAppTheme();
   const dispatch = useAppDispatch();
-  const [createElement, { isError, error }] = useCreateElementMutation();
+  const [createElement, { isLoading, isError, error }] =
+    useCreateElementMutation();
 
   const [createScreenElement, { isError: isErrorScreen, error: errorScreen }] =
     useCreateScreenElementMutation();
 
   const elements = useAppSelector(
-    (state: RootState) => state.surveyBuilder.elements
+    (state: RootState) => state.surveyBuilder.elements,
   );
 
-  const calculateOrder = (elements: Element[], type: string) => {
-    const elementTypes = [
-      "WELCOME_SCREEN",
-      "END_SCREEN",
-      "INSTRUCTIONS",
-      "EMAIL_CONTACT",
-    ];
-    const elementTypeExists = elementTypes.includes(type);
-
-    const nonOrderableTypes = [
-      "WELCOME_SCREEN",
-      "END_SCREEN",
-      "INSTRUCTIONS",
-      "EMAIL_CONTACT",
-    ];
-
-    if (elementTypeExists) {
-      return null;
-    }
-
-    const orderableQuestionsCount = elements.filter(
-      (element: Element) => !nonOrderableTypes.includes(element.type)
-    ).length;
-    return orderableQuestionsCount + 1;
-  };
-
   const handleElementAdd = async (type: string) => {
-    const order: number | null = calculateOrder(elements ?? [], type);
+    if (isLoading) return; //prevents rapid addition of element
+
     try {
       const newElement = await createElement({
         surveyID,
         type,
-        order,
       }).unwrap();
       dispatch(addElement(newElement));
     } catch (error) {
@@ -93,11 +68,11 @@ const AddElementMenu = ({
   };
 
   const containsWelcome = elements?.some(
-    (element) => element.type === "WELCOME_SCREEN"
+    (element) => element.type === "WELCOME_SCREEN",
   );
 
   const containsInstruction = elements?.some(
-    (element) => element.type === "INSTRUCTIONS"
+    (element) => element.type === "INSTRUCTIONS",
   );
 
   useEffect(() => {
@@ -107,7 +82,7 @@ const AddElementMenu = ({
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
@@ -122,7 +97,7 @@ const AddElementMenu = ({
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
@@ -207,7 +182,10 @@ const AddElementMenu = ({
                 Questions
               </Typography>
             </Box>
-            <MenuItem onClick={() => handleElementAdd("THREE_D")}>
+            <MenuItem
+              onClick={() => handleElementAdd("THREE_D")}
+              disabled={isLoading}
+            >
               <Box display="flex" alignItems="center" gap={1.25}>
                 <Typography
                   sx={{ fontSize: 24, color: "#086083ff", lineHeight: 1 }}
@@ -220,7 +198,10 @@ const AddElementMenu = ({
               </Box>
             </MenuItem>
 
-            <MenuItem onClick={() => handleElementAdd("BINARY")}>
+            <MenuItem
+              onClick={() => handleElementAdd("BINARY")}
+              disabled={isLoading}
+            >
               <Box display="flex" alignItems="center" gap={1.25}>
                 <Typography
                   sx={{ fontSize: 24, color: "#31029c", lineHeight: 1 }}
@@ -233,7 +214,10 @@ const AddElementMenu = ({
               </Box>
             </MenuItem>
 
-            <MenuItem onClick={() => handleElementAdd("RADIO")}>
+            <MenuItem
+              onClick={() => handleElementAdd("RADIO")}
+              disabled={isLoading}
+            >
               <Box display="flex" alignItems="center" gap={1.25}>
                 <Typography
                   sx={{ fontSize: 24, color: "#f7c435", lineHeight: 1 }}
@@ -246,7 +230,10 @@ const AddElementMenu = ({
               </Box>
             </MenuItem>
 
-            <MenuItem onClick={() => handleElementAdd("TEXT")}>
+            <MenuItem
+              onClick={() => handleElementAdd("TEXT")}
+              disabled={isLoading}
+            >
               <Box display="flex" alignItems="center" gap={1.25}>
                 <Typography
                   sx={{ fontSize: 24, color: "#c45161", lineHeight: 1 }}
@@ -259,7 +246,10 @@ const AddElementMenu = ({
               </Box>
             </MenuItem>
 
-            <MenuItem onClick={() => handleElementAdd("NUMBER")}>
+            <MenuItem
+              onClick={() => handleElementAdd("NUMBER")}
+              disabled={isLoading}
+            >
               <Box display="flex" alignItems="center" gap={1.25}>
                 <Typography
                   sx={{ fontSize: 24, color: "#d69e49", lineHeight: 1 }}
@@ -272,7 +262,10 @@ const AddElementMenu = ({
               </Box>
             </MenuItem>
 
-            <MenuItem onClick={() => handleElementAdd("RANK")}>
+            <MenuItem
+              onClick={() => handleElementAdd("RANK")}
+              disabled={isLoading}
+            >
               <Box display="flex" alignItems="center" gap={1.25}>
                 <Typography
                   sx={{ fontSize: 24, color: "#ffa600", lineHeight: 1 }}
@@ -285,7 +278,10 @@ const AddElementMenu = ({
               </Box>
             </MenuItem>
 
-            <MenuItem onClick={() => handleElementAdd("RANGE")}>
+            <MenuItem
+              onClick={() => handleElementAdd("RANGE")}
+              disabled={isLoading}
+            >
               <Box display="flex" alignItems="center" gap={1.25}>
                 <Typography
                   sx={{ fontSize: 24, color: "#036b82", lineHeight: 1 }}
@@ -298,7 +294,10 @@ const AddElementMenu = ({
               </Box>
             </MenuItem>
 
-            <MenuItem onClick={() => handleElementAdd("MEDIA")}>
+            <MenuItem
+              onClick={() => handleElementAdd("MEDIA")}
+              disabled={isLoading}
+            >
               <Box display="flex" alignItems="center" gap={1.25}>
                 <Typography
                   sx={{ fontSize: 24, color: "#f2b6c0", lineHeight: 1 }}
@@ -311,7 +310,10 @@ const AddElementMenu = ({
               </Box>
             </MenuItem>
 
-            <MenuItem onClick={() => handleElementAdd("MULTIPLE_CHOICE")}>
+            <MenuItem
+              onClick={() => handleElementAdd("MULTIPLE_CHOICE")}
+              disabled={isLoading}
+            >
               <Box display="flex" alignItems="center" gap={1.25}>
                 <Typography
                   sx={{ fontSize: 24, color: "#369acc", lineHeight: 1 }}
