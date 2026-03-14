@@ -4,6 +4,7 @@ import { ElementSettingsProps } from "../../../utils/types";
 
 import MediaOptionSettings from "./ElementSettingsComponents/MediaOptionSettings";
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
+import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
@@ -17,6 +18,7 @@ const MediaElementSettings = ({ qID }: ElementSettingsProps) => {
         heigh: "100%",
       }}
     >
+      <QuestionTypeMutationSettings />
       <QuestionTextandDescriptionSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
       <ValidationSettings />

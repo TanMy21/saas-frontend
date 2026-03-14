@@ -1556,3 +1556,16 @@ export interface NewWorkspaceModalProps {
 }
 
 export type GenerateSurveyFormData = z.infer<typeof generateSurveySchema>;
+
+
+export type MutateQuestionPayload = {
+  questionID: string;
+  targetType: QuestionType;
+  confirmOptionLoss?: boolean;
+};
+
+export interface MutateConfirmationDialogProps {
+  pendingType: QuestionType | null;
+  setPendingType: React.Dispatch<React.SetStateAction<QuestionType | null>>;
+  applyType: (targetType: QuestionType, confirmOptionLoss?: boolean) => void;
+}

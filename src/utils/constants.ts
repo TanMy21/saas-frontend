@@ -16,7 +16,7 @@ import {
 
 import { LoaderMode } from "../types/modalTypes";
 
-import { NotificationSettings, TabId } from "./types";
+import { NotificationSettings, QuestionType, TabId } from "./types";
 
 export const LAST_WS_KEY = "lWSID";
 
@@ -274,24 +274,38 @@ export const loaderTitles: Record<LoaderMode, string> = {
   REPLACE: "Replacing your survey questions...",
 };
 
+export const nonOrderableTypes = [
+  "WELCOME_SCREEN",
+  "END_SCREEN",
+  "INSTRUCTIONS",
+  "EMAIL_CONTACT",
+];
 
-  export const nonOrderableTypes = [
-    "WELCOME_SCREEN",
-    "END_SCREEN",
-    "INSTRUCTIONS",
-    "EMAIL_CONTACT",
-  ];
+export const elementStartTypes = [
+  "WELCOME_SCREEN",
+  "INSTRUCTIONS",
+  "EMAIL_CONTACT",
+];
 
-  export const elementStartTypes = ["WELCOME_SCREEN", "INSTRUCTIONS", "EMAIL_CONTACT"];
+export const orderedElementTypes = [
+  "BINARY",
+  "MEDIA",
+  "MULTIPLE_CHOICE",
+  "NUMBER",
+  "RADIO",
+  "RANGE",
+  "RANK",
+  "TEXT",
+  "THREE_D",
+];
 
-  export const orderedElementTypes = [
-    "BINARY",
-    "MEDIA",
-    "MULTIPLE_CHOICE",
-    "NUMBER",
-    "RADIO",
-    "RANGE",
-    "RANK",
-    "TEXT",
-    "THREE_D",
-  ];
+export const OPTION_TYPES: QuestionType[] = [
+  "BINARY",
+  "MULTIPLE_CHOICE",
+  "RADIO",
+  "MEDIA",
+  "THREE_D",
+  "RANK",
+];
+
+export const SINGLE_VALUE_TYPES: QuestionType[] = ["TEXT", "NUMBER", "RANGE"];

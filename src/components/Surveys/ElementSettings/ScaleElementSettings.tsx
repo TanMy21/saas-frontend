@@ -4,6 +4,7 @@ import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
 
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
+import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
 import ScaleRangeSettings from "./ElementSettingsComponents/ScaleRangeSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
@@ -24,6 +25,7 @@ const ScaleElementSettings = () => {
         heigh: "100%",
       }}
     >
+      <QuestionTypeMutationSettings />
       <QuestionTextandDescriptionSettings />
       <ScreenTypographySettings key={questionID} qID={questionID!} />
       <ScaleRangeSettings />

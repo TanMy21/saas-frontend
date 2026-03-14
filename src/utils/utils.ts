@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { BarChart3, Shield, Smartphone, Users } from "lucide-react";
 import { type Transition } from "motion/react";
 
+import { OPTION_TYPES, SINGLE_VALUE_TYPES } from "./constants";
 import {
   BinaryResult,
   MediaResult,
@@ -15,7 +16,7 @@ import {
   SummaryQuestion,
   TextResponseItem,
 } from "./insightTypes";
-import { EdgeStyle, LayoutMode } from "./types";
+import { EdgeStyle, LayoutMode, QuestionType } from "./types";
 
 export const generateOptionLabel = (index: number, qType: string) => {
   if (qType === "RADIO" || qType === "MULTIPLE_CHOICE" || qType === "MEDIA") {
@@ -419,4 +420,14 @@ export function formatDuration(ms?: number) {
   return `${(ms / 1000).toFixed(1)}s`;
 }
 
- 
+export const willLoseOptions = (
+  currentType: QuestionType,
+  newType: QuestionType,
+  optionCount: number,
+) => {
+  return (
+    OPTION_TYPES.includes(currentType) &&
+    SINGLE_VALUE_TYPES.includes(newType) &&
+    optionCount > 0
+  );
+};

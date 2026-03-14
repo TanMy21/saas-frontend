@@ -4,6 +4,7 @@ import { ElementSettingsProps } from "../../../utils/types";
 
 import BinaryOptionsSettings from "./ElementSettingsComponents/BinaryOptionsSettings";
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
+import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
@@ -18,6 +19,7 @@ const BinaryElementSettings = ({ qID }: ElementSettingsProps) => {
         // border:"2px solid blue",
       }}
     >
+      <QuestionTypeMutationSettings />
       <QuestionTextandDescriptionSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
       <ValidationSettings />

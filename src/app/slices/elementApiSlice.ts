@@ -1,4 +1,4 @@
-import { Element } from "../../utils/types";
+import { Element, MutateQuestionPayload } from "../../utils/types";
 import { apiSlice } from "../api/apiSlice";
 
 export const elementApiSlice = apiSlice.injectEndpoints({
@@ -266,6 +266,18 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
+    mutateQuestionType: builder.mutation<any, MutateQuestionPayload>({
+      query: ({ questionID, targetType, confirmOptionLoss }) => ({
+        url: `/q/mutate/${questionID}`,
+        method: "PATCH",
+        body: {
+          questionID,
+          targetType,
+          confirmOptionLoss,
+        },
+      }),
+      invalidatesTags: ["Elements", "Surveys"],
+    }),
   }),
 });
 
@@ -297,4 +309,5 @@ export const {
   useImportQuestionsMutation,
   useToggleQuestionImageVisibilityMutation,
   useToggle3DModelQuestionVisibilityMutation,
+  useMutateQuestionTypeMutation,
 } = elementApiSlice;

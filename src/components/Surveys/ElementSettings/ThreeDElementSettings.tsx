@@ -1,11 +1,10 @@
 import { Box } from "@mui/material";
 
-import { ElementSettingsProps } from "../../../utils/types";
-
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
+import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
 import ShowQuestionSettings from "./ElementSettingsComponents/ShowQuestionSettings";
 
-const ThreeDElementSettings = ({ qID }: ElementSettingsProps) => {
+const ThreeDElementSettings = () => {
   return (
     <Box
       sx={{
@@ -16,6 +15,7 @@ const ThreeDElementSettings = ({ qID }: ElementSettingsProps) => {
         // border:"2px solid blue",
       }}
     >
+      <QuestionTypeMutationSettings />
       <QuestionTextandDescriptionSettings />
       <ShowQuestionSettings />
     </Box>
