@@ -14,10 +14,11 @@ const SurveyBuilderLeftSidebar = ({
   setQuestionId,
 }: SurveyBuilderLeftSidebarProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
   const open = Boolean(anchorEl);
 
   const elements = useAppSelector(
-    (state: RootState) => state.surveyBuilder.elements
+    (state: RootState) => state.surveyBuilder.elements,
   );
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -34,7 +35,7 @@ const SurveyBuilderLeftSidebar = ({
         el.type !== "WELCOME_SCREEN" &&
         el.type !== "END_SCREEN" &&
         el.type !== "INSTRUCTIONS" &&
-        el.type !== "EMAIL_CONTACT"
+        el.type !== "EMAIL_CONTACT",
     ).length;
   }, [elements]);
 
