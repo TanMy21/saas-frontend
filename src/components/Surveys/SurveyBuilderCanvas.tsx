@@ -1,9 +1,8 @@
 import { useState } from "react";
 
 import { Box } from "@mui/material";
+import { AnimatePresence, motion } from "motion/react";
 
-// import { RootState } from "../../app/store";
-// import { useAppSelector } from "../../app/typedReduxHooks";
 import { elementComponents } from "../../utils/elementsConfig";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 import DevicePreview from "../DevicePreview";
@@ -19,10 +18,6 @@ const SurveyBuilderCanvas = ({
   const [colorAnchorEl, setColorAnchorEl] = useState<HTMLButtonElement | null>(
     null,
   );
-
-  // const question = useAppSelector(
-  //   (state: RootState) => state.question.selectedQuestion
-  // );
 
   const questionType = question?.type as QuestionTypeKey;
   const backgroundColor =
@@ -100,23 +95,53 @@ const SurveyBuilderCanvas = ({
             // height: "100%",
           }}
         >
-          {/* Element view */}
-          {question?.type && (
-            <QuestionComponent
-              key={question?.questionID}
-              qID={question?.questionID}
-              qNO={question?.order?.toString()}
-              qText={question?.text}
-              qDescription={question?.description}
-              qType={question?.type}
-              qImage={question?.questionImage}
-              // qSettings={question?.config}
-              display={display}
-              showQuestion={question?.Model3D?.showQuestion}
-            />
-          )}
+          <AnimatePresence mode="wait">
+            {question?.type && (
+              <motion.div
+                key={question?.questionID}
+                /** Enter animation */
+                initial={{ opacity: 0, y: 24 }}
+                /** Final state */
+                animate={{ opacity: 1, y: 0 }}
+                /** Exit animation */
+                exit={{ opacity: 0, y: -24 }}
+                transition={{
+                  duration: 0.3,
+                  ease: "easeOut",
+                }}
+                style={{ width: "100%" }}
+              >
+                {/* Element view */}
+                {question?.type && (
+                  <QuestionComponent
+                    key={question?.questionID}
+                    qID={question?.questionID}
+                    qNO={question?.order?.toString()}
+                    qText={question?.text}
+                    qDescription={question?.description}
+                    qType={question?.type}
+                    qImage={question?.questionImage}
+                    // qSettings={question?.config}
+                    display={display}
+                    showQuestion={question?.Model3D?.showQuestion}
+                  />
+                )}{" "}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </Box>
       </DevicePreview>
+      <Box
+        sx={{
+          position: "sticky",
+          bottom: 0,
+          width: "100%",
+          height: "48px",
+          pointerEvents: "none",
+          zIndex: 2,
+          boxShadow: "0 -18px 24px -16px rgba(0,0,0,0.35) inset",
+        }}
+      />
     </Box>
   );
 };

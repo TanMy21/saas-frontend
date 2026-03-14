@@ -94,3 +94,36 @@ body {
   display: none;
   /* Chrome/Safari/Edge   */
 }
+
+
+
+@keyframes aiQuestionAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(0) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes aiQuestionTint {
+  0% {
+    background-color: rgba(99,102,241,0.12);
+  }
+
+  70% {
+    background-color: rgba(99,102,241,0.06);
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}

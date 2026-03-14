@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Box } from "@mui/material";
 import {
@@ -21,6 +21,8 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
   const { scrollStyles } = useAppTheme();
   const dispatch = useAppDispatch();
   const [updateElementOrder] = useUpdateElementOrderMutation();
+  const [newQuestionIds, setNewQuestionIds] = useState<Set<string>>(new Set());
+  const prevLengthRef = useRef(0);
 
   const elements = useAppSelector(
     (state: RootState) => state.surveyBuilder.elements,
@@ -28,9 +30,31 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-const displayedQuestions = useMemo(() => {
-  return [...elements].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-}, [elements]);
+  const displayedQuestions = useMemo(() => {
+    return [...elements].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  }, [elements]);
+
+  useEffect(() => {
+    // detect new questions added
+    if (elements.length > prevLengthRef.current) {
+      const added = elements.slice(prevLengthRef.current);
+
+      const ids = new Set(added.map((q) => q.questionID));
+
+      setNewQuestionIds(ids);
+
+      // remove highlight after animation
+      const t = setTimeout(() => {
+        setNewQuestionIds(new Set());
+      }, 1500);
+
+      prevLengthRef.current = elements.length;
+
+      return () => clearTimeout(t);
+    }
+
+    prevLengthRef.current = elements.length;
+  }, [elements]);
 
   // Accelerated auto-scroll while dragging
   useEffect(() => {
@@ -140,7 +164,6 @@ const displayedQuestions = useMemo(() => {
       });
   };
 
-
   return (
     <>
       {elements.length === 0 ? null : (
@@ -172,6 +195,7 @@ const displayedQuestions = useMemo(() => {
                   setQuestionId={setQuestionId!}
                   displayedQuestions={displayedQuestions}
                   nonOrderableTypes={nonOrderableTypes}
+                   newQuestionIds={newQuestionIds}
                 />
 
                 {provided.placeholder}

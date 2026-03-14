@@ -251,6 +251,7 @@ export interface ElementListItemProps {
   displayedQuestions: Element[];
   nonOrderableTypes: string[];
   setQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
+    newQuestionIds?: Set<string>;
 }
 
 export interface ElementProps {
@@ -436,6 +437,7 @@ export interface ElementsPanelProps {
   elements?: Element[];
   surveyID?: string;
   setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
+  newQuestionIds?: Set<string>;
 }
 
 interface ElementResponse {
@@ -1556,7 +1558,6 @@ export interface NewWorkspaceModalProps {
 }
 
 export type GenerateSurveyFormData = z.infer<typeof generateSurveySchema>;
-
 
 export type MutateQuestionPayload = {
   questionID: string;

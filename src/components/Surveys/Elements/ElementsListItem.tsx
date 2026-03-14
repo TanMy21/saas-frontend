@@ -14,6 +14,7 @@ import ElementDropDownMenu from "./ElementDropDownMenu";
 export const ElementsListItem = ({
   displayedQuestions,
   setQuestionId,
+  newQuestionIds,
 }: ElementListItemProps) => {
   const selectedQuestionId = useAppSelector(
     (state: RootState) => state.question.selectedQuestion?.questionID,
@@ -23,6 +24,14 @@ export const ElementsListItem = ({
     <Box>
       {displayedQuestions.map((element, index) => {
         const isSystemScreen = nonOrderableTypes.includes(element.type);
+        const isNew = newQuestionIds?.has(element.questionID);
+
+        /** Gets the order of this new item among only the new items, for stagger timing */
+        const staggerIndex = isNew
+          ? displayedQuestions
+              .filter((q) => newQuestionIds?.has(q.questionID) ?? false)
+              .findIndex((q) => q.questionID === element.questionID)
+          : -1;
 
         const shouldDisplayOrder =
           !isSystemScreen &&
@@ -76,6 +85,13 @@ export const ElementsListItem = ({
                   /** smooth reorder animation */
                   transition:
                     "transform 180ms cubic-bezier(.2,0,0,1), background-color 0.2s ease, box-shadow 0.2s ease",
+
+                 ...(isNew && {
+  backgroundColor: "rgba(99,102,241,0.10)",
+  animation: "aiQuestionAppear 0.55s ease forwards, aiQuestionTint 1.2s ease forwards",
+  animationDelay: `${staggerIndex * 90}ms`,
+  opacity: 0,
+}),
 
                   opacity: snapshot.isDragging ? 0.98 : 1,
 
