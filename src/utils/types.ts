@@ -1180,7 +1180,7 @@ export interface Survey {
 
 export interface SurveyBuilderCanvasProps {
   display?: "desktop" | "mobile";
-  question?: Element | null;
+  canvasQuestion?: Element | null;
 }
 
 export interface SurveyBuilderState {

@@ -82,9 +82,9 @@ const CanvasConsole = ({
         {noElements ? (
           content
         ) : display === "mobile" ? (
-          <SurveyBuilderCanvasMobile question={question} display={display} />
+          <SurveyBuilderCanvasMobile canvasQuestion={question} display={display} />
         ) : (
-          <SurveyBuilderCanvas question={question} display={display} />
+          <SurveyBuilderCanvas canvasQuestion={question} display={display} />
         )}
       </Box>
       <PublishSurveyAlert open={publishAlertOpen!} setOpen={setPublishOpen} />

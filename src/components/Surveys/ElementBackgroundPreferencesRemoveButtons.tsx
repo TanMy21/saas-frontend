@@ -10,8 +10,13 @@ import {
   removeBackgroundColor,
   removeTemplateImage,
 } from "../../app/slices/elementSlice";
-import { useAppDispatch } from "../../app/typedReduxHooks";
-import { ElementBackgroundPreferencesRemoveButtonsProps } from "../../utils/types";
+import { updateElementField } from "../../app/slices/surveySlice";
+import { RootState } from "../../app/store";
+import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
+import {
+  ElementBackgroundPreferencesRemoveButtonsProps,
+  SurveyCanvasQuestionSettings,
+} from "../../utils/types";
 
 const ElementBackgroundPreferencesRemoveButtons = ({
   questionID,
@@ -19,6 +24,7 @@ const ElementBackgroundPreferencesRemoveButtons = ({
   questionBackgroundColor,
 }: ElementBackgroundPreferencesRemoveButtonsProps) => {
   const dispatch = useAppDispatch();
+
   const [removeQuestionTemplateImage] =
     useRemoveQuestionTemplateImageMutation();
 
@@ -36,10 +42,19 @@ const ElementBackgroundPreferencesRemoveButtons = ({
 
   const handleRemoveBackgroundColor = async () => {
     try {
-      console.log("questionID", questionID);
-      await removeQuestionBackgroundColor(questionID).unwrap();
       dispatch(removeBackgroundColor());
-      console.log("Background color removed successfully");
+
+      dispatch(
+        updateElementField({
+          questionID,
+          key: "questionPreferences",
+          value: {
+            questionBackgroundColor: undefined,
+          } as SurveyCanvasQuestionSettings,
+        }),
+      );
+
+      await removeQuestionBackgroundColor(questionID).unwrap();
     } catch (error) {
       console.error(error);
     }

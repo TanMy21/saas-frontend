@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Box } from "@mui/material";
 import { AnimatePresence, motion } from "motion/react";
 
+import { RootState } from "../../app/store";
+import { useAppSelector } from "../../app/typedReduxHooks";
 import { elementComponents } from "../../utils/elementsConfig";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 import DevicePreview from "../DevicePreview";
@@ -13,15 +15,26 @@ import QuestionBackgroundColor from "./ElementSettings/ElementSettingsComponents
 
 const SurveyBuilderCanvas = ({
   display,
-  question,
+  canvasQuestion,
 }: SurveyBuilderCanvasProps) => {
   const [colorAnchorEl, setColorAnchorEl] = useState<HTMLButtonElement | null>(
     null,
   );
 
+  const selectedQuestion = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
+  );
+
+  // const question =
+  //   selectedQuestion?.questionID === canvasQuestion?.questionID
+  //     ? selectedQuestion
+  //     : canvasQuestion;
+
+  const question = selectedQuestion ?? canvasQuestion;
+
   const questionType = question?.type as QuestionTypeKey;
   const backgroundColor =
-    question?.questionPreferences?.questionBackgroundColor || "white";
+    question?.questionPreferences?.questionBackgroundColor ?? "#ffffff";
 
   const templateUrl = question?.questionPreferences?.questionImageTemplateUrl;
   const templateImage = question?.questionPreferences?.questionImageTemplate;

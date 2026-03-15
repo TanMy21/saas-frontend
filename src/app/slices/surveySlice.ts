@@ -26,7 +26,7 @@ export const surveyBuilderSlice = createSlice({
     },
     deleteElementRedux: (state, action: PayloadAction<string>) => {
       state.elements = state.elements.filter(
-        (el) => el.questionID !== action.payload
+        (el) => el.questionID !== action.payload,
       );
     },
     updateElementOrder: (state, action: PayloadAction<Element[]>) => {
@@ -34,13 +34,24 @@ export const surveyBuilderSlice = createSlice({
     },
     updateElementField: <K extends keyof Element>(
       state: SurveyBuilderState,
-      action: PayloadAction<{ questionID: string; key: K; value: Element[K] }>
+      action: PayloadAction<{ questionID: string; key: K; value: Element[K] }>,
     ) => {
       const element = state.elements.find(
-        (el) => el.questionID === action.payload.questionID
+        (el) => el.questionID === action.payload.questionID,
       );
-      if (element) {
-        element[action.payload.key] = action.payload.value;
+
+      if (!element) return;
+
+      const key = action.payload.key;
+
+      // merge objects instead of replacing
+      if (typeof element[key] === "object" && element[key] !== null) {
+        element[key] = {
+          ...(element[key] as object),
+          ...(action.payload.value as object),
+        } as Element[K];
+      } else {
+        element[key] = action.payload.value;
       }
     },
   },

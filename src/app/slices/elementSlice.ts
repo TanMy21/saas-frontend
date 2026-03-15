@@ -26,14 +26,20 @@ const questionSlice = createSlice({
     setBackgroundColor: (state, action: PayloadAction<string | null>) => {
       if (!state.selectedQuestion?.questionPreferences) return;
 
+      const newColor = action.payload;
+
+      // update selected question
       state.selectedQuestion.questionPreferences.questionBackgroundColor =
-        action.payload;
+        newColor;
     },
 
     removeBackgroundColor: (state) => {
       if (!state.selectedQuestion?.questionPreferences) return;
 
-      state.selectedQuestion.questionPreferences.questionBackgroundColor = null;
+      state.selectedQuestion.questionPreferences = {
+        ...state.selectedQuestion.questionPreferences,
+        questionBackgroundColor: "#ffffff",
+      };
     },
     removeTemplateImage: (state) => {
       if (!state.selectedQuestion?.questionPreferences) return;

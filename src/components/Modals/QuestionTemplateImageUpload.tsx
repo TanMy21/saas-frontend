@@ -12,8 +12,15 @@ import { toast } from "react-toastify";
 
 import { useUploadQuestionTemplateImageMutation } from "../../app/slices/elementApiSlice";
 import { setTemplateImage } from "../../app/slices/elementSlice";
+import { updateElementField } from "../../app/slices/surveySlice";
+import { RootState } from "../../app/store";
+import { useAppSelector } from "../../app/typedReduxHooks";
 import { useAppTheme } from "../../theme/useAppTheme";
-import { ErrorData, QuestionImageUploadModalProps } from "../../utils/types";
+import {
+  ErrorData,
+  QuestionImageUploadModalProps,
+  SurveyCanvasQuestionSettings,
+} from "../../utils/types";
 
 const QuestionTemplateImageUpload = ({
   uploadImageModalOpen,
@@ -22,6 +29,11 @@ const QuestionTemplateImageUpload = ({
 }: QuestionImageUploadModalProps) => {
   const { primary } = useAppTheme();
   const dispatch = useDispatch();
+
+  const selectedQuestion = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
+  );
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -51,11 +63,20 @@ const QuestionTemplateImageUpload = ({
           formData,
           questionID,
         }).unwrap();
+
         if (data) {
           dispatch(setTemplateImage({ url: data.questionImageTemplateUrl }));
-          console.log(
-            "Image uploaded successfully:",
-            data.questionImageTemplateUrl
+
+          dispatch(
+            updateElementField({
+              questionID,
+              key: "questionPreferences",
+              value: {
+                ...(selectedQuestion?.questionPreferences ?? {}),
+                questionImageTemplate: true,
+                questionImageTemplateUrl: data.questionImageTemplateUrl,
+              } as SurveyCanvasQuestionSettings,
+            }),
           );
         }
       }
@@ -98,7 +119,7 @@ const QuestionTemplateImageUpload = ({
       const errorData = errorUploadImage as ErrorData;
       if (Array.isArray(errorData.data.error)) {
         errorData.data.error.forEach((el) =>
-          toast.error(el.message, { position: "top-right" })
+          toast.error(el.message, { position: "top-right" }),
         );
       } else {
         toast.error(errorData.data.message, { position: "top-right" });
