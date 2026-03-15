@@ -14,7 +14,7 @@ const SurveyListCard = ({
   workspaceId,
   workspaceName,
 }: SurveyListCardProps) => {
-  const { brand, background, primary, textStyles, borders, iconStyle } =
+  const { brand, background, grey, textStyles, borders, iconStyle,shadows } =
     useAppTheme();
   const navigate = useNavigate();
 
@@ -43,25 +43,24 @@ const SurveyListCard = ({
         borderRadius: 3,
         border: borders.strong,
         mt: "12px",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35)",
+         boxShadow: shadows[8],
         transition:
-          "box-shadow 140ms ease, background-color 140ms ease, transform 140ms ease, border-color 140ms ease",
+          "box-shadow 120ms ease, transform 120ms ease, border-color 120ms ease",
+        cursor: "pointer",
         "&:hover": {
-          backgroundColor: background.soft6,
-          boxShadow:
-            "0 6px 14px rgba(2,43,103,0.08), inset 0 1px 0 rgba(255,255,255,0.35)",
-          transform: { md: "translateY(-1px)" },
+          boxShadow: shadows[12],
+          transform: { md: "translateY(-2px)" },
+          borderColor: grey[400],
         },
         "&:focus-within": {
           outline: "2px solid",
-          outlineColor: primary.main ?? "#0074EB",
+          outlineColor: "#0074EB",
           outlineOffset: "2px",
         },
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
           "&:hover": { transform: "none" },
         },
-        "&:hover::before": { opacity: 1 },
       }}
     >
       <ButtonBase
@@ -84,7 +83,7 @@ const SurveyListCard = ({
         <Avatar
           sx={{
             flexShrink: 0,
-            bgcolor: brand.avatarBg2,
+            bgcolor: "white",
             width: { md: 38, xl: 42 },
             height: { md: 38, xl: 42 },
             boxShadow: "inset 0 1px 2px rgba(255,255,255,0.5)",

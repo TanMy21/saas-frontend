@@ -12,7 +12,7 @@ import { DashBoardHeader } from "../components/DashBoardHeader";
 import DeleteWorkspaceModal from "../components/Modals/DeleteWorkspaceModal";
 import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";
 import RenameWorkspaceModal from "../components/Modals/RenameWorkspaceModal";
-import DashboardTour from "../components/Tour/DashboardTour";
+import DashboardTour from "../components/tour/DashboardTour";
 import WorkspaceConsole from "../components/Workspaces/WorkspaceConsole";
 import useAuth from "../hooks/useAuth";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
@@ -53,13 +53,13 @@ const Dashboard = () => {
           "Too many requests. Please wait for a minute and try again.",
           {
             position: "top-right",
-          }
+          },
         );
       }
 
       if (Array.isArray(errorData.data.error)) {
         errorData.data.error.forEach((el) =>
-          toast.error(el.message, { position: "top-right" })
+          toast.error(el.message, { position: "top-right" }),
         );
       } else {
         toast.error(errorData.data.message, { position: "top-right" });
@@ -76,7 +76,7 @@ const Dashboard = () => {
       const lastId = localStorage.getItem(LAST_WS_KEY);
       if (lastId) {
         const found = workspaces.find(
-          (w: Workspace) => w.workspaceId === lastId
+          (w: Workspace) => w.workspaceId === lastId,
         );
         if (found) {
           setSelectedWorkspace(found);
@@ -106,7 +106,7 @@ const Dashboard = () => {
     if (!selectedWorkspace) return;
 
     const stillExists = workspaces.some(
-      (w: Workspace) => w.workspaceId === selectedWorkspace.workspaceId
+      (w: Workspace) => w.workspaceId === selectedWorkspace.workspaceId,
     );
     if (!stillExists) {
       setSelectedWorkspace(workspaces[0]);

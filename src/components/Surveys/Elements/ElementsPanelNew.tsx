@@ -8,6 +8,7 @@ import {
 } from "react-beautiful-dnd";
 
 import { useUpdateElementOrderMutation } from "../../../app/slices/elementApiSlice";
+import { clearAiQuestionsJustAdded } from "../../../app/slices/generateSurveyQuestionSlice";
 import { setElements } from "../../../app/slices/surveySlice";
 import { RootState, useAppDispatch } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
@@ -22,12 +23,16 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
   const dispatch = useAppDispatch();
   const [updateElementOrder] = useUpdateElementOrderMutation();
   const [newQuestionIds, setNewQuestionIds] = useState<Set<string>>(new Set());
-  const prevLengthRef = useRef(0);
+
+  const aiQuestionsJustAdded = useAppSelector(
+    (state: RootState) => state.generateQuestionUI.aiQuestionsJustAdded,
+  );
 
   const elements = useAppSelector(
     (state: RootState) => state.surveyBuilder.elements,
   );
 
+  const prevLengthRef = useRef(elements.length);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const displayedQuestions = useMemo(() => {
@@ -35,80 +40,29 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
   }, [elements]);
 
   useEffect(() => {
-    // detect new questions added
-    if (elements.length > prevLengthRef.current) {
-      const added = elements.slice(prevLengthRef.current);
+    if (!aiQuestionsJustAdded) return;
 
-      const ids = new Set(added.map((q) => q.questionID));
+    /** detect when new elements arrive after generation/import */
+    if (elements.length <= prevLengthRef.current) return;
 
-      setNewQuestionIds(ids);
+    const added = elements.slice(prevLengthRef.current);
+    const ids = new Set(added.map((q) => q.questionID));
 
-      // remove highlight after animation
-      const t = setTimeout(() => {
-        setNewQuestionIds(new Set());
-      }, 1500);
+    setNewQuestionIds(ids);
 
-      prevLengthRef.current = elements.length;
-
-      return () => clearTimeout(t);
-    }
+    const t = setTimeout(() => {
+      setNewQuestionIds(new Set());
+      dispatch(clearAiQuestionsJustAdded());
+    }, 1500);
 
     prevLengthRef.current = elements.length;
-  }, [elements]);
 
-  // Accelerated auto-scroll while dragging
+    return () => clearTimeout(t);
+  }, [elements, aiQuestionsJustAdded, dispatch]);
+
   useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    let raf: number | null = null;
-
-    const handleMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect();
-
-      const edge = 80;
-      const maxSpeed = 22;
-
-      let speed = 0;
-
-      if (e.clientY < rect.top + edge) {
-        const dist = rect.top + edge - e.clientY;
-        speed = -Math.min(maxSpeed, dist / 2.5);
-      }
-
-      if (e.clientY > rect.bottom - edge) {
-        const dist = e.clientY - (rect.bottom - edge);
-        speed = Math.min(maxSpeed, dist / 2.5);
-      }
-
-      if (speed !== 0) el.scrollTop += speed;
-
-      raf = requestAnimationFrame(() => handleMove(e));
-    };
-
-    const start = (e: MouseEvent) => {
-      if (raf === null) {
-        raf = requestAnimationFrame(() => handleMove(e));
-      }
-    };
-
-    const stop = () => {
-      if (raf !== null) {
-        cancelAnimationFrame(raf);
-        raf = null;
-      }
-    };
-
-    window.addEventListener("dragover", start);
-    window.addEventListener("drop", stop);
-    window.addEventListener("mouseup", stop);
-
-    return () => {
-      window.removeEventListener("dragover", start);
-      window.removeEventListener("drop", stop);
-      window.removeEventListener("mouseup", stop);
-    };
-  }, []);
+    prevLengthRef.current = elements.length;
+  }, [elements]);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -195,7 +149,7 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
                   setQuestionId={setQuestionId!}
                   displayedQuestions={displayedQuestions}
                   nonOrderableTypes={nonOrderableTypes}
-                   newQuestionIds={newQuestionIds}
+                  newQuestionIds={newQuestionIds}
                 />
 
                 {provided.placeholder}

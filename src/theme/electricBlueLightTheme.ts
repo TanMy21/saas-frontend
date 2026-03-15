@@ -144,7 +144,7 @@ const electricBlueLightTheme = createTheme({
       color: "#333B6B",
     },
     listLayoutIcon: {
-      color: "#FFFFFF",
+      color: "#005BC4",
     },
   },
   typography: {

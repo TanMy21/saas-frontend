@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { Box, Grow, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Grow,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { skipToken } from "@reduxjs/toolkit/query";
 
 import { useGetWorkspaceSurveysQuery } from "../../app/slices/workspaceApiSlice";
@@ -8,6 +14,7 @@ import { useDebounce } from "../../hooks/useDebounce";
 import { useWheelPageNav } from "../../hooks/useSurveyCollectionScrollNav";
 import { VIEW_MODE_KEY } from "../../utils/constants";
 import { WorkspaceConsoleProps } from "../../utils/types";
+import NoSurveysFound from "../NoSurveysFound";
 import SurveysCollection from "../Surveys/SurveysCollection";
 
 import WorkspaceSurveysPagination from "./WorkspaceSurveysPagination";
@@ -57,7 +64,7 @@ const WorkspaceConsole = ({
     ...(debouncedSearch.trim() ? { search: debouncedSearch } : {}),
   };
 
-  const { data } = useGetWorkspaceSurveysQuery(
+  const { data, isLoading, isFetching } = useGetWorkspaceSurveysQuery(
     // skipSearchCall
     // ? skipToken
     // :
@@ -78,8 +85,6 @@ const WorkspaceConsole = ({
 
   const surveys = data?.surveys || [];
   const total = data?.totalCount || 0;
-
-  console.log("WorkspaceConsole render", surveys);
 
   const totalPages = Math.ceil(total / limit);
   const pagerEnabled = totalPages > 1;
@@ -103,7 +108,7 @@ const WorkspaceConsole = ({
       default:
         return surveys;
     }
-  }, [data?.surveys, sortBy, workspaceId]);
+  }, [data?.surveys, sortBy]);
 
   useEffect(() => {
     if (workspaceId) {
@@ -219,13 +224,35 @@ const WorkspaceConsole = ({
           // border: "2px solid red",
         }}
       >
-        <SurveysCollection
-          key={workspaceId}
-          surveys={sortedSurveys}
-          workspaceId={workspaceId}
-          workspaceName={workspaceName}
-          viewMode={viewMode}
-        />
+        {isFetching && !isLoading && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 12,
+              right: 12,
+              zIndex: 2,
+            }}
+          >
+            <CircularProgress size={18} />
+          </Box>
+        )}
+
+        {isLoading || !data ? (
+          <CircularProgress size={36} />
+        ) : sortedSurveys.length === 0 ? (
+          <NoSurveysFound
+            workspaceId={workspaceId!}
+            workspaceName={workspaceName}
+          />
+        ) : (
+          <SurveysCollection
+            key={workspaceId}
+            surveys={sortedSurveys}
+            workspaceId={workspaceId}
+            workspaceName={workspaceName}
+            viewMode={viewMode}
+          />
+        )}
       </Box>
       <Box
         sx={{

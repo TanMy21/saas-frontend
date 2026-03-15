@@ -6,6 +6,7 @@ import { apiSlice } from "./api/apiSlice";
 import authReducer from "./slices/authSlice";
 import questionReducer from "./slices/elementSlice";
 import elementTypographyReducer from "./slices/elementTypographySlice";
+import generateQuestionUISlice from "./slices/generateSurveyQuestionSlice";
 import overlaySlice from "./slices/overlaySlice";
 import surveyCanvasReducer from "./slices/surveyCanvasSlice";
 import surveyBuilderReducer from "./slices/surveySlice";
@@ -20,6 +21,7 @@ const store = configureStore({
     surveyBuilder: surveyBuilderReducer,
     surveyCanvas: surveyCanvasReducer,
     overlayUI: overlaySlice,
+    generateQuestionUI: generateQuestionUISlice,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

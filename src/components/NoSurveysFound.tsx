@@ -1,8 +1,21 @@
-import { Box, Typography } from "@mui/material";
+import { useState } from "react";
+
+import { Box, Button, Typography } from "@mui/material";
 
 import empty from "../assets/empty.svg";
 
-const NoSurveysFound = () => {
+import NewSurveyModal from "./Modals/NewSurveyModal";
+
+const NoSurveysFound = ({
+  workspaceId,
+  workspaceName,
+}: {
+  workspaceId: string;
+  workspaceName: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+
   return (
     <Box
       sx={{
@@ -10,14 +23,13 @@ const NoSurveysFound = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: "40%",
         width: "100%",
-        height: "250px",
+        height: "450px",
         // border: "2px solid red",
       }}
     >
       {/* --- SVG --- */}
-      <Box sx={{ width: 200, height: 200, mb: 0.5 }}>
+      <Box sx={{ width: 400, height: 400, mb: 0.5 }}>
         <img
           src={empty}
           style={{ width: "100%", height: "100%" }}
@@ -35,21 +47,38 @@ const NoSurveysFound = () => {
       >
         No surveys yet
       </Typography>
-      <Typography
-        variant="body2"
-        noWrap
+      {/* CTA BUTTON */}
+      <Button
+        onClick={handleOpen}
         sx={{
-          fontSize: "1.2rem",
-          color: "text.secondary",
-          maxWidth: 400,
-          display: "-webkit-box",
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
+          mt: 4,
+          px: 4,
+          py: 1.3,
+          fontSize: "0.95rem",
+          fontWeight: 600,
+          borderRadius: "16px",
+          textTransform: "none",
+          backgroundColor: "#0074EB",
+          color: "#fff",
+          boxShadow: "0px 4px 14px rgba(0,116,235,0.25)",
+          transition: "all 0.2s ease",
+          "&:hover": {
+            backgroundColor: "#005BC4",
+            transform: "translateY(-1px)",
+            boxShadow: "0px 6px 18px rgba(0,116,235,0.35)",
+          },
         }}
       >
-        Create a survey
-      </Typography>
+        Create new survey
+      </Button>
+
+      {/* MODAL */}
+      <NewSurveyModal
+        open={open}
+        onClose={() => setOpen(false)}
+        workspaceId={workspaceId}
+        workspaceName={workspaceName}
+      />
     </Box>
   );
 };

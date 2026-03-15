@@ -5,7 +5,9 @@ import { toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
 import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
+import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
 import { useGenerateSurveyMutation } from "../../app/slices/surveysApiSlice";
+import { useAppDispatch } from "../../app/typedReduxHooks";
 import { LoaderMode } from "../../types/modalTypes";
 import { GenerateSurveyState, nonOrderableTypes } from "../../utils/constants";
 import { GenerateSurveyModalProps } from "../../utils/types";
@@ -45,6 +47,7 @@ const GenerateSurveyModal = ({
   setOpenGenerate,
 }: GenerateSurveyModalProps) => {
   const { surveyID } = useParams();
+  const dispatch = useAppDispatch();
   const { data: elements = [] } = useGetElementsForSurveyQuery(surveyID!);
   const questionCount = elements.filter(
     (el) => el.type && !nonOrderableTypes.includes(el.type),
@@ -79,6 +82,8 @@ const GenerateSurveyModal = ({
         questionTypes: [],
         mode: "REPLACE",
       }).unwrap();
+
+      dispatch(setAiQuestionsJustAdded());
 
       setOpenGenerate?.(false);
     } catch (err) {

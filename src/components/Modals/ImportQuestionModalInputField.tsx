@@ -5,6 +5,8 @@ import { Box, Button, TextField, Tooltip } from "@mui/material";
 import { ReplaceAll, SquarePlus } from "lucide-react";
 import toast from "react-hot-toast";
 
+import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
+import { useAppDispatch } from "../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
 import { ImportQuestionModalInputFieldProps } from "../../utils/types";
 import { ReplaceImportQuestionsDialog } from "../ModalComponents/ReplaceImportQuestionsDialog";
@@ -24,7 +26,7 @@ const ImportQuestionModalInputField = ({
 }: ImportQuestionModalInputFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [confirmReplaceOpen, setConfirmReplaceOpen] = useState(false);
-
+  const dispatch = useAppDispatch();
   const refetchCanvas = useSurveyCanvasRefetch();
 
   const handleChange = (
@@ -47,6 +49,8 @@ const ImportQuestionModalInputField = ({
         inputText: importText,
         mode,
       }).unwrap();
+
+      dispatch(setAiQuestionsJustAdded());
 
       setImportText("");
       refetchCanvas();

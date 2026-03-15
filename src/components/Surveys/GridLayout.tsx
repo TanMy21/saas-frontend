@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
 
 import { WorkspaceLayoutProps } from "../../utils/types";
-import NoSurveysFound from "../NoSurveysFound";
 
 import CreateNewSurveyCard from "./CreateNewSurveyCard";
 import GridSurveyCard from "./GridSurveyCard";
@@ -12,8 +11,6 @@ const GridLayout = ({
   workspaceName,
   viewMode,
 }: WorkspaceLayoutProps) => {
-  const hasSurveys = Array.isArray(surveys) && surveys.length > 0;
-
   return (
     <Box
       sx={{
@@ -48,19 +45,16 @@ const GridLayout = ({
         workspaceName={workspaceName}
         viewMode={"grid"}
       />
-      {hasSurveys ? (
-        surveys.map((survey) => (
-          <GridSurveyCard
-            key={survey.surveyID}
-            survey={survey}
-            workspaceId={workspaceId}
-            workspaceName={workspaceName}
-            viewMode={viewMode}
-          />
-        ))
-      ) : (
-        <NoSurveysFound />
-      )}
+
+      {surveys.map((survey) => (
+        <GridSurveyCard
+          key={survey.surveyID}
+          survey={survey}
+          workspaceId={workspaceId}
+          workspaceName={workspaceName}
+          viewMode={viewMode}
+        />
+      ))}
     </Box>
   );
 };
