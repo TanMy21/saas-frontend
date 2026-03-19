@@ -1,12 +1,8 @@
 import { Box, Stack, Typography, Chip, Grid, Button } from "@mui/material";
 
-import { useGetMeQuery } from "../../app/slices/userApiSlice";
+import { AccountSettings } from "../../types/userTypes";
 
-export default function BillingTab() {
-  const { data: user } = useGetMeQuery("User", {
-    refetchOnMountOrArgChange: true,
-  });
-
+export default function BillingTab({ user }: AccountSettings) {
   return (
     <Box sx={{ p: 4 }}>
       <Box sx={{ mb: 3 }}>

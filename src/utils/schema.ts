@@ -333,3 +333,29 @@ export const generateSurveySchema = z.object({
     .array(z.string())
     .min(1, "Select at least one question type"),
 });
+
+export const OrgRoles = ["ADMIN", "EDITOR", "ANALYST", "VIEWER"] as const;
+
+export type OrgRole = (typeof OrgRoles)[number];
+
+export const createOrgUserSchema = z.object({
+  firstname: z
+    .string()
+    .min(1, "First name is required")
+    .max(50, "First name too long")
+    .trim(),
+
+  lastname: z
+    .string()
+    .min(1, "Last name is required")
+    .max(50, "Last name too long")
+    .trim(),
+
+  email: z.string().trim().email("Invalid email address"),
+
+  role: z.enum(OrgRoles, {
+    errorMap: () => ({
+      message: "Invalid role selected",
+    }),
+  }),
+});

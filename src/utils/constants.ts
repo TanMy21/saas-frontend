@@ -12,6 +12,7 @@ import {
   Shield,
   TimerOff,
   User,
+  UserPlus,
 } from "lucide-react";
 
 import { LoaderMode } from "../types/modalTypes";
@@ -24,6 +25,7 @@ export const VIEW_MODE_KEY = "ws:vm";
 
 export const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: "general", label: "General", icon: User },
+  { id: "create-user", label: "Add Member", icon: UserPlus },
   { id: "security", label: "Security", icon: Shield },
   // { id: "notifications", label: "Notifications", icon: Bell },
   { id: "subscription", label: "Subscription", icon: CreditCard },
@@ -309,3 +311,23 @@ export const OPTION_TYPES: QuestionType[] = [
 ];
 
 export const SINGLE_VALUE_TYPES: QuestionType[] = ["TEXT", "NUMBER", "RANGE"];
+
+
+export const roles = {
+  ADMIN: {
+    label: "Admin",
+    description: "Full access except ownership",
+  },
+  EDITOR: {
+    label: "Editor",
+    description: "Can create and edit surveys",
+  },
+  ANALYST: {
+    label: "Analyst",
+    description: "Can view analytics only",
+  },
+  VIEWER: {
+    label: "Viewer",
+    description: "Read-only access",
+  },
+};

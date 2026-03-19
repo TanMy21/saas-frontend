@@ -6,6 +6,7 @@ import RequireAuth from "../components/auth/RequireAuth";
 import SurveysListMain from "../components/Surveys/SurveysListMain";
 import PublicGuard from "../layouts/PublicGuard";
 import RootLayout from "../layouts/RootLayout";
+import { AcceptInvite } from "../pages/AcceptInvite";
 import Dashboard from "../pages/Dashboard";
 import EmailNotVerified from "../pages/EmailNotVerified";
 import ErrorPage from "../pages/ErrorPage";
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
       },
       { path: "/forgot", element: <ForgotPassword /> },
       { path: "/reset", element: <ResetPassword /> },
+      { path: "/invite/:token", element: <AcceptInvite /> },
       { path: "/verify/:verificationCode", element: <VerifyUser /> },
       { path: "/not-verified", element: <EmailNotVerified /> },
       { path: "/session-expired", element: <LoginAgain /> },

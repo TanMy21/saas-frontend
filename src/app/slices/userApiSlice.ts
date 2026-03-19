@@ -26,6 +26,14 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "User", id: "LIST" }],
     }),
+    createNewUser: builder.mutation({
+      query: (data) => ({
+        url: "/u/create",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: [{ type: "User", id: "LIST" }],
+    }),
     updateUserInfo: builder.mutation({
       query: ({ firstname, lastname, email }) => ({
         url: `/u/update`,
@@ -41,6 +49,16 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         body: updates,
       }),
     }),
+    validateOrganizationInvite: builder.query({
+      query: (token) => `/u/invite/${token}`,
+    }),
+    acceptOrganizationInvite: builder.mutation({
+      query: (body) => ({
+        url: "/u/invite/accept",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -49,6 +67,9 @@ export const {
   useAddNewUserMutation,
   // useUpdateUserMutation,
   // useDeleteUserMutation,
+  useValidateOrganizationInviteQuery,
+  useAcceptOrganizationInviteMutation,
+  useCreateNewUserMutation,
   useResendVerificationEmailMutation,
   useUpdateUserInfoMutation,
   useUpdateUserTourStatusMutation,

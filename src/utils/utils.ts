@@ -431,3 +431,36 @@ export const willLoseOptions = (
     optionCount > 0
   );
 };
+
+//Format the invited user's initials for avatar display
+export const getInitials = (firstname?: string, lastname?: string) => {
+  return `${firstname?.[0] ?? ""}${lastname?.[0] ?? ""}`.toUpperCase();
+};
+
+// Convert the invite expiry time into readable countdown label
+export const getInviteCountdownLabel = (expiresAt: string) => {
+  const expiryMs = new Date(expiresAt).getTime();
+  const diffMs = expiryMs - Date.now();
+
+  if (diffMs <= 0) return "expired";
+
+  const totalMinutes = Math.floor(diffMs / (1000 * 60));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours <= 0) return `${minutes} min`;
+  return `${hours}h ${minutes}m`;
+};
+
+// password strength indicator for UI
+export const getPasswordStrength = (password: string) => {
+  if (!password) return 0;
+
+  let score = 0;
+  if (password.length >= 8) score++;
+  if (/[A-Z]/.test(password)) score++;
+  if (/[0-9]/.test(password)) score++;
+  if (/[^A-Za-z0-9]/.test(password)) score++;
+
+  return score;
+};

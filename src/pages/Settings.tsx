@@ -2,9 +2,11 @@ import { useState } from "react";
 
 import { Box, Grid } from "@mui/material";
 
+import { useGetMeQuery } from "../app/slices/userApiSlice";
 import { SettingsPageHeader } from "../components/DashBoardHeader";
 import ScrollbarStyle from "../components/ScrollbarStyle";
 import BillingTab from "../components/Settings/BillingsTab";
+import CreateOrgUserForm from "../components/Settings/CreateOrgUserForm";
 import AccountSettingsGeneral from "../components/Settings/GeneralSettings";
 import GlassCard from "../components/Settings/GlassCard";
 // import NotificationsTab from "../components/Settings/NotificationsTab";
@@ -16,6 +18,11 @@ import { TabId } from "../utils/types";
 
 const Settings = () => {
   const { scrollStyles } = useAppTheme();
+
+  const { data: user } = useGetMeQuery("User", {
+    refetchOnMountOrArgChange: true,
+  });
+
   const [activeTab, setActiveTab] = useState<TabId>("general");
 
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +50,7 @@ const Settings = () => {
             xs={12}
             sx={{
               overflowY: "hidden",
-              overflowX:"hidden",
+              overflowX: "hidden",
               position: "sticky",
               top: "0",
               width: "100%",
@@ -88,9 +95,15 @@ const Settings = () => {
                   <Grid item xs={12} lg={9}>
                     <GlassCard>
                       {/* Tabs */}
-                      {activeTab === "general" && <AccountSettingsGeneral />}
+                      {activeTab === "general" && (
+                        <AccountSettingsGeneral user={user} />
+                      )}
 
-                      {activeTab === "security" && <SecurityTab />}
+                      {activeTab === "create-user" && (
+                        <CreateOrgUserForm user={user} />
+                      )}
+
+                      {activeTab === "security" && <SecurityTab user={user} />}
 
                       {/* {activeTab === "notifications" && (
                         <NotificationsTab
@@ -99,7 +112,9 @@ const Settings = () => {
                         />
                       )} */}
 
-                      {activeTab === "subscription" && <BillingTab />}
+                      {activeTab === "subscription" && (
+                        <BillingTab user={user} />
+                      )}
 
                       {/* Save Bar  */}
                       {showSaveBar && (

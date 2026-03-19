@@ -84,7 +84,7 @@ export type NotificationSettings = {
   securityAlerts: boolean;
 };
 
-export type TabId = "general" | "security" | "notifications" | "subscription";
+export type TabId = "general" | "security" | "notifications" | "subscription" | "create-user";
 
 export interface BinaryResponseProps {
   questionID?: string;

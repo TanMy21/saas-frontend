@@ -14,17 +14,14 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import { useUpdatePasswordMutation } from "../../app/slices/authApiSlice";
-import { useGetMeQuery } from "../../app/slices/userApiSlice";
+import { AccountSettings } from "../../types/userTypes";
 import { resetPasswordSchema } from "../../utils/schema";
 import { ErrorData, ResetPasswordFormData } from "../../utils/types";
 
-export default function SecurityTab() {
+export default function SecurityTab({ user }: AccountSettings) {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { data: user } = useGetMeQuery("User", {
-    refetchOnMountOrArgChange: true,
-  });
   const email = user?.email ?? "";
 
   const [updatePassword, { isError, error, isSuccess, isLoading }] =
@@ -68,7 +65,7 @@ export default function SecurityTab() {
       const errorData = error as ErrorData;
       if (Array.isArray(errorData?.data?.error)) {
         errorData.data.error.forEach((el: { message: string }) =>
-          toast.error(el.message, { position: "top-right" })
+          toast.error(el.message, { position: "top-right" }),
         );
       } else if (errorData?.data?.message) {
         toast.error(errorData.data.message, { position: "top-right" });
@@ -85,7 +82,7 @@ export default function SecurityTab() {
         <Typography variant="h5" fontWeight={800} color="text.primary">
           Security Settings
         </Typography>
-        <Typography color="text.secondary" sx={{ ml: 0.5}}>
+        <Typography color="text.secondary" sx={{ ml: 0.5 }}>
           Manage your password and security preferences.
         </Typography>
       </Box>

@@ -5,20 +5,14 @@ import { Box, Stack, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-import {
-  useGetMeQuery,
-  useUpdateUserInfoMutation,
-} from "../../app/slices/userApiSlice";
+import { useUpdateUserInfoMutation } from "../../app/slices/userApiSlice";
+import { AccountSettings } from "../../types/userTypes";
 import { updateUserInfoSchema } from "../../utils/schema";
 import { ErrorData, UpdateUserInfoFormData } from "../../utils/types";
 
 import GeneralTab from "./GeneralTab";
 
-export default function AccountSettingsGeneral() {
-  const { data: user } = useGetMeQuery("User", {
-    refetchOnMountOrArgChange: true,
-  });
-
+export default function AccountSettingsGeneral({ user }: AccountSettings) {
   const [updateUserInfo, { isSuccess, isError, error, isLoading }] =
     useUpdateUserInfoMutation();
 
@@ -44,7 +38,7 @@ export default function AccountSettingsGeneral() {
           lastname: user.lastname ?? "",
           email: user.email ?? "",
         },
-        { keepDirtyValues: true }
+        { keepDirtyValues: true },
       );
     }
   }, [user, reset]);
@@ -70,7 +64,7 @@ export default function AccountSettingsGeneral() {
       const e = error as ErrorData;
       if (Array.isArray(e?.data?.error)) {
         e.data.error.forEach((el: { message: string }) =>
-          toast.error(el.message, { position: "top-right" })
+          toast.error(el.message, { position: "top-right" }),
         );
       } else if (e?.data?.message) {
         toast.error(e.data.message, { position: "top-right" });
