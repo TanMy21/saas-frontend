@@ -16,13 +16,13 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
         tagOnly = false,
       }) =>
         `/w/${workspaceId}/surveys?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}&matchMode=${matchMode}&tagOnly=${tagOnly}`,
-      providesTags: (result, error, { workspaceId }) => [
+      providesTags: ({ workspaceId }) => [
         { type: "Surveys", id: workspaceId },
       ],
     }),
     getWorkspaceById: builder.query({
       query: (workspaceId) => `/w/${workspaceId}`,
-      providesTags: (result, error, workspaceId) => [
+      providesTags: (workspaceId) => [
         { type: "Workspaces", id: workspaceId },
       ],
     }),

@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 
 import { useGetWorkspacesQuery } from "../../app/slices/workspaceApiSlice";
+import useAuth from "../../hooks/useAuth";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { Workspace, WorkspaceDropDownMenuProps } from "../../utils/types";
 
@@ -26,6 +27,7 @@ const WorkspacesDropDownMenu = ({
   setDeleteWorkspaceModalOpen,
 }: WorkspaceDropDownMenuProps) => {
   const { iconStyle, grey } = useAppTheme();
+  const { can } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openWorkspaceMenu = Boolean(anchorEl);
 
@@ -91,23 +93,29 @@ const WorkspacesDropDownMenu = ({
                 {workspace?.name}
               </MenuItem>
             ))}
-            <Divider />
-            <NewWorkspaceMenuOption
-              setAnchorEl={setAnchorEl}
-              setOpenModal={setNewWorkspaceModalOpen}
-            />
-            <RenameWorkspaceMenuOption
-              workspaceId={selectedWorkspace?.workspaceId}
-              workspaceName={selectedWorkspace?.name}
-              setAnchorEl={setAnchorEl}
-              setOpenModal={setRenameWorkspaceModalOpen}
-            />
-            <DeleteWorkspaceMenuOption
-              workspaceId={selectedWorkspace?.workspaceId}
-              workspaceName={selectedWorkspace?.name}
-              setAnchorEl={setAnchorEl}
-              setOpenModal={setDeleteWorkspaceModalOpen}
-            />
+            {can("CREATE_WORKSPACE") && <Divider />}{" "}
+            {can("CREATE_WORKSPACE") && (
+              <NewWorkspaceMenuOption
+                setAnchorEl={setAnchorEl}
+                setOpenModal={setNewWorkspaceModalOpen}
+              />
+            )}
+            {can?.("UPDATE_WORKSPACE") && (
+              <RenameWorkspaceMenuOption
+                workspaceId={selectedWorkspace?.workspaceId}
+                workspaceName={selectedWorkspace?.name}
+                setAnchorEl={setAnchorEl}
+                setOpenModal={setRenameWorkspaceModalOpen}
+              />
+            )}
+            {can?.("DELETE_WORKSPACE") && (
+              <DeleteWorkspaceMenuOption
+                workspaceId={selectedWorkspace?.workspaceId}
+                workspaceName={selectedWorkspace?.name}
+                setAnchorEl={setAnchorEl}
+                setOpenModal={setDeleteWorkspaceModalOpen}
+              />
+            )}
           </Menu>
         </Box>
       </Box>

@@ -52,8 +52,6 @@ export default function CreateOrgUserForm({ user }: AccountSettings) {
   }, [firstname, lastname]);
 
   const onSubmit = async (data: CreateOrgUserFormData) => {
-    console.log("Submit Data: ", data);
-
     try {
       await createNewUser({
         ...data,

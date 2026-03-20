@@ -6,6 +6,7 @@ import {
   useGetWorkspacesQuery,
   useUpdateWorkspaceNameMutation,
 } from "../../app/slices/workspaceApiSlice";
+import useAuth from "../../hooks/useAuth";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { WorkspaceToolbarProps } from "../../utils/types";
 import SurveySearchBar from "../Surveys/SurveySearchBar";
@@ -33,6 +34,7 @@ const WorkspaceToolbar = ({
 }: WorkspaceToolbarProps) => {
   const { primary } = useAppTheme();
   const [isEditing, setIsEditing] = useState(false);
+  const { can } = useAuth();
   const [text, setText] = useState(workspaceName);
   const { refetch } = useGetWorkspacesQuery("workspacesList");
   const [updateWorkspaceName] = useUpdateWorkspaceNameMutation();
@@ -56,7 +58,7 @@ const WorkspaceToolbar = ({
 
     if (selectedWorkspace?.workspaceId === updated.workspaceId) {
       setSelectedWorkspace((prev) =>
-        prev ? { ...prev, name: updated.name } : prev
+        prev ? { ...prev, name: updated.name } : prev,
       );
     }
   };
@@ -122,7 +124,7 @@ const WorkspaceToolbar = ({
               },
             }}
           />
-        ) : (
+        ) : can("UPDATE_WORKSPACE") ? (
           <Tooltip title="Click to rename" arrow placement="bottom">
             <Typography
               onClick={() => setIsEditing(true)}
@@ -137,14 +139,13 @@ const WorkspaceToolbar = ({
                   "background-color 120ms ease, box-shadow 120ms ease",
                 cursor: "text",
                 color: "#080F1F",
-                // keep it on one line without jank; clip if ultra long
                 display: "inline-block",
                 whiteSpace: "nowrap",
-                maxWidth: { xs: "70vw", lg: "32vw" }, // ✨ prevent layout break
+                maxWidth: { xs: "70vw", lg: "32vw" },
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 "&:hover": {
-                  backgroundColor: "rgba(2,43,103,0.06)", // ✨ soft hover tint
+                  backgroundColor: "rgba(2,43,103,0.06)",
                   boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4)",
                 },
                 "&:focus": {
@@ -157,13 +158,34 @@ const WorkspaceToolbar = ({
               {workspaceName}
             </Typography>
           </Tooltip>
+        ) : (
+          <Typography
+            variant="h4"
+            component="h2"
+            sx={{
+              fontWeight: 800,
+              lineHeight: 1.2,
+              padding: "6px 8px",
+              borderRadius: 2,
+              color: "#080F1F",
+              display: "inline-block",
+              whiteSpace: "nowrap",
+              maxWidth: { xs: "70vw", lg: "32vw" },
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {workspaceName}
+          </Typography>
         )}
-        <Box>
-          <WorkspaceDropDown
-            selectedWorkspace={selectedWorkspace}
-            setSelectedWorkspace={setSelectedWorkspace}
-          />
-        </Box>
+        {(can("UPDATE_WORKSPACE") || can("DELETE_WORKSPACE")) && (
+          <Box>
+            <WorkspaceDropDown
+              selectedWorkspace={selectedWorkspace}
+              setSelectedWorkspace={setSelectedWorkspace}
+            />
+          </Box>
+        )}
       </Box>
       <Box
         sx={{

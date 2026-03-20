@@ -1,3 +1,5 @@
+export type Role = "OWNER" | "ADMIN" | "EDITOR" | "ANALYST" | "VIEWER";
+
 export interface OrganizationSummary {
   orgID: string;
   organizationName: string;
@@ -7,7 +9,7 @@ export interface OrganizationSummary {
 
 export interface OrganizationMembership {
   relatedOrgID: string;
-  role: "OWNER" | "ADMIN" | "EDITOR" | "ANALYST" | "VIEWER";
+  role: Role;
   organization: OrganizationSummary;
 }
 
@@ -40,5 +42,5 @@ export type CreateOrgUserFormData = {
   lastname: string;
   email: string;
   role: string;
-  orgID:string;
+  orgID: string;
 };

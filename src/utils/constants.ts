@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { LoaderMode } from "../types/modalTypes";
+import { Role } from "../types/userTypes";
 
 import { NotificationSettings, QuestionType, TabId } from "./types";
 
@@ -312,16 +313,15 @@ export const OPTION_TYPES: QuestionType[] = [
 
 export const SINGLE_VALUE_TYPES: QuestionType[] = ["TEXT", "NUMBER", "RANGE"];
 
-
 export const roles = {
   ADMIN: {
     label: "Admin",
     description: "Full access except ownership",
   },
-  EDITOR: {
-    label: "Editor",
-    description: "Can create and edit surveys",
-  },
+  // EDITOR: {
+  //   label: "Editor",
+  //   description: "Can create and edit surveys",
+  // },
   ANALYST: {
     label: "Analyst",
     description: "Can view analytics only",
@@ -331,3 +331,25 @@ export const roles = {
     description: "Read-only access",
   },
 };
+
+export const rolePermissionsMap: Record<Role, readonly string[]> = {
+  OWNER: [
+    "INVITE_USER",
+    "ASSIGN_ADMIN",
+    "ASSIGN_ANALYST",
+    "ASSIGN_VIEWER",
+    "CREATE_WORKSPACE",
+    "UPDATE_WORKSPACE",
+    "DELETE_WORKSPACE",
+  ],
+  ADMIN: [
+    "INVITE_USER",
+    "ASSIGN_ANALYST",
+    "ASSIGN_VIEWER",
+    "CREATE_WORKSPACE",
+    "UPDATE_WORKSPACE",
+  ],
+  ANALYST: [],
+  EDITOR: [],
+  VIEWER: [],
+} as const;

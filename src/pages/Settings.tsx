@@ -13,11 +13,13 @@ import GlassCard from "../components/Settings/GlassCard";
 import SaveBar from "../components/Settings/SaveBar";
 import SecurityTab from "../components/Settings/SecurityTab";
 import SidebarNav from "../components/Settings/SideBarNav";
+import useAuth from "../hooks/useAuth";
 import { useAppTheme } from "../theme/useAppTheme";
 import { TabId } from "../utils/types";
 
 const Settings = () => {
   const { scrollStyles } = useAppTheme();
+  const { can } = useAuth();
 
   const { data: user } = useGetMeQuery("User", {
     refetchOnMountOrArgChange: true,
@@ -99,7 +101,7 @@ const Settings = () => {
                         <AccountSettingsGeneral user={user} />
                       )}
 
-                      {activeTab === "create-user" && (
+                      {activeTab === "create-user" && can("INVITE_USER") && (
                         <CreateOrgUserForm user={user} />
                       )}
 

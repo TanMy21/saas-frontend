@@ -24,6 +24,7 @@ import {
 import { useImportQuestionsMutation } from "../app/slices/elementApiSlice";
 import { useGenerateSurveyMutation } from "../app/slices/surveysApiSlice";
 import { useResendVerificationEmailMutation } from "../app/slices/userApiSlice";
+import { Role } from "../types/userTypes";
 
 import { generateSurveySchema } from "./schema";
 
@@ -84,7 +85,12 @@ export type NotificationSettings = {
   securityAlerts: boolean;
 };
 
-export type TabId = "general" | "security" | "notifications" | "subscription" | "create-user";
+export type TabId =
+  | "general"
+  | "security"
+  | "notifications"
+  | "subscription"
+  | "create-user";
 
 export interface BinaryResponseProps {
   questionID?: string;
@@ -251,7 +257,7 @@ export interface ElementListItemProps {
   displayedQuestions: Element[];
   nonOrderableTypes: string[];
   setQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
-    newQuestionIds?: Set<string>;
+  newQuestionIds?: Set<string>;
 }
 
 export interface ElementProps {
@@ -650,6 +656,7 @@ export interface ICustomePayload extends JwtPayload {
     email?: string;
     admin?: boolean;
     verified?: boolean;
+    role: Role;
   };
   exp?: number;
 }

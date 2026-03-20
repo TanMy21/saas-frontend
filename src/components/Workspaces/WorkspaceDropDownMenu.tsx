@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Trash } from "lucide-react";
 
+import useAuth from "../../hooks/useAuth";
 import { WorkspaceDropDownMenu } from "../../utils/types";
 import DeleteWorkspaceModal from "../Modals/DeleteWorkspaceModal";
 import RenameWorkspaceModal from "../Modals/RenameWorkspaceModal";
@@ -22,7 +23,7 @@ const WorkspaceDropDown = ({
   setSelectedWorkspace,
 }: WorkspaceDropDownMenu) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-
+  const { can } = useAuth();
   const [openRenameModel, setOpenRenameModel] = useState(false);
   const [openDeleteModel, setOpenDeleteModel] = useState(false);
 

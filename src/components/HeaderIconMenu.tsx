@@ -42,10 +42,6 @@ const HeaderIconMenu = () => {
 
   const [sendLogout, { isSuccess: isSuccessLogout }] = useSendLogoutMutation();
 
-  useEffect(() => {
-    if (isSuccessLogout) navigate("/");
-  }, [isSuccessLogout, navigate]);
-
   const onLogoutClick = () => {
     handleClose();
     setPersist(false);
@@ -53,7 +49,7 @@ const HeaderIconMenu = () => {
 
     // setTimeout(() => {
     sendLogout();
-    navigate("/?logout=success");
+    // navigate("/?logout=success");
     // }, 1000);
   };
 
@@ -66,6 +62,10 @@ const HeaderIconMenu = () => {
     handleClose();
     navigate("/dash");
   };
+
+  useEffect(() => {
+    if (isSuccessLogout) navigate("/?logout=success");
+  }, [isSuccessLogout, navigate]);
 
   return (
     <>

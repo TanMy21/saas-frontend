@@ -24,7 +24,7 @@ const Dashboard = () => {
   const { background, brand } = useAppTheme();
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector(selectUser);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, can } = useAuth();
   const [stepIndex, setStepIndex] = useState(0);
   const [runTour, setRunTour] = useState(false);
   const [newWorkspaceModalOpen, setNewWorkspaceModalOpen] = useState(false);
@@ -68,24 +68,41 @@ const Dashboard = () => {
   }, [isErrorWorkspaces, workspaceError]);
 
   useEffect(() => {
+    // --- Guard: wait for data ---
     if (!isSuccess || !workspaces?.length) return;
 
+    // --- Prevent overriding user selection ---
     if (selectedWorkspace) return;
 
     try {
+      // --- 1. Try localStorage ---
       const lastId = localStorage.getItem(LAST_WS_KEY);
+
       if (lastId) {
         const found = workspaces.find(
           (w: Workspace) => w.workspaceId === lastId,
         );
+
         if (found) {
           setSelectedWorkspace(found);
-          return;
+          return; // ✅ stop if found
         }
       }
 
+      // --- 2. Try "My Workspace" ---
+      const myWorkspace = workspaces.find(
+        (w: Workspace) => w.name === "My Workspace",
+      );
+
+      if (myWorkspace) {
+        setSelectedWorkspace(myWorkspace);
+        return;
+      }
+
+      // --- 3. Fallback to first workspace ---
       setSelectedWorkspace(workspaces[0]);
-    } catch {
+    } catch (error) {
+      // --- Safe fallback ---
       setSelectedWorkspace(workspaces[0]);
     }
   }, [isSuccess, workspaces, selectedWorkspace]);
@@ -229,23 +246,29 @@ const Dashboard = () => {
         </Box>
       </Box>
 
-      <NewWorkspaceModal
-        open={newWorkspaceModalOpen}
-        onClose={() => setNewWorkspaceModalOpen(false)}
-      />
+      {can?.("CREATE_WORKSPACE") && (
+        <NewWorkspaceModal
+          open={newWorkspaceModalOpen}
+          onClose={() => setNewWorkspaceModalOpen(false)}
+        />
+      )}
 
-      <RenameWorkspaceModal
-        open={renameWorkspaceModalOpen}
-        onClose={() => setRenameWorkspaceModalOpen(false)}
-        selectedWorkspace={selectedWorkspace!}
-        setSelectedWorkspace={setSelectedWorkspace}
-      />
+      {can?.("UPDATE_WORKSPACE") && (
+        <RenameWorkspaceModal
+          open={renameWorkspaceModalOpen}
+          onClose={() => setRenameWorkspaceModalOpen(false)}
+          selectedWorkspace={selectedWorkspace!}
+          setSelectedWorkspace={setSelectedWorkspace}
+        />
+      )}
 
-      <DeleteWorkspaceModal
-        open={deleteWorkspaceModalOpen}
-        onClose={() => setDeleteWorkspaceModalOpen(false)}
-        selectedWorkspace={selectedWorkspace!}
-      />
+      {can?.("DELETE_WORKSPACE") && (
+        <DeleteWorkspaceModal
+          open={deleteWorkspaceModalOpen}
+          onClose={() => setDeleteWorkspaceModalOpen(false)}
+          selectedWorkspace={selectedWorkspace!}
+        />
+      )}
       <SpinnerBackdrop />
     </>
   );
