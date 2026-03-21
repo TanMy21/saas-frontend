@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 
 import empty from "../assets/empty.svg";
+import useAuth from "../hooks/useAuth";
 
 import NewSurveyModal from "./Modals/NewSurveyModal";
 
@@ -13,6 +14,7 @@ const NoSurveysFound = ({
   workspaceId: string;
   workspaceName: string;
 }) => {
+  const { can } = useAuth();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
 
@@ -48,37 +50,41 @@ const NoSurveysFound = ({
         No surveys yet
       </Typography>
       {/* CTA BUTTON */}
-      <Button
-        onClick={handleOpen}
-        sx={{
-          mt: 4,
-          px: 4,
-          py: 1.3,
-          fontSize: "0.95rem",
-          fontWeight: 600,
-          borderRadius: "16px",
-          textTransform: "none",
-          backgroundColor: "#0074EB",
-          color: "#fff",
-          boxShadow: "0px 4px 14px rgba(0,116,235,0.25)",
-          transition: "all 0.2s ease",
-          "&:hover": {
-            backgroundColor: "#005BC4",
-            transform: "translateY(-1px)",
-            boxShadow: "0px 6px 18px rgba(0,116,235,0.35)",
-          },
-        }}
-      >
-        Create new survey
-      </Button>
+      {can?.("CREATE_SURVEY") && (
+        <Button
+          onClick={handleOpen}
+          sx={{
+            mt: 4,
+            px: 4,
+            py: 1.3,
+            fontSize: "0.95rem",
+            fontWeight: 600,
+            borderRadius: "16px",
+            textTransform: "none",
+            backgroundColor: "#0074EB",
+            color: "#fff",
+            boxShadow: "0px 4px 14px rgba(0,116,235,0.25)",
+            transition: "all 0.2s ease",
+            "&:hover": {
+              backgroundColor: "#005BC4",
+              transform: "translateY(-1px)",
+              boxShadow: "0px 6px 18px rgba(0,116,235,0.35)",
+            },
+          }}
+        >
+          Create new survey
+        </Button>
+      )}
 
       {/* MODAL */}
-      <NewSurveyModal
-        open={open}
-        onClose={() => setOpen(false)}
-        workspaceId={workspaceId}
-        workspaceName={workspaceName}
-      />
+      {can?.("CREATE_SURVEY") && (
+        <NewSurveyModal
+          open={open}
+          onClose={() => setOpen(false)}
+          workspaceId={workspaceId}
+          workspaceName={workspaceName}
+        />
+      )}
     </Box>
   );
 };

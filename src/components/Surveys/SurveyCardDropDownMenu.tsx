@@ -24,6 +24,7 @@ import {
 } from "../../app/slices/surveysApiSlice";
 import { useGetWorkspacesQuery } from "../../app/slices/workspaceApiSlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
+import useAuth from "../../hooks/useAuth";
 import {
   Workspace,
   SurveyDropDownMenuProps,
@@ -42,6 +43,7 @@ const SurveyCardDropDownMenu = ({
   const { shareID, surveyID } = survey;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { can } = useAuth();
 
   const shareBaseURL = import.meta.env.VITE_SHARE_BASE_URL;
   const shareURL = `${shareBaseURL}/${shareID}`;
@@ -219,7 +221,7 @@ const SurveyCardDropDownMenu = ({
         errorData.data.error.forEach(() =>
           toast.error("Error Copying survey", {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
@@ -234,7 +236,7 @@ const SurveyCardDropDownMenu = ({
         moveErrorData.data.error.forEach(() =>
           toast.error("Error Moving Survey", {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(moveErrorData.data.message, {
@@ -249,7 +251,7 @@ const SurveyCardDropDownMenu = ({
         duplicateErrorData.data.error.forEach(() =>
           toast.error("Error Duplicating Survey", {
             position: "top-right",
-          })
+          }),
         );
       }
     }
@@ -346,10 +348,50 @@ const SurveyCardDropDownMenu = ({
             >
               Open
             </MenuItem>
+
             <Divider sx={{ my: 0.5, opacity: 0.7 }} />
-            {published ? (
+
+            {can?.("UPDATE_SURVEY") &&
+              (published ? (
+                <MenuItem
+                  onClick={handleShareSurvey}
+                  sx={{
+                    gap: 1.25,
+                    px: 1.5,
+                    py: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    transition: "all 0.2s ease",
+                    color: " #374151",
+                  }}
+                >
+                  Share
+                </MenuItem>
+              ) : (
+                <MenuItem
+                  onClick={() => handlePublish(surveyID)}
+                  sx={{
+                    gap: 1.25,
+                    px: 1.5,
+                    py: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    transition: "all 0.2s ease",
+                    color: " #374151",
+                  }}
+                >
+                  Publish
+                </MenuItem>
+              ))}
+            {can?.("UPDATE_SURVEY") && (
               <MenuItem
-                onClick={handleShareSurvey}
+                onClick={handleOpenTagsModal}
                 sx={{
                   gap: 1.25,
                   px: 1.5,
@@ -363,44 +405,9 @@ const SurveyCardDropDownMenu = ({
                   color: " #374151",
                 }}
               >
-                Share
-              </MenuItem>
-            ) : (
-              <MenuItem
-                onClick={() => handlePublish(surveyID)}
-                sx={{
-                  gap: 1.25,
-                  px: 1.5,
-                  py: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  transition: "all 0.2s ease",
-                  color: " #374151",
-                }}
-              >
-                Publish
+                Tags
               </MenuItem>
             )}
-            <MenuItem
-              onClick={handleOpenTagsModal}
-              sx={{
-                gap: 1.25,
-                px: 1.5,
-                py: 1,
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                fontSize: 16,
-                fontWeight: 600,
-                transition: "all 0.2s ease",
-                color: " #374151",
-              }}
-            >
-              Tags
-            </MenuItem>
             <MenuItem
               onClick={handleOpenResultsPage}
               sx={{
@@ -418,7 +425,60 @@ const SurveyCardDropDownMenu = ({
             >
               Results
             </MenuItem>
-            <Divider
+            {can?.("UPDATE_SURVEY") && (
+              <Divider
+                sx={{
+                  my: 0.5,
+                  opacity: 0.7,
+                  display: "flex",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  transition: "all 0.2s ease",
+                  color: " #374151",
+                }}
+              />
+            )}
+            {can?.("UPDATE_SURVEY") && (
+              <MenuItem
+                onClick={handleOpenModalRename}
+                sx={{
+                  gap: 1.25,
+                  px: 1.5,
+                  py: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  transition: "all 0.2s ease",
+                  color: " #374151",
+                }}
+              >
+                Rename
+              </MenuItem>
+            )}
+            {can?.("CREATE_SURVEY") && (
+              <MenuItem
+                onClick={() => handleDuplicateSurvey(surveyID)}
+                sx={{
+                  gap: 1.25,
+                  px: 1.5,
+                  py: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  transition: "all 0.2s ease",
+                  color: " #374151",
+                }}
+              >
+                Duplicate
+              </MenuItem>
+            )}
+           {can?.("UPDATE_SURVEY") && (       <Divider
               sx={{
                 my: 0.5,
                 opacity: 0.7,
@@ -430,71 +490,10 @@ const SurveyCardDropDownMenu = ({
                 transition: "all 0.2s ease",
                 color: " #374151",
               }}
-            />
-            <MenuItem
-              onClick={handleOpenModalRename}
-              sx={{
-                gap: 1.25,
-                px: 1.5,
-                py: 1,
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                fontSize: 16,
-                fontWeight: 600,
-                transition: "all 0.2s ease",
-                color: " #374151",
-              }}
-            >
-              Rename
-            </MenuItem>
-            <MenuItem
-              onClick={() => handleDuplicateSurvey(surveyID)}
-              sx={{
-                gap: 1.25,
-                px: 1.5,
-                py: 1,
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                fontSize: 16,
-                fontWeight: 600,
-                transition: "all 0.2s ease",
-                color: " #374151",
-              }}
-            >
-              Duplicate
-            </MenuItem>
-            <Divider
-              sx={{
-                my: 0.5,
-                opacity: 0.7,
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                fontSize: 16,
-                fontWeight: 600,
-                transition: "all 0.2s ease",
-                color: " #374151",
-              }}
-            />
-            <MenuItem
-              onClick={() => handleNestedOpen("copy to")}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                fontSize: 16,
-                fontWeight: 600,
-                transition: "all 0.2s ease",
-                color: " #374151",
-                justifyContent: "space-between",
-                gap: 6,
-                px: 1.5,
-                py: 1,
-              }}
-            >
-              <Box
+            />)}
+            {can("CREATE_SURVEY") && (
+              <MenuItem
+                onClick={() => handleNestedOpen("copy to")}
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -503,66 +502,89 @@ const SurveyCardDropDownMenu = ({
                   fontWeight: 600,
                   transition: "all 0.2s ease",
                   color: " #374151",
-                  gap: 1.25,
+                  justifyContent: "space-between",
+                  gap: 6,
+                  px: 1.5,
+                  py: 1,
                 }}
               >
-                Copy To
-              </Box>
-              <ChevronRightIcon />
-            </MenuItem>
-            <MenuItem
-              onClick={() => handleNestedOpen("move to")}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                fontSize: 16,
-                fontWeight: 600,
-                transition: "all 0.2s ease",
-                color: " #374151",
-                justifyContent: "space-between",
-                px: 1.5,
-                py: 1,
-              }}
-            >
-              <Box
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    transition: "all 0.2s ease",
+                    color: " #374151",
+                    gap: 1.25,
+                  }}
+                >
+                  Copy To
+                </Box>
+                <ChevronRightIcon />
+              </MenuItem>
+            )}
+            {can("UPDATE_SURVEY") && (
+              <MenuItem
+                onClick={() => handleNestedOpen("move to")}
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 1.25,
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  transition: "all 0.2s ease",
+                  color: " #374151",
+                  justifyContent: "space-between",
+                  px: 1.5,
+                  py: 1,
                 }}
               >
-                Move To
-              </Box>
-              <ChevronRightIcon />
-            </MenuItem>
-            <Divider sx={{ my: 0.5, opacity: 0.7 }} />
-            <MenuItem
-              onClick={handleOpenModalDelete}
-              sx={{
-                gap: 1.25,
-                px: 1.5,
-                py: 1,
-                fontWeight: 600,
-                color: (t: Theme) =>
-                  t.palette.mode === "dark"
-                    ? t.palette.error.light
-                    : t.palette.error.main, // ✨
-                "&:hover": {
-                  backgroundColor: (t: Theme) =>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.25,
+                  }}
+                >
+                  Move To
+                </Box>
+                <ChevronRightIcon />
+              </MenuItem>
+            )}
+            {can?.("UPDATE_SURVEY") && (
+              <Divider sx={{ my: 0.5, opacity: 0.7 }} />
+            )}
+            {can?.("DELETE_SURVEY") && (
+              <MenuItem
+                onClick={handleOpenModalDelete}
+                disabled={!can?.("DELETE_SURVEY")}
+                sx={{
+                  gap: 1.25,
+                  px: 1.5,
+                  py: 1,
+                  fontWeight: 600,
+                  color: (t: Theme) =>
                     t.palette.mode === "dark"
-                      ? "rgba(244,67,54,.12)"
-                      : "rgba(244,67,54,.06)", // ✨
-                },
-              }}
-            >
-              <DeleteIcon sx={{ color: "#D32F2F" }} /> Delete
-            </MenuItem>
+                      ? t.palette.error.light
+                      : t.palette.error.main, // ✨
+                  "&:hover": {
+                    backgroundColor: (t: Theme) =>
+                      t.palette.mode === "dark"
+                        ? "rgba(244,67,54,.12)"
+                        : "rgba(244,67,54,.06)", // ✨
+                  },
+                }}
+              >
+                <DeleteIcon sx={{ color: "#D32F2F" }} /> Delete
+              </MenuItem>
+            )}
           </Box>
         )}
 
         {/* Nested Copy To Menu */}
-        {currentMenu === "copy to" && (
+        {currentMenu === "copy to" && can?.("CREATE_SURVEY") && (
           <Box>
             <MenuItem
               onClick={() => setCurrentMenu("parent")}
@@ -594,7 +616,7 @@ const SurveyCardDropDownMenu = ({
         )}
 
         {/* Nested Move To Menu */}
-        {currentMenu === "move to" && (
+        {currentMenu === "move to" && can?.("UPDATE_SURVEY") && (
           <Box>
             <MenuItem
               onClick={() => setCurrentMenu("parent")}
@@ -612,7 +634,9 @@ const SurveyCardDropDownMenu = ({
               <ChevronLeftIcon />
               Move To
             </MenuItem>
-            <Divider sx={{ my: 0.5, opacity: 0.7 }} /> {/* ✨ */}
+            {can?.("UPDATE_SURVEY") && (
+              <Divider sx={{ my: 0.5, opacity: 0.7 }} />
+            )}
             {workspaces?.map((workspace: Workspace) => (
               <MenuItem
                 key={workspace.workspaceId}
@@ -627,23 +651,31 @@ const SurveyCardDropDownMenu = ({
       </Menu>
 
       {/* Remame Modal */}
-      <RenameSurveyModal
-        open={openRenameModal}
-        onClose={() => setOpenRenameModal(false)}
-        survey={survey}
-      />
+      {can("UPDATE_SURVEY") && (
+        <RenameSurveyModal
+          open={openRenameModal}
+          onClose={() => setOpenRenameModal(false)}
+          survey={survey}
+        />
+      )}
+
       {/* Delete Modal */}
-      <DeleteSurveyModal
-        open={openDeleteModal}
-        onClose={() => setOpenDeleteModal(false)}
-        sID={survey.surveyID}
-        sTitle={survey.title}
-      />
-      <SurveyTagsModal
-        open={openTagsModal}
-        onClose={() => setOpenTagsModal(false)}
-        survey={survey}
-      />
+      {can("DELETE_SURVEY") && (
+        <DeleteSurveyModal
+          open={openDeleteModal}
+          onClose={() => setOpenDeleteModal(false)}
+          sID={survey.surveyID}
+          sTitle={survey.title}
+        />
+      )}
+
+      {can("UPDATE_SURVEY") && (
+        <SurveyTagsModal
+          open={openTagsModal}
+          onClose={() => setOpenTagsModal(false)}
+          survey={survey}
+        />
+      )}
 
       <SnackbarAlert
         openSnackbar={openSnackbar}

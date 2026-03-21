@@ -15,6 +15,7 @@ import {
 } from "../../app/slices/overlaySlice";
 import { RootState } from "../../app/store";
 import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
+import useAuth from "../../hooks/useAuth";
 import { DockItemProps, SurveyIslandProps } from "../../utils/types";
 import GenerateSurveyModal from "../GenerateSurveyModal/GenerateSurveyModal";
 import ShareSurveyModal from "../Modals/ShareSurveyModal";
@@ -187,8 +188,9 @@ const SurveyBuilderDock = ({
 }: SurveyIslandProps) => {
   const dispatch = useAppDispatch();
   const { surveyID } = useParams();
+  const { can } = useAuth();
   const prevPublishedRef = useRef<boolean | null>(null);
-
+  const canUpdateSurvey = can?.("UPDATE_SURVEY");
   const openGenerateState = useAppSelector(
     (state: RootState) => state.surveyBuilder.isGenerateModalOpen,
   );
@@ -225,27 +227,31 @@ const SurveyBuilderDock = ({
           dispatch(openShareModal());
         }
       },
+      visible: can?.("UPDATE_SURVEY"),
     },
     {
       id: "settings",
       icon: <IoMdSettings />,
       label: "Settings",
       action: () => setOpenSettings(true),
+      visible: can?.("UPDATE_SURVEY"),
     },
     {
       id: "import",
       icon: <UploadIcon />,
       label: "Import questions",
       action: () => onOpenImport(),
+      visible: can?.("UPDATE_SURVEY"),
     },
     {
       id: "generate",
       icon: <RiAiGenerate />,
       label: "Generate questions",
       action: () => setOpenGenerate(true),
+      visible: can?.("UPDATE_SURVEY"),
     },
   ];
-
+  const visibleItems = items.filter((item) => item.visible);
   useEffect(() => {
     const prev = prevPublishedRef.current;
     if (prev === false && published === true) {
@@ -255,7 +261,7 @@ const SurveyBuilderDock = ({
     }
     prevPublishedRef.current = published ?? null;
   }, [published, dispatch]);
-
+  console.log("canUpdateSurvey:", can?.("UPDATE_SURVEY"));
   return (
     <>
       <Box
@@ -287,25 +293,27 @@ const SurveyBuilderDock = ({
       >
         <ViewIconSegment onChange={(val) => setDisplay(val)} />
 
-        <Box
-          sx={{
-            width: 1,
-            height: 28,
-            mx: 0.5,
-            borderRight: "1px solid #E5E7EB",
-          }}
-        />
-
-        {items.map(({ id, icon, label, action }) => (
+        {can("UPDATE_SURVEY") && (
+          <Box
+            sx={{
+              width: 1,
+              height: 28,
+              mx: 0.5,
+              borderRight: "1px solid #E5E7EB",
+            }}
+          />
+        )}
+        {visibleItems.map((item, index) => (
           <DockItem
-            key={id}
-            action={action}
-            icon={icon}
-            label={label}
-            isHovered={hovered === id}
+            key={item.id}
+            action={item.action}
+            icon={item.icon}
+            label={item.label}
+            isHovered={hovered === item.id}
             setHovered={setHovered}
-            id={id}
-            withDividerLeft={id === "import"}
+            id={item.id}
+            withDividerLeft={item.id === "import"}
+            // withDividerLeft={index === 1}
           />
         ))}
 
@@ -317,17 +325,21 @@ const SurveyBuilderDock = ({
           setOpenSnackbar={setOpenSnackbar}
           shareID={shareID}
         />
-        {/* <SurveyTitleEditModal openEdit={openEdit} setOpenEdit={setOpenEdit} /> */}
-        <SurveySettingsModal
-          surveyID={surveyID!}
-          openSettings={openSettings}
-          setOpenSettings={setOpenSettings}
-        />
 
-        <GenerateSurveyModal
-          openGenerate={openGenerate}
-          setOpenGenerate={setOpenGenerate}
-        />
+        {can?.("UPDATE_SURVEY") && (
+          <SurveySettingsModal
+            surveyID={surveyID!}
+            openSettings={openSettings}
+            setOpenSettings={setOpenSettings}
+          />
+        )}
+
+        {can?.("UPDATE_SURVEY") && (
+          <GenerateSurveyModal
+            openGenerate={openGenerate}
+            setOpenGenerate={setOpenGenerate}
+          />
+        )}
       </Box>
       <SnackbarAlert
         openSnackbar={openSnackbar}
@@ -347,7 +359,7 @@ const DockItem = ({
   withDividerLeft = false,
 }: DockItemProps) => {
   const size = isHovered ? HOVER_BUTTON_SIZE : DEFAULT_BUTTON_SIZE;
-
+  console.log("withDividerLeft:", withDividerLeft);
   return (
     <Tooltip
       title={label}

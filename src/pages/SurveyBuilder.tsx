@@ -18,6 +18,7 @@ import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSid
 import SurveyPreferencesPanel from "../components/Surveys/SurveyPreferencesPanel";
 import { SurveyCanvasRefetchContext } from "../context/BuilderRefetchCanvas";
 // import useBuilderTourEnable from "../hooks/useBuilderTourEnable";
+import useAuth from "../hooks/useAuth";
 import { useCanvasLoadingAndError } from "../hooks/useCanvasLoadingandError";
 import useFetchAuthenticatedUser from "../hooks/useFetchAuthenticatedUser";
 import { usePersistedSelectedQuestion } from "../hooks/usePersistSelectedQuestion";
@@ -30,6 +31,7 @@ import { Element, LocationStateProps } from "../utils/types";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
+  const { can } = useAuth();
   const dispatch = useAppDispatch();
   const location = useLocation();
 
@@ -219,18 +221,24 @@ const SurveyBuilder = () => {
               />
             </Box>
           </Box>
-          <CreateNewSurveyModal
-            isOpen={openScratch}
-            onClose={() => setOpenScratch(false)}
-            surveyID={surveyID}
-            setSurveyTitle={setSurveyTitle}
-          />
-          <ImportQuestionsModal
-            isOpen={openImportLocal}
-            surveyID={surveyID}
-            onClose={() => setOpenImportLocal(false)}
-          />
-          <GenerateSurveyModal openGenerate={isOpenGenerate} />
+          {can?.("CREATE_SURVEY") && (
+            <CreateNewSurveyModal
+              isOpen={openScratch}
+              onClose={() => setOpenScratch(false)}
+              surveyID={surveyID}
+              setSurveyTitle={setSurveyTitle}
+            />
+          )}
+          {can?.("CREATE_SURVEY") && (
+            <ImportQuestionsModal
+              isOpen={openImportLocal}
+              surveyID={surveyID}
+              onClose={() => setOpenImportLocal(false)}
+            />
+          )}
+          {can?.("CREATE_SURVEY") && (
+            <GenerateSurveyModal openGenerate={isOpenGenerate} />
+          )}
         </Box>
       </SurveyCanvasRefetchContext.Provider>
     </>

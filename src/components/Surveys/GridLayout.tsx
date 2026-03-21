@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 
+import useAuth from "../../hooks/useAuth";
 import { WorkspaceLayoutProps } from "../../utils/types";
 
 import CreateNewSurveyCard from "./CreateNewSurveyCard";
@@ -11,6 +12,8 @@ const GridLayout = ({
   workspaceName,
   viewMode,
 }: WorkspaceLayoutProps) => {
+  const { can } = useAuth();
+
   return (
     <Box
       sx={{
@@ -40,11 +43,13 @@ const GridLayout = ({
         // border: "2px solid green",
       }}
     >
-      <CreateNewSurveyCard
-        workspaceId={workspaceId}
-        workspaceName={workspaceName}
-        viewMode={"grid"}
-      />
+      {can?.("CREATE_SURVEY") && (
+        <CreateNewSurveyCard
+          workspaceId={workspaceId}
+          workspaceName={workspaceName}
+          viewMode={"grid"}
+        />
+      )}
 
       {surveys.map((survey) => (
         <GridSurveyCard

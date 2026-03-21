@@ -341,6 +341,9 @@ export const rolePermissionsMap: Record<Role, readonly string[]> = {
     "CREATE_WORKSPACE",
     "UPDATE_WORKSPACE",
     "DELETE_WORKSPACE",
+    "CREATE_SURVEY",
+    "UPDATE_SURVEY",
+    "DELETE_SURVEY",
   ],
   ADMIN: [
     "INVITE_USER",
@@ -348,6 +351,8 @@ export const rolePermissionsMap: Record<Role, readonly string[]> = {
     "ASSIGN_VIEWER",
     "CREATE_WORKSPACE",
     "UPDATE_WORKSPACE",
+    "CREATE_SURVEY",
+    "UPDATE_SURVEY",
   ],
   ANALYST: [],
   EDITOR: [],
