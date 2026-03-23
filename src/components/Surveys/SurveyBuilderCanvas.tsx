@@ -7,6 +7,7 @@ import { RootState } from "../../app/store";
 import { useAppSelector } from "../../app/typedReduxHooks";
 import { elementComponents } from "../../utils/elementsConfig";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
+import { Can } from "../auth/Can";
 import DevicePreview from "../DevicePreview";
 
 import ElementBackgroundPreferencesButtons from "./ElementBackgroundPreferencesButtons";
@@ -78,29 +79,31 @@ const SurveyBuilderCanvas = ({
       }}
     >
       <DevicePreview display={display}>
-        {questionType !== "THREE_D" && (
-          <>
-            <ElementBackgroundPreferencesButtons
-              questionID={question?.questionID!}
-              colorAnchorEl={colorAnchorEl}
-              setColorAnchorEl={setColorAnchorEl}
-            />
+        <Can permission={"UPDATE_QUESTION"}>
+          {questionType !== "THREE_D" && (
+            <>
+              <ElementBackgroundPreferencesButtons
+                questionID={question?.questionID!}
+                colorAnchorEl={colorAnchorEl}
+                setColorAnchorEl={setColorAnchorEl}
+              />
 
-            <ElementBackgroundPreferencesRemoveButtons
-              questionID={question?.questionID!}
-              templateImage={templateImage!}
-              questionBackgroundColor={
-                question?.questionPreferences?.questionBackgroundColor!
-              }
-            />
+              <ElementBackgroundPreferencesRemoveButtons
+                questionID={question?.questionID!}
+                templateImage={templateImage!}
+                questionBackgroundColor={
+                  question?.questionPreferences?.questionBackgroundColor!
+                }
+              />
 
-            <QuestionBackgroundColor
-              questionID={question?.questionID!}
-              colorAnchorEl={colorAnchorEl}
-              setColorAnchorEl={setColorAnchorEl}
-            />
-          </>
-        )}
+              <QuestionBackgroundColor
+                questionID={question?.questionID!}
+                colorAnchorEl={colorAnchorEl}
+                setColorAnchorEl={setColorAnchorEl}
+              />
+            </>
+          )}
+        </Can>
         <Box
           sx={{
             margin: "auto",

@@ -18,6 +18,7 @@ import {
 import { addElement } from "../../../app/slices/surveySlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
+import useAuth from "../../../hooks/useAuth";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { elementIcons } from "../../../utils/elementsConfig";
 import { AddElementMenuProps, ErrorData } from "../../../utils/types";
@@ -31,6 +32,7 @@ const AddElementMenu = ({
 }: AddElementMenuProps) => {
   const { primary } = useAppTheme();
   const dispatch = useAppDispatch();
+  const { can } = useAuth();
   const [createElement, { isLoading, isError, error }] =
     useCreateElementMutation();
 
@@ -112,6 +114,7 @@ const AddElementMenu = ({
       <IconButton
         aria-label="Add question or screen"
         onClick={handleClick}
+        disabled={!can("CREATE_QUESTION")}
         disableRipple
         sx={{
           width: 36,

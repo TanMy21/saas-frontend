@@ -12,6 +12,7 @@ import { clearAiQuestionsJustAdded } from "../../../app/slices/generateSurveyQue
 import { setElements } from "../../../app/slices/surveySlice";
 import { RootState, useAppDispatch } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
+import useAuth from "../../../hooks/useAuth";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { nonOrderableTypes } from "../../../utils/constants";
 import { ElementsPanelProps } from "../../../utils/types";
@@ -20,6 +21,7 @@ import { ElementsListItem } from "./ElementsListItem";
 
 const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
   const { scrollStyles } = useAppTheme();
+  const { can } = useAuth();
   const dispatch = useAppDispatch();
   const [updateElementOrder] = useUpdateElementOrderMutation();
   const [newQuestionIds, setNewQuestionIds] = useState<Set<string>>(new Set());
@@ -121,7 +123,9 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
   return (
     <>
       {elements.length === 0 ? null : (
-        <DragDropContext onDragEnd={onDragEnd}>
+        <DragDropContext
+          onDragEnd={can("REORDER_QUESTION") ? onDragEnd : () => {}}
+        >
           <Droppable droppableId="elements">
             {(provided, snapshot) => (
               <Box

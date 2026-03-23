@@ -229,14 +229,14 @@ const SurveyBuilder = () => {
               setSurveyTitle={setSurveyTitle}
             />
           )}
-          {can?.("CREATE_SURVEY") && (
+          {can?.("CREATE_QUESTION") && (
             <ImportQuestionsModal
               isOpen={openImportLocal}
               surveyID={surveyID}
               onClose={() => setOpenImportLocal(false)}
             />
           )}
-          {can?.("CREATE_SURVEY") && (
+          {can?.("CREATE_QUESTION") && (
             <GenerateSurveyModal openGenerate={isOpenGenerate} />
           )}
         </Box>

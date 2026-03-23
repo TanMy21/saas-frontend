@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Box, IconButton, Typography } from "@mui/material";
 
+import useAuth from "../../../hooks/useAuth";
 import {
   getSelectionIn,
   insertPlainTextAtSelection,
@@ -26,6 +27,8 @@ export function EditableLine({
   cursorWhenActive = "text",
   contentKey,
 }: EditableLineProps) {
+  const { can } = useAuth();
+  const canShowFormatPill = can("UPDATE_QUESTION");
   const containerRef = useRef<HTMLDivElement>(null);
   const editableRef = useRef<HTMLDivElement>(null);
   const displayRef = useRef<HTMLDivElement>(null);
@@ -112,7 +115,32 @@ export function EditableLine({
       return;
     }
 
-    if (!active) onStartEdit?.();
+    if (ctx.sel.isCollapsed) {
+      requestAnimationFrame(() => {
+        const updated = getSelectionIn(containerRef.current!);
+        if (!updated || updated.sel.isCollapsed) {
+          setShowBar(false);
+        }
+      });
+      return;
+    }
+
+    if (!canShowFormatPill) {
+      setShowBar(false);
+      return;
+    }
+
+    if (!active && canShowFormatPill) {
+      onStartEdit?.();
+
+      // 🔥 delay pill so DOM updates first
+      requestAnimationFrame(() => {
+        updateBarPosition();
+        setShowBar(true);
+      });
+
+      return;
+    }
 
     updateBarPosition();
     setShowBar(true);
@@ -194,8 +222,24 @@ export function EditableLine({
         onStartEdit();
       }
     },
-    [active, onStartEdit, updateBarPosition]
+    [active, onStartEdit, updateBarPosition],
   );
+
+  const handleRestrictedKeyDown = (e: React.KeyboardEvent) => {
+    if (!canShowFormatPill) {
+      // Prevent browser navigation (backspace)
+      if (e.key === "Backspace") {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      // Prevent any typing/editing
+      if (e.key.length === 1 || e.key === "Enter") {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }
+  };
 
   const displayHTML = useMemo(() => html || "", [html]);
   const empty = isEmptyHTML(displayHTML);
@@ -221,7 +265,10 @@ export function EditableLine({
           contentEditable
           suppressContentEditableWarning
           onInput={handleInput}
-          onKeyDown={onEditorKeyDown}
+          onKeyDown={(e) => {
+            handleRestrictedKeyDown(e);
+            onEditorKeyDown(e);
+          }}
           onClick={(e) => e.stopPropagation()}
           onPaste={(e) => {
             e.preventDefault();
@@ -249,8 +296,10 @@ export function EditableLine({
       ) : (
         <Typography
           component="div"
+          tabIndex={-1}
           ref={displayRef}
           onMouseUp={handleViewMouseUp}
+          onKeyDown={handleRestrictedKeyDown}
           sx={{ width: "100%", ...typographySx, userSelect: "text" }}
           dangerouslySetInnerHTML={{
             __html:
@@ -262,7 +311,7 @@ export function EditableLine({
       )}
 
       {/* Formatting pill */}
-      {showBar && (
+      {showBar && canShowFormatPill && (
         <Box
           sx={{
             position: "absolute",

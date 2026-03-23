@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 
 import { RootState } from "../../app/store";
 import { useAppSelector } from "../../app/typedReduxHooks";
+import useAuth from "../../hooks/useAuth";
 import { SurveyBuilderLeftSidebarProps } from "../../utils/types";
 
 import AddElementMenu from "./Elements/AddElementMenu";
@@ -14,7 +15,7 @@ const SurveyBuilderLeftSidebar = ({
   setQuestionId,
 }: SurveyBuilderLeftSidebarProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
+  const { can } = useAuth();
   const open = Boolean(anchorEl);
 
   const elements = useAppSelector(
@@ -122,13 +123,15 @@ const SurveyBuilderLeftSidebar = ({
               gap: 1,
             }}
           >
-            <AddElementMenu
-              surveyID={surveyID!}
-              anchorEl={anchorEl}
-              open={open}
-              handleClick={handleClick}
-              handleClose={handleClose}
-            />
+            {can("CREATE_QUESTION") && (
+              <AddElementMenu
+                surveyID={surveyID!}
+                anchorEl={anchorEl}
+                open={open}
+                handleClick={handleClick}
+                handleClose={handleClose}
+              />
+            )}
           </Box>
         </Box>
       </Box>

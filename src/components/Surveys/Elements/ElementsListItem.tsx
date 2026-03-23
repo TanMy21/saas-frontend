@@ -4,6 +4,7 @@ import { Draggable } from "react-beautiful-dnd";
 
 import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
+import useAuth from "../../../hooks/useAuth";
 import { nonOrderableTypes } from "../../../utils/constants";
 import { elementIcons } from "../../../utils/elementsConfig";
 import { htmlToPlainText } from "../../../utils/richTextUtils";
@@ -16,6 +17,8 @@ export const ElementsListItem = ({
   setQuestionId,
   newQuestionIds,
 }: ElementListItemProps) => {
+  const { can } = useAuth();
+
   const selectedQuestionId = useAppSelector(
     (state: RootState) => state.question.selectedQuestion?.questionID,
   );
@@ -25,6 +28,11 @@ export const ElementsListItem = ({
       {displayedQuestions.map((element, index) => {
         const isSystemScreen = nonOrderableTypes.includes(element.type);
         const isNew = newQuestionIds?.has(element.questionID);
+
+        const canDuplicate = !isSystemScreen && can("CREATE_QUESTION");
+        const canDelete = can("DELETE_QUESTION");
+
+        const canShowMenu = canDuplicate || canDelete;
 
         /** Gets the order of this new item among only the new items, for stagger timing */
         const staggerIndex = isNew
@@ -46,7 +54,7 @@ export const ElementsListItem = ({
             key={element.questionID}
             draggableId={element.questionID}
             index={index}
-            isDragDisabled={isSystemScreen}
+            isDragDisabled={isSystemScreen || !can("REORDER_QUESTION")}
           >
             {(provided, snapshot) => (
               <Box
@@ -86,12 +94,13 @@ export const ElementsListItem = ({
                   transition:
                     "transform 180ms cubic-bezier(.2,0,0,1), background-color 0.2s ease, box-shadow 0.2s ease",
 
-                 ...(isNew && {
-  backgroundColor: "rgba(99,102,241,0.10)",
-  animation: "aiQuestionAppear 0.55s ease forwards, aiQuestionTint 1.2s ease forwards",
-  animationDelay: `${staggerIndex * 90}ms`,
-  opacity: 0,
-}),
+                  ...(isNew && {
+                    backgroundColor: "rgba(99,102,241,0.10)",
+                    animation:
+                      "aiQuestionAppear 0.55s ease forwards, aiQuestionTint 1.2s ease forwards",
+                    animationDelay: `${staggerIndex * 90}ms`,
+                    opacity: 0,
+                  }),
 
                   opacity: snapshot.isDragging ? 0.98 : 1,
 
@@ -201,26 +210,27 @@ export const ElementsListItem = ({
                     {elementIcons[element.type as keyof IconMapping]}
                   </Typography>
 
-                  <Box
-                    sx={{
-                      gridColumn: isSystemScreen ? "3 / 4" : "4 / 5",
-                      gridRow: "1 / 2",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: 32,
-                      flexShrink: 0,
-                      height: 28,
-                      ml: 1,
-                    }}
-                  >
-                    <ElementDropDownMenu
-                      questionID={element.questionID}
-                      setQuestionId={setQuestionId}
-                      isSystemScreen={isSystemScreen}
-                    />
-                  </Box>
-
+                  {canShowMenu && (
+                    <Box
+                      sx={{
+                        gridColumn: isSystemScreen ? "3 / 4" : "4 / 5",
+                        gridRow: "1 / 2",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 32,
+                        flexShrink: 0,
+                        height: 28,
+                        ml: 1,
+                      }}
+                    >
+                      <ElementDropDownMenu
+                        questionID={element.questionID}
+                        setQuestionId={setQuestionId}
+                        isSystemScreen={isSystemScreen}
+                      />
+                    </Box>
+                  )}
                   <Box
                     sx={{
                       gridColumn: isSystemScreen

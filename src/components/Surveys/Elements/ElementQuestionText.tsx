@@ -1,7 +1,6 @@
 import { useRef } from "react";
 
 import { Box } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
 
 import {
   useUpdateElementDescriptionMutation,
@@ -9,6 +8,8 @@ import {
 } from "../../../app/slices/elementApiSlice";
 import { updateQuestionField } from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
+import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
+import useAuth from "../../../hooks/useAuth";
 import { useDebouncedElementDispatch } from "../../../hooks/useDebouncedElementDispatch";
 import { useEditController } from "../../../hooks/useEditController";
 import { useOutsideSave } from "../../../hooks/useOutsideSave";
@@ -21,14 +22,15 @@ import { OrderBadge } from "./OrderBadge";
 
 const ElementQuestionText = ({ display }: ElementProps) => {
   const { primary } = useAppTheme();
-  const dispatch = useDispatch();
-
-  const typographySettings = useSelector(
-    (state: RootState) => state.elementTypography
+  const dispatch = useAppDispatch();
+  const { can } = useAuth();
+  const canEdit = can("UPDATE_QUESTION");
+  const typographySettings = useAppSelector(
+    (state: RootState) => state.elementTypography,
   );
 
-  const question = useSelector(
-    (state: RootState) => state.question.selectedQuestion
+  const question = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
   );
   const { questionID, order, text, description, type } = question || {};
 
@@ -90,7 +92,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
 
   const { debouncedUpdate, clearTimers } = useDebouncedElementDispatch(
     dispatch,
-    questionID
+    questionID,
   );
 
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -108,6 +110,18 @@ const ElementQuestionText = ({ display }: ElementProps) => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!canEdit) {
+      // Prevent browser navigation (backspace)
+      if (e.key === "Backspace") {
+        e.preventDefault();
+      }
+
+      // Prevent any typing/editing
+      if (e.key.length === 1 || e.key === "Enter") {
+        e.preventDefault();
+      }
+    }
+
     if (e.key === "Escape") {
       clearTimers();
       endEdit();
@@ -153,7 +167,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             {/* Title row */}
             <Box
               onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
-                if (editingTarget !== "none") e.preventDefault();
+                e.stopPropagation();
               }}
               onClick={(e: React.MouseEvent<HTMLDivElement>) =>
                 e.stopPropagation()
@@ -177,7 +191,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                     justifyContent: "flex-end",
                     alignItems: "center",
                     width: show ? "8%" : "8%",
-                    mt:0.5,
+                    mt: 0.5,
                     minWidth: 0,
                     // border: "2px solid red",
                   }}
@@ -232,9 +246,14 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   }}
                 >
                   <EditableLine
-                    active={editingTarget === "title"}
+                    active={canEdit && editingTarget === "title"}
+                    // active={editingTarget === "title"}
                     value={text}
-                    onStartEdit={() => beginEdit("title")}
+                    onStartEdit={() => {
+                      if (!canEdit) return;
+                      beginEdit("title");
+                    }}
+                    // onStartEdit={() => beginEdit("title")}
                     onChange={handleChangeTitle}
                     onFormatted={saveTitleIfChanged}
                     onKeyDown={handleKeyDown}
@@ -314,10 +333,13 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               }}
             >
               <EditableLine
-                active={editingTarget === "description"}
+                active={canEdit && editingTarget === "description"}
                 value={description}
                 placeholder="Description (optional)"
-                onStartEdit={() => beginEdit("description")}
+                onStartEdit={() => {
+                  if (!canEdit) return;
+                  beginEdit("description");
+                }}
                 onChange={handleChangeDesc}
                 onFormatted={() => {
                   saveDescriptionIfChanged();
@@ -390,7 +412,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                 alignItems: "center",
                 mx: "auto",
                 width: "98%",
-                gap:"8%",
+                gap: "8%",
                 // border: "2px solid black",
               }}
             >
@@ -455,9 +477,12 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   }}
                 >
                   <EditableLine
-                    active={editingTarget === "title"}
+                    active={canEdit && editingTarget === "title"}
                     value={text}
-                    onStartEdit={() => beginEdit("title")}
+                    onStartEdit={() => {
+                      if (!canEdit) return;
+                      beginEdit("title");
+                    }}
                     onChange={handleChangeTitle}
                     onFormatted={saveTitleIfChanged}
                     onKeyDown={handleKeyDown}

@@ -11,6 +11,7 @@ import { deleteElementRedux } from "../../../app/slices/surveySlice";
 import { RootState } from "../../../app/store";
 import { useAppSelector, useAppDispatch } from "../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../context/BuilderRefetchCanvas";
+import useAuth from "../../../hooks/useAuth";
 import { ElementDropDownMenuProps } from "../../../utils/types";
 import DeleteQuestionAlert from "../../alert/DeleteQuestionAlert";
 
@@ -20,6 +21,7 @@ const ElementDropDownMenu = ({
   isSystemScreen,
 }: ElementDropDownMenuProps) => {
   const dispatch = useAppDispatch();
+  const { can } = useAuth();
   const refetchCanvas = useSurveyCanvasRefetch();
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [recentlyDeletedId, setRecentlyDeletedId] = useState<string | null>(
@@ -43,6 +45,7 @@ const ElementDropDownMenu = ({
 
   const handleDuplicateElement = async () => {
     try {
+      if (!can("CREATE_QUESTION")) return;
       setMenuAnchor(null);
 
       const newQuestion = await duplicateQuestion(questionID).unwrap();
@@ -57,6 +60,8 @@ const ElementDropDownMenu = ({
 
   const handleDeleteElement = async () => {
     try {
+      if (!can("DELETE_QUESTION")) return;
+
       setMenuAnchor(null);
       await deleteElement(questionID).unwrap();
       setRecentlyDeletedId(questionID);
@@ -109,13 +114,17 @@ const ElementDropDownMenu = ({
           top: "-4%",
         }}
       >
-        {!isSystemScreen && (
+        {!isSystemScreen && can("CREATE_QUESTION") && (
           <MenuItem onClick={handleDuplicateElement}>Duplicate</MenuItem>
         )}
-        <MenuItem onClick={handleDeleteElement} sx={{ color: "red" }}>
-          {isSystemScreen ? "Remove Screen" : "Delete"}
-        </MenuItem>
+
+        {can("DELETE_QUESTION") && (
+          <MenuItem onClick={handleDeleteElement} sx={{ color: "red" }}>
+            {isSystemScreen ? "Remove Screen" : "Delete"}
+          </MenuItem>
+        )}
       </Menu>
+
       <DeleteQuestionAlert open={isLoading} />
     </>
   );

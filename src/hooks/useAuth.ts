@@ -33,8 +33,7 @@ const useAuth = () => {
     const activeOrg = user?.activeOrg ?? null;
     const permissions = activeOrg?.permissions || [];
 
-    const can = (permission: string) =>
-      permissions.includes(permission as Permission);
+    const can = (permission: Permission) => permissions.includes(permission);
 
     tokenExpired = exp! * 1000 < Date.now();
 
