@@ -190,7 +190,6 @@ const SurveyBuilderDock = ({
   const { surveyID } = useParams();
   const { can } = useAuth();
   const prevPublishedRef = useRef<boolean | null>(null);
-  const canUpdateSurvey = can?.("UPDATE_SURVEY");
   const openGenerateState = useAppSelector(
     (state: RootState) => state.surveyBuilder.isGenerateModalOpen,
   );
@@ -206,7 +205,6 @@ const SurveyBuilderDock = ({
   };
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [openImport, setOpenImport] = useState(false);
   const [openGenerate, setOpenGenerate] = useState(openGenerateState);
   const [openSettings, setOpenSettings] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -303,7 +301,7 @@ const SurveyBuilderDock = ({
             }}
           />
         )}
-        {visibleItems.map((item, index) => (
+        {visibleItems.map((item) => (
           <DockItem
             key={item.id}
             action={item.action}

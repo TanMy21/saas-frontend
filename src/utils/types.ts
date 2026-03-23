@@ -1389,6 +1389,34 @@ type UserTours = {
   hasSkippedBuilderTour: boolean;
 };
 
+export type Permission =
+  | "INVITE_USER"
+  | "ASSIGN_ADMIN"
+  | "ASSIGN_ANALYST"
+  | "ASSIGN_VIEWER"
+  | "CREATE_WORKSPACE"
+  | "UPDATE_WORKSPACE"
+  | "DELETE_WORKSPACE"
+  | "CREATE_SURVEY"
+  | "UPDATE_SURVEY"
+  | "DELETE_SURVEY"
+  | "PUBLISH_SURVEY"
+  | "CREATE_QUESTION"
+  | "UPDATE_QUESTION"
+  | "DELETE_QUESTION"
+  | "REORDER_QUESTION";
+
+export interface OrganizationMember {
+  relatedOrgID: string;
+  role: string;
+  organization: {
+    orgID: string;
+    organizationName: string;
+    orgSlug: string;
+  };
+  permissions: Permission[];
+}
+
 export interface User {
   firstName: string | null;
   lastName: string | null;
@@ -1397,6 +1425,7 @@ export interface User {
   verified: boolean | null;
   isAdmin: boolean | null;
   tours: UserTours;
+  activeOrg: OrganizationMember;
 }
 
 export interface UpdateUserInfoFormData {

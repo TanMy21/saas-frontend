@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 
 import { CircularProgress } from "@mui/material";
-import { useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import usePersist from "../../hooks/persist";
-import { useAppSelector } from "../typedReduxHooks";
+import { useAppDispatch, useAppSelector } from "../typedReduxHooks";
 
 import { useRefreshMutation, useSendLogoutMutation } from "./authApiSlice";
 import { selectCurrentToken, logOut } from "./authSlice";
+import { fetchUser } from "./userSlice";
 
 const PersistLogin = () => {
   const [persist] = usePersist();
   const token = useAppSelector(selectCurrentToken);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [trueSuccess, setTrueSuccess] = useState(false);
 
@@ -61,6 +61,12 @@ const PersistLogin = () => {
   //   }
   //   // eslint-disable-next-line
   // }, [isError]);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchUser());
+    }
+  }, [token, dispatch]);
 
   let content;
   if (!persist) {

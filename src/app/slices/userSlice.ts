@@ -31,7 +31,7 @@ export const fetchUser = createAsyncThunk(
     });
     if (!response.ok) throw new Error("Failed to fetch user");
     return await response.json();
-  }
+  },
 );
 
 const userSlice = createSlice({

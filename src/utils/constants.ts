@@ -332,29 +332,3 @@ export const roles = {
   },
 };
 
-export const rolePermissionsMap: Record<Role, readonly string[]> = {
-  OWNER: [
-    "INVITE_USER",
-    "ASSIGN_ADMIN",
-    "ASSIGN_ANALYST",
-    "ASSIGN_VIEWER",
-    "CREATE_WORKSPACE",
-    "UPDATE_WORKSPACE",
-    "DELETE_WORKSPACE",
-    "CREATE_SURVEY",
-    "UPDATE_SURVEY",
-    "DELETE_SURVEY",
-  ],
-  ADMIN: [
-    "INVITE_USER",
-    "ASSIGN_ANALYST",
-    "ASSIGN_VIEWER",
-    "CREATE_WORKSPACE",
-    "UPDATE_WORKSPACE",
-    "CREATE_SURVEY",
-    "UPDATE_SURVEY",
-  ],
-  ANALYST: [],
-  EDITOR: [],
-  VIEWER: [],
-} as const;

@@ -2,11 +2,14 @@ import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
 
 import { selectCurrentToken } from "../app/slices/authSlice";
-import { rolePermissionsMap } from "../utils/constants";
-import { ICustomePayload } from "../utils/types";
+import { selectUser } from "../app/slices/userSlice";
+import { ICustomePayload, Permission } from "../utils/types";
 
 const useAuth = () => {
   const token = useSelector(selectCurrentToken);
+  const user = useSelector(selectUser);
+
+  console.log("User: ", user);
 
   if (!token) {
     return {
@@ -27,9 +30,11 @@ const useAuth = () => {
     const { email, admin, verified, role } = decoded.UserInfo || {};
     const { exp } = decoded;
 
-    const permissions = role ? (rolePermissionsMap[role] ?? []) : [];
+    const activeOrg = user?.activeOrg ?? null;
+    const permissions = activeOrg?.permissions || [];
 
-    const can = (permission: string) => permissions.includes(permission);
+    const can = (permission: string) =>
+      permissions.includes(permission as Permission);
 
     tokenExpired = exp! * 1000 < Date.now();
 
