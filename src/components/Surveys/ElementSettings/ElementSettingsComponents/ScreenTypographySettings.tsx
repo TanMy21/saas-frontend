@@ -23,6 +23,7 @@ import {
 import { updateTypographyField } from "../../../../app/slices/elementTypographySlice";
 import { RootState } from "../../../../app/store";
 import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
+import { usePermission } from "../../../../context/PermissionContext";
 import { TypographySettingsFormSchema } from "../../../../utils/schema";
 import {
   ScreenTypographySettingsProps,
@@ -35,11 +36,12 @@ import FontSizeViewToggle from "./FontSizeViewToggle";
 
 const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   const refetchCanvas = useSurveyCanvasRefetch();
+  const { canEditQuestion } = usePermission();
   const [fontSizeView, setFontSizeView] = useState<"desktop" | "mobile">(
-    "desktop"
+    "desktop",
   );
   const typographySettings = useSelector(
-    (state: RootState) => state.elementTypography
+    (state: RootState) => state.elementTypography,
   );
   const dispatch = useDispatch();
 
@@ -101,7 +103,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: TypographySettingsForm) => {
-    console.log("Submitting typography settings:", data);
+    if (!canEditQuestion) return;
 
     try {
       const {
@@ -126,8 +128,9 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   };
 
   const onSubmitMobile = async (data: TypographySettingsForm) => {
+    if (!canEditQuestion) return;
+
     try {
-      console.log("Submitting mobile typography settings:", data);
       const { titleFontSizeMobile, descriptionFontSizeMobile } = data;
 
       await updateElementTypographyMobileView({
@@ -142,6 +145,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   };
 
   const markFormTouched = () => {
+    if (!canEditQuestion) return;
     if (!formTouched) {
       console.log("[markFormTouched] marked as true");
       setFormTouched(true);
@@ -149,9 +153,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   };
 
   useEffect(() => {
-    if (!formTouched) return;
-
-    console.log("[useEffect] debounce triggered");
+    if (!formTouched || !canEditQuestion) return;
 
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
@@ -242,6 +244,8 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
               flexDirection: "column",
               width: "100%",
               height: "100%",
+              opacity: canEditQuestion ? 1 : 0.8,
+              pointerEvents: canEditQuestion ? "auto" : "none",
               // border: "2px solid red",
             }}
           >
@@ -308,6 +312,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     name={titleKey}
                     dispatchKey={titleKey}
                     control={control}
+                    canEdit={canEditQuestion}
                     markFormTouched={markFormTouched}
                   />
                 </Box>
@@ -347,14 +352,16 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                       <>
                         <ColorPicker
                           color={field.value!}
+                          canEdit={canEditQuestion}
                           setColor={(color: string) => {
+                            if (!canEditQuestion) return;
                             field.onChange(color);
                             markFormTouched();
                             dispatch(
                               updateTypographyField({
                                 key: "titleTextColor",
                                 value: color,
-                              })
+                              }),
                             );
                           }}
                         />
@@ -362,6 +369,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                           type="text"
                           variant="standard"
                           value={field.value}
+                          disabled={!canEditQuestion}
                           onChange={(e) => {
                             let input = e.target.value;
 
@@ -374,7 +382,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                               updateTypographyField({
                                 key: "titleTextColor",
                                 value: input,
-                              })
+                              }),
                             );
                           }}
                           placeholder={field.value?.toUpperCase()}
@@ -463,6 +471,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     name={descriptionKey}
                     dispatchKey={descriptionKey}
                     control={control}
+                    canEdit={canEditQuestion}
                     markFormTouched={markFormTouched}
                   />
                 </Box>
@@ -501,14 +510,16 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                       <>
                         <ColorPicker
                           color={field.value!}
+                          canEdit={canEditQuestion}
                           setColor={(color: string) => {
+                            if (!canEditQuestion) return;
                             field.onChange(color);
                             markFormTouched();
                             dispatch(
                               updateTypographyField({
                                 key: "descriptionTextColor",
                                 value: color,
-                              })
+                              }),
                             );
                           }}
                         />
@@ -516,6 +527,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                           type="text"
                           variant="standard"
                           value={field.value}
+                          disabled={!canEditQuestion}
                           onChange={(e) => {
                             let input = e.target.value;
 
@@ -528,7 +540,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                               updateTypographyField({
                                 key: "descriptionTextColor",
                                 value: input,
-                              })
+                              }),
                             );
                           }}
                           placeholder={field.value?.toUpperCase()}

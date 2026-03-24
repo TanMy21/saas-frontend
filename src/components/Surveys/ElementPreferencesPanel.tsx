@@ -5,7 +5,7 @@ import { SurveyPreferencesPanelProps } from "../../utils/types";
 
 import ElementSettingsContainer from "./ElementSettings/ElementSettingsContainer";
 
-const SurveyPreferencesPanel = ({
+const ElementPreferencesPanel = ({
   questionId,
   question,
 }: SurveyPreferencesPanelProps) => {
@@ -34,4 +34,4 @@ const SurveyPreferencesPanel = ({
   );
 };
 
-export default SurveyPreferencesPanel;
+export default ElementPreferencesPanel;

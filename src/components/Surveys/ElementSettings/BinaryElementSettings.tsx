@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 
+import { usePermission } from "../../../context/PermissionContext";
 import { ElementSettingsProps } from "../../../utils/types";
 
 import BinaryOptionsSettings from "./ElementSettingsComponents/BinaryOptionsSettings";
@@ -9,6 +10,7 @@ import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypograp
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
 const BinaryElementSettings = ({ qID }: ElementSettingsProps) => {
+  const { canEditQuestion } = usePermission();
   return (
     <Box
       sx={{
@@ -19,7 +21,8 @@ const BinaryElementSettings = ({ qID }: ElementSettingsProps) => {
         // border:"2px solid blue",
       }}
     >
-      <QuestionTypeMutationSettings />
+      {canEditQuestion && <QuestionTypeMutationSettings />}
+
       <QuestionTextandDescriptionSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
       <ValidationSettings />

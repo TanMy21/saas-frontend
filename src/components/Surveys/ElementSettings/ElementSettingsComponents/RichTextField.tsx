@@ -12,6 +12,7 @@ export function RichTextField({
   sx,
   id = "rich-text-field",
   blockEnter = true,
+  readOnly = false,
 }: RichTextFieldProps) {
   return (
     <Box
@@ -24,6 +25,9 @@ export function RichTextField({
         color: "#1F2937",
         px: 1.5,
         display: "flex",
+        cursor: readOnly ? "not-allowed" : "text",
+        opacity: readOnly ? 0.7 : 1,
+        pointerEvents: "auto",
         alignItems: "center",
         transition: "background-color 0.2s ease",
         "&:hover": { backgroundColor: "#E5E7EB" },
@@ -36,6 +40,7 @@ export function RichTextField({
         value={value ?? ""}
         placeholder={placeholder}
         blockEnter={blockEnter}
+        readOnly={readOnly}
         onChange={(nextPlain) => onChange?.(nextPlain)}
         sx={undefined}
       />

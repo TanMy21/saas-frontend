@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 
+import { usePermission } from "../../../context/PermissionContext";
 import { ElementSettingsProps } from "../../../utils/types";
 
 import NumberInputRangeSettings from "./ElementSettingsComponents/NumberInputRangeSettings";
@@ -9,6 +10,7 @@ import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypograp
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
 const NumberElementSettings = ({ qID }: ElementSettingsProps) => {
+  const { canEditQuestion } = usePermission();
   return (
     <Box
       sx={{
@@ -18,7 +20,7 @@ const NumberElementSettings = ({ qID }: ElementSettingsProps) => {
         heigh: "100%",
       }}
     >
-      <QuestionTypeMutationSettings />
+      {canEditQuestion && <QuestionTypeMutationSettings />}
       <QuestionTextandDescriptionSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
       <NumberInputRangeSettings />

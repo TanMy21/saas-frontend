@@ -19,14 +19,16 @@ import { useUpdateQuestionRequiredPreferenceMutation } from "../../../../app/sli
 import { toggleElementRequired } from "../../../../app/slices/elementSlice";
 import { RootState } from "../../../../app/store";
 import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
+import { usePermission } from "../../../../context/PermissionContext";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionSetting } from "../../../../utils/types";
 
 const ValidationSettings = () => {
   const dispatch = useDispatch();
+  const { canEditQuestion } = usePermission();
   const refetchCanvas = useSurveyCanvasRefetch();
   const question = useSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
   const { questionID, questionPreferences } = question || {};
@@ -50,6 +52,8 @@ const ValidationSettings = () => {
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionSetting) => {
+    if (!canEditQuestion) return;
+
     try {
       const { required } = data;
 
@@ -65,6 +69,7 @@ const ValidationSettings = () => {
   };
 
   const markFormTouched = () => {
+    if (!canEditQuestion) return;
     if (!formTouched) setFormTouched(true);
   };
 
@@ -75,7 +80,7 @@ const ValidationSettings = () => {
   }, [required, reset]);
 
   useEffect(() => {
-    if (!formTouched) return;
+    if (!formTouched || !canEditQuestion) return;
 
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
@@ -139,6 +144,7 @@ const ValidationSettings = () => {
               width: "96%",
               height: "80%",
               marginLeft: "4%",
+               opacity: canEditQuestion ? 1 : 0.8,
               // border: "2px solid red",
             }}
           >
@@ -162,7 +168,9 @@ const ValidationSettings = () => {
                   render={({ field }) => (
                     <Switch
                       checked={field.value}
+                      disabled={!canEditQuestion}
                       onChange={(event) => {
+                         if (!canEditQuestion) return;
                         const value = event.target.checked;
                         field.onChange(value);
                         markFormTouched();

@@ -18,12 +18,14 @@ import { useUpdateQuestionPreferenceUIConfigMutation } from "../../../../app/sli
 import { RootState } from "../../../../app/store";
 import { useAppSelector } from "../../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
+import { usePermission } from "../../../../context/PermissionContext";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionUIConfig } from "../../../../utils/types";
 
 const MediaOptionSettings = () => {
+  const { canEditQuestion } = usePermission();
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
   const refetchCanvas = useSurveyCanvasRefetch();
   const [updateQuestionPreferenceUIConfig] =
@@ -48,6 +50,7 @@ const MediaOptionSettings = () => {
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionUIConfig) => {
+    if (!canEditQuestion) return;
     try {
       const { multipleSelection } = data;
 
@@ -68,7 +71,7 @@ const MediaOptionSettings = () => {
   };
 
   useEffect(() => {
-    if (!formTouched) return;
+    if (!formTouched || !canEditQuestion) return;
 
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
@@ -145,10 +148,16 @@ const MediaOptionSettings = () => {
               render={({ field }) => (
                 <Switch
                   checked={field.value}
+                  disabled={!canEditQuestion}
                   onChange={(event) => {
+                    if (!canEditQuestion) return;
                     const value = event.target.checked;
                     field.onChange(value);
                     markFormTouched();
+                  }}
+                  sx={{
+                    cursor: canEditQuestion ? "pointer" : "not-allowed",
+                    opacity: canEditQuestion ? 1 : 0.8,
                   }}
                 />
               )}

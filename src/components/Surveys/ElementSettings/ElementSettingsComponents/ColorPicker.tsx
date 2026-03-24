@@ -5,7 +5,7 @@ import { Chrome } from "@uiw/react-color";
 
 import { ColorPickerProps } from "../../../../utils/types";
 
-const ColorPicker = ({ color, setColor }: ColorPickerProps) => {
+const ColorPicker = ({ color, setColor, canEdit }: ColorPickerProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   return (
@@ -17,14 +17,18 @@ const ColorPicker = ({ color, setColor }: ColorPickerProps) => {
       }}
     >
       <Box
-        onClick={(e) => setAnchorEl(e.currentTarget)}
+        onClick={(e) => {
+          if (!canEdit) return;
+          setAnchorEl(e.currentTarget);
+        }}
         sx={{
           width: 32,
           height: 32,
           borderRadius: 4,
           backgroundColor: color,
           border: "1px solid #E0E0E0",
-          cursor: "pointer",
+          cursor: canEdit ? "pointer" : "not-allowed",
+          opacity: canEdit ? 1 : 0.8,
         }}
       />
 
@@ -37,7 +41,10 @@ const ColorPicker = ({ color, setColor }: ColorPickerProps) => {
         <Box sx={{ p: 2 }}>
           <Chrome
             color={color}
-            onChange={(color) => setColor(color.hex)}
+            onChange={(color) => {
+              if (!canEdit) return;
+              setColor(color.hex);
+            }}
             style={{ boxShadow: "none" }}
           />
         </Box>

@@ -21,6 +21,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
+import { usePermission } from "../../../../context/PermissionContext";
 import {
   htmlToPlainText,
   rewriteHtmlTextPreserveInlineTags,
@@ -31,9 +32,10 @@ import { QuestionSetting } from "../../../../utils/types";
 import { RichTextField } from "./RichTextField";
 
 const QuestionTextandDescriptionSettings = () => {
+  const { canEditQuestion } = usePermission();
   const dispatch = useAppDispatch();
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
   const { questionID, text, description } = question || {};
   const [updateScreenElements] = useUpdateScreenElementsMutation();
@@ -151,15 +153,16 @@ const QuestionTextandDescriptionSettings = () => {
                   id="settings-question-text"
                   value={htmlToPlainText(field.value)}
                   placeholder="Enter your question"
+                  readOnly={!canEditQuestion}
                   onChange={(nextPlain) => {
                     const mergedHtml = rewriteHtmlTextPreserveInlineTags(
                       field.value ?? "",
-                      nextPlain
+                      nextPlain,
                     );
                     field.onChange(mergedHtml); // RHF value = HTML
                     markFormTouched();
                     dispatch(
-                      updateQuestionField({ key: "text", value: mergedHtml })
+                      updateQuestionField({ key: "text", value: mergedHtml }),
                     );
                     if (questionID) {
                       dispatch(
@@ -167,7 +170,7 @@ const QuestionTextandDescriptionSettings = () => {
                           questionID,
                           key: "text",
                           value: mergedHtml,
-                        })
+                        }),
                       );
                     }
                   }}
@@ -192,10 +195,11 @@ const QuestionTextandDescriptionSettings = () => {
                   id="settings-question-desc"
                   value={htmlToPlainText(field.value)}
                   placeholder="Description (optional)"
+                  readOnly={!canEditQuestion}
                   onChange={(nextPlain) => {
                     const mergedHtml = rewriteHtmlTextPreserveInlineTags(
                       field.value ?? "",
-                      nextPlain
+                      nextPlain,
                     );
                     field.onChange(mergedHtml);
                     markFormTouched();
@@ -203,7 +207,7 @@ const QuestionTextandDescriptionSettings = () => {
                       updateQuestionField({
                         key: "description",
                         value: mergedHtml,
-                      })
+                      }),
                     );
                     if (questionID) {
                       dispatch(
@@ -211,7 +215,7 @@ const QuestionTextandDescriptionSettings = () => {
                           questionID,
                           key: "description",
                           value: mergedHtml,
-                        })
+                        }),
                       );
                     }
                   }}

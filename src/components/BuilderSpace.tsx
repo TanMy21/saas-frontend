@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
 import { BuilderSpaceProps, Element } from "../utils/types";
 
 import CanvasConsole from "./CanvasConsole";
-import SurveyPreferencesPanel from "./Surveys/SurveyPreferencesPanel";
+import SurveyPreferencesPanel from "./Surveys/ElementPreferencesPanel";
 
 const BuilderSpace = ({
   questionId,

@@ -13,9 +13,9 @@ import GenerateSurveyModal from "../components/GenerateSurveyModal/GenerateSurve
 import LogoLoader from "../components/Loaders/LogoLoader";
 import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
 import ImportQuestionsModal from "../components/Modals/ImportQuestionsModal";
+import ElementPreferencesPanel from "../components/Surveys/ElementPreferencesPanel";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
-import SurveyPreferencesPanel from "../components/Surveys/SurveyPreferencesPanel";
 import { SurveyCanvasRefetchContext } from "../context/BuilderRefetchCanvas";
 // import useBuilderTourEnable from "../hooks/useBuilderTourEnable";
 import useAuth from "../hooks/useAuth";
@@ -215,7 +215,7 @@ const SurveyBuilder = () => {
                 // border: "2px solid green",
               }}
             >
-              <SurveyPreferencesPanel
+              <ElementPreferencesPanel
                 questionId={questionId}
                 question={selectedQuestion}
               />

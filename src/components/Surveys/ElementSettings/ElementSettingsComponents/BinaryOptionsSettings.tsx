@@ -25,13 +25,15 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
+import { usePermission } from "../../../../context/PermissionContext";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { BinaryResponseProps } from "../../../../utils/types";
 
 const BinaryOptionsSettings = () => {
   const dispatch = useAppDispatch();
+  const { canEditQuestion } = usePermission();
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
   const [updateQuestionPreferenceUIConfig] =
@@ -57,6 +59,7 @@ const BinaryOptionsSettings = () => {
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: BinaryResponseProps) => {
+    if (!canEditQuestion) return;
     try {
       const { buttonTextYes, buttonTextNo } = data;
 
@@ -72,11 +75,12 @@ const BinaryOptionsSettings = () => {
   };
 
   const markFormTouched = () => {
+    if (!canEditQuestion) return;
     if (!formTouched) setFormTouched(true);
   };
 
   useEffect(() => {
-    if (!formTouched) return;
+    if (!formTouched || !canEditQuestion) return;
 
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
@@ -147,6 +151,8 @@ const BinaryOptionsSettings = () => {
             width: "100%",
             height: "100%",
             marginLeft: "2%",
+            opacity: canEditQuestion ? 1 : 0.8,
+            cursor: canEditQuestion ? "default" : "not-allowed",
             // border: "2px solid orange",
           }}
         >
@@ -159,12 +165,14 @@ const BinaryOptionsSettings = () => {
                 <TextField
                   type="text"
                   variant="standard"
+                  disabled={!canEditQuestion}
                   sx={{
                     "& .MuiInputBase-input": {
                       lineHeight: "1.5",
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
+                      cursor: canEditQuestion ? "default" : "not-allowed",
                       fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
                       fontWeight: 500,
                     },
@@ -177,6 +185,7 @@ const BinaryOptionsSettings = () => {
                       fontWeight: 500,
                       color: "#1F2937",
                       px: 1.5,
+                      cursor: canEditQuestion ? "default" : "not-allowed",
                       transition: "background-color 0.2s ease",
                       "&:hover": {
                         backgroundColor: "#E5E7EB",
@@ -205,6 +214,7 @@ const BinaryOptionsSettings = () => {
                   }}
                   {...field}
                   onChange={(event) => {
+                    if (!canEditQuestion) return;
                     const value = event.target.value;
                     field.onChange(value);
                     markFormTouched();
@@ -225,7 +235,7 @@ const BinaryOptionsSettings = () => {
             // border: "2px solid orange",
           }}
         >
-          <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>Button 2</Box>
+          <Box sx={{ fontWeight: 500, color: "#3F3F46",opacity: canEditQuestion ? 1 : 0.8, }}>Button 2</Box>
           <Box mt={1}>
             <Controller
               name="buttonTextNo"
@@ -234,6 +244,7 @@ const BinaryOptionsSettings = () => {
                 <TextField
                   type="text"
                   variant="standard"
+                  disabled={!canEditQuestion}
                   sx={{
                     "& .MuiInputBase-input": {
                       lineHeight: "1.5",
@@ -242,6 +253,7 @@ const BinaryOptionsSettings = () => {
                       textOverflow: "ellipsis",
                       fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
                       fontWeight: 500,
+                      cursor: canEditQuestion ? "default" : "not-allowed",
                     },
                     "& .MuiInputBase-root": {
                       borderRadius: "8px",
@@ -252,6 +264,7 @@ const BinaryOptionsSettings = () => {
                       fontWeight: 500,
                       color: "#1F2937",
                       px: 1.5,
+                      cursor: canEditQuestion ? "default" : "not-allowed",
                       transition: "background-color 0.2s ease",
                       "&:hover": {
                         backgroundColor: "#E5E7EB",
@@ -269,6 +282,7 @@ const BinaryOptionsSettings = () => {
                   }}
                   {...field}
                   onChange={(event) => {
+                    if (!canEditQuestion) return;
                     const value = event.target.value;
                     field.onChange(value);
                     markFormTouched();

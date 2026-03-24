@@ -22,14 +22,16 @@ import {
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
+import { usePermission } from "../../../../context/PermissionContext";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionSetting } from "../../../../utils/types";
 
 const ShowQuestionSettings = () => {
   const dispatch = useAppDispatch();
+  const { canEditQuestion } = usePermission();
   const refetchCanvas = useSurveyCanvasRefetch();
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
   const questionID = question?.questionID;
@@ -50,6 +52,7 @@ const ShowQuestionSettings = () => {
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionSetting) => {
+    if (!canEditQuestion) return;
     try {
       const { showQuestion } = data;
 
@@ -66,6 +69,7 @@ const ShowQuestionSettings = () => {
   };
 
   const markFormTouched = () => {
+    if (!canEditQuestion) return;
     if (!formTouched) setFormTouched(true);
   };
 
@@ -76,7 +80,7 @@ const ShowQuestionSettings = () => {
   }, [showQuestion, reset]);
 
   useEffect(() => {
-    if (!formTouched) return;
+    if (!formTouched || !canEditQuestion) return;
 
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
@@ -165,11 +169,16 @@ const ShowQuestionSettings = () => {
                   render={({ field }) => (
                     <Switch
                       checked={field.value}
+                      disabled={!canEditQuestion}
                       onChange={(event) => {
+                        if (!canEditQuestion) return;
                         const value = event.target.checked;
                         field.onChange(value);
                         markFormTouched();
                         dispatch(toggleShowQuestionfor3dType(value));
+                      }}
+                      sx={{
+                        cursor: canEditQuestion ? "pointer" : "not-allowed",
                       }}
                     />
                   )}

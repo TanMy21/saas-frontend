@@ -103,6 +103,7 @@ export interface BinaryResponseProps {
 export interface ColorPickerProps {
   color: string;
   setColor: (color: string) => void;
+  canEdit?:boolean;
 }
 
 export interface CanvasConsoleProps {
@@ -275,6 +276,7 @@ export interface ElementProps {
   qRequired?: boolean;
   qSettings?: QuestionSetting;
   qPreferences?: SurveyCanvasQuestionSettings;
+  canEdit?: boolean;
 }
 
 export interface ElementDropDownMenuProps {
@@ -415,6 +417,7 @@ export interface EditablePlainTextProps {
   id?: string;
   sx?: any;
   blockEnter?: boolean;
+  readOnly?:boolean;
 }
 
 export interface RichTextFieldProps {
@@ -429,6 +432,7 @@ export interface RichTextFieldProps {
   contentKey?: string | number;
   blockEnter?: boolean;
   plainOnly?: boolean;
+  readOnly?:boolean;
 }
 
 export type ErrorFallbackProps = Readonly<{
@@ -467,6 +471,7 @@ export interface ElementSettingsProps {
   qRequired?: boolean;
   qSettings?: QuestionSetting;
   qPreferences?: SurveyCanvasQuestionSettings;
+  canEdit: boolean;
 }
 
 export interface ElementSettingsContainerProps {
@@ -499,6 +504,7 @@ export interface FontSizeControlProps {
   control: any;
   dispatchKey: keyof TypographySettingsForm;
   markFormTouched: () => void;
+  canEdit?:boolean;
 }
 
 export interface FlowFormConditionBlockProps {

@@ -9,6 +9,7 @@ export default function EditablePlainText({
   onEnter,
   id = "plain-text-editable",
   blockEnter = true,
+  readOnly = false,
 }: EditablePlainTextProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [text, setText] = useState<string>(value ?? "");
@@ -26,15 +27,20 @@ export default function EditablePlainText({
 
   const handleInput = useCallback(
     (e: React.FormEvent<HTMLDivElement>) => {
+      if (readOnly) return;
       const next = e.currentTarget.textContent ?? "";
       setText(next);
       onChange?.(next);
     },
-    [onChange]
+    [onChange],
   );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (readOnly) {
+        e.preventDefault();
+        return;
+      }
       if (blockEnter && e.key === "Enter") {
         e.preventDefault();
         onEnter?.();
@@ -47,11 +53,16 @@ export default function EditablePlainText({
         e.preventDefault();
       }
     },
-    [blockEnter, onEnter]
+    [blockEnter, onEnter],
   );
 
   const handlePaste = useCallback(
     (e: React.ClipboardEvent<HTMLDivElement>) => {
+      if (readOnly) {
+        e.preventDefault();
+        return;
+      }
+
       e.preventDefault();
       const plain = e.clipboardData.getData("text/plain");
 
@@ -70,7 +81,7 @@ export default function EditablePlainText({
       setText(next);
       onChange?.(next);
     },
-    [onChange]
+    [onChange],
   );
 
   return (
@@ -78,7 +89,7 @@ export default function EditablePlainText({
       id={id}
       ref={ref}
       role="textbox"
-      contentEditable
+      contentEditable={!readOnly}
       suppressContentEditableWarning
       dir="ltr" // Left to Right
       onFocus={() => setIsFocused(true)} //  track focus

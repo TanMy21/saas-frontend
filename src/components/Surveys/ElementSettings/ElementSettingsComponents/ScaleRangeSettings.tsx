@@ -25,10 +25,12 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
+import { usePermission } from "../../../../context/PermissionContext";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionUIConfig } from "../../../../utils/types";
 
 const ScaleRangeSettings = () => {
+  const { canEditQuestion } = usePermission();
   const dispatch = useAppDispatch();
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion,
@@ -63,6 +65,7 @@ const ScaleRangeSettings = () => {
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionUIConfig) => {
+    if (!canEditQuestion) return;
     try {
       if (
         data.minValue !== undefined &&
@@ -87,11 +90,12 @@ const ScaleRangeSettings = () => {
   };
 
   const markFormTouched = () => {
+    if (!canEditQuestion) return;
     if (!formTouched) setFormTouched(true);
   };
 
   useEffect(() => {
-    if (!formTouched) return;
+    if (!formTouched || !canEditQuestion) return;
 
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
@@ -111,6 +115,7 @@ const ScaleRangeSettings = () => {
   }, [minValue, maxValue, reset]);
 
   useEffect(() => {
+    if (!canEditQuestion) return;
     const currentMax = getValues("maxValue");
 
     if (
@@ -181,6 +186,7 @@ const ScaleRangeSettings = () => {
                   fullWidth
                   displayEmpty
                   disableUnderline
+                  disabled={!canEditQuestion}
                   sx={{
                     borderRadius: "8px",
                     height: "42px",
@@ -190,12 +196,16 @@ const ScaleRangeSettings = () => {
                     fontWeight: 500,
                     color: "#1F2937",
                     px: 1.5,
+                    opacity: canEditQuestion ? 1 : 0.8,
+                    cursor: canEditQuestion ? "pointer" : "not-allowed",
                     transition: "background-color 0.2s ease",
                     "&:hover": {
                       backgroundColor: "#E5E7EB",
+                      cursor: canEditQuestion ? "pointer" : "not-allowed",
                     },
                     "&.Mui-focused": {
                       backgroundColor: "#E0E7FF",
+                      cursor: canEditQuestion ? "pointer" : "not-allowed",
                     },
                     "& .MuiSelect-icon": {
                       color: "#4338CA",
@@ -207,10 +217,12 @@ const ScaleRangeSettings = () => {
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
+                      cursor: canEditQuestion ? "pointer" : "not-allowed",
                     },
                     mb: 2,
                   }}
                   onChange={(event) => {
+                    if (!canEditQuestion) return;
                     const value = Number(event.target.value);
                     field.onChange(value);
                     dispatch(updateMinValue(value));
@@ -250,7 +262,7 @@ const ScaleRangeSettings = () => {
                   fullWidth
                   displayEmpty
                   disableUnderline
-                  disabled={!watchedMin}
+                  disabled={!canEditQuestion || !watchedMin}
                   sx={{
                     borderRadius: "8px",
                     height: "42px",
@@ -260,9 +272,12 @@ const ScaleRangeSettings = () => {
                     fontWeight: 500,
                     color: "#1F2937",
                     px: 1.5,
+                    opacity: canEditQuestion ? 1 : 0.8,
+                    cursor: canEditQuestion ? "pointer" : "not-allowed",
                     transition: "background-color 0.2s ease",
                     "&:hover": {
                       backgroundColor: "#E5E7EB",
+                      cursor: canEditQuestion ? "pointer" : "not-allowed",
                     },
                     "&.Mui-focused": {
                       backgroundColor: "#E0E7FF",
@@ -277,10 +292,13 @@ const ScaleRangeSettings = () => {
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
+                      opacity: canEditQuestion ? 1 : 0.8,
+                      cursor: canEditQuestion ? "pointer" : "not-allowed",
                     },
                     mb: 2,
                   }}
                   onChange={(event) => {
+                    if (!canEditQuestion) return;
                     const value = Number(event.target.value);
                     field.onChange(value);
                     dispatch(updateMaxValue(value));

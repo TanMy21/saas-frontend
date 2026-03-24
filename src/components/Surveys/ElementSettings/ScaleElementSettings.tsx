@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 
 import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
+import { usePermission } from "../../../context/PermissionContext";
 
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
 import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
@@ -10,6 +11,7 @@ import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypograp
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
 const ScaleElementSettings = () => {
+  const { canEditQuestion } = usePermission();
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion,
   );
@@ -25,7 +27,7 @@ const ScaleElementSettings = () => {
         heigh: "100%",
       }}
     >
-      <QuestionTypeMutationSettings />
+      {canEditQuestion && <QuestionTypeMutationSettings />}
       <QuestionTextandDescriptionSettings />
       <ScreenTypographySettings key={questionID} qID={questionID!} />
       <ScaleRangeSettings />

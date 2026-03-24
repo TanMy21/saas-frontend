@@ -6,20 +6,11 @@ import NavigationButtonTextSettings from "./ElementSettingsComponents/Navigation
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 
-const EndScreenElementSettings = ({ qID, question }: ElementSettingsProps) => {
-  const { text, description, questionPreferences } = question || {};
-
+const EndScreenElementSettings = ({ qID }: ElementSettingsProps) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <QuestionTextandDescriptionSettings
-        qID={qID}
-        qText={text}
-        qDescription={description}
-      />
-      <NavigationButtonTextSettings
-        qID={qID}
-        questionPreferences={questionPreferences}
-      />
+      <QuestionTextandDescriptionSettings />
+      <NavigationButtonTextSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
     </Box>
   );

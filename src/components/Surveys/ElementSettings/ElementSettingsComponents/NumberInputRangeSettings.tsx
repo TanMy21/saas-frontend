@@ -17,12 +17,14 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { useUpdateQuestionPreferenceUIConfigMutation } from "../../../../app/slices/elementApiSlice";
 import { RootState } from "../../../../app/store";
 import { useAppSelector } from "../../../../app/typedReduxHooks";
+import { usePermission } from "../../../../context/PermissionContext";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionUIConfig } from "../../../../utils/types";
 
 const NumberInputRangeSettings = () => {
+  const { canEditQuestion } = usePermission();
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
   const [updateQuestionPreferenceUIConfig] =
@@ -54,6 +56,7 @@ const NumberInputRangeSettings = () => {
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionUIConfig) => {
+    if (!canEditQuestion) return;
     try {
       if (
         data.minValue !== undefined &&
@@ -78,11 +81,12 @@ const NumberInputRangeSettings = () => {
   };
 
   const markFormTouched = () => {
+    if (!canEditQuestion) return;
     if (!formTouched) setFormTouched(true);
   };
 
   useEffect(() => {
-    if (!formTouched) return;
+    if (!formTouched || !canEditQuestion) return;
 
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
@@ -103,8 +107,8 @@ const NumberInputRangeSettings = () => {
     }
   }, [minValue, maxValue, reset]);
 
-  // 🔒 Auto adjust max if min becomes greater
   useEffect(() => {
+    if (!canEditQuestion) return;
     const currentMax = getValues("maxValue");
 
     if (
@@ -208,6 +212,7 @@ const NumberInputRangeSettings = () => {
                 render={({ field }) => (
                   <TextField
                     type="number"
+                    disabled={!canEditQuestion}
                     variant="standard"
                     InputProps={{
                       disableUnderline: true,
@@ -220,6 +225,7 @@ const NumberInputRangeSettings = () => {
                         textOverflow: "ellipsis",
                         fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
                         fontWeight: 500,
+                        cursor: canEditQuestion ? "default" : "not-allowed",
                       },
                       "& .MuiInputBase-root": {
                         borderRadius: "8px",
@@ -230,6 +236,7 @@ const NumberInputRangeSettings = () => {
                         fontWeight: 600,
                         color: "#1F2937",
                         px: 1.5,
+                        cursor: canEditQuestion ? "text" : "not-allowed",
                         marginLeft: { md: "0%", xl: "16%" },
                         transition: "background-color 0.2s ease",
                         "&:hover": {
@@ -247,6 +254,7 @@ const NumberInputRangeSettings = () => {
                     }}
                     {...field}
                     onChange={(event) => {
+                      if (!canEditQuestion) return;
                       const value = Number(event.target.value);
                       field.onChange(value);
                       markFormTouched();
@@ -302,6 +310,7 @@ const NumberInputRangeSettings = () => {
                 render={({ field }) => (
                   <TextField
                     type="number"
+                    disabled={!canEditQuestion}
                     variant="standard"
                     fullWidth
                     InputProps={{
@@ -318,6 +327,8 @@ const NumberInputRangeSettings = () => {
                         textOverflow: "ellipsis",
                         fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
                         fontWeight: 500,
+                      cursor: canEditQuestion ? "default" : "not-allowed",
+
                       },
                       "& .MuiInputBase-root": {
                         borderRadius: "8px",
@@ -330,6 +341,7 @@ const NumberInputRangeSettings = () => {
                         fontWeight: 500,
                         color: "#1F2937",
                         px: 1.5,
+                        cursor: canEditQuestion ? "text" : "not-allowed",
                         transition: "background-color 0.2s ease",
                         "&:hover": {
                           backgroundColor: "#E5E7EB",
@@ -346,6 +358,7 @@ const NumberInputRangeSettings = () => {
                     }}
                     {...field}
                     onChange={(event) => {
+                      if (!canEditQuestion) return;
                       const value = Number(event.target.value);
                       field.onChange(value);
                       markFormTouched();
@@ -360,6 +373,5 @@ const NumberInputRangeSettings = () => {
     </Accordion>
   );
 };
-
 
 export default NumberInputRangeSettings;

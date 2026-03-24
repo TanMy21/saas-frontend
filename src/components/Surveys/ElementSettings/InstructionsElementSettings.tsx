@@ -5,12 +5,7 @@ import { ElementSettingsProps } from "../../../utils/types";
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 
-const InstructionsElementSettings = ({
-  qID,
-  question,
-}: ElementSettingsProps) => {
-  const { text, description } = question || {};
-
+const InstructionsElementSettings = ({ qID }: ElementSettingsProps) => {
   return (
     <Box
       sx={{
@@ -20,11 +15,7 @@ const InstructionsElementSettings = ({
         heigh: "100%",
       }}
     >
-      <QuestionTextandDescriptionSettings
-        qID={qID}
-        qText={text}
-        qDescription={description}
-      />
+      <QuestionTextandDescriptionSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
     </Box>
   );

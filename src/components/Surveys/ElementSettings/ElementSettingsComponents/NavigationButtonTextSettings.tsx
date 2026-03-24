@@ -19,13 +19,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useUpdateQuestionPreferenceUIConfigMutation } from "../../../../app/slices/elementApiSlice";
 import { updateUIButtonText } from "../../../../app/slices/elementSlice";
 import { RootState } from "../../../../app/store";
+import { usePermission } from "../../../../context/PermissionContext";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionSetting } from "../../../../utils/types";
 
 const NavigationButtonTextSettings = () => {
   const dispatch = useDispatch();
+  const { canEditQuestion } = usePermission();
   const question = useSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
   const { questionID, questionPreferences } = question || {};
@@ -49,10 +51,11 @@ const NavigationButtonTextSettings = () => {
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [inputLength, setInputLength] = useState(
-    questionPreferences?.uiConfig?.buttonText?.length ?? 0
+    questionPreferences?.uiConfig?.buttonText?.length ?? 0,
   );
 
   const onSubmit = async (data: QuestionSetting) => {
+    if (!canEditQuestion) return;
     try {
       const { buttonText } = data;
 
@@ -69,10 +72,12 @@ const NavigationButtonTextSettings = () => {
   };
 
   const markFormTouched = () => {
+    if (!canEditQuestion) return;
     if (!formTouched) setFormTouched(true);
   };
 
   useEffect(() => {
+    if (!canEditQuestion) return;
     if (!formTouched) setFormTouched(true);
 
     if (debounceTimeoutRef.current) {
@@ -127,9 +132,7 @@ const NavigationButtonTextSettings = () => {
           >
             <NavigationIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
             <Tooltip title="Set the text on the navigation button">
-              <Typography>
-                Navigation button
-              </Typography>
+              <Typography>Navigation button</Typography>
             </Tooltip>
           </Box>
         </AccordionSummary>
@@ -155,6 +158,7 @@ const NavigationButtonTextSettings = () => {
                   <TextField
                     type="text"
                     variant="standard"
+                    disabled={!canEditQuestion}
                     placeholder="Enter your question"
                     fullWidth
                     sx={{
@@ -165,6 +169,7 @@ const NavigationButtonTextSettings = () => {
                         textOverflow: "ellipsis",
                         fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
                         fontWeight: 500,
+                        cursor: canEditQuestion ? "text" : "not-allowed",
                       },
                       "& .MuiInputBase-root": {
                         borderRadius: "8px",
@@ -175,6 +180,7 @@ const NavigationButtonTextSettings = () => {
                         fontWeight: 500,
                         color: "#1F2937",
                         px: 1.5,
+                        cursor: canEditQuestion ? "text" : "not-allowed",
                         transition: "background-color 0.2s ease",
                         "&:hover": {
                           backgroundColor: "#E5E7EB",
@@ -193,6 +199,7 @@ const NavigationButtonTextSettings = () => {
                     {...field}
                     value={field.value}
                     onChange={(event) => {
+                      if (!canEditQuestion) return;
                       const value = event.target.value;
                       if (value.length <= 24) {
                         field.onChange(value);

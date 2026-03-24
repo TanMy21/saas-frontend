@@ -16,6 +16,7 @@ const FontSizeControl = ({
   dispatchKey,
   control,
   markFormTouched,
+  canEdit,
 }: FontSizeControlProps) => {
   const dispatch = useDispatch();
   const isMd = useMediaQuery("(min-width:900px) and (max-width:1280px)");
@@ -52,10 +53,12 @@ const FontSizeControl = ({
               min={8}
               max={72}
               step={1}
+              disabled={!canEdit}
               valueLabelDisplay={"on"}
               // valueLabelDisplay={"on"}
               value={field.value}
               onChange={(_, val) => {
+                if (!canEdit) return;
                 const numericValue = Array.isArray(val) ? val[0] : val;
                 field.onChange(numericValue);
                 markFormTouched();
@@ -63,7 +66,7 @@ const FontSizeControl = ({
                   updateTypographyField({
                     key: dispatchKey,
                     value: numericValue,
-                  })
+                  }),
                 );
               }}
               sx={{
@@ -80,7 +83,7 @@ const FontSizeControl = ({
                 "& .MuiSlider-valueLabel": {
                   backgroundColor: "#6846E5",
                   color: "#fff",
-                  fontSize: {xl:"10px"},
+                  fontSize: { xl: "10px" },
                   fontWeight: "bold",
                   borderRadius: "4px",
                   // top: -10,
@@ -113,8 +116,10 @@ const FontSizeControl = ({
               <TextField
                 type="number"
                 variant="standard"
+                disabled={!canEdit}
                 value={field.value}
                 onChange={(e) => {
+                  if (!canEdit) return;
                   const value = Number(e.target.value);
                   field.onChange(value);
                   markFormTouched();
@@ -122,7 +127,7 @@ const FontSizeControl = ({
                     updateTypographyField({
                       key: dispatchKey,
                       value: value,
-                    })
+                    }),
                   );
                 }}
                 inputProps={{ min: 8, max: 72 }}

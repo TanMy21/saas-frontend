@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToggleQuestionImageVisibilityMutation } from "../../../../app/slices/elementApiSlice";
 import { toggleShowImage } from "../../../../app/slices/elementSlice";
 import { RootState } from "../../../../app/store";
+import { usePermission } from "../../../../context/PermissionContext";
 import { questionImageSettingsSchema } from "../../../../utils/schema";
 import { QuestionImage } from "../../../../utils/types";
 
@@ -27,8 +28,9 @@ import QuestionImageUpload from "./QuestionImageUpload";
 
 const QuestionImageSettings = () => {
   const dispatch = useDispatch();
+  const { canEditQuestion } = usePermission();
   const question = useSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
   const [toggleQuestionImageVisibility] =
@@ -48,6 +50,7 @@ const QuestionImageSettings = () => {
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onSubmit = async (data: QuestionImage) => {
+    if (!canEditQuestion) return;
     try {
       const { questionImage } = data;
 
@@ -61,6 +64,7 @@ const QuestionImageSettings = () => {
   };
 
   const markFormTouched = () => {
+    if (!canEditQuestion) return;
     if (!formTouched) setFormTouched(true);
   };
 
@@ -71,7 +75,7 @@ const QuestionImageSettings = () => {
   }, [questionImage, reset]);
 
   useEffect(() => {
-    if (!formTouched) return;
+    if (!formTouched || !canEditQuestion) return;
 
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
@@ -146,12 +150,18 @@ const QuestionImageSettings = () => {
                   control={control}
                   render={({ field }) => (
                     <Switch
+                      disabled={!canEditQuestion}
                       checked={field.value}
                       onChange={(event) => {
+                        if (!canEditQuestion) return;
                         const value = event.target.checked;
                         field.onChange(value);
                         markFormTouched();
                         dispatch(toggleShowImage(value));
+                      }}
+                      sx={{
+                        cursor: canEditQuestion ? "pointer" : "not-allowed",
+                        opacity: canEditQuestion ? 1 : 0.8,
                       }}
                     />
                   )}
@@ -160,11 +170,16 @@ const QuestionImageSettings = () => {
             </form>
           </Box>
           {questionImage && (
-            <>
+            <Box
+              sx={{
+                opacity: canEditQuestion ? 1 : 0.6,
+                pointerEvents: canEditQuestion ? "auto" : "none",
+              }}
+            >
               <QuestionImageUpload questionID={questionID!} />
               <QuestionImageAltTxt />
               <QuestionImageDimensions />
-            </>
+            </Box>
           )}
         </Box>
       </AccordionDetails>
