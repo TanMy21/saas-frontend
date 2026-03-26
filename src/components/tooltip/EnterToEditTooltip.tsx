@@ -2,6 +2,7 @@ import { useEffect } from "react";
 
 import { Tooltip } from "@mui/material";
 
+import useAuth from "../../hooks/useAuth";
 import { EnterToEditTooltipProps } from "../../utils/types";
 
 const EnterToEditTooltip = ({
@@ -15,11 +16,16 @@ const EnterToEditTooltip = ({
   disableHoverListener = true,
   disableTouchListener = true,
 }: EnterToEditTooltipProps) => {
+  const { can } = useAuth();
+  const canEdit = can("UPDATE_OPTION");
+
   useEffect(() => {
     if (!open || !autoHideMs) return;
     const id = setTimeout(() => onOpenChange?.(false), autoHideMs);
     return () => clearTimeout(id);
   }, [open, autoHideMs, onOpenChange]);
+
+  if (!canEdit) return <>{children}</>;
 
   return (
     <Tooltip

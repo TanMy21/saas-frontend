@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, ClickAwayListener, TextField } from "@mui/material";
 
 import { useUpdateQuestionPreferenceUIConfigMutation } from "../../../app/slices/elementApiSlice";
+import useAuth from "../../../hooks/useAuth";
 import { useKeyboardEditableRow } from "../../../hooks/useKeyboardEdit";
 import { BinaryResponseProps } from "../../../utils/types";
 import { mergeHandlers } from "../../../utils/utils";
@@ -14,6 +15,8 @@ const BinaryResponseYes = ({
   index,
   display,
 }: BinaryResponseProps) => {
+  const { can } = useAuth();
+  const canEdit = can("UPDATE_QUESTION");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [tipOpen, setTipOpen] = useState(false);
   const [updateQuestionPreferenceUIConfig] =
@@ -33,6 +36,7 @@ const BinaryResponseYes = ({
     rowDataRole: "binary-item",
     siblingsSelector: '[data-role="binary-item"]',
     onSave: async (next) => {
+      if (!canEdit) return;
       if (next.trim() !== (buttonTextYes ?? "").trim()) {
         await updateQuestionPreferenceUIConfig({
           questionID,
@@ -50,26 +54,32 @@ const BinaryResponseYes = ({
 
   return (
     <EnterToEditTooltip
-      open={tipOpen && !isEditing}
+      open={canEdit && tipOpen && !isEditing}
       onOpenChange={setTipOpen}
       autoHideMs={1800}
     >
       <Box
-        {...editProps}
-        tabIndex={0}
+        {...(canEdit ? editProps : {})}
+        tabIndex={canEdit ? 0 : -1}
         onFocus={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
           (editProps as any).onFocus,
-          () => setTipOpen(true)
+          () => setTipOpen(true),
         )}
         onBlur={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
           (editProps as any).onBlur,
-          () => setTipOpen(false)
+          () => setTipOpen(false),
         )}
         onKeyDownCapture={mergeHandlers<React.KeyboardEvent<HTMLDivElement>>(
           (editProps as any).onKeyDownCapture,
           (e) => {
+            if (!canEdit && (e.key === "Backspace" || e.key === "Enter")) {
+              e.preventDefault();
+              e.stopPropagation();
+              return;
+            }
+
             if (e.key === "Enter") setTipOpen(false);
-          }
+          },
         )}
         sx={{
           display: "flex",
@@ -82,7 +92,7 @@ const BinaryResponseYes = ({
           pl: 4,
           backgroundColor: "#f8f9fc",
           border: "1px solid #E2E8F0",
-          borderRadius:"16px",
+          borderRadius: "16px",
           mb: 1.5,
           transition: "box-shadow 0.2s ease-in-out",
           boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
@@ -101,6 +111,7 @@ const BinaryResponseYes = ({
               <TextField
                 {...editorProps}
                 value={editText}
+                disabled={!canEdit}
                 onChange={(e) => setEditText(e.target.value)}
                 autoFocus
                 inputProps={{
@@ -109,16 +120,20 @@ const BinaryResponseYes = ({
                 sx={{
                   width: "96%",
                   outline: "none",
+                  cursor: canEdit ? "text" : "not-allowed",
                 }}
               />
             </ClickAwayListener>
           ) : (
             <Box
-              onClick={() => enterEdit()}
+              onClick={() => {
+                if (!canEdit) return;
+                enterEdit();
+              }}
               sx={{
                 py: 1,
                 px: 1,
-                cursor: "text",
+                cursor: canEdit ? "text" : "not-allowed",
                 borderRadius: 1,
                 color: "#626B77",
                 width: "92%",

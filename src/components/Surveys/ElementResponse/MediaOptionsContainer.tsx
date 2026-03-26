@@ -21,6 +21,7 @@ import {
   useGetOptionsOfQuestionQuery,
   useUpdateOptionOrderMutation,
 } from "../../../app/slices/optionApiSlice";
+import useAuth from "../../../hooks/useAuth";
 import {
   ErrorData,
   MediaOptionsContainerProps,
@@ -34,6 +35,11 @@ const MediaOptionsContainer = ({
   qID,
   display,
 }: MediaOptionsContainerProps) => {
+  const { can } = useAuth();
+
+  const canCreate = can("CREATE_OPTION");
+  const canReorder = can("REORDER_OPTION");
+
   const { data: options = [] as OptionType[], refetch } =
     useGetOptionsOfQuestionQuery(qID);
 
@@ -47,13 +53,12 @@ const MediaOptionsContainer = ({
   const disableInput = options.length >= MAX_OPTIONS;
 
   const addMedia = async () => {
+    if (!canCreate) return;
+
     if (options.length >= MAX_OPTIONS) {
       toast.info("Limit reached (10 options).");
       return;
     }
-
-    console.log("add clicked");
-    console.log("ID", qID);
 
     const nextCharCode = "A".charCodeAt(0) + options.length;
     const nextChoiceLetter = String.fromCharCode(nextCharCode);
@@ -75,6 +80,8 @@ const MediaOptionsContainer = ({
   };
 
   const onDragEnd = async (event: any) => {
+    if (!canReorder) return;
+
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -98,7 +105,7 @@ const MediaOptionsContainer = ({
     const errorData = error as unknown as ErrorData;
     if (Array.isArray(errorData?.data?.error)) {
       errorData.data.error.forEach((el) =>
-        toast.error(el.message, { position: "top-right" })
+        toast.error(el.message, { position: "top-right" }),
       );
     } else {
       toast.error(errorData?.data?.message || "Something went wrong.", {
@@ -142,35 +149,37 @@ const MediaOptionsContainer = ({
           {options.map((option) => (
             <MediaOption key={option.optionID} option={option} />
           ))}
-          <Box
-            component="button"
-            onClick={addMedia}
-            sx={{
-              border: "2px dashed #d0d5ff",
-              borderRadius: "16px",
-              backgroundColor: "rgba(91, 106, 208, 0.02)",
-              color: "#5b6ad0",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "12px",
-              fontSize: 16,
-              fontWeight: 600,
-              flex: 1,
-              minHeight: { xs: 160, sm: 200, md: 240, xl: 240 },
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-              "&:hover": {
-                backgroundColor: "rgba(91, 106, 208, 0.05)",
-                borderColor: "#5b6ad0",
-                transform: "translateY(-2px)",
-              },
-            }}
-          >
-            <AddIcon sx={{ fontSize: 24 }} />
-            <span>Add Option</span>
-          </Box>
+          {canCreate && (
+            <Box
+              component="button"
+              onClick={addMedia}
+              sx={{
+                border: "2px dashed #d0d5ff",
+                borderRadius: "16px",
+                backgroundColor: "rgba(91, 106, 208, 0.02)",
+                color: "#5b6ad0",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "12px",
+                fontSize: 16,
+                fontWeight: 600,
+                flex: 1,
+                minHeight: { xs: 160, sm: 200, md: 240, xl: 240 },
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  backgroundColor: "rgba(91, 106, 208, 0.05)",
+                  borderColor: "#5b6ad0",
+                  transform: "translateY(-2px)",
+                },
+              }}
+            >
+              <AddIcon sx={{ fontSize: 24 }} />
+              <span>Add Option</span>
+            </Box>
+          )}
         </Box>
       </SortableContext>
     </DndContext>

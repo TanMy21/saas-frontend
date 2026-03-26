@@ -15,12 +15,18 @@ import {
   useGetOptionsOfQuestionQuery,
   useUpdateOptionOrderMutation,
 } from "../../../app/slices/optionApiSlice";
+import useAuth from "../../../hooks/useAuth";
 import { OptionType, ResponseListProps } from "../../../utils/types";
 import { MAX_OPTIONS } from "../../../utils/utils";
 
 import ResponseListItem from "./ResponseListItem";
 
 const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
+  const { can } = useAuth();
+
+  const canCreate = can("CREATE_OPTION");
+  const canReorder = can("REORDER_OPTION");
+
   const { data: options = [] as OptionType[] } =
     useGetOptionsOfQuestionQuery(qID);
 
@@ -98,7 +104,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
     const errData: any = error;
     if (Array.isArray(errData?.data?.error)) {
       errData.data.error.forEach((el: any) =>
-        toast.error(el.message, { position: "top-right" })
+        toast.error(el.message, { position: "top-right" }),
       );
     } else if (errData?.data?.message) {
       toast.error(errData.data.message, { position: "top-right" });
@@ -140,7 +146,12 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
             // border: "2px solid black",
           }}
         >
-          <DragDropContext onDragEnd={handleDragEnd}>
+          <DragDropContext
+            onDragEnd={(result) => {
+              if (!canReorder) return;
+              handleDragEnd(result);
+            }}
+          >
             <Droppable droppableId="responses">
               {(provided) => (
                 <Box
@@ -160,6 +171,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
                       key={option.optionID}
                       draggableId={option.optionID}
                       index={index}
+                      isDragDisabled={!canReorder}
                     >
                       {(provided) => (
                         <Box
@@ -197,92 +209,100 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
           </DragDropContext>
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginX: "auto",
-            width: display === "mobile" ? "92%" : "98%",
-            padding: 1,
-            // border: "2px solid black",
-          }}
-        >
+        {canCreate && (
           <Box
             sx={{
-              position: "relative",
-              width: display === "mobile" ? "92%" : "76%",
-              px: 1,
-              pt: 0.5,
-              pb: 0.5,
-              // border: "2px solid red",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              marginX: "auto",
+              width: display === "mobile" ? "92%" : "98%",
+              padding: 1,
+              // border: "2px solid black",
             }}
           >
-            <TextField
-              multiline
-              minRows={1}
-              inputRef={textareaRef}
-              placeholder="Type an option, press Enter for another…"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              disabled={(localOptions?.length ?? 0) >= MAX_OPTIONS}
-              variant="standard"
-              InputProps={{
-                disableUnderline: true,
-                sx: {
-                  bgcolor: "transparent",
-                  lineHeight: 1.6,
-                  fontSize: 16,
-                  color: "inherit",
-                  px: 0,
-                },
-              }}
+            <Box
               sx={{
-                width: "100%",
-                "& .MuiInputBase-root": {
-                  bgcolor: "transparent",
-                },
+                position: "relative",
+                width: display === "mobile" ? "92%" : "76%",
+                px: 1,
+                pt: 0.5,
+                pb: 0.5,
+                // border: "2px solid red",
               }}
-            />
+            >
+              <TextField
+                multiline
+                minRows={1}
+                disabled={
+                  !canCreate || (localOptions?.length ?? 0) >= MAX_OPTIONS
+                }
+                inputRef={textareaRef}
+                placeholder="Type an option, press Enter for another…"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                variant="standard"
+                InputProps={{
+                  disableUnderline: true,
+                  sx: {
+                    bgcolor: "transparent",
+                    lineHeight: 1.6,
+                    fontSize: 16,
+                    color: "inherit",
+                    px: 0,
+                  },
+                }}
+                sx={{
+                  width: "100%",
+                  "& .MuiInputBase-root": {
+                    bgcolor: "transparent",
+                  },
+                }}
+              />
 
-            <IconButton
-              onClick={handleAddOptions}
-              disabled={
-                (localOptions?.length ?? 0) >= MAX_OPTIONS ||
-                inputValue.trim() === ""
-              }
-              aria-label="Add options"
-              sx={{
-                position: "absolute",
-                right: 0,
-                bottom: 2,
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                bgcolor: "#4F46E5",
-                color: "white",
-                boxShadow: "0 6px 16px rgba(79,70,229,0.25)",
-                "&:hover": { bgcolor: "#4338CA" },
-                "&.Mui-disabled": {
-                  bgcolor: "#CBD5E1",
+              <IconButton
+                onClick={() => {
+                  if (!canCreate) return;
+                  handleAddOptions();
+                }}
+                disabled={
+                  !canCreate ||
+                  (localOptions?.length ?? 0) >= MAX_OPTIONS ||
+                  inputValue.trim() === ""
+                }
+                aria-label="Add options"
+                sx={{
+                  position: "absolute",
+                  right: 0,
+                  bottom: 2,
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  bgcolor: "#4F46E5",
                   color: "white",
-                },
-              }}
-            >
-              <MdAdd size={20} />
-            </IconButton>
-          </Box>
+                  boxShadow: "0 6px 16px rgba(79,70,229,0.25)",
+                  "&:hover": { bgcolor: "#4338CA" },
+                  "&.Mui-disabled": {
+                    bgcolor: "#CBD5E1",
+                    color: "white",
+                  },
+                }}
+              >
+                <MdAdd size={20} />
+              </IconButton>
+            </Box>
 
-          {/* Count line */}
-          <Box sx={{ width: display === "mobile" ? "92%" : "80%", mt: "2%" }}>
-            <Typography
-              variant="body2"
-              sx={{ color: "#64748B", textAlign: "right" }}
-            >
-              {localOptions?.length ?? 0}/{MAX_OPTIONS} options
-            </Typography>
+            {/* Count line */}
+            <Box sx={{ width: display === "mobile" ? "92%" : "80%", mt: "2%" }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "#64748B", textAlign: "right" }}
+              >
+                {localOptions?.length ?? 0}/{MAX_OPTIONS} options
+              </Typography>
+            </Box>
           </Box>
-        </Box>
+        )}
       </Box>
     </Box>
   );

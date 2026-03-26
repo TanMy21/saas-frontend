@@ -18,6 +18,7 @@ export const ElementsListItem = ({
   newQuestionIds,
 }: ElementListItemProps) => {
   const { can } = useAuth();
+  const canReorder = can("REORDER_OPTION");
 
   const selectedQuestionId = useAppSelector(
     (state: RootState) => state.question.selectedQuestion?.questionID,
@@ -185,15 +186,19 @@ export const ElementsListItem = ({
                         alignItems: "center",
                         justifyContent: "center",
                         color: isSelected ? "#2563eb" : "#9CA3AF",
-                        cursor: "grab",
-                        "&:active": { cursor: "grabbing" },
+                        cursor: canReorder ? "grab" : "pointer",
+                        "&:active": {
+                          cursor: canReorder ? "grabbing" : "pointer",
+                        },
                         width: 28,
                         height: 28,
                       }}
                     >
-                      <Tooltip title="Drag to reorder">
-                        <GripVertical fontSize="small" />
-                      </Tooltip>
+                      {canReorder && (
+                        <Tooltip title="Drag to reorder">
+                          <GripVertical fontSize="small" />
+                        </Tooltip>
+                      )}
                     </Box>
                   ) : null}
 

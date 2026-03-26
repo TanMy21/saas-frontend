@@ -1,17 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import useAuth from "./useAuth";
+
 type SaveFn = (nextText: string) => Promise<void> | void;
 
 type UseKeyboardEditableRowOptions = {
-  // initial text to show when not editing
   initialText: string;
-  // called on save (Enter/Tab/outside click)
   onSave: SaveFn;
-  // optional: CSS selector to find siblings for focus traversal
   siblingsSelector?: string; // default: '[data-role="editable-row"]'
-  // optional: custom data-role value for the row; used with siblingsSelector default
   rowDataRole?: string; // default: 'editable-row'
-  // optional: when external value changes, update our local text
   externalValue?: string;
 };
 
@@ -22,21 +19,23 @@ export function useKeyboardEditableRow({
   rowDataRole,
   externalValue,
 }: UseKeyboardEditableRowOptions) {
-  // ---------- state & refs ----------
+  const { can } = useAuth();
+  const canEdit = can("UPDATE_OPTION");
+
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(initialText);
 
   const rowRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // NEW: remember how we entered edit (typed seed vs plain enter/click)
+  // remember how we entered edit (typed seed vs plain enter/click)
   const lastSeedRef = useRef<string | null>(null);
 
   // compute defaults
   const roleValue = rowDataRole ?? "editable-row";
   const selector = siblingsSelector ?? '[data-role="editable-row"]';
 
-  // keep local text synced if external changes (e.g., redux/rtk updates)
+  // keep local text synced if external changes
   useEffect(() => {
     if (typeof externalValue === "string") setText(externalValue);
   }, [externalValue]);
@@ -51,13 +50,13 @@ export function useKeyboardEditableRow({
       const el = rowRef.current;
       if (!el || !el.parentElement) return;
       const siblings = Array.from(
-        el.parentElement.querySelectorAll<HTMLElement>(selector)
+        el.parentElement.querySelectorAll<HTMLElement>(selector),
       );
       const idx = siblings.indexOf(el);
       const next = siblings[idx + delta];
       next?.focus();
     },
-    [selector]
+    [selector],
   );
 
   // ---------- edit lifecycle ----------
@@ -68,7 +67,7 @@ export function useKeyboardEditableRow({
       setText(typeof seed === "string" ? seed : (externalValue ?? initialText));
       focusInputNextTick();
     },
-    [externalValue, initialText]
+    [externalValue, initialText],
   );
 
   const exitEdit = useCallback(() => {
@@ -84,14 +83,16 @@ export function useKeyboardEditableRow({
   const cancel = useCallback(
     (fallback?: string) => {
       setText(
-        typeof fallback === "string" ? fallback : (externalValue ?? initialText)
+        typeof fallback === "string"
+          ? fallback
+          : (externalValue ?? initialText),
       );
       exitEdit();
     },
-    [externalValue, initialText, exitEdit]
+    [externalValue, initialText, exitEdit],
   );
 
-  // NEW: once we’re in edit mode, select all (or place caret) after the input mounts
+  // once in edit mode
   useEffect(() => {
     if (!isEditing) return;
     const id = requestAnimationFrame(() => {
@@ -103,8 +104,6 @@ export function useKeyboardEditableRow({
         // Enter/click/F2 path => select entire text
         el.setSelectionRange(0, el.value.length);
       } else {
-        // Typed a printable char to enter => caret at end (overwrite flow)
-        // If you want select-all here too, replace with the line above.
         const end = el.value.length;
         el.setSelectionRange(end, end);
       }
@@ -140,12 +139,12 @@ export function useKeyboardEditableRow({
         focusSiblingByDelta(-1);
       }
     },
-    [isEditing, enterEdit, focusSiblingByDelta]
+    [isEditing, enterEdit, focusSiblingByDelta],
   );
 
-  // capture backstop: allow Enter to start edit even if a child got focus
   const handleRowKeyDownCapture = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (!canEdit) return;
       if (!isEditing && e.key === "Enter") {
         const t = e.target as HTMLElement;
         const tag = t.tagName;
@@ -162,7 +161,7 @@ export function useKeyboardEditableRow({
         }
       }
     },
-    [isEditing, enterEdit]
+    [isEditing, enterEdit],
   );
 
   const handleEditorKeyDown = useCallback(
@@ -201,14 +200,13 @@ export function useKeyboardEditableRow({
         cancel();
       }
     },
-    [save, cancel, focusSiblingByDelta]
+    [save, cancel, focusSiblingByDelta],
   );
 
   const handleClickAway = useCallback(() => {
     if (isEditing) void save();
   }, [isEditing, save]);
 
-  // ---------- props to spread ----------
   const editProps = useMemo(
     () => ({
       ref: rowRef,
@@ -218,7 +216,7 @@ export function useKeyboardEditableRow({
       onKeyDown: !isEditing ? handleRowKeyDown : undefined,
       onKeyDownCapture: handleRowKeyDownCapture,
     }),
-    [isEditing, handleRowKeyDown, handleRowKeyDownCapture, roleValue]
+    [isEditing, handleRowKeyDown, handleRowKeyDownCapture, roleValue],
   );
 
   const editorProps = useMemo(
@@ -227,7 +225,7 @@ export function useKeyboardEditableRow({
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         setText(e.target.value),
       onKeyDown: handleEditorKeyDown,
-      inputRef, // NEW: fallback—if focus arrives late, still select as intended
+      inputRef, // fallback—if focus arrives late
       onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
         const el = e.currentTarget;
         if (lastSeedRef.current == null) {
@@ -238,7 +236,7 @@ export function useKeyboardEditableRow({
         }
       },
     }),
-    [text, handleEditorKeyDown]
+    [text, handleEditorKeyDown],
   );
 
   return {
@@ -251,7 +249,7 @@ export function useKeyboardEditableRow({
     editProps,
     editorProps,
 
-    // refs (if needed)
+    // refs
     rowRef,
     inputRef,
 

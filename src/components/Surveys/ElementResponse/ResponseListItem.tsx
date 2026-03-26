@@ -15,6 +15,7 @@ import {
   useDeleteOptionMutation,
   useUpdateOptionTextandValueMutation,
 } from "../../../app/slices/optionApiSlice";
+import useAuth from "../../../hooks/useAuth";
 import { useKeyboardEditableRow } from "../../../hooks/useKeyboardEdit";
 import { ResponseListItemProps } from "../../../utils/types";
 import { mergeHandlers } from "../../../utils/utils";
@@ -26,6 +27,10 @@ const ResponseListItem = ({
   index,
   display,
 }: ResponseListItemProps) => {
+  const { can } = useAuth();
+  const canReorder = can("REORDER_OPTION");
+  const canEdit = can("UPDATE_OPTION");
+  const canDelete = can("DELETE_OPTION");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [tipOpen, setTipOpen] = useState(false);
 
@@ -47,6 +52,7 @@ const ResponseListItem = ({
     rowDataRole: "response-item",
     siblingsSelector: '[data-role="response-item"]',
     onSave: async (nextText) => {
+      if (!canEdit) return;
       if (nextText.trim() !== response.text.trim()) {
         await updateOptionTextandValue({
           optionID: response.optionID,
@@ -73,26 +79,32 @@ const ResponseListItem = ({
 
   return (
     <EnterToEditTooltip
-      open={tipOpen && !isEditing}
+      open={canEdit && tipOpen && !isEditing}
       onOpenChange={setTipOpen}
       autoHideMs={1800}
     >
       <Box
-        {...editProps}
-        tabIndex={0}
+        {...(canEdit ? editProps : {})}
+        tabIndex={canEdit ? 0 : -1}
         onFocus={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
           (editProps as any).onFocus,
-          () => setTipOpen(true)
+          () => setTipOpen(true),
         )}
         onBlur={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
           (editProps as any).onBlur,
-          () => setTipOpen(false)
+          () => setTipOpen(false),
         )}
         onKeyDownCapture={mergeHandlers<React.KeyboardEvent<HTMLDivElement>>(
           (editProps as any).onKeyDownCapture,
           (e) => {
+            if (!canEdit && (e.key === "Backspace" || e.key === "Enter")) {
+              e.preventDefault();
+              e.stopPropagation();
+              return;
+            }
+
             if (e.key === "Enter") setTipOpen(false);
-          }
+          },
         )}
         sx={{
           display: "flex",
@@ -106,8 +118,9 @@ const ResponseListItem = ({
           p: 1,
           backgroundColor: "#f8f9fc",
           border: "1px solid #E2E8F0",
-          borderRadius:"16px",
+          borderRadius: "16px",
           mb: 1.5,
+          cursor: canReorder ? "grab" : "not-allowed",
           transition: "box-shadow 0.2s ease-in-out",
           boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
           position: "relative",
@@ -129,7 +142,9 @@ const ResponseListItem = ({
               transition: "opacity 0.2s",
             }}
           >
-            <FaGripVertical size={18} style={{ color: "#6D7584" }} />
+            {canReorder && (
+              <FaGripVertical size={18} style={{ color: "#6D7584" }} />
+            )}
           </Box>
         )}
         {qType === "RADIO" && (
@@ -211,6 +226,7 @@ const ResponseListItem = ({
               <TextField
                 {...editorProps}
                 value={editText}
+                disabled={!canEdit}
                 onChange={(e) => setEditText(e.target.value)}
                 autoFocus
                 inputProps={{
@@ -219,6 +235,7 @@ const ResponseListItem = ({
                 sx={{
                   width: display === "mobile" ? "100%" : "96%",
                   outline: "none",
+                  cursor: canEdit ? "text" : "not-allowed",
                   // border: "2px solid green",
                 }}
               />
@@ -227,6 +244,7 @@ const ResponseListItem = ({
             <>
               <Box
                 onClick={() => {
+                  if (!canEdit) return;
                   setTipOpen(false);
                   enterEdit();
                 }}
@@ -236,7 +254,7 @@ const ResponseListItem = ({
                   maxWidth: "100%",
                   py: 1,
                   px: 1,
-                  cursor: "text",
+                  cursor: canEdit ? "text" : "not-allowed",
                   borderRadius: 1,
                   color: "#626B77",
                   fontSize: display === "mobile" ? 14 : 16,
@@ -263,27 +281,32 @@ const ResponseListItem = ({
             </>
           )}
         </Box>
-        <Button
-          onClick={() => deleteResponseItem(response.optionID)}
-          tabIndex={-1}
-          aria-label="Delete instruction"
-          sx={{
-            p: 1.5,
-            flexShrink: 0,
-            minWidth: "auto",
-            transition: "background-color 0.2s",
-            backgroundColor: "transparent",
-            color: "darkred",
-            borderRadius: "50%",
-            "&:hover": {
+        {canDelete && (
+          <Button
+            onClick={() => {
+              if (!canDelete) return;
+              deleteResponseItem(response.optionID);
+            }}
+            tabIndex={-1}
+            aria-label="Delete instruction"
+            sx={{
+              p: 1.5,
+              flexShrink: 0,
+              minWidth: "auto",
+              transition: "background-color 0.2s",
               backgroundColor: "transparent",
-            },
-            opacity: hoveredIndex === index ? 1 : 0,
-            // border: "2px solid orange",
-          }}
-        >
-          <DeleteIcon />
-        </Button>
+              color: "darkred",
+              borderRadius: "50%",
+              "&:hover": {
+                backgroundColor: "transparent",
+              },
+              opacity: hoveredIndex === index ? 1 : 0,
+              // border: "2px solid orange",
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+        )}
       </Box>
     </EnterToEditTooltip>
   );

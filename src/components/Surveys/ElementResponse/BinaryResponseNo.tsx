@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, ClickAwayListener, TextField } from "@mui/material";
 
 import { useUpdateQuestionPreferenceUIConfigMutation } from "../../../app/slices/elementApiSlice";
+import useAuth from "../../../hooks/useAuth";
 import { useKeyboardEditableRow } from "../../../hooks/useKeyboardEdit";
 import { BinaryResponseProps } from "../../../utils/types";
 import { mergeHandlers } from "../../../utils/utils";
@@ -14,6 +15,8 @@ const BinaryResponseNo = ({
   index,
   display,
 }: BinaryResponseProps) => {
+  const { can } = useAuth();
+  const canEdit = can("UPDATE_QUESTION");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [tipOpen, setTipOpen] = useState(false);
 
@@ -43,6 +46,11 @@ const BinaryResponseNo = ({
     },
   });
 
+  const safeEnterEdit = () => {
+    if (!canEdit) return;
+    enterEdit();
+  };
+
   useEffect(() => {
     if (buttonTextNo) {
       setEditText(buttonTextNo);
@@ -51,26 +59,32 @@ const BinaryResponseNo = ({
 
   return (
     <EnterToEditTooltip
-      open={tipOpen && !isEditing}
+      open={canEdit && tipOpen && !isEditing}
       onOpenChange={setTipOpen}
       autoHideMs={1800}
     >
       <Box
-        {...editProps}
-        tabIndex={0}
+        {...(canEdit ? editProps : {})}
+        tabIndex={canEdit ? 0 : -1}
         onFocus={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
           (editProps as any).onFocus,
-          () => setTipOpen(true)
+          () => setTipOpen(true),
         )}
         onBlur={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
           (editProps as any).onBlur,
-          () => setTipOpen(false)
+          () => setTipOpen(false),
         )}
         onKeyDownCapture={mergeHandlers<React.KeyboardEvent<HTMLDivElement>>(
           (editProps as any).onKeyDownCapture,
           (e) => {
+            if (!canEdit && (e.key === "Backspace" || e.key === "Enter")) {
+              e.preventDefault();
+              e.stopPropagation();
+              return;
+            }
+
             if (e.key === "Enter") setTipOpen(false);
-          }
+          },
         )}
         sx={{
           display: "flex",
@@ -83,10 +97,11 @@ const BinaryResponseNo = ({
           pl: 4,
           backgroundColor: "#f8f9fc",
           border: "1px solid #E2E8F0",
-          borderRadius:"16px",
+          borderRadius: "16px",
           mb: 1.5,
           transition: "box-shadow 0.2s ease-in-out",
-          boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff", "&:focus": { outline: "2px solid #6366F1", outlineOffset: 2 },
+          boxShadow: "8px 8px 24px #e0e0e0, -8px -8px 24px #ffffff",
+          "&:focus": { outline: "2px solid #6366F1", outlineOffset: 2 },
           "&:hover": {
             backgroundColor: "#f5f7ff",
             boxShadow: "0 4px 12px rgba(80, 84, 255, 0.12)",
@@ -109,21 +124,22 @@ const BinaryResponseNo = ({
                 sx={{
                   width: "100%",
                   outline: "none",
+                  cursor: canEdit ? "text" : "not-allowed",
                 }}
               />
             </ClickAwayListener>
           ) : (
             <Box
-              onClick={() => enterEdit()}
+              onClick={safeEnterEdit}
               sx={{
                 py: 1,
                 px: 1,
-                cursor: "text",
                 borderRadius: 1,
                 color: "#626B77",
                 width: "92%",
                 fontSize: 16,
                 fontWeight: "bold",
+                cursor: canEdit ? "text" : "not-allowed",
                 "&:hover": {
                   backgroundColor: "white",
                 },

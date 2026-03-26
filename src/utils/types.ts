@@ -103,7 +103,7 @@ export interface BinaryResponseProps {
 export interface ColorPickerProps {
   color: string;
   setColor: (color: string) => void;
-  canEdit?:boolean;
+  canEdit?: boolean;
 }
 
 export interface CanvasConsoleProps {
@@ -417,7 +417,7 @@ export interface EditablePlainTextProps {
   id?: string;
   sx?: any;
   blockEnter?: boolean;
-  readOnly?:boolean;
+  readOnly?: boolean;
 }
 
 export interface RichTextFieldProps {
@@ -432,7 +432,7 @@ export interface RichTextFieldProps {
   contentKey?: string | number;
   blockEnter?: boolean;
   plainOnly?: boolean;
-  readOnly?:boolean;
+  readOnly?: boolean;
 }
 
 export type ErrorFallbackProps = Readonly<{
@@ -504,7 +504,7 @@ export interface FontSizeControlProps {
   control: any;
   dispatchKey: keyof TypographySettingsForm;
   markFormTouched: () => void;
-  canEdit?:boolean;
+  canEdit?: boolean;
 }
 
 export interface FlowFormConditionBlockProps {
@@ -1410,7 +1410,11 @@ export type Permission =
   | "CREATE_QUESTION"
   | "UPDATE_QUESTION"
   | "DELETE_QUESTION"
-  | "REORDER_QUESTION";
+  | "REORDER_QUESTION"
+  | "CREATE_OPTION"
+  | "UPDATE_OPTION"
+  | "DELETE_OPTION"
+  | "REORDER_OPTION";
 
 export interface OrganizationMember {
   relatedOrgID: string;

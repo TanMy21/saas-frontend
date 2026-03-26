@@ -17,6 +17,7 @@ import {
   useDeleteOptionMutation,
   useUpdateOptionTextandValueMutation,
 } from "../../../app/slices/optionApiSlice";
+import useAuth from "../../../hooks/useAuth";
 import { useKeyboardEditableRow } from "../../../hooks/useKeyboardEdit";
 import { MediaOptionProps } from "../../../utils/types";
 import { getSquareImageURL, mergeHandlers } from "../../../utils/utils";
@@ -25,6 +26,12 @@ import MediaElementImageUploadModal from "../../Modals/MediaElementImageUploadMo
 import EnterToEditTooltip from "../../tooltip/EnterToEditTooltip";
 
 const MediaOption = ({ option }: MediaOptionProps) => {
+  const { can } = useAuth();
+
+  const canEdit = can("UPDATE_OPTION");
+  const canDelete = can("DELETE_OPTION");
+  const canReorder = can("REORDER_OPTION");
+
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: option.optionID });
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -50,6 +57,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
     rowDataRole: "media-item",
     siblingsSelector: '[data-role="media-item"]',
     onSave: async (next) => {
+      if (!canEdit) return;
       if (next.trim() !== option.value.trim()) {
         await updateOptionTextandValue({
           optionID: option.optionID,
@@ -60,6 +68,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
   });
 
   const deleteChoice = async () => {
+    if (!canDelete) return;
     try {
       await deleteOption(option.optionID).unwrap();
     } catch (error) {
@@ -80,6 +89,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
         backgroundColor: "#F9F9F9",
         border: "2px solid #F1F1F1",
         borderRadius: 4,
+        cursor: canEdit ? "pointer" : "not-allowed",
         flex: 1,
         minHeight: { xs: 160, sm: 200, md: 200, xl: 240 },
         overflow: "hidden",
@@ -99,6 +109,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
           width: "100%",
           height: { xs: 140, sm: 160, md: 180, xl: 200 },
           flexShrink: 0,
+          cursor: canEdit ? "pointer" : "not-allowed",
           // border: "1px solid red",
         }}
         onMouseEnter={() => setIsHovered(true)}
@@ -107,12 +118,11 @@ const MediaOption = ({ option }: MediaOptionProps) => {
         <Box
           sx={{
             flexGrow: 1,
-            // border: "1px dashed grey",
             borderRadius: 1,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            cursor: "pointer",
+            cursor: canEdit ? "pointer" : "not-allowed",
             overflow: "hidden",
           }}
         >
@@ -129,7 +139,10 @@ const MediaOption = ({ option }: MediaOptionProps) => {
             />
           ) : (
             <Box
-              onClick={() => setUploadImageModalOpen(true)}
+              onClick={() => {
+                if (!canEdit) return;
+                setUploadImageModalOpen(true);
+              }}
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -142,11 +155,13 @@ const MediaOption = ({ option }: MediaOptionProps) => {
               <span>Upload image</span>
             </Box>
           )}
-          <MediaElementImageUploadModal
-            uploadImageModalOpen={uploadImageModalOpen}
-            setUploadImageModalOpen={setUploadImageModalOpen}
-            optionID={option.optionID}
-          />
+          {canEdit && (
+            <MediaElementImageUploadModal
+              uploadImageModalOpen={uploadImageModalOpen}
+              setUploadImageModalOpen={setUploadImageModalOpen}
+              optionID={option.optionID}
+            />
+          )}
         </Box>
         {isHovered && (
           <Box
@@ -173,24 +188,26 @@ const MediaOption = ({ option }: MediaOptionProps) => {
                 pointerEvents: "auto",
               }}
             >
-              <IconButton
-                {...attributes}
-                {...listeners}
-                tabIndex={-1}
-                sx={{
-                  position: "absolute",
-                  top: 4,
-                  left: 4,
-                  cursor: "grab",
-                  color: "#848484",
-                  backgroundColor: "white",
-                  "&:hover": {
+              {canReorder && (
+                <IconButton
+                  {...attributes}
+                  {...listeners}
+                  tabIndex={-1}
+                  sx={{
+                    position: "absolute",
+                    top: 4,
+                    left: 4,
+                    cursor: "grab",
+                    color: "#848484",
                     backgroundColor: "white",
-                  },
-                }}
-              >
-                <IoMoveSharp style={{ fontSize: 16 }} />
-              </IconButton>
+                    "&:hover": {
+                      backgroundColor: "white",
+                    },
+                  }}
+                >
+                  <IoMoveSharp style={{ fontSize: 16 }} />
+                </IconButton>
+              )}
             </Box>
             <Box
               sx={{
@@ -203,7 +220,9 @@ const MediaOption = ({ option }: MediaOptionProps) => {
                 pointerEvents: "auto",
               }}
             >
-              <MediaElementCardIconBtns optionID={option.optionID} />
+              {canEdit && (
+                <MediaElementCardIconBtns optionID={option.optionID} />
+              )}
             </Box>
             <Box
               sx={{
@@ -216,22 +235,24 @@ const MediaOption = ({ option }: MediaOptionProps) => {
                 pointerEvents: "auto",
               }}
             >
-              <IconButton
-                onClick={deleteChoice}
-                tabIndex={-1}
-                sx={{
-                  position: "absolute",
-                  top: 4,
-                  right: 4,
-                  color: "red",
-                  backgroundColor: "white",
-                  "&:hover": {
+              {canDelete && (
+                <IconButton
+                  onClick={deleteChoice}
+                  tabIndex={-1}
+                  sx={{
+                    position: "absolute",
+                    top: 4,
+                    right: 4,
+                    color: "red",
                     backgroundColor: "white",
-                  },
-                }}
-              >
-                <ClearIcon sx={{ fontSize: 16 }} />
-              </IconButton>
+                    "&:hover": {
+                      backgroundColor: "white",
+                    },
+                  }}
+                >
+                  <ClearIcon sx={{ fontSize: 16 }} />
+                </IconButton>
+              )}
             </Box>
           </Box>
         )}
@@ -282,25 +303,34 @@ const MediaOption = ({ option }: MediaOptionProps) => {
           </Box>
         </Box>
         <EnterToEditTooltip
-          open={tipOpen && !isEditing}
+          open={canEdit && tipOpen && !isEditing}
           onOpenChange={setTipOpen}
           autoHideMs={1800}
         >
           <Box
-            {...editProps}
-            tabIndex={0}
-            onDoubleClick={() => enterEdit()}
+            {...(canEdit ? editProps : {})}
+            tabIndex={canEdit ? 0 : -1}
+            onDoubleClick={() => {
+              if (!canEdit) return;
+              enterEdit();
+            }}
             onFocus={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
               (editProps as any).onFocus,
-              () => setTipOpen(true)
+              () => setTipOpen(true),
             )}
             onBlur={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
               (editProps as any).onBlur,
-              () => setTipOpen(false)
+              () => setTipOpen(false),
             )}
             onKeyDownCapture={mergeHandlers<
               React.KeyboardEvent<HTMLDivElement>
             >((editProps as any).onKeyDownCapture, (e) => {
+              if (!canEdit && (e.key === "Backspace" || e.key === "Enter")) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+              }
+
               if (e.key === "Enter") setTipOpen(false);
             })}
             sx={{
@@ -312,7 +342,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
               padding: "4px 8px",
               paddingRight: "16px",
               minHeight: 40,
-              maxWidth:180,
+              maxWidth: 180,
               height: "auto",
               overflowWrap: "break-word",
               // border:"2px solid red",
@@ -326,6 +356,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
                   type="text"
                   {...editorProps}
                   value={editText}
+                  disabled={!canEdit}
                   onChange={(e) => setEditText(e.target.value)}
                   multiline
                   minRows={1}
@@ -367,6 +398,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (!canEdit) return;
                   enterEdit();
                 }}
               >
