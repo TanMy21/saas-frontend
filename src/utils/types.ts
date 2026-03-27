@@ -583,6 +583,7 @@ export interface FlowFormProps {
   register: UseFormRegister<any>;
   watch: any;
   setValue: any;
+  readOnly: boolean;
   formErrors?: FieldErrors<{
     conditions: {
       conditionValue?: {
@@ -1414,7 +1415,10 @@ export type Permission =
   | "CREATE_OPTION"
   | "UPDATE_OPTION"
   | "DELETE_OPTION"
-  | "REORDER_OPTION";
+  | "REORDER_OPTION"
+  | "CREATE_FLOW"
+  | "UPDATE_FLOW"
+  | "DELETE_FLOW";
 
 export interface OrganizationMember {
   relatedOrgID: string;

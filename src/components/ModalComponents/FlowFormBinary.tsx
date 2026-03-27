@@ -1,6 +1,13 @@
 import { useEffect } from "react";
 
-import { Box, FormControl, MenuItem, OutlinedInput, Select, TextField } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  TextField,
+} from "@mui/material";
 import { Controller } from "react-hook-form";
 
 import { useLazyGetQuestionPreferencesByIDQuery } from "../../app/slices/questionPreferencesApiSlice";
@@ -14,6 +21,7 @@ const FlowFormBinary = ({
   blockIndex,
   setValue,
   watch,
+  readOnly,
   setConditions,
 }: FlowFormProps) => {
   const [trigger, { data }] = useLazyGetQuestionPreferencesByIDQuery();
@@ -45,8 +53,8 @@ const FlowFormBinary = ({
         setValue(`conditions.${blockIndex}.conditionValue`, defaultVal);
         setConditions((prev) =>
           prev.map((cond, idx) =>
-            idx === blockIndex ? { ...cond, conditionValue: defaultVal } : cond
-          )
+            idx === blockIndex ? { ...cond, conditionValue: defaultVal } : cond,
+          ),
         );
       }
     }
@@ -64,10 +72,11 @@ const FlowFormBinary = ({
     >
       <Box sx={{ width: "24%", height: "96%" }}>
         <TextField
+          disabled={readOnly}
           {...register(`conditions.${blockIndex}.conditionType`)}
           defaultValue={"is"}
           InputProps={{
-            readOnly: true,
+            readOnly: readOnly,
           }}
           type="text"
           size="small"
@@ -88,7 +97,19 @@ const FlowFormBinary = ({
             <FormControl fullWidth sx={{ height: "100%" }}>
               <Select
                 {...field}
-                input={<OutlinedInput notched={false} sx={{ height: '100%', padding: 0 }} />}
+                disabled={readOnly}
+                input={
+                  <OutlinedInput
+                    notched={false}
+                    sx={{
+                      height: "100%",
+                      padding: 0,
+                      "& .MuiSelect-icon": {
+                        cursor: !readOnly ? "not-allowed" : "pointer",
+                      },
+                    }}
+                  />
+                }
                 sx={{
                   width: "100%",
                   height: "100%",

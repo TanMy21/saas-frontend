@@ -18,6 +18,7 @@ import {
   useCreateConditionMutation,
   useGetConditionsForQuestionQuery,
 } from "../../app/slices/flowApiSlice";
+import useAuth from "../../hooks/useAuth";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { validateConditions } from "../../utils/conditionValidation";
 import { elementIcons } from "../../utils/elementsConfig";
@@ -47,6 +48,9 @@ const FlowConditionModal = ({
   Elements,
   refetch,
 }: FlowConditionModalProps) => {
+  const { can } = useAuth();
+  const canCreateFlow = can("CREATE_FLOW");
+  const canEditFlow = can("UPDATE_FLOW");
   const { primary, scrollStyles, grey } = useAppTheme();
   const questionID = selectedNode?.data?.questionID as string;
   const { surveyID } = useParams();
@@ -66,9 +70,9 @@ const FlowConditionModal = ({
         (element) =>
           element.type !== "WELCOME_SCREEN" &&
           element.type !== "EMAIL_CONTACT" &&
-          element.type !== "INSTRUCTIONS"
+          element.type !== "INSTRUCTIONS",
       ),
-    [Elements]
+    [Elements],
   );
 
   const {
@@ -84,8 +88,8 @@ const FlowConditionModal = ({
     setEdges((prevEdges) =>
       prevEdges.filter(
         (edge) =>
-          edge.type !== "bypass-edge" || edge.data?.flowConditionID !== ""
-      )
+          edge.type !== "bypass-edge" || edge.data?.flowConditionID !== "",
+      ),
     );
 
     setOpenConditions(false);
@@ -118,11 +122,12 @@ const FlowConditionModal = ({
   };
 
   const submitConditionData = (data: any) => {
+    if (!can("UPDATE_FLOW")) return;
     try {
       setHasSubmitted(true);
 
       let formattedData = (data.conditions ?? []).filter(
-        (condition: any) => condition.goto_questionID
+        (condition: any) => condition.goto_questionID,
       );
 
       formattedData = formattedData.map((condition: any) => {
@@ -135,7 +140,7 @@ const FlowConditionModal = ({
       });
 
       let newConditions = formattedData.filter(
-        (condition: any) => condition.flowConditionID === ""
+        (condition: any) => condition.flowConditionID === "",
       );
 
       console.log("🔍 Final form data before submit:", data);
@@ -158,10 +163,10 @@ const FlowConditionModal = ({
       }
 
       newConditions = newConditions.map(
-        ({ flowConditionID, ...rest }: { flowConditionID: string }) => rest
+        ({ flowConditionID, ...rest }: { flowConditionID: string }) => rest,
       );
 
-      createCondition(newConditions);
+      createCondition(formattedData);
 
       setErrors(() => ({}));
       setIsValidArray(() => []);
@@ -389,24 +394,27 @@ const FlowConditionModal = ({
                     // border: "2px solid red",
                   }}
                 >
-                  <Button
-                    variant="outlined"
-                    onClick={addConditionBlock}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "60%",
-                      textTransform: "unset",
-                      color: "#060608",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      gap: 1,
-                    }}
-                  >
-                    <AddIcon />
-                    Add condition
-                  </Button>
+                  {canCreateFlow && (
+                    <Button
+                      variant="outlined"
+                      onClick={canEditFlow ? addConditionBlock : undefined}
+                      disabled={!canEditFlow}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "60%",
+                        textTransform: "unset",
+                        color: "#060608",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        gap: 1,
+                      }}
+                    >
+                      <AddIcon />
+                      Add condition
+                    </Button>
+                  )}
                 </Box>
                 <Box
                   sx={{
@@ -433,19 +441,21 @@ const FlowConditionModal = ({
                   >
                     Cancel
                   </Button>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    disabled={isCreatingCondition}
-                    sx={{
-                      textTransform: "unset",
-                      backgroundColor: primary.dark,
-                      color: "#FFFFFF",
-                    }}
-                  >
-                    {isCreatingCondition ? "Saving..." : "Save condition"}
-                  </Button>
+                  {canCreateFlow && (
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      disabled={!canEditFlow || isCreatingCondition}
+                      sx={{
+                        textTransform: "unset",
+                        backgroundColor: primary.dark,
+                        color: "#FFFFFF",
+                      }}
+                    >
+                      {isCreatingCondition ? "Saving..." : "Save condition"}
+                    </Button>
+                  )}
                 </Box>
               </Box>
             </form>

@@ -11,6 +11,7 @@ const FlowFormInput = ({
   blockIndex,
   formErrors,
   handleInteraction,
+  readOnly,
 }: FlowFormProps) => {
   const conditionLabel = {
     "is-equal-to": "Is Equal To",
@@ -24,7 +25,7 @@ const FlowFormInput = ({
   ) {
     setValue(
       `conditions.${blockIndex}.flowConditionID`,
-      condition.flowConditionID || ""
+      condition.flowConditionID || "",
     );
   }
 
@@ -40,30 +41,30 @@ const FlowFormInput = ({
     >
       <Box sx={{ width: "50%", height: "96%" }}>
         {questionType === "NUMBER" ? (
-         
-            <Select
-              {...register(`conditions.${blockIndex}.conditionType`)}
-              defaultValue={"is-equal-to"}
-              sx={{ width: "100%", height: "40px" }}
-            >
-              <MenuItem value={"is-equal-to"}>Is Equal to</MenuItem>
-              <MenuItem value={"is-less-than"}>Is Less than</MenuItem>
-              <MenuItem value={"is-less-than-equal-to"}>
-                Is Less than Equal To
-              </MenuItem>
-              <MenuItem value={"is-greater-than"}>Is Greater than</MenuItem>
-              <MenuItem value={"is-greater-than-equal-to"}>
-                Is Greater than Equal To
-              </MenuItem>
-            </Select>
-          
+          <Select
+            disabled={readOnly}
+            {...register(`conditions.${blockIndex}.conditionType`)}
+            defaultValue={"is-equal-to"}
+            sx={{ width: "100%", height: "40px" }}
+          >
+            <MenuItem value={"is-equal-to"}>Is Equal to</MenuItem>
+            <MenuItem value={"is-less-than"}>Is Less than</MenuItem>
+            <MenuItem value={"is-less-than-equal-to"}>
+              Is Less than Equal To
+            </MenuItem>
+            <MenuItem value={"is-greater-than"}>Is Greater than</MenuItem>
+            <MenuItem value={"is-greater-than-equal-to"}>
+              Is Greater than Equal To
+            </MenuItem>
+          </Select>
         ) : (
           <Box sx={{ width: "100%", height: "96%" }}>
             <TextField
+              disabled={readOnly}
               {...register(`conditions.${blockIndex}.conditionType`)}
               defaultValue={conditionLabel["is-equal-to"]}
               InputProps={{
-                readOnly: true,
+                readOnly: readOnly,
               }}
               type="text"
               size="small"
@@ -80,6 +81,7 @@ const FlowFormInput = ({
       <Box sx={{ width: "92%", height: "60%" }}>
         {questionType === "NUMBER" ? (
           <TextField
+            disabled={readOnly}
             {...register(`conditions.${blockIndex}.conditionValue`, {
               validate: (value) => {
                 if (isNaN(Number(value))) return "Only enter numeric values";
@@ -101,7 +103,7 @@ const FlowFormInput = ({
               blockIndex !== undefined
                 ? String(
                     formErrors?.conditions?.[blockIndex]?.conditionValue
-                      ?.message || ""
+                      ?.message || "",
                   )
                 : ""
             }
@@ -111,6 +113,7 @@ const FlowFormInput = ({
           />
         ) : (
           <TextField
+            disabled={readOnly}
             {...register(`conditions.${blockIndex}.conditionValue`)}
             type="text"
             size="small"

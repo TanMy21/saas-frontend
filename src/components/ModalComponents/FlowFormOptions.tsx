@@ -9,6 +9,7 @@ const FlowFormOptions = ({
   blockIndex,
   condition,
   setConditions,
+  readOnly,
 }: FlowFormProps) => {
   const { data: options } = useGetOptionsOfQuestionQuery(questionID);
   return (
@@ -23,6 +24,7 @@ const FlowFormOptions = ({
     >
       <Box sx={{ width: "16%", height: "96%" }}>
         <Select
+          disabled={readOnly}
           {...register(`conditions.${blockIndex}.conditionType`)}
           defaultValue={"is"}
           sx={{ width: "100%", height: "96%" }}
@@ -38,6 +40,7 @@ const FlowFormOptions = ({
       </Box>
       <Box sx={{ width: "80%", height: "96%" }}>
         <Select
+          disabled={readOnly}
           {...register(`conditions.${blockIndex}.conditionValue`)}
           defaultValue={
             condition.conditionValue ??
@@ -48,8 +51,8 @@ const FlowFormOptions = ({
               prev.map((cond, idx) =>
                 idx === blockIndex
                   ? { ...cond, conditionValue: e.target.value }
-                  : cond
-              )
+                  : cond,
+              ),
             );
           }}
           sx={{ width: "100%", height: "96%" }}

@@ -16,8 +16,10 @@ import {
 import { MdError } from "react-icons/md";
 
 import { useDeleteConditionMutation } from "../../app/slices/flowApiSlice";
+import useAuth from "../../hooks/useAuth";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { elementIcons } from "../../utils/elementsConfig";
+import { convertHtmlToPlainText } from "../../utils/richTextUtils";
 import {
   FlowFormConditionBlockProps,
   FlowFormProps,
@@ -48,7 +50,13 @@ const FlowFormConditionBlock = ({
   isValid,
   onAccordionClick,
 }: FlowFormConditionBlockProps) => {
+  const { can } = useAuth();
+  const canCreateFlow = can("CREATE_FLOW");
+  const canEditFlow = can("UPDATE_FLOW");
+  const canDeleteFlow = can("DELETE_FLOW");
+
   const { text } = useAppTheme();
+
   const FormConditionComponent: Record<string, React.FC<FlowFormProps>> = {
     BINARY: FlowFormBinary,
     MEDIA: FlowFormOptions,
@@ -82,7 +90,7 @@ const FlowFormConditionBlock = ({
   const handleDeleteCondition = async () => {
     try {
       setConditions((prev) =>
-        prev.filter((cond, idx) => idx !== blockIndex - 1)
+        prev.filter((cond, idx) => idx !== blockIndex - 1),
       );
 
       setEdges((prevEdges) =>
@@ -92,8 +100,8 @@ const FlowFormConditionBlock = ({
               edge.type === "bypass-edge" &&
               edge.source === condition.relatedQuestionID &&
               edge.target === condition.goto_questionID
-            )
-        )
+            ),
+        ),
       );
 
       if (condition.flowConditionID) {
@@ -157,29 +165,34 @@ const FlowFormConditionBlock = ({
               label={`Condition ${blockIndex}`}
               variant="outlined"
             />
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "end",
-                width: "80%",
-                height: "98%",
-                // border: "2px solid black",
-              }}
-            >
+            {canDeleteFlow && (
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "10%",
-                  height: "100%",
+                  justifyContent: "end",
+                  width: "80%",
+                  height: "98%",
+                  // border: "2px solid black",
                 }}
               >
-                <IconButton onClick={handleDeleteCondition}>
-                  <DeleteIcon sx={{ color: text.danger }} />
-                </IconButton>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "10%",
+                    height: "100%",
+                  }}
+                >
+                  <IconButton
+                    onClick={canEditFlow ? handleDeleteCondition : undefined}
+                    disabled={!canEditFlow}
+                  >
+                    <DeleteIcon sx={{ color: text.danger }} />
+                  </IconButton>
+                </Box>
               </Box>
-            </Box>
+            )}
           </Box>
         </AccordionSummary>
         <AccordionDetails
@@ -258,7 +271,7 @@ const FlowFormConditionBlock = ({
                   whiteSpace: "normal",
                 }}
               >
-                {edgeFormData.sourceQuestionText ||
+                {convertHtmlToPlainText(edgeFormData.sourceQuestionText) ||
                   (selectedNode?.data.question as ReactNode)}
               </Box>
             </Box>
@@ -286,6 +299,7 @@ const FlowFormConditionBlock = ({
                   <ConditionComponent
                     condition={condition}
                     setConditions={setConditions}
+                    readOnly={!canEditFlow}
                     questionID={edgeFormData.sourceQuestionID || questionID}
                     questionType={
                       edgeFormData.sourceQuestionIcon ||
@@ -365,6 +379,7 @@ const FlowFormConditionBlock = ({
                   }}
                 >
                   <Select
+                    disabled={!canEditFlow}
                     {...register(`conditions.${blockIndex}.goto_questionID`)}
                     defaultValue={
                       condition.goto_questionID || Elements[0]?.questionID || ""
@@ -374,11 +389,17 @@ const FlowFormConditionBlock = ({
                         prev.map((cond, idx) =>
                           idx === blockIndex
                             ? { ...cond, goto_questionID: e.target.value }
-                            : cond
-                        )
+                            : cond,
+                        ),
                       );
                     }}
-                    sx={{ width: "100%", height: "80%" }}
+                    sx={{
+                      width: "100%",
+                      height: "80%",
+                      "& .MuiSelect-icon": {
+                        cursor: !canEditFlow ? "not-allowed" : "pointer",
+                      },
+                    }}
                   >
                     {Elements.map((element) => (
                       <MenuItem
@@ -408,7 +429,7 @@ const FlowFormConditionBlock = ({
                               textOverflow: "ellipsis",
                             }}
                           >
-                            {element.text}
+                            {convertHtmlToPlainText(element.text)}
                           </Box>
                         </Box>
                       </MenuItem>

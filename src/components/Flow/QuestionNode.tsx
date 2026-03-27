@@ -3,6 +3,7 @@ import { Handle, Position, type Node, type NodeProps } from "@xyflow/react";
 import { PiFlowArrowBold } from "react-icons/pi";
 
 import { elementIcons } from "../../utils/elementsConfig";
+import { convertHtmlToPlainText } from "../../utils/richTextUtils";
 import { ElementType, IconMapping } from "../../utils/types";
 import { isConditionlessType } from "../../utils/utils";
 
@@ -104,7 +105,7 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
         }}
       >
         <Typography fontSize={"12px"} textAlign={"left"}>
-          {data.question}
+          {convertHtmlToPlainText(data.question)}
         </Typography>
       </Box>
       {qType === "END_SCREEN" ? null : (

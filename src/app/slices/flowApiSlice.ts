@@ -12,20 +12,20 @@ export const flowApiSlice = apiSlice.injectEndpoints({
     }),
     getConditionsForQuestion: builder.query({
       query: (questionID) => `/q/conditions/${questionID}`,
-      providesTags: ["Flow"],
+      providesTags: ["Flow", "Elements"],
     }),
     getAllConditionsForSurvey: builder.query({
       query: (surveyID) => {
         return `/s/all/conditions/${surveyID}`;
       },
-      providesTags: ["Flow"],
+      providesTags: ["Flow", "Elements"],
     }),
     deleteCondition: builder.mutation({
       query: (flowConditionID) => ({
         url: `/q/condition/delete/${flowConditionID}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Flow"],
+      invalidatesTags: ["Flow", "Elements"],
     }),
   }),
 });
