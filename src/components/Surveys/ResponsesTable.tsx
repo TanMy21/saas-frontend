@@ -39,13 +39,13 @@ const ResponsesTable = () => {
   const [openDownloadModal, setOpenDownloadModal] = useState(false);
   const [responsesData, setResponsesData] = useState("");
   const [downloadFileFormat, setDownloadFileFormat] = useState("csv");
-  const [rowData, setRowData] = useState<RowData[]>([]);
+  const [rowData, setRowData] = useState<string[]>([]);
 
   const handleOpen = () => setOpenDownloadModal(true);
   const handleClose = () => setOpenDownloadModal(false);
 
   const { data: results, isLoading: isDataLoading } = useGetResultsQuery(
-    surveyID!
+    surveyID!,
     // {
     //   skip: !surveyID,
     //   pollingInterval: 30000,
@@ -59,10 +59,11 @@ const ResponsesTable = () => {
 
   const handleDownload = (table: MRT_TableInstance<RowData>) => {
     handleOpen();
-    const selectedRows = table
+    const selectedParticipantIDs = table
       .getSelectedRowModel()
-      .rows.map((row) => row.original);
-    setRowData(selectedRows);
+      .rows.map((row) => row.original.participantID);
+
+    setRowData(selectedParticipantIDs);
   };
 
   const columns = useMemo<MRT_ColumnDef<RowData>[]>(() => {
@@ -119,7 +120,7 @@ const ResponsesTable = () => {
 
         // Find matching response for this participant
         const resp = question.response.find(
-          (r) => r.relatedParticipantID === participant.participantID
+          (r) => r.relatedParticipantID === participant.participantID,
         );
 
         row[question?.questionID] = resp?.response ?? null;
@@ -408,6 +409,7 @@ const ResponsesTable = () => {
       />
       <DownloadResponsesModal
         rowData={rowData}
+        surveyID={surveyID!}
         columns={columns}
         setResponsesData={setResponsesData}
         setDownloadFileFormat={setDownloadFileFormat}

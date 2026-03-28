@@ -13,30 +13,19 @@ import {
   Modal,
   RadioGroup,
 } from "@mui/material";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import { useExportDataMutation } from "../../app/slices/exportDataApi";
+import { useExportSelectedResponsesMutation } from "../../app/slices/exportDataApi";
 import { DownloadFormData, downloadDataSchema } from "../../utils/schema";
 import { DownloadResponsesModalProps, ErrorData } from "../../utils/types";
 import { CustomRadioButton } from "../Buttons/CustomRadioButton";
 
-
-
-
-// import {
-//   exportToCsv,
-//   exportToPdf,
-//   exportToXlsx,
-// } from "../../utils/DataDownload";
-
-
-
 const DownloadResponsesModal = ({
   rowData,
-  columns,
   open,
   handleClose,
+  surveyID,
 }: DownloadResponsesModalProps) => {
   const {
     control,
@@ -49,12 +38,17 @@ const DownloadResponsesModal = ({
     },
   });
 
-  const [exportData, { isError, error }] = useExportDataMutation();
+  const [exportSelectedResponses, { isError, error }] =
+    useExportSelectedResponsesMutation();
 
   const handleDownloadFormSubmit: SubmitHandler<DownloadFormData> = (data) => {
     const { fileFormatGroup } = data;
 
-    exportData({ format: fileFormatGroup, selectedRows: rowData, columns });
+    exportSelectedResponses({
+      format: fileFormatGroup,
+      surveyID,
+      participantIDs: rowData,
+    });
   };
 
   useEffect(() => {
@@ -64,7 +58,7 @@ const DownloadResponsesModal = ({
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
@@ -208,7 +202,7 @@ const DownloadResponsesModal = ({
                     )}
                   </FormControl>
                 </Box>
-                <Divider sx={{ marginTop: "2%", borderBottomWidth:"2px" }} />
+                <Divider sx={{ marginTop: "2%", borderBottomWidth: "2px" }} />
                 <Box
                   sx={{
                     display: "flex",

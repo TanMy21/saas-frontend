@@ -100,9 +100,9 @@ export const titleDescriptionUpdateSchema = z.object({
 });
 
 export const downloadDataSchema = z.object({
-  fileFormatGroup: z
-    .string()
-    .min(1, { message: "Please select an option from Group 2" }),
+  fileFormatGroup: z.enum(["csv", "xlsx"], {
+    required_error: "Please select a format",
+  }),
 });
 
 export type DownloadFormData = z.infer<typeof downloadDataSchema>;

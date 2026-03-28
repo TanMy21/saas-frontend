@@ -1,15 +1,18 @@
 import { useState } from "react";
 
 import { AppBar, Box, Tab, Tabs } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 import { useAppTheme } from "../../theme/useAppTheme";
 import { BehaviorInsights } from "../Behavior/BehaviorInsights";
+import { ExportButton } from "../Insights/ExportButton";
 import { SummaryContainer } from "../Insights/SummaryContainer";
 import { SurveyInsights } from "../Insights/SurveyInsights";
 
 import ResultResponses from "./ResultResponses";
 
 const Results = () => {
+  const { surveyID } = useParams();
   const [value, setValue] = useState(0);
   const { scrollStyles } = useAppTheme();
 
@@ -164,6 +167,8 @@ const Results = () => {
                 />
               </Tabs>
             </Box>
+
+            <ExportButton surveyID={surveyID!} />
           </AppBar>
         </Box>
         <Box

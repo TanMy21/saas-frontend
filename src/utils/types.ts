@@ -117,11 +117,12 @@ export interface CanvasConsoleProps {
 }
 
 export interface DownloadResponsesModalProps {
+  surveyID:string;
   setResponsesData: React.Dispatch<React.SetStateAction<string>>;
   setDownloadFileFormat: React.Dispatch<React.SetStateAction<string>>;
   open: boolean;
   handleClose: () => void;
-  rowData: RowData[];
+  rowData: string[];
   columns: MRT_ColumnDef<RowData>[];
 }
 
