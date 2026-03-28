@@ -116,14 +116,17 @@ export interface CanvasConsoleProps {
   noElements: boolean;
 }
 
+type ExportMode = "ALL" | "SELECTED";
+
 export interface DownloadResponsesModalProps {
-  surveyID:string;
-  setResponsesData: React.Dispatch<React.SetStateAction<string>>;
-  setDownloadFileFormat: React.Dispatch<React.SetStateAction<string>>;
+  surveyID: string;
+  setResponsesData?: React.Dispatch<React.SetStateAction<string>>;
+  setDownloadFileFormat?: React.Dispatch<React.SetStateAction<string>>;
   open: boolean;
   handleClose: () => void;
   rowData: string[];
-  columns: MRT_ColumnDef<RowData>[];
+  columns?: MRT_ColumnDef<RowData>[];
+  mode: ExportMode;
 }
 
 export interface DashBoardHeaderProps {

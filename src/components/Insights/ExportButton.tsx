@@ -1,32 +1,52 @@
-import { Button } from "@mui/material";
+import { useState } from "react";
 
-import { useExportSurveyFullMutation } from "../../app/slices/exportDataApi";
+import { Button } from "@mui/material";
+import { FileDown } from "lucide-react";
+
+import DownloadResponsesModal from "../Modals/DownloadResponsesModal";
 
 export const ExportButton = ({ surveyID }: { surveyID: string }) => {
-  const [exportSurveyFull, { isLoading }] = useExportSurveyFullMutation();
-
-  const handleExport = async () => {
-    try {
-      await exportSurveyFull({
-        surveyID,
-        format: "xlsx", // change to "csv" if needed
-      });
-    } catch (err) {
-      console.error("Export failed", err);
-    }
-  };
+  const [open, setOpen] = useState(false);
 
   return (
-    <Button
-      variant="contained"
-      onClick={handleExport}
-      disabled={isLoading}
-      sx={{
-        textTransform: "capitalize",
-        borderRadius: "8px",
-      }}
-    >
-      {isLoading ? "Exporting..." : "Export Full Data"}
-    </Button>
+    <>
+      <Button
+        onClick={() => setOpen(true)}
+        variant="text"
+        sx={{
+          height: "36px",
+          textTransform: "none",
+          fontSize: "0.9rem",
+          fontWeight: 600,
+          color: "#374151",
+          my: 0.5,
+          px: 1.5,
+          py: 0.8,
+          minWidth: "auto",
+          "&:hover": {
+            bgcolor: "rgba(0,0,0,0.04)",
+            color: "#111827",
+          },
+          "&:active": {
+            bgcolor: "rgba(0,0,0,0.08)",
+          },
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+        }}
+      >
+        <FileDown size={20} strokeWidth={2} />
+        Download Results
+      </Button>
+
+      {/* MODAL */}
+      <DownloadResponsesModal
+        open={open}
+        handleClose={() => setOpen(false)}
+        surveyID={surveyID}
+        rowData={[]}
+        mode={"ALL"}
+      />
+    </>
   );
 };

@@ -47,6 +47,9 @@ const Results = () => {
             position="static"
             elevation={0}
             sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
               m: "0px",
               bgcolor: "white",
               borderBottom: 1,
@@ -168,7 +171,16 @@ const Results = () => {
               </Tabs>
             </Box>
 
-            <ExportButton surveyID={surveyID!} />
+            <Box
+              sx={{
+                display: "flex",
+                width: "400px",
+                height: "98%",
+                // border: "3px solid red",
+              }}
+            >
+              <ExportButton surveyID={surveyID!} />
+            </Box>
           </AppBar>
         </Box>
         <Box

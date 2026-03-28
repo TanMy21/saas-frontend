@@ -12,8 +12,8 @@ const ResultResponses = () => {
           margin: "auto",
           marginTop: "24px",
           width: "96%",
-          height: "96vh", // ✅ USE HEIGHT, NOT maxHeight
-          minHeight: 0, // 🔑 critical
+          height: "96vh",
+          minHeight: 0,
           borderRadius: "8px",
         }}
       >
