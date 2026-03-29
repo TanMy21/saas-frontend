@@ -9,8 +9,6 @@ const useAuth = () => {
   const token = useSelector(selectCurrentToken);
   const user = useSelector(selectUser);
 
-  console.log("User: ", user);
-
   if (!token) {
     return {
       email: "",

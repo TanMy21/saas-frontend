@@ -10,6 +10,7 @@ const SurveysCollection = ({
   workspaceId,
   workspaceName,
   viewMode,
+  isArchiveWorkspace,
 }: SurveysCollectionProps) => {
   const layoutContainerHeightLG = viewMode === "list" ? "72vh" : "72%";
 
@@ -22,7 +23,7 @@ const SurveysCollection = ({
         marginTop: { md: "2%", xl: "1%" },
         width: "98%",
         height: { md: "72%", lg: layoutContainerHeightLG, xl: "92%" },
-       }}
+      }}
     >
       {viewMode === "grid" ? (
         <GridLayout
@@ -30,6 +31,7 @@ const SurveysCollection = ({
           workspaceId={workspaceId!}
           workspaceName={workspaceName!}
           viewMode={viewMode}
+          isArchiveWorkspace={isArchiveWorkspace}
         />
       ) : (
         <ListLayout
@@ -37,6 +39,7 @@ const SurveysCollection = ({
           workspaceId={workspaceId!}
           workspaceName={workspaceName!}
           viewMode={viewMode!}
+          isArchiveWorkspace={isArchiveWorkspace}
         />
       )}
     </Box>

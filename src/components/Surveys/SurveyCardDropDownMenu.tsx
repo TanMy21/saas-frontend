@@ -21,6 +21,7 @@ import {
   useCopySurveyMutation,
   useMoveSurveyMutation,
   usePublishSurveyMutation,
+  useUpdateSurveyArchiveMutation,
 } from "../../app/slices/surveysApiSlice";
 import { useGetWorkspacesQuery } from "../../app/slices/workspaceApiSlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
@@ -74,6 +75,8 @@ const SurveyCardDropDownMenu = ({
   ] = useDuplicateSurveyMutation();
   const [publishSurvey] = usePublishSurveyMutation();
   const [copySurvey, { isSuccess, isError, error }] = useCopySurveyMutation();
+  const [updateSurveyArchive, { isLoading: archiveLoading }] =
+    useUpdateSurveyArchiveMutation();
   const [
     moveSurvey,
     { isSuccess: moveSuccess, isError: moveIsError, error: moveError },
@@ -180,6 +183,28 @@ const SurveyCardDropDownMenu = ({
       console.log(error);
     } finally {
       dispatch(hideOverlay());
+    }
+  };
+
+  const handleArchiveSurvey = async () => {
+    try {
+      handleClose();
+
+      await updateSurveyArchive({
+        surveyID,
+        archive: !survey.isArchived,
+      }).unwrap();
+
+      toast.success(survey.isArchived ? "Survey restored" : "Survey archived", {
+        position: "top-right",
+        autoClose: 2000,
+        theme: "colored",
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Error updating archive status", {
+        position: "top-right",
+      });
     }
   };
 
@@ -355,6 +380,7 @@ const SurveyCardDropDownMenu = ({
               (published ? (
                 <MenuItem
                   onClick={handleShareSurvey}
+                  disabled={survey.isArchived}
                   sx={{
                     gap: 1.25,
                     px: 1.5,
@@ -373,6 +399,7 @@ const SurveyCardDropDownMenu = ({
               ) : (
                 <MenuItem
                   onClick={() => handlePublish(surveyID)}
+                  disabled={survey.isArchived}
                   sx={{
                     gap: 1.25,
                     px: 1.5,
@@ -462,6 +489,7 @@ const SurveyCardDropDownMenu = ({
             {can?.("CREATE_SURVEY") && (
               <MenuItem
                 onClick={() => handleDuplicateSurvey(surveyID)}
+                disabled={survey.isArchived}
                 sx={{
                   gap: 1.25,
                   px: 1.5,
@@ -478,22 +506,25 @@ const SurveyCardDropDownMenu = ({
                 Duplicate
               </MenuItem>
             )}
-           {can?.("UPDATE_SURVEY") && (       <Divider
-              sx={{
-                my: 0.5,
-                opacity: 0.7,
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                fontSize: 16,
-                fontWeight: 600,
-                transition: "all 0.2s ease",
-                color: " #374151",
-              }}
-            />)}
+            {can?.("UPDATE_SURVEY") && (
+              <Divider
+                sx={{
+                  my: 0.5,
+                  opacity: 0.7,
+                  display: "flex",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  transition: "all 0.2s ease",
+                  color: " #374151",
+                }}
+              />
+            )}
             {can("CREATE_SURVEY") && (
               <MenuItem
                 onClick={() => handleNestedOpen("copy to")}
+                disabled={survey.isArchived}
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -528,6 +559,7 @@ const SurveyCardDropDownMenu = ({
             {can("UPDATE_SURVEY") && (
               <MenuItem
                 onClick={() => handleNestedOpen("move to")}
+                disabled={survey.isArchived}
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -555,6 +587,22 @@ const SurveyCardDropDownMenu = ({
             )}
             {can?.("UPDATE_SURVEY") && (
               <Divider sx={{ my: 0.5, opacity: 0.7 }} />
+            )}
+
+            {can?.("UPDATE_SURVEY") && (
+              <MenuItem
+                disabled={archiveLoading}
+                onClick={handleArchiveSurvey}
+                sx={{
+                  gap: 1.25,
+                  px: 1.5,
+                  py: 1,
+                  fontWeight: 600,
+                  color: " #374151",
+                }}
+              >
+                {survey.isArchived ? "Restore Survey" : "Archive Survey"}
+              </MenuItem>
             )}
             {can?.("DELETE_SURVEY") && (
               <MenuItem
@@ -592,9 +640,9 @@ const SurveyCardDropDownMenu = ({
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "center",
-                width: 220, // ✨: match parent width
+                width: 220,
                 gap: 2,
-                fontWeight: 600, // ✨: header emphasis
+                fontWeight: 600,
                 px: 1.5,
                 py: 1,
               }}
@@ -602,7 +650,7 @@ const SurveyCardDropDownMenu = ({
               <ChevronLeftIcon />
               Copy To
             </MenuItem>
-            <Divider sx={{ my: 0.5, opacity: 0.7 }} /> {/* ✨ */}
+            <Divider sx={{ my: 0.5, opacity: 0.7 }} />
             {workspaces?.map((workspace: Workspace) => (
               <MenuItem
                 key={workspace.workspaceId}
@@ -624,9 +672,9 @@ const SurveyCardDropDownMenu = ({
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "center",
-                width: 220, // ✨
+                width: 220,
                 gap: 2,
-                fontWeight: 600, // ✨
+                fontWeight: 600,
                 px: 1.5,
                 py: 1,
               }}

@@ -10,6 +10,7 @@ const ListLayout = ({
   surveys,
   workspaceId,
   workspaceName,
+  isArchiveWorkspace,
 }: WorkspaceLayoutProps) => {
   const { can } = useAuth();
   return (
@@ -20,7 +21,7 @@ const ListLayout = ({
         height: { lg: "96%", xl: "96%" },
       }}
     >
-      {can?.("CREATE_SURVEY") && (
+      {can?.("CREATE_SURVEY") && !isArchiveWorkspace && (
         <CreateNewSurveyCard
           workspaceId={workspaceId}
           workspaceName={workspaceName}

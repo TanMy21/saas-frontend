@@ -332,3 +332,8 @@ export const roles = {
   },
 };
 
+export const ARCHIVE_WORKSPACE = {
+  workspaceId: "ARCHIVED",
+  name: "Archived",
+  isVirtual: true,
+};

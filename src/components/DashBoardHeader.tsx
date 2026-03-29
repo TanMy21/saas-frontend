@@ -15,6 +15,7 @@ import WorkspacesDropDownMenu from "./Workspaces/WorkspacesDropDownMenu";
 
 export const DashBoardHeader = ({
   selectedWorkspace,
+  archivedCount = 0,
   setSelectedWorkspace,
   setNewWorkspaceModalOpen,
   setRenameWorkspaceModalOpen,
@@ -94,6 +95,7 @@ export const DashBoardHeader = ({
             setNewWorkspaceModalOpen={setNewWorkspaceModalOpen}
             setRenameWorkspaceModalOpen={setRenameWorkspaceModalOpen}
             setDeleteWorkspaceModalOpen={setDeleteWorkspaceModalOpen}
+            archivedCount={archivedCount}
           />
         </Box>
         <Box

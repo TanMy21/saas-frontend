@@ -131,6 +131,7 @@ export interface DownloadResponsesModalProps {
 
 export interface DashBoardHeaderProps {
   selectedWorkspace: Workspace;
+  archivedCount?: number;
   setSelectedWorkspace: React.Dispatch<
     React.SetStateAction<Workspace | undefined>
   >;
@@ -1182,6 +1183,7 @@ export interface Survey {
   sharedLink: string;
   startDate: string;
   published?: boolean;
+  isArchived: boolean;
   status: string;
   surveyID: string;
   shareID: string;
@@ -1269,6 +1271,7 @@ export interface SurveysCollectionProps {
   workspaceId?: string;
   workspaceName?: string;
   viewMode?: "list" | "grid" | undefined;
+  isArchiveWorkspace?: boolean;
 }
 
 export interface SurveyRenameProps {
@@ -1478,10 +1481,12 @@ export interface Workspace {
   isActive: boolean;
   name: string;
   workspaceName?: string;
+  isArchiveWorkspace?: boolean;
   ownerId: string;
   updatedAt: string;
   visibility: string;
   workspaceId?: string;
+  archivedCount?: number;
 }
 
 export interface SurveyCollectionsScrollNavProps {
@@ -1587,6 +1592,7 @@ export type WorkspaceDropdownOutletContextType = {
 
 export type WorkspaceDropDownMenuProps = {
   selectedWorkspace: Workspace;
+  archivedCount?: number;
   setSelectedWorkspace: React.Dispatch<
     React.SetStateAction<Workspace | undefined>
   >;
@@ -1600,6 +1606,7 @@ export interface WorkspaceLayoutProps {
   workspaceId: string;
   workspaceName: string;
   viewMode: "list" | "grid";
+  isArchiveWorkspace?: boolean;
 }
 
 export interface WorkspaceSurveysListCountProps {

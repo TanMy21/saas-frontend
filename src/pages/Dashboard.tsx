@@ -44,6 +44,12 @@ const Dashboard = () => {
   useBodyScrollLock(true);
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace>();
 
+  const archiveWorkspace = workspaces?.find(
+    (ws: Workspace) => ws.isArchiveWorkspace,
+  );
+
+  const archivedCount = archiveWorkspace?.archivedCount ?? 0;
+
   useEffect(() => {
     if (isErrorWorkspaces) {
       const errorData = workspaceError as ErrorData;
@@ -193,6 +199,7 @@ const Dashboard = () => {
             setNewWorkspaceModalOpen={setNewWorkspaceModalOpen}
             setRenameWorkspaceModalOpen={setRenameWorkspaceModalOpen}
             setDeleteWorkspaceModalOpen={setDeleteWorkspaceModalOpen}
+            archivedCount={archivedCount}
           />
         </Box>
         <Box

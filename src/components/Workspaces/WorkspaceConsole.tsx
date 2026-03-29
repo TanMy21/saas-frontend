@@ -29,6 +29,7 @@ const WorkspaceConsole = ({
   const isMD = useMediaQuery(theme.breakpoints.only("md"));
   const workspaceId = selectedWorkspace?.workspaceId;
   const workspaceName = selectedWorkspace?.name;
+  const isArchiveWorkspace = selectedWorkspace?.isArchiveWorkspace;
   const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
     if (typeof window === "undefined") return "grid";
     const stored = window.localStorage.getItem(VIEW_MODE_KEY);
@@ -243,6 +244,7 @@ const WorkspaceConsole = ({
           <NoSurveysFound
             workspaceId={workspaceId!}
             workspaceName={workspaceName}
+            isArchiveWorkspace={isArchiveWorkspace!}
           />
         ) : (
           <SurveysCollection
@@ -251,6 +253,7 @@ const WorkspaceConsole = ({
             workspaceId={workspaceId}
             workspaceName={workspaceName}
             viewMode={viewMode}
+            isArchiveWorkspace={isArchiveWorkspace}
           />
         )}
       </Box>

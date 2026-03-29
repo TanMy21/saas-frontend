@@ -11,6 +11,7 @@ const GridLayout = ({
   workspaceId,
   workspaceName,
   viewMode,
+  isArchiveWorkspace,
 }: WorkspaceLayoutProps) => {
   const { can } = useAuth();
 
@@ -43,7 +44,7 @@ const GridLayout = ({
         // border: "2px solid green",
       }}
     >
-      {can?.("CREATE_SURVEY") && (
+      {can?.("CREATE_SURVEY") && !isArchiveWorkspace && (
         <CreateNewSurveyCard
           workspaceId={workspaceId}
           workspaceName={workspaceName}

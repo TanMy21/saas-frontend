@@ -9,6 +9,7 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
+import { Archive } from "lucide-react";
 
 import { useGetWorkspacesQuery } from "../../app/slices/workspaceApiSlice";
 import useAuth from "../../hooks/useAuth";
@@ -25,13 +26,20 @@ const WorkspacesDropDownMenu = ({
   setNewWorkspaceModalOpen,
   setRenameWorkspaceModalOpen,
   setDeleteWorkspaceModalOpen,
+  archivedCount = 0,
 }: WorkspaceDropDownMenuProps) => {
   const { iconStyle, grey } = useAppTheme();
   const { can } = useAuth();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openWorkspaceMenu = Boolean(anchorEl);
 
   const { data: workspaces } = useGetWorkspacesQuery("workspacesList");
+  const archiveWorkspace = workspaces?.find(
+    (ws: Workspace) => ws.isArchiveWorkspace,
+  );
+
+  const hasArchived = !!archiveWorkspace;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -40,6 +48,7 @@ const WorkspacesDropDownMenu = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     <Box sx={{ maxWidth: "360px", mx: "auto" }}>
       {/* Header with Dropdown */}
@@ -72,27 +81,61 @@ const WorkspacesDropDownMenu = ({
                 YOUR WORKSPACES
               </Typography>
             </Box>
-            {workspaces?.map((workspace: Workspace) => (
-              <MenuItem
-                key={workspace?.workspaceId}
-                selected={
-                  workspace.workspaceId === selectedWorkspace?.workspaceId
-                }
-                onClick={() => {
-                  setSelectedWorkspace(workspace);
-                  handleClose();
-                }}
-                sx={{
-                  // "&:hover": { bgcolor: "#A195F8" },
-                  fontWeight:
+            {workspaces
+              ?.filter((ws: Workspace) => !ws.isArchiveWorkspace)
+              .map((workspace: Workspace) => (
+                <MenuItem
+                  key={workspace?.workspaceId}
+                  selected={
                     workspace.workspaceId === selectedWorkspace?.workspaceId
-                      ? "bold"
-                      : "normal",
-                }}
-              >
-                {workspace?.name}
-              </MenuItem>
-            ))}
+                  }
+                  onClick={() => {
+                    setSelectedWorkspace(workspace);
+                    handleClose();
+                  }}
+                  sx={{
+                    // "&:hover": { bgcolor: "#A195F8" },
+                    fontWeight:
+                      workspace.workspaceId === selectedWorkspace?.workspaceId
+                        ? "bold"
+                        : "normal",
+                  }}
+                >
+                  {workspace?.name}
+                </MenuItem>
+              ))}
+            {hasArchived && archiveWorkspace && (
+              <>
+                <Divider sx={{ my: 0.5 }} />
+                <MenuItem
+                  disabled={archivedCount === 0}
+                  selected={
+                    selectedWorkspace?.workspaceId ===
+                    archiveWorkspace.workspaceId
+                  }
+                  onClick={() => {
+                    setSelectedWorkspace(archiveWorkspace);
+                    handleClose();
+                  }}
+                  sx={{
+                    fontWeight:
+                      selectedWorkspace?.workspaceId ===
+                      archiveWorkspace.workspaceId
+                        ? "bold"
+                        : "normal",
+                    color: "#6B7280",
+                    display: "flex",
+                    gap: 1,
+                  }}
+                >
+                  <Archive fontSize="small" />
+                  Archived{" "}
+                  <Box sx={{ fontSize: 18, fontWeight: 600, }}>
+                    {`(${archivedCount})`}
+                  </Box>
+                </MenuItem>
+              </>
+            )}
             {can("CREATE_WORKSPACE") && <Divider />}{" "}
             {can("CREATE_WORKSPACE") && (
               <NewWorkspaceMenuOption

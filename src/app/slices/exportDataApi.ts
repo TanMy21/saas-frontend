@@ -17,7 +17,8 @@ export const exportDataApi = apiSlice.injectEndpoints({
 
           const disposition = response.headers.get("Content-Disposition");
 
-          let fileName = "download.xlsx";
+          let fileName =
+            body.format === "csv" ? "download.zip" : "download.xlsx";
 
           if (disposition) {
             const match = disposition.match(/filename="(.+)"/);

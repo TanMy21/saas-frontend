@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { Box, Grow, TextField, Tooltip, Typography } from "@mui/material";
+import { Archive } from "lucide-react";
 
 import {
   useGetWorkspacesQuery,
@@ -33,6 +34,7 @@ const WorkspaceToolbar = ({
   setSelectedWorkspace,
 }: WorkspaceToolbarProps) => {
   const { primary } = useAppTheme();
+  const isArchiveWorkspace = selectedWorkspace?.isArchiveWorkspace;
   const [isEditing, setIsEditing] = useState(false);
   const { can } = useAuth();
   const [text, setText] = useState(workspaceName);
@@ -44,6 +46,8 @@ const WorkspaceToolbar = ({
   };
 
   const handleBlur = async () => {
+    if (isArchiveWorkspace) return;
+
     if (text.trim() === "" || text === workspaceName) {
       setIsEditing(false);
       setText(workspaceName);
@@ -89,7 +93,6 @@ const WorkspaceToolbar = ({
           width: "48%",
           height: "98%",
           px: { xs: 0, md: 0.5 },
-          // border: "2px solid green",
         }}
       >
         {isEditing ? (
@@ -124,10 +127,13 @@ const WorkspaceToolbar = ({
               },
             }}
           />
-        ) : can("UPDATE_WORKSPACE") ? (
+        ) : can("UPDATE_WORKSPACE") && !isArchiveWorkspace ? (
           <Tooltip title="Click to rename" arrow placement="bottom">
             <Typography
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                if (isArchiveWorkspace) return;
+                setIsEditing(true);
+              }}
               variant="h4"
               component="h2"
               sx={{
@@ -170,22 +176,46 @@ const WorkspaceToolbar = ({
               color: "#080F1F",
               display: "inline-block",
               whiteSpace: "nowrap",
-              maxWidth: { xs: "70vw", lg: "32vw" },
+              maxWidth: { xs: "70vw", lg: "60vw" },
               overflow: "hidden",
               textOverflow: "ellipsis",
             }}
           >
-            {workspaceName}
+            {isArchiveWorkspace ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.5,
+                  minWidth: 0,
+                }}
+              >
+                <Archive size={36} />
+                <Box
+                  component="span"
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Archive
+                </Box>
+              </Box>
+            ) : (
+              workspaceName
+            )}
           </Typography>
         )}
-        {(can("UPDATE_WORKSPACE") || can("DELETE_WORKSPACE")) && (
-          <Box>
-            <WorkspaceDropDown
-              selectedWorkspace={selectedWorkspace}
-              setSelectedWorkspace={setSelectedWorkspace}
-            />
-          </Box>
-        )}
+        {(can("UPDATE_WORKSPACE") || can("DELETE_WORKSPACE")) &&
+          !isArchiveWorkspace && (
+            <Box>
+              <WorkspaceDropDown
+                selectedWorkspace={selectedWorkspace}
+                setSelectedWorkspace={setSelectedWorkspace}
+              />
+            </Box>
+          )}
       </Box>
       <Box
         sx={{

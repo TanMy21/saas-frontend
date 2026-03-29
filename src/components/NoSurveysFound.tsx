@@ -10,9 +10,11 @@ import NewSurveyModal from "./Modals/NewSurveyModal";
 const NoSurveysFound = ({
   workspaceId,
   workspaceName,
+  isArchiveWorkspace,
 }: {
   workspaceId: string;
   workspaceName: string;
+  isArchiveWorkspace: boolean;
 }) => {
   const { can } = useAuth();
   const [open, setOpen] = useState(false);
@@ -47,10 +49,10 @@ const NoSurveysFound = ({
           lineHeight: 1.2,
         }}
       >
-        No surveys yet
+        {isArchiveWorkspace ? "No archived surveys" : "No surveys yet"}
       </Typography>
       {/* CTA BUTTON */}
-      {can?.("CREATE_SURVEY") && (
+      {can?.("CREATE_SURVEY") && !isArchiveWorkspace && (
         <Button
           onClick={handleOpen}
           sx={{
@@ -77,7 +79,7 @@ const NoSurveysFound = ({
       )}
 
       {/* MODAL */}
-      {can?.("CREATE_SURVEY") && (
+      {can?.("CREATE_SURVEY") && !isArchiveWorkspace && (
         <NewSurveyModal
           open={open}
           onClose={() => setOpen(false)}
