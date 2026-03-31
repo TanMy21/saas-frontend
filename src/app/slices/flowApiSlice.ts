@@ -8,24 +8,24 @@ export const flowApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Flow"],
+      invalidatesTags: ["Flow", "Elements", "Surveys", "Options"],
     }),
     getConditionsForQuestion: builder.query({
       query: (questionID) => `/q/conditions/${questionID}`,
-      providesTags: ["Flow", "Elements"],
+      providesTags: ["Flow", "Elements", "Options"],
     }),
     getAllConditionsForSurvey: builder.query({
       query: (surveyID) => {
         return `/s/all/conditions/${surveyID}`;
       },
-      providesTags: ["Flow", "Elements"],
+      providesTags: ["Flow", "Elements", "Options"],
     }),
     deleteCondition: builder.mutation({
       query: (flowConditionID) => ({
         url: `/q/condition/delete/${flowConditionID}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Flow", "Elements"],
+      invalidatesTags: ["Flow", "Elements", "Surveys", "Options"],
     }),
   }),
 });

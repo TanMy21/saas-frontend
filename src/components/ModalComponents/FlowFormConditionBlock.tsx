@@ -13,6 +13,7 @@ import {
   Select,
   Typography,
 } from "@mui/material";
+import { Controller } from "react-hook-form";
 import { MdError } from "react-icons/md";
 
 import { useDeleteConditionMutation } from "../../app/slices/flowApiSlice";
@@ -51,7 +52,6 @@ const FlowFormConditionBlock = ({
   onAccordionClick,
 }: FlowFormConditionBlockProps) => {
   const { can } = useAuth();
-  const canCreateFlow = can("CREATE_FLOW");
   const canEditFlow = can("UPDATE_FLOW");
   const canDeleteFlow = can("DELETE_FLOW");
 
@@ -90,7 +90,7 @@ const FlowFormConditionBlock = ({
   const handleDeleteCondition = async () => {
     try {
       setConditions((prev) =>
-        prev.filter((cond, idx) => idx !== blockIndex - 1),
+        prev.filter((_cond, idx) => idx !== blockIndex - 1),
       );
 
       setEdges((prevEdges) =>
@@ -378,63 +378,70 @@ const FlowFormConditionBlock = ({
                     height: "96%",
                   }}
                 >
-                  <Select
-                    disabled={!canEditFlow}
-                    {...register(`conditions.${blockIndex}.goto_questionID`)}
-                    defaultValue={
-                      condition.goto_questionID || Elements[0]?.questionID || ""
-                    }
-                    onChange={(e) => {
-                      setConditions((prev) =>
-                        prev.map((cond, idx) =>
-                          idx === blockIndex
-                            ? { ...cond, goto_questionID: e.target.value }
-                            : cond,
-                        ),
-                      );
-                    }}
-                    sx={{
-                      width: "100%",
-                      height: "80%",
-                      "& .MuiSelect-icon": {
-                        cursor: !canEditFlow ? "not-allowed" : "pointer",
-                      },
-                    }}
-                  >
-                    {Elements.map((element) => (
-                      <MenuItem
-                        key={element.questionID}
-                        value={element.questionID}
+                  <Controller
+                    control={control}
+                    name={`conditions.${blockIndex}.goto_questionID`}
+                    defaultValue={condition.goto_questionID || ""}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        disabled={!canEditFlow}
+                        value={field.value || ""}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setConditions((prev) =>
+                            prev.map((cond, idx) =>
+                              idx === blockIndex - 1
+                                ? { ...cond, goto_questionID: e.target.value }
+                                : cond,
+                            ),
+                          );
+                        }}
+                        sx={{
+                          width: "100%",
+                          height: "80%",
+                        }}
                       >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: "2%",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              fontSize: "20px",
-                            }}
+                        {Elements.map((element) => (
+                          <MenuItem
+                            key={element.questionID}
+                            value={element.questionID}
                           >
-                            {elementIcons[element.type as keyof IconMapping]}
-                          </Box>
-                          <Box
-                            sx={{
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                            }}
-                          >
-                            {convertHtmlToPlainText(element.text)}
-                          </Box>
-                        </Box>
-                      </MenuItem>
-                    ))}
-                  </Select>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: "2%",
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  fontSize: "20px",
+                                }}
+                              >
+                                {
+                                  elementIcons[
+                                    element.type as keyof IconMapping
+                                  ]
+                                }
+                              </Box>
+                              <Box
+                                sx={{
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                }}
+                              >
+                                {convertHtmlToPlainText(element.text)}
+                              </Box>
+                            </Box>
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    )}
+                  />
                 </Box>
               </Box>
             </Box>

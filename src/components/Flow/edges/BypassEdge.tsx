@@ -10,6 +10,7 @@ import {
 } from "@xyflow/react";
 
 import { useDeleteConditionMutation } from "../../../app/slices/flowApiSlice";
+import useAuth from "../../../hooks/useAuth";
 
 import { readEdgeStyle } from "./edgeStyle";
 
@@ -39,6 +40,8 @@ const BypassEdge = ({
   markerEnd,
   selected,
 }: EdgeProps) => {
+  const { can } = useAuth();
+  const canDelete = can("DELETE_FLOW");
   const { setEdges } = useReactFlow();
   const [deleteCondition] = useDeleteConditionMutation();
   const styleChoice = readEdgeStyle({ data } as any, "smoothstep");
@@ -97,8 +100,8 @@ const BypassEdge = ({
     }
   }, [edgePath, styleChoice]);
 
-  // Delete handler
   const handleDeleteEdge = async (e: React.MouseEvent) => {
+    if (!canDelete) return;
     e.stopPropagation();
     try {
       if (data?.flowConditionID) {
@@ -174,24 +177,26 @@ const BypassEdge = ({
           }}
         >
           <div>{`${sourceOrder + 1} ➝ ${targetOrder + 1}`}</div>
-          <button
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={handleDeleteEdge}
-            aria-label="Delete bypass"
-            style={{
-              all: "unset",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: "50%",
-              width: 20,
-              height: 20,
-              cursor: "pointer",
-            }}
-            title="Delete"
-          >
-            <ClearIcon sx={{ fontSize: 16, color: "#D32F2F" }} />
-          </button>
+          {canDelete && (
+            <button
+              onMouseDown={(e) => e.stopPropagation()}
+              onClick={handleDeleteEdge}
+              aria-label="Delete bypass"
+              style={{
+                all: "unset",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                width: 20,
+                height: 20,
+                cursor: "pointer",
+              }}
+              title="Delete"
+            >
+              <ClearIcon sx={{ fontSize: 16, color: "#D32F2F" }} />
+            </button>
+          )}
         </div>
       </foreignObject>
     </>
