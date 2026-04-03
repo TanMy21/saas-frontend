@@ -1,14 +1,13 @@
 import { useState } from "react";
 
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { useGetMeQuery } from "../app/slices/userApiSlice";
 import { SettingsPageHeader } from "../components/DashBoardHeader";
-import ScrollbarStyle from "../components/ScrollbarStyle";
 import BillingTab from "../components/Settings/BillingsTab";
-import CreateOrgUserForm from "../components/Settings/CreateOrgUserForm";
 import AccountSettingsGeneral from "../components/Settings/GeneralSettings";
 import GlassCard from "../components/Settings/GlassCard";
+import { OrgMembers } from "../components/Settings/OrgMembers";
 // import NotificationsTab from "../components/Settings/NotificationsTab";
 import SaveBar from "../components/Settings/SaveBar";
 import SecurityTab from "../components/Settings/SecurityTab";
@@ -42,100 +41,95 @@ const Settings = () => {
 
   return (
     <>
-      {/* <ScrollbarStyle /> */}
-      <Box>
-        <Grid container>
-          <Grid
-            item
-            display={"flex"}
-            flexDirection={"row"}
-            xs={12}
-            sx={{
-              overflowY: "hidden",
-              overflowX: "hidden",
-              position: "sticky",
-              top: "0",
-              width: "100%",
-              zIndex: "10",
-            }}
-          >
-            <SettingsPageHeader />
-          </Grid>
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
+      >
+        {/* Header */}
+        <Box
+          sx={{
+            position: "sticky",
+            top: 0,
+            width: "100%",
+            zIndex: 10,
+          }}
+        >
+          <SettingsPageHeader />
+        </Box>
+
+        {/* Main Layout */}
+        <Box
+          sx={{
+            width: "100%",
+            margin: "auto",
+            minHeight: "100%",
+            overflowY: "auto",
+            ...scrollStyles.builderMain,
+          }}
+        >
           <Box
             sx={{
-              display: "flex",
-              margin: "auto",
-              flexDirection: "row",
-              width: "96%",
-              height: "92vh",
-              // border: "2px solid red",
+              width: "100%",
+              px: { xs: 2, sm: 3, lg: 6 },
+              pt: 4,
+              pb: "4%",
             }}
           >
-            {/* content area */}
             <Box
               sx={{
-                height: "100%",
-                width: "100%",
-                background: "transparent",
-                px: { xs: 2, sm: 3, lg: 6 },
-                py: 4,
+                maxWidth: 1280,
+                mx: "auto",
+                display: { xs: "block", lg: "flex" },
+                gap: { xs: 2, lg: 3 },
               }}
             >
-              <Box sx={{ maxWidth: 1280, mx: "auto" }}>
-                <Grid container spacing={{ xs: 2, lg: 3 }}>
-                  {/* Sidebar */}
-                  <Grid item xs={12} lg={3}>
-                    <GlassCard>
-                      <SidebarNav
-                        activeTab={activeTab}
-                        onChange={setActiveTab}
-                      />
-                    </GlassCard>
-                  </Grid>
+              {/* Sidebar */}
+              <Box
+                sx={{
+                  width: { xs: "100%", lg: "25%" },
+                }}
+              >
+                <GlassCard>
+                  <SidebarNav activeTab={activeTab} onChange={setActiveTab} />
+                </GlassCard>
+              </Box>
 
-                  {/* Main */}
-                  <Grid item xs={12} lg={9}>
-                    <GlassCard>
-                      {/* Tabs */}
-                      {activeTab === "general" && (
-                        <AccountSettingsGeneral user={user} />
-                      )}
+              {/* Main Content */}
+              <Box
+                sx={{
+                  width: { xs: "100%", lg: "75%" },
+                }}
+              >
+                <GlassCard>
+                  {activeTab === "general" && (
+                    <AccountSettingsGeneral user={user} />
+                  )}
 
-                      {activeTab === "create-user" && can("INVITE_USER") && (
-                        <CreateOrgUserForm user={user} />
-                      )}
+                  {activeTab === "create-user" && can("INVITE_USER") && (
+                    <OrgMembers />
+                  )}
 
-                      {activeTab === "security" && <SecurityTab user={user} />}
+                  {activeTab === "security" && <SecurityTab user={user} />}
 
-                      {/* {activeTab === "notifications" && (
-                        <NotificationsTab
-                          value={notifications}
-                          onToggle={handleNotificationToggle}
-                        />
-                      )} */}
+                  {activeTab === "subscription" && <BillingTab user={user} />}
 
-                      {activeTab === "subscription" && (
-                        <BillingTab user={user} />
-                      )}
-
-                      {/* Save Bar  */}
-                      {showSaveBar && (
-                        <SaveBar
-                          loading={isLoading}
-                          success={saveSuccess}
-                          onSave={handleSave}
-                          onCancel={() => {
-                            // restore initial state here if needed
-                          }}
-                        />
-                      )}
-                    </GlassCard>
-                  </Grid>
-                </Grid>
+                  {showSaveBar && (
+                    <SaveBar
+                      loading={isLoading}
+                      success={saveSuccess}
+                      onSave={handleSave}
+                      onCancel={() => {}}
+                    />
+                  )}
+                </GlassCard>
               </Box>
             </Box>
           </Box>
-        </Grid>
+        </Box>
       </Box>
     </>
   );

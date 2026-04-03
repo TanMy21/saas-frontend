@@ -20,9 +20,7 @@ export interface User {
   email: string;
   verified: boolean;
   tier: "FREE" | "PROFESSIONAL" | "ENTERPRISE";
-  /**
-   * ⚠️ Deprecated (you should phase this out)
-   */
+  // Deprecated (you should phase this out)
   isAdmin: boolean;
   tours: {
     hasCompletedDashboardTour: boolean;
@@ -44,3 +42,17 @@ export type CreateOrgUserFormData = {
   role: string;
   orgID: string;
 };
+
+export interface OrgMember {
+  membershipID: string;
+  relatedOrgID: string;
+  userID: string;
+  role: string;
+  user: {
+    id: string;
+    firstname: string;
+    lastname?: string;
+    email: string;
+    verified: boolean;
+  };
+}

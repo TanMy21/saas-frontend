@@ -359,3 +359,13 @@ export const createOrgUserSchema = z.object({
     }),
   }),
 });
+
+
+export const memberFormSchema = z.object({
+  firstname: z.string().min(1, "First name is required"),
+  lastname: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email"),
+  role: z.enum(["ADMIN", "ANALYST", "VIEWER"]),
+});
+
+export type MemberFormValues = z.infer<typeof memberFormSchema>;

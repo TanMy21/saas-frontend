@@ -11,12 +11,47 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: ["User"],
     }),
+    getOrgUsers: builder.query<any, void>({
+      query: () => ({
+        url: "/u/org-users",
+        credentials: "include",
+      }),
+      providesTags: ["User"],
+    }),
+    getOrgUserById: builder.query({
+      query: (userID: string) => ({
+        url: `/u/org-users/${userID}`,
+        credentials: "include",
+      }),
+      providesTags: ["User"],
+    }),
+    getOrgInvites: builder.query<any, void>({
+      query: () => ({
+        url: "/u/org-invites",
+        credentials: "include",
+      }),
+      providesTags: ["User"],
+    }),
     resendVerificationEmail: builder.mutation({
       query: (email) => ({
         url: "/u/verify",
         method: "POST",
         body: email,
       }),
+    }),
+    resendOrgInvite: builder.mutation({
+      query: (inviteID: string) => ({
+        url: `/u/org-invites/${inviteID}/resend`,
+        method: "POST",
+      }),
+      invalidatesTags: ["User"],
+    }),
+    revokeOrgInvite: builder.mutation({
+      query: (inviteID: string) => ({
+        url: `/u/org-invites/${inviteID}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User"],
     }),
     addNewUser: builder.mutation({
       query: (data) => ({
@@ -49,6 +84,21 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         body: updates,
       }),
     }),
+    updateOrgUser: builder.mutation({
+      query: ({ userID, ...data }) => ({
+        url: `/u/org-users/${userID}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    deleteOrgUser: builder.mutation({
+      query: (userID: string) => ({
+        url: `/u/org-users/${userID}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User"],
+    }),
     validateOrganizationInvite: builder.query({
       query: (token) => `/u/invite/${token}`,
     }),
@@ -64,6 +114,9 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetMeQuery,
+  useGetOrgUsersQuery,
+  useGetOrgUserByIdQuery,
+  useGetOrgInvitesQuery,
   useAddNewUserMutation,
   // useUpdateUserMutation,
   // useDeleteUserMutation,
@@ -71,7 +124,11 @@ export const {
   useAcceptOrganizationInviteMutation,
   useCreateNewUserMutation,
   useResendVerificationEmailMutation,
+  useResendOrgInviteMutation,
+  useRevokeOrgInviteMutation,
   useUpdateUserInfoMutation,
+  useUpdateOrgUserMutation,
+  useDeleteOrgUserMutation,
   useUpdateUserTourStatusMutation,
 } = usersApiSlice;
 
