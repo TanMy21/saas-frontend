@@ -42,15 +42,18 @@ const HeaderIconMenu = () => {
 
   const [sendLogout, { isSuccess: isSuccessLogout }] = useSendLogoutMutation();
 
-  const onLogoutClick = () => {
+  const onLogoutClick = async () => {
     handleClose();
     setPersist(false);
+    try {
+      await sendLogout().unwrap();
+    } catch (err) {
+      console.error(err);
+    }
+
     dispatch(logOut());
 
-    // setTimeout(() => {
-    sendLogout();
-    // navigate("/?logout=success");
-    // }, 1000);
+    window.location.href = "/login?session=expired";
   };
 
   const onSettingsClick = () => {

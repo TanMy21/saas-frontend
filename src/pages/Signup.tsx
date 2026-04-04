@@ -53,7 +53,7 @@ const Signup = () => {
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
@@ -617,7 +617,9 @@ const Signup = () => {
               </form>
             </Box>
           </Box>
-          {/*footer: already have an account */}
+
+          {/* footer: already have an account */}
+
           <Box
             sx={{
               display: "flex",

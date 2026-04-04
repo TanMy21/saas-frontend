@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { CircularProgress } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ import { fetchUser } from "./userSlice";
 const PersistLogin = () => {
   const [persist] = usePersist();
   const token = useAppSelector(selectCurrentToken);
-
+  const isLoggingOutRef = useRef(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -26,6 +26,7 @@ const PersistLogin = () => {
 
   const logoutUser = async () => {
     try {
+      isLoggingOutRef.current = true;
       await sendLogout().unwrap();
       dispatch(logOut());
       navigate("/login?session=expired", { replace: true });
@@ -48,7 +49,7 @@ const PersistLogin = () => {
       }
     };
 
-    if (persist && !token) {
+    if (persist && !token && !isLoggingOutRef.current) {
       verifyRefreshToken();
     }
 

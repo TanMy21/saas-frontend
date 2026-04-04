@@ -18,6 +18,14 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    createOrg: builder.mutation({
+      query: (body: { organizationName: string }) => ({
+        url: "/auth/google/onboarding",
+        method: "POST",
+        body,
+      }),
+    }),
     forgotPassword: builder.mutation({
       query: (email) => ({
         url: "/password/forgot",
@@ -81,7 +89,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
               // token: accessToken,
               accessToken,
               // isLoggedIn: true,
-            })
+            }),
           );
         } catch (err) {
           console.log(err);
@@ -95,6 +103,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
 export const {
   useLoginMutation,
   useSendLogoutMutation,
+  useCreateOrgMutation,
   useRefreshMutation,
   useForgotPasswordMutation,
   useVerifyEmailQuery,

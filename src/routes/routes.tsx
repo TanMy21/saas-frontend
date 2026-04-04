@@ -13,6 +13,8 @@ import ErrorPage from "../pages/ErrorPage";
 import ForgotPassword from "../pages/ForgotPassword";
 import Homepage from "../pages/Homepage";
 import LoginAgain from "../pages/LoginAgain";
+import { Onboarding } from "../pages/OnboardingSSO";
+import { PendingInvites } from "../pages/PendingInvites";
 import QuestionFlow from "../pages/QuestionFlow";
 import ResetPassword from "../pages/ResetPassword";
 import Settings from "../pages/Settings";
@@ -66,6 +68,14 @@ const router = createBrowserRouter([
           {
             element: <RequireAuth />,
             children: [
+              {
+                path: "/onboarding",
+                element: <Onboarding />,
+              },
+              {
+                path: "/pending-invites",
+                element: <PendingInvites />,
+              },
               {
                 path: "/dash",
                 element: <Dashboard />,

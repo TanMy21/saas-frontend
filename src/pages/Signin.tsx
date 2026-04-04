@@ -46,8 +46,9 @@ const Signin = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [openToast, setOpenToast] = useState<boolean>(true);
   // const [googleAuthClicked, setGoogleAuthClicked] = useState(false);
-  const params = new URLSearchParams(location.search);
-  const sessionExpired = params.get("session") === "expired";
+  const [initialParams] = useState(() => new URLSearchParams(location.search));
+  // const params = new URLSearchParams(location.search);
+  const sessionExpired = initialParams.get("session") === "expired";
 
   const [login, { isLoading, isError, error }] = useLoginMutation();
   const [
@@ -103,7 +104,7 @@ const Signin = () => {
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
@@ -120,7 +121,7 @@ const Signin = () => {
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
@@ -146,31 +147,45 @@ const Signin = () => {
   };
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const isGoogleAuth = queryParams.get("auth") === "g";
+    const isGoogleAuth = initialParams.get("auth") === "g";
+    const hasPendingInvite = initialParams.get("pendingInvite") === "true";
+    const inviteAccepted = initialParams.get("invite") === "accepted";
 
-    if (isGoogleAuth && location.pathname === "/login") {
+    if (isGoogleAuth && !googleAuthData) {
       googleAuth({});
     }
 
     if (googleAuthData) {
       const { accessToken } = googleAuthData;
       dispatch(setCredentials({ accessToken }));
+
+      if (hasPendingInvite) {
+        navigate("/pending-invites");
+        return;
+      }
+
+      if (inviteAccepted) {
+        toast.success("Joined organization successfully", {
+          position: "top-right",
+        });
+        navigate("/dash");
+        return;
+      }
+
       navigate("/dash");
     }
 
     if (isGoogleAuth && googleAuthError) {
-      console.error("Failed to fetch access token:", error);
+      toast.error("Google login failed");
       navigate("/login");
     }
   }, [
-    location,
+    initialParams,
     googleAuthData,
+    googleAuthError,
     dispatch,
     navigate,
     googleAuth,
-    isGoogleAuthError,
-    googleAuthError,
   ]);
 
   if (isLoading)
@@ -191,246 +206,247 @@ const Signin = () => {
 
   document.body.style.overflowY = "hidden";
 
-  if (sessionExpired) {
-    return (
-      <SessionExpiredToast
-        open={openToast}
-        setOpen={setOpenToast}
-        handleSessionExpired={handleSessionExpired}
-      />
-    );
-  }
-
   return (
-    <Box
-      component="main"
-      sx={{
-        width: "100%",
-        overflowY: "hidden",
-        overflowX: "hidden",
-        background:
-          "radial-gradient(125% 125% at 50% 10%, #fff 40%, #0074EB 100%)",
-      }}
-    >
+    <>
+      {sessionExpired && (
+        <SessionExpiredToast
+          open={openToast}
+          setOpen={setOpenToast}
+          handleSessionExpired={handleSessionExpired}
+        />
+      )}
       <Box
+        component="main"
         sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          p: 3,
+          width: "100%",
+          overflowY: "hidden",
+          overflowX: "hidden",
+          background:
+            "radial-gradient(125% 125% at 50% 10%, #fff 40%, #0074EB 100%)",
         }}
       >
         <Box
           sx={{
-            width: "100%",
-            maxWidth: 480,
-            marginTop: "-4%",
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            p: 3,
           }}
         >
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              textAlign: "center",
-              mb: 3,
+              width: "100%",
+              maxWidth: 480,
+              marginTop: "-4%",
             }}
           >
-            <Box sx={{ width: "60%", height: "60%", margin: "auto" }}>
-              <Link to="/" style={{ textDecoration: "none" }}>
-                <img
-                  src="/Logo.png"
-                  alt="logo"
-                  style={{
-                    maxWidth: "25%",
-                    maxHeight: "25%",
-                    objectFit: "contain",
-                  }}
-                />
-              </Link>
-            </Box>
-            <Typography
-              variant="h4"
+            <Box
               sx={{
-                fontWeight: "bold",
-                background: gradient.background,
-                WebkitBackgroundClip: "text",
-                color: "transparent",
-                display: "inline-block",
+                display: "flex",
+                flexDirection: "column",
+                textAlign: "center",
+                mb: 3,
               }}
             >
-              Welcome back
-            </Typography>
-            <Typography variant="body1" sx={{ color: grey[600] }}>
-              Create . Share . Learn
-            </Typography>
-          </Box>
-
-          <Paper
-            sx={{
-              p: 4,
-              borderRadius: 5,
-              boxShadow: shadows[9],
-            }}
-          >
-            <form onSubmit={handleSubmit(submitLoginData)}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email address"
-                InputLabelProps={{ style: { color: grey[500] } }}
-                autoComplete="email"
-                autoFocus
-                {...register("email")}
-                variant="filled"
-                sx={{
-                  mb: 2,
-                  borderRadius: 3,
-                  backgroundColor: brand.bgColor3,
-                  "& .MuiFilledInput-root": {
-                    borderRadius: 3,
-                    backgroundColor: brand.bgColor3,
-                    borderBottom: "none !important",
-                    "&:before, &:after": {
-                      display: "none",
-                    },
-                  },
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <MailOutlineIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              {errors.email && <FormErrors errors={errors.email.message} />}
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Password"
-                type={showPassword ? "text" : "password"}
-                InputLabelProps={{ style: { color: grey[600] } }}
-                id="password"
-                autoComplete="password"
-                variant="filled"
-                {...register("password")}
-                sx={{
-                  mb: 2,
-                  borderRadius: 3,
-                  backgroundColor: brand.bgColor3,
-                  "& .MuiFilledInput-root": {
-                    borderRadius: 3,
-                    backgroundColor: brand.bgColor3,
-                    borderBottom: "none !important",
-                    "&:before, &:after": {
-                      display: "none",
-                    },
-                  },
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <VisibilityOffIcon />
-                        ) : (
-                          <VisibilityIcon />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-
-              <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-                <Link
-                  to="/forgot"
-                  style={{
-                    color: primary.main,
-                    fontSize: "14px",
-                    textDecoration: "none",
-                  }}
-                >
-                  Forgot password?
+              <Box sx={{ width: "60%", height: "60%", margin: "auto" }}>
+                <Link to="/" style={{ textDecoration: "none" }}>
+                  <img
+                    src="/Logo.png"
+                    alt="logo"
+                    style={{
+                      maxWidth: "25%",
+                      maxHeight: "25%",
+                      objectFit: "contain",
+                    }}
+                  />
                 </Link>
               </Box>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: 1,
-                  py: 1.5,
-                  borderRadius: 4,
-                  fontWeight: "medium",
-                  background: gradient.background,
-                  color: background.paper,
-                  textTransform: "unset",
-                  "&:hover": { opacity: 0.9 },
-                }}
-              >
-                Sign in <LoginIcon />
-              </Button>
-              <Divider sx={{ color: brand.divider1, my: 3 }}>
-                or continue with
-              </Divider>
-              <Button
-                onClick={handleGoogleAuth}
-                fullWidth
-                variant="outlined"
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: 1,
-                  py: 1.5,
-                  borderRadius: 4,
-                  color: brand.btnTxt1,
-                  borderColor: borders.subtle,
-                  textTransform: "unset",
-                  "&:hover": {
-                    borderColor: borders.subtle,
-                  },
-                }}
-              >
-                <FcGoogle size={24} />
-                Continue with Google
-              </Button>
               <Typography
-                variant="body2"
-                sx={{ textAlign: "center", mt: 2, color: grey[600] }}
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+                  background: gradient.background,
+                  WebkitBackgroundClip: "text",
+                  color: "transparent",
+                  display: "inline-block",
+                }}
               >
-                Don't have an account?{" "}
-                <Link
-                  to="/register"
-                  style={{
-                    color: primary.main,
+                Welcome back
+              </Typography>
+              <Typography variant="body1" sx={{ color: grey[600] }}>
+                Create . Share . Learn
+              </Typography>
+            </Box>
+
+            <Paper
+              sx={{
+                p: 4,
+                borderRadius: 5,
+                boxShadow: shadows[9],
+              }}
+            >
+              <form onSubmit={handleSubmit(submitLoginData)}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email address"
+                  InputLabelProps={{ style: { color: grey[500] } }}
+                  autoComplete="email"
+                  autoFocus
+                  {...register("email")}
+                  variant="filled"
+                  sx={{
+                    mb: 2,
+                    borderRadius: 3,
+                    backgroundColor: brand.bgColor3,
+                    "& .MuiFilledInput-root": {
+                      borderRadius: 3,
+                      backgroundColor: brand.bgColor3,
+                      borderBottom: "none !important",
+                      "&:before, &:after": {
+                        display: "none",
+                      },
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <MailOutlineIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                {errors.email && <FormErrors errors={errors.email.message} />}
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  InputLabelProps={{ style: { color: grey[600] } }}
+                  id="password"
+                  autoComplete="password"
+                  variant="filled"
+                  {...register("password")}
+                  sx={{
+                    mb: 2,
+                    borderRadius: 3,
+                    backgroundColor: brand.bgColor3,
+                    "& .MuiFilledInput-root": {
+                      borderRadius: 3,
+                      backgroundColor: brand.bgColor3,
+                      borderBottom: "none !important",
+                      "&:before, &:after": {
+                        display: "none",
+                      },
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <VisibilityOffIcon />
+                          ) : (
+                            <VisibilityIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+
+                <Box
+                  sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}
+                >
+                  <Link
+                    to="/forgot"
+                    style={{
+                      color: primary.main,
+                      fontSize: "14px",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Forgot password?
+                  </Link>
+                </Box>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 1,
+                    py: 1.5,
+                    borderRadius: 4,
                     fontWeight: "medium",
-                    textDecoration: "none",
+                    background: gradient.background,
+                    color: background.paper,
+                    textTransform: "unset",
+                    "&:hover": { opacity: 0.9 },
                   }}
                 >
-                  Sign up
-                </Link>
-              </Typography>
-            </form>
-          </Paper>
+                  Sign in <LoginIcon />
+                </Button>
+                <Divider sx={{ color: brand.divider1, my: 3 }}>
+                  or continue with
+                </Divider>
+                <Button
+                  onClick={handleGoogleAuth}
+                  fullWidth
+                  variant="outlined"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 1,
+                    py: 1.5,
+                    borderRadius: 4,
+                    color: brand.btnTxt1,
+                    borderColor: borders.subtle,
+                    textTransform: "unset",
+                    "&:hover": {
+                      borderColor: borders.subtle,
+                    },
+                  }}
+                >
+                  <FcGoogle size={24} />
+                  Continue with Google
+                </Button>
+                <Typography
+                  variant="body2"
+                  sx={{ textAlign: "center", mt: 2, color: grey[600] }}
+                >
+                  Don't have an account?{" "}
+                  <Link
+                    to="/register"
+                    style={{
+                      color: primary.main,
+                      fontWeight: "medium",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Sign up
+                  </Link>
+                </Typography>
+              </form>
+            </Paper>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

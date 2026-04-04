@@ -8,14 +8,14 @@ export default function SessionExpiredToast({
   handleSessionExpired,
 }: SessionExpireToastProps) {
   const handleClose = (
-    event?: React.SyntheticEvent | Event,
+    _event?: React.SyntheticEvent | Event,
     reason?: string
   ) => {
     if (reason === "clickaway") return;
     setOpen(false);
     setTimeout(() => {
       handleSessionExpired();
-    }, 1000);
+    }, 3000);
   };
 
   return (
