@@ -262,7 +262,7 @@ export interface ElementListItemProps {
   elements?: Element[];
   displayedQuestions: Element[];
   nonOrderableTypes: string[];
-  setQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
+  setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
   newQuestionIds?: Set<string>;
 }
 
@@ -288,7 +288,7 @@ export interface ElementDropDownMenuProps {
   questionID: string;
   elements?: Element[];
   isSystemScreen: boolean;
-  setQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
+  setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export interface ElementType {
@@ -1041,6 +1041,7 @@ export interface QuestionNodeData extends Record<string, unknown> {
 
 export interface QuestionState {
   selectedQuestion: Element | null;
+  selectedQuestionId: string | null;
   is3DModelModalOpen: boolean;
 }
 

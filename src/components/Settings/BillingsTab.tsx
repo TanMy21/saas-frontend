@@ -1,8 +1,33 @@
-import { Box, Stack, Typography, Chip, Grid, Button } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Typography,
+  Chip,
+  Grid,
+  Button,
+  Skeleton,
+} from "@mui/material";
 
 import { AccountSettings } from "../../types/userTypes";
 
 export default function BillingTab({ user }: AccountSettings) {
+  if (!user) {
+    return (
+      <Box sx={{ p: 4 }}>
+        <Skeleton variant="text" width={200} height={32} />
+
+        <Skeleton variant="text" width={300} height={20} sx={{ mt: 1 }} />
+
+        <Box sx={{ mt: 3 }}>
+          <Skeleton
+            variant="rectangular"
+            height={120}
+            sx={{ borderRadius: 2 }}
+          />
+        </Box>
+      </Box>
+    );
+  }
   return (
     <Box sx={{ p: 4 }}>
       <Box sx={{ mb: 3 }}>

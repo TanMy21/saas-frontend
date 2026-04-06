@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 
-import { resetQuestion, setQuestion } from "../app/slices/elementSlice";
 import {
   initializeTypography,
   resetTypography,
@@ -14,13 +13,10 @@ const useSelectedQuestion = (
 ) => {
   useEffect(() => {
     if (!selectedQuestion) {
-      dispatch(resetQuestion());
       dispatch(resetTypography());
       return;
     }
 
-    // Prevent infinite loop
-    dispatch(setQuestion(selectedQuestion));
     dispatch(initializeTypography(selectedQuestion.questionPreferences));
   }, [selectedQuestion?.questionID, dispatch]);
 };

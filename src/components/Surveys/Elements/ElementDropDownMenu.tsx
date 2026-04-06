@@ -7,6 +7,10 @@ import {
   useDeleteElementMutation,
   useDuplicateElementMutation,
 } from "../../../app/slices/elementApiSlice";
+import {
+  setQuestion,
+  setSelectedQuestionId,
+} from "../../../app/slices/elementSlice";
 import { deleteElementRedux } from "../../../app/slices/surveySlice";
 import { RootState } from "../../../app/store";
 import { useAppSelector, useAppDispatch } from "../../../app/typedReduxHooks";
@@ -17,7 +21,6 @@ import DeleteQuestionAlert from "../../alert/DeleteQuestionAlert";
 
 const ElementDropDownMenu = ({
   questionID,
-  setQuestionId,
   isSystemScreen,
 }: ElementDropDownMenuProps) => {
   const dispatch = useAppDispatch();
@@ -52,7 +55,7 @@ const ElementDropDownMenu = ({
 
       refetchCanvas();
 
-      setQuestionId(newQuestion.questionID);
+      dispatch(setQuestion(newQuestion));
     } catch (error) {
       console.error(error);
     }
@@ -78,17 +81,16 @@ const ElementDropDownMenu = ({
     const index = elements.findIndex((e) => e.questionID === recentlyDeletedId);
 
     if (index === 0 && elements.length > 1) {
-      setQuestionId(elements[index + 1].questionID);
+      dispatch(setQuestion(elements[1]));
     } else if (index > 0) {
-      setQuestionId(elements[index - 1].questionID);
+      dispatch(setQuestion(elements[index - 1]));
     } else {
-      setQuestionId(null);
+      dispatch(setSelectedQuestionId(null));
     }
 
-    // Dispatch to remove from Redux store (after confirmed refetch)
     dispatch(deleteElementRedux(recentlyDeletedId));
-    setRecentlyDeletedId(null); // Reset
-  }, [elements, recentlyDeletedId, dispatch, setQuestionId]);
+    setRecentlyDeletedId(null);
+  }, [elements, recentlyDeletedId, dispatch]);
 
   return (
     <>

@@ -12,7 +12,6 @@ import ElementsPanel from "./Elements/ElementsPanelNew";
 
 const SurveyBuilderLeftSidebar = ({
   surveyID,
-  setQuestionId,
 }: SurveyBuilderLeftSidebarProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { can } = useAuth();
@@ -135,7 +134,7 @@ const SurveyBuilderLeftSidebar = ({
           </Box>
         </Box>
       </Box>
-      <ElementsPanel setQuestionId={setQuestionId} />
+      <ElementsPanel />
     </Box>
   );
 };

@@ -4,6 +4,7 @@ import { Element, QuestionState } from "../../utils/types";
 
 const initialState: QuestionState = {
   selectedQuestion: null,
+  selectedQuestionId: null,
   is3DModelModalOpen: false,
 };
 
@@ -13,6 +14,10 @@ const questionSlice = createSlice({
   reducers: {
     setQuestion: (state, action: PayloadAction<Element>) => {
       state.selectedQuestion = action.payload;
+      state.selectedQuestionId = action.payload.questionID;
+    },
+    setSelectedQuestionId: (state, action: PayloadAction<string | null>) => {
+      state.selectedQuestionId = action.payload;
     },
     setTemplateImage: (state, action: PayloadAction<{ url: string }>) => {
       if (!state.selectedQuestion?.questionPreferences) return;
@@ -28,7 +33,6 @@ const questionSlice = createSlice({
 
       const newColor = action.payload;
 
-      // update selected question
       state.selectedQuestion.questionPreferences.questionBackgroundColor =
         newColor;
     },
@@ -165,6 +169,7 @@ const questionSlice = createSlice({
 
 export const {
   setQuestion,
+  setSelectedQuestionId,
   setTemplateImage,
   setBackgroundColor,
   set3DModelModalOpen,

@@ -16,13 +16,13 @@ import {
 } from "lucide-react";
 
 import { LoaderMode } from "../types/modalTypes";
-import { Role } from "../types/userTypes";
 
 import { NotificationSettings, QuestionType, TabId } from "./types";
 
 export const LAST_WS_KEY = "lWSID";
 
 export const VIEW_MODE_KEY = "ws:vm";
+export const SETTINGS_TAB_KEY = "set:lat";
 
 export const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: "general", label: "General", icon: User },

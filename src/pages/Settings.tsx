@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Box } from "@mui/material";
 
@@ -13,7 +13,9 @@ import SaveBar from "../components/Settings/SaveBar";
 import SecurityTab from "../components/Settings/SecurityTab";
 import SidebarNav from "../components/Settings/SideBarNav";
 import useAuth from "../hooks/useAuth";
+import { useStoredState } from "../hooks/useStoredState";
 import { useAppTheme } from "../theme/useAppTheme";
+import { SETTINGS_TAB_KEY } from "../utils/constants";
 import { TabId } from "../utils/types";
 
 const Settings = () => {
@@ -24,8 +26,24 @@ const Settings = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  const [activeTab, setActiveTab] = useState<TabId>("general");
+  const validateTab = useCallback(
+    (tab: TabId) => {
+      if (!user) return tab;
 
+      if (tab === "create-user" && !can("INVITE_USER")) {
+        return "general";
+      }
+
+      return tab;
+    },
+    [can, user],
+  );
+
+  const [activeTab, setActiveTab] = useStoredState<TabId>(
+    SETTINGS_TAB_KEY,
+    "general",
+    validateTab,
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 

@@ -2,8 +2,9 @@ import { Box, Tooltip, Typography } from "@mui/material";
 import { GripVertical } from "lucide-react";
 import { Draggable } from "react-beautiful-dnd";
 
+import { setQuestion } from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
-import { useAppSelector } from "../../../app/typedReduxHooks";
+import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
 import { nonOrderableTypes } from "../../../utils/constants";
 import { elementIcons } from "../../../utils/elementsConfig";
@@ -14,14 +15,14 @@ import ElementDropDownMenu from "./ElementDropDownMenu";
 
 export const ElementsListItem = ({
   displayedQuestions,
-  setQuestionId,
   newQuestionIds,
 }: ElementListItemProps) => {
   const { can } = useAuth();
+  const dispatch = useAppDispatch();
   const canReorder = can("REORDER_OPTION");
 
   const selectedQuestionId = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion?.questionID,
+    (state: RootState) => state.question.selectedQuestionId,
   );
 
   return (
@@ -35,7 +36,6 @@ export const ElementsListItem = ({
 
         const canShowMenu = canDuplicate || canDelete;
 
-        /** Gets the order of this new item among only the new items, for stagger timing */
         const staggerIndex = isNew
           ? displayedQuestions
               .filter((q) => newQuestionIds?.has(q.questionID) ?? false)
@@ -62,39 +62,27 @@ export const ElementsListItem = ({
                 key={element.questionID}
                 ref={provided.innerRef}
                 {...provided.draggableProps}
-                onClick={() =>
-                  element?.questionID && setQuestionId?.(element?.questionID)
-                }
+                onClick={() => dispatch(setQuestion({ ...element }))}
                 sx={{
                   display: "flex",
                   flexDirection: "column",
                   gap: 0.5,
-
                   position: "relative",
                   zIndex: snapshot.isDragging ? 2000 : "auto",
-
                   px: 1.5,
                   py: 1,
                   minHeight: 52,
-
                   cursor: isSystemScreen
                     ? "default"
                     : snapshot.isDragging
                       ? "grabbing"
                       : "default",
-
                   userSelect: "none",
-
                   transform: provided.draggableProps.style?.transform,
-
-                  /** GPU acceleration */
                   willChange: "transform",
                   backfaceVisibility: "hidden",
-
-                  /** smooth reorder animation */
                   transition:
                     "transform 180ms cubic-bezier(.2,0,0,1), background-color 0.2s ease, box-shadow 0.2s ease",
-
                   ...(isNew && {
                     backgroundColor: "rgba(99,102,241,0.10)",
                     animation:
@@ -102,20 +90,15 @@ export const ElementsListItem = ({
                     animationDelay: `${staggerIndex * 90}ms`,
                     opacity: 0,
                   }),
-
                   opacity: snapshot.isDragging ? 0.98 : 1,
-
-                  /** floating drag item */
                   boxShadow: snapshot.isDragging
                     ? "0 20px 40px rgba(0,0,0,0.22)"
                     : "none",
-
                   "&:hover": {
                     backgroundColor: isSelected ? "#EFF6FF" : "#F9FAFB",
                     boxShadow: "0 4px 12px rgba(16, 24, 40, 0.08)",
                     transform: "translateY(-1px)",
                   },
-
                   ...(isSelected
                     ? {
                         backgroundColor: "#EFF6FF",
@@ -231,7 +214,6 @@ export const ElementsListItem = ({
                     >
                       <ElementDropDownMenu
                         questionID={element.questionID}
-                        setQuestionId={setQuestionId}
                         isSystemScreen={isSystemScreen}
                       />
                     </Box>

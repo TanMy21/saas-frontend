@@ -15,11 +15,10 @@ import { useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { nonOrderableTypes } from "../../../utils/constants";
-import { ElementsPanelProps } from "../../../utils/types";
 
 import { ElementsListItem } from "./ElementsListItem";
 
-const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
+const ElementsPanel = () => {
   const { scrollStyles } = useAppTheme();
   const { can } = useAuth();
   const dispatch = useAppDispatch();
@@ -44,7 +43,6 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
   useEffect(() => {
     if (!aiQuestionsJustAdded) return;
 
-    /** detect when new elements arrive after generation/import */
     if (elements.length <= prevLengthRef.current) return;
 
     const added = elements.slice(prevLengthRef.current);
@@ -150,7 +148,6 @@ const ElementsPanel = ({ setQuestionId }: ElementsPanelProps) => {
                 }}
               >
                 <ElementsListItem
-                  setQuestionId={setQuestionId!}
                   displayedQuestions={displayedQuestions}
                   nonOrderableTypes={nonOrderableTypes}
                   newQuestionIds={newQuestionIds}

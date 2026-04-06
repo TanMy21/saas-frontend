@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 
 import { useGetSurveyCanvasByIdQuery } from "../../app/slices/surveysApiSlice";
 import { useGetWorkspaceByIdQuery } from "../../app/slices/workspaceApiSlice";
-import { LAST_WS_KEY } from "../../utils/constants";
 import { SurveyBuilderHeaderProps } from "../../utils/types";
 import PublishButton from "../Buttons/PublishButton";
 import HeaderIconMenu from "../HeaderIconMenu";
@@ -14,10 +13,13 @@ import HeaderIconMenu from "../HeaderIconMenu";
 import SurveyBuilderHeaderTabs from "./SurveyBuilderHeaders/SurveyBuilderHeaderTabs";
 import SurveyNavigation from "./SurveyBuilderHeaders/SurveyNavigation";
 
-const SurveyBuilderHeader = ({ survey }: SurveyBuilderHeaderProps) => {
+const SurveyBuilderHeader = ({
+  survey,
+  workspaceId,
+  workspaceName,
+}: SurveyBuilderHeaderProps) => {
   const { surveyID } = useParams();
   const [tabValue, setTabValue] = useState<string>("create");
-  const workspaceId = localStorage.getItem(LAST_WS_KEY);
 
   const { data: workspace } = useGetWorkspaceByIdQuery(workspaceId!, {
     skip: !workspaceId,
@@ -30,11 +32,7 @@ const SurveyBuilderHeader = ({ survey }: SurveyBuilderHeaderProps) => {
       refetchOnMountOrArgChange: true,
     });
   const { getSurveyCanvas } = surveyCanvas ?? {};
-  const {
-    title,
-
-    published,
-  } = getSurveyCanvas ?? {};
+  const { title, published } = getSurveyCanvas ?? {};
 
   useEffect(() => {
     if (location.pathname.includes("/results")) {
@@ -112,8 +110,8 @@ const SurveyBuilderHeader = ({ survey }: SurveyBuilderHeaderProps) => {
               setTabValue={setTabValue}
               surveyID={getSurveyCanvas?.surveyID}
               survey={survey}
-              workspaceId={workspaceId!}
-              workspaceName={workspace?.name}
+              workspaceId={workspaceId}
+              workspaceName={workspaceName}
             />
           </Box>
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import DashboardTour from "../components/tour/DashboardTour";
 import WorkspaceConsole from "../components/Workspaces/WorkspaceConsole";
 import useAuth from "../hooks/useAuth";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
+import { useStoredState } from "../hooks/useStoredState";
 import { useAppTheme } from "../theme/useAppTheme";
 import { LAST_WS_KEY } from "../utils/constants";
 import { ErrorData, Workspace } from "../utils/types";
@@ -36,19 +37,53 @@ const Dashboard = () => {
     data: workspaces,
     isError: isErrorWorkspaces,
     error: workspaceError,
-    isSuccess,
   } = useGetWorkspacesQuery("workspacesList", {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
   useBodyScrollLock(true);
-  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace>();
+
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useStoredState<
+    string | null
+  >(LAST_WS_KEY, null, (id) => {
+    if (!workspaces?.length) return id;
+
+    if (id && workspaces.some((w: Workspace) => w.workspaceId === id)) {
+      return id;
+    }
+
+    const myWorkspace = workspaces.find(
+      (w: Workspace) => w.name === "My Workspace",
+    );
+    if (myWorkspace) return myWorkspace.workspaceId;
+
+    return workspaces[0].workspaceId;
+  });
 
   const archiveWorkspace = workspaces?.find(
     (ws: Workspace) => ws.isArchiveWorkspace,
   );
 
   const archivedCount = archiveWorkspace?.archivedCount ?? 0;
+
+  const selectedWorkspace = useMemo(() => {
+    if (!workspaces || !selectedWorkspaceId) return undefined;
+
+    return workspaces.find(
+      (w: Workspace) => w.workspaceId === selectedWorkspaceId,
+    );
+  }, [workspaces, selectedWorkspaceId]);
+
+  const handleSetWorkspace: React.Dispatch<
+    React.SetStateAction<Workspace | undefined>
+  > = (value) => {
+    const resolvedValue =
+      typeof value === "function" ? value(selectedWorkspace) : value;
+
+    if (!resolvedValue) return;
+
+    setSelectedWorkspaceId(resolvedValue.workspaceId!);
+  };
 
   useEffect(() => {
     if (isErrorWorkspaces) {
@@ -72,69 +107,6 @@ const Dashboard = () => {
       }
     }
   }, [isErrorWorkspaces, workspaceError]);
-
-  useEffect(() => {
-    // --- Guard: wait for data ---
-    if (!isSuccess || !workspaces?.length) return;
-
-    // --- Prevent overriding user selection ---
-    if (selectedWorkspace) return;
-
-    try {
-      // --- 1. Try localStorage ---
-      const lastId = localStorage.getItem(LAST_WS_KEY);
-
-      if (lastId) {
-        const found = workspaces.find(
-          (w: Workspace) => w.workspaceId === lastId,
-        );
-
-        if (found) {
-          setSelectedWorkspace(found);
-          return; // ✅ stop if found
-        }
-      }
-
-      // --- 2. Try "My Workspace" ---
-      const myWorkspace = workspaces.find(
-        (w: Workspace) => w.name === "My Workspace",
-      );
-
-      if (myWorkspace) {
-        setSelectedWorkspace(myWorkspace);
-        return;
-      }
-
-      // --- 3. Fallback to first workspace ---
-      setSelectedWorkspace(workspaces[0]);
-    } catch (error) {
-      // --- Safe fallback ---
-      setSelectedWorkspace(workspaces[0]);
-    }
-  }, [isSuccess, workspaces, selectedWorkspace]);
-
-  useEffect(() => {
-    if (selectedWorkspace?.workspaceId) {
-      try {
-        localStorage.setItem(LAST_WS_KEY, selectedWorkspace.workspaceId);
-      } catch {
-        // ignore
-      }
-    }
-  }, [selectedWorkspace]);
-
-  useEffect(() => {
-    if (!workspaces || !workspaces.length) return;
-
-    if (!selectedWorkspace) return;
-
-    const stillExists = workspaces.some(
-      (w: Workspace) => w.workspaceId === selectedWorkspace.workspaceId,
-    );
-    if (!stillExists) {
-      setSelectedWorkspace(workspaces[0]);
-    }
-  }, [workspaces, selectedWorkspace]);
 
   useEffect(() => {
     if (!user && isAuthenticated) {
@@ -194,8 +166,8 @@ const Dashboard = () => {
           }}
         >
           <DashBoardHeader
-            selectedWorkspace={selectedWorkspace!}
-            setSelectedWorkspace={setSelectedWorkspace}
+            selectedWorkspace={selectedWorkspace}
+            setSelectedWorkspace={handleSetWorkspace}
             setNewWorkspaceModalOpen={setNewWorkspaceModalOpen}
             setRenameWorkspaceModalOpen={setRenameWorkspaceModalOpen}
             setDeleteWorkspaceModalOpen={setDeleteWorkspaceModalOpen}
@@ -245,8 +217,8 @@ const Dashboard = () => {
               }}
             >
               <WorkspaceConsole
-                selectedWorkspace={selectedWorkspace!}
-                setSelectedWorkspace={setSelectedWorkspace}
+                selectedWorkspace={selectedWorkspace}
+                setSelectedWorkspace={handleSetWorkspace}
               />
             </Box>
           </Box>
@@ -264,8 +236,8 @@ const Dashboard = () => {
         <RenameWorkspaceModal
           open={renameWorkspaceModalOpen}
           onClose={() => setRenameWorkspaceModalOpen(false)}
-          selectedWorkspace={selectedWorkspace!}
-          setSelectedWorkspace={setSelectedWorkspace}
+          selectedWorkspace={selectedWorkspace}
+          setSelectedWorkspace={handleSetWorkspace}
         />
       )}
 
@@ -273,7 +245,7 @@ const Dashboard = () => {
         <DeleteWorkspaceModal
           open={deleteWorkspaceModalOpen}
           onClose={() => setDeleteWorkspaceModalOpen(false)}
-          selectedWorkspace={selectedWorkspace!}
+          selectedWorkspace={selectedWorkspace}
         />
       )}
       <SpinnerBackdrop />

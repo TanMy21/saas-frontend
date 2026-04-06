@@ -259,7 +259,7 @@ const SurveyBuilderDock = ({
     }
     prevPublishedRef.current = published ?? null;
   }, [published, dispatch]);
-  console.log("canUpdateSurvey:", can?.("UPDATE_SURVEY"));
+   
   return (
     <>
       <Box
@@ -311,7 +311,6 @@ const SurveyBuilderDock = ({
             setHovered={setHovered}
             id={item.id}
             withDividerLeft={item.id === "import"}
-            // withDividerLeft={index === 1}
           />
         ))}
 
@@ -357,7 +356,7 @@ const DockItem = ({
   withDividerLeft = false,
 }: DockItemProps) => {
   const size = isHovered ? HOVER_BUTTON_SIZE : DEFAULT_BUTTON_SIZE;
-  console.log("withDividerLeft:", withDividerLeft);
+  
   return (
     <Tooltip
       title={label}

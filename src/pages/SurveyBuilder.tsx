@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Box } from "@mui/material";
 import { useLocation, useParams } from "react-router-dom";
 
+import { setQuestion, setSelectedQuestionId } from "../app/slices/elementSlice";
 import { setSurveyCanvas } from "../app/slices/surveyCanvasSlice";
 import { useGetSurveyCanvasByIdQuery } from "../app/slices/surveysApiSlice";
 import { setGenerateModalOpen } from "../app/slices/surveySlice";
@@ -21,7 +22,6 @@ import { SurveyCanvasRefetchContext } from "../context/BuilderRefetchCanvas";
 import useAuth from "../hooks/useAuth";
 import { useCanvasLoadingAndError } from "../hooks/useCanvasLoadingandError";
 import useFetchAuthenticatedUser from "../hooks/useFetchAuthenticatedUser";
-import { usePersistedSelectedQuestion } from "../hooks/usePersistSelectedQuestion";
 import useSelectedQuestion from "../hooks/useSelectedQuestion";
 import useSortElements from "../hooks/useSortElements";
 import useSurveyBuilderModalLocation from "../hooks/useSurveyBuilderModalLocation";
@@ -42,9 +42,9 @@ const SurveyBuilder = () => {
     useSurveyBuilderModalLocation(location);
   // const [stepIndex, setStepIndex] = useState(0);
   // const isTourEnabled = useBuilderTourEnable(user);
-  const [surveyTitle, setSurveyTitle] = useState<string>("");
+  const [_surveyTitle, setSurveyTitle] = useState<string>("");
   const [display, setDisplay] = useState<"desktop" | "mobile">("desktop");
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
   const [openScratch, setOpenScratch] = useState(isOpen);
   const [openImportLocal, setOpenImportLocal] = useState(false);
 
@@ -52,14 +52,30 @@ const SurveyBuilder = () => {
     (state: RootState) => state.surveyBuilder.elements,
   );
 
-  const { questionId, setQuestionId } = usePersistedSelectedQuestion(
-    surveyID,
-    elements,
+  const selectedQuestionId = useAppSelector(
+    (state: RootState) => state.question.selectedQuestionId,
   );
 
+  useEffect(() => {
+    if (!elements.length) return;
+
+    if (!selectedQuestionId) {
+      dispatch(setQuestion(elements[0]));
+      return;
+    }
+
+    const found = elements.find((q) => q.questionID === selectedQuestionId);
+
+    if (found) {
+      dispatch(setQuestion(found));
+    } else {
+      dispatch(setQuestion(elements[0]));
+    }
+  }, [elements, selectedQuestionId, dispatch]);
+
   const selectedQuestion = useMemo(() => {
-    return elements.find((q) => q.questionID === questionId) || null;
-  }, [elements, questionId]);
+    return elements.find((q) => q.questionID === selectedQuestionId) || null;
+  }, [elements, selectedQuestionId]);
 
   const noElements = elements.length === 0;
 
@@ -98,7 +114,7 @@ const SurveyBuilder = () => {
 
   useSyncQuestionsToElements(questions);
 
-  useSortElements(elements, setQuestionId, questionId);
+  useSortElements(elements, selectedQuestionId, dispatch);
   useSelectedQuestion(selectedQuestion, dispatch);
 
   useEffect(() => {
@@ -113,6 +129,21 @@ const SurveyBuilder = () => {
       setOpenImportLocal(true);
     }
   }, [isOpenImport]);
+
+  useEffect(() => {
+    if (!surveyID) return;
+
+    const saved = localStorage.getItem(`sq:${surveyID}`);
+    if (saved) {
+      dispatch(setSelectedQuestionId(saved));
+    }
+  }, [surveyID, dispatch]);
+
+  useEffect(() => {
+    if (!surveyID || !selectedQuestionId) return;
+
+    localStorage.setItem(`sq:${surveyID}`, selectedQuestionId);
+  }, [surveyID, selectedQuestionId]);
 
   if (isLoadingCanvas)
     return (
@@ -184,7 +215,6 @@ const SurveyBuilder = () => {
             >
               <SurveyBuilderLeftSidebar
                 surveyID={surveyID}
-                setQuestionId={setQuestionId}
                 elements={elements}
               />
             </Box>
@@ -216,7 +246,7 @@ const SurveyBuilder = () => {
               }}
             >
               <ElementPreferencesPanel
-                questionId={questionId}
+                questionId={selectedQuestionId}
                 question={selectedQuestion}
               />
             </Box>
