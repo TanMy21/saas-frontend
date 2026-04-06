@@ -24,6 +24,7 @@ const CanvasConsole = ({
   shareID,
   published,
   onOpenImport,
+  title,
 }: CanvasConsoleProps) => {
   const dispatch = useAppDispatch();
 
@@ -66,6 +67,9 @@ const CanvasConsole = ({
         shareID={shareID}
         published={published}
         onOpenImport={onOpenImport}
+        title={title}
+      />
+      <Box
       />
       <Box
         sx={{

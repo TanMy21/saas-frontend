@@ -232,6 +232,7 @@ const SurveyBuilder = () => {
                 noElements={noElements}
                 shareID={shareID}
                 published={published}
+                title={title}
                 onOpenImport={() => setOpenImportLocal(true)}
               />
             </Box>

@@ -114,6 +114,7 @@ export interface CanvasConsoleProps {
   shareID: string;
   published: boolean;
   noElements: boolean;
+  title: string;
 }
 
 type ExportMode = "ALL" | "SELECTED";
@@ -1292,6 +1293,7 @@ export interface ShareSurveyProps {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   openSnackbar: boolean;
   shareID: string;
+  title: string;
   setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -1311,6 +1313,7 @@ export interface SurveyIslandProps {
   onOpenImport: () => void;
   shareID: string;
   published: boolean;
+  title: string;
 }
 
 export interface SurveyDropDownMenuProps {

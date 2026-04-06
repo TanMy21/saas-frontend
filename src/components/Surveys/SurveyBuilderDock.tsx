@@ -185,6 +185,7 @@ const SurveyBuilderDock = ({
   shareID,
   published,
   onOpenImport,
+  title,
 }: SurveyIslandProps) => {
   const dispatch = useAppDispatch();
   const { surveyID } = useParams();
@@ -193,16 +194,6 @@ const SurveyBuilderDock = ({
   const openGenerateState = useAppSelector(
     (state: RootState) => state.surveyBuilder.isGenerateModalOpen,
   );
-
-  const shareOpen = useAppSelector(
-    (state: RootState) => state.overlayUI.shareModalOpen,
-  );
-
-  // const setShareOpen: React.Dispatch<React.SetStateAction<boolean>> = (val) => {
-  //   const next = typeof val === "function" ? val(shareOpen!) : val;
-  //   if (next) dispatch(openShareModal());
-  //   else dispatch(closeShareModal());
-  // };
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openGenerate, setOpenGenerate] = useState(openGenerateState);
@@ -321,6 +312,7 @@ const SurveyBuilderDock = ({
           openSnackbar={openSnackbar}
           setOpenSnackbar={setOpenSnackbar}
           shareID={shareID}
+          title={title}
         />
 
         {can?.("UPDATE_SURVEY") && (
