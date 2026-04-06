@@ -92,6 +92,7 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
         startDate,
         endDate,
         language,
+        published,
       }) => ({
         url: `/s/settings/${surveyID}`,
         method: "PUT",
@@ -102,6 +103,7 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
           startDate,
           endDate,
           language,
+          published,
         },
       }),
       invalidatesTags: ["Surveys"],

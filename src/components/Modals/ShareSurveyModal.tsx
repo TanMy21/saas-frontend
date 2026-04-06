@@ -22,20 +22,23 @@ import {
 } from "@mui/material";
 import QRCode from "react-qr-code";
 
+// import { setShareModalOpen } from "../../app/slices/surveySlice";
+import { closeShareModal } from "../../app/slices/overlaySlice";
+import { useAppSelector } from "../../app/store";
+import { useAppDispatch } from "../../app/typedReduxHooks";
 import { ShareSurveyProps } from "../../utils/types";
 
 const ShareSurveyModal = ({
-  open,
-  setOpen,
   setShareBtnSelected,
   setOpenSnackbar,
   shareID,
 }: ShareSurveyProps) => {
   // const { background, textStyles } = useAppTheme();
   const [_copied, setCopied] = useState(false);
-
+  const dispatch = useAppDispatch();
+  const open = useAppSelector((state) => state.overlayUI.shareModalOpen);
   const [copyLinkStatus, _setCopyLinkStatus] = useState<"idle" | "copied">(
-    "idle"
+    "idle",
   );
   const [copyQrStatus, setCopyQrStatus] = useState<
     "idle" | "copying" | "copied"
@@ -61,7 +64,9 @@ const ShareSurveyModal = ({
   const handleClose = () => {
     setShareBtnSelected(false);
     setCopied(false);
-    setOpen(false);
+    // setOpen(false);
+    // dispatch(setShareModalOpen(false));
+    dispatch(closeShareModal());
   };
 
   const handleCopyQR = () => {

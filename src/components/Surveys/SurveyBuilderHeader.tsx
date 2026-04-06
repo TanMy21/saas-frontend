@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { useGetSurveyCanvasByIdQuery } from "../../app/slices/surveysApiSlice";
 import { useGetWorkspaceByIdQuery } from "../../app/slices/workspaceApiSlice";
 import { SurveyBuilderHeaderProps } from "../../utils/types";
-import PublishButton from "../Buttons/PublishButton";
+import ShareButton from "../Buttons/ShareButton";
 import HeaderIconMenu from "../HeaderIconMenu";
 
 import SurveyBuilderHeaderTabs from "./SurveyBuilderHeaders/SurveyBuilderHeaderTabs";
@@ -126,7 +126,7 @@ const SurveyBuilderHeader = ({
               // border: "2px solid orange",
             }}
           >
-            <PublishButton
+            <ShareButton
               surveyID={getSurveyCanvas?.surveyID}
               published={published}
             />

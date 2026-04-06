@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import CloseIcon from "@mui/icons-material/Close";
@@ -32,6 +32,7 @@ import {
   SettingsFormData,
   SurveySettingsProps,
 } from "../../utils/types";
+import { CustomToggle } from "../Buttons/CustomToggle";
 
 const SurveySettingsModal = ({
   surveyID,
@@ -40,8 +41,9 @@ const SurveySettingsModal = ({
 }: SurveySettingsProps) => {
   // const { scrollStyles, textStyles } = useAppTheme();
   const surveyCanvas = useAppSelector(
-    (state: RootState) => state.surveyCanvas.data
+    (state: RootState) => state.surveyCanvas.data,
   );
+  const [publishToggled, setPublishToggled] = useState(false);
   const { getSurveyCanvas, languages } = surveyCanvas ?? {};
   const surveySettings = getSurveyCanvas?.SurveySettings;
   const [updateSurvey, { isLoading, isSuccess, isError, error }] =
@@ -80,13 +82,33 @@ const SurveySettingsModal = ({
         endDate,
         language,
       });
+
+      setPublishToggled(false);
     } catch (error) {
       console.log("Error: ", error);
     }
   };
 
+  const handleTogglePublish = async () => {
+    try {
+      await updateSurvey({
+        surveyID,
+        published: !getSurveyCanvas?.published,
+      }).unwrap();
+
+      setPublishToggled((prev) => !prev);
+
+      toast.success(
+        getSurveyCanvas?.published ? "Survey unpublished" : "Survey published",
+        { position: "top-right" },
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && !publishToggled) {
       toast.success("Settings Updated!", {
         position: "top-right",
         autoClose: 3000,
@@ -102,7 +124,7 @@ const SurveySettingsModal = ({
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
@@ -212,6 +234,45 @@ const SurveySettingsModal = ({
           {/* Content */}
           <Box sx={{ px: 4, py: 2, flex: 1, overflowY: "auto" }}>
             <form onSubmit={handleSubmit(submitUpdateData)}>
+              {/* publish toggle */}
+
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: 14,
+                    color: "#374151",
+                    mb: 1,
+                  }}
+                >
+                  {getSurveyCanvas?.published ? "Published" : "Draft"}
+                </Typography>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    bgcolor: "#F9FAFB",
+                    borderRadius: 2,
+                    px: 2,
+                    py: 1.5,
+                    border: "1px solid #E5E7EB",
+                  }}
+                >
+                  <Typography sx={{ fontSize: 14, color: "#4B5563" }}>
+                    {getSurveyCanvas?.published
+                      ? "Survey is live and accepting responses"
+                      : "Survey is in draft mode"}
+                  </Typography>
+
+                  <CustomToggle
+                    checked={!!getSurveyCanvas?.published}
+                    onChange={handleTogglePublish}
+                  />
+                </Box>
+              </Box>
+
               {/* Title */}
               <Box sx={{ mb: 2 }}>
                 <Typography

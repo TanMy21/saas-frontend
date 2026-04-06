@@ -198,11 +198,11 @@ const SurveyBuilderDock = ({
     (state: RootState) => state.overlayUI.shareModalOpen,
   );
 
-  const setShareOpen: React.Dispatch<React.SetStateAction<boolean>> = (val) => {
-    const next = typeof val === "function" ? val(shareOpen!) : val;
-    if (next) dispatch(openShareModal());
-    else dispatch(closeShareModal());
-  };
+  // const setShareOpen: React.Dispatch<React.SetStateAction<boolean>> = (val) => {
+  //   const next = typeof val === "function" ? val(shareOpen!) : val;
+  //   if (next) dispatch(openShareModal());
+  //   else dispatch(closeShareModal());
+  // };
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openGenerate, setOpenGenerate] = useState(openGenerateState);
@@ -259,7 +259,7 @@ const SurveyBuilderDock = ({
     }
     prevPublishedRef.current = published ?? null;
   }, [published, dispatch]);
-   
+
   return (
     <>
       <Box
@@ -315,8 +315,8 @@ const SurveyBuilderDock = ({
         ))}
 
         <ShareSurveyModal
-          open={shareOpen!}
-          setOpen={setShareOpen}
+          // open={shareOpen}
+          // setOpen={setShareOpen}
           setShareBtnSelected={setShareBtnSelected}
           openSnackbar={openSnackbar}
           setOpenSnackbar={setOpenSnackbar}
@@ -356,7 +356,7 @@ const DockItem = ({
   withDividerLeft = false,
 }: DockItemProps) => {
   const size = isHovered ? HOVER_BUTTON_SIZE : DEFAULT_BUTTON_SIZE;
-  
+
   return (
     <Tooltip
       title={label}

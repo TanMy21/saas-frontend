@@ -1287,9 +1287,9 @@ export interface SurveyRenameProps {
 }
 
 export interface ShareSurveyProps {
-  open: boolean;
+  open?: boolean;
   setShareBtnSelected: React.Dispatch<React.SetStateAction<boolean>>;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   openSnackbar: boolean;
   shareID: string;
   setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
