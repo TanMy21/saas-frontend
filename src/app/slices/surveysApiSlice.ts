@@ -151,6 +151,16 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Surveys"],
     }),
+    trackShareEvent: builder.mutation<
+      { success: boolean },
+      { surveyID: string; actionType: string }
+    >({
+      query: (body) => ({
+        url: "/s/share-event",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -171,6 +181,7 @@ export const {
   useMoveSurveyMutation,
   useDeleteSurveyMutation,
   usePublishSurveyMutation,
+  useTrackShareEventMutation,
 } = surveysApiSlice;
 
 export const {

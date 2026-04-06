@@ -465,4 +465,63 @@ export const getPasswordStrength = (password: string) => {
   return score;
 };
 
+// Safe clipboard copy
+export const safeCopyText = async (text: string) => {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      // fallback
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+    return true;
+  } catch {
+    return false;
+  }
+};
 
+// Safe rich copy to plain text
+export const safeCopyHTML = async (html: string) => {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      const blob = new Blob([html], { type: "text/html" });
+      const data = [new ClipboardItem({ "text/html": blob })];
+      await navigator.clipboard.write(data);
+    } else {
+      await safeCopyText(html); // fallback
+    }
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// QR to canvas
+export const qrToCanvas = async (
+  svgNode: SVGElement,
+): Promise<HTMLCanvasElement> => {
+  const svgData = new XMLSerializer().serializeToString(svgNode);
+  const blob = new Blob([svgData], { type: "image/svg+xml" });
+  const url = URL.createObjectURL(blob);
+
+  const img = new Image();
+  img.src = url;
+
+  await new Promise((res) => (img.onload = res));
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 200;
+  canvas.height = 200;
+
+  const ctx = canvas.getContext("2d");
+  ctx?.drawImage(img, 0, 0);
+
+  URL.revokeObjectURL(url);
+
+  return canvas;
+};
