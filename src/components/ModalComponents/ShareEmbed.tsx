@@ -1,6 +1,7 @@
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { CheckCircleIcon, CopyIcon, Loader } from "lucide-react";
 
+import { useBatchedTracking } from "../../hooks/useBatchedTracking";
 import { useShareCopyHandler } from "../../hooks/useShareCopyHandler";
 import { useTrackedEvent } from "../../hooks/useTrackedEvent";
 import { ShareTabProps } from "../../types/surveyBuilderTypes";
@@ -12,7 +13,8 @@ const ShareEmbed = ({
   trackShareEvent,
   surveyID,
 }: ShareTabProps) => {
-  const track = useTrackedEvent(trackShareEvent, surveyID!);
+  const batchedTrack = useBatchedTracking(trackShareEvent, surveyID!);
+  const track = useTrackedEvent(batchedTrack, surveyID!);
 
   const { copy, status: copyStatus } = useShareCopyHandler(
     setOpenSnackbar,

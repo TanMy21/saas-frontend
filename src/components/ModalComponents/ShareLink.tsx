@@ -11,6 +11,7 @@ import {
 import { CheckCircleIcon, CopyIcon, DownloadIcon, Loader } from "lucide-react";
 import QRCode from "react-qr-code";
 
+import { useBatchedTracking } from "../../hooks/useBatchedTracking";
 import { useShareCopyHandler } from "../../hooks/useShareCopyHandler";
 import { useShareQRActions } from "../../hooks/useShareQRActions";
 import { useTrackedEvent } from "../../hooks/useTrackedEvent";
@@ -23,7 +24,8 @@ const ShareLink = ({
   setOpenSnackbar,
   trackShareEvent,
 }: ShareTabProps) => {
-  const track = useTrackedEvent(trackShareEvent, surveyID!);
+  const batchedTrack = useBatchedTracking(trackShareEvent, surveyID!);
+  const track = useTrackedEvent(batchedTrack, surveyID!);
 
   const { copied, copy, triggerCopied, clear } = useShareCopyHandler(
     setOpenSnackbar,

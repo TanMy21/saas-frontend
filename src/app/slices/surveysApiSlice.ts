@@ -153,7 +153,11 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
     }),
     trackShareEvent: builder.mutation<
       { success: boolean },
-      { surveyID: string; actionType: string }
+      {
+        surveyID: string;
+        actionType: string;
+        events?: { actionType: string }[];
+      }
     >({
       query: (body) => ({
         url: "/s/share-event",
