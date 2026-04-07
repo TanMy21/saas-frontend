@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, IconButton, Modal, Tab, Tabs, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 import { closeShareModal } from "../../app/slices/overlaySlice";
 import { useTrackShareEventMutation } from "../../app/slices/surveysApiSlice";
@@ -18,6 +19,7 @@ const ShareSurveyModal = ({
   shareID,
   title,
 }: ShareSurveyProps) => {
+  const { surveyID } = useParams();
   const dispatch = useAppDispatch();
   const open = useAppSelector((state) => state.overlayUI.shareModalOpen);
 
@@ -88,6 +90,7 @@ const ShareSurveyModal = ({
             <ShareLink
               shareURL={shareURL}
               shareID={shareID}
+              surveyID={surveyID}
               setOpenSnackbar={setOpenSnackbar}
               trackShareEvent={trackShareEvent}
             />
@@ -98,6 +101,7 @@ const ShareSurveyModal = ({
             <ShareEmail
               title={title}
               shareURL={shareURL}
+              surveyID={surveyID}
               setOpenSnackbar={setOpenSnackbar}
               trackShareEvent={trackShareEvent}
             />
@@ -107,6 +111,7 @@ const ShareSurveyModal = ({
           {tab === "embed" && (
             <ShareEmbed
               shareURL={shareURL}
+              surveyID={surveyID}
               setOpenSnackbar={setOpenSnackbar}
               trackShareEvent={trackShareEvent}
             />

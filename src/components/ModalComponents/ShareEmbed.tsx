@@ -1,75 +1,25 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { CheckCircleIcon, CopyIcon, Loader } from "lucide-react";
-import { useParams } from "react-router-dom";
 
+import { useShareCopyHandler } from "../../hooks/useShareCopyHandler";
+import { useTrackedEvent } from "../../hooks/useTrackedEvent";
 import { ShareTabProps } from "../../types/surveyBuilderTypes";
-import { safeCopyText } from "../../utils/utils";
+import { getEmbedCode } from "../../utils/utils";
 
 const ShareEmbed = ({
   shareURL,
   setOpenSnackbar,
   trackShareEvent,
+  surveyID,
 }: ShareTabProps) => {
-  const { surveyID } = useParams();
-  const [_loadingKey, setLoadingKey] = useState<string | null>(null);
-  const [_copied, setCopied] = useState<string | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const track = useTrackedEvent(trackShareEvent, surveyID!);
 
-  const [copyStatus, setCopyStatus] = useState<"idle" | "copying" | "copied">(
-    "idle",
+  const { copy, status: copyStatus } = useShareCopyHandler(
+    setOpenSnackbar,
+    track,
   );
 
-  const embedCode = useMemo(
-    () =>
-      `<iframe src="${shareURL}?embed=true" width="100%" height="600" style="border:none;border-radius:8px;"></iframe>`,
-    [shareURL],
-  );
-
-  const triggerCopied = (key: string) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-    setCopied(key);
-    setOpenSnackbar(true);
-
-    timeoutRef.current = setTimeout(() => setCopied(null), 2000);
-  };
-
-  const handleCopy = async (value: string, key: string) => {
-    if (!value) return;
-
-    setLoadingKey(key);
-    setCopyStatus("copying");
-    const success = await safeCopyText(value);
-    setLoadingKey(null);
-
-    if (!success) {
-      console.error("Copy failed");
-      setCopyStatus("idle");
-      return;
-    }
-
-    triggerCopied(key);
-    setCopyStatus("copied");
-    trackShareEvent({
-      surveyID: surveyID!,
-      actionType: "SHARE_EMBED_CODE_COPIED",
-    });
-
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-    timeoutRef.current = setTimeout(() => {
-      setCopyStatus("idle");
-      setCopied(null);
-    }, 2000);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
+  const embedCode = getEmbedCode(shareURL);
 
   return (
     <Box>
@@ -91,7 +41,7 @@ const ShareEmbed = ({
         {embedCode}
         <Tooltip title={copyStatus === "copied" ? "Copied" : "Copy"}>
           <IconButton
-            onClick={() => handleCopy(embedCode, "embed")}
+            onClick={() => copy(embedCode, "embed", "SHARE_EMBED_CODE_COPIED")}
             disabled={!shareURL || copyStatus === "copying"}
             sx={{
               position: "absolute",

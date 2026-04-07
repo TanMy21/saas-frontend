@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 import {
   Box,
@@ -10,135 +10,30 @@ import {
 } from "@mui/material";
 import { CheckCircleIcon, CopyIcon, DownloadIcon, Loader } from "lucide-react";
 import QRCode from "react-qr-code";
-import { useParams } from "react-router-dom";
 
+import { useShareCopyHandler } from "../../hooks/useShareCopyHandler";
+import { useShareQRActions } from "../../hooks/useShareQRActions";
+import { useTrackedEvent } from "../../hooks/useTrackedEvent";
 import { ShareTabProps } from "../../types/surveyBuilderTypes";
-import { qrToCanvas, safeCopyText } from "../../utils/utils";
 
 const ShareLink = ({
   shareURL,
   shareID,
+  surveyID,
   setOpenSnackbar,
   trackShareEvent,
 }: ShareTabProps) => {
-  const { surveyID } = useParams();
-  const [_loadingKey, setLoadingKey] = useState<string | null>(null);
-  const [copied, setCopied] = useState<string | null>(null);
+  const track = useTrackedEvent(trackShareEvent, surveyID!);
 
-  const [copyQrStatus, setCopyQrStatus] = useState<
-    "idle" | "copying" | "copied"
-  >("idle");
-  const [downloadStatus, setDownloadStatus] = useState<
-    "idle" | "downloading" | "downloaded"
-  >("idle");
+  const { copied, copy, triggerCopied, clear } = useShareCopyHandler(
+    setOpenSnackbar,
+    track,
+  );
 
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const qrContainerRef = useRef<HTMLDivElement>(null);
 
-  const resetAfterDelay = (fn: () => void) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-    timeoutRef.current = setTimeout(fn, 2000);
-  };
-
-  const triggerCopied = (key: string) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-    setCopied(key);
-    setOpenSnackbar(true);
-
-    timeoutRef.current = setTimeout(() => setCopied(null), 2000);
-  };
-  const handleCopy = async (value: string, key: string) => {
-    if (!value) return;
-
-    setLoadingKey(key);
-    const success = await safeCopyText(value);
-    setLoadingKey(null);
-
-    if (!success) {
-      console.error("Copy failed");
-      return;
-    }
-
-    triggerCopied(key);
-
-    trackShareEvent({
-      surveyID: surveyID!,
-      actionType: "SHARE_LINK_COPIED",
-    });
-  };
-
-  const handleCopyQR = async () => {
-    const svgNode = qrContainerRef.current?.querySelector("svg");
-    if (!svgNode) return;
-
-    setLoadingKey("qr");
-
-    try {
-      const canvas = await qrToCanvas(svgNode);
-
-      const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res));
-
-      if (!blob) throw new Error();
-
-      await navigator.clipboard.write([
-        new ClipboardItem({ "image/png": blob }),
-      ]);
-
-      triggerCopied("qr");
-      setCopyQrStatus("copied");
-      trackShareEvent({
-        surveyID: surveyID!,
-        actionType: "SHARE_QR_COPIED",
-      });
-      resetAfterDelay(() => {
-        setCopyQrStatus("idle");
-        setCopied(null);
-      });
-    } catch {
-      console.error("QR copy failed");
-    } finally {
-      setLoadingKey(null);
-    }
-  };
-
-  const handleDownloadQR = async () => {
-    const svgNode = qrContainerRef.current?.querySelector("svg");
-    if (!svgNode) return;
-
-    setLoadingKey("download");
-
-    try {
-      const canvas = await qrToCanvas(svgNode);
-
-      const link = document.createElement("a");
-      link.download = `${shareID}-qr.png`;
-      link.href = canvas.toDataURL();
-      link.click();
-
-      triggerCopied("download");
-      setDownloadStatus("downloaded");
-      trackShareEvent({
-        surveyID: surveyID!,
-        actionType: "SHARE_QR_DOWNLOADED",
-      });
-      resetAfterDelay(() => {
-        setDownloadStatus("idle");
-        setCopied(null);
-      });
-    } catch {
-      console.error("QR download failed");
-    } finally {
-      setLoadingKey(null);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
+  const { copyQrStatus, downloadStatus, copyQR, downloadQR } =
+    useShareQRActions(qrContainerRef, shareID!, triggerCopied, clear, track);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -158,7 +53,7 @@ const ShareLink = ({
                 <InputAdornment position="end">
                   <IconButton
                     size="small"
-                    onClick={() => handleCopy(shareURL, "url")}
+                    onClick={() => copy(shareURL, "url", "SHARE_LINK_COPIED")}
                     sx={{
                       color: copied === "url" ? "success.main" : "grey.600",
                     }}
@@ -226,7 +121,7 @@ const ShareLink = ({
           <Box sx={{ mt: 1, display: "flex", gap: 2.5 }}>
             <Button
               size="small"
-              onClick={handleDownloadQR}
+              onClick={downloadQR}
               disabled={!shareURL}
               startIcon={
                 downloadStatus === "downloading" ? (
@@ -256,7 +151,7 @@ const ShareLink = ({
             <Button
               size="small"
               variant="outlined"
-              onClick={handleCopyQR}
+              onClick={copyQR}
               disabled={!shareURL || copyQrStatus === "copying"}
               startIcon={
                 copyQrStatus === "copying" ? (

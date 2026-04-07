@@ -1,106 +1,44 @@
-import { useEffect, useRef, useState } from "react";
-
 import { Box, Typography } from "@mui/material";
 import { CheckIcon, CopyIcon, LinkIcon } from "lucide-react";
-import { useParams } from "react-router-dom";
 
+import { useShareCopyHandler } from "../../hooks/useShareCopyHandler";
+import { useTrackedEvent } from "../../hooks/useTrackedEvent";
 import { ShareTabProps } from "../../types/surveyBuilderTypes";
 import { getSurveyEmailTemplate } from "../../utils/emailTemplate";
-import { safeCopyText } from "../../utils/utils";
+import { copyRichTextToClipboard } from "../../utils/utils";
 
 const ShareEmail = ({
   title,
   shareURL,
+  surveyID,
   setOpenSnackbar,
   trackShareEvent,
 }: ShareTabProps) => {
-  const { surveyID } = useParams();
-  const [_loadingKey, setLoadingKey] = useState<string | null>(null);
-  const [copied, setCopied] = useState<string | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+ const track = useTrackedEvent(trackShareEvent, surveyID!);
 
-  const triggerCopied = (key: string) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  const { copied, copy, triggerCopied } = useShareCopyHandler(
+    setOpenSnackbar,
+    track,
+  );
 
-    setCopied(key);
-    setOpenSnackbar(true);
-
-    timeoutRef.current = setTimeout(() => setCopied(null), 2000);
-  };
-
-  const handleCopy = async (value: string, key: string) => {
-    if (!value) return;
-
-    setLoadingKey(key);
-    const success = await safeCopyText(value);
-    setLoadingKey(null);
-
-    if (!success) {
-      console.error("Copy failed");
-      return;
-    }
-
-    triggerCopied(key);
-    trackShareEvent({
-      surveyID: surveyID!,
-      actionType: "SHARE_LINK_COPIED",
+  const handleCopyTemplate = async () => {
+    const html = getSurveyEmailTemplate({
+      surveyTitle: title,
+      shareURL,
+      senderName: "<Your Name>",
     });
+
+    await copyRichTextToClipboard(html);
+
+    triggerCopied("template");
+
+    track("SHARE_EMAIL_TEMPLATE_COPIED");
   };
-
-  const copyRichText = async (html: string) => {
-    try {
-      if (!navigator.clipboard || !window.isSecureContext) {
-        throw new Error("Clipboard not supported");
-      }
-
-      // Convert HTML to plain text fallback
-      const temp = document.createElement("div");
-      temp.innerHTML = html;
-      const plainText = temp.innerText;
-
-      const item = new ClipboardItem({
-        "text/html": new Blob([html], { type: "text/html" }),
-        "text/plain": new Blob([plainText], { type: "text/plain" }), // 🔥 KEY FIX
-      });
-
-      await navigator.clipboard.write([item]);
-
-      triggerCopied("template");
-      trackShareEvent({
-        surveyID: surveyID!,
-        actionType: "SHARE_EMAIL_TEMPLATE_COPIED",
-      });
-    } catch (err) {
-      console.error("Rich copy failed, fallback to text", err);
-
-      // fallback
-      await safeCopyText(html);
-      triggerCopied("template");
-      trackShareEvent({
-        surveyID: surveyID!,
-        actionType: "SHARE_EMAIL_TEMPLATE_COPIED",
-      });
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       <Box
-        onClick={() =>
-          copyRichText(
-            getSurveyEmailTemplate({
-              surveyTitle: title,
-              shareURL,
-              senderName: "<Your Name>",
-            }),
-          )
-        }
+        onClick={handleCopyTemplate}
         sx={{
           position: "relative",
           p: 2.5,
@@ -145,7 +83,7 @@ const ShareEmail = ({
 
       {/* Survey Link Card */}
       <Box
-        onClick={() => handleCopy(shareURL, "email_link")}
+        onClick={() => copy(shareURL, "email_link", "SHARE_LINK_COPIED")}
         sx={{
           position: "relative",
           p: 2.5,

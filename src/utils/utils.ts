@@ -525,3 +525,60 @@ export const qrToCanvas = async (
 
   return canvas;
 };
+
+// Generates embed iframe code for survey
+export const getEmbedCode = (shareURL: string) => {
+  return `<iframe src="${shareURL}?embed=true" width="100%" height="600" style="border:none;border-radius:8px;"></iframe>`;
+};
+
+/**
+ * Copies HTML + plain text fallback to clipboard
+ */
+export const copyRichTextToClipboard = async (html: string) => {
+  try {
+    const temp = document.createElement("div");
+    temp.innerHTML = html;
+    const plainText = temp.innerText;
+
+    const item = new ClipboardItem({
+      "text/html": new Blob([html], { type: "text/html" }),
+      "text/plain": new Blob([plainText], { type: "text/plain" }),
+    });
+
+    await navigator.clipboard.write([item]);
+    return true;
+  } catch {
+    await safeCopyText(html);
+    return false;
+  }
+};
+
+// Prevents duplicate event tracking within a session
+export const shouldTrackEvent = (
+  key: string,
+  ttlMs = 60 * 1000, // 1 min
+): boolean => {
+  try {
+    const existing = sessionStorage.getItem(key);
+
+    if (existing) {
+      const { timestamp } = JSON.parse(existing);
+
+      if (typeof timestamp !== "number") {
+        sessionStorage.removeItem(key);
+        sessionStorage.setItem(key, JSON.stringify({ timestamp: Date.now() }));
+        return true;
+      }
+
+      if (Date.now() - timestamp < ttlMs) {
+        return false;
+      }
+    }
+
+    sessionStorage.setItem(key, JSON.stringify({ timestamp: Date.now() }));
+
+    return true;
+  } catch {
+    return true;
+  }
+};
