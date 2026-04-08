@@ -4,7 +4,7 @@ import { GoArrowUpLeft } from "react-icons/go";
 import { SurveyWelcomeElementProps } from "../../../utils/types";
 
 const SurveyWelcomeElement = ({ display }: SurveyWelcomeElementProps) => {
-  const marginTop = display === "mobile" ? "-80%" : "10%";
+  const marginTop = display === "mobile" ? "-80%" : "4%";
   const arrowFontSize = display === "mobile" ? "1rem" : "4rem";
   const welcomeFontSize = display === "mobile" ? "24px" : "40px";
   const subtextFontSize = display === "mobile" ? "16px" : "20px";
@@ -17,8 +17,9 @@ const SurveyWelcomeElement = ({ display }: SurveyWelcomeElementProps) => {
       alignItems={"center"}
       margin={"auto"}
       width={"100%"}
-      height={"100%"}
+      height={"60%"}
       zIndex={20}
+      // border={"2px solid red"}
     >
       <Box
         display={"flex"}
@@ -35,10 +36,10 @@ const SurveyWelcomeElement = ({ display }: SurveyWelcomeElementProps) => {
       <Box
         display={"flex"}
         flexDirection={"column"}
-        justifyContent={"center"}
+        justifyContent={"start"}
         alignItems={"center"}
         width={"84%"}
-        height={"60%"}
+        height={"80%"}
       >
         <Typography fontSize={welcomeFontSize} color={"#171D5C"}>
           Welcome to the survey!

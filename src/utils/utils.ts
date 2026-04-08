@@ -556,7 +556,7 @@ export const copyRichTextToClipboard = async (html: string) => {
 // Prevents duplicate event tracking within a session
 export const shouldTrackEvent = (
   key: string,
-  ttlMs = 60 * 1000, // 1 min
+  ttlMs = 30 * 1000, // 30 sec
 ): boolean => {
   try {
     const existing = sessionStorage.getItem(key);

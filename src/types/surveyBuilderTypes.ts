@@ -6,3 +6,6 @@ export interface ShareTabProps {
   setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
   trackShareEvent: (args: { surveyID: string; actionType: string }) => void;
 }
+
+
+export type TabType = "link" | "email" | "embed";

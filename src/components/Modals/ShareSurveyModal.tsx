@@ -1,17 +1,19 @@
 import { useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, IconButton, Modal, Tab, Tabs, Typography } from "@mui/material";
+import { Box, IconButton, Modal, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 import { closeShareModal } from "../../app/slices/overlaySlice";
 import { useTrackShareEventMutation } from "../../app/slices/surveysApiSlice";
 import { useAppSelector } from "../../app/store";
 import { useAppDispatch } from "../../app/typedReduxHooks";
+import { TabType } from "../../types/surveyBuilderTypes";
 import { ShareSurveyProps } from "../../utils/types";
 import ShareEmail from "../ModalComponents/ShareEmail";
 import ShareEmbed from "../ModalComponents/ShareEmbed";
 import ShareLink from "../ModalComponents/ShareLink";
+import ShareModalTabs from "../ModalComponents/ShareModalTabs";
 
 const ShareSurveyModal = ({
   setShareBtnSelected,
@@ -25,7 +27,6 @@ const ShareSurveyModal = ({
 
   const [trackShareEvent] = useTrackShareEventMutation();
 
-  type TabType = "link" | "email" | "embed";
   const [tab, setTab] = useState<TabType>("link");
 
   const shareBaseURL = import.meta.env.VITE_SHARE_BASE_URL || "";
@@ -55,33 +56,22 @@ const ShareSurveyModal = ({
         <Box
           sx={{
             px: 3,
-            py: 2,
+            py: 1.2,
             display: "flex",
             justifyContent: "space-between",
           }}
         >
-          <Typography fontWeight={600}>Share your survey</Typography>
+          <Typography fontWeight={600} fontSize={20}>
+            Share your survey
+          </Typography>
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Box>
 
-        {/* TABS   */}
-        <Tabs
-          value={tab}
-          onChange={(_, val: TabType) => setTab(val)}
-          sx={{
-            px: 2,
-            minHeight: 40,
-            borderBottom: "1px solid #eee",
-            "& .MuiTabs-flexContainer": { gap: 2.5 },
-            "& .MuiTabs-indicator": { height: 2, bottom: 1 },
-          }}
-        >
-          <Tab label="Link" value="link" />
-          <Tab label="Email" value="email" />
-          <Tab label="Embed" value="embed" />
-        </Tabs>
+        <Box>
+          <ShareModalTabs tab={tab} setTab={setTab} />
+        </Box>
 
         {/* CONTENT */}
         <Box sx={{ p: 3 }}>
