@@ -14,6 +14,8 @@ const SurveyNavigation = ({
   const navigate = useNavigate();
   const { grey, text } = useAppTheme();
 
+  const defaultWorkspaceName = workspaceName || "My Workspace";
+
   const handleNavigationBack = () => {
     navigate(-1);
   };
@@ -116,7 +118,7 @@ const SurveyNavigation = ({
               };
             }}
           >
-            {workspaceName} &nbsp;
+            {defaultWorkspaceName} &nbsp;
           </NavLink>
         </Box>
         <Box

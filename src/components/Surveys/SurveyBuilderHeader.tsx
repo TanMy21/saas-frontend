@@ -90,6 +90,7 @@ const SurveyBuilderHeader = ({
               survey={survey}
               surveyTitle={title}
               workspaceName={workspace?.name}
+              workspaceId={workspaceId}
             />
           </Box>
 
@@ -126,10 +127,12 @@ const SurveyBuilderHeader = ({
               // border: "2px solid orange",
             }}
           >
-            <ShareButton
-              surveyID={getSurveyCanvas?.surveyID}
-              published={published}
-            />
+            {tabValue === "create" && (
+              <ShareButton
+                surveyID={getSurveyCanvas?.surveyID}
+                published={published}
+              />
+            )}
             <HeaderIconMenu />
           </Box>
         </Box>

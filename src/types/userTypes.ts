@@ -1,10 +1,12 @@
 export type Role = "OWNER" | "ADMIN" | "EDITOR" | "ANALYST" | "VIEWER";
 
+export type Tier = "FREE" | "PROFESSIONAL" | "ENTERPRISE";
+
 export interface OrganizationSummary {
   orgID: string;
   organizationName: string;
   orgSlug: string;
-  tier: "FREE" | "PROFESSIONAL" | "ENTERPRISE";
+  tier: Tier;
 }
 
 export interface OrganizationMembership {

@@ -10,9 +10,12 @@ import {
 import { skipToken } from "@reduxjs/toolkit/query";
 
 import { useGetWorkspaceSurveysQuery } from "../../app/slices/workspaceApiSlice";
+import useAuth from "../../hooks/useAuth";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useWheelPageNav } from "../../hooks/useSurveyCollectionScrollNav";
+import { Tier } from "../../types/userTypes";
 import { VIEW_MODE_KEY } from "../../utils/constants";
+import { PLAN_LIMITS } from "../../utils/planLimits";
 import { WorkspaceConsoleProps } from "../../utils/types";
 import NoSurveysFound from "../NoSurveysFound";
 import SurveysCollection from "../Surveys/SurveysCollection";
@@ -56,12 +59,11 @@ const WorkspaceConsole = ({
           : 5;
 
   const baseArgs = {
-    workspaceId: workspaceId!, // assert if you already guard with skipToken below
+    workspaceId: workspaceId!,
     page,
     limit,
     matchMode,
     tagOnly,
-    // ✅ only include `search` key when non-empty
     ...(debouncedSearch.trim() ? { search: debouncedSearch } : {}),
   };
 
@@ -86,6 +88,11 @@ const WorkspaceConsole = ({
 
   const surveys = data?.surveys || [];
   const total = data?.totalCount || 0;
+
+  const { tier = "FREE" } = useAuth();
+
+  const maxSurveys = PLAN_LIMITS[tier as Tier].maxSurveys;
+  const isSurveyLimitReached = total >= maxSurveys;
 
   const totalPages = Math.ceil(total / limit);
   const pagerEnabled = totalPages > 1;
@@ -254,6 +261,7 @@ const WorkspaceConsole = ({
             workspaceName={workspaceName}
             viewMode={viewMode}
             isArchiveWorkspace={isArchiveWorkspace}
+            isSurveyLimitReached={isSurveyLimitReached}
           />
         )}
       </Box>

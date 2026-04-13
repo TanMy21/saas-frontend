@@ -32,7 +32,7 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Workspaces"],
+      invalidatesTags: ["Workspaces","Surveys"],
     }),
     updateWorkspaceName: builder.mutation({
       query: ({ workspaceId, name }) => ({

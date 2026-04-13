@@ -11,6 +11,7 @@ const SurveysCollection = ({
   workspaceName,
   viewMode,
   isArchiveWorkspace,
+  isSurveyLimitReached = false,
 }: SurveysCollectionProps) => {
   const layoutContainerHeightLG = viewMode === "list" ? "72vh" : "72%";
 
@@ -32,6 +33,7 @@ const SurveysCollection = ({
           workspaceName={workspaceName!}
           viewMode={viewMode}
           isArchiveWorkspace={isArchiveWorkspace}
+          isSurveyLimitReached={isSurveyLimitReached}
         />
       ) : (
         <ListLayout
@@ -40,6 +42,7 @@ const SurveysCollection = ({
           workspaceName={workspaceName!}
           viewMode={viewMode!}
           isArchiveWorkspace={isArchiveWorkspace}
+          isSurveyLimitReached={isSurveyLimitReached}
         />
       )}
     </Box>

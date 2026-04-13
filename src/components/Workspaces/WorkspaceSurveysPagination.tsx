@@ -28,7 +28,7 @@ const WorkspaceSurveysPagination = ({
         height: "48px",
         marginTop:
           viewMode === "list"
-            ? { lg: "-12%", xl: "0%" }
+            ? { lg: "1%", xl: "0%" }
             : { lg: "-8%", xl: "-2%" },
         // border: "2px solid blue",
       }}

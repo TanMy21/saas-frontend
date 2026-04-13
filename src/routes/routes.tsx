@@ -58,7 +58,6 @@ const router = createBrowserRouter([
       { path: "/reset", element: <ResetPassword /> },
       { path: "/invite/:token", element: <AcceptInvite /> },
       { path: "/verify/:verificationCode", element: <VerifyUser /> },
-      { path: "/not-verified", element: <EmailNotVerified /> },
       { path: "/session-expired", element: <LoginAgain /> },
       {
         element: <PersistLogin />,
@@ -76,6 +75,7 @@ const router = createBrowserRouter([
                 path: "/pending-invites",
                 element: <PendingInvites />,
               },
+              { path: "/not-verified", element: <EmailNotVerified /> },
               {
                 path: "/dash",
                 element: <Dashboard />,

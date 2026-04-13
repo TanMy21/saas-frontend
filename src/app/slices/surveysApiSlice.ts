@@ -24,7 +24,7 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Surveys"],
+      invalidatesTags: ["Surveys","Workspaces"],
     }),
     generateSurvey: builder.mutation<
       {

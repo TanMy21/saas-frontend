@@ -67,10 +67,12 @@ const Dashboard = () => {
   const archivedCount = archiveWorkspace?.archivedCount ?? 0;
 
   const selectedWorkspace = useMemo(() => {
-    if (!workspaces || !selectedWorkspaceId) return undefined;
+    if (!workspaces?.length) return null;
 
-    return workspaces.find(
-      (w: Workspace) => w.workspaceId === selectedWorkspaceId,
+    return (
+      workspaces.find(
+        (ws: Workspace) => ws.workspaceId === selectedWorkspaceId,
+      ) || workspaces[0]
     );
   }, [workspaces, selectedWorkspaceId]);
 
@@ -84,6 +86,18 @@ const Dashboard = () => {
 
     setSelectedWorkspaceId(resolvedValue.workspaceId!);
   };
+
+  useEffect(() => {
+    if (!workspaces?.length) return;
+
+    const exists = workspaces.some(
+      (ws: Workspace) => ws.workspaceId === selectedWorkspaceId,
+    );
+
+    if (!exists) {
+      setSelectedWorkspaceId(workspaces[0]?.workspaceId ?? null);
+    }
+  }, [workspaces, selectedWorkspaceId]);
 
   useEffect(() => {
     if (isErrorWorkspaces) {

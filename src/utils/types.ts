@@ -1240,6 +1240,7 @@ export interface NewSurveyProps {
   workspaceId?: string;
   workspaceName?: string;
   viewMode?: "list" | "grid";
+  isSurveyLimitReached?: boolean;
 }
 
 export interface OptionType {
@@ -1274,6 +1275,7 @@ export interface SurveysCollectionProps {
   workspaceName?: string;
   viewMode?: "list" | "grid" | undefined;
   isArchiveWorkspace?: boolean;
+  isSurveyLimitReached?: boolean;
 }
 
 export interface SurveyRenameProps {
@@ -1448,6 +1450,7 @@ export interface User {
   email: string | null;
   organization: string | null;
   verified: boolean | null;
+  tier: string | null;
   isAdmin: boolean | null;
   tours: UserTours;
   activeOrg: OrganizationMember;
@@ -1611,6 +1614,7 @@ export interface WorkspaceLayoutProps {
   workspaceName: string;
   viewMode: "list" | "grid";
   isArchiveWorkspace?: boolean;
+  isSurveyLimitReached?: boolean;
 }
 
 export interface WorkspaceSurveysListCountProps {

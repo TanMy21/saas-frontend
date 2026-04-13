@@ -11,10 +11,16 @@ const CreateNewSurveyCard = ({
   workspaceId,
   workspaceName,
   viewMode,
+  isSurveyLimitReached = false,
 }: NewSurveyProps) => {
   const { background, primary, textStyles } = useAppTheme();
+
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    if (isSurveyLimitReached) return;
+    setOpen(true);
+  };
+
   return (
     <>
       <Box
@@ -34,7 +40,8 @@ const CreateNewSurveyCard = ({
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          cursor: "pointer",
+          cursor: isSurveyLimitReached ? "not-allowed" : "pointer",
+          opacity: isSurveyLimitReached ? 0.6 : 1,
           margin: viewMode === "list" ? "auto" : null,
           backdropFilter: "saturate(140%) blur(2px)",
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35)",
@@ -86,6 +93,7 @@ const CreateNewSurveyCard = ({
               "&:hover": { backgroundColor: "transparent" },
             }}
             onClick={handleOpen}
+            disabled={isSurveyLimitReached}
             focusRipple
           >
             <Box
@@ -113,7 +121,12 @@ const CreateNewSurveyCard = ({
                 sx={{ fontSize: { md: 26, xl: 30 }, color: primary.dark }}
               />
             </Box>
-            <Typography sx={textStyles.strongH6}>Create new survey</Typography>
+            <Typography sx={textStyles.strongH6}>
+              {" "}
+              {isSurveyLimitReached
+                ? "Survey limit reached"
+                : "Create new survey"}
+            </Typography>
             <Typography
               noWrap
               sx={{
@@ -121,7 +134,9 @@ const CreateNewSurveyCard = ({
                 fontSize: { md: 16, xl: 20 },
               }}
             >
-              Start collecting valuable feedback
+              {isSurveyLimitReached
+                ? "Upgrade your plan to create more surveys"
+                : "Start collecting valuable feedback"}
             </Typography>
           </ButtonBase>
         ) : (
@@ -140,6 +155,8 @@ const CreateNewSurveyCard = ({
               "&:hover": { backgroundColor: "transparent" },
             }}
             onClick={handleOpen}
+            disabled={isSurveyLimitReached}
+            focusRipple
           >
             <Box
               sx={{
@@ -178,10 +195,14 @@ const CreateNewSurveyCard = ({
               }}
             >
               <Typography sx={textStyles.strongH6}>
-                Create new survey
+                {isSurveyLimitReached
+                  ? "Survey limit reached"
+                  : "Create new survey"}
               </Typography>
               <Typography noWrap sx={textStyles.bodyGrey}>
-                Start collecting valuable feedback
+                {isSurveyLimitReached
+                  ? "Upgrade your plan to create more surveys"
+                  : "Start collecting valuable feedback"}
               </Typography>
             </Box>
           </ButtonBase>

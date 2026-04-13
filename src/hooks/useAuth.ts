@@ -29,6 +29,7 @@ const useAuth = () => {
     const { exp } = decoded;
 
     const activeOrg = user?.activeOrg ?? null;
+    const tier = user?.tier ?? "FREE";
     const permissions = activeOrg?.permissions || [];
 
     const can = (permission: Permission) => permissions.includes(permission);
@@ -54,6 +55,7 @@ const useAuth = () => {
       isVerified,
       tokenExpired,
       role,
+      tier,
       permissions,
       can,
     };

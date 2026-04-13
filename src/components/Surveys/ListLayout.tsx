@@ -11,6 +11,7 @@ const ListLayout = ({
   workspaceId,
   workspaceName,
   isArchiveWorkspace,
+  isSurveyLimitReached = false,
 }: WorkspaceLayoutProps) => {
   const { can } = useAuth();
   return (
@@ -26,6 +27,7 @@ const ListLayout = ({
           workspaceId={workspaceId}
           workspaceName={workspaceName}
           viewMode={"list"}
+          isSurveyLimitReached={isSurveyLimitReached}
         />
       )}
 

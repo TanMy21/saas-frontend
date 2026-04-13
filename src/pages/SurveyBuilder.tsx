@@ -27,16 +27,13 @@ import useSortElements from "../hooks/useSortElements";
 import useSurveyBuilderModalLocation from "../hooks/useSurveyBuilderModalLocation";
 import useSurveyBuilderStateReset from "../hooks/useSurveyBuilderStateReset";
 import useSyncQuestionsToElements from "../hooks/useSyncQuestionsToElements";
-import { Element, LocationStateProps } from "../utils/types";
+import { Element } from "../utils/types";
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
   const { can } = useAuth();
   const dispatch = useAppDispatch();
   const location = useLocation();
-
-  const { workspaceId, workspaceName } =
-    (location.state as LocationStateProps) || {};
 
   const { isOpen, isOpenImport, isOpenGenerate } =
     useSurveyBuilderModalLocation(location);
@@ -96,7 +93,10 @@ const SurveyBuilder = () => {
     title,
     shareID,
     published,
+    workspace,
   } = getSurveyCanvas ?? {};
+
+  const { workspaceId, workspaceName } = workspace || {};
 
   useFetchAuthenticatedUser();
   useSurveyBuilderStateReset(surveyID, refetchCanvas);

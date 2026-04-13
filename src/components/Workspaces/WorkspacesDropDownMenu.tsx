@@ -29,7 +29,7 @@ const WorkspacesDropDownMenu = ({
   archivedCount = 0,
 }: WorkspaceDropDownMenuProps) => {
   const { iconStyle, grey } = useAppTheme();
-  const { can } = useAuth();
+  const { can, tier = "FREE" } = useAuth();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openWorkspaceMenu = Boolean(anchorEl);
@@ -38,8 +38,10 @@ const WorkspacesDropDownMenu = ({
   const archiveWorkspace = workspaces?.find(
     (ws: Workspace) => ws.isArchiveWorkspace,
   );
-
   const hasArchived = !!archiveWorkspace;
+  const isArchiveSelected = selectedWorkspace?.isArchiveWorkspace;
+
+  const isPaidUser = tier !== "FREE";
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -105,7 +107,7 @@ const WorkspacesDropDownMenu = ({
                 </MenuItem>
               ))}
             {hasArchived && archiveWorkspace && (
-              <>
+              <Box>
                 <Divider sx={{ my: 0.5 }} />
                 <MenuItem
                   disabled={archivedCount === 0}
@@ -130,20 +132,20 @@ const WorkspacesDropDownMenu = ({
                 >
                   <Archive fontSize="small" />
                   Archived{" "}
-                  <Box sx={{ fontSize: 18, fontWeight: 600, }}>
+                  <Box sx={{ fontSize: 18, fontWeight: 600 }}>
                     {`(${archivedCount})`}
                   </Box>
                 </MenuItem>
-              </>
+              </Box>
             )}
             {can("CREATE_WORKSPACE") && <Divider />}{" "}
-            {can("CREATE_WORKSPACE") && (
+            {can("CREATE_WORKSPACE") && isPaidUser && (
               <NewWorkspaceMenuOption
                 setAnchorEl={setAnchorEl}
                 setOpenModal={setNewWorkspaceModalOpen}
               />
             )}
-            {can?.("UPDATE_WORKSPACE") && (
+            {can?.("UPDATE_WORKSPACE") && !isArchiveSelected && (
               <RenameWorkspaceMenuOption
                 workspaceId={selectedWorkspace?.workspaceId}
                 workspaceName={selectedWorkspace?.name}
@@ -151,7 +153,7 @@ const WorkspacesDropDownMenu = ({
                 setOpenModal={setRenameWorkspaceModalOpen}
               />
             )}
-            {can?.("DELETE_WORKSPACE") && (
+            {can?.("DELETE_WORKSPACE") && isPaidUser && !isArchiveSelected && (
               <DeleteWorkspaceMenuOption
                 workspaceId={selectedWorkspace?.workspaceId}
                 workspaceName={selectedWorkspace?.name}

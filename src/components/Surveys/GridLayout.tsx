@@ -12,9 +12,9 @@ const GridLayout = ({
   workspaceName,
   viewMode,
   isArchiveWorkspace,
+  isSurveyLimitReached = false,
 }: WorkspaceLayoutProps) => {
   const { can } = useAuth();
-
   return (
     <Box
       sx={{
@@ -49,6 +49,7 @@ const GridLayout = ({
           workspaceId={workspaceId}
           workspaceName={workspaceName}
           viewMode={"grid"}
+          isSurveyLimitReached={isSurveyLimitReached}
         />
       )}
 

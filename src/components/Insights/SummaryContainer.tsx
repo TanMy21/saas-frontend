@@ -46,6 +46,7 @@ export const SummaryContainer = () => {
   const showEmptyState =
     !isLoading && !isFetching && data && normalizedQuestions.length === 0;
 
+
   return (
     <Box minHeight="100vh" bgcolor="background.default">
       <SummaryControls filters={filters} setFilters={setFilters} />

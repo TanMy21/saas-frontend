@@ -42,6 +42,9 @@ const RequireAuth = () => {
   }
 
   if (isAuthenticated && !isVerified && !tokenExpired) {
+    if (location.pathname === "/not-verified") {
+      return <Outlet />;
+    }
     return <Navigate to="/not-verified" state={{ from: location }} replace />;
   }
 

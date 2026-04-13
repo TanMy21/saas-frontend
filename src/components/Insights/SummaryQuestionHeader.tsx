@@ -13,13 +13,19 @@ export const SummaryQuestionHeader = ({
     <Box mb={3}>
       <Box
         display="flex"
-        flexWrap="wrap"
         alignItems="flex-start"
         justifyContent="space-between"
         gap={2}
       >
-        {/* Left */}
-        <Box display="flex" alignItems="flex-start" gap={2}>
+        <Box
+          display="flex"
+          alignItems="flex-start"
+          gap={2}
+          sx={{
+            flex: 1,
+            minWidth: 0,
+          }}
+        >
           <Box
             sx={{
               width: 28,
@@ -38,13 +44,27 @@ export const SummaryQuestionHeader = ({
             {question.order}
           </Box>
 
-          <Typography fontSize={18} fontWeight={500}>
+          <Typography
+            fontSize={18}
+            fontWeight={500}
+            sx={{
+              minWidth: 0,
+              overflowWrap: "break-word",
+              wordBreak: "break-word",
+            }}
+          >
             {question.text}
           </Typography>
         </Box>
 
-        {/* Right */}
-        <QuestionTypeBadge type={question.type} />
+        <Box
+          sx={{
+            flexShrink: 0,
+            alignSelf: "flex-start",
+          }}
+        >
+          <QuestionTypeBadge type={question.type} />
+        </Box>
       </Box>
 
       {/* Metadata */}
