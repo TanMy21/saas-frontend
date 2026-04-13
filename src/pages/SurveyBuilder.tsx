@@ -42,6 +42,7 @@ const SurveyBuilder = () => {
   const [_surveyTitle, setSurveyTitle] = useState<string>("");
   const [display, setDisplay] = useState<"desktop" | "mobile">("desktop");
   const [_loading, setLoading] = useState(false);
+  const [hasRestored, setHasRestored] = useState(false);
   const [openScratch, setOpenScratch] = useState(isOpen);
   const [openImportLocal, setOpenImportLocal] = useState(false);
 
@@ -55,6 +56,7 @@ const SurveyBuilder = () => {
 
   useEffect(() => {
     if (!elements.length) return;
+    if (!hasRestored) return;
 
     if (!selectedQuestionId) {
       dispatch(setQuestion(elements[0]));
@@ -68,7 +70,7 @@ const SurveyBuilder = () => {
     } else {
       dispatch(setQuestion(elements[0]));
     }
-  }, [elements, selectedQuestionId, dispatch]);
+  }, [elements, selectedQuestionId, hasRestored, dispatch]);
 
   const selectedQuestion = useMemo(() => {
     return elements.find((q) => q.questionID === selectedQuestionId) || null;
@@ -132,12 +134,16 @@ const SurveyBuilder = () => {
 
   useEffect(() => {
     if (!surveyID) return;
+    if (!elements.length) return;
 
     const saved = localStorage.getItem(`sq:${surveyID}`);
+
     if (saved) {
       dispatch(setSelectedQuestionId(saved));
     }
-  }, [surveyID, dispatch]);
+
+    setHasRestored(true);
+  }, [surveyID, elements, dispatch]);
 
   useEffect(() => {
     if (!surveyID || !selectedQuestionId) return;
