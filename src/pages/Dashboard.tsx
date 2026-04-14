@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Box } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
+import { closeFeedbackModal } from "../app/slices/feedbackSlice";
 import { fetchUser, selectUser } from "../app/slices/userSlice";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
-import { AppDispatch } from "../app/store";
+import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
 import SpinnerBackdrop from "../components/alert/SpinnerBackdrop";
 import { DashBoardHeader } from "../components/DashBoardHeader";
 import DeleteWorkspaceModal from "../components/Modals/DeleteWorkspaceModal";
+import FeedbackModal from "../components/Modals/FeedbackModal";
 import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";
 import RenameWorkspaceModal from "../components/Modals/RenameWorkspaceModal";
 import DashboardTour from "../components/tour/DashboardTour";
@@ -23,8 +24,8 @@ import { ErrorData, Workspace } from "../utils/types";
 
 const Dashboard = () => {
   const { background, brand } = useAppTheme();
-  const dispatch = useDispatch<AppDispatch>();
-  const user = useSelector(selectUser);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
   const { isAuthenticated, can } = useAuth();
   const [stepIndex, setStepIndex] = useState(0);
   const [runTour, setRunTour] = useState(false);
@@ -33,6 +34,8 @@ const Dashboard = () => {
     useState(false);
   const [deleteWorkspaceModalOpen, setDeleteWorkspaceModalOpen] =
     useState(false);
+  const { isFeedbackModalOpen } = useAppSelector((state) => state.feedbackUI);
+
   const {
     data: workspaces,
     isError: isErrorWorkspaces,
@@ -262,6 +265,11 @@ const Dashboard = () => {
           selectedWorkspace={selectedWorkspace}
         />
       )}
+
+      <FeedbackModal
+        open={isFeedbackModalOpen}
+        onClose={() => dispatch(closeFeedbackModal())}
+      />
       <SpinnerBackdrop />
     </>
   );

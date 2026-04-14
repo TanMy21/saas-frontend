@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 
 import store from "./app/store";
 import AppErrorBoundary from "./AppErrorBoundary";
+import GlobalFeedbackOverlays from "./layouts/GlobalFeedbackLayout";
 import router from "./routes/routes";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -37,6 +38,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             >
               <SessionInitializer>
                 <RouterProvider router={router} />
+                <GlobalFeedbackOverlays />
               </SessionInitializer>
             </PostHogProvider>
           </LocalizationProvider>

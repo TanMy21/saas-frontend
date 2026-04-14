@@ -12,10 +12,12 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
+import { MessageSquarePlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
 import { logOut } from "../app/slices/authSlice";
+import { openFeedbackModal } from "../app/slices/feedbackSlice";
 import { useGetMeQuery } from "../app/slices/userApiSlice";
 import { useAppDispatch } from "../app/typedReduxHooks";
 import usePersist from "../hooks/persist";
@@ -206,6 +208,23 @@ const HeaderIconMenu = () => {
         >
           <SpaceDashboardIcon sx={{ color: "#A0A7B2" }} />
           Dashboard
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            dispatch(openFeedbackModal());
+          }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            fontSize: "12px",
+            fontWeight: "bold",
+            color: "#333B70",
+          }}
+        >
+          <MessageSquarePlus />
+          Feedback
         </MenuItem>
         <MenuItem
           onClick={onLogoutClick}

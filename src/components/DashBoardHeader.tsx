@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 
-import { Box, Divider, IconButton, Typography } from "@mui/material";
+import { Box, Button, Divider, IconButton, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import { ChevronLeftIcon, Settings } from "lucide-react";
+import { ChevronLeftIcon, MessageSquarePlus, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import { openFeedbackModal } from "../app/slices/feedbackSlice";
 import { useGetMeQuery } from "../app/slices/userApiSlice";
+import { useAppDispatch } from "../app/typedReduxHooks";
 import { useAppTheme } from "../theme/useAppTheme";
 import { getGreeting } from "../utils/formatDate";
 import { DashBoardHeaderProps } from "../utils/types";
@@ -22,6 +24,7 @@ export const DashBoardHeader = ({
   setDeleteWorkspaceModalOpen,
 }: DashBoardHeaderProps) => {
   const { brand, textStyles } = useAppTheme();
+  const dispatch = useAppDispatch();
 
   const [greeting, setGreeting] = useState(getGreeting());
 
@@ -116,6 +119,27 @@ export const DashBoardHeader = ({
               pl: 1.5,
             }}
           >
+            <Button
+              onClick={() => dispatch(openFeedbackModal())}
+              sx={{
+                textTransform: "none",
+                borderRadius: "999px",
+                px: 2,
+                py: 0.6,
+                fontSize: "13px",
+                border: "1px solid #e5e7eb",
+                backgroundColor: "#fff",
+                color: "#374151",
+                minWidth: "auto",
+                transition: "all 0.15s ease",
+                "&:hover": {
+                  backgroundColor: "#f9fafb",
+                  borderColor: "#d1d5db",
+                },
+              }}
+            >
+              <MessageSquarePlus />
+            </Button>
             <HeaderIconMenu />
           </Box>
         </Box>

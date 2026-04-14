@@ -6,6 +6,7 @@ import { apiSlice } from "./api/apiSlice";
 import authReducer from "./slices/authSlice";
 import questionReducer from "./slices/elementSlice";
 import elementTypographyReducer from "./slices/elementTypographySlice";
+import feedbackUIReducer from "./slices/feedbackSlice";
 import generateQuestionUISlice from "./slices/generateSurveyQuestionSlice";
 import overlaySlice from "./slices/overlaySlice";
 import surveyCanvasReducer from "./slices/surveyCanvasSlice";
@@ -21,6 +22,7 @@ const store = configureStore({
     surveyBuilder: surveyBuilderReducer,
     surveyCanvas: surveyCanvasReducer,
     overlayUI: overlaySlice,
+    feedbackUI: feedbackUIReducer,
     generateQuestionUI: generateQuestionUISlice,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },

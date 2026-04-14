@@ -15,6 +15,7 @@ import {
   UserPlus,
 } from "lucide-react";
 
+import { FeedbackTypeUI } from "../types/feedBackTypes";
 import { LoaderMode } from "../types/modalTypes";
 
 import { NotificationSettings, QuestionType, TabId } from "./types";
@@ -336,4 +337,53 @@ export const ARCHIVE_WORKSPACE = {
   workspaceId: "ARCHIVED",
   name: "Archived",
   isVirtual: true,
+};
+
+export const FeedBackPlaceholders: Record<
+  FeedbackTypeUI,
+  { title: string; description: string }
+> = {
+  "Feature request": {
+    title: "What would you like to see?",
+    description: "Describe the feature and how it would help you...",
+  },
+  Bug: {
+    title: "What’s not working?",
+    description: "What happened? What did you expect instead?",
+  },
+  Complaint: {
+    title: "What’s bothering you?",
+    description: "Tell us what went wrong or frustrated you...",
+  },
+  General: {
+    title: "Share your thoughts",
+    description: "Anything you’d like to tell us...",
+  },
+};
+
+export const FeedbackTypeStyles = {
+  "Feature request": {
+    color: "#2563eb",
+    bg: "#eff6ff",
+    hoverBg: "#dbeafe",
+    selectedBg: "#2563eb",
+  },
+  Bug: {
+    color: "#dc2626",
+    bg: "#fef2f2",
+    hoverBg: "#fee2e2",
+    selectedBg: "#dc2626",
+  },
+  Complaint: {
+    color: "#f59e0b",
+    bg: "#fffbeb",
+    hoverBg: "#fef3c7",
+    selectedBg: "#f59e0b",
+  },
+  General: {
+    color: "#6b7280",
+    bg: "#f3f4f6",
+    hoverBg: "#e5e7eb",
+    selectedBg: "#6b7280",
+  },
 };

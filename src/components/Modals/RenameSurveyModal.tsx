@@ -54,7 +54,7 @@ const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
