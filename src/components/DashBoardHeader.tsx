@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 
-import { Box, Button, Divider, IconButton, Typography } from "@mui/material";
+import { Box, Divider, IconButton, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import { ChevronLeftIcon, MessageSquarePlus, Settings } from "lucide-react";
+import { ChevronLeftIcon, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { openFeedbackModal } from "../app/slices/feedbackSlice";
 import { useGetMeQuery } from "../app/slices/userApiSlice";
-import { useAppDispatch } from "../app/typedReduxHooks";
 import { useAppTheme } from "../theme/useAppTheme";
 import { getGreeting } from "../utils/formatDate";
 import { DashBoardHeaderProps } from "../utils/types";
 
+import FeedbackButton from "./Buttons/FeedbackButton";
 import HeaderIconMenu from "./HeaderIconMenu";
 import WorkspacesDropDownMenu from "./Workspaces/WorkspacesDropDownMenu";
 
@@ -24,7 +23,6 @@ export const DashBoardHeader = ({
   setDeleteWorkspaceModalOpen,
 }: DashBoardHeaderProps) => {
   const { brand, textStyles } = useAppTheme();
-  const dispatch = useAppDispatch();
 
   const [greeting, setGreeting] = useState(getGreeting());
 
@@ -105,8 +103,10 @@ export const DashBoardHeader = ({
           sx={{
             display: "flex",
             justifyContent: "flex-end",
-            width: "10%",
+            width: "12%",
             height: "96%",
+            gap: 1.5,
+            // border: "2px solid green",
           }}
         >
           <Box
@@ -117,29 +117,22 @@ export const DashBoardHeader = ({
               height: "100%",
               width: { xs: "100%", sm: "70%", md: "60%", lg: "48%" },
               pl: 1.5,
+              // border: "1px solid red",
             }}
           >
-            <Button
-              onClick={() => dispatch(openFeedbackModal())}
-              sx={{
-                textTransform: "none",
-                borderRadius: "999px",
-                px: 2,
-                py: 0.6,
-                fontSize: "13px",
-                border: "1px solid #e5e7eb",
-                backgroundColor: "#fff",
-                color: "#374151",
-                minWidth: "auto",
-                transition: "all 0.15s ease",
-                "&:hover": {
-                  backgroundColor: "#f9fafb",
-                  borderColor: "#d1d5db",
-                },
-              }}
-            >
-              <MessageSquarePlus />
-            </Button>
+            <FeedbackButton />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              height: "100%",
+              width: { xs: "100%", sm: "70%", md: "60%", lg: "48%" },
+              pl: 1.5,
+              // border: "1px solid blue",
+            }}
+          >
             <HeaderIconMenu />
           </Box>
         </Box>

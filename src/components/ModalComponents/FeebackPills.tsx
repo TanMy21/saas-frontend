@@ -11,7 +11,7 @@ const FeebackPills = ({
   const feedbackTypes = Object.keys(FeedBackPlaceholders) as FeedbackTypeUI[];
   return (
     <Box
-      sx={{ display: "flex", gap: 1, mb: 2, mt: 1, ml: 3, flexWrap: "wrap" }}
+      sx={{ display: "flex", gap: 1, mb: 2, mt: 1,ml:0.5, flexWrap: "wrap" }}
     >
       {feedbackTypes.map((t) => {
         const style = FeedbackTypeStyles[t];

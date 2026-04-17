@@ -381,9 +381,9 @@ export const FeedbackTypeStyles = {
     selectedBg: "#f59e0b",
   },
   General: {
-    color: "#6b7280",
-    bg: "#f3f4f6",
-    hoverBg: "#e5e7eb",
-    selectedBg: "#6b7280",
+    color: "#0f766e",
+    bg: "#ecfeff",
+    hoverBg: "#cffafe",
+    selectedBg: "#0f766e",
   },
 };

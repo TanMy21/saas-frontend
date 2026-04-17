@@ -8,6 +8,7 @@ import {
 
 import { useAppTheme } from "../../theme/useAppTheme";
 import { SurveySorterProps } from "../../utils/types";
+import { BorderAll } from "@mui/icons-material";
 
 const SurveySorter = ({ sortBy, setSortBy }: SurveySorterProps) => {
   const { primary } = useAppTheme();
@@ -40,6 +41,7 @@ const SurveySorter = ({ sortBy, setSortBy }: SurveySorterProps) => {
           height: "100%",
           mt: "1%",
           borderRadius: 9999,
+          border: "2px solid rgba(0,0,0,0.08)",
           bgcolor: "rgba(2,43,103,0.03)",
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "rgba(0,0,0,0.08)",

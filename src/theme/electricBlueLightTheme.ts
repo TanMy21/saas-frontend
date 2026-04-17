@@ -392,6 +392,62 @@ const electricBlueLightTheme = createTheme({
             fontWeight: "bold",
           },
         },
+        {
+          props: { variant: "modalCancelBtn" },
+          style: {
+            color: "#374151",
+            backgroundColor: "#f3f4f6",
+            border: "1px solid #e5e7eb",
+            fontWeight: 600,
+            borderRadius: "20px",
+            padding: "12px",
+            width: "100px",
+            transition: "all 0.2s",
+            "&.MuiButton-root": {
+              fontWeight: 600,
+              borderRadius: "20px",
+            },
+            "&:hover": {
+              backgroundColor: "#e5e7eb",
+              transform: "scale(0.98)",
+            },
+            "&:active": {
+              transform: "scale(0.95)",
+            },
+          },
+        },
+        {
+          props: { variant: "modalSubmitBtn" },
+          style: {
+            backgroundColor: "#2563EB",
+            color: "#fff",
+            fontWeight: 500,
+            borderRadius: "20px",
+            padding: "8px",
+            boxShadow: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minWidth: "120px",
+            gap: "8px",
+            "&.MuiButton-root": {
+              fontWeight: 600,
+              borderRadius: "20px",
+            },
+            "&:hover": {
+              backgroundColor: "#1e40af",
+              transform: "scale(0.98)",
+            },
+            "&:active": {
+              transform: "scale(0.95)",
+            },
+            "&.Mui-disabled": {
+              backgroundColor: "#93c5fd",
+              color: "#fff",
+              cursor: "not-allowed",
+            },
+          },
+        },
       ],
     },
     MuiCssBaseline: {

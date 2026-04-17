@@ -194,6 +194,8 @@ declare module "@mui/material/Button" {
     submitBtn2: true;
     dangerBtn: true;
     addBtn: true;
+    modalCancelBtn: true;
+    modalSubmitBtn: true;
   }
 }
 
@@ -217,5 +219,6 @@ declare module "@mui/material/TextField" {
     filledRounded: true;
     filledMinimal: true;
     outlineMuted: true;
+    modalInput: true;
   }
 }

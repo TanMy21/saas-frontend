@@ -28,7 +28,8 @@ const CreateNewSurveyModal = ({
     useUpdateSurveyTitleandDescriptionMutation();
 
   const handleNameSurvey = async (data: SurveyNameProps) => {
-    const { surveyName, surveyDescription } = data;
+    const surveyName = data.surveyName?.trim();
+    const surveyDescription = data.surveyDescription?.trim();
     try {
       const surveyCreated = await updateSurveyTitleandDescription({
         surveyID,

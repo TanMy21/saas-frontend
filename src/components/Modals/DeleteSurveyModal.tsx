@@ -1,21 +1,16 @@
 import { useEffect } from "react";
 
-import CloseIcon from "@mui/icons-material/Close";
-import ReportProblemIcon from "@mui/icons-material/ReportProblem";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  IconButton,
-  Modal,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { useDeleteSurveyMutation } from "../../app/slices/surveysApiSlice";
-import { ErrorData, SurveyRenameProps } from "../../utils/types";
+import { ErrorData, SurveyDelete, SurveyRenameProps } from "../../utils/types";
+import { ConfirmationInput } from "../ModalComponents/ConfirmationInput";
+import { DangerActions } from "../ModalComponents/DangerActions";
+import { DangerModalHeader } from "../ModalComponents/DangerModalHeader";
+import { DangerModalShell } from "../ModalComponents/DangerModalShell";
+import { DangerWarningBox } from "../ModalComponents/DangerWarningBox";
 
 const DeleteSurveyModal = ({
   open,
@@ -25,7 +20,14 @@ const DeleteSurveyModal = ({
 }: SurveyRenameProps) => {
   const expectedText = sTitle ?? "";
 
-  const { register, handleSubmit, watch } = useForm<SurveyRenameProps>({
+  const {
+    control,
+    reset,
+    setFocus,
+    handleSubmit,
+    watch,
+    formState: { errors, touchedFields },
+  } = useForm<SurveyRenameProps>({
     mode: "onChange",
     defaultValues: { confirmationText: "" },
   });
@@ -38,14 +40,26 @@ const DeleteSurveyModal = ({
   const [deleteSurvey, { isSuccess, isError, error, isLoading }] =
     useDeleteSurveyMutation();
 
-  const handleDeleteSurvey = async () => {
-    try {
+  const handleDeleteSurvey = async (data: SurveyDelete) => {
+    const input = data.confirmationText?.trim();
+    const expected = sTitle?.trim();
+    if (input === expected) {
       await deleteSurvey(sID);
-    } catch (error) {
+    } else {
       console.log(error);
     }
+    reset({ confirmationText: "" });
     onClose();
   };
+
+  console.log("stitle", sTitle);
+
+  useEffect(() => {
+    if (open) {
+      reset({ confirmationText: "" });
+      setTimeout(() => setFocus("confirmationText"), 0);
+    }
+  }, [open, reset, setFocus]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -63,7 +77,7 @@ const DeleteSurveyModal = ({
         errorData.data.error.forEach((el) =>
           toast.error(el.message, {
             position: "top-right",
-          })
+          }),
         );
       } else {
         toast.error(errorData.data.message, {
@@ -74,319 +88,41 @@ const DeleteSurveyModal = ({
   }, [isSuccess, isError, error]);
 
   return (
-    <Modal open={open} onClose={onClose} disableEnforceFocus>
-      <Box
-        sx={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 1300,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          p: 2,
-        }}
-        tabIndex={-1}
-      >
-        {/* Backdrop */}
-        <Box
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            inset: 0,
-            bgcolor: "rgba(0,0,0,0.4)",
-            backdropFilter: "blur(4px)",
-            transition: "opacity 0.3s",
-          }}
-        />
-        {/* Modal */}
-        <Box
-          sx={{
-            position: "relative",
-            width: "100%",
-            maxWidth: 500,
-            transform: "scale(1)",
-            transition: "all 0.3s",
-            zIndex: 1,
-          }}
-        >
-          <Box
-            sx={{
-              bgcolor: "#fff",
-              borderRadius: 2,
-              boxShadow: 12,
-              border: "1px solid",
-              borderColor: "#f3f4f6", 
-              overflow: "hidden",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            {/* Header */}
-            <Box
-              sx={{
-                px: 2,
-                pt: 4,
-                pb: 2,
-                borderBottom: "1px solid",
-                borderColor: "#f3f4f6",
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "start",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                  <Box
-                    sx={{
-                      flexShrink: 0,
-                      width: 40,
-                      height: 40,
-                      bgcolor: "#fee2e2",
-                      borderRadius: 3,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <ReportProblemIcon
-                      sx={{ color: "#dc2626", width: 22, height: 22 }}
-                    />
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, color: "#111827" }}
-                  >
-                    Delete this survey?
-                  </Typography>
-                </Box>
-                <IconButton
-                  onClick={onClose}
-                  sx={{
-                    flexShrink: 0,
-                    width: 36,
-                    height: 36,
-                    borderRadius: 2,
-                    color: "#6b7280",
-                    "&:hover": { bgcolor: "#f3f4f6" },
-                  }}
-                >
-                  <CloseIcon sx={{ width: 28, height: 28 }} />
-                </IconButton>
-              </Box>
-            </Box>
+    <DangerModalShell open={open} onClose={onClose}>
+      <DangerModalHeader title="Delete this survey?" onClose={onClose} />
 
-            {/* Content */}
-            <Box sx={{ px: 4, py: 4 }}>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                <Box
-                  sx={{
-                    p: 2,
-                    bgcolor: "#fef2f2",
-                    borderRadius: 3,
-                    border: "1px solid",
-                    borderColor: "#fee2e2",
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontSize: 14,
-                      color: "#991b1b",
-                      fontWeight: 600,
-                    }}
-                  >
-                    You will lose all the data associated with this survey
-                  </Typography>
-                </Box>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <Typography sx={{ color: "#111827", fontWeight: 600 }}>
-                    <Box component="span" sx={{ color: "#dc2626" }}>
-                      {expectedText}
-                    </Box>{" "}
-                    will be permanently deleted
-                  </Typography>
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
-                  >
-                    <Typography
-                      component="label"
-                      htmlFor="confirmationText"
-                      sx={{
-                        fontSize: 14,
-                        fontWeight: 500,
-                        color: "#374151",
-                        mb: 0.5,
-                      }}
-                    >
-                      Enter the survey name to confirm
-                    </Typography>
-                    <form
-                      onSubmit={handleSubmit(handleDeleteSurvey)}
-                      autoComplete="off"
-                    >
-                      <TextField
-                        {...register("confirmationText", { required: true })}
-                        id="confirmationText"
-                        type="text"
-                        placeholder={expectedText}
-                        autoFocus
-                        size="small"
-                        fullWidth
-                        sx={{
-                          "& .MuiOutlinedInput-root": {
-                            px: 1.5,
-                            py: 1.2,
-                            borderRadius: 2,
-                            fontFamily: "monospace",
-                            fontSize: 14,
-                            transition: "all 0.2s",
-                            "& fieldset": {
-                              borderWidth: 2,
-                              borderColor:
-                                confirmationText === ""
-                                  ? "#e5e7eb"
-                                  : confirmationMatch
-                                    ? "#22c55e"
-                                    : "#dc2626",
-                            },
-                            "&:hover fieldset": {
-                              borderColor:
-                                confirmationText === ""
-                                  ? "#d1d5db"
-                                  : confirmationMatch
-                                    ? "#16a34a"
-                                    : "#b91c1c",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor:
-                                confirmationText === ""
-                                  ? "#3b82f6"
-                                  : confirmationMatch
-                                    ? "#22c55e"
-                                    : "#dc2626",
-                              boxShadow:
-                                confirmationText === ""
-                                  ? "0 0 0 4px #dbeafe"
-                                  : confirmationMatch
-                                    ? "0 0 0 4px #bbf7d0"
-                                    : "0 0 0 4px #fee2e2",
-                            },
-                          },
-                        }}
-                        inputProps={{
-                          style: {
-                            fontFamily: "monospace",
-                            fontSize: 14,
-                          },
-                        }}
-                      />
-                      {confirmationText !== "" && (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1,
-                            mt: 1,
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              width: 6,
-                              height: 6,
-                              borderRadius: "50%",
-                              bgcolor: confirmationMatch
-                                ? "#22c55e"
-                                : "#dc2626",
-                            }}
-                          />
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: confirmationMatch ? "#15803d" : "#dc2626",
-                              fontWeight: 500,
-                            }}
-                          >
-                            {confirmationMatch
-                              ? "Survey name matched"
-                              : "Survey name doesn't match"}
-                          </Typography>
-                        </Box>
-                      )}
+      <Box sx={{ px: 4, py: 4 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <DangerWarningBox text="You will lose all the data associated with this survey." />
 
-                      {/* Footer actions */}
-                      <Box
-                        sx={{
-                          display: "flex",
-                          gap: 2,
-                          justifyContent: "flex-end",
-                          mt: 4,
-                        }}
-                      >
-                        <Button
-                          type="button"
-                          onClick={onClose}
-                          variant="outlined"
-                          sx={{
-                            px: 2.5,
-                            py: 1.2,
-                            fontSize: 14,
-                            fontWeight: 600,
-                            color: "#374151",
-                            bgcolor: "#fff",
-                            border: "1px solid #d1d5db",
-                            borderRadius: 2,
-                            "&:hover": {
-                              bgcolor: "#f3f4f6",
-                              borderColor: "#9ca3af",
-                            },
-                            boxShadow: "none",
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          type="submit"
-                          disabled={!confirmationMatch || isLoading}
-                          sx={{
-                            px: 2.5,
-                            py: 1.2,
-                            fontSize: 14,
-                            fontWeight: 600,
-                            borderRadius: 2,
-                            color: confirmationMatch ? "#fff" : "#9ca3af",
-                            bgcolor: confirmationMatch ? "#dc2626" : "#e5e7eb",
-                            cursor: confirmationMatch
-                              ? "pointer"
-                              : "not-allowed",
-                            "&:hover": confirmationMatch
-                              ? { bgcolor: "#b91c1c" }
-                              : {},
-                            boxShadow: confirmationMatch
-                              ? "0 1px 2px 0 rgb(0 0 0 / 0.05)"
-                              : "none",
-                            transition: "all 0.2s",
-                          }}
-                        >
-                          {isLoading ? (
-                            <CircularProgress
-                              size={18}
-                              sx={{ color: "#fff", mr: 1 }}
-                            />
-                          ) : null}
-                          {isLoading ? "Deleting..." : "Yes, Delete it"}
-                        </Button>
-                      </Box>
-                    </form>
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
+          <Typography sx={{ fontWeight: 600 }}>
+            <Box component="span" sx={{ color: "#dc2626" }}>
+              {expectedText}
+            </Box>{" "}
+            will be permanently deleted
+          </Typography>
+
+          <form onSubmit={handleSubmit(handleDeleteSurvey)}>
+            <ConfirmationInput
+              expectedText={expectedText}
+              confirmationText={confirmationText}
+              confirmationMatch={confirmationMatch}
+              control={control}
+              errors={errors}
+              touchedFields={touchedFields}
+            />
+
+            <DangerActions
+              onClose={onClose}
+              disabled={!confirmationMatch || isLoading}
+              confirmationMatch={confirmationMatch}
+              isLoading={isLoading}
+              loadingText="Deleting..."
+            />
+          </form>
         </Box>
       </Box>
-    </Modal>
+    </DangerModalShell>
   );
 };
 

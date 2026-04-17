@@ -1514,6 +1514,12 @@ export interface WorkspaceDelete {
   confirmationText?: string;
 }
 
+export interface SurveyDelete {
+  surveyId: string;
+  surveyName: string;
+  confirmationText?: string;
+}
+
 export type WorkspaceConsoleProps = {
   selectedWorkspace: Workspace;
   setSelectedWorkspace: React.Dispatch<
