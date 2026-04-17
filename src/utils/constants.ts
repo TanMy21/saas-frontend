@@ -2,6 +2,7 @@ import {
   CheckCircle,
   Clock,
   CreditCard,
+  Gem,
   Eye,
   EyeOff,
   Hand,
@@ -13,6 +14,8 @@ import {
   TimerOff,
   User,
   UserPlus,
+  LockOpenIcon,
+  TrendingUpIcon,
 } from "lucide-react";
 
 import { FeedbackTypeUI } from "../types/feedBackTypes";
@@ -387,3 +390,27 @@ export const FeedbackTypeStyles = {
     selectedBg: "#0f766e",
   },
 };
+
+export const tierConfig = {
+  FREE: {
+    label: "Free",
+    Icon: LockOpenIcon,
+    gradient: "linear-gradient(135deg, #f3f4f6, #e5e7eb)",
+    textColor: "#6b7280",
+    action: "Upgrade", // 🔥 CTA for free users
+  },
+  PROFESSIONAL: {
+    label: "Pro",
+    Icon: Gem, // 🔥 keep gem
+    gradient: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+    textColor: "#ffffff",
+    action: null,
+  },
+  ENTERPRISE: {
+    label: "Enterprise",
+    Icon: TrendingUpIcon, // 🔥 better than premium icon (feels scale/growth)
+    gradient: "linear-gradient(135deg, #f59e0b, #f97316)",
+    textColor: "#ffffff",
+    action: null,
+  },
+} as const;

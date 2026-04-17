@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import { Trash } from "lucide-react";
 
-import useAuth from "../../hooks/useAuth";
 import { WorkspaceDropDownMenu } from "../../utils/types";
 import DeleteWorkspaceModal from "../Modals/DeleteWorkspaceModal";
 import RenameWorkspaceModal from "../Modals/RenameWorkspaceModal";
@@ -23,7 +22,6 @@ const WorkspaceDropDown = ({
   setSelectedWorkspace,
 }: WorkspaceDropDownMenu) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const { can } = useAuth();
   const [openRenameModel, setOpenRenameModel] = useState(false);
   const [openDeleteModel, setOpenDeleteModel] = useState(false);
 
@@ -55,7 +53,6 @@ const WorkspaceDropDown = ({
           handleClick(e);
         }}
         sx={{
-          // ✨ style: subtle, tactile icon button
           borderRadius: 2,
           p: 0.75,
           transition: "all .2s ease",
@@ -77,12 +74,8 @@ const WorkspaceDropDown = ({
         anchorEl={menuAnchor}
         open={Boolean(menuAnchor)}
         onClose={handleClose}
-        // ✨ style: cleaner placement
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
-        // ✨ style: smooth grow transition
-        // TransitionComponent={OpenInFullIcon}
-        // ✨ style: glassy paper with border & shadow
         PaperProps={{
           elevation: 0,
           sx: (t: Theme) => ({
@@ -93,13 +86,12 @@ const WorkspaceDropDown = ({
               t.palette.mode === "dark"
                 ? "0 10px 24px rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.06) inset"
                 : "0 10px 24px rgba(0,0,0,.08), 0 1px 0 rgba(255,255,255,.6) inset",
-            backdropFilter: "blur(6px)", // subtle glass
+            backdropFilter: "blur(6px)",
             overflow: "hidden",
           }),
         }}
         MenuListProps={{
           "aria-labelledby": "basic-button",
-          // ✨ style: tighter vertical rhythm
           dense: true,
           sx: {
             py: 0.75,
@@ -108,36 +100,41 @@ const WorkspaceDropDown = ({
       >
         <MenuItem
           onClick={handleOpenModalRename}
-          // ✨ style: add icon & hover/focus states
           sx={{
             gap: 1.25,
             px: 1.5,
             py: 1,
+            mx: 1,
+            borderRadius: "8px",
             "&:hover": {
               backgroundColor: (t: Theme) =>
                 t.palette.mode === "dark"
                   ? "rgba(144,202,249,.12)"
                   : "rgba(25,118,210,.06)",
+              borderRadius: "12px",
             },
             "& .MuiSvgIcon-root": { fontSize: 20, opacity: 0.9 },
+            "&.Mui-selected": {
+              borderRadius: "12px",
+            },
+            "&.Mui-selected:hover": {
+              borderRadius: "12px",
+            },
           }}
         >
           <EditIcon style={{ color: "#005BC4" }} />{" "}
           <Typography sx={{ fontWeight: 500 }}>Rename</Typography>
         </MenuItem>
 
-        <Divider
-          // ✨ style: softer divider
-          sx={{ my: 0.5, opacity: 0.7 }}
-        />
+        <Divider sx={{ my: 0.5, opacity: 0.7 }} />
 
         <MenuItem
           onClick={handleOpenModalDelete}
-          // ✨ style: danger emphasis with gentle hover
           sx={{
             gap: 1.25,
             px: 1.5,
             py: 1,
+            mx: 1,
             color: (t: Theme) =>
               t.palette.mode === "dark"
                 ? t.palette.error.light
@@ -147,15 +144,22 @@ const WorkspaceDropDown = ({
                 t.palette.mode === "dark"
                   ? "rgba(244, 67, 54, .12)"
                   : "rgba(244, 67, 54, .06)",
+              borderRadius: "12px",
             },
             "& .MuiSvgIcon-root": { fontSize: 20, opacity: 0.95 },
+            borderRadius: "8px",
+            "&.Mui-selected": {
+              borderRadius: "12px",
+            },
+            "&.Mui-selected:hover": {
+              borderRadius: "12px",
+            },
           }}
         >
           <Trash style={{ marginTop: "-2%" }} />{" "}
           <Typography
             sx={{ fontWeight: 500, fontSize: 18, color: "#c52828ff" }}
           >
-            {" "}
             Delete
           </Typography>
         </MenuItem>

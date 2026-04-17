@@ -8,13 +8,33 @@ import {
 
 import { useAppTheme } from "../../theme/useAppTheme";
 import { SurveySorterProps } from "../../utils/types";
-import { BorderAll } from "@mui/icons-material";
+
+const selectMenuItemSx = {
+  my: 0.8,
+  mx: 1,
+  borderRadius: "8px",
+  "&:hover": {
+    borderRadius: "12px",
+  },
+  "&.Mui-selected": {
+    borderRadius: "12px",
+  },
+  "&.Mui-selected:hover": {
+    borderRadius: "12px",
+  },
+};
+
+const sortOptions = [
+  { value: "Date created", label: "Date created" },
+  { value: "Date updated", label: "Date updated" },
+  { value: "Alphabetically", label: "A-Z" },
+];
 
 const SurveySorter = ({ sortBy, setSortBy }: SurveySorterProps) => {
   const { primary } = useAppTheme();
   const handleSortChange = (event: SelectChangeEvent) => {
     setSortBy(
-      event.target.value as "Date created" | "Date updated" | "Alphabetically"
+      event.target.value as "Date created" | "Date updated" | "Alphabetically",
     );
   };
   return (
@@ -64,9 +84,15 @@ const SurveySorter = ({ sortBy, setSortBy }: SurveySorterProps) => {
           },
         }}
       >
-        <MenuItem value={"Date created"}>Date created</MenuItem>
-        <MenuItem value={"Date updated"}>Date updated</MenuItem>
-        <MenuItem value={"Alphabetically"}>A-Z</MenuItem>
+        {sortOptions.map((option) => (
+          <MenuItem
+            key={option.value}
+            value={option.value}
+            sx={selectMenuItemSx}
+          >
+            {option.label}
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
   );

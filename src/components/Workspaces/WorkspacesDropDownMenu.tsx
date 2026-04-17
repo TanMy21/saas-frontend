@@ -96,7 +96,18 @@ const WorkspacesDropDownMenu = ({
                     handleClose();
                   }}
                   sx={{
-                    // "&:hover": { bgcolor: "#A195F8" },
+                    mx: 1,
+                    my: 0.4,
+                    borderRadius: "8px",
+                    "&:hover": {
+                      borderRadius: "12px",
+                    },
+                    "&.Mui-selected": {
+                      borderRadius: "12px",
+                    },
+                    "&.Mui-selected:hover": {
+                      borderRadius: "12px",
+                    },
                     fontWeight:
                       workspace.workspaceId === selectedWorkspace?.workspaceId
                         ? "bold"

@@ -27,6 +27,18 @@ const DeleteWorkspaceMenuOption = ({
           color: text.danger,
           fontWeight: "500",
           gap: 1,
+          mx: 1,
+          my: 0.4,
+          borderRadius: "8px",
+          "&:hover": {
+            borderRadius: "12px",
+          },
+          "&.Mui-selected": {
+            borderRadius: "12px",
+          },
+          "&.Mui-selected:hover": {
+            borderRadius: "12px",
+          },
         }}
       >
         <DeleteIcon fontSize="small" />
