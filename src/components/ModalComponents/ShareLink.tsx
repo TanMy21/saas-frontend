@@ -21,6 +21,7 @@ const ShareLink = ({
   shareURL,
   shareID,
   surveyID,
+  title,
   setOpenSnackbar,
   trackShareEvent,
 }: ShareTabProps) => {
@@ -35,7 +36,14 @@ const ShareLink = ({
   const qrContainerRef = useRef<HTMLDivElement>(null);
 
   const { copyQrStatus, downloadStatus, copyQR, downloadQR } =
-    useShareQRActions(qrContainerRef, shareID!, triggerCopied, clear, track);
+    useShareQRActions(
+      qrContainerRef,
+      shareID!,
+      title,
+      triggerCopied,
+      clear,
+      track,
+    );
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -109,14 +117,20 @@ const ShareLink = ({
             borderColor: "#F3F4F6",
             borderRadius: 3,
             boxShadow: 1,
-            minWidth: 100,
-            minHeight: 100,
+            width: 120,
+            height: 120,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <QRCode value={shareURL} size={100} />
+          <QRCode
+            value={shareURL}
+            size={200}
+            style={{
+              display: "block",
+            }}
+          />
         </Box>
 
         <Box sx={{ flex: 1 }}>

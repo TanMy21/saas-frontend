@@ -50,16 +50,24 @@ export default function BillingTab({ user }: AccountSettings) {
       >
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
           <Box>
-            <Typography fontWeight={700}>Current Plan</Typography>
-            <Typography color="text.secondary">{user.tier}</Typography>
+            <Typography fontWeight={700}>Current Tier</Typography>
           </Box>
-          <Chip label="Active" color="primary" variant="outlined" />
+          <Chip
+            label="Active"
+            variant="outlined"
+            sx={{
+              bgcolor: "#3ba366",
+              color: "white",
+              fontSize: "14px",
+              fontWeight: 600,
+            }}
+          />
         </Stack>
 
         <Grid container spacing={2} sx={{ fontSize: 14 }}>
           <Grid item xs={12} md={6}>
             <Typography color="text.secondary" component="span">
-              Plan Type:
+              Tier:
             </Typography>
             <Typography component="span" sx={{ fontWeight: 600, ml: 1 }}>
               {user.tier}

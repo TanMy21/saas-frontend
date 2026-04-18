@@ -17,7 +17,6 @@ import {
   useGetOrgUsersQuery,
 } from "../../app/slices/userApiSlice";
 import { OrgMember } from "../../types/userTypes";
-import { InvitesSection } from "../OrgMembers/InvitesSection";
 import { MemberDrawer } from "../OrgMembers/MemberDrawer";
 import { MembersTable } from "../OrgMembers/MembersTable";
 
@@ -106,11 +105,12 @@ export const OrgMembers = () => {
         {!isLimitReached && (
           <Stack direction="row" spacing={2}>
             <Button
-              variant="contained"
+              variant="modalSubmitBtn"
               disabled={isLimitReached}
               onClick={() =>
                 setDrawer({ open: true, mode: "add", member: null })
               }
+              sx={{ px: 2 }}
             >
               Add Member
             </Button>
@@ -121,24 +121,20 @@ export const OrgMembers = () => {
       {/* Table */}
       <Box sx={{ flex: 1, px: 2 }}>
         <MembersTable
-          data={usersData}
+          members={usersData?.members || []}
+          invites={invites || []}
           isLoading={usersLoading}
           onEdit={(m: any) =>
             setDrawer({ open: true, mode: "edit", member: m })
           }
           onDelete={(m: any) => setDeleteDialog({ open: true, member: m })}
+          onResendInvite={(invite: any) => {
+            console.log("Resend invite", invite);
+          }}
+          onCancelInvite={(invite: any) => {
+            console.log("Cancel invite", invite);
+          }}
         />
-
-        {/* INVITES SECTION */}
-        {!!invites?.length && (
-          <Box marginY={4}>
-            <Typography fontWeight={600} mb={1}>
-              Pending Invitations
-            </Typography>
-
-            <InvitesSection invites={invites} />
-          </Box>
-        )}
       </Box>
 
       {/* Drawer */}
@@ -155,18 +151,30 @@ export const OrgMembers = () => {
         open={deleteDialog.open}
         onClose={() => setDeleteDialog({ open: false, member: null })}
       >
-        <DialogTitle>Remove Member?</DialogTitle>
+        <DialogTitle>Remove Member ?</DialogTitle>
         <DialogContent>
           <Typography>This will remove access. Data will remain.</Typography>
         </DialogContent>
 
-        <DialogActions>
+        <DialogActions sx={{ gap: 2 }}>
           <Button
+            sx={{ color: "#1e293b", fontWeight: 600 }}
             onClick={() => setDeleteDialog({ open: false, member: null })}
           >
             Cancel
           </Button>
-          <Button color="error" disabled={deleting} onClick={handleDelete}>
+          <Button
+            variant="modalSubmitBtn"
+            color="error"
+            disabled={deleting}
+            onClick={handleDelete}
+            sx={{
+              backgroundColor: "red",
+              "&:hover": {
+                backgroundColor: "red",
+              },
+            }}
+          >
             {deleting ? "Removing..." : "Remove"}
           </Button>
         </DialogActions>

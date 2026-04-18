@@ -81,6 +81,7 @@ const ShareSurveyModal = ({
               shareURL={shareURL}
               shareID={shareID}
               surveyID={surveyID}
+              title={title}
               setOpenSnackbar={setOpenSnackbar}
               trackShareEvent={trackShareEvent}
             />
@@ -100,6 +101,7 @@ const ShareSurveyModal = ({
           {/* EMBED TAB */}
           {tab === "embed" && (
             <ShareEmbed
+              title={title}
               shareURL={shareURL}
               surveyID={surveyID}
               setOpenSnackbar={setOpenSnackbar}

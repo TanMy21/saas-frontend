@@ -49,7 +49,7 @@ export default function GeneralTab({
               topLabel="First Name"
               placeholder="Enter your first name"
               fullWidth
-              sx={fieldSx}
+              sx={fieldSx} 
               error={!!errors.firstname}
               helperText={errors.firstname?.message}
               {...register("firstname")}
@@ -60,7 +60,7 @@ export default function GeneralTab({
               topLabel="Last Name"
               placeholder="Enter your last name"
               fullWidth
-              sx={fieldSx}
+              sx={fieldSx} 
               error={!!errors.lastname}
               helperText={errors.lastname?.message}
               {...register("lastname")}
@@ -74,7 +74,7 @@ export default function GeneralTab({
             <LabeledField
               topLabel="Email Address"
               placeholder="Enter your email address"
-              fullWidth
+              fullWidth 
               sx={{
                 ...fieldSx,
                 "& .MuiOutlinedInput-root": {

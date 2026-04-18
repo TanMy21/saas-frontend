@@ -3,14 +3,21 @@ import { forwardRef } from "react";
 import {
   FormControl,
   FormLabel,
+  IconButton,
+  InputAdornment,
   TextField,
   type TextFieldProps,
 } from "@mui/material";
+import { Eye, EyeOff } from "lucide-react";
 
-type LabeledFieldProps = TextFieldProps & { topLabel: string };
+type LabeledFieldProps = TextFieldProps & {
+  topLabel: string;
+  showPassword?: boolean;
+  onTogglePassword?: () => void;
+};
 
 const LabeledField = forwardRef<HTMLInputElement, LabeledFieldProps>(
-  ({ topLabel, sx, ...rest }, ref) => {
+  ({ topLabel, showPassword, onTogglePassword, sx, ...rest }, ref) => {
     return (
       <FormControl fullWidth>
         <FormLabel
@@ -29,10 +36,26 @@ const LabeledField = forwardRef<HTMLInputElement, LabeledFieldProps>(
           sx={sx}
           margin="dense"
           inputRef={ref}
+          type={
+            rest.type === "password"
+              ? showPassword
+                ? "text"
+                : "password"
+              : rest.type || "text"
+          }
+          InputProps={{
+            endAdornment: onTogglePassword && (
+              <InputAdornment position="end">
+                <IconButton onClick={onTogglePassword} edge="end">
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
       </FormControl>
     );
-  }
+  },
 );
 
 LabeledField.displayName = "LabeledField";

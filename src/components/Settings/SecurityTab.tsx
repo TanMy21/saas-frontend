@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Box,
-  Stack,
-  Typography,
-  TextField,
-  IconButton,
-  Button,
-} from "@mui/material";
-import { Eye, EyeOff } from "lucide-react";
+import { Box, Stack, Typography, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -17,6 +9,8 @@ import { useUpdatePasswordMutation } from "../../app/slices/authApiSlice";
 import { AccountSettings } from "../../types/userTypes";
 import { resetPasswordSchema } from "../../utils/schema";
 import { ErrorData, ResetPasswordFormData } from "../../utils/types";
+
+import LabeledField from "./LabelField";
 
 export default function SecurityTab({ user }: AccountSettings) {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -97,56 +91,30 @@ export default function SecurityTab({ user }: AccountSettings) {
 
             <Stack spacing={2}>
               {/* New Password */}
-              <TextField
-                label="New Password"
-                type={showNewPassword ? "text" : "password"}
+              <LabeledField
+                topLabel="New Password"
+                placeholder="New Password"
                 fullWidth
                 sx={fieldSx}
+                type="password"
                 error={!!errors.password}
+                showPassword={showNewPassword}
+                onTogglePassword={() => setShowNewPassword((prev) => !prev)}
                 helperText={errors.password?.message}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      onClick={() => setShowNewPassword((s) => !s)}
-                      edge="end"
-                      size="small"
-                      sx={{ color: "text.secondary" }}
-                    >
-                      {showNewPassword ? (
-                        <EyeOff size={18} />
-                      ) : (
-                        <Eye size={18} />
-                      )}
-                    </IconButton>
-                  ),
-                }}
                 {...register("password")}
               />
 
               {/* Confirm New Password */}
-              <TextField
-                label="Confirm New Password"
-                type={showConfirmPassword ? "text" : "password"}
+              <LabeledField
+                topLabel="Confirm New Password"
+                placeholder="Confirm New Password"
                 fullWidth
                 sx={fieldSx}
+                type="password"
+                showPassword={showConfirmPassword}
+                onTogglePassword={() => setShowConfirmPassword((prev) => !prev)}
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword?.message}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      onClick={() => setShowConfirmPassword((s) => !s)}
-                      edge="end"
-                      size="small"
-                      sx={{ color: "text.secondary" }}
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff size={18} />
-                      ) : (
-                        <Eye size={18} />
-                      )}
-                    </IconButton>
-                  ),
-                }}
                 {...register("confirmPassword")}
               />
             </Stack>

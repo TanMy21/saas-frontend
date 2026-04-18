@@ -8,6 +8,7 @@ import { ShareTabProps } from "../../types/surveyBuilderTypes";
 import { getEmbedCode } from "../../utils/utils";
 
 const ShareEmbed = ({
+  title,
   shareURL,
   setOpenSnackbar,
   trackShareEvent,

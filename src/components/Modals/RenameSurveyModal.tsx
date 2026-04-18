@@ -71,7 +71,7 @@ const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
         onSubmit={handleSubmit(renameSurvey)}
         sx={{ px: 2, pb: 0.5 }}
       >
-        <Box sx={{ mb: 3 }}>
+        <Box sx={{ mb: 1 }}>
           <Typography
             sx={{
               fontSize: 16,
@@ -83,7 +83,7 @@ const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
             Survey name
           </Typography>
 
-          {/* 🔥 Reused FormField */}
+          {/* Form Field */}
           <FormField
             name="surveyTitle"
             control={control}
