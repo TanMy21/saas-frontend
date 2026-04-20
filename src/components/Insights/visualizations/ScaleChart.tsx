@@ -82,8 +82,8 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "56px 1fr 64px",
-          columnGap: 12,
+          gridTemplateColumns: "56px 320px auto",
+          columnGap: 8,
           width: "100%",
         }}
       >
@@ -108,17 +108,22 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
         </Box>
 
         {/* ───── Bars ───── */}
-        <Box sx={{ height }}>
+        <Box sx={{ height, width: 320 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
               layout="vertical"
               margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
             >
-              <XAxis type="number" hide domain={[0, 100]} />
+              <XAxis type="number" hide domain={[0, "dataMax"]} />
               <YAxis type="category" dataKey="label" hide />
 
-              <Bar dataKey={"count"} radius={[6, 6, 6, 6]} isAnimationActive>
+              <Bar
+                dataKey={"count"}
+                radius={[6, 6, 6, 6]}
+                maxBarSize={20}
+                isAnimationActive
+              >
                 {data.map((entry, index) => (
                   <Cell key={index} fill={entry.color} />
                 ))}
@@ -161,7 +166,7 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
           </ResponsiveContainer>
         </Box>
 
-        {/* ───── Value column ───── */}
+        {/* ───── Value column   ───── */}
         <Box>
           {data.map((item) => (
             <Box
@@ -170,7 +175,7 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
                 height: ROW_HEIGHT_SCALE,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "flex-end",
+                justifyContent: "flex-start",
                 fontSize: 12,
                 color: "text.secondary",
               }}
@@ -182,4 +187,4 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
       </Box>
     </Box>
   );
-}
+};

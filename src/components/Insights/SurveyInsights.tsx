@@ -39,9 +39,7 @@ export const SurveyInsights = () => {
     device: filters.device,
   });
 
-  /**
-   * Summary card metrics
-   */
+ // Summary card metrics
   const metrics = useMemo(() => {
     if (!data) return null;
 
@@ -54,9 +52,7 @@ export const SurveyInsights = () => {
     };
   }, [data]);
 
-  /**
-   * drop-off table
-   */
+  // drop-off table
   const tableQuestions = useMemo(() => {
     if (!data) return [];
 

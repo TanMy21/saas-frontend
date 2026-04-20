@@ -43,11 +43,18 @@ export function BehaviorParticipantsTable({
         borderColor: "divider",
         bgcolor: "background.paper",
         boxShadow: 1,
+        mt: 4,
       }}
     >
       <Table>
         <TableHead>
-          <TableRow sx={{ bgcolor: "#F3F4F6" }}>
+          <TableRow
+            sx={{
+              bgcolor: "#FAFBFF",
+              borderBottom: "1px solid rgba(0,0,0,0.06)",
+              color: "rgba(15,23,42,0.7)",
+            }}
+          >
             <TableCell sx={{ px: 3, fontWeight: 700 }}>#</TableCell>
             <TableCell sx={{ px: 3, fontWeight: 700 }}>Status</TableCell>
             <TableCell sx={{ px: 3, fontWeight: 700 }}>Device</TableCell>
@@ -215,14 +222,22 @@ export function BehaviorParticipantsTable({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          borderTop: "1px solid",
           borderColor: "divider",
-          bgcolor: "#F3F4F6",
+          borderTop: "1px solid rgba(0,0,0,0.06)",
+          bgcolor: "#FAFBFF",
         }}
       >
         <Typography variant="body2" color="text.secondary">
-          Showing <b>{startItem}</b> to <b>{endItem}</b> of <b>{totalRows}</b>{" "}
-          participants
+          {totalRows === 0 ? (
+            <>
+              Showing <b>0</b> participants
+            </>
+          ) : (
+            <>
+              Showing <b>{startItem}</b> to <b>{endItem}</b> of{" "}
+              <b>{totalRows}</b> participants
+            </>
+          )}
         </Typography>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

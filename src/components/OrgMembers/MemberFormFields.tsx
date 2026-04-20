@@ -16,7 +16,7 @@ export const MemberFormFields = ({
       {/* Name */}
       <Stack direction="row" spacing={2}>
         <TextField
-          label="First name"
+          placeholder={"First name"}
           fullWidth
           size="small"
           {...register("firstname")}
@@ -26,7 +26,7 @@ export const MemberFormFields = ({
         />
 
         <TextField
-          label="Last name"
+          placeholder={"Last name"}
           fullWidth
           size="small"
           {...register("lastname")}
@@ -38,7 +38,7 @@ export const MemberFormFields = ({
 
       {/* Email */}
       <TextField
-        label="Email"
+        placeholder={"Email"}
         fullWidth
         size="small"
         disabled={isEdit}

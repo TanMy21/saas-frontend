@@ -16,12 +16,13 @@ import {
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+import { chipTypeColors } from "../../utils/elementsConfig";
 import {
   InsightTableColumnConfig,
   SurveyInsightTable,
 } from "../../utils/insightTypes";
 import { convertHtmlToPlainText } from "../../utils/richTextUtils";
-import { severitySx } from "../../utils/utils";
+import { hexToRgba, severitySx } from "../../utils/utils";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -41,7 +42,7 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
   const totalPages = Math.ceil(questions.length / ITEMS_PER_PAGE);
   const questionsSlice = questions.slice(
     (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE
+    page * ITEMS_PER_PAGE,
   );
 
   const startItem = (page - 1) * ITEMS_PER_PAGE + 1;
@@ -63,7 +64,12 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
       <TableContainer>
         <Table>
           <TableHead>
-            <TableRow sx={{ bgcolor: "#F3F4F6" }}>
+            <TableRow
+              sx={{
+                bgcolor: "#FAFBFF",
+                borderBottom: "1px solid rgba(0,0,0,0.06)",
+              }}
+            >
               {INSIGHTS_COLUMNS.map((col, i) => (
                 <TableCell
                   key={i}
@@ -74,7 +80,7 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
                     textTransform: "uppercase",
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "text.secondary",
+                    color: "rgba(15,23,42,0.7)",
                   }}
                 >
                   <Box
@@ -124,10 +130,18 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
                     size="small"
                     sx={{
                       mt: 0.5,
-                      bgcolor: "#EDE9FE",
-                      color: "#4C1D95",
                       fontWeight: 600,
-                      opacity: 0.85,
+                      opacity: 0.95,
+                      bgcolor: hexToRgba(
+                        chipTypeColors[q.type] || "#64748B",
+                        0.12,
+                      ),
+                      color: chipTypeColors[q.type] || "#334155",
+                      border: `1px solid ${hexToRgba(
+                        chipTypeColors[q.type] || "#64748B",
+                        0.25,
+                      )}`,
+                      backdropFilter: "blur(4px)",
                     }}
                   />
                 </TableCell>
@@ -180,14 +194,22 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          borderTop: "1px solid",
+          borderTop: "1px solid rgba(0,0,0,0.06)",
           borderColor: "divider",
-          bgcolor: "#F3F4F6",
+          bgcolor: "#FAFBFF",
         }}
       >
         <Typography variant="body2" color="text.secondary">
-          Showing <b>{startItem}</b> to <b>{endItem}</b> of{" "}
-          <b>{questions.length}</b> questions
+          <Typography variant="body2" color="text.secondary">
+            {questions.length === 0 ? (
+              "No questions"
+            ) : (
+              <>
+                Showing <b>{startItem}</b> to <b>{endItem}</b> of{" "}
+                <b>{questions.length}</b> questions
+              </>
+            )}
+          </Typography>
         </Typography>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

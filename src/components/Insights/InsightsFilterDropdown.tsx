@@ -63,11 +63,11 @@ export const InsightsFilterDropdown = <T extends string>({
               fontSize: 14,
               fontWeight: 500,
               "&.Mui-selected": {
-                backgroundColor: "primary.main",
-                color: "primary.contrastText",
+                // backgroundColor: "primary.main",
+                color: "black",
               },
               "&.Mui-selected:hover": {
-                backgroundColor: "primary.dark",
+                // backgroundColor: "primary.dark",
               },
             }}
           >
