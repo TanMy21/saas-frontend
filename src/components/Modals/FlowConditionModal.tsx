@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
@@ -9,6 +9,7 @@ import {
   CircularProgress,
   IconButton,
   Modal,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
@@ -19,9 +20,9 @@ import {
   useGetConditionsForQuestionQuery,
 } from "../../app/slices/flowApiSlice";
 import useAuth from "../../hooks/useAuth";
-import { useAppTheme } from "../../theme/useAppTheme";
 import { validateConditions } from "../../utils/conditionValidation";
 import { elementIcons } from "../../utils/elementsConfig";
+import { convertHtmlToPlainText } from "../../utils/richTextUtils";
 import {
   Condition,
   FlowConditionModalProps,
@@ -51,7 +52,6 @@ const FlowConditionModal = ({
   const { can } = useAuth();
   const canCreateFlow = can("CREATE_FLOW");
   const canEditFlow = can("UPDATE_FLOW");
-  const { primary, scrollStyles, grey } = useAppTheme();
   const questionID = selectedNode?.data?.questionID as string;
   const { surveyID } = useParams();
   const {
@@ -100,6 +100,9 @@ const FlowConditionModal = ({
   const [touchedAccordions, setTouchedAccordions] = useState<
     Record<number, boolean>
   >({});
+
+  const displayOrder = (order?: number) =>
+    typeof order === "number" ? order + 1 : order;
 
   const addConditionBlock = () => {
     setConditions((prev) => [
@@ -203,262 +206,232 @@ const FlowConditionModal = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 700,
-          bgcolor: "#E7E5E5",
-          borderRadius: "8px",
+          width: 800,
+          maxWidth: "95vw",
+          maxHeight: "90vh",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: "24px",
+          overflow: "hidden",
+          bgcolor: "rgba(255,255,255,0.95)",
+          backdropFilter: "blur(16px)",
+          boxShadow: "0 25px 60px rgba(0,0,0,0.25)",
+          border: "1px solid rgba(255,255,255,0.2)",
         }}
       >
+        {/* ---------------- HEADER ---------------- */}
+        <Box
+          sx={{
+            px: 3,
+            py: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderBottom: "1px solid rgba(255,255,255,0.6)",
+            bgcolor: "rgba(255,255,255,0.7)",
+            backdropFilter: "blur(10px)",
+            position: "relative",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Chip
+              sx={{
+                bgcolor: "#eef2ff",
+                color: "#4338ca",
+                fontWeight: 700,
+                fontSize: "32px",
+                height: "36px",
+                px: 1,
+                borderRadius: "10px",
+                "& .MuiChip-label": {
+                  mt: 0.5,
+                  ml: 0.5,
+                  fontSize: "24px",
+                },
+              }}
+              icon={
+                elementIcons[
+                  edgeFormData.sourceQuestionIcon ||
+                    (selectedNode?.data?.element as keyof IconMapping)
+                ]
+              }
+              label={
+                edgeFormData.sourceQuestionOrder !== -1
+                  ? displayOrder(edgeFormData.sourceQuestionOrder)
+                  : displayOrder(Number(selectedNode?.data?.order))
+              }
+            />
+
+            <Tooltip
+              title={convertHtmlToPlainText(
+                String(selectedNode?.data.question),
+              )}
+              placement="bottom-start"
+              arrow
+            >
+              <Typography
+                noWrap
+                sx={{
+                  fontSize: "18px",
+                  fontWeight: 700,
+                  color: "#0f172a",
+                  lineHeight: 1.3,
+                  maxWidth: "420px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  cursor: "default",
+                }}
+              >
+                {convertHtmlToPlainText(String(selectedNode?.data.question))}
+              </Typography>
+            </Tooltip>
+          </Box>
+
+          <IconButton
+            onClick={handleClose}
+            sx={{
+              color: "#94a3b8",
+              "&:hover": {
+                bgcolor: "rgba(0,0,0,0.05)",
+                color: "#475569",
+              },
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
+
+        {/* ---------------- SCROLL AREA ---------------- */}
+        <Box
+          sx={{
+            flex: 1,
+            overflowY: "auto",
+            px: 1.5,
+            py: 2.5,
+          }}
+        >
+          <form
+            id="conditions-form"
+            onSubmit={handleSubmit(submitConditionData)}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 1.5,
+              }}
+            >
+              {isLoading || isFetching ? (
+                <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                (conditions ?? []).map((condition, index: number) => (
+                  <FlowFormConditionBlock
+                    key={index}
+                    condition={condition}
+                    blockIndex={index + 1}
+                    selectedNode={selectedNode}
+                    questionID={questionID}
+                    edgeFormData={edgeFormData}
+                    Elements={filteredElements}
+                    register={register}
+                    control={control}
+                    watch={watch}
+                    setValue={setValue}
+                    setEdges={setEdges}
+                    setConditions={setConditions}
+                    errors={errors[index] || []}
+                    formErrors={formErrors}
+                    isValid={
+                      !(
+                        !touchedAccordions[index] &&
+                        hasSubmitted &&
+                        errors[index]?.length > 0
+                      )
+                    }
+                    onAccordionClick={() => handleAccordionClick(index)}
+                  />
+                ))
+              )}
+
+              {/* ADD CONDITION */}
+              {canCreateFlow && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    mt: 2,
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    onClick={canEditFlow ? addConditionBlock : undefined}
+                    disabled={!canEditFlow}
+                    sx={{
+                      width: "100%",
+                      maxWidth: "600px",
+                      borderRadius: "16px",
+                      textTransform: "none",
+                      fontWeight: 600,
+                      py: 1.5,
+                      border: "2px dashed #e2e8f0",
+                      color: "#64748b",
+                      bgcolor: "rgba(255,255,255,0.6)",
+                      backdropFilter: "blur(6px)",
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        borderColor: "#6366f1",
+                        color: "#6366f1",
+                        bgcolor: "rgba(99,102,241,0.05)",
+                      },
+                    }}
+                  >
+                    <AddIcon sx={{ mr: 1 }} />
+                    Add condition
+                  </Button>
+                </Box>
+              )}
+            </Box>
+          </form>
+        </Box>
+
+        {/* ---------------- FOOTER ---------------- */}
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
-            margin: "auto",
-            width: "100%",
-            gap: "1%",
-            height: 600,
-            overflow: "hidden",
-            // border: "2px solid black",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            px: 3,
+            py: 1,
+            minHeight: "60px",
+            borderTop: "1px solid #e2e8f0",
+            background:
+              "linear-gradient(to top, rgba(255,255,255,0.98), rgba(255,255,255,0.75))",
+            backdropFilter: "blur(12px)",
+            boxShadow: "0 -6px 24px rgba(0,0,0,0.06)",
+            position: "relative",
+            zIndex: 2,
           }}
         >
           <Box
             sx={{
               display: "flex",
-              flexDirection: "row",
-              width: "100%",
-              flex: 1,
-              // border: "2px solid green",
-              borderBottom: "1px solid #FFFFFF",
+              gap: 1.5,
+              mr: 2,
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                height: "98%",
-                width: "20%",
-                // border: "2px solid red",
-              }}
-            >
-              <Chip
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  fontSize: "20px",
-                  marginLeft: "12%",
-                  backgroundColor: "white",
-                  width: "48%",
-                  height: "60%",
-                  gap: "4px",
-                  "& .MuiChip-label": {
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    marginTop: "2px",
-                  },
-                }}
-                icon={
-                  elementIcons[
-                    edgeFormData.sourceQuestionIcon ||
-                      (selectedNode?.data?.element as keyof IconMapping)
-                  ]
-                }
-                label={
-                  edgeFormData.sourceQuestionOrder !== -1
-                    ? edgeFormData.sourceQuestionOrder
-                    : (selectedNode?.data?.order as ReactNode)
-                }
-              />
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "98%",
-                width: "60%",
-                // border: "2px solid green",
-              }}
-            >
-              <Typography
-                sx={{ fontSize: "20px", fontStyle: "bold", color: "#171717" }}
+            {canCreateFlow && (
+              <Button
+                type="submit"
+                variant="modalSubmitBtn"
+                form="conditions-form"
+                disabled={!canEditFlow || isCreatingCondition}
               >
-                Edit conditions
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                height: "98%",
-                width: "20%",
-                // border: "2px solid blue",
-              }}
-            >
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={handleClose}
-                sx={{ marginRight: "12%", color: grey[800] }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          </Box>
-          <Box sx={{ width: "100%", flex: 8 /*border: "2px solid green"*/ }}>
-            <form onSubmit={handleSubmit(submitConditionData)}>
-              <Box
-                sx={{
-                  display: "block",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "16px",
-                  width: "100%",
-                  height: { md: "76vh", lg: "64vh", xl: "50vh" },
-                  overflowY: "scroll",
-                  overflowX: "hidden",
-                  ...scrollStyles.conditionsScroll,
-                  // border: "2px solid black",
-                  boxSizing: "border-box",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    padding: "1%",
-                    gap: "2%",
-                    margin: "auto",
-                    width: "96%",
-                    height: "auto",
-                    // border: "2px solid orange",
-                  }}
-                >
-                  {isLoading || isFetching ? (
-                    <CircularProgress />
-                  ) : (
-                    (conditions ?? []).map((condition, index: number) => (
-                      <FlowFormConditionBlock
-                        key={index} // NOSONAR
-                        condition={condition}
-                        blockIndex={index + 1}
-                        selectedNode={selectedNode}
-                        questionID={questionID}
-                        edgeFormData={edgeFormData}
-                        Elements={filteredElements}
-                        register={register}
-                        control={control}
-                        watch={watch}
-                        setValue={setValue}
-                        setEdges={setEdges}
-                        setConditions={setConditions}
-                        // setTouchedConditions={setTouchedConditions}
-                        errors={errors[index] || []}
-                        formErrors={formErrors}
-                        isValid={
-                          !(
-                            !touchedAccordions[index] &&
-                            hasSubmitted &&
-                            errors[index]?.length > 0
-                          )
-                        }
-                        onAccordionClick={() => handleAccordionClick(index)}
-                      />
-                    ))
-                  )}
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%",
-                  flex: 1,
-                  gap: "1%",
-                  // border: "2px solid blue",
-                  borderTop: "1px solid #FFFFFF",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    marginTop: "2%",
-                    paddingLeft: "2%",
-                    height: "98%",
-                    width: "50%",
-                    // border: "2px solid red",
-                  }}
-                >
-                  {canCreateFlow && (
-                    <Button
-                      variant="outlined"
-                      onClick={canEditFlow ? addConditionBlock : undefined}
-                      disabled={!canEditFlow}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: "60%",
-                        textTransform: "unset",
-                        color: "#060608",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                        gap: 1,
-                      }}
-                    >
-                      <AddIcon />
-                      Add condition
-                    </Button>
-                  )}
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    marginTop: "2%",
-                    paddingRight: "2%",
-                    gap: "12px",
-                    height: "98%",
-                    width: "60%",
-                    // border: "2px solid red",
-                  }}
-                >
-                  <Button
-                    onClick={handleClose}
-                    fullWidth
-                    variant="outlined"
-                    sx={{
-                      textTransform: "capitalize",
-                      color: "#181E2B",
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  {canCreateFlow && (
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      disabled={!canEditFlow || isCreatingCondition}
-                      sx={{
-                        textTransform: "unset",
-                        backgroundColor: primary.dark,
-                        color: "#FFFFFF",
-                      }}
-                    >
-                      {isCreatingCondition ? "Saving..." : "Save condition"}
-                    </Button>
-                  )}
-                </Box>
-              </Box>
-            </form>
+                {isCreatingCondition ? "Saving..." : "Save"}
+              </Button>
+            )}
           </Box>
         </Box>
       </Box>
