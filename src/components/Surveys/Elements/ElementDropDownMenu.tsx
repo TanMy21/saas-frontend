@@ -117,11 +117,14 @@ const ElementDropDownMenu = ({
         }}
       >
         {!isSystemScreen && can("CREATE_QUESTION") && (
-          <MenuItem onClick={handleDuplicateElement}>Duplicate</MenuItem>
+          <MenuItem onClick={handleDuplicateElement} sx={{ mx: 0.5, borderRadius: "12px"}}>Duplicate</MenuItem>
         )}
 
         {can("DELETE_QUESTION") && (
-          <MenuItem onClick={handleDeleteElement} sx={{ color: "red" }}>
+          <MenuItem
+            onClick={handleDeleteElement}
+            sx={{ color: "red", mx: 0.5, borderRadius: "12px" }}
+          >
             {isSystemScreen ? "Remove Screen" : "Delete"}
           </MenuItem>
         )}

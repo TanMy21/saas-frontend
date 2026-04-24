@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { Alert, Box, IconButton, Modal, Typography } from "@mui/material";
-import { toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
 import {
@@ -11,7 +10,6 @@ import {
 } from "../../app/slices/elementApiSlice";
 import { nonOrderableTypes } from "../../utils/constants";
 import { ImportQuestionProps } from "../../utils/types";
-import { ImportQuestionsLoader } from "../Loaders/ImportQuestionsLoader";
 
 import ImportQuestionModalInputField from "./ImportQuestionModalInputField";
 
@@ -23,7 +21,6 @@ const ImportQuestionsModal = ({
   const { surveyID } = useParams();
   const [importText, setImportText] = useState("");
   const [importBtnClicked, setImportBtnClicked] = useState(false);
-  const [showSlowMessage, setShowSlowMessage] = useState(false);
   const [attemptedMode, setAttemptedMode] = useState<
     "INITIAL" | "APPEND" | "REPLACE" | null
   >(null);
@@ -54,27 +51,6 @@ const ImportQuestionsModal = ({
     setOpenImport?.(false);
     setImportBtnClicked(false);
   };
-
-  useEffect(() => {
-    if (!isLoading) {
-      setShowSlowMessage(false); // reset when loading stops
-      return;
-    }
-
-    const warningTimer = setTimeout(() => {
-      setShowSlowMessage(true);
-    }, 45000);
-
-    const timeoutTimer = setTimeout(() => {
-      toast.error("Import is taking longer than expected. Please wait...");
-      handleClose();
-    }, 61000);
-
-    return () => {
-      clearTimeout(warningTimer);
-      clearTimeout(timeoutTimer);
-    };
-  }, [isLoading]);
 
   return (
     <Modal
@@ -170,21 +146,18 @@ const ImportQuestionsModal = ({
                 {getEmptyTextMessage()}
               </Alert>
             )}
-            {isLoading ? (
-              <ImportQuestionsLoader slow={showSlowMessage} />
-            ) : (
-              <ImportQuestionModalInputField
-                importQuestions={importQuestions}
-                surveyID={surveyID!}
-                isLoading={isLoading}
-                importText={importText}
-                setImportText={setImportText}
-                setImportBtnClicked={setImportBtnClicked}
-                setAttemptedMode={setAttemptedMode}
-                handleClose={handleClose}
-                existingQuestionsCount={existingQuestionsCount}
-              />
-            )}
+
+            <ImportQuestionModalInputField
+              importQuestions={importQuestions}
+              surveyID={surveyID!}
+              isLoading={isLoading}
+              importText={importText}
+              setImportText={setImportText}
+              setImportBtnClicked={setImportBtnClicked}
+              setAttemptedMode={setAttemptedMode}
+              handleClose={handleClose}
+              existingQuestionsCount={existingQuestionsCount}
+            />
           </Box>
         </Box>
       </Box>

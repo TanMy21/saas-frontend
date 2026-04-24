@@ -15,6 +15,9 @@ import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
+import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
+import { useAppDispatch } from "../../app/typedReduxHooks";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { questionTypes } from "../../utils/elementsConfig";
 import { generateSurveySchema } from "../../utils/schema";
@@ -25,14 +28,13 @@ import {
 } from "../../utils/types";
 
 export const GenerateSurveyForm = ({
-  onGenerate,
   generateSurvey,
   isError,
   error,
-  setOpenGenerate,
   handleClose,
 }: GenerateSurveyFormProps) => {
   const { surveyID } = useParams();
+  const dispatch = useAppDispatch();
 
   const { scrollStyles } = useAppTheme();
 
@@ -41,7 +43,6 @@ export const GenerateSurveyForm = ({
     handleSubmit,
     watch,
     setValue,
-    reset,
     formState: { errors },
   } = useForm<GenerateSurveyFormData>({
     resolver: zodResolver(generateSurveySchema),
@@ -66,9 +67,28 @@ export const GenerateSurveyForm = ({
     }
   };
 
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
   const onSubmit = async (data: GenerateSurveyFormData) => {
     try {
-      onGenerate();
+      handleClose(); // close modal
+
+      dispatch(
+        showOverlay({
+          message: "Understanding your survey topic...",
+          variant: "GENERATE",
+        }),
+      );
+
+      await delay(700);
+
+      dispatch(
+        showOverlay({
+          message: "Generating relevant questions...",
+          variant: "GENERATE",
+        }),
+      );
+
       await generateSurvey({
         surveyID: surveyID!,
         inputText: data.description,
@@ -76,9 +96,26 @@ export const GenerateSurveyForm = ({
         questionTypes: data.selectedTypes,
         mode: "INITIAL",
       }).unwrap();
-      reset();
-      setOpenGenerate?.(false);
-      // handleClose();
+
+      dispatch(
+        showOverlay({
+          message: "Structuring your survey...",
+          variant: "GENERATE",
+        }),
+      );
+      await delay(500);
+
+      dispatch(
+        showOverlay({
+          message: "Finalizing your survey...",
+          variant: "GENERATE",
+        }),
+      );
+      await delay(400);
+
+      dispatch(setAiQuestionsJustAdded());
+
+      dispatch(hideOverlay());
     } catch (error) {
       console.error("Error generating survey:", error);
     }

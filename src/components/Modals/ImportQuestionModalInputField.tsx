@@ -6,6 +6,7 @@ import { ReplaceAll, SquarePlus } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
+import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
 import { ImportQuestionModalInputFieldProps } from "../../utils/types";
@@ -34,6 +35,7 @@ const ImportQuestionModalInputField = ({
   ) => {
     setImportText(event.target.value);
   };
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const handleImport = async (mode: "INITIAL" | "APPEND" | "REPLACE") => {
     try {
@@ -44,11 +46,42 @@ const ImportQuestionModalInputField = ({
         return;
       }
 
+      handleClose();
+
+      dispatch(
+        showOverlay({ message: "Analyzing your input...", variant: "IMPORT" }),
+      );
+
+      await delay(500);
+
+      dispatch(
+        showOverlay({
+          message: "Identifying questions and options...",
+          variant: "IMPORT",
+        }),
+      );
+
       await importQuestions({
         surveyID,
         inputText: importText,
         mode,
       }).unwrap();
+
+      dispatch(
+        showOverlay({
+          message: "Structuring your survey...",
+          variant: "IMPORT",
+        }),
+      );
+      await delay(400);
+
+      dispatch(
+        showOverlay({
+          message: "Finalizing your survey...",
+          variant: "IMPORT",
+        }),
+      );
+      await delay(300);
 
       dispatch(setAiQuestionsJustAdded());
 
@@ -59,6 +92,8 @@ const ImportQuestionModalInputField = ({
     } catch (error) {
       toast.error("Failed to import questions.");
       console.error(error);
+    } finally {
+      dispatch(hideOverlay());
     }
   };
   return (

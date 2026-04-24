@@ -7,7 +7,6 @@ import {
   Button,
   CircularProgress,
   IconButton,
-  InputAdornment,
   MenuItem,
   Modal,
   Select,
@@ -510,6 +509,17 @@ const SurveySettingsModal = ({
                       fullWidth
                       displayEmpty
                       error={!!fieldState.error}
+                      IconComponent={(props) => (
+                        <ChevronDown
+                          {...props}
+                          style={{
+                            width: 24,
+                            height: 24,
+                            color: "#5e5a5aff",
+                            right: 10,
+                          }}
+                        />
+                      )}
                       sx={{
                         bgcolor: "#f9fafb",
                         borderRadius: 2,
@@ -519,41 +529,41 @@ const SurveySettingsModal = ({
                         py: 1,
                         fontSize: 15,
                         color: "#1e293b",
-                        "&hover": {
-                          border: "1.5px solid #e5e7eb",
+
+                        "&:hover": {
+                          border: "1.5px solid #d1d5db",
+                        },
+
+                        "&.Mui-focused": {
+                          border: "1.5px solid #6366f1",
+                          boxShadow: "0 0 0 2px rgba(99,102,241,0.15)",
+                        },
+
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          border: "none",
+                        },
+
+                        "& .MuiSelect-icon": {
+                          right: 10,
                         },
                       }}
-                      inputProps={{
-                        sx: {
-                          px: 2,
-                          py: 1.8,
-                          fontSize: 15,
-                        },
-                        endAdornment: (
-                          <InputAdornment position="end" sx={{ mr: 1 }}>
-                            <ChevronDown
-                              style={{
-                                width: 17,
-                                height: 17,
-                                color: "#5e5a5aff",
-                              }}
-                            />
-                          </InputAdornment>
-                        ),
-                      }}
-                      IconComponent={() => null}
                       MenuProps={{
                         PaperProps: {
                           sx: {
                             borderRadius: 2,
                             mt: 0.5,
+                            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
                           },
+                        },
+                        MenuListProps: {
+                          dense: true,
                         },
                       }}
                     >
                       <MenuItem value="">
                         <em>Select Language</em>
                       </MenuItem>
+
                       {languages?.map((lang: any) => (
                         <MenuItem key={lang.code} value={lang.code}>
                           {lang.name}

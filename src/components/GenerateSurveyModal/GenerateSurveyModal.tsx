@@ -1,17 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Box, Modal } from "@mui/material";
-import { toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
 import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
 import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
+import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
 import { useGenerateSurveyMutation } from "../../app/slices/surveysApiSlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
-import { LoaderMode } from "../../types/modalTypes";
 import { GenerateSurveyState, nonOrderableTypes } from "../../utils/constants";
 import { GenerateSurveyModalProps } from "../../utils/types";
-import GenerateSurveyLoader from "../Loaders/GenerateSurveyLoader";
 
 import { GenerateSurveyAppendForm } from "./GenerateSurveyAppendForm";
 import { GenerateSurveyForm } from "./GenerateSurveyForm";
@@ -52,29 +50,38 @@ const GenerateSurveyModal = ({
   const questionCount = elements.filter(
     (el) => el.type && !nonOrderableTypes.includes(el.type),
   ).length;
-  const timeoutTriggeredRef = useRef(false);
+
   const [state, setState] = useState<GenerateSurveyState>(
     GenerateSurveyState.LOADING,
   );
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [showTimeoutWarning, setShowTimeoutWarning] = useState(false);
-  const [loaderMode, setLoaderMode] = useState<LoaderMode>("INITIAL");
 
-  const [generateSurvey, { isError, error, isLoading }] =
-    useGenerateSurveyMutation();
+  const [generateSurvey, { isError, error }] = useGenerateSurveyMutation();
 
   const handleClose = () => {
     setOpenGenerate?.(false);
   };
 
-  const handleStartLoading = (mode: LoaderMode) => {
-    setLoaderMode(mode);
-    setState(GenerateSurveyState.LOADING);
-  };
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const handleRepacleConfirm = async () => {
     try {
-      handleStartLoading("REPLACE");
+      handleClose();
+
+      dispatch(
+        showOverlay({
+          message: "Removing existing questions...",
+          variant: "GENERATE",
+        }),
+      );
+
+      await delay(600);
+
+      dispatch(
+        showOverlay({
+          message: "Generating new survey structure...",
+          variant: "GENERATE",
+        }),
+      );
 
       await generateSurvey({
         surveyID: surveyID!,
@@ -83,9 +90,17 @@ const GenerateSurveyModal = ({
         mode: "REPLACE",
       }).unwrap();
 
+      dispatch(
+        showOverlay({
+          message: "Finalizing your new survey...",
+          variant: "GENERATE",
+        }),
+      );
+      await delay(500);
+
       dispatch(setAiQuestionsJustAdded());
 
-      setOpenGenerate?.(false);
+      dispatch(hideOverlay());
     } catch (err) {
       console.error(err);
     }
@@ -101,61 +116,14 @@ const GenerateSurveyModal = ({
     }
   }, [openGenerate, questionCount]);
 
-  useEffect(() => {
-    if (!openGenerate || state !== GenerateSurveyState.LOADING) return;
-
-    // reset timer state
-    setElapsedTime(0);
-    setShowTimeoutWarning(false);
-    timeoutTriggeredRef.current = false;
-
-    const interval = setInterval(() => {
-      setElapsedTime((prev) => {
-        const next = prev + 1;
-
-        // show warning
-        if (next === 45) {
-          setShowTimeoutWarning(true);
-        }
-
-        // hard timeout only if request still loading
-        if (next >= 60 && !timeoutTriggeredRef.current && isLoading) {
-          timeoutTriggeredRef.current = true;
-
-          toast.error("Survey generation timed out.", {
-            duration: 4000,
-            position: "top-right",
-          });
-
-          setOpenGenerate?.(false);
-        }
-
-        return next;
-      });
-    }, 1000);
-
-    // stop timer if request finishes
-    if (!isLoading) {
-      timeoutTriggeredRef.current = true;
-    }
-
-    return () => clearInterval(interval);
-  }, [state, isLoading]);
-
   return (
     <Modal open={openGenerate} onClose={handleClose}>
       <Box sx={modalOverlaySx}>
         <Box sx={modalContainerSx}>
           <GenerateSurveyHeader state={state} onClose={handleClose} />
 
-          {state === GenerateSurveyState.LOADING ? (
-            <GenerateSurveyLoader
-              showTimeoutWarning={showTimeoutWarning}
-              mode={loaderMode}
-            />
-          ) : state === GenerateSurveyState.INITIAL_CONFIG ? (
+          {state === GenerateSurveyState.INITIAL_CONFIG ? (
             <GenerateSurveyForm
-              onGenerate={() => handleStartLoading("INITIAL")}
               generateSurvey={generateSurvey}
               isError={isError}
               error={error}
@@ -170,9 +138,9 @@ const GenerateSurveyModal = ({
           ) : state === GenerateSurveyState.APPEND_CONFIG ? (
             <GenerateSurveyAppendForm
               onBack={() => setState(GenerateSurveyState.TOOLS)}
-              onGenerate={() => handleStartLoading("APPEND")}
               generateSurvey={generateSurvey}
               setOpenGenerate={setOpenGenerate}
+              handleClose={handleClose}
             />
           ) : state === GenerateSurveyState.REPLACE_CONFIRM ? (
             <GenerateSurveyReplaceConfirm

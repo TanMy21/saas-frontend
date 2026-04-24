@@ -4,23 +4,34 @@ import { UIState } from "../../utils/types";
 
 const initialState: UIState = {
   overlayOpen: false,
-  overlayMessage: "",
+  overlayMessage: undefined,
   publishAlertOpen: false,
   shareModalOpen: false,
+  overlayVariant: undefined,
 };
 
 const overlaySlice = createSlice({
   name: "overlayUI",
   initialState,
   reducers: {
-    showOverlay: (s, a: PayloadAction<string | undefined>) => {
+    showOverlay: (
+      s,
+      a: PayloadAction<{
+        message?: string;
+        variant?: "IMPORT" | "GENERATE" | "FEEDBACK";
+      }>,
+    ) => {
       s.overlayOpen = true;
-      s.overlayMessage = a.payload;
+      s.overlayMessage = a.payload.message;
+      s.overlayVariant = a.payload.variant || "IMPORT";
     },
+
     hideOverlay: (s) => {
       s.overlayOpen = false;
       s.overlayMessage = undefined;
+      s.overlayVariant = undefined;
     },
+
     openPublishAlert: (s) => {
       s.publishAlertOpen = true;
     },

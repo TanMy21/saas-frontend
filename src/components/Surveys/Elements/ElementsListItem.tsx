@@ -66,21 +66,10 @@ export const ElementsListItem = ({
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: 0.5,
                   position: "relative",
-                  zIndex: snapshot.isDragging ? 2000 : "auto",
-                  px: 1.5,
-                  py: 1,
-                  minHeight: 52,
-                  cursor: isSystemScreen
-                    ? "default"
-                    : snapshot.isDragging
-                      ? "grabbing"
-                      : "default",
-                  userSelect: "none",
-                  transform: provided.draggableProps.style?.transform,
-                  willChange: "transform",
-                  backfaceVisibility: "hidden",
+                  mx: isSelected ? 0.8 : 0,
+                  my: isSelected ? 0.6 : 0,
+                  borderRadius: "8px",
                   transition:
                     "transform 180ms cubic-bezier(.2,0,0,1), background-color 0.2s ease, box-shadow 0.2s ease",
                   ...(isNew && {
@@ -94,35 +83,34 @@ export const ElementsListItem = ({
                   boxShadow: snapshot.isDragging
                     ? "0 20px 40px rgba(0,0,0,0.22)"
                     : "none",
+                  cursor: isSystemScreen
+                    ? "default"
+                    : snapshot.isDragging
+                      ? "grabbing"
+                      : "pointer",
+                  userSelect: "none",
+                  transform: provided.draggableProps.style?.transform,
+                  willChange: "transform",
+                  backfaceVisibility: "hidden",
                   "&:hover": {
-                    backgroundColor: isSelected ? "#EFF6FF" : "#F9FAFB",
-                    boxShadow: "0 4px 12px rgba(16, 24, 40, 0.08)",
+                    backgroundColor: isSelected ? "#F8FAFC" : "#F3F4F6",
+                    boxShadow: isSelected
+                      ? "0 6px 16px rgba(0,0,0,0.08)"
+                      : "0 2px 8px rgba(16, 24, 40, 0.06)",
                     transform: "translateY(-1px)",
                   },
-                  ...(isSelected
-                    ? {
-                        backgroundColor: "#EFF6FF",
-                        color: "#1e3a8a",
-                        border: "1px solid #bfdbfe",
-                        borderLeft: "8px solid #4C6FFF",
-                        borderTopLeftRadius: "20px",
-                        borderBottomLeftRadius: "20px",
-                        boxShadow:
-                          "0 4px 12px rgba(76,111,255,0.15), 0 0 0 1px rgba(76,111,255,0.05)",
-                        transform: "translateY(-1px)",
-                      }
-                    : {
-                        backgroundColor:
-                          index % 2 === 0 ? "#FFFFFF" : "#FCFCFD",
-                        color: "#374151",
-                        border: "1px solid #EEF2F7",
-                      }),
+                  ...(isSelected && {
+                    backgroundColor: "#F8FAFC",
+                    boxShadow: `
+                                0 0 0 1px rgba(99,102,241,0.25),
+                                  0 6px 16px rgba(0,0,0,0.08)
+                                `,
+                    transform: "translateY(-1px)",
+                  }),
                   ...(isSystemScreen && {
                     opacity: 0.9,
                     backgroundColor: "#F8FAFC",
-                    borderStyle: "dashed",
                     cursor: "default",
-
                     "&:hover": {
                       backgroundColor: "#F8FAFC",
                       boxShadow: "none",
@@ -131,40 +119,21 @@ export const ElementsListItem = ({
                   }),
                 }}
               >
-                {/* Drop target indicator */}
-                {snapshot.isDragging && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      left: 0,
-                      right: 0,
-                      top: -2,
-                      height: 2,
-                      backgroundColor: "#3B82F6",
-                      borderRadius: 2,
-                    }}
-                  />
-                )}
-
                 <Box
                   sx={{
-                    display: "grid",
-                    gridTemplateColumns: isSystemScreen
-                      ? "28px minmax(0,1fr) auto"
-                      : "28px 28px minmax(0,1fr) auto",
-                    gridTemplateRows: isSystemScreen ? "28px" : "28px auto",
+                    display: "flex",
                     alignItems: "center",
-                    columnGap: 1,
-                    rowGap: 1,
+                    gap: 1,
                     width: "100%",
+                    height: "64px",
+                    minWidth: 0,
                   }}
                 >
-                  {!isSystemScreen ? (
+                  {/* Drag Handle */}
+                  {!isSystemScreen && (
                     <Box
                       {...provided.dragHandleProps}
                       sx={{
-                        gridColumn: "1 / 2",
-                        gridRow: "1 / 2",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -173,8 +142,10 @@ export const ElementsListItem = ({
                         "&:active": {
                           cursor: canReorder ? "grabbing" : "pointer",
                         },
-                        width: 28,
-                        height: 28,
+                        width: 24,
+                        height: 24,
+                        flexShrink: 0,
+                        ml: 0.5,
                       }}
                     >
                       {canReorder && (
@@ -183,68 +154,45 @@ export const ElementsListItem = ({
                         </Tooltip>
                       )}
                     </Box>
-                  ) : null}
+                  )}
 
+                  {/* Question Number */}
+                  {shouldDisplayOrder && (
+                    <Typography
+                      sx={{
+                        fontSize: "1.4rem",
+                        fontWeight: 700,
+                        color: isSelected ? "#4f46e5" : "#6B7280",
+                        width: 20,
+                        textAlign: "center",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {element.order}
+                    </Typography>
+                  )}
+
+                  {/* Type Icon */}
                   <Typography
                     sx={{
-                      gridColumn: isSystemScreen ? "1 / 2" : "2 / 3",
-                      gridRow: "1 / 2",
-                      fontSize: "1.4rem",
+                      fontSize: "1.2rem",
                       lineHeight: 1,
-                      mt: 0.25,
                       opacity: isSelected ? 1 : 0.9,
+                      flexShrink: 0,
+                      ml: isSystemScreen ? 2 : 0,
                     }}
                   >
                     {elementIcons[element.type as keyof IconMapping]}
                   </Typography>
 
-                  {canShowMenu && (
-                    <Box
-                      sx={{
-                        gridColumn: isSystemScreen ? "3 / 4" : "4 / 5",
-                        gridRow: "1 / 2",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: 32,
-                        flexShrink: 0,
-                        height: 28,
-                        ml: 1,
-                      }}
-                    >
-                      <ElementDropDownMenu
-                        questionID={element.questionID}
-                        isSystemScreen={isSystemScreen}
-                      />
-                    </Box>
-                  )}
+                  {/* Question Text */}
                   <Box
                     sx={{
-                      gridColumn: isSystemScreen
-                        ? "2 / 3"
-                        : { xs: "2 / 4", md: "2 / -1" },
-                      gridRow: isSystemScreen ? "1 / 2" : "2 / 3",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1,
-                      minHeight: 24,
+                      flex: 1,
                       minWidth: 0,
-                      pr: 0.5,
+                      overflow: "hidden",
                     }}
                   >
-                    {shouldDisplayOrder && (
-                      <Typography
-                        sx={{
-                          fontSize: "1.1rem",
-                          fontWeight: 700,
-                          lineHeight: 1,
-                          color: isSelected ? "#4f46e5" : "#374151",
-                        }}
-                      >
-                        {element.order}
-                      </Typography>
-                    )}
-
                     <Tooltip
                       title={htmlToPlainText(element.text)}
                       placement="top"
@@ -255,9 +203,8 @@ export const ElementsListItem = ({
                         noWrap
                         sx={{
                           color: isSelected ? "#4f46e5" : "#374151",
-                          fontSize: "0.95rem",
+                          fontSize: "1rem",
                           fontWeight: 600,
-                          textTransform: "capitalize",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
@@ -267,6 +214,24 @@ export const ElementsListItem = ({
                       </Typography>
                     </Tooltip>
                   </Box>
+
+                  {/* Menu  */}
+                  {canShowMenu && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        ml: 1,
+                        flexShrink: 0,
+                      }}
+                    >
+                      <ElementDropDownMenu
+                        questionID={element.questionID}
+                        isSystemScreen={isSystemScreen}
+                      />
+                    </Box>
+                  )}
                 </Box>
               </Box>
             )}

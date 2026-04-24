@@ -4,6 +4,9 @@ import { Sparkles } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
+import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
+import { useAppDispatch } from "../../app/typedReduxHooks";
+
 type AppendFormData = {
   numberOfQuestions: number;
   description?: string;
@@ -11,19 +14,19 @@ type AppendFormData = {
 
 type Props = {
   onBack: () => void;
-  onGenerate: () => void;
+  onGenerate?: () => void;
   generateSurvey: any;
   setOpenGenerate?: (open: boolean) => void;
+  handleClose: () => void;
 };
 
 export const GenerateSurveyAppendForm = ({
   onBack,
-  onGenerate,
   generateSurvey,
-  setOpenGenerate,
+  handleClose,
 }: Props) => {
   const { surveyID } = useParams();
-
+  const dispatch = useAppDispatch();
   const { control, handleSubmit } = useForm<AppendFormData>({
     defaultValues: {
       numberOfQuestions: 3,
@@ -31,18 +34,45 @@ export const GenerateSurveyAppendForm = ({
     },
   });
 
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
   const onSubmit = async (data: AppendFormData) => {
     try {
-      onGenerate(); // switch modal to loading state
+      handleClose();
+
+      dispatch(
+        showOverlay({
+          message: "Analyzing existing survey...",
+          variant: "GENERATE",
+        }),
+      );
+
+      await delay(600);
+
+      dispatch(
+        showOverlay({
+          message: "Generating additional questions...",
+          variant: "GENERATE",
+        }),
+      );
 
       await generateSurvey({
         surveyID: surveyID!,
         inputText: data.description,
         numberOfQuestions: data.numberOfQuestions,
-        questionTypes: [], //let the backend decide question types for append.
+        questionTypes: [],
         mode: "APPEND",
       }).unwrap();
-      setOpenGenerate?.(false);
+
+      dispatch(
+        showOverlay({
+          message: "Analyzing existing survey...",
+          variant: "GENERATE",
+        }),
+      );
+      await delay(500);
+
+      dispatch(hideOverlay());
     } catch (error) {
       console.error("Append generation failed", error);
     }

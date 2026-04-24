@@ -162,7 +162,7 @@ const SurveyCardDropDownMenu = ({
   const handleCopyTo = async (wID: string) => {
     handleClose();
     try {
-      dispatch(showOverlay("Copying survey…"));
+      dispatch(showOverlay({ message: "Copying survey…" }));
       await copySurvey({ surveyID, workspaceId: wID });
     } catch (error) {
       console.log(error);
@@ -183,7 +183,7 @@ const SurveyCardDropDownMenu = ({
   const handleDuplicateSurvey = async (surveyID: string) => {
     handleClose();
     try {
-      dispatch(showOverlay("Duplicating survey…"));
+      dispatch(showOverlay({ message: "Duplicating survey…" }));
       await duplicateSurvey(surveyID);
     } catch (error) {
       console.log(error);

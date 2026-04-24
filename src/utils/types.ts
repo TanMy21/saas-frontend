@@ -621,7 +621,7 @@ export interface GenerateSurveyModalProps {
 }
 
 export interface GenerateSurveyFormProps {
-  onGenerate: () => void;
+  onGenerate?: () => void;
   generateSurvey: ReturnType<typeof useGenerateSurveyMutation>[0];
   setOpenGenerate?: React.Dispatch<React.SetStateAction<boolean>>;
   handleClose: () => void;
@@ -814,6 +814,7 @@ export interface UIState {
   overlayMessage?: string;
   publishAlertOpen?: boolean;
   shareModalOpen?: boolean;
+  overlayVariant?: "IMPORT" | "GENERATE" | "FEEDBACK";
 }
 
 export type QuestionTypeKey =
