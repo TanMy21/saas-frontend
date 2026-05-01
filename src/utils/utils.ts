@@ -1,7 +1,29 @@
 import { ReactNode } from "react";
 
-import { BarChart3, Shield, Smartphone, Users } from "lucide-react";
+import {
+  Box,
+  EyeOff,
+  Gauge,
+  GripVertical,
+  Layers,
+  LineChart,
+  MousePointerClick,
+  Palette,
+  PieChart,
+  Plus,
+  Image as Img,
+  RotateCw,
+  Sparkles,
+  TrendingUp,
+  Type,
+  Users,
+  Crosshair,
+  Activity,
+  CircleDot,
+} from "lucide-react";
 import { type Transition } from "motion/react";
+
+import { FeatureItem, UseCase } from "../types/landingTypes";
 
 import { OPTION_TYPES, SINGLE_VALUE_TYPES } from "./constants";
 import {
@@ -28,42 +50,118 @@ export const generateOptionLabel = (index: number, qType: string) => {
 export const getSquareImageURL = (url: string) =>
   url.replace("/upload/", "/upload/w_250,h_250,c_fill,g_auto/");
 
-export const features = [
+export const features: FeatureItem[] = [
   {
-    id: 1,
-    icon: BarChart3,
-    title: "Survey Analytics",
+    key: "create",
+    label: "Create Surveys",
+    icon: Plus,
+    step: "01",
+    title: "Create beautiful surveys\nin minutes",
     description:
-      "Get instant insights with our advanced analytics dashboard. Track performance metrics, user behavior, and business growth in real-time.",
-    image:
-      "https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "Build engaging surveys with our intuitive builder. Choose from various question types and customize to match your needs.",
+    color: "feature-color-blue",
+    bullets: [
+      {
+        icon: GripVertical,
+        title: "Drag & drop builder",
+        desc: "Create surveys effortlessly",
+      },
+      {
+        icon: Type,
+        title: "Multiple question types",
+        desc: "Text, rating, choice, and more",
+      },
+      {
+        icon: Palette,
+        title: "Fully customizable",
+        desc: "Match your brand and style",
+      },
+    ],
+    cta: "Start Creating",
   },
   {
-    id: 2,
-    icon: Users,
-    title: "Design",
+    key: "threeD",
+    label: "3D Questions",
+    icon: Box,
+    step: "02",
+    title: "Capture feedback\non real 3D products",
     description:
-      "Seamlessly collaborate with your team members. Share projects, assign tasks, and communicate effectively all in one place.",
-    image:
-      "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "Let users interact with 3D models directly inside surveys. Rotate, inspect, and respond to products like perfumes, shoes, packaging, and more.",
+    color: "feature-color-violet",
+    bullets: [
+      {
+        icon: RotateCw,
+        title: "Interactive 3D models",
+        desc: "Users can rotate, zoom, and explore freely",
+      },
+      {
+        icon: MousePointerClick,
+        title: "Contextual feedback",
+        desc: "Collect feedback based on what users actually see",
+      },
+      {
+        icon: Layers,
+        title: "Real product validation",
+        desc: "Test designs before manufacturing or launch",
+      },
+    ],
+    cta: "Try 3D Questions",
   },
   {
-    id: 3,
-    icon: Shield,
-    title: "Flow",
+    key: "track",
+    label: "Track Responses",
+    icon: LineChart,
+    step: "03",
+    title: "Monitor responses\nas they come in",
     description:
-      "Enterprise-grade security with end-to-end encryption, multi-factor authentication, and regular security audits.",
-    image:
-      "https://images.pexels.com/photos/60504/security-protection-anti-virus-software-60504.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "Watch real-time engagement, completion rates, and response trends with a live dashboard built for clarity.",
+    color: "feature-color-emerald",
+    bullets: [
+      {
+        icon: TrendingUp,
+        title: "Live response feed",
+        desc: "Updates the moment they arrive",
+      },
+      {
+        icon: Gauge,
+        title: "Completion rates",
+        desc: "See where people drop off",
+      },
+      {
+        icon: Users,
+        title: "Audience breakdown",
+        desc: "Segment by source and channel",
+      },
+    ],
+    cta: "View Dashboard",
   },
   {
-    id: 4,
-    icon: Smartphone,
-    title: "Mobile Optimization",
+    key: "insights",
+    label: "Understand Insights",
+    icon: PieChart,
+    step: "04",
+    title: "Turn feedback into\nclear, smart insights",
     description:
-      "Access your workspace anywhere with our fully responsive design and native mobile apps for iOS and Android.",
-    image:
-      "https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "Sentiment analysis, trending themes, and AI-generated recommendations help you act on feedback faster.",
+    color: "feature-color-amber",
+    bullets: [
+      {
+        icon: PieChart,
+        title: "Sentiment analysis",
+        desc: "Positive, neutral, negative at a glance",
+      },
+      {
+        icon: Sparkles,
+        title: "AI recommendations",
+        desc: "Smart next steps from every survey",
+      },
+      {
+        icon: TrendingUp,
+        title: "Top themes",
+        desc: "Surface what matters most",
+      },
+    ],
+    cta: "See Insights",
   },
 ];
 
@@ -583,10 +681,8 @@ export const shouldTrackEvent = (
   }
 };
 
-
-
 // Converts hex color to rgba with custom alpha
- export const hexToRgba = (hex: string, alpha: number) => {
+export const hexToRgba = (hex: string, alpha: number) => {
   const cleanHex = hex.replace("#", "");
   const bigint = parseInt(cleanHex, 16);
 
@@ -596,3 +692,74 @@ export const shouldTrackEvent = (
 
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
+
+export const useCases: UseCase[] = [
+  {
+    eyebrow: "Customer research",
+    title: "Customer research",
+    description:
+      "Go deeper than NPS. Uncover motivations, frustrations, and opportunities through adaptive conversations.",
+    mockupLabel: "Customer research",
+    color: "uc-color-blue",
+  },
+  {
+    eyebrow: "Product feedback",
+    title: "Product feedback",
+    description:
+      "Validate ideas, prioritize your roadmap, and understand what users actually need before building.",
+    mockupLabel: "Product feedback",
+    color: "uc-color-violet",
+  },
+  {
+    eyebrow: "Marketing research",
+    title: "Marketing research",
+    description:
+      "Test messaging, understand audience intent, and learn what makes people choose, trust, or ignore your offer.",
+    mockupLabel: "Marketing research",
+    color: "uc-color-emerald",
+  },
+  {
+    eyebrow: "Physical products",
+    title: "Physical product testing",
+    description:
+      "Collect feedback for products like lipstick, perfume, packaging, or 3D product experiences before launch.",
+    mockupLabel: "Physical product testing",
+    color: "uc-color-amber",
+  },
+];
+
+export const oldWayItems = [
+  {
+    icon: EyeOff,
+    title: "Hidden friction",
+    description: "Users hesitate, scroll, and change answers — unseen.",
+  },
+  {
+    icon: CircleDot,
+    title: "Surface-level responses",
+    description: "You get the responses, not the reason behind it.",
+  },
+  {
+    icon: Img,
+    title: "Flat product feedback",
+    description: "Images and text fall short for visual or physical products.",
+  },
+];
+
+export const newWayItems = [
+  {
+    icon: Crosshair,
+    title: "Intent-aware feedback",
+    description: "Connect responses with behavior to understand real intent.",
+  },
+  {
+    icon: Activity,
+    title: "Behavioral insights",
+    description: "Spot uncertainty, confusion, and confidence in interactions.",
+  },
+  {
+    icon: Box,
+    title: "3D product feedback",
+    description: "Let users explore products naturally before responding.",
+  },
+];

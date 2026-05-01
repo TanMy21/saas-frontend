@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { zodResolver } from "@hookform/resolvers/zod"; 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
@@ -98,7 +97,7 @@ const ShowQuestionSettings = () => {
         sx={{
           width: "100%",
           backgroundColor: "#FFFFFF",
-          borderTop: "1px solid #E0E0E0",
+          borderBottom: "1px solid #E0E0E0",
           borderRadius: 0,
           boxShadow: "none",
           "&:before": { display: "none" },
@@ -128,9 +127,6 @@ const ShowQuestionSettings = () => {
               color: "#453F46",
             }}
           >
-            <CheckCircleOutlineIcon
-              sx={{ color: "#752FEC", fontSize: "20px" }}
-            />
             <Tooltip title="Set whether the question is shown or not">
               <Typography>Show Question</Typography>
             </Tooltip>

@@ -100,7 +100,7 @@ export const QuestionTypeMutationSettings = () => {
         sx={{
           width: "100%",
           backgroundColor: "#FFFFFF",
-          borderTop: "1px solid #E0E0E0",
+          borderBottom: "1px solid #E0E0E0",
           boxShadow: "none",
         }}
         disableGutters
@@ -146,6 +146,25 @@ export const QuestionTypeMutationSettings = () => {
                 value={displayType || ""}
                 disabled={isLoading}
                 onChange={(e) => changeType(e.target.value as QuestionType)}
+                sx={{
+                  bgcolor: "#F3F4F6",
+                  borderRadius: 2,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
+                  "& .MuiSelect-select": {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    py: 1.2,
+                  },
+                }}
               >
                 {availableTypes.map((q) => (
                   <MenuItem key={q!.type} value={q!.type}>

@@ -123,7 +123,6 @@ const MediaOptionSettings = () => {
             color: "#453F46",
           }}
         >
-          <BiSolidSelectMultiple style={{ color: "#752FEC" }} />
           <Tooltip title="Typography settings for question text and description">
             <Typography>Multiple selection</Typography>
           </Tooltip>

@@ -1,261 +1,237 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
-
+import { FeatureItem, FeaturesProps } from "../../types/landingTypes";
 import { features } from "../../utils/utils";
 
-const Features = () => {
-  const [activeFeature, setActiveFeature] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+/**
+ * getScrollViewportHeight
+ * Returns the correct viewport height for either parent-container scroll or normal window scroll.
+ */
+function getScrollViewportHeight(scrollParent: HTMLDivElement | null) {
+  return scrollParent ? scrollParent.clientHeight : window.innerHeight;
+}
 
-  const cycleDuration = 6000;
-  const transitionDuration = 200;
+/**
+ * formatMultilineTitle
+ * Converts "\n" in feature titles into line breaks for clean headline layout.
+ */
+function formatMultilineTitle(title: string) {
+  return title.split("\n").map((line) => (
+    <span key={line}>
+      {line}
+      <br />
+    </span>
+  ));
+}
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(0);
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setActiveFeature((current) => (current + 1) % features.length);
-        setIsTransitioning(false);
-      }, transitionDuration);
-    }, cycleDuration);
-
-    const progressInterval = setInterval(() => {
-      setProgress((prev) =>
-        prev >= 100 ? 100 : prev + 100 / (cycleDuration / 50)
-      );
-    }, 50);
-
-    return () => {
-      clearInterval(interval);
-      clearInterval(progressInterval);
-    };
-  }, []);
-
-  const handleTabClick = (index: number) => {
-    setActiveFeature(index);
-    setProgress(0);
-    setIsTransitioning(false);
-  };
-
-  const currentFeature = features[activeFeature];
-  const IconComponent = currentFeature.icon;
+/**
+ * FeatureMockup
+ * Right-side placeholder mockup for the active feature.
+ * Later you can replace this with real dashboard/survey/3D UI.
+ */
+function FeatureMockup({ feature }: { feature: FeatureItem }) {
+  const Icon = feature.icon;
 
   return (
-    <Box
-      sx={{
-        height: "600px",
-        background: "white",
-        py: 12,
-      }}
-    >
-      <Container maxWidth="lg">
-        {/* Tabs */}
-        <Box display="flex" justifyContent="center" mb={8}>
-          <Box display="flex" gap={8}>
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              const isActive = activeFeature === index;
+    <div className={`feature-mockup-panel ${feature.color}`}>
+      <div className="feature-mockup-dots">
+        <span />
+        <span />
+        <span />
+      </div>
 
-              return (
-                <Button
-                  key={feature.id}
-                  onClick={() => handleTabClick(index)}
-                  sx={{
-                    position: "relative",
-                    width: 140,
-                    height: 48,
-                    borderRadius: 4,
-                    textTransform: "none",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 600,
-                    fontSize: "0.75rem",
-                    py:4,
-                    color: isActive ? "#fff" : "text.secondary",
-                    bgcolor: isActive ? "primary.main" : "#fff",
-                    boxShadow: isActive ? 4 : 1,
-                    transform: isActive ? "scale(1.1)" : "scale(1)",
-                    transition: "all 0.3s ease",
-                    overflow: "hidden",
-                    "&:hover": {
-                      bgcolor: isActive ? "primary.dark" : "grey.100",
-                    },
-                  }}
-                >
-                  {/* Progress animation background */}
-                  {isActive && (
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        width: `${progress}%`,
-                        backgroundColor: "primary.dark",
-                        zIndex: 0,
-                        transition: "width 0.05s linear",
-                      }}
-                    />
-                  )}
-                  <Box
-                    sx={{
-                      position: "relative",
-                      zIndex: 1,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
+      <div className="feature-mockup-card">
+        <div className="feature-mockup-icon">
+          <Icon size={32} />
+        </div>
+
+        <div className="feature-mockup-step">Step {feature.step}</div>
+
+        <div className="feature-mockup-title">{feature.label}</div>
+
+        <div className="feature-mockup-line" />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Features
+ * Sticky scroll-driven feature section.
+ * Active feature changes based on parent page scroll, similar to the UseCases section.
+ */
+const Features = ({ scrollParentRef }: FeaturesProps) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    /**
+     * handleScroll
+     * Calculates scroll progress inside the Features section and maps it to the active feature index.
+     */
+    const handleScroll = () => {
+      const container = containerRef.current;
+      const scrollParent = scrollParentRef?.current ?? null;
+
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      const viewportHeight = getScrollViewportHeight(scrollParent);
+
+      // How much of this section has moved past the top of the viewport.
+      const scrollDistance = -rect.top;
+
+      // Total scroll distance available after one sticky viewport is removed.
+      const scrollableHeight = Math.max(rect.height - viewportHeight, 1);
+
+      if (scrollDistance <= 0) {
+        setActiveIndex(0);
+        return;
+      }
+
+      if (scrollDistance >= scrollableHeight) {
+        setActiveIndex(features.length - 1);
+        return;
+      }
+
+      // Converts current scroll position into progress between 0 and 1.
+      const progress = scrollDistance / scrollableHeight;
+
+      // Converts progress into the active feature index.
+      const nextIndex = Math.floor(progress * features.length);
+
+      setActiveIndex(Math.min(nextIndex, features.length - 1));
+    };
+
+    const scrollParent = scrollParentRef?.current ?? null;
+    const scrollTarget: HTMLElement | Window = scrollParent ?? window;
+
+    scrollTarget.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    // Initializes correct active feature on mount.
+    handleScroll();
+
+    return () => {
+      scrollTarget.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [scrollParentRef]);
+
+  return (
+    <section className="feature-scroll-section">
+      <div
+        ref={containerRef}
+        className="feature-scroll-container"
+        style={{
+          // One viewport of scroll distance for each feature.
+          height: `${features.length * 100}vh`,
+        }}
+      >
+        <div className="feature-sticky-wrapper">
+          <div className="feature-inner">
+            <div className="feature-layout">
+              <div className="feature-left-column">
+                <div className="feature-static-content">
+                  <h2 className="feature-main-title">
+                    Everything you need to collect smarter feedback
+                  </h2>
+
+                  <p className="feature-main-subtitle">
+                    Create interactive surveys, capture richer responses, track
+                    behavior, and turn feedback into decisions.
+                  </p>
+                </div>
+
+                <div className="feature-dynamic-content">
+                  {features.map((feature, index) => {
+                    const Icon = feature.icon;
+
+                    return (
+                      <div
+                        key={feature.key}
+                        className={`feature-dynamic-item ${
+                          activeIndex === index ? "feature-active" : ""
+                        }`}
+                      >
+                        <div className="feature-step-row">
+                          <div className={`feature-step-icon ${feature.color}`}>
+                            <Icon size={20} />
+                          </div>
+
+                          <span className="feature-step-text">
+                            {feature.step} / {feature.label}
+                          </span>
+                        </div>
+
+                        <h3 className="feature-title">
+                          {formatMultilineTitle(feature.title)}
+                        </h3>
+
+                        <p className="feature-description">
+                          {feature.description}
+                        </p>
+
+                        <div className="feature-bullets">
+                          {feature.bullets.map((bullet) => {
+                            const BulletIcon = bullet.icon;
+
+                            return (
+                              <div
+                                key={bullet.title}
+                                className="feature-bullet-item"
+                              >
+                                <div className="feature-bullet-icon">
+                                  <BulletIcon size={18} />
+                                </div>
+
+                                <div>
+                                  <div className="feature-bullet-title">
+                                    {bullet.title}
+                                  </div>
+
+                                  <div className="feature-bullet-desc">
+                                    {bullet.desc}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="feature-right-column">
+                {features.map((feature, index) => (
+                  <div
+                    key={feature.key}
+                    className={`feature-mockup-layer ${
+                      activeIndex === index ? "feature-active" : ""
+                    }`}
                   >
-                    <Icon size={24} style={{ marginBottom: 4 }} />
-                    {feature.title}
-                  </Box>
-                </Button>
-              );
-            })}
-          </Box>
-        </Box>
-
-        {/* Main Content */}
-        <Grid
-          container
-          spacing={8}
-          alignItems="center"
-          sx={{
-            opacity: isTransitioning ? 0 : 1,
-            transition: "opacity 0.3s ease",
-          }}
-        >
-          {/* Left column */}
-          <Grid item xs={12} lg={6}>
-            <Box display="flex" alignItems="center" gap={2} mb={4}>
-              <Box
-                sx={{
-                  p: 2,
-                  bgcolor: "primary.main",
-                  borderRadius: 4,
-                  display: "flex",
-                }}
-              >
-                <IconComponent size={32} style={{ color: "#fff" }} />
-              </Box>
-              <Typography variant="h4" fontWeight="bold" color="text.primary">
-                {currentFeature.title}
-              </Typography>
-            </Box>
-
-            <Typography variant="body1" color="text.secondary" mb={4}>
-              {currentFeature.description}
-            </Typography>
-
-            <Box mb={4}>
-              <Typography variant="h6" fontWeight={600} mb={2}>
-                Key Benefits:
-              </Typography>
-              <Grid container spacing={2}>
-                {[
-                  "Easy to use",
-                  "Fast performance",
-                  "Reliable support",
-                  "Scalable solution",
-                ].map((benefit, i) => (
-                  <Grid item xs={6} key={i}>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <Box
-                        sx={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: "50%",
-                          bgcolor: "primary.main",
-                        }}
-                      />
-                      <Typography variant="body2" color="text.primary">
-                        {benefit}
-                      </Typography>
-                    </Box>
-                  </Grid>
+                    <FeatureMockup feature={feature} />
+                  </div>
                 ))}
-              </Grid>
-            </Box>
+              </div>
+            </div>
 
-            <Button
-              variant="contained"
-              sx={{
-                textTransform: "none",
-                px: 4,
-                py: 2,
-                borderRadius: 2,
-                fontWeight: 600,
-                boxShadow: 4,
-                bgcolor: "primary.main",
-                "&:hover": {
-                  bgcolor: "primary.dark",
-                  boxShadow: 6,
-                },
-              }}
-            >
-              Learn More
-            </Button>
-          </Grid>
-
-          {/* Right column */}
-          <Grid item xs={12} lg={6}>
-            <Box position="relative">
-              <Box
-                component="img"
-                src={currentFeature.image}
-                alt={currentFeature.title}
-                sx={{
-                  width: "100%",
-                  height: { xs: 400, md: 500 },
-                  objectFit: "cover",
-                  borderRadius: 6,
-                  boxShadow: 6,
-                }}
-              />
-              <Box
-                sx={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(to top, rgba(0,0,0,0.2), transparent)",
-                  borderRadius: 6,
-                }}
-              />
-
-              {/* Decorative circles */}
-              <Box
-                sx={{
-                  position: "absolute",
-                  bottom: -24,
-                  left: -24,
-                  width: 96,
-                  height: 96,
-                  borderRadius: "50%",
-                  bgcolor: "primary.light",
-                  opacity: 0.6,
-                }}
-              />
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  right: -32,
-                  width: 64,
-                  height: 64,
-                  borderRadius: "50%",
-                  bgcolor: "#ddd6fe", // purple-200
-                  opacity: 0.4,
-                }}
-              />
-            </Box>
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
+            <div className="feature-progress">
+              {features.map((feature, index) => (
+                <div
+                  key={feature.key}
+                  className={`feature-progress-dot ${
+                    activeIndex === index ? "feature-active" : ""
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 

@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; 
 import {
   Accordion,
   AccordionDetails,
@@ -100,7 +99,7 @@ const QuestionTextandDescriptionSettings = () => {
       sx={{
         width: "100%",
         backgroundColor: "#FFFFFF",
-        borderTop: "1px solid #E0E0E0",
+        borderBottom: "1px solid #E0E0E0",
         boxShadow: "none",
       }}
       disableGutters
@@ -125,7 +124,7 @@ const QuestionTextandDescriptionSettings = () => {
             color: "#453F46",
           }}
         >
-          <HelpOutlineIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
+           
           <Tooltip title="Set the question text and description for your question">
             <Typography>Question</Typography>
           </Tooltip>

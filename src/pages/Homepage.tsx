@@ -1,20 +1,22 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
-import { Box, Container } from "@mui/material";
-
+import CTA from "../components/landingpage/CTA";
 import Features from "../components/landingpage/Features";
 import Footer from "../components/landingpage/Footer";
 import Header from "../components/landingpage/Header";
 import HeroSection from "../components/landingpage/HeroSection";
-import StatsSection from "../components/landingpage/StatsSection";
+import HowItWorks from "../components/landingpage/HowItWorks";
+import ProblemSolution from "../components/landingpage/ProblemSolution";
+import UseCases from "../components/landingpage/UseCases";
 import SuccessfullLogoutToast from "../components/toast/SuccessfullLogoutToast";
-import { useAppTheme } from "../theme/useAppTheme";
+import "../styles/landing.css";
 
 const Homepage = () => {
-  const { background } = useAppTheme();
   const params = new URLSearchParams(location.search);
   const successfulLogout = params.get("logout") === "success";
   const [showLogoutAlert, setShowLogoutAlert] = useState(true);
+
+  const pageScrollRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <>
@@ -24,44 +26,40 @@ const Homepage = () => {
           setShowLogoutAlert={setShowLogoutAlert}
         />
       )}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          overflowX: "hidden",
-          overflowY: "auto",
-          backgroundColor: background.paper,
-        }}
-      >
-        <Header />
-        {/* Hero Section */}
-        <Box sx={{ width: "100%", backgroundColor: "#FFFFFF", py: 10 }}>
-          <Container maxWidth="lg">
+      <div ref={pageScrollRef} className="lp-root">
+        {/* HERO */}
+        <section className="lp-hero">
+          <Header />
+
+          <div className="lp-container hero-inner">
             <HeroSection />
-          </Container>
-        </Box>
+          </div>
+        </section>
 
-        {/* Stats section */}
-        <Box sx={{ width: "100%", backgroundColor: "#F9FAFB", py: 10 }}>
-          <Container maxWidth="lg">
-            <StatsSection />
-          </Container>
-        </Box>
+        <section className="lp-section problem">
+          <div className="lp-container">
+            <ProblemSolution />
+          </div>
+        </section>
 
-        {/* Features */}
-        <Box sx={{ width: "100%", backgroundColor: "#FFFFFF", py: 10 }}>
-          <Container maxWidth="lg">
-            <Features />
-          </Container>
-        </Box>
+        <section className="lp-section how">
+          <div className="lp-container">
+            <HowItWorks />
+          </div>
+        </section>
 
-        {/* Footer */}
-        <Box width="100%">
-          <Footer />
-        </Box>
-      </Box>
+        <Features scrollParentRef={pageScrollRef} />
+
+        <UseCases scrollParentRef={pageScrollRef} />
+
+        <section className="lp-section cta">
+          <div className="lp-container">
+            <CTA />
+          </div>
+        </section>
+
+        <Footer />
+      </div>
     </>
   );
 };

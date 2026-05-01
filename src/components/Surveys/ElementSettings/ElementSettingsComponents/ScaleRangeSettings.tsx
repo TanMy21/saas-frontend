@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import LinearScaleIcon from "@mui/icons-material/LinearScale";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; 
 import {
   Accordion,
   AccordionDetails,
@@ -135,7 +134,7 @@ const ScaleRangeSettings = () => {
       sx={{
         width: "100%",
         backgroundColor: "#FFFFFF",
-        borderTop: "1px solid #E0E0E0",
+        borderBottom: "1px solid #E0E0E0",
         borderRadius: 0,
         boxShadow: "none",
       }}
@@ -157,7 +156,6 @@ const ScaleRangeSettings = () => {
             color: "#453F46",
           }}
         >
-          <LinearScaleIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
           <Tooltip title="Set the range for the slider">
             <Typography>Slider range</Typography>
           </Tooltip>

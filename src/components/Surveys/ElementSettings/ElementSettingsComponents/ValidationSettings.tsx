@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
@@ -128,9 +127,6 @@ const ValidationSettings = () => {
               color: "#453F46",
             }}
           >
-            <CheckCircleOutlineIcon
-              sx={{ color: "#752FEC", fontSize: "20px" }}
-            />
             <Tooltip title="Set whether the response to question is required or not">
               <Typography>Response required</Typography>
             </Tooltip>

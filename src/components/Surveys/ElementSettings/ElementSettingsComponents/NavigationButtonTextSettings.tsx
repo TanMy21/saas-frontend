@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import NavigationIcon from "@mui/icons-material/Navigation";
 import {
   Accordion,
   AccordionDetails,
@@ -104,7 +103,7 @@ const NavigationButtonTextSettings = () => {
         sx={{
           width: "100%",
           backgroundColor: "#FFFFFF",
-          borderTop: "1px solid #E0E0E0",
+          borderBottom: "1px solid #E0E0E0",
           borderRadius: 0,
           boxShadow: "none",
         }}
@@ -130,7 +129,6 @@ const NavigationButtonTextSettings = () => {
               color: "#453F46",
             }}
           >
-            <NavigationIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
             <Tooltip title="Set the text on the navigation button">
               <Typography>Navigation button</Typography>
             </Tooltip>

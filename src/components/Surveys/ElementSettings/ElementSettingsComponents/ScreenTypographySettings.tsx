@@ -207,7 +207,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
         sx={{
           width: "100%",
           backgroundColor: "#FFFFFF",
-          borderTop: "1px solid #E0E0E0",
+          borderBottom: "1px solid #E0E0E0",
           borderRadius: 0,
           boxShadow: "none",
           "&:before": { display: "none" },
@@ -231,7 +231,6 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
               color: "#453F46",
             }}
           >
-            <FiType style={{ color: "#752FEC" }} />
             <Tooltip title="Typography settings for question text and description">
               <Typography>Typography</Typography>
             </Tooltip>

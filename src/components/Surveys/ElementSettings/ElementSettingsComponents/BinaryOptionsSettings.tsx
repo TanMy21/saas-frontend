@@ -137,7 +137,6 @@ const BinaryOptionsSettings = () => {
             color: "#453F46",
           }}
         >
-          <ListIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
           <Tooltip title="Set the text for the options">
             <Typography>Options</Typography>
           </Tooltip>

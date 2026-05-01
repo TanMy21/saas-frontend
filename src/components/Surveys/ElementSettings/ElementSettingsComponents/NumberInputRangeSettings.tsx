@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import LinearScaleIcon from "@mui/icons-material/LinearScale";
 import {
   Accordion,
   AccordionDetails,
@@ -151,7 +150,6 @@ const NumberInputRangeSettings = () => {
             color: "#453F46",
           }}
         >
-          <LinearScaleIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
           <Tooltip title="Set the input range for the number input">
             <Typography>Input range</Typography>
           </Tooltip>
@@ -327,8 +325,7 @@ const NumberInputRangeSettings = () => {
                         textOverflow: "ellipsis",
                         fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
                         fontWeight: 500,
-                      cursor: canEditQuestion ? "default" : "not-allowed",
-
+                        cursor: canEditQuestion ? "default" : "not-allowed",
                       },
                       "& .MuiInputBase-root": {
                         borderRadius: "8px",
