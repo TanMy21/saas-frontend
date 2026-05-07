@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { type Transition } from "motion/react";
 
-import { FeatureItem, UseCase } from "../types/landingTypes";
+import { FeatureItem, Step, UseCase } from "../types/landingTypes";
 
 import { OPTION_TYPES, SINGLE_VALUE_TYPES } from "./constants";
 import {
@@ -698,7 +698,7 @@ export const useCases: UseCase[] = [
     eyebrow: "Customer research",
     title: "Customer research",
     description:
-      "Go deeper than NPS. Uncover motivations, frustrations, and opportunities through adaptive conversations.",
+      "Understand people’s needs, pain points, and expectations through richer feedback.",
     mockupLabel: "Customer research",
     color: "uc-color-blue",
   },
@@ -722,8 +722,8 @@ export const useCases: UseCase[] = [
     eyebrow: "Physical products",
     title: "Physical product testing",
     description:
-      "Collect feedback for products like lipstick, perfume, packaging, or 3D product experiences before launch.",
-    mockupLabel: "Physical product testing",
+      "Collect feedback on physical products, packaging, and 3D experiences before launch.",
+    mockupLabel: "Physical product",
     color: "uc-color-amber",
   },
 ];
@@ -761,5 +761,31 @@ export const newWayItems = [
     icon: Box,
     title: "3D product feedback",
     description: "Let users explore products naturally before responding.",
+  },
+];
+
+export const HowItWorksSteps: Step[] = [
+  {
+    title: "Create",
+    description:
+      "Build surveys with the question types, design, and flow you need.",
+    image:
+      "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=800",
+    alt: "Person working on a creative project outdoors",
+  },
+  {
+    title: "Share",
+    description: "Share by link, QR code, or embed it directly on your site.",
+    image:
+      "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=800",
+    alt: "Person focused on laptop in a studio",
+  },
+  {
+    title: "Understand",
+    description:
+      "See what users say, where they pause, and what their feedback really means.",
+    image:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800",
+    alt: "Woman observing feedback and insights",
   },
 ];

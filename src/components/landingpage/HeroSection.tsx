@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 
+import { MoveRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 const HeroSection = () => {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleStartFlow = () => {
+    navigate("/register");
+  };
 
   const openDemoModal = () => {
     setIsDemoOpen(true);
@@ -44,8 +52,8 @@ const HeroSection = () => {
             </p>
 
             <div className="hero-actions">
-              <button className="hero-primary-btn">
-                Create your first survey
+              <button className="hero-primary-btn" onClick={handleStartFlow}>
+                Start the flow <MoveRight />
               </button>
 
               <button
@@ -110,16 +118,6 @@ const HeroSection = () => {
 
             <div className="demo-modal-header">
               <p className="demo-modal-eyebrow">Product demo</p>
-
-              <h2 id="demo-modal-title" className="demo-modal-title">
-                See how smarter surveys work
-              </h2>
-
-              <p className="demo-modal-description">
-                This is a temporary demo shell. Later, you can replace this area
-                with a hosted video, YouTube embed, Vimeo embed, or your own CDN
-                video.
-              </p>
             </div>
 
             <div className="demo-video-shell">
@@ -128,9 +126,6 @@ const HeroSection = () => {
 
                 <div className="demo-video-text">
                   <strong>Demo video placeholder</strong>
-                  <span>
-                    Upload or embed your product walkthrough here later.
-                  </span>
                 </div>
               </div>
             </div>

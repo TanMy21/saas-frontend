@@ -1,20 +1,35 @@
 import { useEffect, useRef, useState } from "react";
 
+import CustomerResearchImg from "../../assets/customer research.webp";
+import MarketingResearchImg from "../../assets/marketing research.webp";
+import PhysicalResearchImg from "../../assets/physical product.webp";
+import ProductResearchImg from "../../assets/product research.webp";
 import { UseCasesProps } from "../../types/landingTypes";
 import { useCases } from "../../utils/utils";
 
-/**
- * getScrollViewportHeight
- * Returns the correct viewport height depending on whether the page scrolls on window or a parent div.
- */
 function getScrollViewportHeight(scrollParent: HTMLDivElement | null) {
   return scrollParent ? scrollParent.clientHeight : window.innerHeight;
 }
 
-/**
- * UseCases
- * Displays one sticky use case area while the active use case changes based on the parent page scroll.
- */
+const useCaseImages = [
+  {
+    src: CustomerResearchImg,
+    alt: "Customer research interview in a bright modern workspace",
+  },
+  {
+    src: ProductResearchImg,
+    alt: "Product team reviewing a physical product prototype and sketches",
+  },
+  {
+    src: MarketingResearchImg,
+    alt: "Marketing team discussing audience research on a strategy board",
+  },
+  {
+    src: PhysicalResearchImg,
+    alt: "Premium perfume bottle used for physical product feedback",
+  },
+];
+
 const UseCases = ({ scrollParentRef }: UseCasesProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -22,7 +37,7 @@ const UseCases = ({ scrollParentRef }: UseCasesProps) => {
   useEffect(() => {
     /**
      * handleScroll
-     * Reads this section's position inside the parent scroll flow and maps progress to active use case.
+     * Calculates scroll progress inside the UseCases section and maps it to the active use case index.
      */
     const handleScroll = () => {
       const container = containerRef.current;
@@ -81,7 +96,7 @@ const UseCases = ({ scrollParentRef }: UseCasesProps) => {
         ref={containerRef}
         className="uc-scroll-container"
         style={{
-          // Creates enough scroll distance for every use case.
+          // Creates enough scroll distance for every use case on desktop/tablet.
           height: `${useCases.length * 100}vh`,
         }}
       >
@@ -91,12 +106,12 @@ const UseCases = ({ scrollParentRef }: UseCasesProps) => {
               <div className="uc-left-column">
                 <div className="uc-static-content">
                   <h2 className="uc-main-title">
-                    Built for real-world feedback, not just forms
+                    Feedback for every kind of decision
                   </h2>
 
                   <p className="uc-main-subtitle">
-                    From digital experiences to physical products, understand
-                    what people think, do, and feel.
+                    Capture the signals behind every response and turn them into
+                    clearer direction.
                   </p>
                 </div>
 
@@ -108,8 +123,6 @@ const UseCases = ({ scrollParentRef }: UseCasesProps) => {
                         activeIndex === index ? "uc-active" : ""
                       }`}
                     >
-                      <span className="uc-eyebrow">{useCase.eyebrow}</span>
-
                       <h3 className="uc-use-case-title">{useCase.title}</h3>
 
                       <p className="uc-use-case-description">
@@ -121,28 +134,41 @@ const UseCases = ({ scrollParentRef }: UseCasesProps) => {
               </div>
 
               <div className="uc-right-column">
+                {useCases.map((useCase, index) => {
+                  const image = useCaseImages[index];
+
+                  return (
+                    <div
+                      key={useCase.mockupLabel}
+                      className={`uc-image-panel ${
+                        activeIndex === index ? "uc-active" : ""
+                      }`}
+                    >
+                      <img
+                        src={image.src}
+                        alt={image.alt}
+                        className="uc-use-case-image"
+                        loading="lazy"
+                        decoding="async"
+                      />
+
+                      <div className="uc-image-overlay">
+                        <span>{useCase.mockupLabel}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="uc-progress" aria-hidden="true">
                 {useCases.map((useCase, index) => (
                   <div
-                    key={useCase.mockupLabel}
-                    className={`uc-mockup-panel ${useCase.color} ${
+                    key={useCase.title}
+                    className={`uc-progress-dot ${
                       activeIndex === index ? "uc-active" : ""
                     }`}
-                  >
-                    <div className="uc-mockup-content">
-                      <div className="uc-mockup-title">
-                        {useCase.mockupLabel}
-                      </div>
-
-                      <div className="uc-mockup-line" />
-                    </div>
-                  </div>
+                  />
                 ))}
-
-                <div className="uc-window-dots">
-                  <div className="uc-window-dot" />
-                  <div className="uc-window-dot" />
-                  <div className="uc-window-dot" />
-                </div>
               </div>
             </div>
           </div>
@@ -151,5 +177,4 @@ const UseCases = ({ scrollParentRef }: UseCasesProps) => {
     </section>
   );
 };
-
 export default UseCases;

@@ -1,10 +1,16 @@
+import { useNavigate } from "react-router-dom";
+
 import Logo from "../../../public/Logo.png";
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleStartFlow = () => {
+    navigate("/register");
+  };
   return (
-  <div className="lp-header">
+    <div className="lp-header">
       <div className="lp-container header-inner">
-        
         {/* Logo */}
         <div className="logo-wrapper">
           <div className="logo-box">
@@ -15,10 +21,13 @@ const Header = () => {
 
         {/* Actions */}
         <div className="header-actions">
-          <a href="/login" className="login-link">Login</a>
-          <button className="btn-primary">Get Started</button>
+          <a href="/login" className="login-link">
+            Login
+          </a>
+          <button className="header-btn-primary" onClick={handleStartFlow}>
+            Get Started
+          </button>
         </div>
-
       </div>
     </div>
   );

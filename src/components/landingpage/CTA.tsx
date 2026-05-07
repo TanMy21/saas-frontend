@@ -1,19 +1,20 @@
 import { useState } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 const CTA = () => {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
 
-  /**
-   * Opens the demo video modal.
-   * Later, this modal can show a hosted video from YouTube, Vimeo, Cloudinary, S3, etc.
-   */
+  const navigate = useNavigate();
+
+  const handleStartFlow = () => {
+    navigate("/register");
+  };
+
   const handleOpenDemo = () => {
     setIsDemoOpen(true);
   };
 
-  /**
-   * Closes the demo video modal.
-   */
   const handleCloseDemo = () => {
     setIsDemoOpen(false);
   };
@@ -28,10 +29,14 @@ const CTA = () => {
             your users like never before?
           </h2>
 
-          <p className="cta-subtitle">Create your first survey in minutes</p>
+          <p className="cta-subtitle">
+            Create surveys that help you understand users better.
+          </p>
 
           <div className="cta-actions">
-            <button className="cta-btn primary">Get started for free</button>
+            <button className="cta-btn primary" onClick={handleStartFlow}>
+              Start creating
+            </button>
 
             <button
               type="button"

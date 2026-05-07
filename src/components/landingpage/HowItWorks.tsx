@@ -1,60 +1,58 @@
-import { ArrowRight } from "lucide-react";
- 
+import { useEffect, useRef, useState } from "react";
 
-type Step = {
-  title: string;
-  description: string;
-  image: string;
-  alt: string;
-};
+import { HowItWorksSteps } from "../../utils/utils";
 
 const HowItWorks = () => {
-  const steps: Step[] = [
-    {
-      title: "Create",
-      description:
-        "Build surveys in minutes with a clean builder. Add questions, customize design, and set branching logic without writing code.",
-      image:
-        "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=800",
-      alt: "Person working on a creative project outdoors",
-    },
-    {
-      title: "Share",
-      description:
-        "Send a survey link, embed it on your site, or share it with the right audience. Collect feedback wherever your users already are.",
-      image:
-        "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=800",
-      alt: "Person focused on laptop in a studio",
-    },
-    {
-      title: "Understand",
-      description:
-        "Go beyond answers. See patterns in responses, hesitation, drop-offs, time spent, and behavior signals that reveal what users really mean.",
-      image:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800",
-      alt: "Woman observing feedback and insights",
-    },
-  ];
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  /**
+   * Watches the How It Works section and starts the reveal animation
+   * only when the section enters the visible scroll area.
+   */
+  useEffect(() => {
+    const sectionElement = sectionRef.current;
+
+    if (!sectionElement) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+
+          // Stops observing after the first reveal so animation runs only once.
+          observer.unobserve(sectionElement);
+        }
+      },
+      {
+        // Starts animation when around 25% of the section is visible.
+        threshold: 0.25,
+      },
+    );
+
+    observer.observe(sectionElement);
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className="how-section">
+    <section
+      ref={sectionRef}
+      className={`how-section ${isVisible ? "how-visible" : ""}`}
+    >
       <div className="how-container">
         {/* Header */}
         <div className="how-header">
-          
-
-          <h2 className="how-title">
-         How feedback becomes insight
-          </h2>
+          <h2 className="how-title">Feedback to Insight</h2>
 
           <p className="how-subtitle">
-            Create, share, and understand feedback in one seamless flow.
+            Create, share, and understand in one simple flow.
           </p>
         </div>
 
         {/* Steps */}
         <div className="how-grid">
-          {steps.map((step, index) => (
+          {HowItWorksSteps.map((step, index) => (
             <div className="how-card" key={step.title}>
               {/* Number badge */}
               <div className="how-step-number">{index + 1}</div>
@@ -71,9 +69,6 @@ const HowItWorks = () => {
             </div>
           ))}
         </div>
-
-        
-        
       </div>
     </section>
   );

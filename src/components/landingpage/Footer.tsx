@@ -16,27 +16,23 @@ const Footer = () => {
 
           {/* Center navigation */}
           <nav className="footer-nav" aria-label="Footer navigation">
-            <a href="#features">Features</a>
-            <a href="#use-cases">Use cases</a>
+            <a href="#features">Privacy policy</a>
+            <a href="#use-cases">Terms of use</a>
             <a href="#pricing">Pricing</a>
             <a href="#company">Company</a>
           </nav>
 
           {/* Right side replacement for social icons */}
           <div className="footer-actions">
-            <a href="#get-started" className="footer-cta">
-              Get started
+            <a href="/register" className="footer-cta">
+              Try it now
             </a>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="footer-divider" />
-
         {/* Bottom row */}
         <div className="footer-bottom">
           <p>© 2026 Feedflo. All rights reserved.</p>
-          <p>Made with ❤️ for better insights</p>
         </div>
       </div>
     </footer>

@@ -36,3 +36,10 @@ export type UseCase = {
 export type UseCasesProps = {
   scrollParentRef?: RefObject<HTMLDivElement | null>;
 };
+
+export type Step = {
+  title: string;
+  description: string;
+  image: string;
+  alt: string;
+};
