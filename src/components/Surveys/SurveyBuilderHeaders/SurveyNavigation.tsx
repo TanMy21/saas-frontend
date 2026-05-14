@@ -1,5 +1,6 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { Box, IconButton, Tooltip } from "@mui/material";
+import { Lock } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { useAppTheme } from "../../../theme/useAppTheme";
@@ -10,6 +11,7 @@ const SurveyNavigation = ({
   workspaceName,
   survey,
   surveyTitle,
+  isLocked,
 }: SurveyBuilderHeaderProps) => {
   const navigate = useNavigate();
   const { grey, text } = useAppTheme();
@@ -147,6 +149,33 @@ const SurveyNavigation = ({
               &nbsp; {surveyTitle ? surveyTitle : survey?.title}
             </Box>
           </Tooltip>
+
+          {isLocked && (
+            <Box
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                height: "20px",
+                px: "8px",
+                borderRadius: "999px",
+                flexShrink: 0,
+                marginLeft: "12px",
+
+                color: "#9F1239",
+                backgroundColor: "#FFF1F2",
+                border: "1px solid #FECDD3",
+
+                fontSize: "16px",
+                fontWeight: 700,
+                lineHeight: 1,
+                letterSpacing: "0.01em",
+              }}
+            >
+              <Lock size={14} strokeWidth={4} />
+              Locked
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

@@ -3,12 +3,18 @@ import { Box, Typography } from "@mui/material";
 import { useAppSelector } from "../app/typedReduxHooks";
 import { ImportQuestionsLoader } from "../components/Loaders/ImportQuestionsLoader";
 
+import GlobalSimpleLoader from "./GlobalSimpleLoader";
+
 export const GlobalImportLoaderOverlay = () => {
-  const { overlayOpen, overlayMessage } = useAppSelector(
+  const { overlayOpen, overlayMessage, overlayVariant } = useAppSelector(
     (state) => state.overlayUI,
   );
 
   if (!overlayOpen) return null;
+
+  if (overlayVariant === "SIMPLE") {
+    return <GlobalSimpleLoader overlayMessage={overlayMessage} />;
+  }
 
   return (
     <Box

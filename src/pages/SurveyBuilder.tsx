@@ -96,6 +96,7 @@ const SurveyBuilder = () => {
     shareID,
     published,
     workspace,
+    isLocked,
   } = getSurveyCanvas ?? {};
 
   const { workspaceId, workspaceName } = workspace || {};
@@ -196,6 +197,7 @@ const SurveyBuilder = () => {
               workspaceId={workspaceId}
               workspaceName={workspaceName}
               title={title}
+              isLocked={isLocked}
             />
           </Box>
           {/* Builder */}
@@ -239,6 +241,7 @@ const SurveyBuilder = () => {
                 shareID={shareID}
                 published={published}
                 title={title}
+                isLocked={isLocked}
                 onOpenImport={() => setOpenImportLocal(true)}
               />
             </Box>

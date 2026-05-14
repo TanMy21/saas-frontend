@@ -186,6 +186,7 @@ const SurveyBuilderDock = ({
   published,
   onOpenImport,
   title,
+  isLocked,
 }: SurveyIslandProps) => {
   const dispatch = useAppDispatch();
   const { surveyID } = useParams();
@@ -313,6 +314,7 @@ const SurveyBuilderDock = ({
           setOpenSnackbar={setOpenSnackbar}
           shareID={shareID}
           title={title}
+          isLocked={isLocked}
         />
 
         {can?.("UPDATE_SURVEY") && (

@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
 import { CanvasConsoleProps } from "../utils/types";
 
 import PublishSurveyAlert from "./alert/PublishSurveyAlert";
+import SurveyLockedBanner from "./alert/SurveyLockedBanner";
 import SurveyWelcomeElement from "./Surveys/Elements/SurveyWelcomeElement";
 import SurveyBuilderCanvas from "./Surveys/SurveyBuilderCanvas";
 import SurveyBuilderCanvasMobile from "./Surveys/SurveyBuilderCanvasMobile";
@@ -25,13 +26,14 @@ const CanvasConsole = ({
   published,
   onOpenImport,
   title,
+  isLocked,
 }: CanvasConsoleProps) => {
   const dispatch = useAppDispatch();
 
   let content;
 
   const publishAlertOpen = useAppSelector(
-    (s: RootState) => s.overlayUI.publishAlertOpen
+    (s: RootState) => s.overlayUI.publishAlertOpen,
   );
 
   const setPublishOpen: React.Dispatch<React.SetStateAction<boolean>> =
@@ -45,7 +47,7 @@ const CanvasConsole = ({
         if (next) dispatch(openPublishAlert());
         else dispatch(closePublishAlert());
       },
-      [dispatch, publishAlertOpen]
+      [dispatch, publishAlertOpen],
     );
 
   if (noElements) {
@@ -68,25 +70,31 @@ const CanvasConsole = ({
         published={published}
         onOpenImport={onOpenImport}
         title={title}
+        isLocked={isLocked}
       />
-      <Box
-      />
+      <Box />
+
+      {isLocked && <SurveyLockedBanner />}
+
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           marginLeft: "1%",
-          marginTop: "1%",
+          marginTop: isLocked ? 0 : "1%",
           maxWidth: "98%",
           height: "80vh",
-          overflow:"hidden",
+          overflow: "hidden",
           // border: "2px solid green",
         }}
       >
         {noElements ? (
           content
         ) : display === "mobile" ? (
-          <SurveyBuilderCanvasMobile canvasQuestion={question} display={display} />
+          <SurveyBuilderCanvasMobile
+            canvasQuestion={question}
+            display={display}
+          />
         ) : (
           <SurveyBuilderCanvas canvasQuestion={question} display={display} />
         )}

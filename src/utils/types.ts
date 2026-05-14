@@ -115,6 +115,7 @@ export interface CanvasConsoleProps {
   published: boolean;
   noElements: boolean;
   title: string;
+  isLocked: boolean;
 }
 
 type ExportMode = "ALL" | "SELECTED";
@@ -814,7 +815,7 @@ export interface UIState {
   overlayMessage?: string;
   publishAlertOpen?: boolean;
   shareModalOpen?: boolean;
-  overlayVariant?: "IMPORT" | "GENERATE" | "FEEDBACK";
+  overlayVariant?: "IMPORT" | "GENERATE" | "FEEDBACK" | "SIMPLE";
 }
 
 export type QuestionTypeKey =
@@ -1297,6 +1298,7 @@ export interface ShareSurveyProps {
   openSnackbar: boolean;
   shareID: string;
   title: string;
+  isLocked: boolean;
   setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -1317,6 +1319,7 @@ export interface SurveyIslandProps {
   shareID: string;
   published: boolean;
   title: string;
+  isLocked: boolean;
 }
 
 export interface SurveyDropDownMenuProps {
@@ -1333,6 +1336,7 @@ export interface SurveyBuilderHeaderProps {
   title?: string;
   tabValue?: string;
   surveyTitle?: string;
+  isLocked?: boolean;
 }
 
 export interface SurveyBuilderHeaderTabsProps {

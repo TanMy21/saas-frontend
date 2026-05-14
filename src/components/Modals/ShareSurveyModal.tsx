@@ -10,6 +10,7 @@ import { useAppSelector } from "../../app/store";
 import { useAppDispatch } from "../../app/typedReduxHooks";
 import { TabType } from "../../types/surveyBuilderTypes";
 import { ShareSurveyProps } from "../../utils/types";
+import ShareLockedSurveyNotice from "../alert/ShareLockedSurveyNotice";
 import ShareEmail from "../ModalComponents/ShareEmail";
 import ShareEmbed from "../ModalComponents/ShareEmbed";
 import ShareLink from "../ModalComponents/ShareLink";
@@ -20,6 +21,7 @@ const ShareSurveyModal = ({
   setOpenSnackbar,
   shareID,
   title,
+  isLocked,
 }: ShareSurveyProps) => {
   const { surveyID } = useParams();
   const dispatch = useAppDispatch();
@@ -72,6 +74,9 @@ const ShareSurveyModal = ({
         <Box>
           <ShareModalTabs tab={tab} setTab={setTab} />
         </Box>
+
+        {/* LOCKED SURVEY NOTICE */}
+        {isLocked && <ShareLockedSurveyNotice />}
 
         {/* CONTENT */}
         <Box sx={{ p: 3 }}>

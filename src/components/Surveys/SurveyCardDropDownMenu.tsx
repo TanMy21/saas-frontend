@@ -162,8 +162,15 @@ const SurveyCardDropDownMenu = ({
   const handleCopyTo = async (wID: string) => {
     handleClose();
     try {
-      dispatch(showOverlay({ message: "Copying survey…" }));
+      dispatch(showOverlay({ message: "Copying survey", variant: "SIMPLE" }));
       await copySurvey({ surveyID, workspaceId: wID });
+
+      toast.success("Copy Successfull!", {
+        position: "top-right",
+        autoClose: 3000,
+        closeOnClick: true,
+        theme: "colored",
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -173,18 +180,37 @@ const SurveyCardDropDownMenu = ({
 
   const handleMoveTo = async (wID: string) => {
     try {
+      dispatch(showOverlay({ message: "Moving survey", variant: "SIMPLE" }));
       await moveSurvey({ surveyID, workspaceId: wID });
+
+      toast.success("Survey moved Successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        closeOnClick: true,
+        theme: "colored",
+      });
     } catch (error) {
       console.log(error);
+    } finally {
+      handleClose();
+      dispatch(hideOverlay());
     }
-    handleClose();
   };
 
   const handleDuplicateSurvey = async (surveyID: string) => {
     handleClose();
     try {
-      dispatch(showOverlay({ message: "Duplicating survey…" }));
+      dispatch(
+        showOverlay({ message: "Duplicating survey", variant: "SIMPLE" }),
+      );
       await duplicateSurvey(surveyID);
+
+      toast.success("Survey duplicated Successfully!", {
+        position: "top-right",
+        autoClose: 2000,
+        closeOnClick: true,
+        theme: "colored",
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -219,33 +245,6 @@ const SurveyCardDropDownMenu = ({
   }, [survey.published]);
 
   useEffect(() => {
-    if (isSuccess) {
-      toast.success("Copy Successfull!", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        theme: "colored",
-      });
-    }
-
-    if (moveSuccess) {
-      toast.success("Survey moved Successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        theme: "colored",
-      });
-    }
-
-    if (surveyDuplicated) {
-      toast.success("Survey duplicated Successfully!", {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-        theme: "colored",
-      });
-    }
-
     if (isError) {
       const errorData = error as ErrorData;
       if (Array.isArray(errorData.data.error)) {
@@ -287,15 +286,12 @@ const SurveyCardDropDownMenu = ({
       }
     }
   }, [
-    isSuccess,
-    moveSuccess,
     moveIsError,
     isError,
     error,
     moveError,
     isErrorDuplicateSurvey,
     duplicateSurveyError,
-    surveyDuplicated,
   ]);
 
   return (

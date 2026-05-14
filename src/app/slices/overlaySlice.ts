@@ -18,7 +18,7 @@ const overlaySlice = createSlice({
       s,
       a: PayloadAction<{
         message?: string;
-        variant?: "IMPORT" | "GENERATE" | "FEEDBACK";
+        variant?: "IMPORT" | "GENERATE" | "FEEDBACK" | "SIMPLE";
       }>,
     ) => {
       s.overlayOpen = true;

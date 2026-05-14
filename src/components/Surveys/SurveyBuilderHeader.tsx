@@ -17,6 +17,7 @@ const SurveyBuilderHeader = ({
   survey,
   workspaceId,
   workspaceName,
+  isLocked,
 }: SurveyBuilderHeaderProps) => {
   const { surveyID } = useParams();
   const [tabValue, setTabValue] = useState<string>("create");
@@ -91,6 +92,7 @@ const SurveyBuilderHeader = ({
               surveyTitle={title}
               workspaceName={workspace?.name}
               workspaceId={workspaceId}
+              isLocked={isLocked}
             />
           </Box>
 
