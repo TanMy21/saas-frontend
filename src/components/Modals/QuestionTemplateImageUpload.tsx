@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import ClearIcon from "@mui/icons-material/Clear";
 import CloseIcon from "@mui/icons-material/Close";
@@ -8,16 +8,16 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
 import { FiUpload } from "react-icons/fi";
 import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
 
 import { useUploadQuestionTemplateImageMutation } from "../../app/slices/elementApiSlice";
 import { setTemplateImage } from "../../app/slices/elementSlice";
 import { updateElementField } from "../../app/slices/surveySlice";
 import { RootState } from "../../app/store";
 import { useAppSelector } from "../../app/typedReduxHooks";
+import { useToast } from "../../hooks/useToast";
 import { useAppTheme } from "../../theme/useAppTheme";
+import { showToast } from "../../utils/showToast";
 import {
-  ErrorData,
   QuestionImageUploadModalProps,
   SurveyCanvasQuestionSettings,
 } from "../../utils/types";
@@ -82,11 +82,8 @@ const QuestionTemplateImageUpload = ({
       }
     } catch (error) {
       console.error("Error uploading template:", error);
-      toast.error("Error uploading template image", {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-        theme: "colored",
+      showToast.error("Error uploading template image.", {
+        duration: 2000,
       });
     }
   };
@@ -104,29 +101,19 @@ const QuestionTemplateImageUpload = ({
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Template Saved !", {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-        theme: "colored",
-      });
+  useToast({
+    isSuccess,
+    isError: isErrorUploadImage,
+    error: errorUploadImage,
+    successMessage: "Template saved!",
+    errorFallbackMessage: "Could not save template. Please try again.",
+    successToastOptions: {
+      duration: 2000,
+    },
+    onSuccess: () => {
       setUploadImageModalOpen(false);
-    }
-
-    if (isErrorUploadImage) {
-      const errorData = errorUploadImage as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, { position: "top-right" }),
-        );
-      } else {
-        toast.error(errorData.data.message, { position: "top-right" });
-      }
-    }
-  }, [isErrorUploadImage, errorUploadImage, isSuccess]);
-
+    },
+  });
   return (
     <Modal
       open={uploadImageModalOpen}

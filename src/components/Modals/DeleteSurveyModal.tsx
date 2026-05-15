@@ -2,10 +2,10 @@ import { useEffect } from "react";
 
 import { Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 
 import { useDeleteSurveyMutation } from "../../app/slices/surveysApiSlice";
-import { ErrorData, SurveyDelete, SurveyRenameProps } from "../../utils/types";
+import { useToast } from "../../hooks/useToast";
+import { SurveyDelete, SurveyRenameProps } from "../../utils/types";
 import { ConfirmationInput } from "../ModalComponents/ConfirmationInput";
 import { DangerActions } from "../ModalComponents/DangerActions";
 import { DangerModalHeader } from "../ModalComponents/DangerModalHeader";
@@ -52,8 +52,6 @@ const DeleteSurveyModal = ({
     onClose();
   };
 
-  console.log("stitle", sTitle);
-
   useEffect(() => {
     if (open) {
       reset({ confirmationText: "" });
@@ -61,31 +59,16 @@ const DeleteSurveyModal = ({
     }
   }, [open, reset, setFocus]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Survey Deleted !", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        theme: "colored",
-      });
-    }
-
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isSuccess, isError, error]);
+  useToast({
+    isSuccess,
+    isError,
+    error,
+    successMessage: "Survey deleted!",
+    errorFallbackMessage: "Could not delete survey. Please try again.",
+    successToastOptions: {
+      duration: 3000,
+    },
+  });
 
   return (
     <DangerModalShell open={open} onClose={onClose}>

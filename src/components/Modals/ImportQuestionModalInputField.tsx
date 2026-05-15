@@ -3,12 +3,12 @@ import { useState } from "react";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { Box, Button, TextField, Tooltip } from "@mui/material";
 import { ReplaceAll, SquarePlus } from "lucide-react";
-import toast from "react-hot-toast";
 
 import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
 import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
+import { showToast } from "../../utils/showToast";
 import { ImportQuestionModalInputFieldProps } from "../../utils/types";
 import { ReplaceImportQuestionsDialog } from "../ModalComponents/ReplaceImportQuestionsDialog";
 
@@ -87,10 +87,12 @@ const ImportQuestionModalInputField = ({
 
       setImportText("");
       refetchCanvas();
-      toast.success("Questions imported successfully");
+      showToast.success("Questions imported successfully.");
       handleClose();
     } catch (error) {
-      toast.error("Failed to import questions.");
+      showToast.apiError(error, {
+        fallbackMessage: "Failed to import questions.",
+      });
       console.error(error);
     } finally {
       dispatch(hideOverlay());

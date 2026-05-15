@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -11,10 +9,10 @@ import {
 } from "@mui/material";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 
 import { useUpdateSurveyTitleandDescriptionMutation } from "../../app/slices/surveysApiSlice";
-import { ErrorData, SurveyNameProps } from "../../utils/types";
+import { useToast } from "../../hooks/useToast";
+import { SurveyNameProps } from "../../utils/types";
 
 const CreateNewSurveyModal = ({
   isOpen,
@@ -47,31 +45,16 @@ const CreateNewSurveyModal = ({
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Survey Created!", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        theme: "colored",
-      });
-    }
-
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isSuccess, isError, error]);
+  useToast({
+    isSuccess,
+    isError,
+    error,
+    successMessage: "Survey created!",
+    errorFallbackMessage: "Could not create survey. Please try again.",
+    successToastOptions: {
+      duration: 3000,
+    },
+  });
 
   return (
     <Modal open={isOpen} onClose={onClose}>

@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -12,14 +10,14 @@ import {
   RadioGroup,
 } from "@mui/material";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 
 import {
   useExportSelectedResponsesMutation,
   useExportSurveyFullMutation,
 } from "../../app/slices/exportDataApi";
+import { useToast } from "../../hooks/useToast";
 import { DownloadFormData, downloadDataSchema } from "../../utils/schema";
-import { DownloadResponsesModalProps, ErrorData } from "../../utils/types";
+import { DownloadResponsesModalProps } from "../../utils/types";
 
 const DownloadResponsesModal = ({
   rowData,
@@ -73,33 +71,17 @@ const DownloadResponsesModal = ({
     }
   };
 
-  useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, { position: "top-right" }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
+  useToast({
+    isError,
+    error,
+    errorFallbackMessage: "Could not complete the action. Please try again.",
+  });
 
-    if (isFullError) {
-      const errorData = fullError as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, { position: "top-right" }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isError, error]);
+  useToast({
+    isError: isFullError,
+    error: fullError,
+    errorFallbackMessage: "Could not load the full data. Please try again.",
+  });
 
   return (
     <Modal open={open} onClose={handleClose}>

@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
 import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
 import { ArrowRight, Edit3, Sparkles, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import { useCreateSurveyMutation } from "../../app/slices/surveysApiSlice";
 import { setGenerateModalOpen } from "../../app/slices/surveySlice";
 import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 // import { useAppTheme } from "../../theme/useAppTheme";
-import { ErrorData, NewSurveyModalProps } from "../../utils/types";
+import { useToast } from "../../hooks/useToast";
+import { NewSurveyModalProps } from "../../utils/types";
 
 const NewSurveyModal = ({
   open,
@@ -118,22 +118,10 @@ const NewSurveyModal = ({
     },
   ];
 
-  useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isError, error]);
+  useToast({
+    isError,
+    error,
+  });
 
   return (
     <Modal

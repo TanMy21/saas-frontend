@@ -1,10 +1,8 @@
-import { useEffect } from "react";
-
 import { Box } from "@mui/material";
-import { toast } from "react-toastify";
 
 import { useResetPasswordMutation } from "../../app/slices/authApiSlice";
-import { ErrorData, ResetPassword } from "../../utils/types";
+import { useToast } from "../../hooks/useToast";
+import { ResetPassword } from "../../utils/types";
 
 import NewPasswordForm from "./NewPasswordForm";
 import PasswordResetSuccessCard from "./PasswordResetSuccessCard";
@@ -13,23 +11,10 @@ const ResetPasswordCard = ({ code }: ResetPassword) => {
   const [resetPassword, { isSuccess, isError, error }] =
     useResetPasswordMutation();
 
-  useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isError, error]);
+  useToast({
+    isError,
+    error,
+  });
 
   return (
     <>

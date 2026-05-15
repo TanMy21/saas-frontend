@@ -2,9 +2,9 @@ import { useRef } from "react";
 
 import { Box, Typography, Button, IconButton } from "@mui/material";
 import { UploadCloud, X } from "lucide-react";
-import toast from "react-hot-toast";
 
 import { FeedbackScreenshotUploadProps } from "../../types/feedBackTypes";
+import { showToast } from "../../utils/showToast";
 
 const FeedbackScreenshotUpload = ({
   file,
@@ -16,12 +16,12 @@ const FeedbackScreenshotUpload = ({
     const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
 
     if (!allowedTypes.includes(selected.type)) {
-      toast.error("Only JPG and PNG images allowed");
+      showToast.error("Only JPG and PNG images are allowed.");
       return;
     }
 
     if (selected.size > 5 * 1024 * 1024) {
-      toast.error("File size must be less than 5MB");
+      showToast.error("File size must be less than 5 MB.");
       return;
     }
 

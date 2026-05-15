@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Box, CardMedia, IconButton } from "@mui/material";
 import { BiImageAdd } from "react-icons/bi";
-import { toast } from "react-toastify";
 
 import { useUploadImageMutation } from "../../app/slices/optionApiSlice";
-import { ErrorData, MediaElementMediaProps } from "../../utils/types";
+import { useToast } from "../../hooks/useToast";
+import { MediaElementMediaProps } from "../../utils/types";
 import MediaElementImageUploadModal from "../Modals/MediaElementImageUploadModal";
 
 import MediaElementCardIconBtns from "./MediaElementCardIconBtns";
@@ -42,32 +42,19 @@ const MediaElementCardMedia = ({
     setPreview(null);
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Image Saved !", {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-        theme: "colored",
-      });
+  useToast({
+    isSuccess,
+    isError: isErrorUploadImage,
+    error: errorUploadImage,
+    successMessage: "Image saved!",
+    errorFallbackMessage: "Could not save image. Please try again.",
+    onSuccess: () => {
       handleClose();
-    }
-
-    if (isErrorUploadImage) {
-      const errorData = errorUploadImage as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isErrorUploadImage, errorUploadImage, isSuccess]);
+    },
+    successToastOptions: {
+      duration: 2000,
+    },
+  });
 
   return (
     <Box

@@ -3,12 +3,11 @@ import { useEffect } from "react";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { SquarePlus } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 
 import { useCreateNewWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
 // import { useAppTheme } from "../../theme/useAppTheme";
+import { useToast } from "../../hooks/useToast";
 import {
-  ErrorData,
   NewWorkspaceModalProps,
   WorkspaceDropDownMenu,
 } from "../../utils/types";
@@ -45,33 +44,20 @@ const NewWorkspaceModal = ({ open, onClose }: NewWorkspaceModalProps) => {
     }
   }, [open, reset, setFocus]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Workspace Created !", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        theme: "colored",
-      });
+  useToast({
+    isSuccess,
+    isError,
+    error,
+    successMessage: "Workspace created!",
+    errorFallbackMessage: "Could not create workspace. Please try again.",
+    successToastOptions: {
+      duration: 3000,
+    },
+    onSuccess: () => {
       reset({ workspaceName: "" });
       onClose();
-    }
-
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isSuccess, isError, error, reset]);
+    },
+  });
 
   return (
     <BaseModal

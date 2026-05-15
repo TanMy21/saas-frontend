@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import {
   Box,
@@ -9,13 +9,11 @@ import {
   Typography,
 } from "@mui/material";
 import { ImageIcon, Loader2, Trash2, Upload, X } from "lucide-react";
-import { toast } from "react-toastify";
 
 import { useUploadImageMutation } from "../../app/slices/optionApiSlice";
-import {
-  ErrorData,
-  MediaElementImageUploadModalProps,
-} from "../../utils/types";
+import { useToast } from "../../hooks/useToast";
+import { showToast } from "../../utils/showToast";
+import { MediaElementImageUploadModalProps } from "../../utils/types";
 import UploadImageAnimation from "../Loaders/UploadImageAnimation";
 
 const MediaElementImageUploadModal = ({
@@ -54,13 +52,13 @@ const MediaElementImageUploadModal = ({
   const processFile = (file: File) => {
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file");
+      showToast.error("Please select an image file.");
       return;
     }
 
     // Validate file size (5MB)
     if (file.size > 10 * 1024 * 1024) {
-      toast.error("File size must be less than 10MB");
+      showToast.error("File size must be less than 10 MB.");
       return;
     }
 
@@ -101,7 +99,7 @@ const MediaElementImageUploadModal = ({
   }, []);
 
   const handleFileChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
     // optionID: string
   ) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -116,32 +114,19 @@ const MediaElementImageUploadModal = ({
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Image Saved !", {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-        theme: "colored",
-      });
+  useToast({
+    isSuccess,
+    isError: isErrorUploadImage,
+    error: errorUploadImage,
+    successMessage: "Image saved!",
+    errorFallbackMessage: "Could not save image. Please try again.",
+    successToastOptions: {
+      duration: 2000,
+    },
+    onSuccess: () => {
       setUploadImageModalOpen(false);
-    }
-
-    if (isErrorUploadImage) {
-      const errorData = errorUploadImage as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isErrorUploadImage, errorUploadImage, isSuccess]);
+    },
+  });
 
   return (
     <Modal

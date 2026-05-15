@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Box, Button, CircularProgress } from "@mui/material";
 import { MessageSquarePlus } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
 
 import { useCreateFeedbackMutation } from "../../app/slices/feedbackApiSlice";
 import {
@@ -12,6 +11,7 @@ import {
   FeedbackTypeUI,
 } from "../../types/feedBackTypes";
 import { FeedBackPlaceholders } from "../../utils/constants";
+import { showToast } from "../../utils/showToast";
 import FeebackPills from "../ModalComponents/FeebackPills";
 import FeedbackScreenshotUpload from "../ModalComponents/FeedbackScreenshotUpload";
 import { FormField } from "../ModalComponents/FormFields";
@@ -44,17 +44,17 @@ const FeedbackModal = ({ open, onClose }: FeedbackModalProps) => {
       formData.append("description", data.description);
       formData.append("pagePath", window.location.pathname);
 
-      // validation
+      // Validate the optional screenshot before sending it to the backend.
       if (file) {
         const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
 
         if (!allowedTypes.includes(file.type)) {
-          toast.error("Only JPG and PNG images allowed");
+          showToast.error("Only JPG and PNG images are allowed.");
           return;
         }
 
         if (file.size > 5 * 1024 * 1024) {
-          toast.error("File size must be less than 5MB");
+          showToast.error("File size must be less than 5 MB.");
           return;
         }
 
@@ -63,14 +63,16 @@ const FeedbackModal = ({ open, onClose }: FeedbackModalProps) => {
 
       await createFeedback(formData).unwrap();
 
-      toast.success("Thanks for your feedback!");
+      showToast.success("Thanks for your feedback!");
 
       reset();
       setFile(null);
       onClose();
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      toast.error("Something went wrong. Try again.");
+      showToast.apiError(err, {
+        fallbackMessage: "Something went wrong. Please try again.",
+      });
     }
   };
 

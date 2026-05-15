@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -13,16 +11,15 @@ import {
 import { Sparkles } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
 import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
+import { useToast } from "../../hooks/useToast";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { questionTypes } from "../../utils/elementsConfig";
 import { generateSurveySchema } from "../../utils/schema";
 import {
-  ErrorData,
   GenerateSurveyFormData,
   GenerateSurveyFormProps,
 } from "../../utils/types";
@@ -121,22 +118,10 @@ export const GenerateSurveyForm = ({
     }
   };
 
-  useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isError, error]);
+  useToast({
+    isError,
+    error,
+  });
 
   return (
     <Box
