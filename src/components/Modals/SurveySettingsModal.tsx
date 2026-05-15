@@ -19,18 +19,15 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import { ChevronDown, Settings } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 
 import { useUpdateSurveyMutation } from "../../app/slices/surveysApiSlice";
 import { RootState } from "../../app/store";
 import { useAppSelector } from "../../app/typedReduxHooks";
 // import { useAppTheme } from "../../theme/useAppTheme";
+import { useToast } from "../../hooks/useToast";
 import { settingsUpdateSchema } from "../../utils/schema";
-import {
-  ErrorData,
-  SettingsFormData,
-  SurveySettingsProps,
-} from "../../utils/types";
+import { showToast } from "../../utils/showToast";
+import { SettingsFormData, SurveySettingsProps } from "../../utils/types";
 import { CustomToggle } from "../Buttons/CustomToggle";
 
 const SurveySettingsModal = ({
@@ -97,41 +94,29 @@ const SurveySettingsModal = ({
 
       setPublishToggled((prev) => !prev);
 
-      toast.success(
-        getSurveyCanvas?.published ? "Survey unpublished" : "Survey published",
-        { position: "top-right" },
+      showToast.success(
+        getSurveyCanvas?.published
+          ? "Survey unpublished."
+          : "Survey published.",
       );
     } catch (err) {
       console.error(err);
     }
   };
 
-  useEffect(() => {
-    if (isSuccess && !publishToggled) {
-      toast.success("Settings Updated!", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        theme: "colored",
-      });
+  useToast({
+    isSuccess: isSuccess && !publishToggled,
+    isError,
+    error,
+    successMessage: "Settings updated!",
+    errorFallbackMessage: "Could not update settings. Please try again.",
+    successToastOptions: {
+      duration: 3000,
+    },
+    onSuccess: () => {
       handleClose();
-    }
-
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isSuccess, isError, error]);
+    },
+  });
 
   useEffect(() => {
     if (surveySettings) {

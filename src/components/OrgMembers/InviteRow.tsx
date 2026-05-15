@@ -2,12 +2,12 @@ import { useState } from "react";
 
 import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import { MoreHorizontal, Repeat } from "lucide-react";
-import toast from "react-hot-toast";
 
 import {
   useResendOrgInviteMutation,
   useRevokeOrgInviteMutation,
 } from "../../app/slices/userApiSlice";
+import { showToast } from "../../utils/showToast";
 
 import { RoleBadge } from "./RoleBadge";
 
@@ -34,14 +34,13 @@ export const InviteRow = ({ invite }: any) => {
     try {
       await resendInvite(invite.inviteID).unwrap();
 
-      toast.success("Invite resent successfully", {
+      showToast.success("Invite resent successfully.", {
         duration: 3000,
-        position: "top-right",
       });
     } catch (err) {
-      toast.error("Failed to resend invite", {
+      showToast.apiError(err, {
+        fallbackMessage: "Failed to resend invite.",
         duration: 3000,
-        position: "top-right",
       });
     }
   };
@@ -53,14 +52,13 @@ export const InviteRow = ({ invite }: any) => {
     try {
       await revokeInvite(invite.inviteID).unwrap();
 
-      toast.success("Invite revoked successfully", {
+      showToast.success("Invite revoked successfully.", {
         duration: 3000,
-        position: "top-right",
       });
     } catch (err) {
-      toast.error("Failed to revoke invite", {
+      showToast.apiError(err, {
+        fallbackMessage: "Failed to revoke invite.",
         duration: 3000,
-        position: "top-right",
       });
     }
   };

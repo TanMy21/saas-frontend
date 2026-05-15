@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { CiPercent } from "react-icons/ci";
 import { FaRegClock } from "react-icons/fa";
@@ -7,10 +5,9 @@ import { FiEye } from "react-icons/fi";
 import { IoPlayCircleOutline } from "react-icons/io5";
 import { MdDoneAll } from "react-icons/md";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import { useGetInsightsQuery } from "../../app/slices/insightsApiSlice";
-import { ErrorData } from "../../utils/types";
+import { useToast } from "../../hooks/useToast";
 import InsightCard from "../Insights/InsightCard";
 
 const ResultInsights = () => {
@@ -31,22 +28,10 @@ const ResultInsights = () => {
     averageCompletionTimeInMinutes,
   } = results || {};
 
-  useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isError, error]);
+  useToast({
+    isError,
+    error,
+  });
 
   return (
     <>

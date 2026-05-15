@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import {
   Box,
@@ -9,7 +7,6 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import { toast } from "react-toastify";
 
 import {
   useCreateElementMutation,
@@ -19,9 +16,10 @@ import { addElement } from "../../../app/slices/surveySlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
+import { useToast } from "../../../hooks/useToast";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { elementIcons } from "../../../utils/elementsConfig";
-import { AddElementMenuProps, ErrorData } from "../../../utils/types";
+import { AddElementMenuProps } from "../../../utils/types";
 
 const AddElementMenu = ({
   surveyID,
@@ -77,37 +75,15 @@ const AddElementMenu = ({
     (element) => element.type === "INSTRUCTIONS",
   );
 
-  useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
+  useToast({
+    isError,
+    error,
+  });
 
-    if (isErrorScreen) {
-      const errorData = errorScreen as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isError, isErrorScreen, error, errorScreen]);
+  useToast({
+    isError: isErrorScreen,
+    error: errorScreen,
+  });
 
   return (
     <>

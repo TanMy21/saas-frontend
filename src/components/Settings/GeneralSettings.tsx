@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Stack, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 
 import { useUpdateUserInfoMutation } from "../../app/slices/userApiSlice";
+import { useToast } from "../../hooks/useToast";
 import { AccountSettings } from "../../types/userTypes";
 import { updateUserInfoSchema } from "../../utils/schema";
-import { ErrorData, UpdateUserInfoFormData } from "../../utils/types";
+import { UpdateUserInfoFormData } from "../../utils/types";
 
 import GeneralTab from "./GeneralTab";
 
@@ -53,26 +53,16 @@ export default function AccountSettingsGeneral({ user }: AccountSettings) {
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("User Info Updated Successfully!", {
-        position: "top-right",
-        duration: 3000,
-      });
-    }
-    if (isError) {
-      const e = error as ErrorData;
-      if (Array.isArray(e?.data?.error)) {
-        e.data.error.forEach((el: { message: string }) =>
-          toast.error(el.message, { position: "top-right" }),
-        );
-      } else if (e?.data?.message) {
-        toast.error(e.data.message, { position: "top-right" });
-      } else {
-        toast.error("Something went wrong", { position: "top-right" });
-      }
-    }
-  }, [isSuccess, isError, error]);
+  useToast({
+    isSuccess,
+    isError,
+    error,
+    successMessage: "User info updated successfully!",
+    errorFallbackMessage: "Could not update user info. Please try again.",
+    successToastOptions: {
+      duration: 3000,
+    },
+  });
 
   return (
     <form onSubmit={handleSubmit(handleUpdateUserInfo)}>

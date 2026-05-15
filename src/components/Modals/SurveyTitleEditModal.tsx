@@ -15,16 +15,15 @@ import {
 import { FileText } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import {
   useGetSurveyByIdQuery,
   useUpdateSurveyTitleandDescriptionMutation,
 } from "../../app/slices/surveysApiSlice";
+import { useToast } from "../../hooks/useToast";
 // import { useAppTheme } from "../../theme/useAppTheme";
 import { titleDescriptionUpdateSchema } from "../../utils/schema";
 import {
-  ErrorData,
   SurveyTitleAndDescription,
   SurveyTitleEditModalProps,
 } from "../../utils/types";
@@ -77,32 +76,19 @@ const SurveyTitleEditModal = ({
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Settings Updated!", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        theme: "colored",
-      });
+  useToast({
+    isSuccess,
+    isError,
+    error,
+    successMessage: "Settings updated!",
+    errorFallbackMessage: "Could not update settings. Please try again.",
+    successToastOptions: {
+      duration: 3000,
+    },
+    onSuccess: () => {
       handleClose();
-    }
-
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isSuccess, isError, error]);
+    },
+  });
 
   useEffect(() => {
     if (survey) {

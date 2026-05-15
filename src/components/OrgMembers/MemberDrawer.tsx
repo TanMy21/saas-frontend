@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Drawer, IconButton, Typography } from "@mui/material";
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 
 import {
   useCreateNewUserMutation,
@@ -13,6 +12,7 @@ import {
 } from "../../app/slices/userApiSlice";
 import useAuth from "../../hooks/useAuth";
 import { memberFormSchema, MemberFormValues } from "../../utils/schema";
+import { showToast } from "../../utils/showToast";
 
 import { MemberFormFields } from "./MemberFormFields";
 
@@ -100,42 +100,40 @@ export const MemberDrawer = ({
     }
   }, [member, userData, isEdit]);
 
-  const getErrorMessage = (err: any): string => {
-    return (
-      err?.data?.message || err?.error || err?.message || "Something went wrong"
-    );
-  };
-
   useEffect(() => {
     if (createSuccess) {
-      toast.success("Member invited successfully");
+      showToast.success("Member invited successfully.");
       onClose();
     }
   }, [createSuccess]);
 
   useEffect(() => {
     if (updateSuccess) {
-      toast.success("Member updated successfully");
+      showToast.success("Member updated successfully.");
       onClose();
     }
   }, [updateSuccess]);
 
   useEffect(() => {
     if (createErrorFlag && createError) {
-      toast.error(getErrorMessage(createError));
+      showToast.apiError(createError, {
+        fallbackMessage: "Could not invite member. Please try again.",
+      });
     }
   }, [createErrorFlag, createError]);
 
   useEffect(() => {
     if (updateErrorFlag && updateError) {
-      toast.error(getErrorMessage(updateError));
+      showToast.apiError(updateError, {
+        fallbackMessage: "Could not update member. Please try again.",
+      });
     }
   }, [updateErrorFlag, updateError]);
 
   const onSubmit = async (values: MemberFormValues) => {
     if (!isEdit) {
       if (isLimitReached) {
-        toast.error("User limit reached");
+        showToast.error("User limit reached.");
         return;
       }
 

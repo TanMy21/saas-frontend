@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Stack, Typography, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 
 import { useUpdatePasswordMutation } from "../../app/slices/authApiSlice";
+import { useToast } from "../../hooks/useToast";
 import { AccountSettings } from "../../types/userTypes";
 import { resetPasswordSchema } from "../../utils/schema";
-import { ErrorData, ResetPasswordFormData } from "../../utils/types";
+import { ResetPasswordFormData } from "../../utils/types";
 
 import LabeledField from "./LabelField";
 
@@ -42,32 +42,22 @@ export default function SecurityTab({ user }: AccountSettings) {
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Password Updated Successfully !", {
-        position: "top-right",
-        duration: 3000,
-      });
-
+  useToast({
+    isSuccess,
+    isError,
+    error,
+    successMessage: "Password updated successfully!",
+    errorFallbackMessage: "Could not update password. Please try again.",
+    successToastOptions: {
+      duration: 3000,
+    },
+    onSuccess: () => {
       reset({
         password: "",
         confirmPassword: "",
       });
-    }
-
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData?.data?.error)) {
-        errorData.data.error.forEach((el: { message: string }) =>
-          toast.error(el.message, { position: "top-right" }),
-        );
-      } else if (errorData?.data?.message) {
-        toast.error(errorData.data.message, { position: "top-right" });
-      } else {
-        toast.error("Something went wrong", { position: "top-right" });
-      }
-    }
-  }, [isSuccess, isError, error, reset]);
+    },
+  });
 
   return (
     <Box sx={{ p: 4 }}>

@@ -1,12 +1,10 @@
-import { useEffect } from "react";
-
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 
 import { useRetitleSurveyMutation } from "../../app/slices/surveysApiSlice";
-import { ErrorData, SurveyRenameProps } from "../../utils/types";
+import { useToast } from "../../hooks/useToast";
+import { SurveyRenameProps } from "../../utils/types";
 import { FormField } from "../ModalComponents/FormFields";
 
 import { BaseModal } from "./BaseModal";
@@ -32,31 +30,16 @@ const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
     onClose();
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Survey Renamed Successfully !", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        theme: "colored",
-      });
-    }
-
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isSuccess, isError, error]);
+  useToast({
+    isSuccess,
+    isError,
+    error,
+    successMessage: "Survey renamed successfully!",
+    errorFallbackMessage: "Could not rename survey. Please try again.",
+    successToastOptions: {
+      duration: 3000,
+    },
+  });
 
   return (
     <BaseModal
