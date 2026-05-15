@@ -20,7 +20,6 @@ import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import {
   useLazyGoogleAuthQuery,
@@ -31,9 +30,11 @@ import SessionExpiredToast from "../components/alert/SessionExpiredToast";
 import FormErrors from "../components/FormErrors";
 import LogoLoader from "../components/Loaders/LogoLoader";
 import usePersist from "../hooks/persist";
+import { useToast } from "../hooks/useToast";
 import { useAppTheme } from "../theme/useAppTheme";
 import { loginSchema } from "../utils/schema";
-import { ErrorData, FetchBaseQueryError, LoginFormData } from "../utils/types";
+import { showToast } from "../utils/showToast";
+import { LoginFormData } from "../utils/types";
 
 const Signin = () => {
   const { primary, background, grey, shadows, gradient, borders, brand } =
@@ -78,65 +79,29 @@ const Signin = () => {
       handlePersist();
       navigate("/dash");
     } catch (error) {
-      const errorData = error as FetchBaseQueryError;
-      if (!errorData.status) {
-        toast.error("No Server Response", { position: "top-right" });
-      } else if (errorData.status === 400) {
-        toast.error("Missing Username or Password", {
-          position: "top-right",
-        });
-      } else if (errorData.status === 401) {
-        toast.error(errorData.data?.message || "Unauthorized", {
-          position: "top-right",
-        });
-      } else {
-        toast.error(errorData.data?.message || "An error occurred", {
-          position: "top-right",
-        });
-      }
+      showToast.apiError(error, {
+        fallbackMessage: "Login failed. Please try again.",
+      });
     }
   };
 
-  useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [error]);
+  useToast({
+    isError,
+    error,
+  });
 
-  useEffect(() => {
-    if (isGoogleAuthError) {
-      const errorData = googleAuthError as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isGoogleAuthError, googleAuthError]);
+  useToast({
+    isError: isGoogleAuthError,
+    error: googleAuthError,
+    errorFallbackMessage: "Google sign-in failed. Please try again.",
+  });
 
   const handleGoogleAuth = () => {
     try {
       window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google`;
     } catch (err: any) {
-      toast.error(err?.data?.message, {
-        position: "top-right",
+      showToast.apiError(err, {
+        fallbackMessage: "Google sign-in failed. Please try again.",
       });
     }
   };
@@ -165,9 +130,7 @@ const Signin = () => {
       }
 
       if (inviteAccepted) {
-        toast.success("Joined organization successfully", {
-          position: "top-right",
-        });
+        showToast.success("Joined organization successfully");
         navigate("/dash");
         return;
       }
@@ -176,7 +139,9 @@ const Signin = () => {
     }
 
     if (isGoogleAuth && googleAuthError) {
-      toast.error("Google login failed");
+      showToast.apiError(googleAuthError, {
+        fallbackMessage: "Google login failed. Please try again.",
+      });
       navigate("/login");
     }
   }, [

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import BusinessIcon from "@mui/icons-material/Business";
@@ -18,13 +18,14 @@ import {
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import { useAddNewUserMutation } from "../app/slices/userApiSlice";
 import FormErrors from "../components/FormErrors";
+import { useToast } from "../hooks/useToast";
 import { useAppTheme } from "../theme/useAppTheme";
 import { registerSchema } from "../utils/schema";
-import { ErrorData, RegisterFormData } from "../utils/types";
+import { showToast } from "../utils/showToast";
+import { RegisterFormData } from "../utils/types";
 
 const Signup = () => {
   const { primary, background, grey, shadows, gradient, borders, brand } =
@@ -36,32 +37,17 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Registration Successful!, check email", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        theme: "colored",
-      });
-      navigate("/login");
-    }
-
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isSuccess, isError, navigate, error]);
+  useToast({
+    isSuccess,
+    isError,
+    error,
+    successMessage: "Registration successful. Check your email.",
+    errorFallbackMessage: "Registration failed. Please try again.",
+    successToastOptions: {
+      duration: 5000,
+    },
+    onSuccess: () => navigate("/login"),
+  });
 
   const {
     register,
@@ -81,8 +67,8 @@ const Signup = () => {
     try {
       window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google/callback`;
     } catch (err: any) {
-      toast.error(err?.data?.message, {
-        position: "top-right",
+      showToast.apiError(err, {
+        fallbackMessage: "Google sign-in failed. Please try again.",
       });
     }
   };

@@ -3,13 +3,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { PostHogProvider } from "posthog-js/react";
 import ReactDOM from "react-dom/client";
-import { Toaster } from "react-hot-toast";
+// import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+// import { ToastContainer } from "react-toastify";
 
 import store from "./app/store";
 import AppErrorBoundary from "./AppErrorBoundary";
+import AppToaster from "./components/alert/AppToaster";
 import GlobalFeedbackOverlays from "./layouts/GlobalFeedbackLayout";
 import { GlobalGenerateLoaderOverlay } from "./layouts/GlobalGenerateLoaderOverlay";
 import { GlobalImportLoaderOverlay } from "./layouts/GlobalImporLoaderOverlay";
@@ -49,8 +50,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </ThemeProvider>
       </AppErrorBoundary>
     </Provider>
-    <Toaster position="bottom-right" reverseOrder={false} />
-    <ToastContainer />
+    {/* <Toaster position="bottom-right" reverseOrder={false} /> */}
+    <AppToaster />
+    {/* <ToastContainer /> */}
   </>,
   // </React.StrictMode>
 );
