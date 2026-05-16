@@ -7,7 +7,6 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +19,7 @@ import {
 } from "../app/slices/orgApiSlice";
 import { selectUser } from "../app/slices/userSlice";
 import { useAppDispatch } from "../app/typedReduxHooks";
+import { showToast } from "../utils/showToast";
 
 export const PendingInvites = () => {
   const navigate = useNavigate();
@@ -39,13 +39,13 @@ export const PendingInvites = () => {
     try {
       await acceptInvite({ inviteID }).unwrap();
 
-      toast.success("Joined organization", {
+      showToast.success("Joined organization", {
         position: "top-right",
       });
 
       navigate("/dash");
     } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to accept invite");
+      showToast.error(err?.data?.message || "Failed to accept invite");
     }
   };
 
@@ -64,11 +64,11 @@ export const PendingInvites = () => {
         window.location.href = "/";
       }
 
-      toast.success("Invite declined", {
+      showToast.success("Invite declined", {
         position: "top-right",
       });
     } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to decline invite");
+      showToast.error(err?.data?.message || "Failed to decline invite");
     }
   };
 

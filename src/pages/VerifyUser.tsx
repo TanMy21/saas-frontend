@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
@@ -12,11 +10,10 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import { useVerifyEmailQuery } from "../app/slices/authApiSlice";
+import { useToast } from "../hooks/useToast";
 import { useAppTheme } from "../theme/useAppTheme";
-import { ErrorData } from "../utils/types";
 
 const VerifyUser = () => {
   const { textStyles, background, grey, shadows, iconStyle } = useAppTheme();
@@ -26,23 +23,10 @@ const VerifyUser = () => {
   const { isLoading, isSuccess, isError, error } =
     useVerifyEmailQuery(verificationCode);
 
-  useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isError, error]);
+  useToast({
+    isError,
+    error,
+  });
 
   return (
     <Container component="main" maxWidth="xl" sx={{ marginTop: "4%" }}>

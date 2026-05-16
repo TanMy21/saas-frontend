@@ -8,7 +8,6 @@ import {
   type DropResult,
 } from "react-beautiful-dnd";
 import { MdAdd } from "react-icons/md";
-import { toast } from "react-toastify";
 
 import {
   useCreateNewOptionMutation,
@@ -16,6 +15,8 @@ import {
   useUpdateOptionOrderMutation,
 } from "../../../app/slices/optionApiSlice";
 import useAuth from "../../../hooks/useAuth";
+import { useToast } from "../../../hooks/useToast";
+import { showToast } from "../../../utils/showToast";
 import { OptionType, ResponseListProps } from "../../../utils/types";
 import { MAX_OPTIONS } from "../../../utils/utils";
 
@@ -55,7 +56,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
 
     const available = MAX_OPTIONS - (localOptions?.length ?? 0);
     if (available <= 0) {
-      toast.info("Limit reached (10 options).");
+      showToast.info("Limit reached (10 options).");
       return;
     }
 
@@ -67,11 +68,11 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
       await createNewOption({ questionID: qID, options: batch }).unwrap();
       setInputValue("");
       if (lines.length > available) {
-        toast.info(`Only ${available} option(s) added (limit reached).`);
+        showToast.info(`Only ${available} option(s) added (limit reached).`);
       }
     } catch (err) {
       console.error("Add options error:", err);
-      toast.error("Failed to add options.");
+      showToast.error("Failed to add options.");
     }
   };
 
@@ -99,19 +100,11 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
     setLocalOptions(options);
   }, [options]);
 
-  useEffect(() => {
-    if (!isError) return;
-    const errData: any = error;
-    if (Array.isArray(errData?.data?.error)) {
-      errData.data.error.forEach((el: any) =>
-        toast.error(el.message, { position: "top-right" }),
-      );
-    } else if (errData?.data?.message) {
-      toast.error(errData.data.message, { position: "top-right" });
-    } else {
-      toast.error("Something went wrong.", { position: "top-right" });
-    }
-  }, [isError, error]);
+  useToast({
+    isError,
+    error,
+    errorFallbackMessage: "Something went wrong.",
+  });
 
   return (
     <Box

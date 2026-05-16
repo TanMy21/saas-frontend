@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Box } from "@mui/material";
-import { toast } from "react-toastify";
 
 import { closeFeedbackModal } from "../app/slices/feedbackSlice";
 import { fetchUser, selectUser } from "../app/slices/userSlice";
@@ -18,9 +17,10 @@ import WorkspaceConsole from "../components/Workspaces/WorkspaceConsole";
 import useAuth from "../hooks/useAuth";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 import { useStoredState } from "../hooks/useStoredState";
+import { useToast } from "../hooks/useToast";
 import { useAppTheme } from "../theme/useAppTheme";
 import { LAST_WS_KEY } from "../utils/constants";
-import { ErrorData, Workspace } from "../utils/types";
+import { Workspace } from "../utils/types";
 
 const Dashboard = () => {
   const { background, brand } = useAppTheme();
@@ -102,28 +102,11 @@ const Dashboard = () => {
     }
   }, [workspaces, selectedWorkspaceId]);
 
-  useEffect(() => {
-    if (isErrorWorkspaces) {
-      const errorData = workspaceError as ErrorData;
-
-      if (errorData?.data.status === 429) {
-        toast.error(
-          "Too many requests. Please wait for a minute and try again.",
-          {
-            position: "top-right",
-          },
-        );
-      }
-
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, { position: "top-right" }),
-        );
-      } else {
-        toast.error(errorData.data.message, { position: "top-right" });
-      }
-    }
-  }, [isErrorWorkspaces, workspaceError]);
+  useToast({
+    isError: isErrorWorkspaces,
+    error: workspaceError,
+    errorFallbackMessage: "Could not load workspaces. Please try again.",
+  });
 
   useEffect(() => {
     if (!user && isAuthenticated) {

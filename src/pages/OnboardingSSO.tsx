@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import { Box, Button, TextField, Typography } from "@mui/material";
-import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import {
@@ -10,6 +9,7 @@ import {
 } from "../app/slices/authApiSlice";
 import { setCredentials } from "../app/slices/authSlice";
 import { useAppDispatch } from "../app/typedReduxHooks";
+import { showToast } from "../utils/showToast";
 
 export const Onboarding = () => {
   const [orgName, setOrgName] = useState("");
@@ -37,7 +37,7 @@ export const Onboarding = () => {
     }
 
     if (isError) {
-      toast.error("Authentication failed", {
+      showToast.error("Authentication failed", {
         position: "top-right",
       });
       navigate("/login");
@@ -48,13 +48,13 @@ export const Onboarding = () => {
     try {
       await createOrg({ organizationName: orgName }).unwrap();
 
-      toast.success("Organization created", {
+      showToast.success("Organization created", {
         position: "top-right",
       });
 
       navigate("/dash");
     } catch (err: any) {
-      toast.error(err?.data?.message || "Error creating org", {
+      showToast.error(err?.data?.message || "Error creating org", {
         position: "top-right",
       });
     }

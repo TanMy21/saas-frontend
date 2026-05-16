@@ -2,7 +2,6 @@ import { useEffect } from "react";
 
 import { Box, Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import { useSendLogoutMutation } from "../app/slices/authApiSlice";
 import {
@@ -12,7 +11,7 @@ import {
 import VerificationEmailSent from "../components/auth/VerificationEmailSent";
 import VerifyEmailCard from "../components/auth/VerifyEmailCard";
 import usePersist from "../hooks/persist";
-import { ErrorData } from "../utils/types";
+import { useToast } from "../hooks/useToast";
 
 const EmailNotVerified = () => {
   const navigate = useNavigate();
@@ -30,23 +29,10 @@ const EmailNotVerified = () => {
     if (isSuccessLogout) navigate("/");
   }, [isSuccessLogout, navigate]);
 
-  useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isError, error]);
+  useToast({
+    isError,
+    error,
+  });
 
   return (
     <Container component="main" maxWidth="xl">

@@ -18,7 +18,6 @@ import {
   Upload,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
 import {
@@ -31,11 +30,9 @@ import {
 import { useGetWorkspacesQuery } from "../../app/slices/workspaceApiSlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
 import useAuth from "../../hooks/useAuth";
-import {
-  Workspace,
-  SurveyDropDownMenuProps,
-  ErrorData,
-} from "../../utils/types";
+import { useToast } from "../../hooks/useToast";
+import { showToast } from "../../utils/showToast";
+import { Workspace, SurveyDropDownMenuProps } from "../../utils/types";
 import { SurveyMenuItem } from "../MenuComponents/SurveyMenuItem";
 import DeleteSurveyModal from "../Modals/DeleteSurveyModal";
 import RenameSurveyModal from "../Modals/RenameSurveyModal";
@@ -125,9 +122,7 @@ const SurveyCardDropDownMenu = ({
       handleClose();
     } catch (e) {
       console.error(error);
-      toast.error("Error Publishing survey", {
-        position: "top-right",
-      });
+      showToast.error("Error publishing survey.");
     }
   };
 
@@ -165,11 +160,8 @@ const SurveyCardDropDownMenu = ({
       dispatch(showOverlay({ message: "Copying survey", variant: "SIMPLE" }));
       await copySurvey({ surveyID, workspaceId: wID });
 
-      toast.success("Copy Successfull!", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        theme: "colored",
+      showToast.success("Copied successfully!", {
+        duration: 3000,
       });
     } catch (error) {
       console.log(error);
@@ -183,11 +175,8 @@ const SurveyCardDropDownMenu = ({
       dispatch(showOverlay({ message: "Moving survey", variant: "SIMPLE" }));
       await moveSurvey({ surveyID, workspaceId: wID });
 
-      toast.success("Survey moved Successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        theme: "colored",
+      showToast.success("Survey moved successfully!", {
+        duration: 3000,
       });
     } catch (error) {
       console.log(error);
@@ -205,11 +194,8 @@ const SurveyCardDropDownMenu = ({
       );
       await duplicateSurvey(surveyID);
 
-      toast.success("Survey duplicated Successfully!", {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-        theme: "colored",
+      showToast.success("Survey duplicated successfully!", {
+        duration: 2000,
       });
     } catch (error) {
       console.log(error);
@@ -227,16 +213,15 @@ const SurveyCardDropDownMenu = ({
         archive: !survey.isArchived,
       }).unwrap();
 
-      toast.success(survey.isArchived ? "Survey restored" : "Survey archived", {
-        position: "top-right",
-        autoClose: 2000,
-        theme: "colored",
-      });
+      showToast.success(
+        survey.isArchived ? "Survey restored." : "Survey archived.",
+        {
+          duration: 2000,
+        },
+      );
     } catch (error) {
       console.error(error);
-      toast.error("Error updating archive status", {
-        position: "top-right",
-      });
+      showToast.error("Error updating archive status");
     }
   };
 
@@ -244,55 +229,23 @@ const SurveyCardDropDownMenu = ({
     setIsPublished(survey?.published!);
   }, [survey.published]);
 
-  useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach(() =>
-          toast.error("Error Copying survey", {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-
-    if (moveIsError) {
-      const moveErrorData = moveError as ErrorData;
-      if (Array.isArray(moveErrorData.data.error)) {
-        moveErrorData.data.error.forEach(() =>
-          toast.error("Error Moving Survey", {
-            position: "top-right",
-          }),
-        );
-      } else {
-        toast.error(moveErrorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-
-    if (isErrorDuplicateSurvey) {
-      const duplicateErrorData = moveError as ErrorData;
-      if (Array.isArray(duplicateErrorData.data.error)) {
-        duplicateErrorData.data.error.forEach(() =>
-          toast.error("Error Duplicating Survey", {
-            position: "top-right",
-          }),
-        );
-      }
-    }
-  }, [
-    moveIsError,
+  useToast({
     isError,
     error,
-    moveError,
-    isErrorDuplicateSurvey,
-    duplicateSurveyError,
-  ]);
+    errorFallbackMessage: "Error copying survey.",
+  });
+
+  useToast({
+    isError: moveIsError,
+    error: moveError,
+    errorFallbackMessage: "Error moving survey.",
+  });
+
+  useToast({
+    isError: isErrorDuplicateSurvey,
+    error: duplicateSurveyError,
+    errorFallbackMessage: "Error duplicating survey.",
+  });
 
   return (
     <>

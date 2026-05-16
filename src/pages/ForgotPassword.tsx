@@ -1,33 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Box, Container } from "@mui/material";
-import { toast } from "react-toastify";
 
 import { useForgotPasswordMutation } from "../app/slices/authApiSlice";
 import PasswordResetForm from "../components/auth/PasswordResetForm";
 import PasswordResetSuccess from "../components/auth/PasswordResetSuccess";
-import { ErrorData } from "../utils/types";
+import { useToast } from "../hooks/useToast";
 
 const ForgotPassword = () => {
   const [forgotPassword, { isSuccess, isError, error, isLoading, reset }] =
     useForgotPasswordMutation();
   const [submittedEmail, setSubmittedEmail] = useState("");
-  useEffect(() => {
-    if (isError) {
-      const errorData = error as ErrorData;
-      if (Array.isArray(errorData.data.error)) {
-        errorData.data.error.forEach((el) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error(errorData.data.message, {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isError, error]);
+
+  useToast({
+    isError,
+    error,
+  });
+
   return (
     <Container component="main" maxWidth="xl" sx={{ marginTop: "8%" }}>
       <Box

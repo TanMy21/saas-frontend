@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   DndContext,
@@ -14,7 +14,6 @@ import {
 } from "@dnd-kit/sortable";
 import AddIcon from "@mui/icons-material/Add";
 import { Box } from "@mui/material";
-import { toast } from "react-toastify";
 
 import {
   useCreateNewOptionMutation,
@@ -22,11 +21,9 @@ import {
   useUpdateOptionOrderMutation,
 } from "../../../app/slices/optionApiSlice";
 import useAuth from "../../../hooks/useAuth";
-import {
-  ErrorData,
-  MediaOptionsContainerProps,
-  OptionType,
-} from "../../../utils/types";
+import { useToast } from "../../../hooks/useToast";
+import { showToast } from "../../../utils/showToast";
+import { MediaOptionsContainerProps, OptionType } from "../../../utils/types";
 import { MAX_OPTIONS } from "../../../utils/utils";
 
 import MediaOption from "./MediaOption";
@@ -56,7 +53,7 @@ const MediaOptionsContainer = ({
     if (!canCreate) return;
 
     if (options.length >= MAX_OPTIONS) {
-      toast.info("Limit reached (10 options).");
+      showToast.info("Limit reached. You can add up to 10 options.");
       return;
     }
 
@@ -75,7 +72,7 @@ const MediaOptionsContainer = ({
       await refetch();
     } catch (err) {
       console.error("Add media option error:", err);
-      toast.error("Failed to add option.");
+      showToast.error("Failed to add option.");
     }
   };
 
@@ -100,19 +97,11 @@ const MediaOptionsContainer = ({
       .catch((err) => console.error("Order update error:", err));
   };
 
-  useEffect(() => {
-    if (!isError) return;
-    const errorData = error as unknown as ErrorData;
-    if (Array.isArray(errorData?.data?.error)) {
-      errorData.data.error.forEach((el) =>
-        toast.error(el.message, { position: "top-right" }),
-      );
-    } else {
-      toast.error(errorData?.data?.message || "Something went wrong.", {
-        position: "top-right",
-      });
-    }
-  }, [isError, error, options]);
+  useToast({
+    isError,
+    error,
+    errorFallbackMessage: "Something went wrong.",
+  });
 
   return (
     <DndContext

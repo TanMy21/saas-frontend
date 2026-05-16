@@ -11,13 +11,13 @@ import {
   IconButton,
   CircularProgress,
 } from "@mui/material";
-import toast from "react-hot-toast";
 import { useNavigate, useParams, Link } from "react-router-dom";
 
 import {
   useAcceptOrganizationInviteMutation,
   useValidateOrganizationInviteQuery,
 } from "../app/slices/userApiSlice";
+import { useToast } from "../hooks/useToast";
 import { useAppTheme } from "../theme/useAppTheme";
 import { getInitials } from "../utils/utils";
 
@@ -80,53 +80,31 @@ export const AcceptInvite = () => {
     }
   };
 
-  useEffect(() => {
-    if (!isInviteError) return;
+  useToast({
+    isError: isInviteError,
+    error: inviteError,
+    errorFallbackMessage: "Invalid or expired invite link.",
+  });
 
-    const err = inviteError as {
-      data?: { message?: string; error?: Array<{ message: string }> };
-    };
-
-    if (Array.isArray(err?.data?.error)) {
-      err.data.error.forEach((el) =>
-        toast.error(el.message, { position: "top-right" }),
-      );
-    } else {
-      toast.error(err?.data?.message || "Invalid or expired invite link", {
-        position: "top-right",
-      });
-    }
-  }, [isInviteError, inviteError]);
+  useToast({
+    isSuccess: isAcceptSuccess,
+    isError: isAcceptError,
+    error: acceptError,
+    successMessage: "Password set successfully. Please log in.",
+    errorFallbackMessage: "Failed to accept invite.",
+  });
 
   useEffect(() => {
-    if (isAcceptSuccess) {
-      toast.success("Password set successfully. Please log in.", {
-        position: "top-right",
-      });
-
-      const timeout = setTimeout(() => {
-        navigate("/login");
-      }, 1500);
-
-      return () => clearTimeout(timeout);
+    if (!isAcceptSuccess) {
+      return;
     }
 
-    if (isAcceptError) {
-      const err = acceptError as {
-        data?: { message?: string; error?: Array<{ message: string }> };
-      };
+    const timeout = setTimeout(() => {
+      navigate("/login");
+    }, 1500);
 
-      if (Array.isArray(err?.data?.error)) {
-        err.data.error.forEach((el) =>
-          toast.error(el.message, { position: "top-right" }),
-        );
-      } else {
-        toast.error(err?.data?.message || "Failed to accept invite", {
-          position: "top-right",
-        });
-      }
-    }
-  }, [isAcceptSuccess, isAcceptError, acceptError, navigate]);
+    return () => clearTimeout(timeout);
+  }, [isAcceptSuccess, navigate]);
 
   if (isInviteLoading) {
     return (
