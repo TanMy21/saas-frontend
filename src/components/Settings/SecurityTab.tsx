@@ -7,16 +7,15 @@ import { useForm } from "react-hook-form";
 import { useUpdatePasswordMutation } from "../../app/slices/authApiSlice";
 import { useToast } from "../../hooks/useToast";
 import { AccountSettings } from "../../types/userTypes";
-import { resetPasswordSchema } from "../../utils/schema";
-import { ResetPasswordFormData } from "../../utils/types";
+import { updatePasswordSchema } from "../../utils/schema";
+import { UpdatePasswordFormData } from "../../utils/types";
 
 import LabeledField from "./LabelField";
 
 export default function SecurityTab({ user }: AccountSettings) {
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const email = user?.email ?? "";
 
   const [updatePassword, { isError, error, isSuccess, isLoading }] =
     useUpdatePasswordMutation();
@@ -26,17 +25,21 @@ export default function SecurityTab({ user }: AccountSettings) {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting, isDirty },
-  } = useForm<ResetPasswordFormData>({
-    resolver: zodResolver(resetPasswordSchema),
+  } = useForm<UpdatePasswordFormData>({
+    resolver: zodResolver(updatePasswordSchema),
     defaultValues: {
+      currentPassword: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  const submitUpdatedPassword = async (data: ResetPasswordFormData) => {
+  const submitUpdatedPassword = async (data: UpdatePasswordFormData) => {
     try {
-      await updatePassword({ email, newPassword: data.password }).unwrap();
+      await updatePassword({
+        currentPassword: data.currentPassword,
+        newPassword: data.password,
+      }).unwrap();
     } catch (e) {
       console.error(e);
     }
@@ -53,6 +56,7 @@ export default function SecurityTab({ user }: AccountSettings) {
     },
     onSuccess: () => {
       reset({
+        currentPassword: "",
         password: "",
         confirmPassword: "",
       });
@@ -80,6 +84,20 @@ export default function SecurityTab({ user }: AccountSettings) {
             </Typography>
 
             <Stack spacing={2}>
+              {/* Current Password */}
+              <LabeledField
+                topLabel="Current Password"
+                placeholder="Current Password"
+                fullWidth
+                sx={fieldSx}
+                type="password"
+                error={!!errors.currentPassword}
+                showPassword={showCurrentPassword}
+                onTogglePassword={() => setShowCurrentPassword((prev) => !prev)}
+                helperText={errors.currentPassword?.message}
+                {...register("currentPassword")}
+              />
+
               {/* New Password */}
               <LabeledField
                 topLabel="New Password"

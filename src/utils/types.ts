@@ -652,7 +652,13 @@ export interface ForgotPasswordRequest {
   email: string;
 }
 
-export interface ResetPasswordFormData {
+export interface UpdatePasswordFormData {
+  currentPassword: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface ResetPasswordFormData { 
   password: string;
   confirmPassword: string;
 }

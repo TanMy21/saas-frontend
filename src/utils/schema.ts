@@ -116,6 +116,23 @@ export const forgetPasswordSchema = z.object({
   email: z.string().email(),
 });
 
+export const updatePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Current password is required"),
+    password: z
+      .string()
+      .min(6, { message: "password should be more than 6 characters *" })
+      .max(20, { message: "password should be less than 20 characters *" }),
+    confirmPassword: z
+      .string()
+      .min(6, { message: "password should be more than 6 characters *" })
+      .max(20, { message: "password should be less than 20 characters *" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match *",
+    path: ["confirmPassword"],
+  });
+
 export const resetPasswordSchema = z
   .object({
     password: z
@@ -359,7 +376,6 @@ export const createOrgUserSchema = z.object({
     }),
   }),
 });
-
 
 export const memberFormSchema = z.object({
   firstname: z.string().min(1, "First name is required"),

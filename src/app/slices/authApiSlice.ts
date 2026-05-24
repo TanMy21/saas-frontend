@@ -41,10 +41,10 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     updatePassword: builder.mutation({
-      query: ({ email, newPassword }) => ({
+      query: ({ currentPassword, newPassword }) => ({
         url: "/update/pwd",
         method: "PATCH",
-        body: { email, newPassword },
+        body: { currentPassword, newPassword },
       }),
     }),
     verifyEmail: builder.query({

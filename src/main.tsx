@@ -16,7 +16,7 @@ import { GlobalGenerateLoaderOverlay } from "./layouts/GlobalGenerateLoaderOverl
 import { GlobalImportLoaderOverlay } from "./layouts/GlobalImporLoaderOverlay";
 import router from "./routes/routes";
 import "./index.css";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import "../src/utils/analytics";
 import "../src/utils/sentry";
 import SessionInitializer from "./SessionInitializer";

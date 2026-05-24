@@ -9,8 +9,8 @@ const SuccessfullLogoutToast = ({
 }: SuccessfullLogoutToastProps) => {
   const navigate = useNavigate();
   const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
+    _event?: React.SyntheticEvent | Event,
+    reason?: string,
   ) => {
     if (reason === "clickaway") return;
     setShowLogoutAlert(false);
