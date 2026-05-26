@@ -12,8 +12,8 @@ import { ImageIcon, Loader2, Trash2, Upload, X } from "lucide-react";
 
 import { useUploadImageMutation } from "../../app/slices/optionApiSlice";
 import { useToast } from "../../hooks/useToast";
-import { showToast } from "../../utils/showToast";
 import { MediaElementImageUploadModalProps } from "../../utils/types";
+import { readImagePreview, validateImageFile } from "../../utils/utils";
 import UploadImageAnimation from "../Loaders/UploadImageAnimation";
 
 const MediaElementImageUploadModal = ({
@@ -50,24 +50,15 @@ const MediaElementImageUploadModal = ({
   };
 
   const processFile = (file: File) => {
-    // Validate file type
-    if (!file.type.startsWith("image/")) {
-      showToast.error("Please select an image file.");
-      return;
-    }
-
-    // Validate file size (5MB)
-    if (file.size > 10 * 1024 * 1024) {
-      showToast.error("File size must be less than 10 MB.");
+    if (!validateImageFile(file)) {
       return;
     }
 
     setSelectedFile(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+
+    readImagePreview(file, (previewUrl) => {
+      setPreview(previewUrl);
+    });
   };
 
   const handleDragEnter = useCallback((e: React.DragEvent) => {
@@ -98,20 +89,17 @@ const MediaElementImageUploadModal = ({
     }
   }, []);
 
-  const handleFileChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    // optionID: string
-  ) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
 
-      setSelectedFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file) {
+      return;
     }
+
+    processFile(file);
+
+    // Allows selecting the same file again after validation failure/removal.
+    event.target.value = "";
   };
 
   useToast({
@@ -292,7 +280,7 @@ const MediaElementImageUploadModal = ({
                     id="file-input"
                     onChange={handleFileChange}
                     disabled={isLoading}
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp"
                     hidden
                   />
 

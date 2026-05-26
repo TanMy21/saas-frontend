@@ -63,7 +63,8 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["react-refresh"],
   parserOptions: {
-    project: "./tsconfig.json",
+    project: "./tsconfig.eslint.json",
+    tsconfigRootDir: __dirname,
   },
   rules: {
     "warning": "off",

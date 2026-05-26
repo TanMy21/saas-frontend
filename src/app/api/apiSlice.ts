@@ -33,7 +33,6 @@ const baseQueryWithReauth: BaseQueryFn<
 
   let result = await baseQuery(args, api, extraOptions);
 
-  // If you want, handle other status codes, too
   if (result?.error?.status === 403) {
     // send refresh token to get new access token
     const refreshResult = await baseQuery("/refresh", api, extraOptions);

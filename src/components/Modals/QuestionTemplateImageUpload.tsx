@@ -21,6 +21,7 @@ import {
   QuestionImageUploadModalProps,
   SurveyCanvasQuestionSettings,
 } from "../../utils/types";
+import { readImagePreview, validateImageFile } from "../../utils/utils";
 
 const QuestionTemplateImageUpload = ({
   uploadImageModalOpen,
@@ -51,6 +52,18 @@ const QuestionTemplateImageUpload = ({
     // UI reset only
     setSelectedFile(null);
     setPreview(null);
+  };
+
+  const processFile = (file: File) => {
+    if (!validateImageFile(file)) {
+      return;
+    }
+
+    setSelectedFile(file);
+
+    readImagePreview(file, (previewUrl) => {
+      setPreview(previewUrl);
+    });
   };
 
   const handleUpload = async () => {
@@ -89,16 +102,15 @@ const QuestionTemplateImageUpload = ({
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
+    const file = event.target.files?.[0];
 
-      setSelectedFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file) {
+      return;
     }
+
+    processFile(file);
+
+    event.target.value = "";
   };
 
   useToast({
@@ -235,7 +247,7 @@ const QuestionTemplateImageUpload = ({
 
               {/* Constraints */}
               <Box sx={{ mt: 2, color: "#9CA3AF", fontSize: 8 }}>
-                <Typography>Supported: JPEG, PNG</Typography>
+                <Typography>Supported: JPEG, PNG, WebP</Typography>
                 <Typography>Maximum size: 5MB</Typography>
               </Box>
 
@@ -245,7 +257,7 @@ const QuestionTemplateImageUpload = ({
                 id="img-ipload"
                 onChange={handleFileChange}
                 disabled={isLoading}
-                accept="image/jpeg,image/png"
+                accept="image/jpeg,image/png,image/webp"
                 style={{ display: "none" }}
               />
             </Box>

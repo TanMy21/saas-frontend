@@ -317,6 +317,10 @@ export const OPTION_TYPES: QuestionType[] = [
 
 export const SINGLE_VALUE_TYPES: QuestionType[] = ["TEXT", "NUMBER", "RANGE"];
 
+export const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+
+export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
 export const roles = {
   ADMIN: {
     label: "Admin",
@@ -397,18 +401,18 @@ export const tierConfig = {
     Icon: LockOpenIcon,
     gradient: "linear-gradient(135deg, #f3f4f6, #e5e7eb)",
     textColor: "#6b7280",
-    action: "Upgrade", // 🔥 CTA for free users
+    action: "Upgrade",
   },
   PROFESSIONAL: {
     label: "Pro",
-    Icon: Gem, // 🔥 keep gem
+    Icon: Gem,
     gradient: "linear-gradient(135deg, #6366f1, #8b5cf6)",
     textColor: "#ffffff",
     action: null,
   },
   ENTERPRISE: {
     label: "Enterprise",
-    Icon: TrendingUpIcon, // 🔥 better than premium icon (feels scale/growth)
+    Icon: TrendingUpIcon,
     gradient: "linear-gradient(135deg, #f59e0b, #f97316)",
     textColor: "#ffffff",
     action: null,

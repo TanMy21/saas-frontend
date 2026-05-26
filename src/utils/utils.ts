@@ -25,7 +25,12 @@ import { type Transition } from "motion/react";
 
 import { FeatureItem, Step, UseCase } from "../types/landingTypes";
 
-import { OPTION_TYPES, SINGLE_VALUE_TYPES } from "./constants";
+import {
+  ALLOWED_IMAGE_TYPES,
+  MAX_IMAGE_SIZE_BYTES,
+  OPTION_TYPES,
+  SINGLE_VALUE_TYPES,
+} from "./constants";
 import {
   BinaryResult,
   MediaResult,
@@ -38,6 +43,7 @@ import {
   SummaryQuestion,
   TextResponseItem,
 } from "./insightTypes";
+import { showToast } from "./showToast";
 import { EdgeStyle, LayoutMode, QuestionType } from "./types";
 
 export const generateOptionLabel = (index: number, qType: string) => {
@@ -626,12 +632,17 @@ export const qrToCanvas = async (
 
 // Generates embed iframe code for survey
 export const getEmbedCode = (shareURL: string) => {
-  return `<iframe src="${shareURL}?embed=true" width="100%" height="600" style="border:none;border-radius:8px;"></iframe>`;
+  const validatedShareURL = validateShareURL(shareURL);
+
+  const embedURL = new URL(validatedShareURL);
+  embedURL.searchParams.set("embed", "true");
+
+  const safeEmbedURL = escapeHtml(embedURL.toString());
+
+  return `<iframe src="${safeEmbedURL}" width="100%" height="600" style="border:none;border-radius:8px;"></iframe>`;
 };
 
-/**
- * Copies HTML + plain text fallback to clipboard
- */
+// Copies HTML + plain text fallback to clipboard
 export const copyRichTextToClipboard = async (html: string) => {
   try {
     const temp = document.createElement("div");
@@ -789,3 +800,60 @@ export const HowItWorksSteps: Step[] = [
     alt: "Woman observing feedback and insights",
   },
 ];
+
+export const escapeHtml = (value: string) => {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
+export const validateShareURL = (shareURL: string) => {
+  const expectedShareOrigin = process.env.CLIENT_SHARE_ORIGIN;
+
+  if (!expectedShareOrigin) {
+    throw new Error("CLIENT_SHARE_ORIGIN is not configured");
+  }
+
+  const parsedShareURL = new URL(shareURL);
+  const parsedExpectedOrigin = new URL(expectedShareOrigin);
+
+  if (parsedShareURL.protocol !== "https:") {
+    throw new Error("Invalid share URL protocol");
+  }
+
+  if (parsedShareURL.origin !== parsedExpectedOrigin.origin) {
+    throw new Error("Invalid share URL origin");
+  }
+
+  return parsedShareURL.toString();
+};
+
+export const validateImageFile = (file: File) => {
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    showToast.error("Please select a JPEG, PNG, or WebP image.");
+    return false;
+  }
+
+  if (file.size > MAX_IMAGE_SIZE_BYTES) {
+    showToast.error("File size must be less than 5 MB.");
+    return false;
+  }
+
+  return true;
+};
+
+export const readImagePreview = (
+  file: File,
+  onPreviewReady: (preview: string) => void,
+) => {
+  const reader = new FileReader();
+
+  reader.onloadend = () => {
+    onPreviewReady(reader.result as string);
+  };
+
+  reader.readAsDataURL(file);
+};

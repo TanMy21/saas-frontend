@@ -1,3 +1,5 @@
+import { escapeHtml, validateShareURL } from "./utils";
+
 export const getSurveyEmailTemplate = ({
   surveyTitle,
   shareURL,
@@ -7,16 +9,21 @@ export const getSurveyEmailTemplate = ({
   shareURL: string;
   senderName?: string;
 }) => {
+  const safeShareURL = escapeHtml(validateShareURL(shareURL));
+
+  const safeSurveyTitle = surveyTitle ? escapeHtml(surveyTitle) : "";
+  const safeSenderName = senderName ? escapeHtml(senderName) : "";
+
   return `Hi,<br/><br/>
 
 Wanted to get your thoughts${
-    surveyTitle ? ` on <strong>${surveyTitle}</strong>` : ""
+    safeSurveyTitle ? ` on <strong>${safeSurveyTitle}</strong>` : ""
   }.<br/><br/>
 
 It’ll only take a minute, and your feedback genuinely helps.<br/><br/>
 
 <strong>Take the survey here:</strong><br/>
-<a href="${shareURL}" target="_blank">${shareURL}</a><br/><br/>
+<a href="${safeShareURL}" target="_blank" rel="noopener noreferrer">${safeShareURL}</a><br/><br/>
 
-Thanks${senderName ? `,<br/><strong>${senderName}</strong>` : "!"}`;
+Thanks${safeSenderName ? `,<br/><strong>${safeSenderName}</strong>` : "!"}`;
 };
