@@ -274,7 +274,7 @@ const QuestionImageUploadModal = ({
                   id="file-input"
                   onChange={handleFileChange}
                   disabled={isLoading}
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp"
                   hidden
                 />
 

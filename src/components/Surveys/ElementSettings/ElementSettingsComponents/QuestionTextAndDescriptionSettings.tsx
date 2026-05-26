@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; 
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
   AccordionDetails,
@@ -24,6 +24,7 @@ import { usePermission } from "../../../../context/PermissionContext";
 import {
   htmlToPlainText,
   rewriteHtmlTextPreserveInlineTags,
+  sanitizeRichTextHtml,
 } from "../../../../utils/richTextUtils";
 import { textAndDescriptionSettingsSchema } from "../../../../utils/schema";
 import { QuestionSetting } from "../../../../utils/types";
@@ -65,6 +66,41 @@ const QuestionTextandDescriptionSettings = () => {
       setFormTouched(false);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleQuestionTextChange = (
+    nextPlain: string,
+    fieldValue: string | undefined,
+    onFieldChange: (value: string) => void,
+  ) => {
+    const mergedHtml = rewriteHtmlTextPreserveInlineTags(
+      fieldValue ?? "",
+      nextPlain,
+    );
+
+    const safeHtml = sanitizeRichTextHtml(mergedHtml);
+
+    // RHF value remains HTML, but only sanitized supported HTML.
+    onFieldChange(safeHtml);
+
+    markFormTouched();
+
+    dispatch(
+      updateQuestionField({
+        key: "text",
+        value: safeHtml,
+      }),
+    );
+
+    if (questionID) {
+      dispatch(
+        updateElementField({
+          questionID,
+          key: "text",
+          value: safeHtml,
+        }),
+      );
     }
   };
 
@@ -124,7 +160,6 @@ const QuestionTextandDescriptionSettings = () => {
             color: "#453F46",
           }}
         >
-           
           <Tooltip title="Set the question text and description for your question">
             <Typography>Question</Typography>
           </Tooltip>
@@ -154,24 +189,11 @@ const QuestionTextandDescriptionSettings = () => {
                   placeholder="Enter your question"
                   readOnly={!canEditQuestion}
                   onChange={(nextPlain) => {
-                    const mergedHtml = rewriteHtmlTextPreserveInlineTags(
-                      field.value ?? "",
+                    handleQuestionTextChange(
                       nextPlain,
+                      field.value,
+                      field.onChange,
                     );
-                    field.onChange(mergedHtml); // RHF value = HTML
-                    markFormTouched();
-                    dispatch(
-                      updateQuestionField({ key: "text", value: mergedHtml }),
-                    );
-                    if (questionID) {
-                      dispatch(
-                        updateElementField({
-                          questionID,
-                          key: "text",
-                          value: mergedHtml,
-                        }),
-                      );
-                    }
                   }}
                   height={42}
                   sx={{ mb: 2 }}

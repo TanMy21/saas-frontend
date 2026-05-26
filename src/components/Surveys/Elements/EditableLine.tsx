@@ -7,6 +7,8 @@ import {
   getSelectionIn,
   insertPlainTextAtSelection,
   isEmptyHTML,
+  sanitizePlainTextForHtml,
+  sanitizeRichTextHtml,
   selectionHasTag,
   unwrapSelectionTag,
   wrapSelectionWithTag,
@@ -34,7 +36,7 @@ export function EditableLine({
   const displayRef = useRef<HTMLDivElement>(null);
   const lastContentKeyRef = useRef<EditableLineProps["contentKey"]>(undefined);
 
-  const [html, setHtml] = useState<string>(value || "");
+  const [html, setHtml] = useState<string>(() => sanitizeRichTextHtml(value));
   const [showBar, setShowBar] = useState(false);
   const [barPos, setBarPos] = useState<{ top: number; left: number }>({
     top: 0,
@@ -43,13 +45,15 @@ export function EditableLine({
 
   // Keep state in sync with external value
   useEffect(() => {
-    if (!active) setHtml(value || "");
+    if (!active) {
+      setHtml(sanitizeRichTextHtml(value));
+    }
   }, [value, active]);
 
   /*Seed DOM once.Do NOT keep re-setting innerHTML while typing, or caret will jump. */
   useEffect(() => {
     if (active && editableRef.current) {
-      editableRef.current.innerHTML = html || "";
+      editableRef.current.innerHTML = sanitizeRichTextHtml(html);
       // focus & put caret at end
       const rAF = requestAnimationFrame(() => {
         const el = editableRef.current!;
@@ -72,7 +76,7 @@ export function EditableLine({
       return;
     }
     if (contentKey !== lastContentKeyRef.current) {
-      editableRef.current.innerHTML = value ?? "";
+      editableRef.current.innerHTML = sanitizeRichTextHtml(value);
       // Caret at end and hide pill
       const el = editableRef.current;
       const sel = window.getSelection();
@@ -133,7 +137,7 @@ export function EditableLine({
     if (!active && canShowFormatPill) {
       onStartEdit?.();
 
-      // 🔥 delay pill so DOM updates first
+      //   delay pill so DOM updates first
       requestAnimationFrame(() => {
         updateBarPosition();
         setShowBar(true);
@@ -171,10 +175,17 @@ export function EditableLine({
     }
 
     // Sync model from the active DOM
-    const next =
+    /**
+     * Read from DOM after formatting, then sanitize before updating state or saving.
+     * This prevents unsupported tags/attributes from being persisted.
+     */
+    const rawNext =
       (active
         ? editableRef.current?.innerHTML
         : displayRef.current?.innerHTML) ?? html;
+
+    const next = sanitizeRichTextHtml(rawNext);
+
     setHtml(next);
     onChange?.(next);
     queueMicrotask(() => onFormatted?.(next));
@@ -199,8 +210,10 @@ export function EditableLine({
   };
 
   const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
-    const next = (e.currentTarget as HTMLDivElement).innerHTML;
-    setHtml(next); // keep state for view mode
+    const rawNext = e.currentTarget.innerHTML;
+    const next = sanitizeRichTextHtml(rawNext);
+
+    setHtml(next);
     onChange?.(next);
   };
 
@@ -241,7 +254,7 @@ export function EditableLine({
     }
   };
 
-  const displayHTML = useMemo(() => html || "", [html]);
+  const displayHTML = useMemo(() => sanitizeRichTextHtml(html), [html]);
   const empty = isEmptyHTML(displayHTML);
 
   return (
@@ -275,7 +288,9 @@ export function EditableLine({
             const text = e.clipboardData.getData("text/plain");
             if (editableRef.current)
               insertPlainTextAtSelection(editableRef.current, text);
-            const next = editableRef.current?.innerHTML ?? "";
+            const rawNext = editableRef.current?.innerHTML ?? "";
+            const next = sanitizeRichTextHtml(rawNext);
+
             setHtml(next);
             onChange?.(next);
           }}
@@ -304,7 +319,7 @@ export function EditableLine({
           dangerouslySetInnerHTML={{
             __html:
               empty && placeholder
-                ? `<span style="opacity:.6">${placeholder}</span>`
+                ? sanitizePlainTextForHtml(placeholder)
                 : displayHTML,
           }}
         />

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 
+import DOMPurify from "dompurify";
 import {
   Box,
   EyeOff,
@@ -591,14 +592,22 @@ export const safeCopyText = async (text: string) => {
 
 // Safe rich copy to plain text
 export const safeCopyHTML = async (html: string) => {
+  const safeHtml = sanitizeClipboardHtml(html);
+
   try {
     if (navigator.clipboard && window.isSecureContext) {
-      const blob = new Blob([html], { type: "text/html" });
+      const blob = new Blob([safeHtml], { type: "text/html" });
       const data = [new ClipboardItem({ "text/html": blob })];
+
       await navigator.clipboard.write(data);
     } else {
-      await safeCopyText(html); // fallback
+      /**
+       * Fallback copies sanitized HTML as text.
+       * Never fallback to the original raw HTML.
+       */
+      await safeCopyText(safeHtml);
     }
+
     return true;
   } catch {
     return false;
@@ -642,26 +651,102 @@ export const getEmbedCode = (shareURL: string) => {
   return `<iframe src="${safeEmbedURL}" width="100%" height="600" style="border:none;border-radius:8px;"></iframe>`;
 };
 
-// Copies HTML + plain text fallback to clipboard
+/**
+ * Sanitizes rich HTML copied to clipboard.
+ * Allows only the minimal tags needed for generated email/share content.
+ */
+/**
+ * Sanitizes generated clipboard HTML.
+ * Allows only basic formatting and safe HTTPS links.
+ * Rebuilds anchor attributes so callers cannot preserve unsafe target/rel values.
+ */
+export const sanitizeClipboardHtml = (html?: string | null) => {
+  if (!html) {
+    return "";
+  }
+
+  const sanitizedHtml = DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ["strong", "em", "u", "br", "a"],
+    ALLOWED_ATTR: ["href"],
+    ALLOWED_URI_REGEXP: /^https:\/\//i,
+    KEEP_CONTENT: true,
+  });
+
+  const temp = document.createElement("div");
+
+  temp.innerHTML = sanitizedHtml;
+
+  temp.querySelectorAll("a").forEach((anchor) => {
+    const href = anchor.getAttribute("href");
+
+    if (!href) {
+      anchor.replaceWith(...Array.from(anchor.childNodes));
+      return;
+    }
+
+    try {
+      const url = new URL(href);
+
+      if (url.protocol !== "https:") {
+        anchor.replaceWith(...Array.from(anchor.childNodes));
+        return;
+      }
+
+      /**
+       * Force safe link attributes instead of trusting caller-provided values.
+       */
+      anchor.setAttribute("href", url.toString());
+      anchor.setAttribute("target", "_blank");
+      anchor.setAttribute("rel", "noopener noreferrer");
+    } catch {
+      anchor.replaceWith(...Array.from(anchor.childNodes));
+    }
+  });
+
+  return temp.innerHTML;
+};
+/**
+ * Copies rich HTML to the clipboard safely.
+ * Sanitizes the HTML before parsing it and before creating the clipboard HTML blob.
+ */
 export const copyRichTextToClipboard = async (html: string) => {
+  const safeHtml = sanitizeClipboardHtml(html);
+
   try {
     const temp = document.createElement("div");
-    temp.innerHTML = html;
+
+    /**
+     * Safe because safeHtml has already been sanitized.
+     */
+    temp.innerHTML = safeHtml;
+
     const plainText = temp.innerText;
 
     const item = new ClipboardItem({
-      "text/html": new Blob([html], { type: "text/html" }),
+      "text/html": new Blob([safeHtml], { type: "text/html" }),
       "text/plain": new Blob([plainText], { type: "text/plain" }),
     });
 
     await navigator.clipboard.write([item]);
+
     return true;
   } catch {
-    await safeCopyText(html);
+    await safeCopyText(plainTextFromHtml(safeHtml));
+
     return false;
   }
 };
 
+/**
+ * Converts sanitized HTML to plain text for fallback clipboard copying.
+ */
+const plainTextFromHtml = (html: string) => {
+  const temp = document.createElement("div");
+
+  temp.innerHTML = html;
+
+  return temp.innerText;
+};
 // Prevents duplicate event tracking within a session
 export const shouldTrackEvent = (
   key: string,
@@ -811,10 +896,10 @@ export const escapeHtml = (value: string) => {
 };
 
 export const validateShareURL = (shareURL: string) => {
-  const expectedShareOrigin = process.env.CLIENT_SHARE_ORIGIN;
+  const expectedShareOrigin = import.meta.env.VITE_SHARE_BASE_URL;
 
   if (!expectedShareOrigin) {
-    throw new Error("CLIENT_SHARE_ORIGIN is not configured");
+    throw new Error("VITE_SHARE_BASE_URL is not configured");
   }
 
   const parsedShareURL = new URL(shareURL);

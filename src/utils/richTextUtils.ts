@@ -1,3 +1,5 @@
+import DOMPurify from "dompurify";
+
 import { FormatTagType } from "./types";
 
 /**
@@ -105,7 +107,7 @@ export function unwrapTags(el: HTMLElement, tagNames: string[]) {
  */
 export function wrapSelectionWithTag(
   root: HTMLElement,
-  tagName: FormatTagType
+  tagName: FormatTagType,
 ) {
   const ctx = getSelectionIn(root);
   if (!ctx) return;
@@ -151,7 +153,7 @@ export function wrapSelectionWithTag(
  */
 export function selectionFullyInsideTag(
   root: HTMLElement,
-  tagName: FormatTagType
+  tagName: FormatTagType,
 ) {
   const ctx = getSelectionIn(root);
   if (!ctx) return false;
@@ -191,11 +193,16 @@ export function insertPlainTextAtSelection(root: HTMLElement, text: string) {
  * @returns Plain text string.
  */
 export function htmlToPlainText(html?: string | null): string {
-  if (!html) return "";
+  if (!html) {
+    return "";
+  }
+
   const div = document.createElement("div");
-  div.innerHTML = html;
+
+  div.innerHTML = sanitizeRichTextHtml(html);
 
   const text = div.textContent || "";
+
   return text.replace(/\u00A0/g, " ");
 }
 
@@ -206,14 +213,28 @@ export function htmlToPlainText(html?: string | null): string {
  * @returns Plain text string with line breaks.
  */
 export function convertHtmlToPlainText(html?: string | null): string {
-  if (!html) return "";
+  if (!html) {
+    return "";
+  }
 
   const withBreaks = html
     .replace(/<br\s*\/?>/gi, "\n")
     .replace(/<\/(p|div|li|h[1-6])>/gi, "\n");
+
+  // Strip every tag and attribute before assigning the result to innerHTML.
+  const safeTextHtml = DOMPurify.sanitize(withBreaks, {
+    ALLOWED_TAGS: [],
+    ALLOWED_ATTR: [],
+    KEEP_CONTENT: true,
+  });
+
   const div = document.createElement("div");
-  div.innerHTML = withBreaks;
+
+  // Safe because safeTextHtml contains no allowed tags.
+  div.innerHTML = safeTextHtml;
+
   const text = div.textContent || "";
+
   return text
     .replace(/\u00A0/g, " ")
     .replace(/\n{3,}/g, "\n\n")
@@ -246,7 +267,7 @@ export function plainTextToSafeHtml(text: string): string {
 export function closestTagAny(
   node: Node | null,
   tags: string[],
-  root: HTMLElement
+  root: HTMLElement,
 ) {
   if (!node) return null;
   const UPPER = new Set(tags.map((t) => t.toUpperCase()));
@@ -273,7 +294,7 @@ export function closestTagAny(
 export function liftCollapsedRangeOutOfTags(
   range: Range,
   tags: string[],
-  root: HTMLElement
+  root: HTMLElement,
 ) {
   let container: Node = range.startContainer;
   let ancestor = closestTagAny(container, tags, root);
@@ -293,7 +314,7 @@ export function liftCollapsedRangeOutOfTags(
  */
 export function unwrapSelectionTag(
   root: HTMLElement,
-  tagName: "strong" | "em" | "u"
+  tagName: "strong" | "em" | "u",
 ) {
   const ctx = getSelectionIn(root);
   if (!ctx) return;
@@ -331,7 +352,7 @@ export function unwrapSelectionTag(
  */
 export function selectionHasTag(
   root: HTMLElement,
-  tagName: "strong" | "em" | "u"
+  tagName: "strong" | "em" | "u",
 ) {
   const ctx = getSelectionIn(root);
   if (!ctx) return false;
@@ -363,15 +384,20 @@ export function selectionHasTag(
  */
 export function rewriteHtmlTextPreserveInlineTags(
   oldHtml: string,
-  newPlain: string
+  newPlain: string,
 ): string {
   const normalized = (newPlain ?? "").replace(/\u00A0/g, " ");
+
   const host = document.createElement("div");
-  host.innerHTML = oldHtml || "";
+
+  // Sanitize old backend HTML before parsing it into DOM nodes.
+  host.innerHTML = sanitizeRichTextHtml(oldHtml || "");
 
   const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT, null);
   const nodes: Text[] = [];
+
   let node = walker.nextNode();
+
   while (node) {
     nodes.push(node as Text);
     node = walker.nextNode();
@@ -379,36 +405,46 @@ export function rewriteHtmlTextPreserveInlineTags(
 
   if (nodes.length === 0) {
     host.textContent = normalized;
-    return host.innerHTML;
+
+    // Sanitize final HTML before returning it to form/store/API paths.
+    return sanitizeRichTextHtml(host.innerHTML);
   }
 
   let cursor = 0;
   const total = normalized.length;
 
-  nodes.forEach((t, i) => {
+  nodes.forEach((textNode, index) => {
     if (cursor >= total) {
-      t.textContent = "";
+      textNode.textContent = "";
       return;
     }
-    const isLast = i === nodes.length - 1;
+
+    const isLast = index === nodes.length - 1;
+
     if (isLast) {
-      t.textContent = normalized.slice(cursor);
+      textNode.textContent = normalized.slice(cursor);
       cursor = total;
-    } else {
-      const keep = Math.min(t.textContent?.length ?? 0, total - cursor);
-      t.textContent = normalized.slice(cursor, cursor + keep);
-      cursor += keep;
+      return;
     }
+
+    const keep = Math.min(
+      textNode.textContent?.length ?? 0,
+      total - cursor,
+    );
+
+    textNode.textContent = normalized.slice(cursor, cursor + keep);
+    cursor += keep;
   });
 
   if (cursor < total) {
     const last = nodes[nodes.length - 1];
-    last.textContent = (last.textContent || "") + normalized.slice(cursor);
+
+    last.textContent = `${last.textContent || ""}${normalized.slice(cursor)}`;
   }
 
-  return host.innerHTML;
+  // Sanitize returned HTML so no unsafe tags/attributes survive this utility.
+  return sanitizeRichTextHtml(host.innerHTML);
 }
-
 /**
  * Normalizes an HTML string by replacing non-breaking spaces and collapsing whitespace.
  *
@@ -420,3 +456,41 @@ export const normalizeHtml = (s?: string | null) =>
     .replace(/&nbsp;/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+
+/**
+ * Defines the only rich-text tags your editor intentionally supports.
+ * Do not add attributes unless the editor truly needs them.
+ */
+const ALLOWED_RICH_TEXT_TAGS = ["strong", "em", "u", "br"];
+
+/**
+ * Sanitizes rich text produced by contentEditable before storing or rendering.
+ * Only basic formatting tags are allowed; scripts, styles, links, images, spans, and attributes are removed.
+ */
+export const sanitizeRichTextHtml = (html?: string | null) => {
+  if (!html) {
+    return "";
+  }
+
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ALLOWED_RICH_TEXT_TAGS,
+    ALLOWED_ATTR: [],
+    KEEP_CONTENT: true,
+  });
+};
+
+/**
+ * Sanitizes placeholder text before placing it inside fallback HTML.
+ * This prevents placeholder values from becoming injectable markup.
+ */
+export const sanitizePlainTextForHtml = (value?: string | null) => {
+  if (!value) {
+    return "";
+  }
+
+  return DOMPurify.sanitize(value, {
+    ALLOWED_TAGS: [],
+    ALLOWED_ATTR: [],
+    KEEP_CONTENT: true,
+  });
+};

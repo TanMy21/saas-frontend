@@ -14,6 +14,7 @@ import { useDebouncedElementDispatch } from "../../../hooks/useDebouncedElementD
 import { useEditController } from "../../../hooks/useEditController";
 import { useOutsideSave } from "../../../hooks/useOutsideSave";
 import { useAppTheme } from "../../../theme/useAppTheme";
+import { sanitizeRichTextHtml } from "../../../utils/richTextUtils";
 import { ElementProps } from "../../../utils/types";
 import { isOrderable } from "../../../utils/utils";
 
@@ -97,16 +98,26 @@ const ElementQuestionText = ({ display }: ElementProps) => {
 
   const rootRef = useRef<HTMLDivElement | null>(null);
 
-  /* HTML from contentEditable and store as-is (rich) */
+  /**
+   * Sanitizes title rich text before updating local state or sending debounced API updates.
+   * This prevents unsupported HTML from being stored.
+   */
   const handleChangeTitle = (nextHTML: string) => {
-    dispatch(updateQuestionField({ key: "text", value: nextHTML }));
-    debouncedUpdate("text", nextHTML);
+    const safeHTML = sanitizeRichTextHtml(nextHTML);
+
+    dispatch(updateQuestionField({ key: "text", value: safeHTML }));
+    debouncedUpdate("text", safeHTML);
   };
 
-  /* HTML from contentEditable and store as-is (rich) */
+  /**
+   * Sanitizes description rich text before updating local state or sending debounced API updates.
+   * This prevents unsupported HTML from being stored.
+   */
   const handleChangeDesc = (nextHTML: string) => {
-    dispatch(updateQuestionField({ key: "description", value: nextHTML }));
-    debouncedUpdate("description", nextHTML);
+    const safeHTML = sanitizeRichTextHtml(nextHTML);
+
+    dispatch(updateQuestionField({ key: "description", value: safeHTML }));
+    debouncedUpdate("description", safeHTML);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
