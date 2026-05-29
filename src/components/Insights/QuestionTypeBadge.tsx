@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 
+import { QuestionTypeBadgeProps } from "../../types/insightTypes";
 import { questionTypeMap } from "../../utils/elementsConfig";
-import { QuestionTypeBadgeProps } from "../../utils/insightTypes";
 
 export function QuestionTypeBadge({ type, className }: QuestionTypeBadgeProps) {
   const config = questionTypeMap[type];

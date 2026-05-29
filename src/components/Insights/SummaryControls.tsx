@@ -3,12 +3,12 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { Calendar, Smartphone } from "lucide-react";
 
-import { filterInputSx } from "../../utils/constants";
 import {
   DeviceFilter,
   SummaryControlsProps,
   TimeFilter,
-} from "../../utils/insightTypes";
+} from "../../types/insightTypes";
+import { filterInputSx } from "../../utils/constants";
 
 import { InsightsFilterDropdown } from "./InsightsFilterDropdown";
 

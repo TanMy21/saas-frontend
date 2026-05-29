@@ -1,7 +1,7 @@
 import {
   NormalizedQuestion,
   ResponsesSummaryResponse,
-} from "../../utils/insightTypes";
+} from "../../types/insightTypes";
 
 export function normalizeResponsesSummary(
   api: ResponsesSummaryResponse,

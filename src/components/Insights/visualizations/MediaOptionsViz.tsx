@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-import { MediaOptionsVizProps } from "../../../utils/insightTypes";
+import { MediaOptionsVizProps } from "../../../types/insightTypes";
 
 export const MediaOptionsViz = ({ question }: MediaOptionsVizProps) => {
   const total = question.meta.totalResponses;

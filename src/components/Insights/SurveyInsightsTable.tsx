@@ -16,11 +16,11 @@ import {
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { chipTypeColors } from "../../utils/elementsConfig";
 import {
   InsightTableColumnConfig,
   SurveyInsightTable,
-} from "../../utils/insightTypes";
+} from "../../types/insightTypes";
+import { chipTypeColors } from "../../utils/elementsConfig";
 import { convertHtmlToPlainText } from "../../utils/richTextUtils";
 import { hexToRgba, severitySx } from "../../utils/utils";
 

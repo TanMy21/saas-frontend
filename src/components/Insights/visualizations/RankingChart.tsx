@@ -10,12 +10,12 @@ import {
 } from "recharts";
 
 import { useAppTheme } from "../../../theme/useAppTheme";
+import { RankingChartProps } from "../../../types/insightTypes";
 import {
   BAR_COLOR,
   medalColors,
   MIN_BAR_PERCENT,
 } from "../../../utils/constants";
-import { RankingChartProps } from "../../../utils/insightTypes";
 
 export const RankingChart = ({ question }: RankingChartProps) => {
   const { scrollStyles } = useAppTheme();

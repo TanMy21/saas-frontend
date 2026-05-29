@@ -9,8 +9,8 @@ import {
   Tooltip,
 } from "recharts";
 
+import { NumericChartProps } from "../../../types/insightTypes";
 import { BAR_COLORS } from "../../../utils/constants";
-import { NumericChartProps } from "../../../utils/insightTypes";
 import { formatChartValue, formatRangeLabel } from "../../../utils/utils";
 
 import { NumericDistributionTooltip } from "./NumericDistributionTooltip";

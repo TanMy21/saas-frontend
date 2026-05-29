@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Box, Typography } from "@mui/material";
 
-import { BinaryChartProps } from "../../../utils/insightTypes";
+import { BinaryChartProps } from "../../../types/insightTypes";
 
 export const BinaryChart = ({ question }: BinaryChartProps) => {
   const [animate, setAnimate] = useState(false);

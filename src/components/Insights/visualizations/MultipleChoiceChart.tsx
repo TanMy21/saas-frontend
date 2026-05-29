@@ -10,8 +10,8 @@ import {
   LabelList,
 } from "recharts";
 
+import { MultipleChoiceChartProps } from "../../../types/insightTypes";
 import { OPTION_COLORS, ROW_HEIGHT } from "../../../utils/constants";
-import { MultipleChoiceChartProps } from "../../../utils/insightTypes";
 
 import { MultipleChoiceTooltip } from "./MultipleChoiceTooltip";
 

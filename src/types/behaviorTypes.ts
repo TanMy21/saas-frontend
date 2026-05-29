@@ -1,4 +1,6 @@
-import { BehavioralSignals, SegmentComparison } from "../utils/insightTypes";
+import { BehavioralSignals, SegmentComparison } from "./insightTypes";
+
+ 
 
 export type ParticipantBehaviorCursor = {
   startedAt: string;
@@ -118,13 +120,11 @@ export interface BehaviorTimelineProps {
   timeline: BackendTimeline[];
 }
 
-
 export type BehaviorMetricProps = {
   label: string;
   value: number | string;
   sx?: object;
 };
-
 
 export interface BehavioralSignalsProps {
   signals: BehavioralSignals;
@@ -144,7 +144,178 @@ export interface BehaviorMetricCardProps {
   className?: string;
 }
 
-
 export interface NoResultsProps {
   onClearFilters: () => void;
 }
+
+export type ClickedMeshArea = {
+  label: string;
+  meshName: string;
+  materialName: string | null;
+  clickCount: number;
+};
+
+export type SurfaceClickSample = {
+  t: number;
+  meshName: string | null;
+  materialName: string | null;
+  faceIndex: number | null;
+  screenZoneId?: string | null;
+  point: {
+    x: number;
+    y: number;
+    z: number;
+  };
+};
+
+export type ThreeDQuestionResultAggregate = {
+  questionID: string;
+
+  explicit: {
+    totalResponses: number;
+    likeCount: number;
+    dislikeCount: number;
+    likeRate: number;
+    dislikeRate: number;
+  };
+
+  behaviorSummary: {
+    answeredWithoutInteractionCount: number;
+    answeredWithoutInteractionRate: number;
+
+    viewedMultipleAnglesCount: number;
+    viewedMultipleAnglesRate: number;
+
+    fullRotationCompletedCount: number;
+    fullRotationCompletedRate: number;
+
+    deepZoomUsedCount: number;
+    deepZoomUsedRate: number;
+
+    modelClickCountTotal: number;
+    emptySpaceClickCountTotal: number;
+    viewerClickCountTotal: number;
+    emptyClickRate: number;
+  };
+
+  behaviorByAnswer: {
+    like: ThreeDBehaviorGroupSummary;
+    dislike: ThreeDBehaviorGroupSummary;
+  };
+
+  heatmap: {
+    screenZoneClickSummary: Record<string, number>;
+    likeScreenZoneClickSummary: Record<string, number>;
+    dislikeScreenZoneClickSummary: Record<string, number>;
+  };
+
+  modelAreas: {
+    clickedMeshes: ClickedMeshArea[];
+    likedClickedMeshes: ClickedMeshArea[];
+    dislikedClickedMeshes: ClickedMeshArea[];
+  };
+
+  surfaceClickSamples: SurfaceClickSample[];
+  likedSurfaceClickSamples: SurfaceClickSample[];
+  dislikedSurfaceClickSamples: SurfaceClickSample[];
+
+  performance: {
+    avgFps: number | null;
+    avgTriangles: number | null;
+    avgDrawCalls: number | null;
+    avgTextures: number | null;
+  };
+
+  insights: {
+    mostInteractedArea: {
+      hasData: boolean;
+      message: string;
+      area: ClickedMeshArea | null;
+    };
+
+    firstImpressionVsInspected: {
+      firstImpression: {
+        total: number;
+        likeCount: number;
+        dislikeCount: number;
+        likeRate: number;
+      };
+      inspected: {
+        total: number;
+        likeCount: number;
+        dislikeCount: number;
+        likeRate: number;
+      };
+    };
+
+    rotationInspection: {
+      viewedMultipleAnglesCount: number;
+      viewedMultipleAnglesRate: number;
+      fullRotationCompletedCount: number;
+      fullRotationCompletedRate: number;
+      avgManualAzimuthCoverage: number;
+      avgManualElevationCoverage: number;
+      avgManualOrbitChanges: number;
+    };
+
+    zoomInspection: {
+      deepZoomUsedCount: number;
+      deepZoomUsedRate: number;
+      deepZoomLikeRate: number;
+      nonDeepZoomLikeRate: number;
+    };
+
+    performanceWarning: {
+      hasWarning: boolean;
+      warnings: string[];
+    };
+  };
+};
+
+export type ThreeDBehaviorGroupSummary = {
+  total: number;
+  answeredWithoutInteractionRate: number;
+  viewedMultipleAnglesRate: number;
+  deepZoomUsedRate: number;
+  avgModelClicks: number;
+  avgEmptyClicks: number;
+};
+
+export type HeatmapMode = "ALL" | "LIKE" | "DISLIKE";
+
+export type LikeDislikeSplitSummaryProps = {
+  likeCount: number;
+  dislikeCount: number;
+  likePercentage: number;
+  dislikePercentage: number;
+  formatValue: (count: number, percentage: number) => string;
+};
+
+export interface ThreeDBehaviorInsightsProps {
+  data: any;
+  isLoading: boolean;
+  modelUrl?: string;
+}
+
+export type ThreeDInsightTab = "by-answer" | "viewport" | "regions";
+
+export type ThreeDBehaviorDetailsTabsProps = {
+  data: ThreeDQuestionResultAggregate;
+  activeAreas: ColoredClickedMeshArea[];
+};
+
+export type ThreeDHeatmapInsightsSectionProps = {
+  data: ThreeDQuestionResultAggregate;
+  modelUrl?: string;
+  heatmapMode: HeatmapMode;
+  onHeatmapModeChange: (mode: HeatmapMode) => void;
+  activeHeatmapData: {
+    clickedMeshes: ColoredClickedMeshArea[];
+    surfaceClickSamples: SurfaceClickSample[];
+    label: string;
+  };
+};
+
+export type ColoredClickedMeshArea = ClickedMeshArea & {
+  color: string;
+};

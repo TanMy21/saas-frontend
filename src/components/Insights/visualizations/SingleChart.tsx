@@ -10,11 +10,11 @@ import {
   LabelList,
 } from "recharts";
 
+import { SingleChoiceChartProps } from "../../../types/insightTypes";
 import {
   OPTION_COLORS_SINGLE_CHOICE,
   ROW_HEIGHT_SINGLE_CHOICE,
 } from "../../../utils/constants";
-import { SingleChoiceChartProps } from "../../../utils/insightTypes";
 
 import { SingleChoiceTooltip } from "./SingleChoiceTooltip";
 

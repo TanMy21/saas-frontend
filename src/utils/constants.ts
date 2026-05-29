@@ -418,3 +418,17 @@ export const tierConfig = {
     action: null,
   },
 } as const;
+
+
+
+// 3D interaction areas colors
+export const THREE_D_AREA_COLORS = [
+  "#2563EB", // blue
+  "#A855F7", // purple
+  "#F97316", // orange
+  "#10B981", // green
+  "#EC4899", // pink
+  "#EAB308", // yellow
+  "#06B6D4", // cyan
+  "#EF4444", // red
+];

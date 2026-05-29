@@ -10,8 +10,8 @@ import {
   Tooltip,
 } from "recharts";
 
+import { ScaleChartProps } from "../../../types/insightTypes";
 import { RATING_COLORS, ROW_HEIGHT_SCALE } from "../../../utils/constants";
-import { ScaleChartProps } from "../../../utils/insightTypes";
 
 export const ScaleChart = ({ question }: ScaleChartProps) => {
   const total = question.meta.totalResponses || 0;

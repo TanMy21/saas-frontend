@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Box, Typography, IconButton, InputBase } from "@mui/material";
 import { Grid, List, Search } from "lucide-react";
 
-import { TextResponsesProps } from "../../../utils/insightTypes";
+import { TextResponsesProps } from "../../../types/insightTypes";
 import { timeAgo } from "../../../utils/utils";
 
 export const TextResponses = ({ question }: TextResponsesProps) => {

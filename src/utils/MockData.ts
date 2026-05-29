@@ -563,3 +563,215 @@ export const mockSurvey = {
   avgCompletionTime: 8.5,
   questions: mockQuestions,
 };
+
+
+
+
+
+
+/**
+ * Represents one answer-group behavior summary.
+ * Used to compare LIKE users against DISLIKE users.
+ */
+type ThreeDBehaviorGroupSummary = {
+  total: number;
+  answeredWithoutInteractionRate: number;
+  viewedMultipleAnglesRate: number;
+  deepZoomUsedRate: number;
+  avgModelClicks: number;
+  avgEmptyClicks: number;
+};
+
+/**
+ * Represents the mock aggregate result for one 3D question.
+ * This mirrors the backend response shape you can build later.
+ */
+export type ThreeDQuestionResultAggregate = {
+  questionID: string;
+
+  explicit: {
+    totalResponses: number;
+    likeCount: number;
+    dislikeCount: number;
+    likeRate: number;
+    dislikeRate: number;
+  };
+
+  behaviorSummary: {
+    answeredWithoutInteractionCount: number;
+    answeredWithoutInteractionRate: number;
+
+    viewedMultipleAnglesCount: number;
+    viewedMultipleAnglesRate: number;
+
+    fullRotationCompletedCount: number;
+    fullRotationCompletedRate: number;
+
+    deepZoomUsedCount: number;
+    deepZoomUsedRate: number;
+
+    modelClickCountTotal: number;
+    emptySpaceClickCountTotal: number;
+    viewerClickCountTotal: number;
+    emptyClickRate: number;
+  };
+
+  behaviorByAnswer: {
+    like: ThreeDBehaviorGroupSummary;
+    dislike: ThreeDBehaviorGroupSummary;
+  };
+
+  heatmap: {
+    screenZoneClickSummary: Record<string, number>;
+    likeScreenZoneClickSummary: Record<string, number>;
+    dislikeScreenZoneClickSummary: Record<string, number>;
+  };
+
+  modelAreas: {
+    clickedMeshes: {
+      meshName: string;
+      materialName: string | null;
+      clickCount: number;
+      label: string;
+    }[];
+  };
+
+  performance: {
+    avgFps: number | null;
+    avgTriangles: number | null;
+    avgDrawCalls: number | null;
+    avgTextures: number | null;
+  };
+};
+
+/**
+ * Mock 3D result aggregate.
+ * Use this temporarily to build the creator-facing 3D results UI before wiring backend aggregation.
+ */
+export const mockThreeDResults: ThreeDQuestionResultAggregate = {
+  questionID: "mock-3d-question-001",
+
+  explicit: {
+    totalResponses: 42,
+    likeCount: 27,
+    dislikeCount: 15,
+    likeRate: 64.3,
+    dislikeRate: 35.7,
+  },
+
+  behaviorSummary: {
+    answeredWithoutInteractionCount: 11,
+    answeredWithoutInteractionRate: 26.2,
+
+    viewedMultipleAnglesCount: 24,
+    viewedMultipleAnglesRate: 57.1,
+
+    fullRotationCompletedCount: 9,
+    fullRotationCompletedRate: 21.4,
+
+    deepZoomUsedCount: 13,
+    deepZoomUsedRate: 31.0,
+
+    modelClickCountTotal: 38,
+    emptySpaceClickCountTotal: 19,
+    viewerClickCountTotal: 57,
+
+    // Empty clicks as percentage of all viewer clicks.
+    emptyClickRate: 33.3,
+  },
+
+  behaviorByAnswer: {
+    like: {
+      total: 27,
+      answeredWithoutInteractionRate: 33.3,
+      viewedMultipleAnglesRate: 62.9,
+      deepZoomUsedRate: 22.2,
+      avgModelClicks: 1.1,
+      avgEmptyClicks: 0.3,
+    },
+
+    dislike: {
+      total: 15,
+      answeredWithoutInteractionRate: 13.3,
+      viewedMultipleAnglesRate: 46.7,
+      deepZoomUsedRate: 46.7,
+      avgModelClicks: 0.6,
+      avgEmptyClicks: 0.8,
+    },
+  },
+
+  heatmap: {
+    screenZoneClickSummary: {
+      "top-left": 2,
+      "top-center": 5,
+      "top-right": 4,
+      "middle-left": 6,
+      "middle-center": 18,
+      "middle-right": 9,
+      "bottom-left": 1,
+      "bottom-center": 7,
+      "bottom-right": 5,
+    },
+
+    // Later you can use these for Like/Dislike heatmap tabs.
+    likeScreenZoneClickSummary: {
+      "top-left": 1,
+      "top-center": 3,
+      "top-right": 2,
+      "middle-left": 4,
+      "middle-center": 12,
+      "middle-right": 5,
+      "bottom-left": 0,
+      "bottom-center": 2,
+      "bottom-right": 1,
+    },
+
+    dislikeScreenZoneClickSummary: {
+      "top-left": 1,
+      "top-center": 2,
+      "top-right": 2,
+      "middle-left": 2,
+      "middle-center": 6,
+      "middle-right": 4,
+      "bottom-left": 1,
+      "bottom-center": 5,
+      "bottom-right": 4,
+    },
+  },
+
+  modelAreas: {
+    clickedMeshes: [
+      {
+        label: "Area A",
+        meshName: "mesh_0",
+        materialName: "Sauvage_glass",
+        clickCount: 18,
+      },
+      {
+        label: "Area B",
+        meshName: "mesh_2",
+        materialName: "material",
+        clickCount: 11,
+      },
+      {
+        label: "Area C",
+        meshName: "mesh_10",
+        materialName: "Mesh",
+        clickCount: 6,
+      },
+      {
+        label: "Area D",
+        meshName: "mesh_5",
+        materialName: null,
+        clickCount: 3,
+      },
+    ],
+  },
+
+  performance: {
+    avgFps: 58,
+    avgTriangles: 143754,
+    avgDrawCalls: 13,
+    avgTextures: 5,
+  },
+};

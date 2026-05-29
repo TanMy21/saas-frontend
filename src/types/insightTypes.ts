@@ -1,7 +1,8 @@
 import { type TableCellProps } from "@mui/material";
 import { type LucideIcon } from "lucide-react";
 
-import { Question, QuestionType } from "./types";
+import { ColoredClickedMeshArea } from "../types/behaviorTypes";
+import { Question, QuestionType } from "../utils/types";
 
 type DistributionItem = { label: string; percent: number };
 
@@ -361,6 +362,20 @@ export interface TextQuestion extends NormalizedQuestion {
   responses: TextResponseItem[];
 }
 
+export interface ThreeDQuestion {
+  surveyID: string;
+  type: "THREE_D";
+  questionID: string;
+  title?: string;
+  questionText?: string;
+  responses?: any[];
+}
+
+export interface ThreeDOptionChartProps {
+  question: BinaryQuestion;
+  surveyID: string;
+}
+
 export interface TextResponsesProps {
   question: TextQuestion;
 }
@@ -376,6 +391,7 @@ export type SummaryQuestion =
   | TextQuestion;
 
 export interface QuestionSectionProps {
+  surveyID: string;
   question: SummaryQuestion;
 }
 
@@ -383,3 +399,38 @@ export interface QuestionTypeBadgeProps {
   type: QuestionType;
   className?: string;
 }
+
+export type SummaryVisualizationProps = {
+  question: SummaryQuestion;
+  surveyID: string;
+};
+
+export type SummaryVisualizationComponent = React.FC<SummaryVisualizationProps>;
+
+export type ClickedMeshArea = {
+  label: string;
+  meshName: string;
+  materialName: string | null;
+  clickCount: number;
+};
+
+export type SurfaceClickSample = {
+  t: number;
+  meshName: string | null;
+  materialName: string | null;
+  faceIndex: number | null;
+  screenZoneId?: string | null;
+  point: {
+    x: number;
+    y: number;
+    z: number;
+  };
+};
+
+export type ThreeDResultBehaviorViewerProps = {
+  modelUrl?: string;
+  clickedMeshes: ColoredClickedMeshArea[];
+  surfaceClickSamples?: SurfaceClickSample[];
+  height?: number;
+  autoRotate?: boolean;
+};

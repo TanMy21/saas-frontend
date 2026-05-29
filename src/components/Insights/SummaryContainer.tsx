@@ -5,7 +5,7 @@ import { skipToken } from "@reduxjs/toolkit/query/react";
 import { useParams } from "react-router-dom";
 
 import { useGetResponsesSummaryQuery } from "../../app/slices/resultsApiSlice";
-import { InsightsFilters } from "../../utils/insightTypes";
+import { InsightsFilters } from "../../types/insightTypes";
 import { normalizeQuestion } from "../../utils/utils";
 import { SummarySkeleton } from "../LoadingSkeletons/SummarySkeleton";
 import { EmptyState } from "../States/EmptyState";
@@ -112,7 +112,7 @@ export const SummaryContainer = () => {
           {/* ───────────── Data loaded ───────────── */}
           {!isLoading &&
             normalizedQuestions.map((question) => (
-              <QuestionSection key={question.questionID} question={question} />
+              <QuestionSection key={question.questionID} question={question} surveyID={surveyID!} />
             ))}
 
           {/* ───────────── Background refetch indicator ───────────── */}

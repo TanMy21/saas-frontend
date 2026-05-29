@@ -48,6 +48,7 @@ import ScaleElementSettings from "../components/Surveys/ElementSettings/ScaleEle
 import TextElementSettings from "../components/Surveys/ElementSettings/TextElementSettings";
 import ThreeDElementSettings from "../components/Surveys/ElementSettings/ThreeDElementSettings";
 import WelcomeScreenElementSettings from "../components/Surveys/ElementSettings/WelcomeScreenElementSettings";
+import { SummaryQuestion } from "../types/insightTypes";
 import {
   ElementType,
   IconMapping,
@@ -55,7 +56,7 @@ import {
   QuestionTypeKey,
 } from "../utils/types";
 
-import { SummaryQuestion } from "./insightTypes";
+ 
 
 export const elementIcons: IconMapping = {
   THREE_D: <Box color="#276c9bff" />,
@@ -317,7 +318,6 @@ export const elementTypes: { [key: string]: ElementType } = {
 };
 
 // Summary Insights Visualization registry
-
 export const summaryVisualizationMap: Record<
   SummaryQuestion["type"],
   React.FC<{ question: any }>

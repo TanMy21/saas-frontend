@@ -15,7 +15,7 @@ import {
   DeviceFilter,
   InsightsFilters,
   TimeFilter,
-} from "../../utils/insightTypes";
+} from "../../types/insightTypes";
 import { SurveyInsightsSkeleton } from "../LoadingSkeletons/SurveyInsightsSkeleton";
 
 import { InsightsFilterDropdown } from "./InsightsFilterDropdown";

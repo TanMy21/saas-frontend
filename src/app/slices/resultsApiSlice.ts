@@ -2,7 +2,7 @@ import {
   GetInsightsArgs,
   GetResponsesSummaryArgs,
   ResponsesSummaryResponse,
-} from "../../utils/insightTypes";
+} from "../../types/insightTypes";
 import { InsightsResponse, ResultsResponse } from "../../utils/types";
 import { apiSlice } from "../api/apiSlice";
 
@@ -78,6 +78,15 @@ export const resultsApiSlice = apiSlice.injectEndpoints({
         { type: "Results", id: arg.surveyID },
       ],
     }),
+    get3DModelBehavior: builder.query({
+      query: ({ surveyID, questionID }) =>
+        `/summary/${surveyID}/question/${questionID}/3d`,
+      providesTags: ["Results"],
+    }),
+    get3DModelsForSurvey: builder.query({
+      query: (surveyID) => `/summary/${surveyID}/3d-models`,
+      providesTags: ["Results"],
+    }),
   }),
 });
 
@@ -85,4 +94,6 @@ export const {
   useGetResultsQuery,
   useGetInsightsQuery,
   useGetResponsesSummaryQuery,
+  useGet3DModelBehaviorQuery,
+  useGet3DModelsForSurveyQuery,
 } = resultsApiSlice;

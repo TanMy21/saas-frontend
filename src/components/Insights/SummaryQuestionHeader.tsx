@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 
-import { SummaryQuestion } from "../../utils/insightTypes";
+import { SummaryQuestion } from "../../types/insightTypes";
+import { getSummaryQuestionTitle } from "../../utils/utils";
 
 import { QuestionTypeBadge } from "./QuestionTypeBadge";
 
@@ -53,7 +54,7 @@ export const SummaryQuestionHeader = ({
               wordBreak: "break-word",
             }}
           >
-            {question.text}
+            {getSummaryQuestionTitle(question)}
           </Typography>
         </Box>
 

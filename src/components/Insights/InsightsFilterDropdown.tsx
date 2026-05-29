@@ -1,6 +1,6 @@
 import { Box, FormControl, MenuItem, Select } from "@mui/material";
 
-import { InsightsFilterDropdownProps } from "../../utils/insightTypes";
+import { InsightsFilterDropdownProps } from "../../types/insightTypes";
 
 export const InsightsFilterDropdown = <T extends string>({
   value,

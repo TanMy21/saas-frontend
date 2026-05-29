@@ -24,14 +24,6 @@ import {
 } from "lucide-react";
 import { type Transition } from "motion/react";
 
-import { FeatureItem, Step, UseCase } from "../types/landingTypes";
-
-import {
-  ALLOWED_IMAGE_TYPES,
-  MAX_IMAGE_SIZE_BYTES,
-  OPTION_TYPES,
-  SINGLE_VALUE_TYPES,
-} from "./constants";
 import {
   BinaryResult,
   MediaResult,
@@ -43,7 +35,16 @@ import {
   SingleChoiceResult,
   SummaryQuestion,
   TextResponseItem,
-} from "./insightTypes";
+} from "../types/insightTypes";
+import { FeatureItem, Step, UseCase } from "../types/landingTypes";
+
+import {
+  ALLOWED_IMAGE_TYPES,
+  MAX_IMAGE_SIZE_BYTES,
+  OPTION_TYPES,
+  SINGLE_VALUE_TYPES,
+  THREE_D_AREA_COLORS,
+} from "./constants";
 import { showToast } from "./showToast";
 import { EdgeStyle, LayoutMode, QuestionType } from "./types";
 
@@ -941,4 +942,66 @@ export const readImagePreview = (
   };
 
   reader.readAsDataURL(file);
+};
+
+export function getRotationInspectionMessage(rotation: {
+  viewedMultipleAnglesRate: number;
+  fullRotationCompletedRate: number;
+}) {
+  const viewedRate = rotation.viewedMultipleAnglesRate;
+  const fullRotationRate = rotation.fullRotationCompletedRate;
+
+  if (viewedRate >= 70) {
+    return "Most users actively inspected the model from multiple angles before answering.";
+  }
+
+  if (viewedRate >= 40) {
+    return "A meaningful share of users inspected the model from multiple angles before answering.";
+  }
+
+  if (viewedRate >= 20) {
+    return "Some users inspected the model from multiple angles, but many answered with limited manual exploration.";
+  }
+
+  if (viewedRate > 0) {
+    return "Only a small share of users manually explored the model before answering.";
+  }
+
+  return "Users mostly answered without manually rotating the model.";
+}
+
+export function withAreaColors<
+  T extends {
+    label: string;
+    meshName: string;
+    materialName: string | null;
+    clickCount: number;
+  },
+>(areas: T[]) {
+  return areas.map((area, index) => ({
+    ...area,
+    color: THREE_D_AREA_COLORS[index % THREE_D_AREA_COLORS.length],
+  }));
+}
+
+export const isPlaceholderQuestionText = (text?: string | null) => {
+  const normalized = text?.trim().toLowerCase();
+
+  return (
+    !normalized ||
+    normalized === "your question here" ||
+    normalized === "untitled question"
+  );
+};
+
+export const getSummaryQuestionTitle = (question: SummaryQuestion) => {
+  if (question.type === "THREE_D" && isPlaceholderQuestionText(question.text)) {
+    return "3D interaction feedback";
+  }
+
+  if (isPlaceholderQuestionText(question.text)) {
+    return "Untitled question";
+  }
+
+  return question.text;
 };

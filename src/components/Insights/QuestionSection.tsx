@@ -1,16 +1,21 @@
 import { Box, Typography } from "@mui/material";
 
+import { QuestionSectionProps } from "../../types/insightTypes";
 import {
   questionTypeMap,
   summaryVisualizationMap,
 } from "../../utils/elementsConfig";
-import { QuestionSectionProps } from "../../utils/insightTypes";
 
 import { SummaryQuestionHeader } from "./SummaryQuestionHeader";
+import { ThreeDOptionChart } from "./visualizations/ThreeDOptionChart";
 
-export function QuestionSection({ question }: QuestionSectionProps) {
-  const Visualization = summaryVisualizationMap[question.type];
+export function QuestionSection({ question, surveyID }: QuestionSectionProps) {
   const config = questionTypeMap[question.type];
+
+  const isThreeD = question.type === "THREE_D";
+  const Visualization = isThreeD
+    ? null
+    : summaryVisualizationMap[question.type];
 
   return (
     <Box
@@ -38,7 +43,9 @@ export function QuestionSection({ question }: QuestionSectionProps) {
           pl: { xs: 0, lg: "40px" },
         }}
       >
-        {Visualization ? (
+        {isThreeD ? (
+          <ThreeDOptionChart question={question} surveyID={surveyID} />
+        ) : Visualization ? (
           <Visualization question={question} />
         ) : (
           <Typography color="text.secondary" fontSize={14}>
