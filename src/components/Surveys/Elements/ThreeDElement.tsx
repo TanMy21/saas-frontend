@@ -4,12 +4,12 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
 
-import {
-  set3DModelModalOpen,
-} from "../../../app/slices/elementSlice";
+import { set3DModelModalOpen } from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../context/BuilderRefetchCanvas";
+import useAuth from "../../../hooks/useAuth";
+import { hasMinimumPlan } from "../../../utils/planLimits";
 import { ElementProps } from "../../../utils/types";
 import FileUpload3D from "../../ModalComponents/FileUpload3D";
 import Upload3DModelModal from "../../Modals/Upload3DModelModal";
@@ -27,6 +27,11 @@ const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [overrideUrl, setOverrideUrl] = useState<string | null>(null);
   const [isReadyToView, setIsReadyToView] = useState(false);
+
+  const { can, tier = "FREE" } = useAuth();
+
+  const canUpload3DModel =
+    can("UPDATE_QUESTION") && hasMinimumPlan(tier, "PROFESSIONAL");
 
   const question = useSelector(
     (state: RootState) => state.question.selectedQuestion,
@@ -94,44 +99,48 @@ const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
   return (
     <>
       <div style={{ textAlign: "center" }}>
-        <Button
-          onClick={() => dispatch(set3DModelModalOpen(true))}
-          variant="contained"
-          startIcon={<FileUploadIcon />}
-          sx={{
-            bgcolor: "common.white",
-            color: "#2563EB",
-            borderRadius: 2.5,
-            px: 3,
-            py: 1.5,
-            fontWeight: 600,
-            textTransform: "none",
-            boxShadow: "none",
-            "&:hover": {
-              bgcolor: "rgba(255,255,255,0.92)",
+        {canUpload3DModel && (
+          <Button
+            onClick={() => dispatch(set3DModelModalOpen(true))}
+            variant="contained"
+            startIcon={<FileUploadIcon />}
+            sx={{
+              bgcolor: "common.white",
+              color: "#2563EB",
+              borderRadius: 2.5,
+              px: 3,
+              py: 1.5,
+              fontWeight: 600,
+              textTransform: "none",
               boxShadow: "none",
-            },
-            transition: "background-color .2s ease",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
-          Upload Your Model
-        </Button>
+              "&:hover": {
+                bgcolor: "rgba(255,255,255,0.92)",
+                boxShadow: "none",
+              },
+              transition: "background-color .2s ease",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            Upload Your Model
+          </Button>
+        )}
       </div>
-      <Upload3DModelModal
-        isOpen={isOpen3DModel}
-        onClose={handleCloseModal}
-        title="Upload 3D Model"
-      >
-        <FileUpload3D
-          questionID={qID!}
-          onFileSelect={handleFileSelect}
-          onUploadSuccess={handleUploadSuccess}
-          onUploadError={handleUploadError}
-        />
-      </Upload3DModelModal>
+      {canUpload3DModel && (
+        <Upload3DModelModal
+          isOpen={isOpen3DModel}
+          onClose={handleCloseModal}
+          title="Upload 3D Model"
+        >
+          <FileUpload3D
+            questionID={qID!}
+            onFileSelect={handleFileSelect}
+            onUploadSuccess={handleUploadSuccess}
+            onUploadError={handleUploadError}
+          />
+        </Upload3DModelModal>
+      )}
     </>
   );
 };

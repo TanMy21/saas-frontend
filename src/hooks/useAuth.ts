@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 import { selectCurrentToken } from "../app/slices/authSlice";
 import { selectUser } from "../app/slices/userSlice";
+import { Tier } from "../types/userTypes";
 import { ICustomePayload, Permission } from "../utils/types";
 
 const useAuth = () => {
@@ -29,7 +30,7 @@ const useAuth = () => {
     const { exp } = decoded;
 
     const activeOrg = user?.activeOrg ?? null;
-    const tier = user?.tier ?? "FREE";
+    const tier: Tier = (user?.tier as Tier) ?? "FREE";
     const permissions = activeOrg?.permissions || [];
 
     const can = (permission: Permission) => permissions.includes(permission);

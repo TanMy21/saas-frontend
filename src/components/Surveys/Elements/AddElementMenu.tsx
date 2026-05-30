@@ -19,6 +19,7 @@ import useAuth from "../../../hooks/useAuth";
 import { useToast } from "../../../hooks/useToast";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { elementIcons } from "../../../utils/elementsConfig";
+import { hasMinimumPlan } from "../../../utils/planLimits";
 import { AddElementMenuProps } from "../../../utils/types";
 
 const AddElementMenu = ({
@@ -30,7 +31,9 @@ const AddElementMenu = ({
 }: AddElementMenuProps) => {
   const { primary } = useAppTheme();
   const dispatch = useAppDispatch();
-  const { can } = useAuth();
+  const { can, tier = "FREE" } = useAuth();
+  const canCreate3DQuestion =
+    can("CREATE_QUESTION") && hasMinimumPlan(tier, "PROFESSIONAL");
   const [createElement, { isLoading, isError, error }] =
     useCreateElementMutation();
 
@@ -161,21 +164,26 @@ const AddElementMenu = ({
                 Questions
               </Typography>
             </Box>
-            <MenuItem
-              onClick={() => handleElementAdd("THREE_D")}
-              disabled={isLoading}
-            >
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#086083ff", lineHeight: 1 }}
-                >
-                  {elementIcons.THREE_D}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  3D
-                </Typography>
-              </Box>
-            </MenuItem>
+            {canCreate3DQuestion && (
+              <MenuItem
+                onClick={() => {
+                  if (!canCreate3DQuestion) return;
+                  handleElementAdd("THREE_D");
+                }}
+                disabled={isLoading || !canCreate3DQuestion}
+              >
+                <Box display="flex" alignItems="center" gap={1.25}>
+                  <Typography
+                    sx={{ fontSize: 24, color: "#086083ff", lineHeight: 1 }}
+                  >
+                    {elementIcons.THREE_D}
+                  </Typography>
+                  <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
+                    3D
+                  </Typography>
+                </Box>
+              </MenuItem>
+            )}
 
             <MenuItem
               onClick={() => handleElementAdd("BINARY")}

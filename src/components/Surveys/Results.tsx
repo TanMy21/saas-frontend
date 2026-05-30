@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AppBar, Box, Tab, Tabs } from "@mui/material";
 import { useParams } from "react-router-dom";
 
+import useAuth from "../../hooks/useAuth";
 import { useAppTheme } from "../../theme/useAppTheme";
+import { hasMinimumPlan } from "../../utils/planLimits";
 import { BehaviorInsights } from "../Behavior/BehaviorInsights";
 import { ExportButton } from "../Insights/ExportButton";
 import { SummaryContainer } from "../Insights/SummaryContainer";
@@ -16,6 +18,16 @@ const Results = () => {
   const [value, setValue] = useState(0);
   const { scrollStyles } = useAppTheme();
 
+  const { tier = "FREE" } = useAuth();
+
+  const canViewAdvancedResults = hasMinimumPlan(tier, "PROFESSIONAL");
+
+  useEffect(() => {
+    if (!canViewAdvancedResults && (value === 2 || value === 3)) {
+      setValue(0);
+    }
+  }, [canViewAdvancedResults, value]);
+
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -26,10 +38,12 @@ const Results = () => {
     content = <SurveyInsights />;
   } else if (value === 1) {
     content = <ResultResponses />;
-  } else if (value === 2) {
+  } else if (value === 2 && canViewAdvancedResults) {
     content = <SummaryContainer />;
-  } else if (value === 3) {
+  } else if (value === 3 && canViewAdvancedResults) {
     content = <BehaviorInsights />;
+  } else {
+    content = <SurveyInsights />;
   }
 
   return (
@@ -132,42 +146,46 @@ const Results = () => {
                     },
                   }}
                 />
-                <Tab
-                  label="Summary"
-                  value={2}
-                  sx={{
-                    fontWeight: 600,
-                    color: "#718096",
-                    "& .MuiTab-iconWrapper": {
+                {canViewAdvancedResults && (
+                  <Tab
+                    label="Summary"
+                    value={2}
+                    sx={{
+                      fontWeight: 600,
                       color: "#718096",
-                    },
-                    "&.Mui-selected": {
-                      color: "#111827",
-                    },
+                      "& .MuiTab-iconWrapper": {
+                        color: "#718096",
+                      },
+                      "&.Mui-selected": {
+                        color: "#111827",
+                      },
 
-                    "&.Mui-selected .MuiTab-iconWrapper": {
-                      color: "#111827",
-                    },
-                  }}
-                />
-                <Tab
-                  label="Behavior"
-                  value={3}
-                  sx={{
-                    fontWeight: 600,
-                    color: "#718096",
-                    "& .MuiTab-iconWrapper": {
+                      "&.Mui-selected .MuiTab-iconWrapper": {
+                        color: "#111827",
+                      },
+                    }}
+                  />
+                )}
+                {canViewAdvancedResults && (
+                  <Tab
+                    label="Behavior"
+                    value={3}
+                    sx={{
+                      fontWeight: 600,
                       color: "#718096",
-                    },
-                    "&.Mui-selected": {
-                      color: "#111827",
-                    },
+                      "& .MuiTab-iconWrapper": {
+                        color: "#718096",
+                      },
+                      "&.Mui-selected": {
+                        color: "#111827",
+                      },
 
-                    "&.Mui-selected .MuiTab-iconWrapper": {
-                      color: "#111827",
-                    },
-                  }}
-                />
+                      "&.Mui-selected .MuiTab-iconWrapper": {
+                        color: "#111827",
+                      },
+                    }}
+                  />
+                )}
               </Tabs>
             </Box>
 

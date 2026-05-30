@@ -6,6 +6,8 @@ import { Replace, X } from "lucide-react";
 
 import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
+import useAuth from "../../../hooks/useAuth";
+import { hasMinimumPlan } from "../../../utils/planLimits";
 import { ThreeDViewProps } from "../../../utils/types";
 import Model3dLoader from "../../Loaders/Model3dLoader";
 import Replace3DModelModal from "../../Modals/Replace3DModelModal";
@@ -15,6 +17,12 @@ import { Interactive3DModelViewer } from "./Interactive3DModelViewer";
 
 const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
   const [isOpenReplaceModal, setIsOpenReplaceModal] = useState(false);
+
+  const { can, tier = "FREE" } = useAuth();
+
+  const canReplace3DModel =
+    can("UPDATE_QUESTION") && hasMinimumPlan(tier, "PROFESSIONAL");
+
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion,
   );
@@ -54,26 +62,28 @@ const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
               // border: "2px solid red",
             }}
           >
-            <IconButton
-              className="template-icon-btn"
-              onClick={() => setIsOpenReplaceModal(true)}
-              sx={{
-                position: "absolute",
-                top: 16,
-                left: 4,
-                zIndex: 2,
-                width: 48,
-                height: 48,
-                backgroundColor: "#FFFFFF",
-                color: "#424242",
-                borderRadius: "50%",
-                "&:hover": {
-                  backgroundColor: "#F5F5F5",
-                },
-              }}
-            >
-              <Replace style={{ fontWeight: "bold" }} />
-            </IconButton>
+            {canReplace3DModel && (
+              <IconButton
+                className="template-icon-btn"
+                onClick={() => setIsOpenReplaceModal(true)}
+                sx={{
+                  position: "absolute",
+                  top: 16,
+                  left: 4,
+                  zIndex: 2,
+                  width: 48,
+                  height: 48,
+                  backgroundColor: "#FFFFFF",
+                  color: "#424242",
+                  borderRadius: "50%",
+                  "&:hover": {
+                    backgroundColor: "#F5F5F5",
+                  },
+                }}
+              >
+                <Replace style={{ fontWeight: "bold" }} />
+              </IconButton>
+            )}
           </div>
           {showQuestion && (
             <div
@@ -209,12 +219,14 @@ const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
           </div>
         </div>
       </div>
-      <Replace3DModelModal
-        open={isOpenReplaceModal}
-        onClose={() => setIsOpenReplaceModal(false)}
-        questionID={questionID!}
-        currentFileName={modelFileName}
-      />
+      {canReplace3DModel && (
+        <Replace3DModelModal
+          open={isOpenReplaceModal}
+          onClose={() => setIsOpenReplaceModal(false)}
+          questionID={questionID!}
+          currentFileName={modelFileName}
+        />
+      )}
     </>
   );
 };
