@@ -28,10 +28,22 @@ export const LAST_WS_KEY = "lWSID";
 export const VIEW_MODE_KEY = "ws:vm";
 export const SETTINGS_TAB_KEY = "set:lat";
 
-
-
 export const MAX_DROPDOWN_OPTIONS = 100;
 export const DROPDOWN_WARNING_COUNT = 30;
+
+export const MAX_TIMED_CHOICE_OPTIONS = 2;
+export const DEFAULT_TIMER_SECONDS = 3;
+
+export const MAX_CONCEPT_ATTRIBUTES = 10;
+export const MIN_RECOMMENDED_ATTRIBUTES = 4;
+
+export const DEFAULT_IAT_PREVIEW = {
+  targetA: "Brand A",
+  targetB: "Brand B",
+  attributeA: "Premium",
+  attributeB: "Cheap",
+  stimulus: "Luxury",
+};
 
 export const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: "general", label: "General", icon: User },

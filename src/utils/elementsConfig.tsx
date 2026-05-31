@@ -32,8 +32,11 @@ import { ThreeDOptionChart } from "../components/Insights/visualizations/ThreeDO
 import BinaryElement from "../components/Surveys/Elements/BinaryElement";
 import CheckBoxElement from "../components/Surveys/Elements/CheckBoxElement";
 import ChoiceElement from "../components/Surveys/Elements/ChoiceElement";
+import { ConceptFitElement } from "../components/Surveys/Elements/ConceptFitElement";
+import DropdownElement from "../components/Surveys/Elements/DropdownElement";
 import EmailContactELement from "../components/Surveys/Elements/EmailContactELement";
 import EndScreenElement from "../components/Surveys/Elements/EndScreenElement";
+import ImplicitAssociationTest from "../components/Surveys/Elements/ImplicitAssociationTest";
 import InstructionsElement from "../components/Surveys/Elements/InstructionsElement";
 import MediaElement from "../components/Surveys/Elements/MediaElement";
 import NumberElement from "../components/Surveys/Elements/NumberElement";
@@ -41,6 +44,7 @@ import RankElement from "../components/Surveys/Elements/RankElement";
 import ScaleElement from "../components/Surveys/Elements/ScaleElement";
 import TextElement from "../components/Surveys/Elements/TextElement";
 import ThreeDElement from "../components/Surveys/Elements/ThreeDElement";
+import TimedChoiceElement from "../components/Surveys/Elements/TimerElement";
 import WelcomeScreenElement from "../components/Surveys/Elements/WelcomeScreenElement";
 import BinaryElementSettings from "../components/Surveys/ElementSettings/BinaryElementSettings";
 import CheckBoxElementSettings from "../components/Surveys/ElementSettings/CheckBoxElementSettings";
@@ -62,24 +66,14 @@ import {
   ElementProps,
   QuestionTypeKey,
 } from "../utils/types";
-import DropdownElement from "../components/Surveys/Elements/DropdownElement";
 
 // ------------------- Remove: Temp components-------------------------------------
-
- 
 
 /**
  * Temporary settings placeholder for Dropdown until option/settings UI is implemented.
  */
 export const DropdownElementSettings = () => {
   return <div>Dropdown settings</div>;
-};
-
-/**
- * Temporary builder placeholder for Timed Choice until the full renderer is implemented.
- */
-export const TimedChoiceElement = ({ element }: Element) => {
-  return <div>{element?.text || "Timed choice question"}</div>;
 };
 
 /**
@@ -90,24 +84,10 @@ export const TimedChoiceElementSettings = () => {
 };
 
 /**
- * Temporary builder placeholder for Concept Fit until the full renderer is implemented.
- */
-export const ConceptFitElement = ({ element }: Element) => {
-  return <div>{element?.text || "Concept fit test"}</div>;
-};
-
-/**
  * Temporary settings placeholder for Concept Fit until attribute settings are implemented.
  */
 export const ConceptFitElementSettings = () => {
   return <div>Concept fit settings</div>;
-};
-
-/**
- * Temporary builder placeholder for IAT until the full block renderer is implemented.
- */
-export const IATElement = ({ element }: Element) => {
-  return <div>{element?.text || "IAT test"}</div>;
 };
 
 /**
@@ -337,7 +317,7 @@ export const elementComponents: {
   DROPDOWN: DropdownElement,
   TIMED_CHOICE: TimedChoiceElement,
   CONCEPT_FIT: ConceptFitElement,
-  IAT: IATElement,
+  IAT: ImplicitAssociationTest,
   INFO_SCREEN: InfoScreenElement,
 };
 
@@ -426,7 +406,7 @@ export const elementTypes: { [key: string]: ElementType } = {
     type: "IAT",
     icon: elementIcons.IAT,
     text: "Your IAT test here",
-    Element: IATElement,
+    Element: ImplicitAssociationTest,
     Settings: IATElementSettings,
   },
   InfoScreen: {
@@ -517,7 +497,7 @@ export const summaryVisualizationMap: Record<
   RANK: RankingChart,
   TEXT: TextResponses,
 
-    // Temporary mappings until dedicated implicit-test report charts exist.
+  // Temporary mappings until dedicated implicit-test report charts exist.
   TIMED_CHOICE: SingleChoiceChart,
   CONCEPT_FIT: MultipleChoiceChart,
   IAT: SingleChoiceChart,
