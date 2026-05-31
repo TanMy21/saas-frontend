@@ -16,11 +16,17 @@ import {
   useGetOrgInvitesQuery,
   useGetOrgUsersQuery,
 } from "../../app/slices/userApiSlice";
+import useAuth from "../../hooks/useAuth";
 import { OrgMember } from "../../types/userTypes";
+import { hasMinimumPlan } from "../../utils/planLimits";
 import { MemberDrawer } from "../OrgMembers/MemberDrawer";
 import { MembersTable } from "../OrgMembers/MembersTable";
 
 export const OrgMembers = () => {
+  const { tier = "FREE" } = useAuth();
+
+  const canManageOrgMembers = hasMinimumPlan(tier, "ENTERPRISE");
+
   const [drawer, setDrawer] = useState<{
     open: boolean;
     mode: "add" | "edit";
@@ -38,11 +44,68 @@ export const OrgMembers = () => {
     open: false,
     member: null,
   });
-  const { data: usersData, isLoading: usersLoading } = useGetOrgUsersQuery();
-  const { data: invites, isLoading: invitesLoading } = useGetOrgInvitesQuery();
+
+  const { data: usersData, isLoading: usersLoading } = useGetOrgUsersQuery(
+    undefined,
+    {
+      skip: !canManageOrgMembers,
+    },
+  );
+
+  const { data: invites, isLoading: invitesLoading } = useGetOrgInvitesQuery(
+    undefined,
+    {
+      skip: !canManageOrgMembers,
+    },
+  );
+
   const [deleteOrgUser, { isLoading: deleting }] = useDeleteOrgUserMutation();
 
+  useEffect(() => {
+    if (!usersLoading && !invitesLoading) {
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event("resize"));
+      });
+    }
+  }, [usersLoading, invitesLoading]);
+
+  if (!canManageOrgMembers) {
+    return (
+      <Box
+        sx={{
+          display: "grid",
+          placeItems: "center",
+          minHeight: "60vh",
+          px: 3,
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 520,
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: 3,
+            p: 4,
+            bgcolor: "white",
+            textAlign: "center",
+          }}
+        >
+          <Typography fontSize={22} fontWeight={700} mb={1}>
+            Team management is available on Enterprise
+          </Typography>
+
+          <Typography fontSize={14} color="text.secondary">
+            Invite members, assign roles, and manage organization access with
+            the Enterprise plan.
+          </Typography>
+        </Box>
+      </Box>
+    );
+  }
+
   const totalMembers = usersData?.members?.length || 0;
+
   const activeInvites =
     invites?.filter((i: any) => ["PENDING", "EXPIRED"].includes(i.status)) ||
     [];
@@ -55,6 +118,7 @@ export const OrgMembers = () => {
 
   const handleDelete = async () => {
     if (!deleteDialog.member) return;
+
     try {
       await deleteOrgUser(deleteDialog.member.userID).unwrap();
       setDeleteDialog({ open: false, member: null });
@@ -62,14 +126,6 @@ export const OrgMembers = () => {
       console.error(err);
     }
   };
-
-  useEffect(() => {
-    if (!usersLoading && !invitesLoading) {
-      requestAnimationFrame(() => {
-        window.dispatchEvent(new Event("resize"));
-      });
-    }
-  }, [usersLoading, invitesLoading]);
 
   return (
     <Box
@@ -95,6 +151,7 @@ export const OrgMembers = () => {
           <Typography fontSize={20} fontWeight={700}>
             Team Members
           </Typography>
+
           <Typography fontSize={14} color="text.secondary">
             {usersData?.organizationName
               ? `Manage access for ${usersData.organizationName}`
@@ -152,6 +209,7 @@ export const OrgMembers = () => {
         onClose={() => setDeleteDialog({ open: false, member: null })}
       >
         <DialogTitle>Remove Member ?</DialogTitle>
+
         <DialogContent>
           <Typography>This will remove access. Data will remain.</Typography>
         </DialogContent>
@@ -163,6 +221,7 @@ export const OrgMembers = () => {
           >
             Cancel
           </Button>
+
           <Button
             variant="modalSubmitBtn"
             color="error"

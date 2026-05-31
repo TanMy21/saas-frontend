@@ -15,6 +15,7 @@ import { useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { nonOrderableTypes } from "../../../utils/constants";
+import { createDisplayOrderMap } from "../../../utils/elementsDisplayOrder";
 
 import { ElementsListItem } from "./ElementsListItem";
 
@@ -39,6 +40,14 @@ const ElementsPanel = () => {
   const displayedQuestions = useMemo(() => {
     return [...elements].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   }, [elements]);
+
+  /**
+   * Maps each numbered question/test to its visible display number.
+   * Non-numbered screens like INFO_SCREEN are skipped.
+   */
+  const displayOrderMap = useMemo(() => {
+    return createDisplayOrderMap(displayedQuestions);
+  }, [displayedQuestions]);
 
   useEffect(() => {
     if (!aiQuestionsJustAdded) return;
@@ -151,6 +160,7 @@ const ElementsPanel = () => {
                   displayedQuestions={displayedQuestions}
                   nonOrderableTypes={nonOrderableTypes}
                   newQuestionIds={newQuestionIds}
+                  displayOrderMap={displayOrderMap}
                 />
 
                 {provided.placeholder}

@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
 import { nonOrderableTypes } from "../../../utils/constants";
 import { elementIcons } from "../../../utils/elementsConfig";
+import { getDisplayOrderForElement } from "../../../utils/elementsDisplayOrder";
 import { htmlToPlainText } from "../../../utils/richTextUtils";
 import { ElementListItemProps, IconMapping } from "../../../utils/types";
 
@@ -16,6 +17,7 @@ import ElementDropDownMenu from "./ElementDropDownMenu";
 export const ElementsListItem = ({
   displayedQuestions,
   newQuestionIds,
+  displayOrderMap,
 }: ElementListItemProps) => {
   const { can } = useAuth();
   const dispatch = useAppDispatch();
@@ -42,8 +44,13 @@ export const ElementsListItem = ({
               .findIndex((q) => q.questionID === element.questionID)
           : -1;
 
+        const displayOrder = getDisplayOrderForElement(
+          element,
+          displayOrderMap,
+        );
+
         const shouldDisplayOrder =
-          !isSystemScreen &&
+          displayOrder !== null &&
           typeof element.order === "number" &&
           element.order > 0 &&
           element.order < 9999;
@@ -168,7 +175,7 @@ export const ElementsListItem = ({
                         flexShrink: 0,
                       }}
                     >
-                      {element.order}
+                      {displayOrder}
                     </Typography>
                   )}
 

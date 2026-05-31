@@ -13,7 +13,6 @@ import { useGetWorkspaceSurveysQuery } from "../../app/slices/workspaceApiSlice"
 import useAuth from "../../hooks/useAuth";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useWheelPageNav } from "../../hooks/useSurveyCollectionScrollNav";
-import { Tier } from "../../types/userTypes";
 import { VIEW_MODE_KEY } from "../../utils/constants";
 import { PLAN_LIMITS } from "../../utils/planLimits";
 import { WorkspaceConsoleProps } from "../../utils/types";
@@ -91,7 +90,7 @@ const WorkspaceConsole = ({
 
   const { tier = "FREE" } = useAuth();
 
-  const maxSurveys = PLAN_LIMITS[tier as Tier].maxSurveys;
+  const maxSurveys = PLAN_LIMITS[tier].maxSurveys;
   const isSurveyLimitReached = total >= maxSurveys;
 
   const totalPages = Math.ceil(total / limit);

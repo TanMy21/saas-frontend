@@ -4,12 +4,19 @@ import { CiViewList } from "react-icons/ci";
 import { FaRankingStar, FaRegImage } from "react-icons/fa6";
 import { GiChoice } from "react-icons/gi";
 import { IoText } from "react-icons/io5";
-import { LuGalleryVerticalEnd } from "react-icons/lu";
+import {
+  LuArrowLeftRight,
+  LuGalleryVerticalEnd,
+  LuInfo,
+  LuTimer,
+} from "react-icons/lu";
 import {
   MdNumbers,
   MdOutlineLinearScale,
   MdCheckBox,
   MdEmail,
+  MdOutlineArrowDropDownCircle,
+  MdOutlineFactCheck,
 } from "react-icons/md";
 import { RxCardStack } from "react-icons/rx";
 
@@ -56,7 +63,79 @@ import {
   QuestionTypeKey,
 } from "../utils/types";
 
- 
+// ------------------- Remove: Temp components-------------------------------------
+
+/**
+ * Temporary builder placeholder for Dropdown until the full renderer is implemented.
+ */
+export const DropdownElement = ({ element }: Element) => {
+  return <div>{element?.text || "Dropdown question"}</div>;
+};
+
+/**
+ * Temporary settings placeholder for Dropdown until option/settings UI is implemented.
+ */
+export const DropdownElementSettings = () => {
+  return <div>Dropdown settings</div>;
+};
+
+/**
+ * Temporary builder placeholder for Timed Choice until the full renderer is implemented.
+ */
+export const TimedChoiceElement = ({ element }: Element) => {
+  return <div>{element?.text || "Timed choice question"}</div>;
+};
+
+/**
+ * Temporary settings placeholder for Timed Choice until timer settings are implemented.
+ */
+export const TimedChoiceElementSettings = () => {
+  return <div>Timed choice settings</div>;
+};
+
+/**
+ * Temporary builder placeholder for Concept Fit until the full renderer is implemented.
+ */
+export const ConceptFitElement = ({ element }: Element) => {
+  return <div>{element?.text || "Concept fit test"}</div>;
+};
+
+/**
+ * Temporary settings placeholder for Concept Fit until attribute settings are implemented.
+ */
+export const ConceptFitElementSettings = () => {
+  return <div>Concept fit settings</div>;
+};
+
+/**
+ * Temporary builder placeholder for IAT until the full block renderer is implemented.
+ */
+export const IATElement = ({ element }: Element) => {
+  return <div>{element?.text || "IAT test"}</div>;
+};
+
+/**
+ * Temporary settings placeholder for IAT until the setup wizard is implemented.
+ */
+export const IATElementSettings = () => {
+  return <div>IAT settings</div>;
+};
+
+/**
+ * Temporary builder placeholder for Info Screen until rich text/image UI is implemented.
+ */
+export const InfoScreenElement = ({ element }: Element) => {
+  return <div>{element?.text || "Info Screen"}</div>;
+};
+
+/**
+ * Temporary settings placeholder for Info Screen until rich text/image settings are implemented.
+ */
+export const InfoScreenElementSettings = () => {
+  return <div>Info screen settings</div>;
+};
+
+//---------------------------------------------------------------------------
 
 export const elementIcons: IconMapping = {
   THREE_D: <Box color="#276c9bff" />,
@@ -72,8 +151,17 @@ export const elementIcons: IconMapping = {
   RANGE: <MdOutlineLinearScale color="#036b82" />,
   TEXT: <IoText color="#c45161" />,
   WELCOME_SCREEN: <RxCardStack color="#3C3737" />,
+  DROPDOWN: <MdOutlineArrowDropDownCircle color="#7C3AED" />,
+  TIMED_CHOICE: <LuTimer color="#EA580C" />,
+  CONCEPT_FIT: <MdOutlineFactCheck color="#0891B2" />,
+  IAT: <LuArrowLeftRight color="#DB2777" />,
+  INFO_SCREEN: <LuInfo color="#475569" />,
 };
 
+/**
+ * Question/test types shown in badges, builder menus, and question metadata.
+ * INFO_SCREEN is excluded because it is a screen, not an answerable question.
+ */
 export const questionTypes: {
   id: number;
   label: string;
@@ -164,6 +252,44 @@ export const questionTypes: {
     bgColor: "#ecfeff",
     borderColor: "#a5f3fc",
   },
+
+  // New question/test types.
+  {
+    id: 10,
+    label: "Dropdown",
+    type: "DROPDOWN",
+    icon: elementIcons.DROPDOWN,
+    color: "#7C3AED",
+    bgColor: "#F5F3FF",
+    borderColor: "#DDD6FE",
+  },
+  {
+    id: 11,
+    label: "Timed",
+    type: "TIMED_CHOICE",
+    icon: elementIcons.TIMED_CHOICE,
+    color: "#EA580C",
+    bgColor: "#FFF7ED",
+    borderColor: "#FED7AA",
+  },
+  {
+    id: 12,
+    label: "Concept",
+    type: "CONCEPT_FIT",
+    icon: elementIcons.CONCEPT_FIT,
+    color: "#0891B2",
+    bgColor: "#ECFEFF",
+    borderColor: "#A5F3FC",
+  },
+  {
+    id: 13,
+    label: "IAT",
+    type: "IAT",
+    icon: elementIcons.IAT,
+    color: "#DB2777",
+    bgColor: "#FDF2F8",
+    borderColor: "#FBCFE8",
+  },
 ] as const;
 
 // for insights question type badge
@@ -185,6 +311,13 @@ export const chipTypeColors: Record<string, string> = {
   RANGE: "#036b82",
   RANK: "#ffa600",
   MEDIA: "#f2b6c0",
+
+  // New types.
+  DROPDOWN: "#7C3AED",
+  TIMED_CHOICE: "#EA580C",
+  CONCEPT_FIT: "#0891B2",
+  IAT: "#DB2777",
+  INFO_SCREEN: "#475569",
 };
 
 export const elementComponents: {
@@ -203,6 +336,13 @@ export const elementComponents: {
   TEXT: TextElement,
   THREE_D: ThreeDElement,
   WELCOME_SCREEN: WelcomeScreenElement,
+
+  // New types.
+  DROPDOWN: DropdownElement,
+  TIMED_CHOICE: TimedChoiceElement,
+  CONCEPT_FIT: ConceptFitElement,
+  IAT: IATElement,
+  INFO_SCREEN: InfoScreenElement,
 };
 
 export const elementSettingsComponents: {
@@ -221,8 +361,19 @@ export const elementSettingsComponents: {
   TEXT: TextElementSettings,
   THREE_D: ThreeDElementSettings,
   WELCOME_SCREEN: WelcomeScreenElementSettings,
+
+  // New types.
+  DROPDOWN: DropdownElementSettings,
+  TIMED_CHOICE: TimedChoiceElementSettings,
+  CONCEPT_FIT: ConceptFitElementSettings,
+  IAT: IATElementSettings,
+  INFO_SCREEN: InfoScreenElementSettings,
 };
 
+/**
+ * Registry used by older builder paths to resolve element metadata.
+ * Keep this in sync with elementComponents and elementSettingsComponents.
+ */
 export const elementTypes: { [key: string]: ElementType } = {
   ThreeD: {
     type: "Three_D",
@@ -252,6 +403,44 @@ export const elementTypes: { [key: string]: ElementType } = {
     Element: ChoiceElement,
     Settings: ChoiceElementSettings,
   },
+
+  // New types.
+  Dropdown: {
+    type: "Dropdown",
+    icon: elementIcons.DROPDOWN,
+    text: "Your question here",
+    Element: DropdownElement,
+    Settings: DropdownElementSettings,
+  },
+  Timed: {
+    type: "Timed",
+    icon: elementIcons.TIMED_CHOICE,
+    text: "Your question here",
+    Element: TimedChoiceElement,
+    Settings: TimedChoiceElementSettings,
+  },
+  Concept: {
+    type: "Concept",
+    icon: elementIcons.CONCEPT_FIT,
+    text: "Your concept here",
+    Element: ConceptFitElement,
+    Settings: ConceptFitElementSettings,
+  },
+  IAT: {
+    type: "IAT",
+    icon: elementIcons.IAT,
+    text: "Your IAT test here",
+    Element: IATElement,
+    Settings: IATElementSettings,
+  },
+  InfoScreen: {
+    type: "InfoScreen",
+    icon: elementIcons.INFO_SCREEN,
+    text: "Your info screen here",
+    Element: InfoScreenElement,
+    Settings: InfoScreenElementSettings,
+  },
+
   EmailContact: {
     type: "EmailContact",
     icon: elementIcons.EMAIL_CONTACT,
@@ -331,4 +520,9 @@ export const summaryVisualizationMap: Record<
   NUMBER: NumericChart,
   RANK: RankingChart,
   TEXT: TextResponses,
+
+    // Temporary mappings until dedicated implicit-test report charts exist.
+  TIMED_CHOICE: SingleChoiceChart,
+  CONCEPT_FIT: MultipleChoiceChart,
+  IAT: SingleChoiceChart,
 };

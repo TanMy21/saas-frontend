@@ -18,10 +18,89 @@ import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
 import { useToast } from "../../../hooks/useToast";
 import { useAppTheme } from "../../../theme/useAppTheme";
-import { elementIcons } from "../../../utils/elementsConfig";
+import { AddMenuItemConfig } from "../../../types/surveyBuilderTypes";
+import {
+  baseScreenMenuItems,
+  implicitMenuItems,
+  questionMenuItems,
+  threeDMenuItem,
+} from "../../../utils/AddElementMenuConfig";
 import { hasMinimumPlan } from "../../../utils/planLimits";
-import { AddElementMenuProps } from "../../../utils/types";
+import { AddElementMenuProps, QuestionTypeKey } from "../../../utils/types";
 
+const AddMenuItem = ({
+  item,
+  isLoading,
+  onAdd,
+}: {
+  item: AddMenuItemConfig;
+  isLoading?: boolean;
+  onAdd: (item: AddMenuItemConfig) => void;
+}) => {
+  return (
+    <MenuItem
+      onClick={() => onAdd(item)}
+      disabled={Boolean(isLoading || item.disabled)}
+      title={item.title || ""}
+    >
+      <Box display="flex" alignItems="center" gap={1.25}>
+        <Typography sx={{ fontSize: 24, color: item.color, lineHeight: 1 }}>
+          {item.icon}
+        </Typography>
+
+        <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
+          {item.label}
+        </Typography>
+      </Box>
+    </MenuItem>
+  );
+};
+
+/**
+ * Renders a labeled group of add-menu items.
+ */
+const AddMenuSection = ({
+  title,
+  items,
+  isLoading,
+  onAdd,
+}: {
+  title: string;
+  items: AddMenuItemConfig[];
+  isLoading?: boolean;
+  onAdd: (item: AddMenuItemConfig) => void;
+}) => {
+  return (
+    <>
+      <Box sx={{ px: 1, py: 0.75 }}>
+        <Typography
+          sx={{
+            fontSize: 12,
+            fontWeight: 700,
+            color: "#64748B",
+            textTransform: "uppercase",
+            letterSpacing: 0.4,
+          }}
+        >
+          {title}
+        </Typography>
+      </Box>
+
+      {items.map((item) => (
+        <AddMenuItem
+          key={item.type}
+          item={item}
+          isLoading={isLoading}
+          onAdd={onAdd}
+        />
+      ))}
+    </>
+  );
+};
+
+/**
+ * Displays the add-element menu for questions, implicit tests, and screens.
+ */
 const AddElementMenu = ({
   surveyID,
   anchorEl,
@@ -32,8 +111,10 @@ const AddElementMenu = ({
   const { primary } = useAppTheme();
   const dispatch = useAppDispatch();
   const { can, tier = "FREE" } = useAuth();
+
   const canCreate3DQuestion =
     can("CREATE_QUESTION") && hasMinimumPlan(tier, "PROFESSIONAL");
+
   const [createElement, { isLoading, isError, error }] =
     useCreateElementMutation();
 
@@ -44,32 +125,6 @@ const AddElementMenu = ({
     (state: RootState) => state.surveyBuilder.elements,
   );
 
-  const handleElementAdd = async (type: string) => {
-    if (isLoading) return; //prevents rapid addition of element
-
-    try {
-      const newElement = await createElement({
-        surveyID,
-        type,
-      }).unwrap();
-      dispatch(addElement(newElement));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleScreenElementAdd = async (type: string) => {
-    try {
-      const newScreenElement = await createScreenElement({
-        surveyID,
-        type,
-      }).unwrap();
-      dispatch(addElement(newScreenElement));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const containsWelcome = elements?.some(
     (element) => element.type === "WELCOME_SCREEN",
   );
@@ -77,6 +132,85 @@ const AddElementMenu = ({
   const containsInstruction = elements?.some(
     (element) => element.type === "INSTRUCTIONS",
   );
+
+  /**
+   * Applies runtime plan gating for 3D without putting auth-dependent logic in config.
+   */
+  const gatedQuestionItems: AddMenuItemConfig[] = canCreate3DQuestion
+    ? [threeDMenuItem]
+    : [];
+
+  /**
+   * Applies runtime disabled states for fixed system screens.
+   * INFO_SCREEN intentionally remains reusable and is not disabled.
+   */
+  const screenMenuItems: AddMenuItemConfig[] = baseScreenMenuItems.map(
+    (item) => {
+      if (item.type === "INSTRUCTIONS") {
+        return {
+          ...item,
+          disabled: containsInstruction,
+          title: containsInstruction ? "Instructions screen already added" : "",
+        };
+      }
+
+      if (item.type === "WELCOME_SCREEN") {
+        return {
+          ...item,
+          disabled: containsWelcome,
+          title: containsWelcome ? "Welcome screen already added" : "",
+        };
+      }
+
+      return item;
+    },
+  );
+
+  /**
+   * Creates a normal question/test element using the existing createElement mutation.
+   */
+  const handleElementAdd = async (type: QuestionTypeKey) => {
+    if (isLoading) return;
+
+    try {
+      const newElement = await createElement({
+        surveyID,
+        type,
+      }).unwrap();
+
+      dispatch(addElement(newElement));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /**
+   * Creates a screen element using the existing createScreenElement mutation.
+   */
+  const handleScreenElementAdd = async (type: QuestionTypeKey) => {
+    try {
+      const newScreenElement = await createScreenElement({
+        surveyID,
+        type,
+      }).unwrap();
+
+      dispatch(addElement(newScreenElement));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /**
+   * Routes add-menu clicks to the correct existing creation mutation.
+   */
+  const handleMenuItemAdd = async (item: AddMenuItemConfig) => {
+    if (item.action === "SCREEN") {
+      await handleScreenElementAdd(item.type);
+      return;
+    }
+
+    await handleElementAdd(item.type);
+  };
 
   useToast({
     isError,
@@ -113,6 +247,7 @@ const AddElementMenu = ({
       >
         <AddOutlinedIcon fontSize="medium" />
       </IconButton>
+
       <Menu
         id="add-element-menu"
         anchorEl={anchorEl}
@@ -149,248 +284,31 @@ const AddElementMenu = ({
         }}
       >
         <Grid container spacing={0.75} sx={{ px: 1 }}>
-          {/* Questions */}
           <Grid item xs={12} sm={6}>
-            <Box sx={{ px: 1, py: 0.75 }}>
-              <Typography
-                sx={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "#64748B",
-                  textTransform: "uppercase",
-                  letterSpacing: 0.4,
-                }}
-              >
-                Questions
-              </Typography>
-            </Box>
-            {canCreate3DQuestion && (
-              <MenuItem
-                onClick={() => {
-                  if (!canCreate3DQuestion) return;
-                  handleElementAdd("THREE_D");
-                }}
-                disabled={isLoading || !canCreate3DQuestion}
-              >
-                <Box display="flex" alignItems="center" gap={1.25}>
-                  <Typography
-                    sx={{ fontSize: 24, color: "#086083ff", lineHeight: 1 }}
-                  >
-                    {elementIcons.THREE_D}
-                  </Typography>
-                  <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                    3D
-                  </Typography>
-                </Box>
-              </MenuItem>
-            )}
-
-            <MenuItem
-              onClick={() => handleElementAdd("BINARY")}
-              disabled={isLoading}
-            >
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#31029c", lineHeight: 1 }}
-                >
-                  {elementIcons.BINARY}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Binary
-                </Typography>
-              </Box>
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => handleElementAdd("RADIO")}
-              disabled={isLoading}
-            >
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#f7c435", lineHeight: 1 }}
-                >
-                  {elementIcons.RADIO}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Choice
-                </Typography>
-              </Box>
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => handleElementAdd("TEXT")}
-              disabled={isLoading}
-            >
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#c45161", lineHeight: 1 }}
-                >
-                  {elementIcons.TEXT}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Text
-                </Typography>
-              </Box>
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => handleElementAdd("NUMBER")}
-              disabled={isLoading}
-            >
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#d69e49", lineHeight: 1 }}
-                >
-                  {elementIcons.NUMBER}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Number
-                </Typography>
-              </Box>
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => handleElementAdd("RANK")}
-              disabled={isLoading}
-            >
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#ffa600", lineHeight: 1 }}
-                >
-                  {elementIcons.RANK}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Rank
-                </Typography>
-              </Box>
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => handleElementAdd("RANGE")}
-              disabled={isLoading}
-            >
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#036b82", lineHeight: 1 }}
-                >
-                  {elementIcons.RANGE}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Scale
-                </Typography>
-              </Box>
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => handleElementAdd("MEDIA")}
-              disabled={isLoading}
-            >
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#f2b6c0", lineHeight: 1 }}
-                >
-                  {elementIcons.MEDIA}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Media
-                </Typography>
-              </Box>
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => handleElementAdd("MULTIPLE_CHOICE")}
-              disabled={isLoading}
-            >
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#369acc", lineHeight: 1 }}
-                >
-                  {elementIcons.MULTIPLE_CHOICE}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Checkbox
-                </Typography>
-              </Box>
-            </MenuItem>
+            <AddMenuSection
+              title="Questions"
+              items={[...gatedQuestionItems, ...questionMenuItems]}
+              isLoading={isLoading}
+              onAdd={handleMenuItemAdd}
+            />
           </Grid>
 
-          {/* Screens */}
           <Grid item xs={12} sm={6}>
-            <Box sx={{ px: 1, py: 0.75 }}>
-              <Typography
-                sx={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "#64748B",
-                  textTransform: "uppercase",
-                  letterSpacing: 0.4,
-                }}
-              >
-                Screens
-              </Typography>
+            <AddMenuSection
+              title="Implicit"
+              items={implicitMenuItems}
+              isLoading={isLoading}
+              onAdd={handleMenuItemAdd}
+            />
+
+            <Box sx={{ mt: 1 }}>
+              <AddMenuSection
+                title="Screens"
+                items={screenMenuItems}
+                isLoading={isLoading}
+                onAdd={handleMenuItemAdd}
+              />
             </Box>
-
-            <MenuItem onClick={() => handleScreenElementAdd("EMAIL_CONTACT")}>
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#31029c", lineHeight: 1 }}
-                >
-                  {elementIcons.EMAIL_CONTACT}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Email
-                </Typography>
-              </Box>
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => handleScreenElementAdd("INSTRUCTIONS")}
-              disabled={containsInstruction}
-              title={
-                containsInstruction ? "Instructions screen already added" : ""
-              }
-            >
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#f7c435", lineHeight: 1 }}
-                >
-                  {elementIcons.INSTRUCTIONS}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Instructions
-                </Typography>
-              </Box>
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => handleScreenElementAdd("WELCOME_SCREEN")}
-              disabled={containsWelcome}
-              title={containsWelcome ? "Welcome screen already added" : ""}
-            >
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#c45161", lineHeight: 1 }}
-                >
-                  {elementIcons.WELCOME_SCREEN}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Welcome Screen
-                </Typography>
-              </Box>
-            </MenuItem>
-
-            <MenuItem onClick={() => handleScreenElementAdd("END_SCREEN")}>
-              <Box display="flex" alignItems="center" gap={1.25}>
-                <Typography
-                  sx={{ fontSize: 24, color: "#d69e49", lineHeight: 1 }}
-                >
-                  {elementIcons.END_SCREEN}
-                </Typography>
-                <Typography sx={{ fontSize: 14.5, fontWeight: 600 }}>
-                  End Screen
-                </Typography>
-              </Box>
-            </MenuItem>
           </Grid>
         </Grid>
       </Menu>

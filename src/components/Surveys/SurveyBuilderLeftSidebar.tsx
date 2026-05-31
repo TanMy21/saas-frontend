@@ -5,6 +5,7 @@ import { Box, Typography } from "@mui/material";
 import { RootState } from "../../app/store";
 import { useAppSelector } from "../../app/typedReduxHooks";
 import useAuth from "../../hooks/useAuth";
+import { isNumberedElement } from "../../utils/elementsDisplayOrder";
 import { SurveyBuilderLeftSidebarProps } from "../../utils/types";
 
 import AddElementMenu from "./Elements/AddElementMenu";
@@ -30,13 +31,7 @@ const SurveyBuilderLeftSidebar = ({
   };
 
   const questionCount = useMemo(() => {
-    return elements.filter(
-      (el) =>
-        el.type !== "WELCOME_SCREEN" &&
-        el.type !== "END_SCREEN" &&
-        el.type !== "INSTRUCTIONS" &&
-        el.type !== "EMAIL_CONTACT",
-    ).length;
+    return elements.filter((el) => isNumberedElement(el.type)).length;
   }, [elements]);
 
   return (

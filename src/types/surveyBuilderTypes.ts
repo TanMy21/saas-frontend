@@ -1,3 +1,5 @@
+import { QuestionTypeKey } from "../utils/types";
+
 export interface ShareTabProps {
   title: string;
   shareURL: string;
@@ -8,3 +10,21 @@ export interface ShareTabProps {
 }
 
 export type TabType = "link" | "email" | "embed";
+
+ 
+export type AddMenuItemConfig = {
+  label: string;
+  type: QuestionTypeKey;
+  icon: JSX.Element;
+  color: string;
+  action: "QUESTION" | "SCREEN";
+  disabled?: boolean;
+  title?: string;
+  professionalOnly?: boolean;
+};
+
+export type OrderedSurveyElement = {
+  questionID: string;
+  type: string;
+  order?: number | null;
+};

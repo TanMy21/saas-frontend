@@ -266,6 +266,7 @@ export interface ElementListItemProps {
   nonOrderableTypes: string[];
   setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
   newQuestionIds?: Set<string>;
+  displayOrderMap: Map<string, number>;
 }
 
 export interface ElementProps {
@@ -824,6 +825,7 @@ export interface UIState {
   overlayVariant?: "IMPORT" | "GENERATE" | "FEEDBACK" | "SIMPLE";
 }
 
+ 
 export type QuestionTypeKey =
   | "BINARY"
   | "EMAIL_CONTACT"
@@ -837,8 +839,14 @@ export type QuestionTypeKey =
   | "TEXT"
   | "THREE_D"
   | "MULTIPLE_CHOICE"
-  | "WELCOME_SCREEN";
+  | "WELCOME_SCREEN"
+  | "DROPDOWN"
+  | "TIMED_CHOICE"
+  | "CONCEPT_FIT"
+  | "IAT"
+  | "INFO_SCREEN";
 
+ 
 export type QuestionType =
   | "BINARY"
   | "MEDIA"
@@ -848,7 +856,11 @@ export type QuestionType =
   | "RANGE"
   | "TEXT"
   | "THREE_D"
-  | "MULTIPLE_CHOICE";
+  | "MULTIPLE_CHOICE"
+  | "DROPDOWN"
+  | "TIMED_CHOICE"
+  | "CONCEPT_FIT"
+  | "IAT";
 
 export interface QuestionDetail {
   questionID: string;

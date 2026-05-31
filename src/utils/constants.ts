@@ -304,15 +304,25 @@ export const orderedElementTypes = [
   "RANK",
   "TEXT",
   "THREE_D",
+
+  // New ordered types.
+  "DROPDOWN",
+  "TIMED_CHOICE",
+  "CONCEPT_FIT",
+  "IAT",
+  "INFO_SCREEN",
 ];
 
 export const OPTION_TYPES: QuestionType[] = [
   "BINARY",
+  "DROPDOWN",
   "MULTIPLE_CHOICE",
   "RADIO",
   "MEDIA",
   "THREE_D",
   "RANK",
+  "TIMED_CHOICE",
+  "CONCEPT_FIT",
 ];
 
 export const SINGLE_VALUE_TYPES: QuestionType[] = ["TEXT", "NUMBER", "RANGE"];
@@ -419,8 +429,6 @@ export const tierConfig = {
   },
 } as const;
 
-
-
 // 3D interaction areas colors
 export const THREE_D_AREA_COLORS = [
   "#2563EB", // blue
@@ -432,3 +440,11 @@ export const THREE_D_AREA_COLORS = [
   "#06B6D4", // cyan
   "#EF4444", // red
 ];
+
+export const NON_NUMBERED_ELEMENT_TYPES = [
+  "WELCOME_SCREEN",
+  "INSTRUCTIONS",
+  "EMAIL_CONTACT",
+  "END_SCREEN",
+  "INFO_SCREEN",
+] as const;
