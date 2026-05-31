@@ -28,6 +28,11 @@ export const LAST_WS_KEY = "lWSID";
 export const VIEW_MODE_KEY = "ws:vm";
 export const SETTINGS_TAB_KEY = "set:lat";
 
+
+
+export const MAX_DROPDOWN_OPTIONS = 100;
+export const DROPDOWN_WARNING_COUNT = 30;
+
 export const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: "general", label: "General", icon: User },
   { id: "create-user", label: "Add Member", icon: UserPlus },

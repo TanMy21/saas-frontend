@@ -62,15 +62,11 @@ import {
   ElementProps,
   QuestionTypeKey,
 } from "../utils/types";
+import DropdownElement from "../components/Surveys/Elements/DropdownElement";
 
 // ------------------- Remove: Temp components-------------------------------------
 
-/**
- * Temporary builder placeholder for Dropdown until the full renderer is implemented.
- */
-export const DropdownElement = ({ element }: Element) => {
-  return <div>{element?.text || "Dropdown question"}</div>;
-};
+ 
 
 /**
  * Temporary settings placeholder for Dropdown until option/settings UI is implemented.
