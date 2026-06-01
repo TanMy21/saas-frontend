@@ -427,10 +427,7 @@ export function rewriteHtmlTextPreserveInlineTags(
       return;
     }
 
-    const keep = Math.min(
-      textNode.textContent?.length ?? 0,
-      total - cursor,
-    );
+    const keep = Math.min(textNode.textContent?.length ?? 0, total - cursor);
 
     textNode.textContent = normalized.slice(cursor, cursor + keep);
     cursor += keep;
@@ -476,6 +473,36 @@ export const sanitizeRichTextHtml = (html?: string | null) => {
     ALLOWED_TAGS: ALLOWED_RICH_TEXT_TAGS,
     ALLOWED_ATTR: [],
     KEEP_CONTENT: true,
+    USE_PROFILES: { html: true },
+    ADD_TAGS: ["img"],
+    ADD_ATTR: [
+      "src",
+      "alt",
+      "title",
+      "target",
+      "rel",
+      "style",
+        "data-editor-image-id",
+      "data-public-id",
+    ],
+  });
+};
+
+export const sanitizeInfoScreenHtml = (html?: string | null) => {
+  if (!html?.trim()) return "";
+
+  return DOMPurify.sanitize(html, {
+    USE_PROFILES: { html: true },
+    ADD_TAGS: ["img"],
+    ADD_ATTR: [
+      "src",
+      "alt",
+      "title",
+      "target",
+      "rel",
+      "style",
+      "data-public-id",
+    ],
   });
 };
 
@@ -493,4 +520,29 @@ export const sanitizePlainTextForHtml = (value?: string | null) => {
     ALLOWED_ATTR: [],
     KEEP_CONTENT: true,
   });
+};
+
+export const extractEditorImagesFromHtml = (html?: string | null) => {
+  if (!html?.trim()) return [];
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+
+  return Array.from(doc.querySelectorAll("img"))
+    .map((img) => ({
+      publicId: img.getAttribute("data-public-id") || "",
+      imageUrl: img.getAttribute("src") || "",
+    }))
+    .filter((image) => image.publicId || image.imageUrl);
+};
+
+
+export 
+const extractUsedEditorImageIDs = (html: string) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+
+  return Array.from(doc.querySelectorAll("img"))
+    .map((img) => img.getAttribute("data-editor-image-id"))
+    .filter((id): id is string => Boolean(id));
 };

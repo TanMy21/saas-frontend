@@ -206,6 +206,13 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
+    uploadEditorImage: builder.mutation({
+      query: ({ questionID, formData }) => ({
+        url: `/q/editor-img/${questionID}`,
+        method: "POST",
+        body: formData,
+      }),
+    }),
     replace3DModel: builder.mutation({
       query: ({ formData, questionID }) => ({
         url: `/q/u/model/${questionID}`,
@@ -213,6 +220,13 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         body: formData,
       }),
       invalidatesTags: ["Elements", "Surveys"],
+    }),
+    replaceEditorImage: builder.mutation({
+      query: ({ questionID, editorImageID, formData }) => ({
+        url: `/q/editor-img/${questionID}/${editorImageID}`,
+        method: "PATCH",
+        body: formData,
+      }),
     }),
     toggleQuestionImageVisibility: builder.mutation({
       query: ({ questionID, questionImage }) => ({
@@ -251,6 +265,12 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
+    removeEditorImage: builder.mutation({
+      query: ({ questionID, editorImageID }) => ({
+        url: `/q/remove/editor-img/${questionID}/${editorImageID}`,
+        method: "POST",
+      }),
+    }),
     removeQuestionTemplateImage: builder.mutation({
       query: (questionID) => ({
         url: `/q/remove/template/${questionID}`,
@@ -263,6 +283,16 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         url: `/q/remove/bg/color`,
         method: "POST",
         body: { questionID },
+      }),
+      invalidatesTags: ["Elements"],
+    }),
+    syncEditorImages: builder.mutation({
+      query: ({ questionID, usedEditorImageIDs }) => ({
+        url: `/q/sync/editor-img/${questionID}`,
+        method: "POST",
+        body: {
+          usedEditorImageIDs,
+        },
       }),
       invalidatesTags: ["Elements"],
     }),
@@ -300,13 +330,17 @@ export const {
   useUploadQuestionImageMutation,
   useUploadQuestionTemplateImageMutation,
   useUpload3DModelMutation,
+  useUploadEditorImageMutation,
   useRemoveQuestionImageMutation,
+  useRemoveEditorImageMutation,
   useRemoveQuestionTemplateImageMutation,
   useRemoveQuestionBackgroundColorMutation,
   useReplace3DModelMutation,
+  useReplaceEditorImageMutation,
   useDuplicateElementMutation,
   useDeleteElementMutation,
   useImportQuestionsMutation,
+  useSyncEditorImagesMutation,
   useToggleQuestionImageVisibilityMutation,
   useToggle3DModelQuestionVisibilityMutation,
   useMutateQuestionTypeMutation,

@@ -28,3 +28,8 @@ export type OrderedSurveyElement = {
   type: string;
   order?: number | null;
 };
+
+
+export type InfoScreenRichTextSettingsProps = {
+  qID?: string;
+};

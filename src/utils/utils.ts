@@ -1005,3 +1005,16 @@ export const getSummaryQuestionTitle = (question: SummaryQuestion) => {
 
   return question.text;
 };
+
+
+export const normalizeLinkUrl = (url: string) => {
+  const trimmed = url.trim();
+
+  if (!trimmed) return "";
+
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+
+  return `https://${trimmed}`;
+};

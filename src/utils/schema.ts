@@ -217,6 +217,17 @@ export const TypographySettingsFormSchema = z.object({
     .optional(),
 });
 
+export const QuestionTextTypographySettingsFormSchema = z.object({
+  titleFontSize: z.number().min(1).optional(),
+  titleFontSizeMobile: z.number().min(1).optional(),
+  titleTextColor: z
+    .string()
+    .regex(hexColorRegex, {
+      message: "Invalid hex color (expected format: #RRGGBB or #RGB)",
+    })
+    .optional(),
+});
+
 export const binarySettingsSchema = z.object({
   questionText: z
     .string()
@@ -238,6 +249,12 @@ export const textAndDescriptionSettingsSchema = z.object({
     .string()
     .min(1, "Question text must be at least 1 character long"),
   questionDescription: z.string(),
+});
+
+export const QuestionTextSettingsSchema = z.object({
+  questionText: z
+    .string()
+    .min(1, "Question text must be at least 1 character long"),
 });
 
 export const questionImageSettingsSchema = z.object({

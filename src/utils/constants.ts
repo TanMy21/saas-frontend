@@ -45,6 +45,44 @@ export const DEFAULT_IAT_PREVIEW = {
   stimulus: "Luxury",
 };
 
+export const RICH_TEXT_FONT_SIZE_OPTIONS = [
+  { label: "12", value: "12px" },
+  { label: "14", value: "14px" },
+  { label: "16", value: "16px" },
+  { label: "18", value: "18px" },
+  { label: "20", value: "20px" },
+  { label: "24", value: "24px" },
+  { label: "28", value: "28px" },
+  { label: "32", value: "32px" },
+  { label: "36", value: "36px" },
+  { label: "40", value: "40px" },
+  { label: "44", value: "44px" },
+  { label: "48", value: "48px" },
+  { label: "52", value: "52px" },
+  { label: "56", value: "56px" },
+  { label: "60", value: "60px" },
+  { label: "64", value: "64px" },
+];
+
+export const RICH_TEXT_FONT_FAMILY_OPTIONS = [
+  { label: "Inter", value: "Inter" },
+  { label: "Arial", value: "Arial" },
+  { label: "Helvetica", value: "Helvetica" },
+  { label: "Verdana", value: "Verdana" },
+  { label: "Tahoma", value: "Tahoma" },
+  { label: "Trebuchet", value: "Trebuchet MS" },
+  { label: "Georgia", value: "Georgia" },
+  { label: "Times", value: "Times New Roman" },
+  { label: "Garamond", value: "Garamond" },
+  { label: "Palatino", value: "Palatino Linotype" },
+  { label: "Courier", value: "Courier New" },
+  { label: "Lucida Console", value: "Lucida Console" },
+  { label: "Monaco", value: "Monaco" },
+  { label: "Comic Sans", value: "Comic Sans MS" },
+  { label: "Impact", value: "Impact" },
+  { label: "Segoe UI", value: "Segoe UI" },
+];
+
 export const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: "general", label: "General", icon: User },
   { id: "create-user", label: "Add Member", icon: UserPlus },

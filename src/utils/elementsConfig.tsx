@@ -37,6 +37,7 @@ import DropdownElement from "../components/Surveys/Elements/DropdownElement";
 import EmailContactELement from "../components/Surveys/Elements/EmailContactELement";
 import EndScreenElement from "../components/Surveys/Elements/EndScreenElement";
 import ImplicitAssociationTest from "../components/Surveys/Elements/ImplicitAssociationTest";
+import InfoScreenElement from "../components/Surveys/Elements/InfoScreenElement";
 import InstructionsElement from "../components/Surveys/Elements/InstructionsElement";
 import MediaElement from "../components/Surveys/Elements/MediaElement";
 import NumberElement from "../components/Surveys/Elements/NumberElement";
@@ -51,6 +52,7 @@ import CheckBoxElementSettings from "../components/Surveys/ElementSettings/Check
 import ChoiceElementSettings from "../components/Surveys/ElementSettings/ChoiceElementSettings";
 import EmailContactElementSettings from "../components/Surveys/ElementSettings/EmailContactElementSettings";
 import EndScreenElementSettings from "../components/Surveys/ElementSettings/EndScreenElementSettings";
+import InfoScreenElementSettings from "../components/Surveys/ElementSettings/InfoScreenElementSettings";
 import InstructionsElementSettings from "../components/Surveys/ElementSettings/InstructionsElementSettings";
 import MediaElementSettings from "../components/Surveys/ElementSettings/MediaElementSettings";
 import NumberElementSettings from "../components/Surveys/ElementSettings/NumberElementSettings";
@@ -95,20 +97,6 @@ export const ConceptFitElementSettings = () => {
  */
 export const IATElementSettings = () => {
   return <div>IAT settings</div>;
-};
-
-/**
- * Temporary builder placeholder for Info Screen until rich text/image UI is implemented.
- */
-export const InfoScreenElement = ({ element }: Element) => {
-  return <div>{element?.text || "Info Screen"}</div>;
-};
-
-/**
- * Temporary settings placeholder for Info Screen until rich text/image settings are implemented.
- */
-export const InfoScreenElementSettings = () => {
-  return <div>Info screen settings</div>;
 };
 
 //---------------------------------------------------------------------------

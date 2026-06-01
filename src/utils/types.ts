@@ -659,7 +659,7 @@ export interface UpdatePasswordFormData {
   confirmPassword: string;
 }
 
-export interface ResetPasswordFormData { 
+export interface ResetPasswordFormData {
   password: string;
   confirmPassword: string;
 }
@@ -825,7 +825,6 @@ export interface UIState {
   overlayVariant?: "IMPORT" | "GENERATE" | "FEEDBACK" | "SIMPLE";
 }
 
- 
 export type QuestionTypeKey =
   | "BINARY"
   | "EMAIL_CONTACT"
@@ -846,7 +845,6 @@ export type QuestionTypeKey =
   | "IAT"
   | "INFO_SCREEN";
 
- 
 export type QuestionType =
   | "BINARY"
   | "MEDIA"
@@ -1414,6 +1412,12 @@ export interface TypographySettingsForm {
   descriptionFontSize?: number;
   descriptionFontSizeMobile?: number;
   descriptionTextColor?: string;
+}
+
+export interface QuestionTextTypographySettingsForm {
+  titleFontSize?: number;
+  titleFontSizeMobile?: number;
+  titleTextColor?: string;
 }
 
 export interface TypographySettingsView {
