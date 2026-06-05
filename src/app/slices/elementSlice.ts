@@ -70,6 +70,20 @@ const questionSlice = createSlice({
         state.selectedQuestion.questionImageAltTxt = action.payload;
       }
     },
+
+    setConceptFitDisplayMode: (
+      state,
+      action: PayloadAction<"TEXT" | "IMAGE">,
+    ) => {
+      if (!state.selectedQuestion?.questionPreferences) return;
+
+      if (!state.selectedQuestion.questionPreferences.uiConfig) {
+        state.selectedQuestion.questionPreferences.uiConfig = {};
+      }
+
+      state.selectedQuestion.questionPreferences.uiConfig.conceptDisplayMode =
+        action.payload;
+    },
     toggleElementRequired: (state, action: PayloadAction<boolean>) => {
       if (!state.selectedQuestion?.questionPreferences) return;
 
@@ -111,6 +125,7 @@ const questionSlice = createSlice({
         state.selectedQuestion[action.payload.key] = action.payload.value;
       }
     },
+
     updateUIButtonText: (state, action: PayloadAction<string>) => {
       if (!state.selectedQuestion?.questionPreferences) return;
 
@@ -178,6 +193,7 @@ export const {
   setImageHeight,
   setImageWidth,
   setImageAltText,
+  setConceptFitDisplayMode,
   toggleElementRequired,
   toggleShowImage,
   toggleShowQuestionfor3dType,

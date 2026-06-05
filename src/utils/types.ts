@@ -237,6 +237,18 @@ export interface Interactive3DModelViewerProps {
   frontIsNegZ?: boolean;
 }
 
+export type ElementImageAsset = {
+  questionImageID: string;
+  questionID: string;
+  imageUrl: string;
+  publicId: string;
+  role: string;
+  altText?: string | null;
+  width?: number | null;
+  height?: number | null;
+  isUsed?: boolean;
+};
+
 export interface Element {
   questionID: string;
   relatedSurveyId: string;
@@ -247,17 +259,13 @@ export interface Element {
   order?: number;
   questionPreferences: SurveyCanvasQuestionSettings;
   Model3D: Model3D;
-  questionImage?: boolean;
-  questionImageUrl?: string;
-  questionImageAltTxt?: string;
-  questionImagePublicId?: string;
-  questionImageWidth?: number;
-  questionImageHeight?: number;
+  showQuestion: boolean;
   response: ElementResponse[];
   minOptions: number;
   maxOptions: number;
   options?: OptionType[];
   required: boolean;
+  questionImages?: ElementImageAsset[];
 }
 
 export interface ElementListItemProps {
@@ -275,7 +283,7 @@ export interface ElementProps {
   qText?: string;
   qDescription?: string;
   qType?: string;
-  qImage?: boolean;
+  qImage?: ElementImageAsset[];
   showQuestion?: boolean;
   display?: "mobile" | "desktop";
   qID?: string;
@@ -479,7 +487,7 @@ export interface ElementSettingsProps {
   qRequired?: boolean;
   qSettings?: QuestionSetting;
   qPreferences?: SurveyCanvasQuestionSettings;
-  canEdit: boolean;
+  canEdit?: boolean;
 }
 
 export interface ElementSettingsContainerProps {
@@ -986,6 +994,12 @@ export interface QuestionUIConfig {
   superSize?: boolean;
   minValue?: number;
   maxValue?: number;
+  timeLimitMs?: number;
+  showCountdown?: boolean;
+  autoAdvanceOnAnswer?: boolean;
+  allowTimeout?: boolean;
+  conceptDisplayMode?: "TEXT" | "IMAGE";
+  randomizeAttributes?: boolean;
 }
 
 export interface QuestionBackgroundColorProps {

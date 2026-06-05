@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Box, IconButton, TextField, Typography } from "@mui/material";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  type DropResult,
-} from "react-beautiful-dnd";
-import { MdAdd } from "react-icons/md";
+import { type DropResult } from "react-beautiful-dnd";
 
 import {
   useCreateNewOptionMutation,
@@ -15,8 +8,11 @@ import {
   useGetOptionsOfQuestionQuery,
   useUpdateOptionOrderMutation,
 } from "../../../app/slices/optionApiSlice";
+import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
 import { useToast } from "../../../hooks/useToast";
+import { ConceptFitStimulusLayoutProps } from "../../../types/surveyBuilderTypes";
 import {
   MAX_CONCEPT_ATTRIBUTES,
   MIN_RECOMMENDED_ATTRIBUTES,
@@ -24,11 +20,18 @@ import {
 import { showToast } from "../../../utils/showToast";
 import { ElementProps, OptionType } from "../../../utils/types";
 
-import { ConceptAttributeRow } from "./ConceptAttributeRow";
-import { ConceptFitPreview } from "./ConceptFitPreview";
+import { ConceptFitImageOnlyStimulus } from "./ConceptFitImageOnlyStimulus";
+import { ConceptTextOnlyStimulus } from "./ConceptTextOnlyStimulus";
 
-export const ConceptFitResponse = ({ qID, display }: ElementProps) => {
+export const ConceptFitResponse = ({ qID, display, qImage }: ElementProps) => {
   const { can } = useAuth();
+
+  const question = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
+  );
+
+  const conceptDisplayMode =
+    question?.questionPreferences?.uiConfig?.conceptDisplayMode ?? "TEXT";
 
   const canCreate = can("CREATE_OPTION");
   const canEdit = can("UPDATE_OPTION");
@@ -153,183 +156,28 @@ export const ConceptFitResponse = ({ qID, display }: ElementProps) => {
   const hasMinimumRecommended =
     localOptions.length >= MIN_RECOMMENDED_ATTRIBUTES;
 
-  return (
-    <Box
-      sx={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        mt: 3,
-      }}
-    >
-      <Box
-        sx={{
-          width: display === "mobile" ? "92%" : "72%",
-          display: "flex",
-          flexDirection: "column",
-          gap: 2.5,
-        }}
-      >
-        <ConceptFitPreview firstAttribute={localOptions[0]?.text} />
+  const stimulusProps: ConceptFitStimulusLayoutProps = {
+    qID,
+    display,
+    localOptions,
+    inputValue,
+    textareaRef,
+    canCreate,
+    canEdit,
+    canDelete,
+    canReorder,
+    canAddMore,
+    qImage,
+    hasMinimumRecommended,
+    setInputValue,
+    handleAddAttributes,
+    handleDeleteAttribute,
+    handleDragEnd,
+  };
 
-        <Typography
-          sx={{
-            fontSize: 13,
-            color: hasMinimumRecommended ? "#64748B" : "#B45309",
-            textAlign: "right",
-          }}
-        >
-          {localOptions.length}/{MAX_CONCEPT_ATTRIBUTES} attributes
-          {!hasMinimumRecommended
-            ? ` · Recommended minimum: ${MIN_RECOMMENDED_ATTRIBUTES}`
-            : ""}
-        </Typography>
+  if (conceptDisplayMode === "IMAGE") {
+    return <ConceptFitImageOnlyStimulus {...stimulusProps} />;
+  }
 
-        <Box
-          sx={{
-            border: "1px solid #E2E8F0",
-            borderRadius: 2,
-            bgcolor: "#F8FAFC",
-            p: 1.5,
-            maxHeight: 340,
-            overflowY: "auto",
-            overflowX: "hidden",
-          }}
-        >
-          <DragDropContext
-            onDragEnd={(result) => {
-              if (!canReorder) return;
-              handleDragEnd(result);
-            }}
-          >
-            <Droppable droppableId={`concept-fit-attributes-${qID}`}>
-              {(provided) => (
-                <Box
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 1,
-                  }}
-                >
-                  {localOptions.map((option, index) => (
-                    <Draggable
-                      key={option.optionID}
-                      draggableId={option.optionID}
-                      index={index}
-                      isDragDisabled={!canReorder}
-                    >
-                      {(provided) => (
-                        <Box
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          sx={{
-                            outline: "none",
-                            "&:focus": { outline: "none" },
-                            "&:focus-visible": { outline: "none" },
-                          }}
-                        >
-                          <ConceptAttributeRow
-                            option={option}
-                            index={index}
-                            canReorder={canReorder}
-                            canEdit={canEdit}
-                            canDelete={canDelete}
-                            onDelete={handleDeleteAttribute}
-                          />
-                        </Box>
-                      )}
-                    </Draggable>
-                  ))}
-
-                  {provided.placeholder}
-                </Box>
-              )}
-            </Droppable>
-          </DragDropContext>
-
-          {localOptions.length === 0 && (
-            <Typography
-              sx={{
-                fontSize: 14,
-                color: "#64748B",
-                textAlign: "center",
-                py: 3,
-              }}
-            >
-              Add attribute words like Premium, Elegant, Cheap, or Trustworthy.
-            </Typography>
-          )}
-        </Box>
-
-        {canCreate && (
-          <Box
-            sx={{
-              position: "relative",
-              width: "100%",
-              px: 1,
-              pt: 0.75,
-              pb: 0.75,
-              border: "1px solid #E2E8F0",
-              borderRadius: 2,
-              bgcolor: "#FFFFFF",
-            }}
-          >
-            <TextField
-              multiline
-              minRows={1}
-              disabled={!canAddMore}
-              inputRef={textareaRef}
-              placeholder="Type or paste attributes, one per line…"
-              value={inputValue}
-              onChange={(event) => setInputValue(event.target.value)}
-              variant="standard"
-              InputProps={{
-                disableUnderline: true,
-                sx: {
-                  bgcolor: "transparent",
-                  lineHeight: 1.6,
-                  fontSize: 15,
-                  color: "inherit",
-                  pr: 5,
-                },
-              }}
-              sx={{
-                width: "100%",
-                "& .MuiInputBase-root": {
-                  bgcolor: "transparent",
-                },
-              }}
-            />
-
-            <IconButton
-              onClick={handleAddAttributes}
-              disabled={!canAddMore || inputValue.trim() === ""}
-              aria-label="Add concept fit attributes"
-              sx={{
-                position: "absolute",
-                right: 8,
-                bottom: 7,
-                width: 34,
-                height: 34,
-                borderRadius: "50%",
-                bgcolor: "#0891B2",
-                color: "white",
-                boxShadow: "0 6px 16px rgba(8,145,178,0.25)",
-                "&:hover": { bgcolor: "#0E7490" },
-                "&.Mui-disabled": {
-                  bgcolor: "#CBD5E1",
-                  color: "white",
-                },
-              }}
-            >
-              <MdAdd size={20} />
-            </IconButton>
-          </Box>
-        )}
-      </Box>
-    </Box>
-  );
+  return <ConceptTextOnlyStimulus {...stimulusProps} />;
 };

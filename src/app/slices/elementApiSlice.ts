@@ -156,7 +156,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { questionID, uiConfig },
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: ["Elements", "Surveys", "QuestionPreferences"],
     }),
     updateQuestionImageDimensions: builder.mutation({
       query: ({ questionID, questionImageWidth, questionImageHeight }) => ({
@@ -182,14 +182,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
-    uploadQuestionImage: builder.mutation({
-      query: ({ formData, questionID }) => ({
-        url: `/q/img/${questionID}`,
-        method: "PATCH",
-        body: formData,
-      }),
-      invalidatesTags: ["Elements"],
-    }),
+
     uploadQuestionTemplateImage: builder.mutation({
       query: ({ formData, questionID }) => ({
         url: `/q/template/${questionID}`,
@@ -206,12 +199,14 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
-    uploadEditorImage: builder.mutation({
-      query: ({ questionID, formData }) => ({
-        url: `/q/editor-img/${questionID}`,
+    uploadQuestionImage: builder.mutation({
+      query: ({ questionID, role, formData }) => ({
+        url: `/q/img/${questionID}`,
         method: "POST",
         body: formData,
+        params: { role },
       }),
+      invalidatesTags: ["Elements"],
     }),
     replace3DModel: builder.mutation({
       query: ({ formData, questionID }) => ({
@@ -221,9 +216,9 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements", "Surveys"],
     }),
-    replaceEditorImage: builder.mutation({
-      query: ({ questionID, editorImageID, formData }) => ({
-        url: `/q/editor-img/${questionID}/${editorImageID}`,
+    replaceQuestionImage: builder.mutation({
+      query: ({ questionID, questionImageID, formData }) => ({
+        url: `/q/img/${questionID}/${questionImageID}`,
         method: "PATCH",
         body: formData,
       }),
@@ -259,17 +254,11 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Elements"],
     }),
     removeQuestionImage: builder.mutation({
-      query: (questionID) => ({
-        url: `/q/remove/img/${questionID}`,
+      query: ({ questionID, questionImageID }) => ({
+        url: `/q/remove/img/${questionID}/${questionImageID}`,
         method: "POST",
       }),
       invalidatesTags: ["Elements"],
-    }),
-    removeEditorImage: builder.mutation({
-      query: ({ questionID, editorImageID }) => ({
-        url: `/q/remove/editor-img/${questionID}/${editorImageID}`,
-        method: "POST",
-      }),
     }),
     removeQuestionTemplateImage: builder.mutation({
       query: (questionID) => ({
@@ -287,11 +276,12 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Elements"],
     }),
     syncEditorImages: builder.mutation({
-      query: ({ questionID, usedEditorImageIDs }) => ({
-        url: `/q/sync/editor-img/${questionID}`,
+      query: ({ questionID, usedQuestionImageIDs, role }) => ({
+        url: `/q/sync/img/${questionID}`,
         method: "POST",
         body: {
-          usedEditorImageIDs,
+          usedQuestionImageIDs,
+          role,
         },
       }),
       invalidatesTags: ["Elements"],
@@ -330,13 +320,11 @@ export const {
   useUploadQuestionImageMutation,
   useUploadQuestionTemplateImageMutation,
   useUpload3DModelMutation,
-  useUploadEditorImageMutation,
   useRemoveQuestionImageMutation,
-  useRemoveEditorImageMutation,
   useRemoveQuestionTemplateImageMutation,
   useRemoveQuestionBackgroundColorMutation,
   useReplace3DModelMutation,
-  useReplaceEditorImageMutation,
+  useReplaceQuestionImageMutation,
   useDuplicateElementMutation,
   useDeleteElementMutation,
   useImportQuestionsMutation,

@@ -31,7 +31,10 @@ const SurveyBuilderCanvas = ({
   //     ? selectedQuestion
   //     : canvasQuestion;
 
-  const question = selectedQuestion ?? canvasQuestion;
+  const question =
+    selectedQuestion?.questionID === canvasQuestion?.questionID
+      ? selectedQuestion
+      : canvasQuestion;
 
   const questionType = question?.type as QuestionTypeKey;
   const backgroundColor =
@@ -136,10 +139,12 @@ const SurveyBuilderCanvas = ({
                     qText={question?.text}
                     qDescription={question?.description}
                     qType={question?.type}
-                    qImage={question?.questionImage}
+                    qImage={question?.questionImages}
                     // qSettings={question?.config}
                     display={display}
-                    showQuestion={question?.Model3D?.showQuestion}
+                    showQuestion={
+                      question?.showQuestion ?? question?.Model3D?.showQuestion
+                    }
                   />
                 )}{" "}
               </motion.div>

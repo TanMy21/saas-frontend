@@ -1,30 +1,30 @@
 import { Box } from "@mui/material";
 
-import { usePermission } from "../../../context/PermissionContext";
 import { ElementSettingsProps } from "../../../utils/types";
 
+import ConceptFitDisplaySettings from "./ElementSettingsComponents/ConceptFitDisplaySettings";
 import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
-import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
+import ShowQuestionSettings from "./ElementSettingsComponents/ShowQuestionSettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
-const ChoiceElementSettings = ({ qID }: ElementSettingsProps) => {
-  const { canEditQuestion } = usePermission();
+const ConceptFitElementSettings = ({ qID }: ElementSettingsProps) => {
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        height: "100%",
+        heigh: "100%",
       }}
     >
-      {canEditQuestion && <QuestionTypeMutationSettings />}
       <QuestionTextandDescriptionSettings />
+      <ConceptFitDisplaySettings qID={qID} />
       <ScreenTypographySettings key={qID} qID={qID} />
       <ValidationSettings />
+      <ShowQuestionSettings />
     </Box>
   );
 };
 
-export default ChoiceElementSettings;
+export default ConceptFitElementSettings;

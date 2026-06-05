@@ -8,7 +8,7 @@ import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/Questi
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
-const ChoiceElementSettings = ({ qID }: ElementSettingsProps) => {
+const DropdownElementSettings = ({ qID }: ElementSettingsProps) => {
   const { canEditQuestion } = usePermission();
   return (
     <Box
@@ -27,4 +27,4 @@ const ChoiceElementSettings = ({ qID }: ElementSettingsProps) => {
   );
 };
 
-export default ChoiceElementSettings;
+export default DropdownElementSettings;

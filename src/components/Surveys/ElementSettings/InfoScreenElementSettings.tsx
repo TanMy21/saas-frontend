@@ -1,12 +1,8 @@
 import { Box } from "@mui/material";
 
-import { ElementSettingsProps } from "../../../utils/types";
-
-import { InfoScreenRichTextSettings } from "./ElementSettingsComponents/InfoScreenRichTextSettings";
 import { QuestionTextSettings } from "./ElementSettingsComponents/QuestionTextSettings";
-import { QuestionTextTypographySettings } from "./ElementSettingsComponents/QuestionTextTypographySettings";
 
-const InfoScreenElementSettings = ({ qID }: ElementSettingsProps) => {
+const InfoScreenElementSettings = () => {
   return (
     <Box
       sx={{
@@ -17,8 +13,6 @@ const InfoScreenElementSettings = ({ qID }: ElementSettingsProps) => {
       }}
     >
       <QuestionTextSettings />
-      <QuestionTextTypographySettings key={qID} qID={qID} />
-      <InfoScreenRichTextSettings qID={qID} />
     </Box>
   );
 };

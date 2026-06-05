@@ -1,12 +1,43 @@
-import { Box, Typography } from "@mui/material";
+import { Box, keyframes, Typography } from "@mui/material";
 
+import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
 import { DEFAULT_TIMER_SECONDS } from "../../../utils/constants";
+import { ElementProps } from "../../../utils/types";
 
-export const TimedChoiceTimerPreview = () => {
+
+ 
+const timerDrain = keyframes`
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
+`;
+
+export const TimedChoiceTimerPreview = ({ qID }: Pick<ElementProps, "qID">) => {
+  const question = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
+  );
+
+  const questionID = qID || question?.questionID;
+  const uiConfig = question?.questionPreferences?.uiConfig || {};
+
+  const timeLimitMs =
+    question?.questionID === questionID &&
+    typeof uiConfig.timeLimitMs === "number"
+      ? uiConfig.timeLimitMs
+      : DEFAULT_TIMER_SECONDS * 1000;
+
+  const timeLimitSeconds = Math.round(timeLimitMs / 1000);
+
   return (
     <Box
       sx={{
-        width: "100%",
+        width: "80%",
+        mx: "auto",
         border: "1px solid #FED7AA",
         bgcolor: "#FFF7ED",
         borderRadius: 2,
@@ -27,7 +58,7 @@ export const TimedChoiceTimerPreview = () => {
         </Typography>
 
         <Typography sx={{ fontSize: 13, fontWeight: 800, color: "#EA580C" }}>
-          {DEFAULT_TIMER_SECONDS}s
+          {timeLimitSeconds}s
         </Typography>
       </Box>
 
@@ -41,11 +72,17 @@ export const TimedChoiceTimerPreview = () => {
         }}
       >
         <Box
+          key={timeLimitMs}
           sx={{
-            width: "72%",
             height: "100%",
             borderRadius: 999,
             bgcolor: "#EA580C",
+
+            /**
+             * Animates based on actual stored timer duration.
+             * key={timeLimitMs} restarts animation when creator changes time.
+             */
+            animation: `${timerDrain} ${timeLimitMs}ms linear infinite`,
           }}
         />
       </Box>

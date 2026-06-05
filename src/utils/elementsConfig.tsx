@@ -45,11 +45,12 @@ import RankElement from "../components/Surveys/Elements/RankElement";
 import ScaleElement from "../components/Surveys/Elements/ScaleElement";
 import TextElement from "../components/Surveys/Elements/TextElement";
 import ThreeDElement from "../components/Surveys/Elements/ThreeDElement";
-import TimedChoiceElement from "../components/Surveys/Elements/TimerElement";
+import TimedChoiceElement from "../components/Surveys/Elements/TimedChoiceElement";
 import WelcomeScreenElement from "../components/Surveys/Elements/WelcomeScreenElement";
 import BinaryElementSettings from "../components/Surveys/ElementSettings/BinaryElementSettings";
 import CheckBoxElementSettings from "../components/Surveys/ElementSettings/CheckBoxElementSettings";
 import ChoiceElementSettings from "../components/Surveys/ElementSettings/ChoiceElementSettings";
+import DropdownElementSettings from "../components/Surveys/ElementSettings/DropdownElementSettings";
 import EmailContactElementSettings from "../components/Surveys/ElementSettings/EmailContactElementSettings";
 import EndScreenElementSettings from "../components/Surveys/ElementSettings/EndScreenElementSettings";
 import InfoScreenElementSettings from "../components/Surveys/ElementSettings/InfoScreenElementSettings";
@@ -60,6 +61,7 @@ import RankElementSettings from "../components/Surveys/ElementSettings/RankEleme
 import ScaleElementSettings from "../components/Surveys/ElementSettings/ScaleElementSettings";
 import TextElementSettings from "../components/Surveys/ElementSettings/TextElementSettings";
 import ThreeDElementSettings from "../components/Surveys/ElementSettings/ThreeDElementSettings";
+import TimedChoiceElementSettings from "../components/Surveys/ElementSettings/TimedChoiceElementSettings";
 import WelcomeScreenElementSettings from "../components/Surveys/ElementSettings/WelcomeScreenElementSettings";
 import { SummaryQuestion } from "../types/insightTypes";
 import {
@@ -68,30 +70,11 @@ import {
   ElementProps,
   QuestionTypeKey,
 } from "../utils/types";
+import ConceptFitElementSettings from "../components/Surveys/ElementSettings/ConceptFitElementSettings";
 
 // ------------------- Remove: Temp components-------------------------------------
 
-/**
- * Temporary settings placeholder for Dropdown until option/settings UI is implemented.
- */
-export const DropdownElementSettings = () => {
-  return <div>Dropdown settings</div>;
-};
-
-/**
- * Temporary settings placeholder for Timed Choice until timer settings are implemented.
- */
-export const TimedChoiceElementSettings = () => {
-  return <div>Timed choice settings</div>;
-};
-
-/**
- * Temporary settings placeholder for Concept Fit until attribute settings are implemented.
- */
-export const ConceptFitElementSettings = () => {
-  return <div>Concept fit settings</div>;
-};
-
+ 
 /**
  * Temporary settings placeholder for IAT until the setup wizard is implemented.
  */

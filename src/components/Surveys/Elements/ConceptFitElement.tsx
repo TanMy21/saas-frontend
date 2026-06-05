@@ -6,15 +6,20 @@ import { ConceptFitResponse } from "../ElementResponse/ConceptFitResponse";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-export const ConceptFitElement = ({ qID, display }: ElementProps) => {
+export const ConceptFitElement = ({
+  qID,
+  display,
+  showQuestion,
+  qImage
+}: ElementProps) => {
   return (
     <ScreenRoot display={display}>
       <CenteredStack display={display}>
-        <ElementQuestionText display={display} />
+        {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
 
       <ResponseContainer display={display}>
-        <ConceptFitResponse qID={qID} display={display} />
+        <ConceptFitResponse qID={qID} display={display} qImage={qImage} />
       </ResponseContainer>
     </ScreenRoot>
   );

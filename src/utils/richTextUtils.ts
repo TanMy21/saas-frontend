@@ -482,7 +482,7 @@ export const sanitizeRichTextHtml = (html?: string | null) => {
       "target",
       "rel",
       "style",
-        "data-editor-image-id",
+      "data-editor-image-id",
       "data-public-id",
     ],
   });
@@ -536,9 +536,7 @@ export const extractEditorImagesFromHtml = (html?: string | null) => {
     .filter((image) => image.publicId || image.imageUrl);
 };
 
-
-export 
-const extractUsedEditorImageIDs = (html: string) => {
+export const extractUsedEditorImageIDs = (html: string) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
 

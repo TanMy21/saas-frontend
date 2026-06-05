@@ -20,6 +20,7 @@ import {
 
 import { FeedbackTypeUI } from "../types/feedBackTypes";
 import { LoaderMode } from "../types/modalTypes";
+import { TimedChoiceSettingsForm } from "../types/surveyBuilderTypes";
 
 import { NotificationSettings, QuestionType, TabId } from "./types";
 
@@ -36,6 +37,15 @@ export const DEFAULT_TIMER_SECONDS = 3;
 
 export const MAX_CONCEPT_ATTRIBUTES = 10;
 export const MIN_RECOMMENDED_ATTRIBUTES = 4;
+
+export const MAX_TIMED_OPTION_LENGTH = 80;
+
+export const DEFAULT_TIMED_CHOICE_CONFIG: TimedChoiceSettingsForm = {
+  timeLimitSeconds: 3,
+  showCountdown: true,
+  autoAdvanceOnAnswer: true,
+  allowTimeout: true,
+};
 
 export const DEFAULT_IAT_PREVIEW = {
   targetA: "Brand A",
@@ -82,6 +92,14 @@ export const RICH_TEXT_FONT_FAMILY_OPTIONS = [
   { label: "Impact", value: "Impact" },
   { label: "Segoe UI", value: "Segoe UI" },
 ];
+
+export const CONCEPT_FIT_DISPLAY_MODE_OPTIONS = [
+  { label: "Text only", value: "TEXT" },
+  { label: "Image only", value: "IMAGE" },
+  // { label: "Text + image", value: "TEXT_IMAGE" },
+] as const;
+
+export const CONCEPT_FIT_IMAGE_ROLE = "CONCEPT_FIT_STIMULUS";
 
 export const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: "general", label: "General", icon: User },

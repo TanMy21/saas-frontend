@@ -37,16 +37,21 @@ import {
   TextResponseItem,
 } from "../types/insightTypes";
 import { FeatureItem, Step, UseCase } from "../types/landingTypes";
+import {
+  ConceptFitSettingsForm,
+  TimedChoiceSettingsForm,
+} from "../types/surveyBuilderTypes";
 
 import {
   ALLOWED_IMAGE_TYPES,
+  DEFAULT_TIMED_CHOICE_CONFIG,
   MAX_IMAGE_SIZE_BYTES,
   OPTION_TYPES,
   SINGLE_VALUE_TYPES,
   THREE_D_AREA_COLORS,
 } from "./constants";
 import { showToast } from "./showToast";
-import { EdgeStyle, LayoutMode, QuestionType } from "./types";
+import { EdgeStyle, LayoutMode, QuestionType, QuestionUIConfig } from "./types";
 
 export const generateOptionLabel = (index: number, qType: string) => {
   if (qType === "RADIO" || qType === "MULTIPLE_CHOICE" || qType === "MEDIA") {
@@ -1006,7 +1011,6 @@ export const getSummaryQuestionTitle = (question: SummaryQuestion) => {
   return question.text;
 };
 
-
 export const normalizeLinkUrl = (url: string) => {
   const trimmed = url.trim();
 
@@ -1017,4 +1021,78 @@ export const normalizeLinkUrl = (url: string) => {
   }
 
   return `https://${trimmed}`;
+};
+
+// Provides default timed choice settings based on UI config or falls back to defaults
+export const getTimedChoiceDefaults = (
+  uiConfig?: any,
+): TimedChoiceSettingsForm => {
+  return {
+    timeLimitSeconds:
+      typeof uiConfig?.timeLimitMs === "number"
+        ? Math.max(1, Math.round(uiConfig.timeLimitMs / 1000))
+        : DEFAULT_TIMED_CHOICE_CONFIG.timeLimitSeconds,
+    showCountdown:
+      typeof uiConfig?.showCountdown === "boolean"
+        ? uiConfig.showCountdown
+        : DEFAULT_TIMED_CHOICE_CONFIG.showCountdown,
+    autoAdvanceOnAnswer:
+      typeof uiConfig?.autoAdvanceOnAnswer === "boolean"
+        ? uiConfig.autoAdvanceOnAnswer
+        : DEFAULT_TIMED_CHOICE_CONFIG.autoAdvanceOnAnswer,
+    allowTimeout:
+      typeof uiConfig?.allowTimeout === "boolean"
+        ? uiConfig.allowTimeout
+        : DEFAULT_TIMED_CHOICE_CONFIG.allowTimeout,
+  };
+};
+
+/**
+ * Builds the persisted uiConfig payload.
+ */
+export const buildTimedChoiceUiConfig = (
+  data: TimedChoiceSettingsForm,
+  currentUiConfig: QuestionUIConfig = {},
+) => {
+  return {
+    ...currentUiConfig,
+    timeLimitMs: Math.min(Math.max(data.timeLimitSeconds, 1), 30) * 1000,
+    showCountdown: data.showCountdown,
+    autoAdvanceOnAnswer: data.autoAdvanceOnAnswer,
+    allowTimeout: data.allowTimeout,
+  };
+};
+
+export const getConceptFitDefaults = (
+  uiConfig?: QuestionUIConfig,
+): ConceptFitSettingsForm => {
+  return {
+    conceptDisplayMode:
+      uiConfig?.conceptDisplayMode === "TEXT" ||
+      uiConfig?.conceptDisplayMode === "IMAGE"
+        ? uiConfig.conceptDisplayMode
+        : "TEXT",
+
+    randomizeAttributes:
+      typeof uiConfig?.randomizeAttributes === "boolean"
+        ? uiConfig.randomizeAttributes
+        : true,
+
+    autoAdvanceOnAnswer:
+      typeof uiConfig?.autoAdvanceOnAnswer === "boolean"
+        ? uiConfig.autoAdvanceOnAnswer
+        : true,
+  };
+};
+
+export const buildConceptFitUiConfig = (
+  data: ConceptFitSettingsForm,
+  currentUiConfig: QuestionUIConfig = {},
+): QuestionUIConfig => {
+  return {
+    ...currentUiConfig,
+    conceptDisplayMode: data.conceptDisplayMode,
+    randomizeAttributes: data.randomizeAttributes,
+    autoAdvanceOnAnswer: data.autoAdvanceOnAnswer,
+  };
 };
