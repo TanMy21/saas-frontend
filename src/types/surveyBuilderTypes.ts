@@ -1,6 +1,13 @@
 import { type DropResult } from "react-beautiful-dnd";
 
-import { ElementImageAsset, ElementProps, OptionType, QuestionTypeKey } from "../utils/types";
+import {
+  ElementImageAsset,
+  ElementProps,
+  OptionType,
+  QuestionTypeKey,
+} from "../utils/types";
+
+import { GeneratedDropdownOption } from "./genTypes";
 
 export interface ShareTabProps {
   title: string;
@@ -83,7 +90,6 @@ export type QuestionImageAsset = {
   height?: number | null;
 };
 
-
 export type IATCategorySettingsForm = {
   iatLeftCategoryLabel: string;
   iatRightCategoryLabel: string;
@@ -97,7 +103,7 @@ export type IATBehaviorSettingsForm = {
   autoAdvanceOnAnswer: boolean;
 };
 
- export type ImplicitAssociationTestBlockPreviewProps = {
+export type ImplicitAssociationTestBlockPreviewProps = {
   centerStimulus: string;
 };
 
@@ -115,4 +121,35 @@ export type IATStimulusRowProps = {
   dragHandleProps?: any;
   onUpdate: (option: OptionType, nextText: string) => Promise<void>;
   onDelete: (optionID: string) => Promise<void>;
+};
+
+export type DropdownManualAddProps = {
+  inputValue: string;
+  disabled: boolean;
+  onInputChange: (value: string) => void;
+  onAddOptions: () => void;
+  onOpenAI: () => void;
+};
+
+export type DropdownAIPromptDialogProps = {
+  open: boolean;
+  prompt: string;
+  count: number;
+  maxCount: number;
+  isGenerating: boolean;
+  onClose: () => void;
+  onPromptChange: (value: string) => void;
+  onCountChange: (value: number) => void;
+  onGenerate: () => void;
+};
+
+export type DropdownAIReviewDialogProps = {
+  open: boolean;
+  options: GeneratedDropdownOption[];
+  onClose: () => void;
+  onBack: () => void;
+  isAddingReviewedOptions: boolean;
+  onUpdateOption: (index: number, value: string) => void;
+  onDeleteOption: (index: number) => void;
+  onAddReviewedOptions: () => void;
 };

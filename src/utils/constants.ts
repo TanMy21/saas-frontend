@@ -30,6 +30,7 @@ export const VIEW_MODE_KEY = "ws:vm";
 export const SETTINGS_TAB_KEY = "set:lat";
 
 export const MAX_DROPDOWN_OPTIONS = 100;
+
 export const DROPDOWN_WARNING_COUNT = 30;
 
 export const MAX_TIMED_CHOICE_OPTIONS = 2;
