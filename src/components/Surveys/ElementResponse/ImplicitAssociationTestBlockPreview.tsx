@@ -1,10 +1,27 @@
 import { Box, Chip, Typography } from "@mui/material";
 
+import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
+import { ImplicitAssociationTestBlockPreviewProps } from "../../../types/surveyBuilderTypes";
 import { DEFAULT_IAT_PREVIEW } from "../../../utils/constants";
 
 import { ImplicitAssociationSideCard } from "./ImplicitAssociationSideCard";
 
-export const ImplicitAssociationTestBlockPreview = () => {
+export const ImplicitAssociationTestBlockPreview = ({
+  centerStimulus,
+}: ImplicitAssociationTestBlockPreviewProps) => {
+  const question = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
+  );
+
+  const uiConfig = question?.questionPreferences?.uiConfig || {};
+
+  const leftCategory =
+    uiConfig.iatLeftCategoryLabel || DEFAULT_IAT_PREVIEW.targetA;
+
+  const rightCategory =
+    uiConfig.iatRightCategoryLabel || DEFAULT_IAT_PREVIEW.targetB;
+
   return (
     <Box
       sx={{
@@ -46,10 +63,7 @@ export const ImplicitAssociationTestBlockPreview = () => {
           gap: 2,
         }}
       >
-        <ImplicitAssociationSideCard
-          keyLabel="E"
-          title={`${DEFAULT_IAT_PREVIEW.targetA} or ${DEFAULT_IAT_PREVIEW.attributeA}`}
-        />
+        <ImplicitAssociationSideCard keyLabel="E" title={leftCategory} />
 
         <Box
           sx={{
@@ -68,14 +82,11 @@ export const ImplicitAssociationTestBlockPreview = () => {
           </Typography>
 
           <Typography sx={{ fontSize: 20, fontWeight: 900, color: "#0F172A" }}>
-            {DEFAULT_IAT_PREVIEW.stimulus}
+            {centerStimulus}
           </Typography>
         </Box>
 
-        <ImplicitAssociationSideCard
-          keyLabel="I"
-          title={`${DEFAULT_IAT_PREVIEW.targetB} or ${DEFAULT_IAT_PREVIEW.attributeB}`}
-        />
+        <ImplicitAssociationSideCard keyLabel="I" title={rightCategory} />
       </Box>
 
       <Typography sx={{ mt: 1.5, fontSize: 12, color: "#BE185D" }}>

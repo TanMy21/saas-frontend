@@ -39,6 +39,8 @@ import {
 import { FeatureItem, Step, UseCase } from "../types/landingTypes";
 import {
   ConceptFitSettingsForm,
+  IATBehaviorSettingsForm,
+  IATCategorySettingsForm,
   TimedChoiceSettingsForm,
 } from "../types/surveyBuilderTypes";
 
@@ -1093,6 +1095,71 @@ export const buildConceptFitUiConfig = (
     ...currentUiConfig,
     conceptDisplayMode: data.conceptDisplayMode,
     randomizeAttributes: data.randomizeAttributes,
+    autoAdvanceOnAnswer: data.autoAdvanceOnAnswer,
+  };
+};
+
+
+
+
+ 
+export const getIATCategoryDefaults = (
+  uiConfig?: QuestionUIConfig,
+): IATCategorySettingsForm => {
+  return {
+    iatLeftCategoryLabel: uiConfig?.iatLeftCategoryLabel || "Left category",
+    iatRightCategoryLabel: uiConfig?.iatRightCategoryLabel || "Right category",
+    iatLeftKey: uiConfig?.iatLeftKey || "E",
+    iatRightKey: uiConfig?.iatRightKey || "I",
+  };
+};
+
+ 
+export const getIATBehaviorDefaults = (
+  uiConfig?: QuestionUIConfig,
+): IATBehaviorSettingsForm => {
+  return {
+    iatShowKeyboardHints:
+      typeof uiConfig?.iatShowKeyboardHints === "boolean"
+        ? uiConfig.iatShowKeyboardHints
+        : true,
+
+    iatRandomizeStimuli:
+      typeof uiConfig?.iatRandomizeStimuli === "boolean"
+        ? uiConfig.iatRandomizeStimuli
+        : true,
+
+    autoAdvanceOnAnswer:
+      typeof uiConfig?.autoAdvanceOnAnswer === "boolean"
+        ? uiConfig.autoAdvanceOnAnswer
+        : true,
+  };
+};
+
+ 
+export const buildIATCategoryUiConfig = (
+  data: IATCategorySettingsForm,
+  currentUiConfig: QuestionUIConfig = {},
+): QuestionUIConfig => {
+  return {
+    ...currentUiConfig,
+    iatLeftCategoryLabel: data.iatLeftCategoryLabel.trim() || "Left category",
+    iatRightCategoryLabel:
+      data.iatRightCategoryLabel.trim() || "Right category",
+    iatLeftKey: data.iatLeftKey.trim().toUpperCase() || "E",
+    iatRightKey: data.iatRightKey.trim().toUpperCase() || "I",
+  };
+};
+
+ 
+export const buildIATBehaviorUiConfig = (
+  data: IATBehaviorSettingsForm,
+  currentUiConfig: QuestionUIConfig = {},
+): QuestionUIConfig => {
+  return {
+    ...currentUiConfig,
+    iatShowKeyboardHints: data.iatShowKeyboardHints,
+    iatRandomizeStimuli: data.iatRandomizeStimuli,
     autoAdvanceOnAnswer: data.autoAdvanceOnAnswer,
   };
 };

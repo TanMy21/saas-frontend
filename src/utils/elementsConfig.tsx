@@ -50,9 +50,11 @@ import WelcomeScreenElement from "../components/Surveys/Elements/WelcomeScreenEl
 import BinaryElementSettings from "../components/Surveys/ElementSettings/BinaryElementSettings";
 import CheckBoxElementSettings from "../components/Surveys/ElementSettings/CheckBoxElementSettings";
 import ChoiceElementSettings from "../components/Surveys/ElementSettings/ChoiceElementSettings";
+import ConceptFitElementSettings from "../components/Surveys/ElementSettings/ConceptFitElementSettings";
 import DropdownElementSettings from "../components/Surveys/ElementSettings/DropdownElementSettings";
 import EmailContactElementSettings from "../components/Surveys/ElementSettings/EmailContactElementSettings";
 import EndScreenElementSettings from "../components/Surveys/ElementSettings/EndScreenElementSettings";
+import IATElementSettings from "../components/Surveys/ElementSettings/IATElementSettings";
 import InfoScreenElementSettings from "../components/Surveys/ElementSettings/InfoScreenElementSettings";
 import InstructionsElementSettings from "../components/Surveys/ElementSettings/InstructionsElementSettings";
 import MediaElementSettings from "../components/Surveys/ElementSettings/MediaElementSettings";
@@ -70,19 +72,6 @@ import {
   ElementProps,
   QuestionTypeKey,
 } from "../utils/types";
-import ConceptFitElementSettings from "../components/Surveys/ElementSettings/ConceptFitElementSettings";
-
-// ------------------- Remove: Temp components-------------------------------------
-
- 
-/**
- * Temporary settings placeholder for IAT until the setup wizard is implemented.
- */
-export const IATElementSettings = () => {
-  return <div>IAT settings</div>;
-};
-
-//---------------------------------------------------------------------------
 
 export const elementIcons: IconMapping = {
   THREE_D: <Box color="#276c9bff" />,

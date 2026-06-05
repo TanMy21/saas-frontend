@@ -1,6 +1,6 @@
 import { type DropResult } from "react-beautiful-dnd";
 
-import { ElementImageAsset, OptionType, QuestionTypeKey } from "../utils/types";
+import { ElementImageAsset, ElementProps, OptionType, QuestionTypeKey } from "../utils/types";
 
 export interface ShareTabProps {
   title: string;
@@ -81,4 +81,38 @@ export type QuestionImageAsset = {
   altText?: string | null;
   width?: number | null;
   height?: number | null;
+};
+
+
+export type IATCategorySettingsForm = {
+  iatLeftCategoryLabel: string;
+  iatRightCategoryLabel: string;
+  iatLeftKey: string;
+  iatRightKey: string;
+};
+
+export type IATBehaviorSettingsForm = {
+  iatShowKeyboardHints: boolean;
+  iatRandomizeStimuli: boolean;
+  autoAdvanceOnAnswer: boolean;
+};
+
+ export type ImplicitAssociationTestBlockPreviewProps = {
+  centerStimulus: string;
+};
+
+export type IATStimulusManagerProps = {
+  qID?: string;
+  display?: ElementProps["display"];
+};
+
+export type IATStimulusRowProps = {
+  option: OptionType;
+  index: number;
+  canEdit: boolean;
+  canDelete: boolean;
+  canReorder: boolean;
+  dragHandleProps?: any;
+  onUpdate: (option: OptionType, nextText: string) => Promise<void>;
+  onDelete: (optionID: string) => Promise<void>;
 };

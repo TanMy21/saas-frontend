@@ -1,16 +1,30 @@
 import { Box } from "@mui/material";
 
-import { ElementProps } from "../../../utils/types";
+import { useGetOptionsOfQuestionQuery } from "../../../app/slices/optionApiSlice";
+import { ElementProps, OptionType } from "../../../utils/types";
 
+import { IATStimulusManager } from "./IATStimulusManager";
 import { ImplicitAssociationTestBlockPreview } from "./ImplicitAssociationTestBlockPreview";
 import { ImplicitAssociationTestBuilderNote } from "./ImplicitAssociationTestBuilderNote";
-import { ImplicitAssociationTestPairingPreview } from "./ImplicitAssociationTestPairingPreview";
 
 export const ImplicitAssociationTestResponsePreview = ({
   qID,
   display,
 }: ElementProps) => {
   const isMobile = display === "mobile";
+
+  const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
+    qID!,
+    {
+      skip: !qID,
+    },
+  );
+
+  const sortedStimuli = [...options].sort(
+    (a, b) => (a.order || 0) - (b.order || 0),
+  );
+
+  const firstStimulus = sortedStimuli[0]?.text || "Add stimuli";
 
   return (
     <Box
@@ -29,9 +43,9 @@ export const ImplicitAssociationTestResponsePreview = ({
           gap: 2.5,
         }}
       >
-        <ImplicitAssociationTestBlockPreview />
+        <ImplicitAssociationTestBlockPreview centerStimulus={firstStimulus} />
 
-        <ImplicitAssociationTestPairingPreview />
+        <IATStimulusManager qID={qID} display={display} />
 
         <ImplicitAssociationTestBuilderNote />
       </Box>

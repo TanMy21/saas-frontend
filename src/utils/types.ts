@@ -292,7 +292,7 @@ export interface ElementProps {
   qRequired?: boolean;
   qSettings?: QuestionSetting;
   qPreferences?: SurveyCanvasQuestionSettings;
-  canEdit?: boolean;
+  canEdit?: boolean; 
 }
 
 export interface ElementDropDownMenuProps {
@@ -1000,6 +1000,12 @@ export interface QuestionUIConfig {
   allowTimeout?: boolean;
   conceptDisplayMode?: "TEXT" | "IMAGE";
   randomizeAttributes?: boolean;
+  iatLeftCategoryLabel?: string;
+  iatRightCategoryLabel?: string;
+  iatLeftKey?: string;
+  iatRightKey?: string;
+  iatShowKeyboardHints?: boolean;
+  iatRandomizeStimuli?: boolean;
 }
 
 export interface QuestionBackgroundColorProps {
