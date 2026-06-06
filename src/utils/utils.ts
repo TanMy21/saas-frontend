@@ -47,6 +47,7 @@ import {
 import {
   ALLOWED_IMAGE_TYPES,
   DEFAULT_TIMED_CHOICE_CONFIG,
+  DEFAULT_TIMER_SECONDS,
   MAX_IMAGE_SIZE_BYTES,
   OPTION_TYPES,
   SINGLE_VALUE_TYPES,
@@ -1046,6 +1047,8 @@ export const getTimedChoiceDefaults = (
       typeof uiConfig?.allowTimeout === "boolean"
         ? uiConfig.allowTimeout
         : DEFAULT_TIMED_CHOICE_CONFIG.allowTimeout,
+    timedChoiceDisplayMode:
+      uiConfig?.timedChoiceDisplayMode === "IMAGE" ? "IMAGE" : "TEXT",
   };
 };
 
@@ -1062,6 +1065,7 @@ export const buildTimedChoiceUiConfig = (
     showCountdown: data.showCountdown,
     autoAdvanceOnAnswer: data.autoAdvanceOnAnswer,
     allowTimeout: data.allowTimeout,
+    timedChoiceDisplayMode: data.timedChoiceDisplayMode,
   };
 };
 
@@ -1084,6 +1088,11 @@ export const getConceptFitDefaults = (
       typeof uiConfig?.autoAdvanceOnAnswer === "boolean"
         ? uiConfig.autoAdvanceOnAnswer
         : true,
+
+    timeLimitSeconds:
+      typeof uiConfig?.timeLimitMs === "number"
+        ? Math.round(uiConfig.timeLimitMs / 1000)
+        : DEFAULT_TIMER_SECONDS,
   };
 };
 
@@ -1096,13 +1105,10 @@ export const buildConceptFitUiConfig = (
     conceptDisplayMode: data.conceptDisplayMode,
     randomizeAttributes: data.randomizeAttributes,
     autoAdvanceOnAnswer: data.autoAdvanceOnAnswer,
+    timeLimitMs: data.timeLimitSeconds * 1000,
   };
 };
 
-
-
-
- 
 export const getIATCategoryDefaults = (
   uiConfig?: QuestionUIConfig,
 ): IATCategorySettingsForm => {
@@ -1114,7 +1120,6 @@ export const getIATCategoryDefaults = (
   };
 };
 
- 
 export const getIATBehaviorDefaults = (
   uiConfig?: QuestionUIConfig,
 ): IATBehaviorSettingsForm => {
@@ -1136,7 +1141,6 @@ export const getIATBehaviorDefaults = (
   };
 };
 
- 
 export const buildIATCategoryUiConfig = (
   data: IATCategorySettingsForm,
   currentUiConfig: QuestionUIConfig = {},
@@ -1151,7 +1155,6 @@ export const buildIATCategoryUiConfig = (
   };
 };
 
- 
 export const buildIATBehaviorUiConfig = (
   data: IATBehaviorSettingsForm,
   currentUiConfig: QuestionUIConfig = {},

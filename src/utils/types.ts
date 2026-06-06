@@ -265,6 +265,8 @@ export interface Element {
   maxOptions: number;
   options?: OptionType[];
   required: boolean;
+  qImage?: boolean;
+  questionImage?: boolean;
   questionImages?: ElementImageAsset[];
 }
 
@@ -283,7 +285,8 @@ export interface ElementProps {
   qText?: string;
   qDescription?: string;
   qType?: string;
-  qImage?: ElementImageAsset[];
+  qImage?: boolean;
+  questionImages?: ElementImageAsset[];
   showQuestion?: boolean;
   display?: "mobile" | "desktop";
   qID?: string;
@@ -292,7 +295,7 @@ export interface ElementProps {
   qRequired?: boolean;
   qSettings?: QuestionSetting;
   qPreferences?: SurveyCanvasQuestionSettings;
-  canEdit?: boolean; 
+  canEdit?: boolean;
 }
 
 export interface ElementDropDownMenuProps {
@@ -914,6 +917,7 @@ export interface QuestionImageDimensionsFormProps {
 
 export interface QuestionImageUploadProps {
   questionID: string;
+  questionImageID: string;
 }
 
 export interface ElementImageIconButtonsProps {
@@ -999,6 +1003,7 @@ export interface QuestionUIConfig {
   autoAdvanceOnAnswer?: boolean;
   allowTimeout?: boolean;
   conceptDisplayMode?: "TEXT" | "IMAGE";
+  timedChoiceDisplayMode?: "TEXT" | "IMAGE";
   randomizeAttributes?: boolean;
   iatLeftCategoryLabel?: string;
   iatRightCategoryLabel?: string;

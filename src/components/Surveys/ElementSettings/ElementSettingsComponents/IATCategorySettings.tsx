@@ -175,7 +175,7 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
         width: "100%",
         m: "0 !important",
         backgroundColor: "#FFFFFF",
-        borderTop: "1px solid #E0E0E0",
+        borderBottom: "1px solid #E0E0E0",
         borderRadius: 0,
         boxShadow: "none",
         "&:before": { display: "none" },
@@ -215,6 +215,7 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
             flexDirection: "column",
             gap: 2,
             opacity: canEditQuestion ? 1 : 0.8,
+            p: 1,
             pointerEvents: canEditQuestion ? "auto" : "none",
           }}
         >
@@ -224,8 +225,7 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                size="small"
-                label="Left category"
+                variant="standard"
                 disabled={!canEditQuestion}
                 value={field.value}
                 onChange={(event) => {
@@ -242,11 +242,40 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
                   });
                 }}
                 InputProps={{
+                  // Removes the default MUI standard underline.
+                  disableUnderline: true,
+
                   endAdornment: (
                     <InputAdornment position="end">
                       {field.value.length}/{MAX_IAT_CATEGORY_LABEL_LENGTH}
                     </InputAdornment>
                   ),
+                }}
+                sx={{
+                  "& .MuiInputBase-input": {
+                    lineHeight: "1.5",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    cursor: canEditQuestion ? "text" : "not-allowed",
+                    fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
+                    fontWeight: 500,
+                  },
+                  "& .MuiInputBase-root": {
+                    borderRadius: "8px",
+                    height: "42px",
+                    fontSize: "15px",
+                    backgroundColor: "#F3F4F6",
+                    color: "#1F2937",
+                    px: 1.5,
+                    transition: "background-color 0.2s ease",
+                    "&:hover": {
+                      backgroundColor: "#E5E7EB",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "#FFF7ED",
+                    },
+                  },
                 }}
               />
             )}
@@ -258,8 +287,7 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
             render={({ field }) => (
               <TextField
                 fullWidth
-                size="small"
-                label="Right category"
+                variant="standard"
                 disabled={!canEditQuestion}
                 value={field.value}
                 onChange={(event) => {
@@ -276,18 +304,45 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
                   });
                 }}
                 InputProps={{
+                  // Removes the default black underline from MUI standard variant.
+                  disableUnderline: true,
+
                   endAdornment: (
                     <InputAdornment position="end">
                       {field.value.length}/{MAX_IAT_CATEGORY_LABEL_LENGTH}
                     </InputAdornment>
                   ),
                 }}
+                sx={{
+                  "& .MuiInputBase-input": {
+                    lineHeight: "1.5",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    cursor: canEditQuestion ? "text" : "not-allowed",
+                    fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
+                    fontWeight: 500,
+                  },
+                  "& .MuiInputBase-root": {
+                    borderRadius: "8px",
+                    height: "42px",
+                    fontSize: "15px",
+                    backgroundColor: "#F3F4F6",
+                    color: "#1F2937",
+                    px: 1.5,
+                    transition: "background-color 0.2s ease",
+                    "&:hover": {
+                      backgroundColor: "#E5E7EB",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "#FFF7ED",
+                    },
+                  },
+                }}
               />
             )}
           />
 
-       
- 
           <SettingSaveStatus state={isSavingIAT ? "saving" : saveStatus} />
         </Box>
       </AccordionDetails>

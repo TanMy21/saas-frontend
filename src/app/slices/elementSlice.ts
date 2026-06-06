@@ -53,21 +53,21 @@ const questionSlice = createSlice({
         undefined;
     },
     setImageWidth: (state, action: PayloadAction<number>) => {
-      if (state.selectedQuestion) {
-        state.selectedQuestion.questionImageWidth = action.payload;
+      if (state.selectedQuestion?.questionImages?.[0]) {
+        state.selectedQuestion.questionImages[0].width = action.payload;
       }
     },
     setImageHeight: (state, action: PayloadAction<number>) => {
-      if (state.selectedQuestion) {
-        state.selectedQuestion.questionImageHeight = action.payload;
+      if (state.selectedQuestion?.questionImages?.[0]) {
+        state.selectedQuestion.questionImages[0].height = action.payload;
       }
     },
     set3DModelModalOpen: (state, action: PayloadAction<boolean>) => {
       state.is3DModelModalOpen = action.payload;
     },
     setImageAltText: (state, action: PayloadAction<string>) => {
-      if (state.selectedQuestion) {
-        state.selectedQuestion.questionImageAltTxt = action.payload;
+      if (state.selectedQuestion?.questionImages?.[0]) {
+        state.selectedQuestion.questionImages[0].altText = action.payload;
       }
     },
 
@@ -82,6 +82,20 @@ const questionSlice = createSlice({
       }
 
       state.selectedQuestion.questionPreferences.uiConfig.conceptDisplayMode =
+        action.payload;
+    },
+
+    setTimedChoiceDisplayMode: (
+      state,
+      action: PayloadAction<"TEXT" | "IMAGE">,
+    ) => {
+      if (!state.selectedQuestion?.questionPreferences) return;
+
+      if (!state.selectedQuestion.questionPreferences.uiConfig) {
+        state.selectedQuestion.questionPreferences.uiConfig = {};
+      }
+
+      state.selectedQuestion.questionPreferences.uiConfig.timedChoiceDisplayMode =
         action.payload;
     },
     toggleElementRequired: (state, action: PayloadAction<boolean>) => {
@@ -102,6 +116,12 @@ const questionSlice = createSlice({
       if (state.selectedQuestion) {
         state.selectedQuestion.Model3D.showQuestion = action.payload;
       }
+    },
+
+    toggleShowQuestion: (state, action: PayloadAction<boolean>) => {
+      if (!state.selectedQuestion) return;
+
+      state.selectedQuestion.showQuestion = action.payload;
     },
 
     updateSelectedQuestion3DModel: (state, action: PayloadAction<any>) => {
@@ -194,8 +214,10 @@ export const {
   setImageWidth,
   setImageAltText,
   setConceptFitDisplayMode,
+  setTimedChoiceDisplayMode,
   toggleElementRequired,
   toggleShowImage,
+  toggleShowQuestion,
   toggleShowQuestionfor3dType,
   updateMinValue,
   updateMaxValue,

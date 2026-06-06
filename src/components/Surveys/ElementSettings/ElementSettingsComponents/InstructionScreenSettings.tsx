@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 
 import { ElementSettingsProps } from "../../../../utils/types";
 
-import QuestionTextandDescriptionSettings from "./QuestionTextAndDescriptionSettings";
+import QuestionTextandDescriptionSettings from "./QuestionSettings";
 import ScreenTypographySettings from "./ScreenTypographySettings";
 
 const InstructionScreenSettings = ({ qID }: ElementSettingsProps) => {

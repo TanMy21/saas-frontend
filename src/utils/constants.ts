@@ -1,3 +1,4 @@
+import { keyframes } from "@mui/material";
 import {
   CheckCircle,
   Clock,
@@ -47,11 +48,14 @@ export const MAX_IAT_STIMULI = 10;
 
 export const MIN_RECOMMENDED_IAT_STIMULI = 8;
 
+export const TIMED_ACCENT = "#F97316";
+
 export const DEFAULT_TIMED_CHOICE_CONFIG: TimedChoiceSettingsForm = {
   timeLimitSeconds: 3,
   showCountdown: true,
   autoAdvanceOnAnswer: true,
   allowTimeout: true,
+  timedChoiceDisplayMode: "TEXT",
 };
 
 export const DEFAULT_IAT_PREVIEW = {
@@ -116,6 +120,11 @@ export const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: "subscription", label: "Subscription", icon: CreditCard },
 ];
 
+export const TIMED_CHOICE_IMAGE_ROLES = {
+  LEFT: "TIMED_CHOICE_LEFT",
+  RIGHT: "TIMED_CHOICE_RIGHT",
+} as const;
+
 export const LABELS: Record<
   keyof NotificationSettings,
   { title: string; desc: string }
@@ -137,6 +146,16 @@ export const LABELS: Record<
     desc: "Important security notifications",
   },
 };
+
+export const timerDrain = keyframes`
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
+`;
 
 // multiple choice chart row height
 export const ROW_HEIGHT = 44;

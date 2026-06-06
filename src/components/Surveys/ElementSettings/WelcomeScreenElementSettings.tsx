@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { ElementSettingsProps } from "../../../utils/types";
 
 import NavigationButtonTextSettings from "./ElementSettingsComponents/NavigationButtonTextSettings";
-import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
+import QuestionContentSettings from "./ElementSettingsComponents/QuestionSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 
 const WelcomeScreenElementSettings = ({ qID }: ElementSettingsProps) => {
@@ -17,9 +17,9 @@ const WelcomeScreenElementSettings = ({ qID }: ElementSettingsProps) => {
         // border: "2px solid red",
       }}
     >
-      <QuestionTextandDescriptionSettings />
-      <NavigationButtonTextSettings />
+      <QuestionContentSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
+      <NavigationButtonTextSettings />
     </Box>
   );
 };

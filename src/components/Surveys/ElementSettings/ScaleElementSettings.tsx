@@ -4,11 +4,10 @@ import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
 import { usePermission } from "../../../context/PermissionContext";
 
-import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
+import QuestionContentSettings from "./ElementSettingsComponents/QuestionSettings";
 import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
 import ScaleRangeSettings from "./ElementSettingsComponents/ScaleRangeSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
-import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
 const ScaleElementSettings = () => {
   const { canEditQuestion } = usePermission();
@@ -28,10 +27,9 @@ const ScaleElementSettings = () => {
       }}
     >
       {canEditQuestion && <QuestionTypeMutationSettings />}
-      <QuestionTextandDescriptionSettings />
+      <QuestionContentSettings />
       <ScreenTypographySettings key={questionID} qID={questionID!} />
       <ScaleRangeSettings />
-      <ValidationSettings />
     </Box>
   );
 };

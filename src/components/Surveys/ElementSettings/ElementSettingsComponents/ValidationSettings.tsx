@@ -97,7 +97,7 @@ const ValidationSettings = () => {
         sx={{
           width: "100%",
           backgroundColor: "#FFFFFF",
-          borderTop: "1px solid #E0E0E0",
+          borderBottom: "1px solid #E0E0E0",
           borderRadius: 0,
           boxShadow: "none",
           "&:before": { display: "none" },

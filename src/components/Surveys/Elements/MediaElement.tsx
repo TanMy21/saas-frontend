@@ -8,7 +8,7 @@ import MediaOptionsContainer from "../ElementResponse/MediaOptionsContainer";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const MediaElement = ({ qID, display }: ElementProps) => {
+const MediaElement = ({ qID, display, showQuestion }: ElementProps) => {
   return (
     <ScreenRoot display={display}>
       <CenteredStack
@@ -16,7 +16,7 @@ const MediaElement = ({ qID, display }: ElementProps) => {
         widthOverride={display === "mobile" ? "98%" : "72%"}
         marginTopOveride={display === "mobile" ? "4%" : "16%"}
       >
-        <ElementQuestionText display={display} />
+        {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
       <ResponseContainer display={display}>
         <Box

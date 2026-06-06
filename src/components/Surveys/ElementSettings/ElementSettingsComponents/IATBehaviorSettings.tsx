@@ -173,7 +173,7 @@ const IATBehaviorSettings = ({ qID }: ElementSettingsProps) => {
         width: "100%",
         m: "0 !important",
         backgroundColor: "#FFFFFF",
-        borderTop: "1px solid #E0E0E0",
+        borderBottom: "1px solid #E0E0E0",
         borderRadius: 0,
         boxShadow: "none",
         "&:before": { display: "none" },
@@ -238,32 +238,6 @@ const IATBehaviorSettings = ({ qID }: ElementSettingsProps) => {
                   />
                 }
                 label="Randomize stimuli"
-              />
-            )}
-          />
-
-          <Controller
-            name="autoAdvanceOnAnswer"
-            control={control}
-            render={({ field }) => (
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={field.value}
-                    disabled={!canEditQuestion}
-                    onChange={(event) => {
-                      const checked = event.target.checked;
-
-                      field.onChange(checked);
-                      markFormTouched();
-
-                      updateIATPreview({
-                        autoAdvanceOnAnswer: checked,
-                      });
-                    }}
-                  />
-                }
-                label="Auto-advance after answer"
               />
             )}
           />

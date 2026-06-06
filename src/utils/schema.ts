@@ -402,3 +402,11 @@ export const memberFormSchema = z.object({
 });
 
 export type MemberFormValues = z.infer<typeof memberFormSchema>;
+
+
+export const questionBasicSettingsSchema = z.object({
+  questionText: z.string().min(1),
+  questionDescription: z.string().optional().nullable(),
+  showQuestion: z.boolean(),
+  required: z.boolean(),
+});

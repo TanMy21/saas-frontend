@@ -205,8 +205,6 @@ export const IATStimulusManager = ({
   return (
     <Box
       sx={{
-        border: "1px solid #E2E8F0",
-        borderRadius: 3,
         bgcolor: "#FFFFFF",
         p: isMobile ? 1.5 : 2,
         display: "flex",
@@ -222,16 +220,6 @@ export const IATStimulusManager = ({
           gap: 1,
         }}
       >
-        <Box>
-          <Typography sx={{ fontSize: 14, fontWeight: 900, color: "#0F172A" }}>
-            IAT stimuli
-          </Typography>
-
-          <Typography sx={{ fontSize: 12, color: "#64748B", mt: 0.25 }}>
-            Add center words shown one by one in the task.
-          </Typography>
-        </Box>
-
         <Typography
           sx={{
             fontSize: 12,
@@ -249,10 +237,23 @@ export const IATStimulusManager = ({
           border: "1px solid #E2E8F0",
           borderRadius: 2,
           bgcolor: "#F8FAFC",
-          p: 1.25,
-          maxHeight: 230,
+          p: 1.5,
+          maxHeight: 340,
+
+          // Allows scrolling when content is taller than maxHeight.
           overflowY: "auto",
           overflowX: "hidden",
+
+          // Firefox: hides scrollbar but keeps scroll behavior.
+          scrollbarWidth: "none",
+
+          // IE/old Edge: hides scrollbar but keeps scroll behavior.
+          msOverflowStyle: "none",
+
+          // Chrome/Safari/Edge: hides scrollbar but keeps scroll behavior.
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
         <DragDropContext onDragEnd={handleDragEnd}>
@@ -323,7 +324,9 @@ export const IATStimulusManager = ({
         <Box
           sx={{
             position: "relative",
-            width: "100%",
+            width: "94%",
+            mx: "auto",
+            mt: 1,
             px: 1,
             pt: 0.75,
             pb: 0.75,

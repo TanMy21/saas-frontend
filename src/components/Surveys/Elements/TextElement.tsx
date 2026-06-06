@@ -1,5 +1,7 @@
 import { Box } from "@mui/material";
 
+import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
 import { ElementProps } from "../../../utils/types";
 import CenteredStack from "../../screen-layout/CenteredStack";
 import ResponseContainer from "../../screen-layout/ResponseContainer";
@@ -9,11 +11,18 @@ import InputResponse from "../ElementResponse/InputResponse";
 import ElementImageContainer from "./ElementImageContainer";
 import ElementQuestionText from "./ElementQuestionText";
 
-const TextElement = ({ display, qImage }: ElementProps) => {
+const TextElement = ({ display, showQuestion }: ElementProps) => {
+  const question = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
+  );
+
+  const questionImage = question?.questionImage;
+
   return (
     <ScreenRoot display={display}>
       {/* Image container */}
-      {qImage && (
+
+      {questionImage && (
         <Box
           sx={{
             display: "flex",
@@ -34,9 +43,9 @@ const TextElement = ({ display, qImage }: ElementProps) => {
       <CenteredStack
         display={display}
         widthOverride={display === "mobile" ? "98%" : "72%"}
-        marginTopOveride={qImage ? "4px" : "8%"}
+        marginTopOveride={questionImage ? "4px" : "8%"}
       >
-        <ElementQuestionText display={display} />
+        {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
       <ResponseContainer display={display}>
         <Box

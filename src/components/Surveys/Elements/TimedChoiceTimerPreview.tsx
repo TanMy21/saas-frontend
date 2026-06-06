@@ -1,21 +1,9 @@
-import { Box, keyframes, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
-import { DEFAULT_TIMER_SECONDS } from "../../../utils/constants";
+import { DEFAULT_TIMER_SECONDS, timerDrain } from "../../../utils/constants";
 import { ElementProps } from "../../../utils/types";
-
-
- 
-const timerDrain = keyframes`
-  from {
-    width: 100%;
-  }
-
-  to {
-    width: 0%;
-  }
-`;
 
 export const TimedChoiceTimerPreview = ({ qID }: Pick<ElementProps, "qID">) => {
   const question = useAppSelector(

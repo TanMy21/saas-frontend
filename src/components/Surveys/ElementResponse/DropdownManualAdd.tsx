@@ -16,6 +16,7 @@ export const DropdownManualAdd = ({
         display: "flex",
         flexDirection: "column",
         gap: 1,
+        mt: 1,
       }}
     >
       <Box
@@ -60,17 +61,18 @@ export const DropdownManualAdd = ({
             },
           }}
         >
-          Generate with AI
+          Generate options
         </Button>
       </Box>
 
       <Box
         sx={{
           position: "relative",
-          width: "100%",
+          width: "96%",
           px: 1,
           pt: 0.75,
           pb: 0.75,
+          mt: 2,
           border: "1px solid #E2E8F0",
           borderRadius: 2,
           bgcolor: "#FFFFFF",
@@ -95,7 +97,7 @@ export const DropdownManualAdd = ({
             },
           }}
           sx={{
-            width: "100%",
+            width: "96%",
             "& .MuiInputBase-root": {
               bgcolor: "transparent",
             },

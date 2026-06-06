@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import {
   Accordion,
   AccordionDetails,
@@ -61,7 +60,6 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
   const [formTouched, setFormTouched] = useState(false);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
- 
   useEffect(() => {
     if (formTouched) return;
 
@@ -154,7 +152,7 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
         width: "100%",
         m: "0 !important",
         backgroundColor: "#FFFFFF",
-        borderTop: "1px solid #E0E0E0",
+        borderBottom: "1px solid #E0E0E0",
         borderRadius: 0,
         boxShadow: "none",
         "&:before": { display: "none" },
@@ -177,9 +175,8 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
             color: "#453F46",
           }}
         >
-          <TimerOutlinedIcon sx={{ color: "#EA580C", fontSize: 20 }} />
           <Tooltip title="Configure timer behavior for this timed choice question">
-            <Typography>Timer</Typography>
+            <Typography>Time settings</Typography>
           </Tooltip>
         </Box>
       </AccordionSummary>
@@ -294,41 +291,6 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
                   />
                 }
                 label="Show countdown"
-              />
-            )}
-          />
-
-          <Controller
-            name="autoAdvanceOnAnswer"
-            control={control}
-            render={({ field }) => (
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={field.value}
-                    disabled={!canEditQuestion}
-                    onChange={(event) => {
-                      const checked = event.target.checked;
-
-                      field.onChange(checked);
-                      markFormTouched();
-
-                      dispatch(
-                        updateQuestionField({
-                          key: "questionPreferences",
-                          value: {
-                            ...question?.questionPreferences,
-                            uiConfig: {
-                              ...uiConfig,
-                              autoAdvanceOnAnswer: checked,
-                            },
-                          } as any,
-                        }),
-                      );
-                    }}
-                  />
-                }
-                label="Auto-advance after answer"
               />
             )}
           />

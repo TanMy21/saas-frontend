@@ -2,9 +2,8 @@ import { Box } from "@mui/material";
 
 import { usePermission } from "../../../context/PermissionContext";
 
-import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
+import QuestionContentSettings from "./ElementSettingsComponents/QuestionSettings";
 import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
-import ShowQuestionSettings from "./ElementSettingsComponents/ShowQuestionSettings";
 
 const ThreeDElementSettings = () => {
   const { canEditQuestion } = usePermission();
@@ -19,8 +18,7 @@ const ThreeDElementSettings = () => {
       }}
     >
       {canEditQuestion && <QuestionTypeMutationSettings />}
-      <QuestionTextandDescriptionSettings />
-      <ShowQuestionSettings />
+      <QuestionContentSettings />
     </Box>
   );
 };

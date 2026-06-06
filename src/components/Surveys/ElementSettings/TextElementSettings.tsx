@@ -4,10 +4,9 @@ import { usePermission } from "../../../context/PermissionContext";
 import { ElementSettingsProps } from "../../../utils/types";
 
 import QuestionImageSettings from "./ElementSettingsComponents/QuestionImageSettings";
-import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
+import QuestionContentSettings from "./ElementSettingsComponents/QuestionSettings";
 import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
-import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
 const TextElementSettings = ({ qID }: ElementSettingsProps) => {
   const { canEditQuestion } = usePermission();
@@ -21,9 +20,8 @@ const TextElementSettings = ({ qID }: ElementSettingsProps) => {
       }}
     >
       {canEditQuestion && <QuestionTypeMutationSettings />}
-      <QuestionTextandDescriptionSettings />
+      <QuestionContentSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
-      <ValidationSettings />
       <QuestionImageSettings />
     </Box>
   );

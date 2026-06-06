@@ -1,7 +1,5 @@
 import { Box } from "@mui/material";
 
-import { QuestionTextSettings } from "./ElementSettingsComponents/QuestionTextSettings";
-
 const InfoScreenElementSettings = () => {
   return (
     <Box
@@ -11,9 +9,7 @@ const InfoScreenElementSettings = () => {
         width: "100%",
         heigh: "100%",
       }}
-    >
-      <QuestionTextSettings />
-    </Box>
+    ></Box>
   );
 };
 

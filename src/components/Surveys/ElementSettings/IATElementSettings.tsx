@@ -4,9 +4,8 @@ import { ElementSettingsProps } from "../../../utils/types";
 
 import IATBehaviorSettings from "./ElementSettingsComponents/IATBehaviorSettings";
 import IATCategorySettings from "./ElementSettingsComponents/IATCategorySettings";
-import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
+import QuestionContentSettings from "./ElementSettingsComponents/QuestionSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
-import ShowQuestionSettings from "./ElementSettingsComponents/ShowQuestionSettings";
 
 const IATElementSettings = ({ qID }: ElementSettingsProps) => {
   return (
@@ -18,11 +17,10 @@ const IATElementSettings = ({ qID }: ElementSettingsProps) => {
         height: "100%",
       }}
     >
-      <QuestionTextandDescriptionSettings />
+      <QuestionContentSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
       <IATCategorySettings qID={qID} />
       <IATBehaviorSettings qID={qID} />
-      <ShowQuestionSettings />
     </Box>
   );
 };

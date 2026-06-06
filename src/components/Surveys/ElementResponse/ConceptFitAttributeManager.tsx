@@ -51,8 +51,21 @@ export const ConceptFitAttributeManager = ({
           bgcolor: "#F8FAFC",
           p: 1.5,
           maxHeight: 340,
+
+          // Allows scrolling when content is taller than maxHeight.
           overflowY: "auto",
           overflowX: "hidden",
+
+          // Firefox: hides scrollbar but keeps scroll behavior.
+          scrollbarWidth: "none",
+
+          // IE/old Edge: hides scrollbar but keeps scroll behavior.
+          msOverflowStyle: "none",
+
+          // Chrome/Safari/Edge: hides scrollbar but keeps scroll behavior.
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
         <DragDropContext
@@ -127,7 +140,8 @@ export const ConceptFitAttributeManager = ({
         <Box
           sx={{
             position: "relative",
-            width: "100%",
+            width: "94%",
+            mx:"auto",
             px: 1,
             pt: 0.75,
             pb: 0.75,

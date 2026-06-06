@@ -3,18 +3,23 @@ import CenteredStack from "../../screen-layout/CenteredStack";
 import ResponseContainer from "../../screen-layout/ResponseContainer";
 import ScreenRoot from "../../screen-layout/ScreenRoot";
 import { TimedChoiceResponse } from "../ElementResponse/TimedChoiceResponse";
+import { TimedChoiceResponseMobilePreview } from "../ElementResponse/TimedChoiceResponseMobilePreview";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const TimedChoiceElement = ({ qID, display }: ElementProps) => {
+const TimedChoiceElement = ({ qID, display, showQuestion }: ElementProps) => {
   return (
     <ScreenRoot display={display}>
       <CenteredStack display={display}>
-        <ElementQuestionText display={display} />
+        {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
 
       <ResponseContainer display={display}>
-        <TimedChoiceResponse qID={qID} display={display} />
+        {display === "mobile" ? (
+          <TimedChoiceResponseMobilePreview />
+        ) : (
+          <TimedChoiceResponse qID={qID} display={display} />
+        )}{" "}
       </ResponseContainer>
     </ScreenRoot>
   );

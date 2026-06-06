@@ -6,11 +6,11 @@ import ResponseList from "../ElementResponse/ResponseList";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const ChoiceElement = ({ qID, display }: ElementProps) => {
+const ChoiceElement = ({ qID, display, showQuestion }: ElementProps) => {
   return (
     <ScreenRoot display={display}>
       <CenteredStack display={display}>
-        <ElementQuestionText display={display} />
+        {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
       <ResponseContainer display={display}>
         <ResponseList

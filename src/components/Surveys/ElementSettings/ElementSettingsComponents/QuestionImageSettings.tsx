@@ -36,7 +36,11 @@ const QuestionImageSettings = () => {
   const [toggleQuestionImageVisibility] =
     useToggleQuestionImageVisibilityMutation();
 
-  const { questionID, questionImage } = question || {};
+  const { questionID, questionImage, questionImages } = question || {};
+
+  const firstImage = questionImages?.[0];
+
+  const questionImageID = firstImage?.questionImageID;
 
   const { handleSubmit, control, reset } = useForm<QuestionImage>({
     resolver: zodResolver(questionImageSettingsSchema),
@@ -114,7 +118,6 @@ const QuestionImageSettings = () => {
             color: "#453F46",
           }}
         >
-          <ImageIcon sx={{ color: "#752FEC", fontSize: "20px" }} />
           <Tooltip title="Set an image for the question">
             <Typography>Question image</Typography>
           </Tooltip>
@@ -176,7 +179,10 @@ const QuestionImageSettings = () => {
                 pointerEvents: canEditQuestion ? "auto" : "none",
               }}
             >
-              <QuestionImageUpload questionID={questionID!} />
+              <QuestionImageUpload
+                questionID={questionID!}
+                questionImageID={questionImageID!}
+              />
               <QuestionImageAltTxt />
               <QuestionImageDimensions />
             </Box>

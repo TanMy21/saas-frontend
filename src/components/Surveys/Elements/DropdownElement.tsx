@@ -6,11 +6,11 @@ import DropdownResponse from "../ElementResponse/DropdownResponse";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const DropdownElement = ({ qID, display }: ElementProps) => {
+const DropdownElement = ({ qID, display, showQuestion }: ElementProps) => {
   return (
     <ScreenRoot display={display}>
       <CenteredStack display={display}>
-        <ElementQuestionText display={display} />
+        {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
       <ResponseContainer display={display}>
         <DropdownResponse qID={qID} display={display} />

@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 import { type DropResult } from "react-beautiful-dnd";
 
 import {
@@ -41,21 +43,25 @@ export type InfoScreenRichTextSettingsProps = {
   qID?: string;
 };
 
-export type TimedChoiceSettingsForm = {
-  timeLimitSeconds: number;
-  showCountdown: boolean;
-  autoAdvanceOnAnswer: boolean;
-  allowTimeout: boolean;
-};
-
 export type SettingSaveState = "idle" | "dirty" | "saving" | "saved" | "error";
 
 export type ConceptFitDisplayMode = "TEXT" | "IMAGE";
+
+export type TimedChoiceDisplayMode = "TEXT" | "IMAGE";
 
 export type ConceptFitSettingsForm = {
   conceptDisplayMode: ConceptFitDisplayMode;
   randomizeAttributes: boolean;
   autoAdvanceOnAnswer: boolean;
+  timeLimitSeconds: number;
+};
+
+export type TimedChoiceSettingsForm = {
+  timeLimitSeconds: number;
+  showCountdown: boolean;
+  autoAdvanceOnAnswer: boolean;
+  allowTimeout: boolean;
+  timedChoiceDisplayMode: TimedChoiceDisplayMode;
 };
 
 export type ConceptFitStimulusLayoutProps = {
@@ -71,8 +77,8 @@ export type ConceptFitStimulusLayoutProps = {
   canReorder: boolean;
   canAddMore: boolean;
   hasMinimumRecommended: boolean;
-  qImage?: ElementImageAsset[];
-
+  questionImages?: ElementImageAsset[];
+  qImage?: boolean;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   handleAddAttributes: () => Promise<void>;
   handleDeleteAttribute: (optionID: string) => Promise<void>;
@@ -153,3 +159,37 @@ export type DropdownAIReviewDialogProps = {
   onDeleteOption: (index: number) => void;
   onAddReviewedOptions: () => void;
 };
+
+export const TIMED_CHOICE_DISPLAY_MODE_OPTIONS: {
+  label: string;
+  value: TimedChoiceDisplayMode;
+}[] = [
+  { label: "Text", value: "TEXT" },
+  { label: "Image", value: "IMAGE" },
+];
+
+export interface TimerPreviewProps {
+  seconds: number;
+  accent?: string;
+  label?: string;
+}
+
+export interface MobileShellProps {
+  children: ReactNode;
+  accent?: string;
+}
+
+export interface TimedChoiceMobilePreviewProps {
+  options: OptionType[];
+  questionImages: QuestionImageAsset[];
+  durationSeconds: number;
+  displayMode: TimedChoiceDisplayMode;
+}
+
+export interface TimedChoiceMobileOptionCardProps {
+  option: OptionType;
+  imageUrl?: string | null;
+  displayMode: TimedChoiceDisplayMode;
+}
+
+

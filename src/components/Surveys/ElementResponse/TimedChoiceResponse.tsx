@@ -8,9 +8,14 @@ import {
   useDeleteOptionMutation,
   useGetOptionsOfQuestionQuery,
 } from "../../../app/slices/optionApiSlice";
+import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
 import { useToast } from "../../../hooks/useToast";
-import { MAX_TIMED_CHOICE_OPTIONS } from "../../../utils/constants";
+import {
+  MAX_TIMED_CHOICE_OPTIONS,
+  TIMED_CHOICE_IMAGE_ROLES,
+} from "../../../utils/constants";
 import { showToast } from "../../../utils/showToast";
 import { ElementProps, OptionType } from "../../../utils/types";
 import { TimedChoiceTimerPreview } from "../Elements/TimedChoiceTimerPreview";
@@ -27,6 +32,19 @@ export const TimedChoiceResponse = ({ qID, display }: ElementProps) => {
   const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
     qID!,
   );
+
+  // const { data: questionImages = [] as QuestionImageAsset[] } =
+  // useGetQuestionImagesQuery(qID!, {
+  //   skip: !qID || timedChoiceDisplayMode !== "IMAGE",
+  // });
+
+  const question = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
+  );
+
+  const questionImages = question?.questionImages || [];
+  const timedChoiceDisplayMode =
+    question?.questionPreferences?.uiConfig?.timedChoiceDisplayMode ?? "TEXT";
 
   const [inputValue, setInputValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -130,16 +148,38 @@ export const TimedChoiceResponse = ({ qID, display }: ElementProps) => {
             gap: 2,
           }}
         >
-          {options.map((option, index) => (
-            <TimedChoiceOptionCard
-              key={option.optionID}
-              option={option}
-              index={index}
-              canEdit={canEdit}
-              canDelete={canDelete}
-              onDelete={handleDeleteOption}
-            />
-          ))}
+          {options.map((option, index) => {
+            /**
+             * Option A gets the LEFT image role.
+             * Option B gets the RIGHT image role.
+             */
+            const imageRole =
+              index === 0
+                ? TIMED_CHOICE_IMAGE_ROLES.LEFT
+                : TIMED_CHOICE_IMAGE_ROLES.RIGHT;
+
+            /**
+             * Finds the image row already loaded on the selected question.
+             */
+            const optionImage = questionImages.find(
+              (image) => image.role === imageRole,
+            );
+
+            return (
+              <TimedChoiceOptionCard
+                key={option.optionID}
+                qID={qID!}
+                option={option}
+                index={index}
+                canEdit={canEdit}
+                canDelete={canDelete}
+                onDelete={handleDeleteOption}
+                displayMode={timedChoiceDisplayMode}
+                imageRole={imageRole}
+                optionImage={optionImage}
+              />
+            );
+          })}
 
           {options.length === 0 && (
             <Box
@@ -176,7 +216,8 @@ export const TimedChoiceResponse = ({ qID, display }: ElementProps) => {
           <Box
             sx={{
               position: "relative",
-              width: "100%",
+              width: "92%",
+              mx:"auto",
               px: 1,
               pt: 0.75,
               pb: 0.75,

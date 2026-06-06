@@ -3,6 +3,7 @@ import CenteredStack from "../../screen-layout/CenteredStack";
 import ResponseContainer from "../../screen-layout/ResponseContainer";
 import ScreenRoot from "../../screen-layout/ScreenRoot";
 import { ConceptFitResponse } from "../ElementResponse/ConceptFitResponse";
+import { ConceptFitResponseMobilePreview } from "../ElementResponse/ConceptFitResponseMobilePreview";
 
 import ElementQuestionText from "./ElementQuestionText";
 
@@ -10,7 +11,7 @@ export const ConceptFitElement = ({
   qID,
   display,
   showQuestion,
-  qImage
+  questionImages,
 }: ElementProps) => {
   return (
     <ScreenRoot display={display}>
@@ -19,7 +20,15 @@ export const ConceptFitElement = ({
       </CenteredStack>
 
       <ResponseContainer display={display}>
-        <ConceptFitResponse qID={qID} display={display} qImage={qImage} />
+        {display === "mobile" ? (
+          <ConceptFitResponseMobilePreview />
+        ) : (
+          <ConceptFitResponse
+            qID={qID}
+            display={display}
+            questionImages={questionImages}
+          />
+        )}
       </ResponseContainer>
     </ScreenRoot>
   );

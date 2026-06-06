@@ -1,3 +1,4 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
@@ -9,6 +10,7 @@ import {
 import { motion } from "framer-motion";
 import { CircleX } from "lucide-react";
 
+import { useAppTheme } from "../../theme/useAppTheme";
 import { DropdownAIReviewDialogProps } from "../../types/surveyBuilderTypes";
 
 export const DropdownAIReviewDialog = ({
@@ -21,6 +23,7 @@ export const DropdownAIReviewDialog = ({
   onAddReviewedOptions,
   isAddingReviewedOptions,
 }: DropdownAIReviewDialogProps) => {
+    const { scrollStyles } = useAppTheme();
   return (
     <Dialog
       open={open}
@@ -59,8 +62,20 @@ export const DropdownAIReviewDialog = ({
           </Typography>
         </Box>
 
-        <IconButton onClick={onClose}>
-          <CircleX />
+        <IconButton
+          onClick={onClose}
+          sx={{
+            p: 1,
+            color: "grey.400",
+            transition: "all 0.2s",
+            "&:hover": {
+              color: "grey.600",
+              bgcolor: "grey.100",
+            },
+            borderRadius: 2,
+          }}
+        >
+          <CloseIcon style={{ width: 28, height: 28 }} />
         </IconButton>
       </Box>
 
@@ -105,6 +120,7 @@ export const DropdownAIReviewDialog = ({
                 border: "1px solid #E2E8F0",
                 borderRadius: 2,
                 bgcolor: "#FFFFFF",
+                 ...scrollStyles.elementsPanel,
               }}
             >
               <Typography
@@ -186,18 +202,17 @@ export const DropdownAIReviewDialog = ({
             onClick={onAddReviewedOptions}
             disabled={options.length === 0 || isAddingReviewedOptions}
             sx={{
-              textTransform: "none",
+              px: 3,
+              py: 1.3,
+              fontSize: 15,
+              fontWeight: 600,
+              color: "#fff",
+              bgcolor: "#2563eb",
               borderRadius: 2,
-              px: 2,
-              fontWeight: 800,
-              bgcolor: "#7C3AED",
-              color: "white",
+              boxShadow: "0 2px 8px 0 rgba(59,130,246,0.09)",
+              transition: "all 0.18s",
               "&:hover": {
-                bgcolor: "#6D28D9",
-              },
-              "&.Mui-disabled": {
-                bgcolor: "#CBD5E1",
-                color: "white",
+                bgcolor: "#1d4ed8",
               },
             }}
           >

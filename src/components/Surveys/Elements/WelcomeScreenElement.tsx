@@ -11,10 +11,10 @@ import ScreenRoot from "../../screen-layout/ScreenRoot";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const WelcomeScreenElement = ({ display }: ElementProps) => {
+const WelcomeScreenElement = ({ display, showQuestion }: ElementProps) => {
   const { primary } = useAppTheme();
   const question = useSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
   const { questionPreferences } = question || {};
@@ -30,7 +30,7 @@ const WelcomeScreenElement = ({ display }: ElementProps) => {
         widthOverride={display === "mobile" ? "98%" : "72%"}
         marginBottomOveride={display === "mobile" ? "32px" : "1px"}
       >
-        <ElementQuestionText display={display} />
+        {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
 
       <ResponseContainer

@@ -17,7 +17,7 @@ import { ConceptFitAttributeManager } from "./ConceptFitAttributeManager";
 export const ConceptFitImageOnlyStimulus = (
   props: ConceptFitStimulusLayoutProps,
 ) => {
-  const { qID, display, qImage = [] } = props;
+  const { qID, display, questionImages = [] } = props;
 
   const { can } = useAuth();
 
@@ -36,7 +36,7 @@ export const ConceptFitImageOnlyStimulus = (
   const [removeQuestionImage, { isLoading: isDeleting }] =
     useRemoveQuestionImageMutation();
 
-  const conceptImage = qImage.find(
+  const conceptImage = questionImages.find(
     (image) => image.role === CONCEPT_FIT_IMAGE_ROLE,
   );
 

@@ -3,12 +3,10 @@ import { Box } from "@mui/material";
 import { usePermission } from "../../../context/PermissionContext";
 import { ElementSettingsProps } from "../../../utils/types";
 
-import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
-import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
+import QuestionContentSettings from "./ElementSettingsComponents/QuestionSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
 import TimedChoiceOptionSettings from "./ElementSettingsComponents/TimedChoiceOptionSettings";
 import TimedChoiceSettings from "./ElementSettingsComponents/TimedChoiceSettings";
-import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
 const TimedChoiceElementSettings = ({ qID }: ElementSettingsProps) => {
   const { canEditQuestion } = usePermission();
@@ -22,12 +20,10 @@ const TimedChoiceElementSettings = ({ qID }: ElementSettingsProps) => {
         // border:"2px solid blue",
       }}
     >
-      {canEditQuestion && <QuestionTypeMutationSettings />}
-      <QuestionTextandDescriptionSettings />
+      <QuestionContentSettings />
       <TimedChoiceOptionSettings qID={qID} canEdit={canEditQuestion} />
       <TimedChoiceSettings qID={qID} />
       <ScreenTypographySettings key={qID} qID={qID} />
-      <ValidationSettings />
     </Box>
   );
 };

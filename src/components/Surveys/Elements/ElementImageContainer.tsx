@@ -14,16 +14,15 @@ const ElementImageContainer = () => {
   const [uploadImageModalOpen, setUploadImageModalOpen] =
     useState<boolean>(false);
   const question = useSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
-  const {
-    questionID,
-    questionImageWidth,
-    questionImageHeight,
-    questionImageUrl,
-    // questionImageAltText,
-  } = question || {};
+  const { questionID, questionImages } = question || {};
+  const firstImage = questionImages?.[0];
+  const imageUrl = firstImage?.imageUrl;
+  const imageWidth = firstImage?.width || 300;
+  const imageHeight = firstImage?.height || 200;
+  const questionImageID = firstImage?.questionImageID;
 
   return (
     <Box
@@ -45,17 +44,18 @@ const ElementImageContainer = () => {
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          width: questionImageWidth,
-          height: questionImageHeight,
+          width: imageWidth,
+          height: imageHeight,
           backgroundColor: "#F8F9FE",
           borderRadius: "8px",
-          border: "2px dashed blue",
+          // border: "2px dashed blue",
           position: "relative",
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <Box
+          key={imageUrl}
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -68,9 +68,9 @@ const ElementImageContainer = () => {
             zIndex: 1,
           }}
         >
-          {questionImageUrl ? (
+          {imageUrl ? (
             <img
-              src={questionImageUrl}
+              src={imageUrl}
               //   alt={questionImageAltText}
               style={{
                 width: "100%",
@@ -104,19 +104,22 @@ const ElementImageContainer = () => {
           <Box
             sx={{
               position: "absolute",
-              top: "-36%",
-              left: "18%",
+              top: "4%",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              width: "64%",
-              height: "92%",
+              width: "92%",
+              height: "8%",
               // border: "2px solid green",
               pointerEvents: "auto",
               zIndex: 20,
+              px: 1.5,
             }}
           >
-            <ElementImageIconButtons questionID={questionID!} />
+            <ElementImageIconButtons
+              questionID={questionID!}
+              questionImageID={questionImageID!}
+            />
           </Box>
         )}
       </Box>

@@ -25,6 +25,7 @@ import { QuestionSetting } from "../../../../utils/types";
 const NavigationButtonTextSettings = () => {
   const dispatch = useDispatch();
   const { canEditQuestion } = usePermission();
+
   const question = useSelector(
     (state: RootState) => state.question.selectedQuestion,
   );
@@ -34,9 +35,7 @@ const NavigationButtonTextSettings = () => {
   const [updateQuestionPreferenceUIConfig] =
     useUpdateQuestionPreferenceUIConfigMutation();
 
-  const { buttonText } = questionPreferences?.uiConfig || {
-    buttonText: "Next",
-  };
+  const buttonText = questionPreferences?.uiConfig?.buttonText ?? "Next";
 
   const { handleSubmit, control, reset } = useForm<QuestionSetting>({
     resolver: zodResolver(uiConfigPreferenceSchema),
@@ -46,38 +45,60 @@ const NavigationButtonTextSettings = () => {
   });
 
   const watchedValues = useWatch({ control });
+
   const [formTouched, setFormTouched] = useState(false);
+  const [inputLength, setInputLength] = useState(buttonText.length);
+
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const [inputLength, setInputLength] = useState(
-    questionPreferences?.uiConfig?.buttonText?.length ?? 0,
-  );
-
+  /**
+   * Saves navigation button text into uiConfig.
+   * Existing uiConfig keys must be preserved so settings like timers/display modes
+   * are not accidentally removed.
+   */
   const onSubmit = async (data: QuestionSetting) => {
-    if (!canEditQuestion) return;
+    if (!canEditQuestion || !questionID) return;
+
     try {
-      const { buttonText } = data;
+      const nextButtonText = data.buttonText?.trim() || "Next";
+      const currentButtonText =
+        questionPreferences?.uiConfig?.buttonText ?? "Next";
 
-      if (buttonText === questionPreferences?.uiConfig?.buttonText) return;
+      if (nextButtonText === currentButtonText) {
+        setFormTouched(false);
+        return;
+      }
 
-      const uiConfig = { buttonText };
+      const uiConfig = {
+        ...questionPreferences?.uiConfig,
+        buttonText: nextButtonText,
+      };
+
       await updateQuestionPreferenceUIConfig({
         questionID,
         uiConfig,
-      });
+      }).unwrap();
+
+      setFormTouched(false);
     } catch (error) {
-      console.error(error);
+      console.error("Navigation button text update error:", error);
     }
   };
 
+  /**
+   * Marks this form as touched only after a real user edit.
+   */
   const markFormTouched = () => {
     if (!canEditQuestion) return;
     if (!formTouched) setFormTouched(true);
   };
 
+  /**
+   * Debounces save only after the user has edited the button text.
+   * Important: do not set formTouched=true inside this effect.
+   */
   useEffect(() => {
-    if (!canEditQuestion) return;
-    if (!formTouched) setFormTouched(true);
+    if (!formTouched || !canEditQuestion) return;
 
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
@@ -85,17 +106,27 @@ const NavigationButtonTextSettings = () => {
 
     debounceTimeoutRef.current = setTimeout(() => {
       handleSubmit(onSubmit)();
-      setFormTouched(false);
     }, 2500);
-  }, [watchedValues, formTouched, handleSubmit]);
 
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, [watchedValues, formTouched, canEditQuestion, handleSubmit]);
+
+  /**
+   * Keeps form and character counter synced when selected question changes
+   * or when fresh backend data arrives.
+   */
   useEffect(() => {
-    if (buttonText !== undefined) {
-      reset({
-        buttonText,
-      });
-    }
-  }, [buttonText, reset]);
+    reset({
+      buttonText,
+    });
+
+    setInputLength(buttonText.length);
+    setFormTouched(false);
+  }, [buttonText, questionID, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -114,8 +145,8 @@ const NavigationButtonTextSettings = () => {
       >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
+          aria-controls="navigation-button-settings-content"
+          id="navigation-button-settings-header"
         >
           <Box
             sx={{
@@ -125,7 +156,6 @@ const NavigationButtonTextSettings = () => {
               alignItems: "center",
               gap: 2,
               fontWeight: 500,
-              // pl: "4%",
               color: "#453F46",
             }}
           >
@@ -134,6 +164,7 @@ const NavigationButtonTextSettings = () => {
             </Tooltip>
           </Box>
         </AccordionSummary>
+
         <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
           <Box
             sx={{
@@ -142,12 +173,14 @@ const NavigationButtonTextSettings = () => {
               width: "96%",
               height: "100%",
               marginLeft: "2%",
-              // border: "2px solid red",
+              opacity: canEditQuestion ? 1 : 0.8,
+              pointerEvents: canEditQuestion ? "auto" : "none",
             }}
           >
             <Box sx={{ marginTop: "2%", fontWeight: 500, color: "#3F3F46" }}>
               Button
             </Box>
+
             <Box mt={1}>
               <Controller
                 name="buttonText"
@@ -157,8 +190,43 @@ const NavigationButtonTextSettings = () => {
                     type="text"
                     variant="standard"
                     disabled={!canEditQuestion}
-                    placeholder="Enter your question"
+                    placeholder="Next"
                     fullWidth
+                    {...field}
+                    value={field.value ?? ""}
+                    onChange={(event) => {
+                      if (!canEditQuestion) return;
+
+                      const value = event.target.value;
+
+                      if (value.length <= 24) {
+                        field.onChange(value);
+                        markFormTouched();
+
+                        /**
+                         * Updates Redux immediately so the canvas button text previews live.
+                         */
+                        dispatch(updateUIButtonText(value));
+
+                        setInputLength(value.length);
+                      }
+                    }}
+                    InputProps={{
+                      disableUnderline: true,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Box
+                            sx={{
+                              fontSize: "12px",
+                              color: "#9E9E9E",
+                              pr: 1,
+                            }}
+                          >
+                            {inputLength}/24
+                          </Box>
+                        </InputAdornment>
+                      ),
+                    }}
                     sx={{
                       "& .MuiInputBase-input": {
                         lineHeight: "1.5",
@@ -193,30 +261,6 @@ const NavigationButtonTextSettings = () => {
                         fontWeight: 400,
                       },
                       mb: 2,
-                    }}
-                    {...field}
-                    value={field.value}
-                    onChange={(event) => {
-                      if (!canEditQuestion) return;
-                      const value = event.target.value;
-                      if (value.length <= 24) {
-                        field.onChange(value);
-                        markFormTouched();
-                        dispatch(updateUIButtonText(value));
-                        setInputLength(value.length);
-                      }
-                    }}
-                    InputProps={{
-                      disableUnderline: true,
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Box
-                            sx={{ fontSize: "12px", color: "#9E9E9E", pr: 1 }}
-                          >
-                            {inputLength}/24
-                          </Box>
-                        </InputAdornment>
-                      ),
                     }}
                   />
                 )}

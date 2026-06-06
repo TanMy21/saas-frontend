@@ -8,14 +8,14 @@ import InputResponse from "../ElementResponse/InputResponse";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const NumberElement = ({ display }: ElementProps) => {
+const NumberElement = ({ display, showQuestion }: ElementProps) => {
   return (
     <ScreenRoot display={display}>
       <CenteredStack
         display={display}
         widthOverride={display === "mobile" ? "98%" : "72%"}
       >
-        <ElementQuestionText display={display} />
+        {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
       <ResponseContainer display={display}>
         <Box

@@ -182,7 +182,20 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
-
+    updateQuestionBasicSettings: builder.mutation({
+      query: ({ questionID, text, description, showQuestion, required }) => ({
+        url: `/q/basic/settings`,
+        method: "PATCH",
+        body: {
+          questionID,
+          text,
+          description,
+          showQuestion,
+          required,
+        },
+      }),
+      // invalidatesTags: ["Elements", "Surveys"],
+    }),
     uploadQuestionTemplateImage: builder.mutation({
       query: ({ formData, questionID }) => ({
         url: `/q/template/${questionID}`,
@@ -231,9 +244,9 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements"],
     }),
-    toggle3DModelQuestionVisibility: builder.mutation({
+    toggleQuestionVisibility: builder.mutation({
       query: ({ questionID, showQuestion }) => ({
-        url: `/q/3d/visibility`,
+        url: `/q/visibility`,
         method: "PATCH",
         body: { questionID, showQuestion },
       }),
@@ -308,6 +321,7 @@ export const {
   useCreateScreenElementMutation,
   useUpdateElementTextMutation,
   useUpdateElementOrderMutation,
+  useUpdateQuestionBasicSettingsMutation,
   useUpdateElementTypographyMutation,
   useUpdateElementTypographyMobileViewMutation,
   useUpdateQuestionRequiredPreferenceMutation,
@@ -330,6 +344,6 @@ export const {
   useImportQuestionsMutation,
   useSyncEditorImagesMutation,
   useToggleQuestionImageVisibilityMutation,
-  useToggle3DModelQuestionVisibilityMutation,
+  useToggleQuestionVisibilityMutation,
   useMutateQuestionTypeMutation,
 } = elementApiSlice;

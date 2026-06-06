@@ -1,12 +1,28 @@
 import { Box, Typography } from "@mui/material";
 
-import { DEFAULT_TIMER_SECONDS } from "../../../utils/constants";
+import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
+import { DEFAULT_TIMER_SECONDS, timerDrain } from "../../../utils/constants";
 
 export const ConceptFitPreview = ({
   firstAttribute,
 }: {
   firstAttribute?: string;
 }) => {
+  const question = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
+  );
+
+  const questionID = question?.questionID;
+  const uiConfig = question?.questionPreferences?.uiConfig || {};
+
+  const timeLimitMs =
+    questionID && typeof uiConfig.timeLimitMs === "number"
+      ? uiConfig.timeLimitMs
+      : DEFAULT_TIMER_SECONDS * 1000;
+
+  const timeLimitSeconds = Math.round(timeLimitMs / 1000);
+
   return (
     <Box
       sx={{
@@ -29,7 +45,7 @@ export const ConceptFitPreview = ({
         </Typography>
 
         <Typography sx={{ fontSize: 13, fontWeight: 800, color: "#0891B2" }}>
-          {DEFAULT_TIMER_SECONDS}s
+          {timeLimitSeconds}s
         </Typography>
       </Box>
 
@@ -104,11 +120,13 @@ export const ConceptFitPreview = ({
         }}
       >
         <Box
+          key={timeLimitMs}
           sx={{
             width: "68%",
             height: "100%",
             borderRadius: 999,
             bgcolor: "#0891B2",
+            animation: `${timerDrain} ${timeLimitMs}ms linear infinite`,
           }}
         />
       </Box>

@@ -23,14 +23,16 @@ import { QuestionImageDimensionsFormProps } from "../../../../utils/types";
 const QuestionImageDimensions = () => {
   const dispatch = useDispatch();
   const question = useSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
   const [updateQuestionImageDimensions] =
     useUpdateQuestionImageDimensionsMutation();
 
-  const { questionID, questionImageWidth, questionImageHeight } =
-    question || {};
+  const { questionID, questionImages } = question || {};
+  const firstImage = questionImages?.[0];
+  const questionImageWidth = firstImage?.width ?? 200;
+  const questionImageHeight = firstImage?.height ?? 300;
 
   const { handleSubmit, control, reset } =
     useForm<QuestionImageDimensionsFormProps>({

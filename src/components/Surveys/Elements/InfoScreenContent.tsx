@@ -53,9 +53,10 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
   const initialHtml =
     question?.questionID === questionID ? question?.description || "" : "";
 
-  console.log("Question: ", question);
-
   const [formTouched, setFormTouched] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<
+    "saved" | "dirty" | "saving" | "error"
+  >("saved");
 
   const [updateScreenElements, { isLoading: isSaving }] =
     useUpdateScreenElementsMutation();
@@ -171,6 +172,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
       );
 
       setFormTouched(true);
+      setSaveStatus("dirty");
     },
   });
 
@@ -181,6 +183,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
     if (!editor || !canEditQuestion || !questionID) return;
 
     try {
+      setSaveStatus("saving");
       const sanitizedHtml = sanitizeRichTextHtml(editor.getHTML());
 
       lastSavedHtmlRef.current = sanitizedHtml;
@@ -206,6 +209,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
 
       setFormTouched(false);
       showToast.success("Info content saved.");
+      setSaveStatus("saved");
     } catch (error) {
       console.error("Info screen rich text save error:", error);
       showToast.error("Failed to save info content.");
@@ -260,6 +264,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
       );
 
       setFormTouched(true);
+      setSaveStatus("dirty");
     } catch (error) {
       console.error("Info screen image upload error:", error);
       showToast.error("Failed to upload image.");
@@ -275,25 +280,27 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
 
     const currentHtml = editor.getHTML();
 
-    if (initialHtml !== currentHtml && !formTouched) {
-      /**
-       * Marks this as a controlled/programmatic editor update.
-       * This prevents onUpdate from setting formTouched back to true.
-       */
+    if (formTouched) {
+      editor.setEditable(canEditQuestion && !isMobile);
+      return;
+    }
+
+    if (lastSavedHtmlRef.current && initialHtml !== lastSavedHtmlRef.current) {
+      editor.setEditable(canEditQuestion && !isMobile);
+      return;
+    }
+
+    if (initialHtml !== currentHtml) {
       isContentUpdateRef.current = true;
 
       editor.commands.setContent(initialHtml || "", {
         emitUpdate: false,
       });
 
-      /**
-       * Releases the guard after the current microtask.
-       */
       queueMicrotask(() => {
         isContentUpdateRef.current = false;
       });
     }
-
     editor.setEditable(canEditQuestion && !isMobile);
   }, [editor, initialHtml, questionID, formTouched, canEditQuestion, isMobile]);
 
@@ -360,13 +367,9 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
               justifyContent: "flex-end",
               mb: 1,
               py: 0.5,
-              bgcolor: "rgba(255,255,255,0.92)",
-              backdropFilter: "blur(6px)",
             }}
           >
-            <SettingSaveStatus
-              state={isSaving ? "saving" : formTouched ? "dirty" : "saved"}
-            />
+            <SettingSaveStatus state={isSaving ? "saving" : saveStatus} />
           </Box>
         )}
 

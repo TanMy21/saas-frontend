@@ -2,9 +2,8 @@ import { Box } from "@mui/material";
 
 import { ElementSettingsProps } from "../../../utils/types";
 
-import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
+import QuestionContentSettings from "./ElementSettingsComponents/QuestionSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
-import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
 const EmailContactElementSettings = ({ qID }: ElementSettingsProps) => {
   return (
@@ -16,9 +15,8 @@ const EmailContactElementSettings = ({ qID }: ElementSettingsProps) => {
         heigh: "100%",
       }}
     >
-      <QuestionTextandDescriptionSettings />
+      <QuestionContentSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
-      <ValidationSettings />
     </Box>
   );
 };

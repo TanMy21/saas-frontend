@@ -8,11 +8,14 @@ import BinaryResponseContainer from "../ElementResponse/BinaryResponseContainer"
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const BinaryElement = ({ display }: ElementProps) => {
+const BinaryElement = ({ display, showQuestion }: ElementProps) => {
   return (
     <ScreenRoot>
-      <CenteredStack display={display}  marginTopOveride={display === "mobile" ? "32%" : "16%"}>
-        <ElementQuestionText display={display} />
+      <CenteredStack
+        display={display}
+        marginTopOveride={display === "mobile" ? "32%" : "16%"}
+      >
+        {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
       <ResponseContainer display={display}>
         <Box

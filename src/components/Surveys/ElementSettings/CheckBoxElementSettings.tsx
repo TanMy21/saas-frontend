@@ -3,10 +3,9 @@ import { Box } from "@mui/material";
 import { usePermission } from "../../../context/PermissionContext";
 import { ElementSettingsProps } from "../../../utils/types";
 
-import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
+import QuestionContentSettings from "./ElementSettingsComponents/QuestionSettings";
 import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
-import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
 const CheckBoxElementSettings = ({ qID }: ElementSettingsProps) => {
   const { canEditQuestion } = usePermission();
@@ -16,13 +15,12 @@ const CheckBoxElementSettings = ({ qID }: ElementSettingsProps) => {
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        heigh: "100%",
+        height: "100%",
       }}
     >
       {canEditQuestion && <QuestionTypeMutationSettings />}
-      <QuestionTextandDescriptionSettings />
+      <QuestionContentSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
-      <ValidationSettings />
     </Box>
   );
 };

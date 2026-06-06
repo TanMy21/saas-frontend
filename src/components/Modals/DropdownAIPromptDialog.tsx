@@ -1,3 +1,4 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
@@ -7,10 +8,10 @@ import {
   Typography,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { CircleX, Wand } from "lucide-react";
+import { Wand } from "lucide-react";
 
 import { DropdownAIPromptDialogProps } from "../../types/surveyBuilderTypes";
- 
+
 export const DropdownAIPromptDialog = ({
   open,
   prompt,
@@ -56,13 +57,24 @@ export const DropdownAIPromptDialog = ({
           </Typography>
 
           <Typography sx={{ fontSize: 13, color: "#64748B", mt: 0.5 }}>
-            Describe the options you want. You can review and edit them before
-            adding.
+            Generate options and review them before adding.
           </Typography>
         </Box>
 
-        <IconButton onClick={onClose}>
-          <CircleX />
+        <IconButton
+          onClick={onClose}
+          sx={{
+            p: 1,
+            color: "grey.400",
+            transition: "all 0.2s",
+            "&:hover": {
+              color: "grey.600",
+              bgcolor: "grey.100",
+            },
+            borderRadius: 2,
+          }}
+        >
+          <CloseIcon style={{ width: 28, height: 28 }} />
         </IconButton>
       </Box>
 
@@ -84,7 +96,6 @@ export const DropdownAIPromptDialog = ({
 
         <TextField
           type="number"
-          label="Number of options"
           value={count}
           onChange={(event) => {
             const nextValue = Number(event.target.value);
@@ -126,18 +137,17 @@ export const DropdownAIPromptDialog = ({
             disabled={isGenerating || !prompt.trim()}
             startIcon={<Wand />}
             sx={{
-              textTransform: "none",
+              px: 3,
+              py: 1.3,
+              fontSize: 15,
+              fontWeight: 600,
+              color: "#fff",
+              bgcolor: "#2563eb",
               borderRadius: 2,
-              px: 2,
-              fontWeight: 800,
-              bgcolor: "#7C3AED",
-              color: "white",
+              boxShadow: "0 2px 8px 0 rgba(59,130,246,0.09)",
+              transition: "all 0.18s",
               "&:hover": {
-                bgcolor: "#6D28D9",
-              },
-              "&.Mui-disabled": {
-                bgcolor: "#CBD5E1",
-                color: "white",
+                bgcolor: "#1d4ed8",
               },
             }}
           >

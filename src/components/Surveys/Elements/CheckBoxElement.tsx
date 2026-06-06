@@ -8,14 +8,14 @@ import ResponseList from "../ElementResponse/ResponseList";
 
 import ElementQuestionText from "./ElementQuestionText";
 
-const CheckBoxElement = ({ qID, display }: ElementProps) => {
+const CheckBoxElement = ({ qID, display, showQuestion }: ElementProps) => {
   return (
     <ScreenRoot display={display}>
       <CenteredStack
         display={display}
         widthOverride={display === "mobile" ? "98%" : "72%"}
       >
-        <ElementQuestionText display={display} />
+        {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
       <ResponseContainer display={display}>
         <Box

@@ -1,15 +1,11 @@
 import { Box } from "@mui/material";
 
-import { usePermission } from "../../../context/PermissionContext";
 import { ElementSettingsProps } from "../../../utils/types";
 
-import QuestionTextandDescriptionSettings from "./ElementSettingsComponents/QuestionTextAndDescriptionSettings";
-import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/QuestionTypeMutationSettings";
+import QuestionContentSettings from "./ElementSettingsComponents/QuestionSettings";
 import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypographySettings";
-import ValidationSettings from "./ElementSettingsComponents/ValidationSettings";
 
 const DropdownElementSettings = ({ qID }: ElementSettingsProps) => {
-  const { canEditQuestion } = usePermission();
   return (
     <Box
       sx={{
@@ -19,10 +15,8 @@ const DropdownElementSettings = ({ qID }: ElementSettingsProps) => {
         height: "100%",
       }}
     >
-      {canEditQuestion && <QuestionTypeMutationSettings />}
-      <QuestionTextandDescriptionSettings />
+      <QuestionContentSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
-      <ValidationSettings />
     </Box>
   );
 };

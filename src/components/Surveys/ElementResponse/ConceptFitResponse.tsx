@@ -23,7 +23,7 @@ import { ElementProps, OptionType } from "../../../utils/types";
 import { ConceptFitImageOnlyStimulus } from "./ConceptFitImageOnlyStimulus";
 import { ConceptTextOnlyStimulus } from "./ConceptTextOnlyStimulus";
 
-export const ConceptFitResponse = ({ qID, display, qImage }: ElementProps) => {
+export const ConceptFitResponse = ({ qID, display, questionImages }: ElementProps) => {
   const { can } = useAuth();
 
   const question = useAppSelector(
@@ -167,7 +167,7 @@ export const ConceptFitResponse = ({ qID, display, qImage }: ElementProps) => {
     canDelete,
     canReorder,
     canAddMore,
-    qImage,
+    questionImages,
     hasMinimumRecommended,
     setInputValue,
     handleAddAttributes,

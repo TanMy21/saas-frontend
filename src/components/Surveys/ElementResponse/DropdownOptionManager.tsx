@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
+import { useAppTheme } from "../../../theme/useAppTheme";
 import { DropdownOptionManagerProps } from "../../../types/optionTypes";
 
 import { DropdownOptionRow } from "./DropdownOptionRow";
@@ -14,18 +15,32 @@ export const DropdownOptionManager = ({
   onDragEnd,
   onDelete,
 }: DropdownOptionManagerProps) => {
+  const { scrollStyles } = useAppTheme();
   return (
-    <Box
-      sx={{
-        border: "1px solid #E2E8F0",
-        borderRadius: 2,
-        bgcolor: "#F8FAFC",
-        p: 1.5,
-        maxHeight: 340,
-        overflowY: "auto",
-        overflowX: "hidden",
-      }}
-    >
+<Box
+  sx={{
+    border: "1px solid #E2E8F0",
+    borderRadius: 2,
+    bgcolor: "#F8FAFC",
+    p: 1.5,
+    maxHeight: 340,
+
+    // Allows scrolling when content is taller than maxHeight.
+    overflowY: "auto",
+    overflowX: "hidden",
+
+    // Firefox: hides scrollbar but keeps scroll behavior.
+    scrollbarWidth: "none",
+
+    // IE/old Edge: hides scrollbar but keeps scroll behavior.
+    msOverflowStyle: "none",
+
+    // Chrome/Safari/Edge: hides scrollbar but keeps scroll behavior.
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
+  }}
+>
       <DragDropContext
         onDragEnd={(result) => {
           if (!canReorder) return;

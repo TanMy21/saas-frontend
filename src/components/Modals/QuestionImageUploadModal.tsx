@@ -97,7 +97,7 @@ const QuestionImageUploadModal = ({
       const formData = new FormData();
       formData.append("imgFile", selectedFile);
 
-      uploadQuestionImage({ formData, questionID });
+      uploadQuestionImage({ questionID, role: "TEXT_IMAGE", formData });
     }
   };
 

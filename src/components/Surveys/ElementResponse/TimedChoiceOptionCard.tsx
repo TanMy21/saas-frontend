@@ -1,28 +1,58 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { Box, IconButton, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import { CircleX } from "lucide-react";
 
+import {
+  useRemoveQuestionImageMutation,
+  useReplaceQuestionImageMutation,
+  useUploadQuestionImageMutation,
+} from "../../../app/slices/elementApiSlice";
 import { useUpdateOptionTextandValueMutation } from "../../../app/slices/optionApiSlice";
+import { QuestionImageAsset } from "../../../types/surveyBuilderTypes";
+import { showToast } from "../../../utils/showToast";
 import { OptionType } from "../../../utils/types";
 
 export const TimedChoiceOptionCard = ({
+  qID,
   option,
   index,
   canEdit,
   canDelete,
   onDelete,
+  displayMode,
+  imageRole,
+  optionImage,
 }: {
+  qID: string;
   option: OptionType;
   index: number;
   canEdit: boolean;
   canDelete: boolean;
   onDelete: (optionID: string) => void;
+  displayMode: "TEXT" | "IMAGE";
+  imageRole: string;
+  optionImage?: QuestionImageAsset;
 }) => {
   const [editText, setEditText] = useState(option.text);
   const [isEditing, setIsEditing] = useState(false);
 
+  const uploadInputRef = useRef<HTMLInputElement | null>(null);
+  const replaceInputRef = useRef<HTMLInputElement | null>(null);
+
   const [updateOptionTextandValue] = useUpdateOptionTextandValueMutation();
+
+  const [uploadQuestionImage, { isLoading: isUploading }] =
+    useUploadQuestionImageMutation();
+
+  const [replaceQuestionImage, { isLoading: isReplacing }] =
+    useReplaceQuestionImageMutation();
+
+  const [removeQuestionImageAsset, { isLoading: isDeleting }] =
+    useRemoveQuestionImageMutation();
+
+  const isImageMode = displayMode === "IMAGE";
+  const isBusy = isUploading || isReplacing || isDeleting;
 
   /**
    * Keeps local edit text synced when RTK Query returns updated option data.
@@ -54,6 +84,72 @@ export const TimedChoiceOptionCard = ({
     }
 
     setIsEditing(false);
+  };
+
+  /**
+   * Uploads an image for this timed choice option card.
+   * The role decides whether it belongs to the left or right card.
+   */
+  const handleUploadImage = async (file: File) => {
+    if (!qID || !imageRole || !canEdit) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("imgFile", file);
+
+      await uploadQuestionImage({
+        questionID: qID,
+        role: imageRole,
+        formData,
+      }).unwrap();
+
+      showToast.success("Option image uploaded.");
+    } catch (error) {
+      console.error("Timed choice image upload error:", error);
+      showToast.error("Failed to upload option image.");
+    }
+  };
+
+  /**
+   * Replaces the image for this timed choice option card.
+   */
+  const handleReplaceImage = async (file: File) => {
+    if (!qID || !optionImage || !canEdit) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("imgFile", file);
+
+      await replaceQuestionImage({
+        questionID: qID,
+        questionImageID: optionImage.questionImageID,
+        formData,
+      }).unwrap();
+
+      showToast.success("Option image replaced.");
+    } catch (error) {
+      console.error("Timed choice image replace error:", error);
+      showToast.error("Failed to replace option image.");
+    }
+  };
+
+  /**
+   * Deletes the image from this timed choice option card.
+   */
+  const handleDeleteImage = async () => {
+    if (!qID || !optionImage || !canEdit) return;
+
+    try {
+      await removeQuestionImageAsset({
+        questionID: qID,
+        questionImageID: optionImage.questionImageID,
+      }).unwrap();
+
+      showToast.success("Option image deleted.");
+    } catch (error) {
+      console.error("Timed choice image delete error:", error);
+      showToast.error("Failed to delete option image.");
+    }
   };
 
   return (
@@ -92,6 +188,141 @@ export const TimedChoiceOptionCard = ({
       >
         {index === 0 ? "A" : "B"}
       </Typography>
+
+      {isImageMode && (
+        <Box
+          sx={{
+            mb: 1.5,
+            border: optionImage ? "1px solid #E2E8F0" : "1px dashed #CBD5E1",
+            borderRadius: 2.5,
+            bgcolor: optionImage ? "#FFFFFF" : "#F8FAFC",
+            p: 1.25,
+            textAlign: "center",
+          }}
+        >
+          {optionImage?.imageUrl ? (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Box
+                component="img"
+                src={optionImage.imageUrl}
+                alt={
+                  optionImage.altText || option.text || "Timed choice option"
+                }
+                sx={{
+                  width: "100%",
+                  height: 150,
+                  objectFit: "contain",
+                  borderRadius: 2,
+                  bgcolor: "#F8FAFC",
+                  border: "1px solid #E2E8F0",
+                }}
+              />
+
+              {canEdit && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: 1,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    disabled={isBusy}
+                    onClick={() => replaceInputRef.current?.click()}
+                    sx={{
+                      textTransform: "none",
+                      fontSize: 12,
+                      fontWeight: 700,
+                      borderRadius: 999,
+                    }}
+                  >
+                    {isReplacing ? "Replacing..." : "Replace"}
+                  </Button>
+
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="error"
+                    disabled={isBusy}
+                    onClick={handleDeleteImage}
+                    sx={{
+                      textTransform: "none",
+                      fontSize: 12,
+                      fontWeight: 700,
+                      borderRadius: 999,
+                    }}
+                  >
+                    {isDeleting ? "Deleting..." : "Delete"}
+                  </Button>
+                </Box>
+              )}
+
+              <input
+                ref={replaceInputRef}
+                hidden
+                type="file"
+                accept="image/png,image/jpeg,image/jpg,image/webp"
+                onChange={async (event) => {
+                  const file = event.target.files?.[0];
+                  event.target.value = "";
+
+                  if (!file) return;
+
+                  await handleReplaceImage(file);
+                }}
+              />
+            </Box>
+          ) : (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Typography sx={{ fontSize: 12, color: "#64748B" }}>
+                Upload image for option {index === 0 ? "A" : "B"}
+              </Typography>
+
+              {canEdit && (
+                <>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    disabled={isUploading}
+                    onClick={() => uploadInputRef.current?.click()}
+                    sx={{
+                      alignSelf: "center",
+                      textTransform: "none",
+                      fontSize: 12,
+                      fontWeight: 800,
+                      borderRadius: 999,
+                      bgcolor: "#EA580C",
+                      "&:hover": {
+                        bgcolor: "#C2410C",
+                      },
+                    }}
+                  >
+                    {isUploading ? "Uploading..." : "Upload image"}
+                  </Button>
+
+                  <input
+                    ref={uploadInputRef}
+                    hidden
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    onChange={async (event) => {
+                      const file = event.target.files?.[0];
+                      event.target.value = "";
+
+                      if (!file) return;
+
+                      await handleUploadImage(file);
+                    }}
+                  />
+                </>
+              )}
+            </Box>
+          )}
+        </Box>
+      )}
 
       {isEditing ? (
         <TextField

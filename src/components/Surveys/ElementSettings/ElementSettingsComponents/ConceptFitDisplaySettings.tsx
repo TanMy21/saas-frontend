@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import PsychologyAltOutlinedIcon from "@mui/icons-material/PsychologyAltOutlined";
 import {
   Accordion,
   AccordionDetails,
@@ -9,9 +8,11 @@ import {
   Box,
   FormControl,
   FormControlLabel,
+  InputAdornment,
   MenuItem,
   Select,
   Switch,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -33,7 +34,10 @@ import {
   ConceptFitSettingsForm,
   SettingSaveState,
 } from "../../../../types/surveyBuilderTypes";
-import { CONCEPT_FIT_DISPLAY_MODE_OPTIONS } from "../../../../utils/constants";
+import {
+  CONCEPT_FIT_DISPLAY_MODE_OPTIONS,
+  DEFAULT_TIMER_SECONDS,
+} from "../../../../utils/constants";
 import {
   ElementSettingsProps,
   QuestionUIConfig,
@@ -84,6 +88,7 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
     uiConfig?.conceptDisplayMode,
     uiConfig?.randomizeAttributes,
     uiConfig?.autoAdvanceOnAnswer,
+    uiConfig?.timeLimitMs,
     formTouched,
     reset,
   ]);
@@ -183,7 +188,7 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
         width: "100%",
         m: "0 !important",
         backgroundColor: "#FFFFFF",
-        borderTop: "1px solid #E0E0E0",
+        borderBottom: "1px solid #E0E0E0",
         borderRadius: 0,
         boxShadow: "none",
         "&:before": { display: "none" },
@@ -206,10 +211,8 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
             color: "#453F46",
           }}
         >
-          <PsychologyAltOutlinedIcon sx={{ color: "#7C3AED", fontSize: 20 }} />
-
           <Tooltip title="Configure how the Concept Fit stimulus is displayed">
-            <Typography>Concept display</Typography>
+            <Typography>Concept</Typography>
           </Tooltip>
         </Box>
       </AccordionSummary>
@@ -280,6 +283,71 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
           </Box>
 
           <Controller
+            name="timeLimitSeconds"
+            control={control}
+            render={({ field }) => (
+              <Box>
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    color: "#444D5C",
+                    fontSize: 13,
+                    mb: 1,
+                  }}
+                >
+                  Timer
+                </Typography>
+
+                <TextField
+                  type="number"
+                  fullWidth
+                  disabled={!canEditQuestion}
+                  value={field.value}
+                  onChange={(event) => {
+                    /**
+                     * Keeps Concept Fit timer between 1 and 30 seconds.
+                     */
+                    const value = Number(event.target.value);
+                    const safeValue = Number.isNaN(value)
+                      ? DEFAULT_TIMER_SECONDS
+                      : value;
+                    const clampedValue = Math.min(
+                      Math.max(safeValue || 1, 1),
+                      30,
+                    );
+
+                    field.onChange(clampedValue);
+                    markFormTouched();
+
+                    updateConceptFitPreview({
+                      timeLimitMs: clampedValue * 1000,
+                    });
+                  }}
+                  inputProps={{
+                    min: 1,
+                    max: 30,
+                    step: 1,
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">sec</InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      borderRadius: "8px",
+                      height: "42px",
+                      fontSize: "15px",
+                      backgroundColor: "#F3F4F6",
+                      px: 1.5,
+                    },
+                  }}
+                />
+              </Box>
+            )}
+          />
+
+          <Controller
             name="randomizeAttributes"
             control={control}
             render={({ field }) => (
@@ -303,36 +371,6 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
               />
             )}
           />
-
-          <Controller
-            name="autoAdvanceOnAnswer"
-            control={control}
-            render={({ field }) => (
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={field.value}
-                    disabled={!canEditQuestion}
-                    onChange={(event) => {
-                      const checked = event.target.checked;
-
-                      field.onChange(checked);
-                      markFormTouched();
-                      updateConceptFitPreview({
-                        autoAdvanceOnAnswer: checked,
-                      });
-                    }}
-                  />
-                }
-                label="Auto-advance after answer"
-              />
-            )}
-          />
-
-          <Typography sx={{ fontSize: 12, color: "#64748B", lineHeight: 1.5 }}>
-            Concept image is static. Attribute words are shown one by one from
-            this question’s options.
-          </Typography>
 
           <SettingSaveStatus
             state={isSavingConceptFit ? "saving" : saveStatus}
