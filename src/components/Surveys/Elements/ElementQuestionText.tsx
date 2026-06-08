@@ -16,9 +16,10 @@ import { useOutsideSave } from "../../../hooks/useOutsideSave";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { sanitizeRichTextHtml } from "../../../utils/richTextUtils";
 import { ElementProps } from "../../../utils/types";
-import { isOrderable } from "../../../utils/utils";
+import { getDefaultQuestionTextAlign, isOrderable } from "../../../utils/utils";
 
 import { EditableLine } from "./EditableLine";
+import { EditableQuestionText } from "./EditableQuestionTextandDescription";
 import { OrderBadge } from "./OrderBadge";
 
 const ElementQuestionText = ({ display }: ElementProps) => {
@@ -36,6 +37,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
   const { questionID, order, text, description, type } = question || {};
 
   const show = isOrderable(type, order);
+  const defaultTextAlign = getDefaultQuestionTextAlign(type);
 
   const titleFontSize =
     typographySettings.titleFontSize ??
@@ -222,7 +224,8 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   ...(show
                     ? {
                         display: "flex",
-                        width: "max-content",
+                        width: "100%",
+                        minWidth: 0,
                       }
                     : {
                         display: "flex",
@@ -245,43 +248,41 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                           display: "flex",
                           justifyContent: "center",
                           width: "100%",
+                          minWidth: 0,
                         }
                       : {
                           display: "block",
-                          width: "fit-content",
+                          width: "100%",
                           maxWidth: { xs: "100%", md: "min(72ch, 100%)" },
                         }),
                     textAlign: "left",
                     whiteSpace: "normal",
-                    // border: "2px solid yellow",
+                    border: "2px solid yellow",
                   }}
                 >
-                  <EditableLine
+                  <EditableQuestionText
                     active={canEdit && editingTarget === "title"}
-                    // active={editingTarget === "title"}
                     value={text}
                     onStartEdit={() => {
                       if (!canEdit) return;
                       beginEdit("title");
                     }}
-                    // onStartEdit={() => beginEdit("title")}
                     onChange={handleChangeTitle}
                     onFormatted={saveTitleIfChanged}
                     onKeyDown={handleKeyDown}
-                    textFieldId="title-input"
-                    cursorWhenActive="text"
-                    textFieldSx={{
+                    editorSx={{
                       ...(show
                         ? {
-                            display: "inline-block",
-                            width: "max-content",
-                            maxWidth: "none",
+                            display: "block",
+                            width: "100%",
+                            maxWidth: "100%",
+                            minWidth: 0,
                           }
                         : {
                             display: "block",
                             width: "100%",
                           }),
-                      textAlign: "left",
+                      textAlign: defaultTextAlign,
                       backgroundColor: "transparent",
                       fontFamily:
                         'Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif',
@@ -290,35 +291,10 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                       fontSize: textFontSize,
                       lineHeight: 1.25,
                       letterSpacing: "-0.01em",
-                      "& *": {
-                        fontFamily: "inherit",
-                        fontSize: "inherit",
-                        lineHeight: "inherit",
-                      },
-                      // border: "2px solid green",
-                    }}
-                    typographySx={{
-                      ...(show
-                        ? {
-                            display: "inline-block",
-                            width: "max-content",
-                            maxWidth: "none",
-                          }
-                        : {
-                            display: "block",
-                            width: "100%",
-                            maxWidth: { xs: "100%", md: "min(72ch, 100%)" },
-                          }),
-                      textAlign: "left",
+                      color: titleTextColor,
                       whiteSpace: "normal",
                       overflowWrap: "break-word",
-                      fontFamily:
-                        'Inter, "Segoe UI", Roboto, system-ui, -apple-system, sans-serif',
-                      fontWeight: 700,
-                      fontSize: textFontSize,
-                      color: titleTextColor,
-                      lineHeight: 1.25,
-                      letterSpacing: "-0.01em",
+                      wordBreak: "break-word",
                     }}
                   />
                 </Box>
@@ -339,11 +315,12 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                 justifyContent: "center",
                 alignItems: "center",
                 width: "60%",
+                minWidth: 0,
                 margin: "1% auto",
                 // border: "2px solid blue",
               }}
             >
-              <EditableLine
+              <EditableQuestionText
                 active={canEdit && editingTarget === "description"}
                 value={description}
                 placeholder="Description (optional)"
@@ -352,32 +329,23 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   beginEdit("description");
                 }}
                 onChange={handleChangeDesc}
-                onFormatted={() => {
-                  saveDescriptionIfChanged();
-                }}
+                onFormatted={saveDescriptionIfChanged}
                 onKeyDown={handleKeyDown}
-                textFieldId="description-input"
-                cursorWhenActive="text"
-                textFieldSx={{
+                editorSx={{
                   backgroundColor: "transparent",
-                  fontFamily:
-                    "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
-                  fontSize: descFontSize,
-                  lineHeight: 1.5,
-                  "& *": {
-                    fontFamily: "inherit",
-                    fontSize: "inherit",
-                    lineHeight: "inherit",
-                  },
-                }}
-                typographySx={{
                   fontStyle: "italic",
                   fontFamily:
                     "BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
                   whiteSpace: "normal",
-                  width: "fit-content",
+                  width: "100%",
+                  maxWidth: "100%",
+                  minWidth: 0,
+                  textAlign: defaultTextAlign,
                   fontSize: descFontSize,
                   color: descriptionTextColor,
+                  lineHeight: 1.5,
+                  overflowWrap: "break-word",
+                  wordBreak: "break-word",
                   "& *": {
                     fontFamily: "inherit",
                     fontSize: "inherit",

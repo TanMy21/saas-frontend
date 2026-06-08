@@ -1166,3 +1166,14 @@ export const buildIATBehaviorUiConfig = (
     autoAdvanceOnAnswer: data.autoAdvanceOnAnswer,
   };
 };
+
+export const getDefaultQuestionTextAlign = (type?: string | null) => {
+  const centeredTypes = [
+    "WELCOME_SCREEN",
+    "END_SCREEN",
+    "INSTRUCTIONS",
+    "EMAIL_CONTACT",
+  ];
+
+  return centeredTypes.includes(type || "") ? "center" : "left";
+};

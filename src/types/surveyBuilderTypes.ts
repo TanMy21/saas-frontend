@@ -192,4 +192,13 @@ export interface TimedChoiceMobileOptionCardProps {
   displayMode: TimedChoiceDisplayMode;
 }
 
-
+export type EditableQuestionTextProps = {
+  active: boolean;
+  value?: string | null;
+  placeholder?: string;
+  onStartEdit: () => void;
+  onChange: (html: string) => void;
+  onFormatted: () => void;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
+  editorSx?: any;
+};

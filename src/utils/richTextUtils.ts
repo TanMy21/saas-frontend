@@ -464,28 +464,58 @@ const ALLOWED_RICH_TEXT_TAGS = ["strong", "em", "u", "br"];
  * Sanitizes rich text produced by contentEditable before storing or rendering.
  * Only basic formatting tags are allowed; scripts, styles, links, images, spans, and attributes are removed.
  */
+/**
+ * Sanitizes TipTap rich text while preserving only editor-approved inline styles.
+ * Prevents unsafe or random CSS from being saved.
+ */
 export const sanitizeRichTextHtml = (html?: string | null) => {
   if (!html) {
     return "";
   }
 
-  return DOMPurify.sanitize(html, {
+  const clean = DOMPurify.sanitize(html, {
     ALLOWED_TAGS: ALLOWED_RICH_TEXT_TAGS,
-    ALLOWED_ATTR: [],
-    KEEP_CONTENT: true,
-    USE_PROFILES: { html: true },
-    ADD_TAGS: ["img"],
-    ADD_ATTR: [
-      "src",
-      "alt",
-      "title",
+    ALLOWED_ATTR: [
+      "href",
       "target",
       "rel",
       "style",
+      "src",
+      "alt",
+      "title",
       "data-editor-image-id",
       "data-public-id",
     ],
+    KEEP_CONTENT: true,
+    USE_PROFILES: { html: true },
   });
+
+  const doc = new DOMParser().parseFromString(clean, "text/html");
+
+  /**
+   * Keeps only supported text-align values from TipTap.
+   * Removes any other inline style from paragraph/list/span elements.
+   */
+  doc.body.querySelectorAll<HTMLElement>("[style]").forEach((el) => {
+    const textAlign = el.style.textAlign;
+    const color = el.style.color;
+
+    el.removeAttribute("style");
+
+    if (["left", "center", "right"].includes(textAlign)) {
+      el.style.textAlign = textAlign;
+    }
+
+    if (color) {
+      el.style.color = color;
+    }
+
+    if (!el.getAttribute("style")) {
+      el.removeAttribute("style");
+    }
+  });
+
+  return doc.body.innerHTML;
 };
 
 export const sanitizeInfoScreenHtml = (html?: string | null) => {

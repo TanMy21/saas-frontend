@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import ColorLensIcon from "@mui/icons-material/ColorLens";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { FiType } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -20,7 +18,6 @@ import {
   useUpdateElementTypographyMobileViewMutation,
   useUpdateElementTypographyMutation,
 } from "../../../../app/slices/elementApiSlice";
-import { updateTypographyField } from "../../../../app/slices/elementTypographySlice";
 import { RootState } from "../../../../app/store";
 import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
 import { usePermission } from "../../../../context/PermissionContext";
@@ -30,31 +27,45 @@ import {
   TypographySettingsForm,
 } from "../../../../utils/types";
 
-import ColorPicker from "./ColorPicker";
 import FontSizeControl from "./FontSizeControl";
 import FontSizeViewToggle from "./FontSizeViewToggle";
+import SettingSaveStatus from "./SettingSaveStatus";
 
 const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   const refetchCanvas = useSurveyCanvasRefetch();
   const { canEditQuestion } = usePermission();
+
   const [fontSizeView, setFontSizeView] = useState<"desktop" | "mobile">(
     "desktop",
   );
+
   const typographySettings = useSelector(
     (state: RootState) => state.elementTypography,
   );
+
   const dispatch = useDispatch();
 
   const isDesktop = fontSizeView === "desktop";
+
   const titleKey = (
     isDesktop ? "titleFontSize" : "titleFontSizeMobile"
   ) as keyof TypographySettingsForm;
+
   const descriptionKey = (
     isDesktop ? "descriptionFontSize" : "descriptionFontSizeMobile"
   ) as keyof TypographySettingsForm;
-  const [updateElementTypography] = useUpdateElementTypographyMutation();
-  const [updateElementTypographyMobileView] =
-    useUpdateElementTypographyMobileViewMutation();
+
+  const [updateElementTypography, { isLoading: isSavingDesktopTypography }] =
+    useUpdateElementTypographyMutation();
+
+  const [
+    updateElementTypographyMobileView,
+    { isLoading: isSavingMobileTypography },
+  ] = useUpdateElementTypographyMobileViewMutation();
+
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "dirty" | "saving" | "saved" | "error"
+  >("idle");
 
   const {
     titleTextColor,
@@ -81,19 +92,27 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
     control,
     name: "titleFontSize",
   });
+
   const watchedTitleFontSizeMobileValues = useWatch({
     control,
     name: "titleFontSizeMobile",
   });
-  const watchedTitleTextColor = useWatch({ control, name: "titleTextColor" });
+
+  const watchedTitleTextColor = useWatch({
+    control,
+    name: "titleTextColor",
+  });
+
   const watchedDescriptionFontValues = useWatch({
     control,
     name: "descriptionFontSize",
   });
+
   const watchedDescriptionFontMobileValues = useWatch({
     control,
     name: "descriptionFontSizeMobile",
   });
+
   const watchedDescriptionTextColor = useWatch({
     control,
     name: "descriptionTextColor",
@@ -102,10 +121,19 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   const [formTouched, setFormTouched] = useState(false);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const isSavingTypography =
+    isSavingDesktopTypography || isSavingMobileTypography;
+
+  /**
+   * Saves desktop typography settings.
+   * This handles desktop title/description font size and text colors.
+   */
   const onSubmit = async (data: TypographySettingsForm) => {
     if (!canEditQuestion) return;
 
     try {
+      setSaveStatus("saving");
+
       const {
         titleFontSize,
         titleTextColor,
@@ -120,17 +148,26 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
         descriptionTextColor,
         descriptionFontSize,
       }).unwrap();
+
       refetchCanvas();
       setFormTouched(false);
+      setSaveStatus("saved");
     } catch (error) {
-      console.error(error);
+      console.error("Typography desktop settings update error:", error);
+      setSaveStatus("error");
     }
   };
 
+  /**
+   * Saves mobile typography settings.
+   * This handles mobile title and description font sizes only.
+   */
   const onSubmitMobile = async (data: TypographySettingsForm) => {
     if (!canEditQuestion) return;
 
     try {
+      setSaveStatus("saving");
+
       const { titleFontSizeMobile, descriptionFontSizeMobile } = data;
 
       await updateElementTypographyMobileView({
@@ -138,20 +175,34 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
         titleFontSizeMobile,
         descriptionFontSizeMobile,
       }).unwrap();
+
+      refetchCanvas();
       setFormTouched(false);
+      setSaveStatus("saved");
     } catch (error) {
-      console.error(error);
+      console.error("Typography mobile settings update error:", error);
+      setSaveStatus("error");
     }
   };
 
+  /**
+   * Marks the form as changed.
+   * This is called by FontSizeControl before the debounced save starts.
+   */
   const markFormTouched = () => {
     if (!canEditQuestion) return;
+
     if (!formTouched) {
-      console.log("[markFormTouched] marked as true");
       setFormTouched(true);
     }
+
+    setSaveStatus("dirty");
   };
 
+  /**
+   * Debounces typography saves.
+   * Desktop and mobile saves are routed to different endpoints based on the active view.
+   */
   useEffect(() => {
     if (!formTouched || !canEditQuestion) return;
 
@@ -160,13 +211,18 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      console.log("[useEffect] timeout fired → submitting form");
       handleSubmit(isDesktop ? onSubmit : onSubmitMobile, (errors) => {
-        console.error("[handleSubmit] validation failed:", errors);
+        console.error("[Typography settings validation failed]:", errors);
+        setSaveStatus("error");
+        setFormTouched(false);
       })();
-
-      setFormTouched(false);
     }, 2500);
+
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
   }, [
     watchedTitleFontSizeValues,
     watchedTitleFontSizeMobileValues,
@@ -175,9 +231,15 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
     watchedDescriptionFontMobileValues,
     watchedDescriptionTextColor,
     formTouched,
+    canEditQuestion,
+    isDesktop,
     handleSubmit,
   ]);
 
+  /**
+   * Hydrates RHF values from Redux typography settings.
+   * Also returns save status to idle when fresh settings are loaded.
+   */
   useEffect(() => {
     reset({
       titleFontSize: titleFontSize ?? undefined,
@@ -187,6 +249,9 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
       descriptionFontSizeMobile: descriptionFontSizeMobile ?? undefined,
       descriptionTextColor: descriptionTextColor ?? undefined,
     });
+
+    setFormTouched(false);
+    setSaveStatus("idle");
   }, [
     titleFontSize,
     titleFontSizeMobile,
@@ -196,6 +261,18 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
     descriptionTextColor,
     reset,
   ]);
+
+  /**
+   * Clears pending debounce when the component unmounts.
+   * This prevents a stale save from firing after switching panels/questions.
+   */
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <form onSubmit={(e) => e.preventDefault()}>
@@ -236,6 +313,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
             </Tooltip>
           </Box>
         </AccordionSummary>
+
         <AccordionDetails sx={{ px: { md: 2, xl: 1 }, pb: 2 }}>
           <Box
             sx={{
@@ -245,7 +323,6 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
               height: "100%",
               opacity: canEditQuestion ? 1 : 0.8,
               pointerEvents: canEditQuestion ? "auto" : "none",
-              // border: "2px solid red",
             }}
           >
             {/* === TEXT SETTINGS === */}
@@ -258,7 +335,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
               >
                 Title
               </Typography>
-              {/* Font Size */}
+
               <Box
                 sx={{
                   display: "flex",
@@ -275,7 +352,6 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     justifyContent: "space-between",
                     mb: 1,
                     width: "100%",
-                    // border: "2px solid blue",
                   }}
                 >
                   <Typography
@@ -298,6 +374,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     </Box>
                     Font size
                   </Typography>
+
                   <Box>
                     <FontSizeViewToggle
                       view={fontSizeView}
@@ -305,6 +382,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     />
                   </Box>
                 </Box>
+
                 <Box>
                   <FontSizeControl
                     key={titleKey}
@@ -313,99 +391,6 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     control={control}
                     canEdit={canEditQuestion}
                     markFormTouched={markFormTouched}
-                  />
-                </Box>
-              </Box>
-              {/* Text Color */}
-              <Box sx={{ mb: 1, ml: 1, width: "96%" }}>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    gap: 1,
-                    mb: 1,
-                    fontWeight: "bold",
-                    color: "#444D5C",
-                  }}
-                >
-                  <ColorLensIcon style={{ color: "#752FEC" }} /> Color
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    width: { md: "98%", xl: "96%" },
-                    height: "40px",
-                    marginLeft: { md: "2px", xl: 2 },
-                    gap: 4,
-                    // border: "2px solid blue",
-                  }}
-                >
-                  <Controller
-                    name="titleTextColor"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <ColorPicker
-                          color={field.value!}
-                          canEdit={canEditQuestion}
-                          setColor={(color: string) => {
-                            if (!canEditQuestion) return;
-                            field.onChange(color);
-                            markFormTouched();
-                            dispatch(
-                              updateTypographyField({
-                                key: "titleTextColor",
-                                value: color,
-                              }),
-                            );
-                          }}
-                        />
-                        <TextField
-                          type="text"
-                          variant="standard"
-                          value={field.value}
-                          disabled={!canEditQuestion}
-                          onChange={(e) => {
-                            let input = e.target.value;
-
-                            if (!input.startsWith("#")) {
-                              input = `#${input.replace(/^#*/, "")}`;
-                            }
-                            field.onChange(input);
-                            markFormTouched();
-                            dispatch(
-                              updateTypographyField({
-                                key: "titleTextColor",
-                                value: input,
-                              }),
-                            );
-                          }}
-                          placeholder={field.value?.toUpperCase()}
-                          InputProps={{
-                            disableUnderline: true,
-                          }}
-                          sx={{
-                            flex: 1,
-                            "& .MuiInputBase-root": {
-                              borderRadius: 1,
-                              width: { md: "92%", xl: "80%" },
-                              height: "36px",
-                              fontSize: "16px",
-                              backgroundColor: "#EEF2FF",
-                              fontWeight: "bold",
-                              color: "#6846E5",
-                              border: "none",
-                              boxShadow: "none",
-                              px: 1.25,
-                            },
-                          }}
-                        />
-                      </>
-                    )}
                   />
                 </Box>
               </Box>
@@ -421,7 +406,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
               >
                 Description
               </Typography>
-              {/* Font Size */}
+
               <Box
                 sx={{
                   display: "flex",
@@ -452,11 +437,15 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                   >
                     <Box sx={{ display: { md: "none" } }}>
                       <FiType
-                        style={{ marginBottom: "1%", color: "#752FEC" }}
+                        style={{
+                          marginBottom: "1%",
+                          color: "#752FEC",
+                        }}
                       />
                     </Box>
                     Font size
                   </Typography>
+
                   <Box>
                     <FontSizeViewToggle
                       view={fontSizeView}
@@ -464,6 +453,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     />
                   </Box>
                 </Box>
+
                 <Box>
                   <FontSizeControl
                     key={descriptionKey}
@@ -475,98 +465,12 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                   />
                 </Box>
               </Box>
-              {/* Description Color */}
-              <Box sx={{ mb: 1, ml: 1, width: "96%" }}>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    gap: 1,
-                    mb: 1,
-                    fontWeight: "bold",
-                    color: "#444D5C",
-                  }}
-                >
-                  <ColorLensIcon style={{ color: "#752FEC" }} /> Color
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    width: { md: "98%", xl: "96%" },
-                    height: "40px",
-                    marginLeft: { md: "2px", xl: 2 },
-                    gap: 4,
-                  }}
-                >
-                  <Controller
-                    name="descriptionTextColor"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <ColorPicker
-                          color={field.value!}
-                          canEdit={canEditQuestion}
-                          setColor={(color: string) => {
-                            if (!canEditQuestion) return;
-                            field.onChange(color);
-                            markFormTouched();
-                            dispatch(
-                              updateTypographyField({
-                                key: "descriptionTextColor",
-                                value: color,
-                              }),
-                            );
-                          }}
-                        />
-                        <TextField
-                          type="text"
-                          variant="standard"
-                          value={field.value}
-                          disabled={!canEditQuestion}
-                          onChange={(e) => {
-                            let input = e.target.value;
+            </Box>
 
-                            if (!input.startsWith("#")) {
-                              input = `#${input.replace(/^#*/, "")}`;
-                            }
-                            field.onChange(input);
-                            markFormTouched();
-                            dispatch(
-                              updateTypographyField({
-                                key: "descriptionTextColor",
-                                value: input,
-                              }),
-                            );
-                          }}
-                          placeholder={field.value?.toUpperCase()}
-                          InputProps={{
-                            disableUnderline: true,
-                          }}
-                          sx={{
-                            flex: 1,
-                            "& .MuiInputBase-root": {
-                              borderRadius: 1,
-                              width: { md: "92%", xl: "80%" },
-                              height: "36px",
-                              fontSize: "16px",
-                              backgroundColor: "#EEF2FF",
-                              fontWeight: "bold",
-                              color: "#6846E5",
-                              border: "none",
-                              boxShadow: "none",
-                              px: 1.25,
-                            },
-                          }}
-                        />
-                      </>
-                    )}
-                  />
-                </Box>
-              </Box>
+            <Box sx={{ mt: 1.5 }}>
+              <SettingSaveStatus
+                state={isSavingTypography ? "saving" : saveStatus}
+              />
             </Box>
           </Box>
         </AccordionDetails>

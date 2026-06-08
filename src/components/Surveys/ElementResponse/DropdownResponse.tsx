@@ -88,18 +88,19 @@ const DropdownResponse = ({ qID, display }: ElementProps) => {
         <DropdownPreview options={options} />
 
         <DropdownOptionCount count={options.length} />
+        {display === "desktop" && (
+          <DropdownOptionManager
+            qID={qID!}
+            options={options}
+            canReorder={canReorder}
+            canEdit={canEdit}
+            canDelete={canDelete}
+            onDragEnd={handleDragEnd}
+            onDelete={handleDeleteOption}
+          />
+        )}
 
-        <DropdownOptionManager
-          qID={qID!}
-          options={options}
-          canReorder={canReorder}
-          canEdit={canEdit}
-          canDelete={canDelete}
-          onDragEnd={handleDragEnd}
-          onDelete={handleDeleteOption}
-        />
-
-        {canCreate && (
+        {display === "desktop" && canCreate && (
           <DropdownManualAdd
             inputValue={inputValue}
             disabled={options.length >= MAX_DROPDOWN_OPTIONS}

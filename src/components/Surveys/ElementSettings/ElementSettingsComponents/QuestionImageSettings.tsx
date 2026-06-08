@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ImageIcon from "@mui/icons-material/Image";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; 
 import {
   Accordion,
   AccordionDetails,
@@ -96,7 +95,7 @@ const QuestionImageSettings = () => {
       sx={{
         width: "100%",
         backgroundColor: "#FFFFFF",
-        borderTop: "1px solid #E0E0E0",
+        borderBottom: "1px solid #E0E0E0",
         borderRadius: 0,
         boxShadow: "none",
       }}

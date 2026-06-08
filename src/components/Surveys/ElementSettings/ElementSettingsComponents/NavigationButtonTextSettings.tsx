@@ -22,6 +22,8 @@ import { usePermission } from "../../../../context/PermissionContext";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionSetting } from "../../../../utils/types";
 
+import SettingSaveStatus from "./SettingSaveStatus";
+
 const NavigationButtonTextSettings = () => {
   const dispatch = useDispatch();
   const { canEditQuestion } = usePermission();
@@ -32,8 +34,10 @@ const NavigationButtonTextSettings = () => {
 
   const { questionID, questionPreferences } = question || {};
 
-  const [updateQuestionPreferenceUIConfig] =
-    useUpdateQuestionPreferenceUIConfigMutation();
+  const [
+    updateQuestionPreferenceUIConfig,
+    { isLoading: isSavingNavigationButtonText },
+  ] = useUpdateQuestionPreferenceUIConfigMutation();
 
   const buttonText = questionPreferences?.uiConfig?.buttonText ?? "Next";
 
@@ -49,11 +53,29 @@ const NavigationButtonTextSettings = () => {
   const [formTouched, setFormTouched] = useState(false);
   const [inputLength, setInputLength] = useState(buttonText.length);
 
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "dirty" | "saving" | "saved" | "error"
+  >("idle");
+
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   /**
+   * Stores the last successfully saved backend value.
+   * This avoids comparing against Redux live-preview value,
+   * because Redux is updated immediately while typing.
+   */
+  const lastSavedButtonTextRef = useRef(buttonText);
+
+  /**
+   * Tracks the currently selected question.
+   * We only reset the form when the selected question changes,
+   * not every time Redux preview text changes while typing.
+   */
+  const activeQuestionIDRef = useRef<string | undefined>(undefined);
+
+  /**
    * Saves navigation button text into uiConfig.
-   * Existing uiConfig keys must be preserved so settings like timers/display modes
+   * Existing uiConfig keys are preserved so settings like timers/display modes
    * are not accidentally removed.
    */
   const onSubmit = async (data: QuestionSetting) => {
@@ -61,11 +83,14 @@ const NavigationButtonTextSettings = () => {
 
     try {
       const nextButtonText = data.buttonText?.trim() || "Next";
-      const currentButtonText =
-        questionPreferences?.uiConfig?.buttonText ?? "Next";
 
-      if (nextButtonText === currentButtonText) {
+      /**
+       * Compare against the last confirmed saved value,
+       * not the Redux preview value.
+       */
+      if (nextButtonText === lastSavedButtonTextRef.current) {
         setFormTouched(false);
+        setSaveStatus("idle");
         return;
       }
 
@@ -74,28 +99,43 @@ const NavigationButtonTextSettings = () => {
         buttonText: nextButtonText,
       };
 
+      setSaveStatus("saving");
+
       await updateQuestionPreferenceUIConfig({
         questionID,
         uiConfig,
       }).unwrap();
 
+      /**
+       * After successful save, update the saved baseline.
+       */
+      lastSavedButtonTextRef.current = nextButtonText;
+
       setFormTouched(false);
+      setSaveStatus("saved");
     } catch (error) {
       console.error("Navigation button text update error:", error);
+      setFormTouched(false);
+      setSaveStatus("error");
     }
   };
 
   /**
    * Marks this form as touched only after a real user edit.
+   * Save status appears only after the user changes something.
    */
   const markFormTouched = () => {
     if (!canEditQuestion) return;
-    if (!formTouched) setFormTouched(true);
+
+    if (!formTouched) {
+      setFormTouched(true);
+    }
+
+    setSaveStatus("dirty");
   };
 
   /**
    * Debounces save only after the user has edited the button text.
-   * Important: do not set formTouched=true inside this effect.
    */
   useEffect(() => {
     if (!formTouched || !canEditQuestion) return;
@@ -105,7 +145,11 @@ const NavigationButtonTextSettings = () => {
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      handleSubmit(onSubmit)();
+      handleSubmit(onSubmit, (errors) => {
+        console.error("Navigation button text validation error:", errors);
+        setFormTouched(false);
+        setSaveStatus("error");
+      })();
     }, 2500);
 
     return () => {
@@ -116,17 +160,37 @@ const NavigationButtonTextSettings = () => {
   }, [watchedValues, formTouched, canEditQuestion, handleSubmit]);
 
   /**
-   * Keeps form and character counter synced when selected question changes
-   * or when fresh backend data arrives.
+   * Hydrates the form only when the selected question changes.
+   * This prevents Redux live-preview updates from resetting saveStatus to idle.
    */
   useEffect(() => {
+    if (!questionID) return;
+
+    if (activeQuestionIDRef.current === questionID) return;
+
+    activeQuestionIDRef.current = questionID;
+    lastSavedButtonTextRef.current = buttonText;
+
     reset({
       buttonText,
     });
 
     setInputLength(buttonText.length);
     setFormTouched(false);
+    setSaveStatus("idle");
   }, [buttonText, questionID, reset]);
+
+  /**
+   * Clears pending debounce when the component unmounts.
+   * This prevents stale saves after switching questions or leaving the panel.
+   */
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -260,12 +324,22 @@ const NavigationButtonTextSettings = () => {
                         opacity: 1,
                         fontWeight: 400,
                       },
-                      mb: 2,
+                      mb: saveStatus === "idle" ? 2 : 1,
                     }}
                   />
                 )}
               />
             </Box>
+
+            {saveStatus !== "idle" && (
+              <Box sx={{ mt: 0.5 }}>
+                <SettingSaveStatus
+                  state={
+                    isSavingNavigationButtonText ? "saving" : saveStatus
+                  }
+                />
+              </Box>
+            )}
           </Box>
         </AccordionDetails>
       </Accordion>

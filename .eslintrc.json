@@ -71,6 +71,11 @@
     "react": {
       "version": "detect"
     },
-    "import/resolver": "foo"
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./tsconfig.json"
+      }
+    }
   }
 }

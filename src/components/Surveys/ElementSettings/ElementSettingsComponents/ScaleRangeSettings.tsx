@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; 
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
   AccordionDetails,
@@ -28,14 +28,17 @@ import { usePermission } from "../../../../context/PermissionContext";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionUIConfig } from "../../../../utils/types";
 
+import SettingSaveStatus from "./SettingSaveStatus";
+
 const ScaleRangeSettings = () => {
   const { canEditQuestion } = usePermission();
   const dispatch = useAppDispatch();
+
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion,
   );
 
-  const [updateQuestionPreferenceUIConfig] =
+  const [updateQuestionPreferenceUIConfig, { isLoading: isSavingScaleRange }] =
     useUpdateQuestionPreferenceUIConfigMutation();
 
   const { questionID, questionPreferences } = question || {};
@@ -60,39 +63,110 @@ const ScaleRangeSettings = () => {
   });
 
   const watchedValues = useWatch({ control });
+
   const [formTouched, setFormTouched] = useState(false);
+
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "dirty" | "saving" | "saved" | "error"
+  >("idle");
+
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  /**
+   * Stores the last successfully saved slider range.
+   * This avoids comparing against Redux live-preview values.
+   */
+  const lastSavedRangeRef = useRef({
+    minValue,
+    maxValue,
+  });
+
+  /**
+   * Tracks the selected question.
+   * This prevents Redux preview updates from resetting save status.
+   */
+  const activeQuestionIDRef = useRef<string | undefined>(undefined);
+
+  /**
+   * Saves slider range settings.
+   * Existing uiConfig keys are preserved so other config values are not deleted.
+   */
   const onSubmit = async (data: QuestionUIConfig) => {
-    if (!canEditQuestion) return;
+    if (!canEditQuestion || !questionID) return;
+
     try {
       if (
         data.minValue !== undefined &&
         data.maxValue !== undefined &&
         data.minValue > data.maxValue
       ) {
+        setSaveStatus("error");
+        setFormTouched(false);
         return;
       }
+
+      const nextMinValue = data.minValue;
+      const nextMaxValue = data.maxValue;
+
+      const hasNoChanges =
+        nextMinValue === lastSavedRangeRef.current.minValue &&
+        nextMaxValue === lastSavedRangeRef.current.maxValue;
+
+      /**
+       * If the user returns to the last saved range,
+       * hide the save indicator because there is nothing to save.
+       */
+      if (hasNoChanges) {
+        setFormTouched(false);
+        setSaveStatus("idle");
+        return;
+      }
+
+      setSaveStatus("saving");
 
       await updateQuestionPreferenceUIConfig({
         questionID,
         uiConfig: {
-          minValue: data.minValue,
-          maxValue: data.maxValue,
+          ...questionPreferences?.uiConfig,
+          minValue: nextMinValue,
+          maxValue: nextMaxValue,
         },
-      });
+      }).unwrap();
+
+      /**
+       * Update saved baseline only after backend success.
+       */
+      lastSavedRangeRef.current = {
+        minValue: nextMinValue,
+        maxValue: nextMaxValue,
+      };
 
       setFormTouched(false);
+      setSaveStatus("saved");
     } catch (error) {
-      console.error(error);
+      console.error("Scale range update error:", error);
+      setFormTouched(false);
+      setSaveStatus("error");
     }
   };
 
+  /**
+   * Marks the form dirty only after a real user change.
+   * This keeps the save indicator hidden on initial render.
+   */
   const markFormTouched = () => {
     if (!canEditQuestion) return;
-    if (!formTouched) setFormTouched(true);
+
+    if (!formTouched) {
+      setFormTouched(true);
+    }
+
+    setSaveStatus("dirty");
   };
 
+  /**
+   * Debounces slider range saves after the user edits min or max.
+   */
   useEffect(() => {
     if (!formTouched || !canEditQuestion) return;
 
@@ -101,20 +175,52 @@ const ScaleRangeSettings = () => {
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      handleSubmit(onSubmit)();
-      setFormTouched(false);
+      handleSubmit(onSubmit, (errors) => {
+        console.error("Scale range validation error:", errors);
+        setFormTouched(false);
+        setSaveStatus("error");
+      })();
     }, 2500);
-  }, [watchedValues, formTouched, handleSubmit]);
 
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, [watchedValues, formTouched, canEditQuestion, handleSubmit]);
+
+  /**
+   * Hydrates the form only when the selected question changes.
+   * This prevents local Redux preview updates from clearing the indicator.
+   */
   useEffect(() => {
+    if (!questionID) return;
+
+    if (activeQuestionIDRef.current === questionID) return;
+
+    activeQuestionIDRef.current = questionID;
+
+    lastSavedRangeRef.current = {
+      minValue,
+      maxValue,
+    };
+
     reset({
       minValue,
       maxValue,
     });
-  }, [minValue, maxValue, reset]);
 
+    setFormTouched(false);
+    setSaveStatus("idle");
+  }, [questionID, minValue, maxValue, reset]);
+
+  /**
+   * Keeps maxValue valid when minValue becomes greater than maxValue.
+   * Since this changes the form and Redux preview, it marks the form dirty.
+   */
   useEffect(() => {
     if (!canEditQuestion) return;
+
     const currentMax = getValues("maxValue");
 
     if (
@@ -122,10 +228,26 @@ const ScaleRangeSettings = () => {
       currentMax !== undefined &&
       watchedMin > currentMax
     ) {
-      setValue("maxValue", watchedMin);
+      setValue("maxValue", watchedMin, {
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+
       dispatch(updateMaxValue(watchedMin));
+      markFormTouched();
     }
-  }, [watchedMin]);
+  }, [watchedMin, canEditQuestion, getValues, setValue, dispatch]);
+
+  /**
+   * Clears pending debounce on unmount.
+   */
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const rangeOptions = Array.from({ length: 10 }, (_, i) => i + 1);
 
@@ -217,13 +339,20 @@ const ScaleRangeSettings = () => {
                       textOverflow: "ellipsis",
                       cursor: canEditQuestion ? "pointer" : "not-allowed",
                     },
-                    mb: 2,
+                    mb: saveStatus === "idle" ? 2 : 1,
                   }}
                   onChange={(event) => {
                     if (!canEditQuestion) return;
+
                     const value = Number(event.target.value);
+
                     field.onChange(value);
+
+                    /**
+                     * Updates Redux immediately for live canvas preview.
+                     */
                     dispatch(updateMinValue(value));
+
                     markFormTouched();
                   }}
                 >
@@ -242,7 +371,7 @@ const ScaleRangeSettings = () => {
               fontSize: "20px",
               fontWeight: 600,
               color: "#3F3F46",
-              marginBottom: "8%",
+              marginBottom: saveStatus === "idle" ? "8%" : "4%",
             }}
           >
             to
@@ -293,13 +422,20 @@ const ScaleRangeSettings = () => {
                       opacity: canEditQuestion ? 1 : 0.8,
                       cursor: canEditQuestion ? "pointer" : "not-allowed",
                     },
-                    mb: 2,
+                    mb: saveStatus === "idle" ? 2 : 1,
                   }}
                   onChange={(event) => {
                     if (!canEditQuestion) return;
+
                     const value = Number(event.target.value);
+
                     field.onChange(value);
+
+                    /**
+                     * Updates Redux immediately for live canvas preview.
+                     */
                     dispatch(updateMaxValue(value));
+
                     markFormTouched();
                   }}
                 >
@@ -318,6 +454,14 @@ const ScaleRangeSettings = () => {
             />
           </Box>
         </Box>
+
+        {saveStatus !== "idle" && (
+          <Box sx={{ mt: 0.5 }}>
+            <SettingSaveStatus
+              state={isSavingScaleRange ? "saving" : saveStatus}
+            />
+          </Box>
+        )}
       </AccordionDetails>
     </Accordion>
   );

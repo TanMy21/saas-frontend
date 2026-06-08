@@ -20,13 +20,16 @@ import { usePermission } from "../../../../context/PermissionContext";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionUIConfig } from "../../../../utils/types";
 
+import SettingSaveStatus from "./SettingSaveStatus";
+
 const NumberInputRangeSettings = () => {
   const { canEditQuestion } = usePermission();
+
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion,
   );
 
-  const [updateQuestionPreferenceUIConfig] =
+  const [updateQuestionPreferenceUIConfig, { isLoading: isSavingNumberRange }] =
     useUpdateQuestionPreferenceUIConfigMutation();
 
   const { questionID, questionPreferences } = question || {};
@@ -51,39 +54,109 @@ const NumberInputRangeSettings = () => {
   });
 
   const watchedValues = useWatch({ control });
+
   const [formTouched, setFormTouched] = useState(false);
+
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "dirty" | "saving" | "saved" | "error"
+  >("idle");
+
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  /**
+   * Stores the last successfully saved input range.
+   * This prevents local form changes from being treated as backend-saved values.
+   */
+  const lastSavedRangeRef = useRef({
+    minValue,
+    maxValue,
+  });
+
+  /**
+   * Tracks the currently selected question.
+   * This prevents save status from resetting during normal field edits.
+   */
+  const activeQuestionIDRef = useRef<string | undefined>(undefined);
+
+  /**
+   * Saves number input range settings.
+   * Existing uiConfig keys are preserved so other settings are not removed.
+   */
   const onSubmit = async (data: QuestionUIConfig) => {
-    if (!canEditQuestion) return;
+    if (!canEditQuestion || !questionID) return;
+
     try {
       if (
         data.minValue !== undefined &&
         data.maxValue !== undefined &&
         data.minValue > data.maxValue
       ) {
+        setSaveStatus("error");
         return;
       }
+
+      const nextMinValue = data.minValue;
+      const nextMaxValue = data.maxValue;
+
+      const hasNoChanges =
+        nextMinValue === lastSavedRangeRef.current.minValue &&
+        nextMaxValue === lastSavedRangeRef.current.maxValue;
+
+      /**
+       * If the user edits and returns to the last saved values,
+       * hide the indicator again because there is nothing to save.
+       */
+      if (hasNoChanges) {
+        setFormTouched(false);
+        setSaveStatus("idle");
+        return;
+      }
+
+      setSaveStatus("saving");
 
       await updateQuestionPreferenceUIConfig({
         questionID,
         uiConfig: {
-          minValue: data.minValue,
-          maxValue: data.maxValue,
+          ...questionPreferences?.uiConfig,
+          minValue: nextMinValue,
+          maxValue: nextMaxValue,
         },
-      });
+      }).unwrap();
+
+      /**
+       * Update the saved baseline only after backend success.
+       */
+      lastSavedRangeRef.current = {
+        minValue: nextMinValue,
+        maxValue: nextMaxValue,
+      };
 
       setFormTouched(false);
+      setSaveStatus("saved");
     } catch (error) {
-      console.error(error);
+      console.error("Number input range update error:", error);
+      setFormTouched(false);
+      setSaveStatus("error");
     }
   };
 
+  /**
+   * Marks the form as changed after a real user edit.
+   * This makes the save indicator appear only after editing.
+   */
   const markFormTouched = () => {
     if (!canEditQuestion) return;
-    if (!formTouched) setFormTouched(true);
+
+    if (!formTouched) {
+      setFormTouched(true);
+    }
+
+    setSaveStatus("dirty");
   };
 
+  /**
+   * Debounces range saves after the user edits min or max.
+   */
   useEffect(() => {
     if (!formTouched || !canEditQuestion) return;
 
@@ -92,22 +165,52 @@ const NumberInputRangeSettings = () => {
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      handleSubmit(onSubmit)();
-      setFormTouched(false);
+      handleSubmit(onSubmit, (errors) => {
+        console.error("Number input range validation error:", errors);
+        setFormTouched(false);
+        setSaveStatus("error");
+      })();
     }, 2500);
-  }, [watchedValues, formTouched, handleSubmit]);
 
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, [watchedValues, formTouched, canEditQuestion, handleSubmit]);
+
+  /**
+   * Hydrates the form only when the selected question changes.
+   * This keeps the indicator hidden initially and avoids reset flicker.
+   */
   useEffect(() => {
-    if (minValue !== undefined && maxValue !== undefined) {
-      reset({
-        minValue,
-        maxValue,
-      });
-    }
-  }, [minValue, maxValue, reset]);
+    if (!questionID) return;
 
+    if (activeQuestionIDRef.current === questionID) return;
+
+    activeQuestionIDRef.current = questionID;
+
+    lastSavedRangeRef.current = {
+      minValue,
+      maxValue,
+    };
+
+    reset({
+      minValue,
+      maxValue,
+    });
+
+    setFormTouched(false);
+    setSaveStatus("idle");
+  }, [questionID, minValue, maxValue, reset]);
+
+  /**
+   * Keeps maxValue valid when minValue becomes greater than maxValue.
+   * Because this changes form data, it also marks the form dirty.
+   */
   useEffect(() => {
     if (!canEditQuestion) return;
+
     const currentMax = getValues("maxValue");
 
     if (
@@ -115,9 +218,25 @@ const NumberInputRangeSettings = () => {
       currentMax !== undefined &&
       watchedMin > currentMax
     ) {
-      setValue("maxValue", watchedMin);
+      setValue("maxValue", watchedMin, {
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+
+      markFormTouched();
     }
-  }, [watchedMin]);
+  }, [watchedMin, canEditQuestion, getValues, setValue]);
+
+  /**
+   * Clears pending debounce on unmount.
+   */
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <Accordion
@@ -176,7 +295,7 @@ const NumberInputRangeSettings = () => {
               justifyContent: "flex-start",
               alignItems: { xs: "flex-start", md: "flex-start", xl: "center" },
               width: "100%",
-              miHeight: "48px",
+              minHeight: "48px",
               gap: { md: 1 },
             }}
           >
@@ -251,9 +370,15 @@ const NumberInputRangeSettings = () => {
                       },
                     }}
                     {...field}
+                    value={field.value ?? ""}
                     onChange={(event) => {
                       if (!canEditQuestion) return;
-                      const value = Number(event.target.value);
+
+                      const value =
+                        event.target.value === ""
+                          ? undefined
+                          : Number(event.target.value);
+
                       field.onChange(value);
                       markFormTouched();
                     }}
@@ -354,9 +479,15 @@ const NumberInputRangeSettings = () => {
                       },
                     }}
                     {...field}
+                    value={field.value ?? ""}
                     onChange={(event) => {
                       if (!canEditQuestion) return;
-                      const value = Number(event.target.value);
+
+                      const value =
+                        event.target.value === ""
+                          ? undefined
+                          : Number(event.target.value);
+
                       field.onChange(value);
                       markFormTouched();
                     }}
@@ -365,10 +496,17 @@ const NumberInputRangeSettings = () => {
               />
             </Box>
           </Box>
+
+          {saveStatus !== "idle" && (
+            <Box sx={{ mt: 1 }}>
+              <SettingSaveStatus
+                state={isSavingNumberRange ? "saving" : saveStatus}
+              />
+            </Box>
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>
   );
 };
-
 export default NumberInputRangeSettings;

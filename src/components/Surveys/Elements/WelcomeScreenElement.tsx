@@ -23,6 +23,8 @@ const WelcomeScreenElement = ({ display, showQuestion }: ElementProps) => {
     buttonText: "Next",
   };
 
+
+
   return (
     <ScreenRoot>
       <CenteredStack

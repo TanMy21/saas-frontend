@@ -1,5 +1,3 @@
-import { useRef } from "react";
-
 import { Box } from "@mui/material";
 
 import { RootState } from "../../app/store";
@@ -10,10 +8,10 @@ import DevicePreview from "../DevicePreview";
 
 const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
     // shallowEqual
   );
-  const canvasRef = useRef<HTMLDivElement | null>(null);
+
   const backgroundColor =
     question?.questionPreferences?.questionBackgroundColor;
 
@@ -65,6 +63,9 @@ const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
               qType={question?.type}
               display={display}
               qImage={question?.questionImage}
+              showQuestion={
+                question?.showQuestion ?? question?.Model3D?.showQuestion
+              }
             />
           )}
         </Box>
