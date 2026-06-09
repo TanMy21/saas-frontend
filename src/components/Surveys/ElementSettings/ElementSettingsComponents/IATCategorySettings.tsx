@@ -52,25 +52,49 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
 
   const [saveStatus, setSaveStatus] = useState<SettingSaveState>("idle");
   const [formTouched, setFormTouched] = useState(false);
+
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [updateQuestionPreferenceUIConfig, { isLoading: isSavingIAT }] =
     useUpdateQuestionPreferenceUIConfigMutation();
 
+  const formDefaults = getIATCategoryDefaults(uiConfig);
+
   const { control, reset, handleSubmit } = useForm<IATCategorySettingsForm>({
-    defaultValues: getIATCategoryDefaults(uiConfig),
+    defaultValues: formDefaults,
   });
 
   const watchedValues = useWatch({ control });
 
   /**
-   * Hydrates form from saved uiConfig.
-   * Does not reset while the creator has unsaved local edits.
+   * Stores the last confirmed saved IAT category settings.
+   * This lets us show the save indicator only when there is an actual change.
+   */
+  const lastSavedIATCategoryRef = useRef<IATCategorySettingsForm>(formDefaults);
+
+  /**
+   * Tracks the active question.
+   * This prevents Redux live-preview updates from resetting the form/status while editing.
+   */
+  const activeQuestionIDRef = useRef<string | undefined>(undefined);
+
+  /**
+   * Hydrates form from saved uiConfig only when the selected question changes.
+   * This keeps the save indicator hidden on initial render.
    */
   useEffect(() => {
-    if (formTouched) return;
+    if (!questionID) return;
 
-    reset(getIATCategoryDefaults(uiConfig));
+    if (activeQuestionIDRef.current === questionID) return;
+
+    activeQuestionIDRef.current = questionID;
+
+    const nextDefaults = getIATCategoryDefaults(uiConfig);
+
+    lastSavedIATCategoryRef.current = nextDefaults;
+
+    reset(nextDefaults);
+    setFormTouched(false);
     setSaveStatus("idle");
   }, [
     questionID,
@@ -78,15 +102,34 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
     uiConfig?.iatRightCategoryLabel,
     uiConfig?.iatLeftKey,
     uiConfig?.iatRightKey,
-    formTouched,
     reset,
   ]);
 
   /**
-   * Marks this panel as dirty only when the user can edit.
+   * Checks whether IAT category settings actually changed from the last saved backend state.
    */
-  const markFormTouched = () => {
+  const hasActualIATCategoryChange = (data: IATCategorySettingsForm) => {
+    const lastSaved = lastSavedIATCategoryRef.current;
+
+    return (
+      data.iatLeftCategoryLabel !== lastSaved.iatLeftCategoryLabel ||
+      data.iatRightCategoryLabel !== lastSaved.iatRightCategoryLabel ||
+      data.iatLeftKey !== lastSaved.iatLeftKey ||
+      data.iatRightKey !== lastSaved.iatRightKey
+    );
+  };
+
+  /**
+   * Marks this panel as dirty only when values differ from the saved baseline.
+   */
+  const markFormTouched = (nextData?: IATCategorySettingsForm) => {
     if (!canEditQuestion) return;
+
+    if (nextData && !hasActualIATCategoryChange(nextData)) {
+      setFormTouched(false);
+      setSaveStatus("idle");
+      return;
+    }
 
     setFormTouched(true);
     setSaveStatus("dirty");
@@ -112,9 +155,16 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
 
   /**
    * Persists IAT category settings into questionPreferences.uiConfig.
+   * Saves only when there is an actual change from the saved baseline.
    */
   const onSubmit = async (data: IATCategorySettingsForm) => {
     if (!canEditQuestion || !questionID) return;
+
+    if (!hasActualIATCategoryChange(data)) {
+      setFormTouched(false);
+      setSaveStatus("idle");
+      return;
+    }
 
     const nextUiConfig = buildIATCategoryUiConfig(data, uiConfig);
 
@@ -136,10 +186,16 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
         }),
       );
 
+      /**
+       * Update saved baseline only after backend confirms the save.
+       */
+      lastSavedIATCategoryRef.current = data;
+
       setFormTouched(false);
       setSaveStatus("saved");
     } catch (error) {
       console.error("IAT category settings update error:", error);
+      setFormTouched(false);
       setSaveStatus("error");
     }
   };
@@ -155,7 +211,11 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      handleSubmit(onSubmit)();
+      handleSubmit(onSubmit, (errors) => {
+        console.error("IAT category settings validation error:", errors);
+        setFormTouched(false);
+        setSaveStatus("error");
+      })();
     }, 1200);
 
     return () => {
@@ -164,6 +224,17 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
       }
     };
   }, [watchedValues, formTouched, canEditQuestion, handleSubmit]);
+
+  /**
+   * Clears pending debounce when the component unmounts.
+   */
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <Accordion
@@ -198,8 +269,6 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
             color: "#453F46",
           }}
         >
-          <KeyboardAltOutlinedIcon sx={{ color: "#7C3AED", fontSize: 20 }} />
-
           <Tooltip title="Configure IAT left/right categories and response keys">
             <Typography>IAT categories</Typography>
           </Tooltip>
@@ -227,19 +296,31 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
                 fullWidth
                 variant="standard"
                 disabled={!canEditQuestion}
-                value={field.value}
+                value={field.value ?? ""}
                 onChange={(event) => {
+                  if (!canEditQuestion) return;
+
                   const value = event.target.value.slice(
                     0,
                     MAX_IAT_CATEGORY_LABEL_LENGTH,
                   );
 
                   field.onChange(value);
-                  markFormTouched();
 
                   updateIATPreview({
                     iatLeftCategoryLabel: value,
                   });
+
+                  /**
+                   * Builds the next expected form state so actual-change detection
+                   * does not depend on React Hook Form updating synchronously.
+                   */
+                  const nextData = {
+                    ...(watchedValues as IATCategorySettingsForm),
+                    iatLeftCategoryLabel: value,
+                  };
+
+                  markFormTouched(nextData);
                 }}
                 InputProps={{
                   // Removes the default MUI standard underline.
@@ -247,7 +328,8 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
 
                   endAdornment: (
                     <InputAdornment position="end">
-                      {field.value.length}/{MAX_IAT_CATEGORY_LABEL_LENGTH}
+                      {(field.value ?? "").length}/
+                      {MAX_IAT_CATEGORY_LABEL_LENGTH}
                     </InputAdornment>
                   ),
                 }}
@@ -289,19 +371,31 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
                 fullWidth
                 variant="standard"
                 disabled={!canEditQuestion}
-                value={field.value}
+                value={field.value ?? ""}
                 onChange={(event) => {
+                  if (!canEditQuestion) return;
+
                   const value = event.target.value.slice(
                     0,
                     MAX_IAT_CATEGORY_LABEL_LENGTH,
                   );
 
                   field.onChange(value);
-                  markFormTouched();
 
                   updateIATPreview({
                     iatRightCategoryLabel: value,
                   });
+
+                  /**
+                   * Builds the next expected form state so actual-change detection
+                   * does not depend on React Hook Form updating synchronously.
+                   */
+                  const nextData = {
+                    ...(watchedValues as IATCategorySettingsForm),
+                    iatRightCategoryLabel: value,
+                  };
+
+                  markFormTouched(nextData);
                 }}
                 InputProps={{
                   // Removes the default black underline from MUI standard variant.
@@ -309,7 +403,8 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
 
                   endAdornment: (
                     <InputAdornment position="end">
-                      {field.value.length}/{MAX_IAT_CATEGORY_LABEL_LENGTH}
+                      {(field.value ?? "").length}/
+                      {MAX_IAT_CATEGORY_LABEL_LENGTH}
                     </InputAdornment>
                   ),
                 }}
@@ -343,11 +438,12 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
             )}
           />
 
-          <SettingSaveStatus state={isSavingIAT ? "saving" : saveStatus} />
+          {saveStatus !== "idle" && (
+            <SettingSaveStatus state={isSavingIAT ? "saving" : saveStatus} />
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>
   );
 };
-
 export default IATCategorySettings;

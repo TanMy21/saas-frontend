@@ -68,20 +68,44 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
   const [updateQuestionPreferenceUIConfig, { isLoading: isSavingConceptFit }] =
     useUpdateQuestionPreferenceUIConfigMutation();
 
+  const formDefaults = getConceptFitDefaults(uiConfig);
+
   const { control, reset, handleSubmit } = useForm<ConceptFitSettingsForm>({
-    defaultValues: getConceptFitDefaults(uiConfig),
+    defaultValues: formDefaults,
   });
 
   const watchedValues = useWatch({ control });
 
   /**
-   * Hydrates the form from persisted uiConfig.
-   * Does not reset while the user has unsaved local edits.
+   * Stores the last confirmed saved Concept Fit settings.
+   * This lets us show the save indicator only when there is an actual change.
+   */
+  const lastSavedConceptFitSettingsRef =
+    useRef<ConceptFitSettingsForm>(formDefaults);
+
+  /**
+   * Tracks the active selected question.
+   * This prevents Redux live-preview changes from resetting the form/status while editing.
+   */
+  const activeQuestionIDRef = useRef<string | undefined>(undefined);
+
+  /**
+   * Hydrates the form only when the selected question changes.
+   * This keeps the save indicator hidden on initial render.
    */
   useEffect(() => {
-    if (formTouched) return;
+    if (!questionID) return;
 
-    reset(getConceptFitDefaults(uiConfig));
+    if (activeQuestionIDRef.current === questionID) return;
+
+    activeQuestionIDRef.current = questionID;
+
+    const nextDefaults = getConceptFitDefaults(uiConfig);
+
+    lastSavedConceptFitSettingsRef.current = nextDefaults;
+
+    reset(nextDefaults);
+    setFormTouched(false);
     setSaveStatus("idle");
   }, [
     questionID,
@@ -89,15 +113,34 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
     uiConfig?.randomizeAttributes,
     uiConfig?.autoAdvanceOnAnswer,
     uiConfig?.timeLimitMs,
-    formTouched,
     reset,
   ]);
 
   /**
-   * Marks this settings panel as dirty when user edits fields.
+   * Checks whether Concept Fit settings actually changed from the last saved backend state.
    */
-  const markFormTouched = () => {
+  const hasActualConceptFitChange = (data: ConceptFitSettingsForm) => {
+    const lastSaved = lastSavedConceptFitSettingsRef.current;
+
+    return (
+      data.conceptDisplayMode !== lastSaved.conceptDisplayMode ||
+      data.randomizeAttributes !== lastSaved.randomizeAttributes ||
+      data.autoAdvanceOnAnswer !== lastSaved.autoAdvanceOnAnswer ||
+      data.timeLimitSeconds !== lastSaved.timeLimitSeconds
+    );
+  };
+
+  /**
+   * Marks this settings panel as dirty only when values differ from the saved baseline.
+   */
+  const markFormTouched = (nextData?: ConceptFitSettingsForm) => {
     if (!canEditQuestion) return;
+
+    if (nextData && !hasActualConceptFitChange(nextData)) {
+      setFormTouched(false);
+      setSaveStatus("idle");
+      return;
+    }
 
     setFormTouched(true);
     setSaveStatus("dirty");
@@ -125,9 +168,16 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
 
   /**
    * Persists Concept Fit display config into questionPreferences.uiConfig.
+   * Saves only when there is an actual change.
    */
   const onSubmit = async (data: ConceptFitSettingsForm) => {
     if (!canEditQuestion || !questionID) return;
+
+    if (!hasActualConceptFitChange(data)) {
+      setFormTouched(false);
+      setSaveStatus("idle");
+      return;
+    }
 
     const nextUiConfig = buildConceptFitUiConfig(data, uiConfig);
 
@@ -149,10 +199,16 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
         }),
       );
 
+      /**
+       * Update saved baseline only after backend confirms the save.
+       */
+      lastSavedConceptFitSettingsRef.current = data;
+
       setFormTouched(false);
       setSaveStatus("saved");
     } catch (error) {
       console.error("Concept fit settings update error:", error);
+      setFormTouched(false);
       setSaveStatus("error");
     }
   };
@@ -168,7 +224,11 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      handleSubmit(onSubmit)();
+      handleSubmit(onSubmit, (errors) => {
+        console.error("Concept fit settings validation error:", errors);
+        setFormTouched(false);
+        setSaveStatus("error");
+      })();
     }, 1200);
 
     return () => {
@@ -177,6 +237,17 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
       }
     };
   }, [watchedValues, formTouched, canEditQuestion, handleSubmit]);
+
+  /**
+   * Clears pending debounce when the component unmounts.
+   */
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <Accordion
@@ -223,6 +294,8 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
           onSubmit={(event) => event.preventDefault()}
           sx={{
             display: "flex",
+            width:"94%",
+            mx:"auto",
             flexDirection: "column",
             gap: 2,
             opacity: canEditQuestion ? 1 : 0.8,
@@ -250,24 +323,45 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
                     disabled={!canEditQuestion}
                     value={field.value}
                     onChange={(event) => {
+                      if (!canEditQuestion) return;
+
                       const value = event.target.value as ConceptFitDisplayMode;
 
                       field.onChange(value);
-                      markFormTouched();
 
+                      /**
+                       * Updates Redux immediately so the canvas preview changes live.
+                       */
                       dispatch(setConceptFitDisplayMode(value));
 
                       updateConceptFitPreview({
                         conceptDisplayMode: value,
                       });
+
+                      const nextData = {
+                        ...(watchedValues as ConceptFitSettingsForm),
+                        conceptDisplayMode: value,
+                      };
+
+                      markFormTouched(nextData);
                     }}
                     sx={{
-                      height: 42,
-                      borderRadius: "8px",
-                      fontSize: "14px",
-                      backgroundColor: "#F3F4F6",
+                      bgcolor: "#F3F4F6",
+                      borderRadius: 1,
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
                       "& .MuiSelect-select": {
-                        py: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        py: 1.2,
                       },
                     }}
                   >
@@ -300,28 +394,38 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
 
                 <TextField
                   type="number"
-                  fullWidth
+                  variant="standard"
                   disabled={!canEditQuestion}
-                  value={field.value}
+                  value={field.value ?? ""}
                   onChange={(event) => {
+                    if (!canEditQuestion) return;
+
                     /**
                      * Keeps Concept Fit timer between 1 and 30 seconds.
                      */
                     const value = Number(event.target.value);
+
                     const safeValue = Number.isNaN(value)
                       ? DEFAULT_TIMER_SECONDS
                       : value;
+
                     const clampedValue = Math.min(
                       Math.max(safeValue || 1, 1),
                       30,
                     );
 
                     field.onChange(clampedValue);
-                    markFormTouched();
 
                     updateConceptFitPreview({
                       timeLimitMs: clampedValue * 1000,
                     });
+
+                    const nextData = {
+                      ...(watchedValues as ConceptFitSettingsForm),
+                      timeLimitSeconds: clampedValue,
+                    };
+
+                    markFormTouched(nextData);
                   }}
                   inputProps={{
                     min: 1,
@@ -330,16 +434,35 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
                   }}
                   InputProps={{
                     endAdornment: (
-                      <InputAdornment position="end">sec</InputAdornment>
+                      <InputAdornment
+                        position="end"
+                        sx={{ color: "#6846E5", marginBottom: 0.5 }}
+                      >
+                        sec
+                      </InputAdornment>
                     ),
+                    disableUnderline: true,
                   }}
                   sx={{
+                    width: "100%",
                     "& .MuiInputBase-root": {
-                      borderRadius: "8px",
-                      height: "42px",
-                      fontSize: "15px",
-                      backgroundColor: "#F3F4F6",
-                      px: 1.5,
+                      borderRadius: 1,
+                      backgroundColor: "#EEF2FF",
+                      height: "36px",
+                      minWidth: 80,
+                      width: "100%",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      color: "#6846E5",
+                      boxShadow: "none",
+                      px: 1.25,
+                    },
+                    "& .MuiInputBase-input": {
+                      lineHeight: "1.5",
+                      fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
+                      fontWeight: 700,
+                      color: "#6846E5",
+                      cursor: canEditQuestion ? "text" : "not-allowed",
                     },
                   }}
                 />
@@ -347,38 +470,48 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
             )}
           />
 
-          <Controller
+          {/* <Controller
             name="randomizeAttributes"
             control={control}
             render={({ field }) => (
               <FormControlLabel
                 control={
                   <Switch
-                    checked={field.value}
+                    checked={Boolean(field.value)}
                     disabled={!canEditQuestion}
                     onChange={(event) => {
+                      if (!canEditQuestion) return;
+
                       const checked = event.target.checked;
 
                       field.onChange(checked);
-                      markFormTouched();
+
                       updateConceptFitPreview({
                         randomizeAttributes: checked,
                       });
+
+                      const nextData = {
+                        ...(watchedValues as ConceptFitSettingsForm),
+                        randomizeAttributes: checked,
+                      };
+
+                      markFormTouched(nextData);
                     }}
                   />
                 }
                 label="Randomize attributes"
               />
             )}
-          />
+          /> */}
 
-          <SettingSaveStatus
-            state={isSavingConceptFit ? "saving" : saveStatus}
-          />
+          {saveStatus !== "idle" && (
+            <SettingSaveStatus
+              state={isSavingConceptFit ? "saving" : saveStatus}
+            />
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>
   );
 };
-
 export default ConceptFitDisplaySettings;

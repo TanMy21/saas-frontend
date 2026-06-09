@@ -90,18 +90,46 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
   const [localValues, setLocalValues] = useState<Record<string, string>>({});
 
   /**
-   * Keeps display mode form synced with persisted uiConfig.
-   * Does not reset while the user has unsaved display mode edits.
+   * Stores the last saved display mode config.
+   * This prevents Redux live-preview updates from being treated as saved backend state.
+   */
+  const lastSavedDisplayModeRef = useRef(getTimedChoiceDefaults(uiConfig));
+
+  /**
+   * Stores the last saved option text per optionID.
+   * This lets option blur/Enter save only when text actually changed.
+   */
+  const lastSavedOptionTextRef = useRef<Record<string, string>>({});
+
+  /**
+   * Tracks the selected question.
+   * This prevents form reset/status reset during live preview edits.
+   */
+  const activeQuestionIDRef = useRef<string | undefined>(undefined);
+
+  /**
+   * Hydrates display mode form only when the selected question changes.
+   * This keeps the save indicator hidden initially.
    */
   useEffect(() => {
-    if (formTouched) return;
+    if (!questionID) return;
 
-    reset(getTimedChoiceDefaults(uiConfig));
+    if (activeQuestionIDRef.current === questionID) return;
+
+    activeQuestionIDRef.current = questionID;
+
+    const nextDefaults = getTimedChoiceDefaults(uiConfig);
+
+    lastSavedDisplayModeRef.current = nextDefaults;
+
+    reset(nextDefaults);
+    setFormTouched(false);
     setSaveStatus("idle");
-  }, [questionID, uiConfig?.timedChoiceDisplayMode, formTouched, reset]);
+  }, [questionID, uiConfig?.timedChoiceDisplayMode, reset]);
 
   /**
    * Keeps local input state synced with fetched option rows.
+   * Also updates the saved baseline for option labels.
    */
   useEffect(() => {
     const nextValues = sortedOptions.reduce<Record<string, string>>(
@@ -113,10 +141,21 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
     );
 
     setLocalValues(nextValues);
+    lastSavedOptionTextRef.current = nextValues;
   }, [options]);
 
   /**
-   * Marks display mode settings as dirty.
+   * Checks if display mode has actually changed from the last saved value.
+   */
+  const hasActualDisplayModeChange = (data: TimedChoiceSettingsForm) => {
+    return (
+      data.timedChoiceDisplayMode !==
+      lastSavedDisplayModeRef.current.timedChoiceDisplayMode
+    );
+  };
+
+  /**
+   * Marks display mode settings as dirty only when there is a real user edit.
    */
   const markFormTouched = () => {
     if (!canEditQuestion) return;
@@ -147,9 +186,16 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
 
   /**
    * Persists Timed Choice display mode into questionPreferences.uiConfig.
+   * Saves only when the display mode actually changed.
    */
   const onSubmitDisplayMode = async (data: TimedChoiceSettingsForm) => {
     if (!canEditQuestion || !questionID) return;
+
+    if (!hasActualDisplayModeChange(data)) {
+      setFormTouched(false);
+      setSaveStatus("idle");
+      return;
+    }
 
     const nextUiConfig = buildTimedChoiceUiConfig(data, uiConfig);
 
@@ -171,6 +217,11 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
         }),
       );
 
+      /**
+       * Update saved baseline only after backend confirms the save.
+       */
+      lastSavedDisplayModeRef.current = data;
+
       setFormTouched(false);
       setSaveStatus("saved");
     } catch (error) {
@@ -191,7 +242,11 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      handleSubmit(onSubmitDisplayMode)();
+      handleSubmit(onSubmitDisplayMode, (errors) => {
+        console.error("Timed choice display mode validation error:", errors);
+        setFormTouched(false);
+        setSaveStatus("error");
+      })();
     }, 1200);
 
     return () => {
@@ -203,6 +258,7 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
 
   /**
    * Saves text and value together for a timed-choice option.
+   * Saves only when option text actually changed.
    */
   const handleSaveOption = async (option: OptionType) => {
     if (!canEdit) return;
@@ -215,8 +271,15 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
       return;
     }
 
-    if (nextText === option.text) {
-      setSaveStatus("saved");
+    const lastSavedText =
+      lastSavedOptionTextRef.current[option.optionID] ?? option.text ?? "";
+
+    /**
+     * If the user focuses/blurs without changing text,
+     * keep the indicator hidden.
+     */
+    if (nextText === lastSavedText) {
+      setSaveStatus("idle");
       return;
     }
 
@@ -229,6 +292,14 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
         value: nextText,
       }).unwrap();
 
+      /**
+       * Update saved baseline only after successful option save.
+       */
+      lastSavedOptionTextRef.current = {
+        ...lastSavedOptionTextRef.current,
+        [option.optionID]: nextText,
+      };
+
       setSaveStatus("saved");
     } catch (error) {
       setSaveStatus("error");
@@ -236,6 +307,40 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
       showToast.error("Failed to update timed choice option.");
     }
   };
+
+  /**
+   * Marks option editing as dirty only when the value differs
+   * from the last saved option text.
+   */
+  const handleOptionTextChange = (option: OptionType, value: string) => {
+    const nextValue = value.slice(0, MAX_TIMED_OPTION_LENGTH);
+
+    setLocalValues((prev) => ({
+      ...prev,
+      [option.optionID]: nextValue,
+    }));
+
+    const lastSavedText =
+      lastSavedOptionTextRef.current[option.optionID] ?? option.text ?? "";
+
+    if (nextValue.trim() === lastSavedText) {
+      setSaveStatus("idle");
+      return;
+    }
+
+    setSaveStatus("dirty");
+  };
+
+  /**
+   * Clears pending debounce on unmount.
+   */
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <Accordion
@@ -310,7 +415,6 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
                         .value as TimedChoiceDisplayMode;
 
                       field.onChange(value);
-                      markFormTouched();
 
                       /**
                        * Updates Redux immediately so canvas switches card mode.
@@ -320,6 +424,17 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
                       updateTimedChoicePreview({
                         timedChoiceDisplayMode: value,
                       });
+
+                      if (
+                        value ===
+                        lastSavedDisplayModeRef.current.timedChoiceDisplayMode
+                      ) {
+                        setFormTouched(false);
+                        setSaveStatus("idle");
+                        return;
+                      }
+
+                      markFormTouched();
                     }}
                     sx={{
                       bgcolor: "#F3F4F6",
@@ -361,15 +476,6 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
               pointerEvents: canEdit ? "auto" : "none",
             }}
           >
-            {sortedOptions.length < 2 && (
-              <Typography
-                sx={{ fontSize: 13, color: "#B45309", lineHeight: 1.6 }}
-              >
-                Timed choice needs exactly 2 options. Add missing options from
-                the canvas first.
-              </Typography>
-            )}
-
             {sortedOptions.map((option, index) => {
               const label = index === 0 ? "Option A" : "Option B";
               const value = localValues[option.optionID] || "";
@@ -393,15 +499,7 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
                     disabled={!canEdit}
                     value={value}
                     onChange={(event) => {
-                      const nextValue = event.target.value.slice(
-                        0,
-                        MAX_TIMED_OPTION_LENGTH,
-                      );
-
-                      setLocalValues((prev) => ({
-                        ...prev,
-                        [option.optionID]: nextValue,
-                      }));
+                      handleOptionTextChange(option, event.target.value);
                     }}
                     onBlur={() => handleSaveOption(option)}
                     onKeyDown={(event) => {
@@ -452,7 +550,13 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
               );
             })}
 
-            <SettingSaveStatus state={isSavingOption ? "saving" : saveStatus} />
+            {saveStatus !== "idle" && (
+              <SettingSaveStatus
+                state={
+                  isSavingOption || isSavingDisplayMode ? "saving" : saveStatus
+                }
+              />
+            )}
           </Box>
         </Box>
       </AccordionDetails>

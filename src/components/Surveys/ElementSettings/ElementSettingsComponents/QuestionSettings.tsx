@@ -60,6 +60,17 @@ const QuestionContentSettings = () => {
    */
   const activeQuestionIDRef = useRef<string | undefined>(undefined);
 
+  /**
+   * Stores the last successfully saved basic settings.
+   * This prevents Redux live-preview updates from being treated as saved backend state.
+   */
+  const lastSavedBasicSettingsRef = useRef({
+    questionText: "",
+    questionDescription: "",
+    showQuestion: true,
+    required: false,
+  });
+
   const { control, reset, getValues, setValue } = useForm<QuestionSetting>({
     resolver: zodResolver(questionBasicSettingsSchema),
     defaultValues: {
@@ -75,7 +86,7 @@ const QuestionContentSettings = () => {
 
   /**
    * Hydrates text, description, showQuestion, and required when a new question is selected.
-   * This fixes empty inputs on initial load.
+   * This fixes empty inputs on initial load and keeps the save indicator hidden initially.
    */
   useEffect(() => {
     if (!questionID || !question) return;
@@ -89,6 +100,13 @@ const QuestionContentSettings = () => {
     const nextShowQuestion = question.showQuestion ?? true;
     const nextRequired = question.required ?? false;
 
+    lastSavedBasicSettingsRef.current = {
+      questionText: nextText,
+      questionDescription: nextDescription,
+      showQuestion: nextShowQuestion,
+      required: nextRequired,
+    };
+
     reset({
       questionText: nextText,
       questionDescription: nextDescription,
@@ -100,6 +118,21 @@ const QuestionContentSettings = () => {
     setLocalRequired(nextRequired);
     setSaveStatus("idle");
   }, [questionID, question, reset]);
+
+  /**
+   * Checks whether the next payload is different from the last confirmed saved payload.
+   * This avoids showing saving/saved when the user returns to the original value.
+   */
+  const hasActualBasicSettingsChange = (payload: QuestionSetting) => {
+    const lastSaved = lastSavedBasicSettingsRef.current;
+
+    return (
+      payload.questionText !== lastSaved.questionText ||
+      payload.questionDescription !== lastSaved.questionDescription ||
+      payload.showQuestion !== lastSaved.showQuestion ||
+      payload.required !== lastSaved.required
+    );
+  };
 
   /**
    * Sends the full basic settings payload through one endpoint.
@@ -131,15 +164,21 @@ const QuestionContentSettings = () => {
         currentValues.showQuestion ??
         localShowQuestion,
 
-      required:
-        nextValues?.required ??
-        currentValues.required ??
-        localRequired,
+      required: nextValues?.required ?? currentValues.required ?? localRequired,
     };
 
     if (!payload.questionText?.trim()) {
       showToast.error("Question text cannot be empty.");
       setSaveStatus("error");
+      return;
+    }
+
+    /**
+     * If there is no real change compared to the last saved backend state,
+     * hide the indicator because nothing needs to be saved.
+     */
+    if (!hasActualBasicSettingsChange(payload)) {
+      setSaveStatus("idle");
       return;
     }
 
@@ -221,6 +260,16 @@ const QuestionContentSettings = () => {
         }),
       );
 
+      /**
+       * Update saved baseline only after backend confirms the save.
+       */
+      lastSavedBasicSettingsRef.current = {
+        questionText: updatedQuestion.text,
+        questionDescription: updatedQuestion.description,
+        showQuestion: payload.showQuestion,
+        required: payload.required,
+      };
+
       setSaveStatus("saved");
     } catch (error) {
       console.error("Question basic settings update error:", error);
@@ -231,10 +280,33 @@ const QuestionContentSettings = () => {
 
   /**
    * Debounces text/description saves.
-   * Switches save immediately.
+   * The indicator appears only when there is a real difference from the saved baseline.
    */
   const scheduleTextSave = () => {
     if (!canEditQuestion) return;
+
+    const currentValues = getValues();
+
+    const payload = {
+      questionText: currentValues.questionText ?? "",
+      questionDescription: currentValues.questionDescription ?? "",
+      showQuestion: currentValues.showQuestion ?? localShowQuestion,
+      required: currentValues.required ?? localRequired,
+    };
+
+    /**
+     * If the user returns the text/description to the saved value,
+     * hide the status instead of showing dirty/saved unnecessarily.
+     */
+    if (!hasActualBasicSettingsChange(payload)) {
+      setSaveStatus("idle");
+
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+
+      return;
+    }
 
     setSaveStatus("dirty");
 
@@ -322,7 +394,7 @@ const QuestionContentSettings = () => {
   };
 
   /**
-   * Updates showQuestion locally and saves through the same endpoint.
+   * Updates showQuestion locally and saves only if the value actually changed.
    */
   const handleShowQuestionChange = async (value: boolean) => {
     if (!canEditQuestion || !questionID) return;
@@ -349,6 +421,23 @@ const QuestionContentSettings = () => {
       }),
     );
 
+    const currentValues = getValues();
+
+    const payload = {
+      questionText: currentValues.questionText ?? question?.text ?? "",
+      questionDescription:
+        currentValues.questionDescription ?? question?.description ?? "",
+      showQuestion: value,
+      required: localRequired,
+    };
+
+    if (!hasActualBasicSettingsChange(payload)) {
+      setSaveStatus("idle");
+      return;
+    }
+
+    setSaveStatus("dirty");
+
     await saveQuestionBasicSettings({
       showQuestion: value,
       required: localRequired,
@@ -356,7 +445,7 @@ const QuestionContentSettings = () => {
   };
 
   /**
-   * Updates required locally and saves through the same endpoint.
+   * Updates required locally and saves only if the value actually changed.
    */
   const handleRequiredChange = async (value: boolean) => {
     if (!canEditQuestion || !questionID) return;
@@ -382,6 +471,23 @@ const QuestionContentSettings = () => {
         value,
       }),
     );
+
+    const currentValues = getValues();
+
+    const payload = {
+      questionText: currentValues.questionText ?? question?.text ?? "",
+      questionDescription:
+        currentValues.questionDescription ?? question?.description ?? "",
+      showQuestion: localShowQuestion,
+      required: value,
+    };
+
+    if (!hasActualBasicSettingsChange(payload)) {
+      setSaveStatus("idle");
+      return;
+    }
+
+    setSaveStatus("dirty");
 
     await saveQuestionBasicSettings({
       showQuestion: localShowQuestion,
@@ -569,9 +675,11 @@ const QuestionContentSettings = () => {
               />
             </Box>
 
-            <SettingSaveStatus
-              state={isSavingBasicSettings ? "saving" : saveStatus}
-            />
+            {saveStatus !== "idle" && (
+              <SettingSaveStatus
+                state={isSavingBasicSettings ? "saving" : saveStatus}
+              />
+            )}
           </Box>
         </Box>
       </AccordionDetails>

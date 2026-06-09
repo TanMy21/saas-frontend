@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Box, Button, Typography } from "@mui/material";
-import { Check, Sparkles, Timer, X } from "lucide-react";
+import { Check, Timer, X } from "lucide-react";
 
 import { useGetOptionsOfQuestionQuery } from "../../../app/slices/optionApiSlice";
 import { RootState } from "../../../app/store";
@@ -19,7 +19,6 @@ export const ConceptFitResponseMobilePreview = () => {
 
   const questionID = question?.questionID;
   const uiConfig = question?.questionPreferences?.uiConfig || {};
- 
 
   const timeLimitMs =
     typeof uiConfig.timeLimitMs === "number"
@@ -143,50 +142,7 @@ export const ConceptFitResponseMobilePreview = () => {
             alignItems: "center",
             pt: 0.5,
           }}
-        >
-          <Box
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 0.75,
-              px: 1.25,
-              py: 0.5,
-              borderRadius: "999px",
-              bgcolor: "#F3E8FF",
-              color: "#7E22CE",
-              border: "1px solid #E9D5FF",
-            }}
-          >
-            <Sparkles size={13} />
-
-            <Typography
-              sx={{
-                fontSize: 10,
-                fontWeight: 900,
-                textTransform: "uppercase",
-                letterSpacing: 0.8,
-              }}
-            >
-              Fit Challenge
-            </Typography>
-          </Box>
-
-          {attributes.length > 0 && !gameEnded && (
-            <Typography
-              sx={{
-                fontSize: 12,
-                fontWeight: 900,
-                color: "#64748B",
-                bgcolor: "#F1F5F9",
-                px: 1,
-                py: 0.4,
-                borderRadius: "8px",
-              }}
-            >
-              {currentIndex + 1} / {attributes.length}
-            </Typography>
-          )}
-        </Box>
+        ></Box>
 
         <Box
           sx={{
@@ -225,6 +181,7 @@ export const ConceptFitResponseMobilePreview = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                P: 2,
               }}
             >
               <Box
@@ -261,7 +218,7 @@ export const ConceptFitResponseMobilePreview = () => {
 
               <Box
                 sx={{
-                  width: "100%",
+                  width: "80%",
                   minHeight: 150,
                   position: "relative",
                   overflow: "hidden",
@@ -402,20 +359,6 @@ export const ConceptFitResponseMobilePreview = () => {
               </Typography>
             </Button>
           </Box>
-        )}
-
-        {!gameEnded && (
-          <Typography
-            sx={{
-              fontSize: 10,
-              color: "#94A3B8",
-              textAlign: "center",
-              mt: 1.25,
-              fontWeight: 600,
-            }}
-          >
-            Is the word compatible with the target concept? Tap to sort.
-          </Typography>
         )}
       </Box>
     </Box>

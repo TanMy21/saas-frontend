@@ -38,6 +38,7 @@ import SettingSaveStatus from "./SettingSaveStatus";
 const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
   const { canEditQuestion } = usePermission();
   const dispatch = useAppDispatch();
+
   const [saveStatus, setSaveStatus] = useState<SettingSaveState>("idle");
 
   const question = useAppSelector(
@@ -57,13 +58,40 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
   });
 
   const watchedValues = useWatch({ control });
+
   const [formTouched, setFormTouched] = useState(false);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    if (formTouched) return;
+  /**
+   * Stores the last confirmed saved timer settings.
+   * This lets us show the save indicator only when there is an actual change.
+   */
+  const lastSavedTimedSettingsRef =
+    useRef<TimedChoiceSettingsForm>(formDefaults);
 
-    reset(getTimedChoiceDefaults(uiConfig));
+  /**
+   * Tracks the active question.
+   * This prevents Redux live-preview updates from resetting the form/status while editing.
+   */
+  const activeQuestionIDRef = useRef<string | undefined>(undefined);
+
+  /**
+   * Hydrates timer settings only when the selected question changes.
+   * This keeps the save indicator hidden on initial render.
+   */
+  useEffect(() => {
+    if (!questionID) return;
+
+    if (activeQuestionIDRef.current === questionID) return;
+
+    activeQuestionIDRef.current = questionID;
+
+    const nextDefaults = getTimedChoiceDefaults(uiConfig);
+
+    lastSavedTimedSettingsRef.current = nextDefaults;
+
+    reset(nextDefaults);
+    setFormTouched(false);
     setSaveStatus("idle");
   }, [
     questionID,
@@ -71,29 +99,59 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
     uiConfig?.showCountdown,
     uiConfig?.autoAdvanceOnAnswer,
     uiConfig?.allowTimeout,
-    formTouched,
     reset,
   ]);
 
   /**
-   * Marks the settings form as touched only when user can edit.
+   * Checks whether the timer settings actually changed from the last saved backend state.
    */
-  const markFormTouched = () => {
+  const hasActualTimedSettingsChange = (data: TimedChoiceSettingsForm) => {
+    const lastSaved = lastSavedTimedSettingsRef.current;
+
+    return (
+      data.timeLimitSeconds !== lastSaved.timeLimitSeconds ||
+      data.showCountdown !== lastSaved.showCountdown ||
+      data.allowTimeout !== lastSaved.allowTimeout ||
+      data.autoAdvanceOnAnswer !== lastSaved.autoAdvanceOnAnswer ||
+      data.timedChoiceDisplayMode !== lastSaved.timedChoiceDisplayMode
+    );
+  };
+
+  /**
+   * Marks the settings form as dirty only when user can edit.
+   * If values return to the saved baseline, the indicator is hidden again.
+   */
+  const markFormTouched = (nextData?: TimedChoiceSettingsForm) => {
     if (!canEditQuestion) return;
+
+    if (nextData && !hasActualTimedSettingsChange(nextData)) {
+      setFormTouched(false);
+      setSaveStatus("idle");
+      return;
+    }
+
     setFormTouched(true);
     setSaveStatus("dirty");
   };
 
   /**
    * Persists timed choice uiConfig to the backend.
+   * Saves only when there is an actual change from the last saved value.
    */
   const onSubmit = async (data: TimedChoiceSettingsForm) => {
     if (!canEditQuestion || !questionID) return;
+
+    if (!hasActualTimedSettingsChange(data)) {
+      setFormTouched(false);
+      setSaveStatus("idle");
+      return;
+    }
 
     const nextUiConfig = buildTimedChoiceUiConfig(data, uiConfig);
 
     try {
       setSaveStatus("saving");
+
       await updateQuestionPreferenceUIConfig({
         questionID,
         uiConfig: nextUiConfig,
@@ -113,10 +171,16 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
         }),
       );
 
+      /**
+       * Update saved baseline only after backend confirms the save.
+       */
+      lastSavedTimedSettingsRef.current = data;
+
       setSaveStatus("saved");
       setFormTouched(false);
     } catch (error) {
       setSaveStatus("error");
+      setFormTouched(false);
       console.error("Timed choice settings update error:", error);
     }
   };
@@ -132,7 +196,11 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      handleSubmit(onSubmit)();
+      handleSubmit(onSubmit, (errors) => {
+        console.error("Timed choice settings validation error:", errors);
+        setFormTouched(false);
+        setSaveStatus("error");
+      })();
     }, 1200);
 
     return () => {
@@ -141,6 +209,17 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
       }
     };
   }, [watchedValues, formTouched, canEditQuestion, handleSubmit]);
+
+  /**
+   * Clears pending debounce when the component unmounts.
+   */
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <Accordion
@@ -181,16 +260,18 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
         </Box>
       </AccordionSummary>
 
-      <AccordionDetails sx={{ px: { md: 2, xl: 1 }, pb: 2 }}>
+      <AccordionDetails sx={{ px: { md: 2, xl: 1 }, pb: 2, p:2 }}>
         <Box
           component="form"
           onSubmit={(event) => event.preventDefault()}
           sx={{
             display: "flex",
+            width:"92%",
             flexDirection: "column",
             gap: 2,
             opacity: canEditQuestion ? 1 : 0.8,
             pointerEvents: canEditQuestion ? "auto" : "none",
+            mx:"auto"
           }}
         >
           <Box>
@@ -211,18 +292,29 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
               render={({ field }) => (
                 <TextField
                   type="number"
-                  fullWidth
+                  variant="standard"
                   disabled={!canEditQuestion}
-                  value={field.value}
+                  value={field.value ?? ""}
                   onChange={(event) => {
+                    if (!canEditQuestion) return;
+
                     const value = Number(event.target.value);
                     const safeValue = Number.isNaN(value) ? 3 : value;
+
                     const clampedValue = Math.min(
                       Math.max(safeValue || 1, 1),
                       30,
                     );
+
                     field.onChange(clampedValue);
-                    markFormTouched();
+
+                    const nextData = {
+                      ...(watchedValues as TimedChoiceSettingsForm),
+                      timeLimitSeconds: clampedValue,
+                    };
+
+                    markFormTouched(nextData);
+
                     dispatch(
                       updateQuestionField({
                         key: "questionPreferences",
@@ -243,16 +335,35 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
                   }}
                   InputProps={{
                     endAdornment: (
-                      <InputAdornment position="end">sec</InputAdornment>
+                      <InputAdornment
+                        position="end"
+                        sx={{ color: "#6846E5", marginBottom: 0.5 }}
+                      >
+                        sec
+                      </InputAdornment>
                     ),
+                    disableUnderline: true,
                   }}
                   sx={{
+                    width: "100%",
                     "& .MuiInputBase-root": {
-                      borderRadius: "8px",
-                      height: "42px",
-                      fontSize: "15px",
-                      backgroundColor: "#F3F4F6",
-                      px: 1.5,
+                      borderRadius: 1,
+                      backgroundColor: "#EEF2FF",
+                      height: "36px",
+                      minWidth: 80,
+                      width: "100%",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      color: "#6846E5",
+                      boxShadow: "none",
+                      px: 1.25,
+                    },
+                    "& .MuiInputBase-input": {
+                      lineHeight: "1.5",
+                      fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
+                      fontWeight: 700,
+                      color: "#6846E5",
+                      cursor: canEditQuestion ? "text" : "not-allowed",
                     },
                   }}
                 />
@@ -267,13 +378,21 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={field.value}
+                    checked={Boolean(field.value)}
                     disabled={!canEditQuestion}
                     onChange={(event) => {
+                      if (!canEditQuestion) return;
+
                       const checked = event.target.checked;
 
                       field.onChange(checked);
-                      markFormTouched();
+
+                      const nextData = {
+                        ...(watchedValues as TimedChoiceSettingsForm),
+                        showCountdown: checked,
+                      };
+
+                      markFormTouched(nextData);
 
                       dispatch(
                         updateQuestionField({
@@ -302,12 +421,22 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={field.value}
+                    checked={Boolean(field.value)}
                     disabled={!canEditQuestion}
                     onChange={(event) => {
+                      if (!canEditQuestion) return;
+
                       const checked = event.target.checked;
+
                       field.onChange(checked);
-                      markFormTouched();
+
+                      const nextData = {
+                        ...(watchedValues as TimedChoiceSettingsForm),
+                        allowTimeout: checked,
+                      };
+
+                      markFormTouched(nextData);
+
                       dispatch(
                         updateQuestionField({
                           key: "questionPreferences",
@@ -328,7 +457,9 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
             )}
           />
 
-          <SettingSaveStatus state={isSavingTimer ? "saving" : saveStatus} />
+          {saveStatus !== "idle" && (
+            <SettingSaveStatus state={isSavingTimer ? "saving" : saveStatus} />
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>
