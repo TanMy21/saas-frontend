@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
 import { Box } from "@mui/material";
 
@@ -14,6 +14,7 @@ import { useDebouncedElementDispatch } from "../../../hooks/useDebouncedElementD
 import { useEditController } from "../../../hooks/useEditController";
 import { useOutsideSave } from "../../../hooks/useOutsideSave";
 import { useAppTheme } from "../../../theme/useAppTheme";
+import { NON_NUMBERED_ELEMENT_TYPES } from "../../../utils/constants";
 import { sanitizeRichTextHtml } from "../../../utils/richTextUtils";
 import { ElementProps } from "../../../utils/types";
 import { getDefaultQuestionTextAlign, isOrderable } from "../../../utils/utils";
@@ -31,10 +32,38 @@ const ElementQuestionText = ({ display }: ElementProps) => {
     (state: RootState) => state.elementTypography,
   );
 
+  const elements = useAppSelector(
+    (state: RootState) => state.surveyBuilder.elements,
+  );
+
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion,
   );
   const { questionID, order, text, description, type } = question || {};
+
+  const displayOrder = useMemo(() => {
+    if (!questionID) return order;
+
+    const visibleQuestions = [...(elements || [])]
+      .filter((element) => {
+        if (!element.questionID) return false;
+
+        if (NON_NUMBERED_ELEMENT_TYPES.has(element.type)) {
+          return false;
+        }
+
+        return typeof element.order === "number" && element.order > 0;
+      })
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+    const index = visibleQuestions.findIndex(
+      (element) => element.questionID === questionID,
+    );
+
+    if (index === -1) return order;
+
+    return index + 1;
+  }, [elements, questionID, order]);
 
   const show = isOrderable(type, order);
   const defaultTextAlign = getDefaultQuestionTextAlign(type);
@@ -215,7 +244,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                     sizeXL={circleSizeXL}
                     color={primary.light}
                     fontSize={orderFontSize || 20}
-                    value={order}
+                    value={displayOrder}
                   />
                 </Box>
               )}
@@ -414,7 +443,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                     sizeXL={circleSizeXL}
                     color={primary.light}
                     fontSize={orderFontSize || 20}
-                    value={order}
+                    value={displayOrder}
                   />
                 </Box>
               )}

@@ -46,7 +46,7 @@ export const ConceptFitAttributeManager = ({
 
       <Box
         sx={{
-          border: "1px solid #E2E8F0",
+          // border: "1px solid #E2E8F0",
           borderRadius: 2,
           bgcolor: "#F8FAFC",
           p: 1.5,
@@ -145,8 +145,8 @@ export const ConceptFitAttributeManager = ({
             px: 1,
             pt: 0.75,
             pb: 0.75,
-            border: "1px solid #E2E8F0",
-            borderRadius: 2,
+            // border: "1px solid #E2E8F0",
+            // borderRadius: 2,
             bgcolor: "#FFFFFF",
           }}
         >

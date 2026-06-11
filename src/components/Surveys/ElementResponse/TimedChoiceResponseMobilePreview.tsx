@@ -42,7 +42,7 @@ export function TimerPreview({
           fontSize: 12,
           fontWeight: 700,
           letterSpacing: 0.4,
-          color:TIMED_ACCENT,
+          color: TIMED_ACCENT,
           textTransform: "uppercase",
         }}
       >
@@ -86,9 +86,9 @@ export function MobileShell({
           display: "flex",
           flexDirection: "column",
           gap: 2,
-          background: `linear-gradient(180deg, ${accent}12 0%, #FFFFFF 42%, #F8FAFC 100%)`,
-          border: "1px solid #E2E8F0",
-          boxShadow: "0 18px 45px rgba(15,23,42,0.12)",
+          // background: `linear-gradient(180deg, ${accent}12 0%, #FFFFFF 42%, #F8FAFC 100%)`,
+          // border: "1px solid #E2E8F0",
+          // boxShadow: "0 18px 45px rgba(15,23,42,0.12)",
           overflow: "hidden",
         }}
       >
@@ -110,22 +110,28 @@ function TimedChoiceMobileOptionCard({
       role="button"
       tabIndex={0}
       sx={{
-        flex: 1,
-        minHeight: 150,
-        borderRadius: "22px",
+        width: "100%",
+        borderRadius: "24px",
         backgroundColor: "#FFFFFF",
-        border: "1px solid #F1F5F9",
-        boxShadow: "0 10px 28px rgba(15,23,42,0.08)",
+        border: "1px solid #E2E8F0",
+        boxShadow: "0 8px 22px rgba(15,23,42,0.06)",
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        flexDirection: "column",
         overflow: "hidden",
         cursor: "pointer",
-        position: "relative",
-        transition: "transform 120ms ease, box-shadow 120ms ease",
+
+        // Allows image cards to grow based on content instead of forcing equal height.
+        flex: showImage ? "0 0 auto" : 1,
+
+        // Keeps text-only cards comfortably tappable.
+        minHeight: showImage ? "auto" : 150,
+
+        transition:
+          "transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease",
         "&:hover": {
           transform: "translateY(-2px)",
-          boxShadow: "0 14px 34px rgba(249,115,22,0.18)",
+          borderColor: "rgba(249,115,22,0.45)",
+          boxShadow: "0 12px 28px rgba(249,115,22,0.14)",
         },
         "&:focus-visible": {
           outline: "3px solid rgba(249,115,22,0.35)",
@@ -136,36 +142,58 @@ function TimedChoiceMobileOptionCard({
       {showImage ? (
         <>
           <Box
-            component="img"
-            src={imageUrl!}
-            alt={option.text}
             sx={{
               width: "100%",
-              height: "100%",
-              objectFit: "cover",
+              bgcolor: "#ffffff",
+              overflow: "hidden",
+
+              // Gives the image area a mobile-friendly height while allowing full image visibility.
+              height: 180,
+
+              // Keeps image nicely centered when it does not fill the full container.
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
-          />
+          >
+            <Box
+              component="img"
+              src={imageUrl!}
+              alt={option.text}
+              sx={{
+                width: "100%",
+                height: "100%",
+
+                // Preserves original aspect ratio and prevents portrait images from being cropped.
+                objectFit: "contain",
+
+                display: "block",
+              }}
+            />
+          </Box>
 
           <Box
             sx={{
-              position: "absolute",
-              left: 12,
-              right: 12,
-              bottom: 12,
               px: 1.5,
-              py: 1,
-              borderRadius: "14px",
-              bgcolor: "rgba(15,23,42,0.72)",
-              backdropFilter: "blur(8px)",
-              border: "1px solid rgba(255,255,255,0.24)",
+
+              // Reduced vertical height for the option label area.
+              py: 0.9,
+              height:"32px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: "#FFFFFF",
+              borderTop: "1px solid #F1F5F9",
             }}
           >
             <Typography
               sx={{
-                fontSize: 17,
-                fontWeight: 900,
-                color: "#FFFFFF",
+                fontSize: 15.5,
+                fontWeight: 850,
+                color: "#0F172A",
                 textAlign: "center",
+                lineHeight: 1.1,
+                letterSpacing: "-0.02em",
               }}
             >
               {option.text}
@@ -173,24 +201,32 @@ function TimedChoiceMobileOptionCard({
           </Box>
         </>
       ) : (
-        <Typography
+        <Box
           sx={{
-            fontSize: 25,
-            fontWeight: 900,
-            color: "#0F172A",
-            textAlign: "center",
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             px: 2,
-            lineHeight: 1.15,
-            letterSpacing: "-0.03em",
           }}
         >
-          {option.text}
-        </Typography>
+          <Typography
+            sx={{
+              fontSize: 25,
+              fontWeight: 900,
+              color: "#0F172A",
+              textAlign: "center",
+              lineHeight: 1.15,
+              letterSpacing: "-0.03em",
+            }}
+          >
+            {option.text}
+          </Typography>
+        </Box>
       )}
     </Box>
   );
 }
-
 export function TimedChoiceResponseMobilePreview() {
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion,
@@ -217,25 +253,7 @@ export function TimedChoiceResponseMobilePreview() {
 
   return (
     <MobileShell accent={TIMED_ACCENT}>
-      <TimerPreview
-        seconds={timeLimitSeconds}
-        accent={TIMED_ACCENT}
-        label="React in"
-      />
-
-      <Typography
-        sx={{
-          fontSize: 22,
-          fontWeight: 900,
-          textAlign: "center",
-          color: "#0F172A",
-          letterSpacing: "-0.03em",
-        }}
-      >
-        Pick one — fast!
-      </Typography>
-
-  
+     
 
       <Box
         sx={{

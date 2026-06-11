@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
-import { CircleX } from "lucide-react";
+import {
+  Box,
+  Button,
+  IconButton,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import { ImageMinus, Replace } from "lucide-react";
 
 import {
   useRemoveQuestionImageMutation,
@@ -18,8 +25,6 @@ export const TimedChoiceOptionCard = ({
   option,
   index,
   canEdit,
-  canDelete,
-  onDelete,
   displayMode,
   imageRole,
   optionImage,
@@ -28,8 +33,6 @@ export const TimedChoiceOptionCard = ({
   option: OptionType;
   index: number;
   canEdit: boolean;
-  canDelete: boolean;
-  onDelete: (optionID: string) => void;
   displayMode: "TEXT" | "IMAGE";
   imageRole: string;
   optionImage?: QuestionImageAsset;
@@ -171,24 +174,6 @@ export const TimedChoiceOptionCard = ({
         },
       }}
     >
-      <Typography
-        sx={{
-          width: 28,
-          height: 28,
-          borderRadius: "50%",
-          bgcolor: "#FFF7ED",
-          color: "#EA580C",
-          fontSize: 13,
-          fontWeight: 800,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          mb: 1.25,
-        }}
-      >
-        {index === 0 ? "A" : "B"}
-      </Typography>
-
       {isImageMode && (
         <Box
           sx={{
@@ -213,7 +198,7 @@ export const TimedChoiceOptionCard = ({
                   height: 150,
                   objectFit: "contain",
                   borderRadius: 2,
-                  bgcolor: "#F8FAFC",
+                  bgcolor: "#ffffff",
                   border: "1px solid #E2E8F0",
                 }}
               />
@@ -223,40 +208,83 @@ export const TimedChoiceOptionCard = ({
                   sx={{
                     display: "flex",
                     justifyContent: "center",
-                    gap: 1,
+                    gap: 2,
                     flexWrap: "wrap",
                   }}
                 >
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    disabled={isBusy}
-                    onClick={() => replaceInputRef.current?.click()}
-                    sx={{
-                      textTransform: "none",
-                      fontSize: 12,
-                      fontWeight: 700,
-                      borderRadius: 999,
-                    }}
+                  <Tooltip
+                    title={isReplacing ? "Replacing image..." : "Replace image"}
                   >
-                    {isReplacing ? "Replacing..." : "Replace"}
-                  </Button>
+                    <span>
+                      <IconButton
+                        size="small"
+                        disabled={isBusy}
+                        onClick={() => replaceInputRef.current?.click()}
+                        sx={{
+                          width: 34,
+                          height: 34,
+                          borderRadius: 1,
+                          border: "1px solid #E2E8F0",
+                          bgcolor: "#FFFFFF",
+                          color: "#475569",
+                          boxShadow: "0 6px 16px rgba(15, 23, 42, 0.08)",
+                          transition: "all 0.18s ease",
+                          "&:hover": {
+                            bgcolor: "#F8FAFC",
+                            color: "#2563EB",
+                            borderColor: "#BFDBFE",
+                            transform: "translateY(-1px)",
+                            boxShadow: "0 10px 22px rgba(37, 99, 235, 0.16)",
+                          },
+                          "&.Mui-disabled": {
+                            bgcolor: "#F8FAFC",
+                            color: "#CBD5E1",
+                            borderColor: "#E2E8F0",
+                            boxShadow: "none",
+                          },
+                        }}
+                      >
+                        <Replace size={17} />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
 
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    color="error"
-                    disabled={isBusy}
-                    onClick={handleDeleteImage}
-                    sx={{
-                      textTransform: "none",
-                      fontSize: 12,
-                      fontWeight: 700,
-                      borderRadius: 999,
-                    }}
+                  <Tooltip
+                    title={isDeleting ? "Deleting image..." : "Delete image"}
                   >
-                    {isDeleting ? "Deleting..." : "Delete"}
-                  </Button>
+                    <span>
+                      <IconButton
+                        size="small"
+                        disabled={isBusy}
+                        onClick={handleDeleteImage}
+                        sx={{
+                          width: 34,
+                          height: 34,
+                          borderRadius: 1,
+                          border: "1px solid #FECACA",
+                          bgcolor: "#FFFFFF",
+                          color: "#DC2626",
+                          boxShadow: "0 6px 16px rgba(15, 23, 42, 0.08)",
+                          transition: "all 0.18s ease",
+                          "&:hover": {
+                            bgcolor: "#FEF2F2",
+                            color: "#B91C1C",
+                            borderColor: "#FCA5A5",
+                            transform: "translateY(-1px)",
+                            boxShadow: "0 10px 22px rgba(220, 38, 38, 0.16)",
+                          },
+                          "&.Mui-disabled": {
+                            bgcolor: "#F8FAFC",
+                            color: "#CBD5E1",
+                            borderColor: "#E2E8F0",
+                            boxShadow: "none",
+                          },
+                        }}
+                      >
+                        <ImageMinus size={17} />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
                 </Box>
               )}
 
@@ -354,36 +382,13 @@ export const TimedChoiceOptionCard = ({
             fontSize: 16,
             fontWeight: 700,
             color: "#0F172A",
-            minHeight: 38,
+            minHeight: 24,
             cursor: canEdit ? "text" : "default",
             wordBreak: "break-word",
           }}
         >
           {option.text}
         </Typography>
-      )}
-
-      {canDelete && (
-        <IconButton
-          onClick={(event) => {
-            event.stopPropagation();
-            onDelete(option.optionID);
-          }}
-          aria-label="Delete timed choice option"
-          size="small"
-          sx={{
-            position: "absolute",
-            top: 8,
-            right: 8,
-            color: "darkred",
-            bgcolor: "transparent",
-            "&:hover": {
-              bgcolor: "transparent",
-            },
-          }}
-        >
-          <CircleX fontSize="small" />
-        </IconButton>
       )}
     </Box>
   );

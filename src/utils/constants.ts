@@ -50,6 +50,11 @@ export const MIN_RECOMMENDED_IAT_STIMULI = 8;
 
 export const TIMED_ACCENT = "#F97316";
 
+export const DEFAULT_CONCEPT_FIT_LEFT_TEXT = "Fits";
+export const DEFAULT_CONCEPT_FIT_RIGHT_TEXT = "Does not fit";
+export const DEFAULT_CONCEPT_FIT_TIMER_MS = 3000;
+export const DEFAULT_CONCEPT_FIT_DISPLAY_MODE = "TEXT";
+
 export const DEFAULT_TIMED_CHOICE_CONFIG: TimedChoiceSettingsForm = {
   timeLimitSeconds: 3,
   showCountdown: true,
@@ -540,10 +545,10 @@ export const THREE_D_AREA_COLORS = [
   "#EF4444", // red
 ];
 
-export const NON_NUMBERED_ELEMENT_TYPES = [
+export const NON_NUMBERED_ELEMENT_TYPES = new Set<string>([
   "WELCOME_SCREEN",
   "INSTRUCTIONS",
   "EMAIL_CONTACT",
   "END_SCREEN",
   "INFO_SCREEN",
-] as const;
+]);

@@ -2,11 +2,13 @@ import { OrderedSurveyElement } from "../types/surveyBuilderTypes";
 
 import { NON_NUMBERED_ELEMENT_TYPES } from "./constants";
 
-export const isNumberedElement = (type: string) => {
-  return !NON_NUMBERED_ELEMENT_TYPES.includes(
-    type as (typeof NON_NUMBERED_ELEMENT_TYPES)[number],
-  );
+export const isNumberedElement = (type?: string | null) => {
+  if (!type) return false;
+
+  return !NON_NUMBERED_ELEMENT_TYPES.has(type);
 };
+
+
 
 export const sortElementsByInternalOrder = <T extends OrderedSurveyElement>(
   elements: T[],

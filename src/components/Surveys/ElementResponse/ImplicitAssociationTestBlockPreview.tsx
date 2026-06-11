@@ -33,30 +33,6 @@ export const ImplicitAssociationTestBlockPreview = ({
     >
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 1.5,
-          gap: 1,
-        }}
-      >
-        <Typography sx={{ fontSize: 13, fontWeight: 800, color: "#BE185D" }}>
-          IAT preview
-        </Typography>
-
-        <Chip
-          label="Compatible block"
-          size="small"
-          sx={{
-            bgcolor: "#FCE7F3",
-            color: "#BE185D",
-            fontWeight: 700,
-          }}
-        />
-      </Box>
-
-      <Box
-        sx={{
           display: "grid",
           gridTemplateColumns: { xs: "1fr", sm: "1fr auto 1fr" },
           alignItems: "center",
@@ -77,10 +53,6 @@ export const ImplicitAssociationTestBlockPreview = ({
             boxShadow: "0 8px 22px rgba(15,23,42,0.06)",
           }}
         >
-          <Typography sx={{ fontSize: 12, color: "#64748B", mb: 0.75 }}>
-            Center stimulus
-          </Typography>
-
           <Typography sx={{ fontSize: 20, fontWeight: 900, color: "#0F172A" }}>
             {centerStimulus}
           </Typography>
@@ -88,11 +60,6 @@ export const ImplicitAssociationTestBlockPreview = ({
 
         <ImplicitAssociationSideCard keyLabel="I" title={rightCategory} />
       </Box>
-
-      <Typography sx={{ mt: 1.5, fontSize: 12, color: "#BE185D" }}>
-        Participants sort mixed brand/product items and attribute words using E
-        and I.
-      </Typography>
     </Box>
   );
 };

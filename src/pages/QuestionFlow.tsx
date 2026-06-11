@@ -16,7 +16,7 @@ const QuestionFlow = () => {
   const { survey, workspaceId, workspaceName } = headerProps || {};
 
   const surveyCanvas = useAppSelector(
-    (state: RootState) => state.surveyCanvas.data
+    (state: RootState) => state.surveyCanvas.data,
   );
   const { getSurveyCanvas } = surveyCanvas ?? {};
   const { surveyID: flowSurveyID, title } = getSurveyCanvas ?? {};
@@ -25,7 +25,7 @@ const QuestionFlow = () => {
 
   const { data, refetch: refetchFlow } = useGetElementsForSurveyQuery(
     surveyID,
-    { refetchOnMountOrArgChange: true }
+    { refetchOnMountOrArgChange: true },
   );
 
   return (
@@ -52,8 +52,8 @@ const QuestionFlow = () => {
         >
           <SurveyBuilderHeader
             survey={survey!}
-            workspaceId={workspaceId!}
-            workspaceName={workspaceName!}
+            workspaceId={workspaceId}
+            workspaceName={workspaceName}
             title={title}
           />
         </Grid>
@@ -75,7 +75,11 @@ const QuestionFlow = () => {
           }}
         >
           {/* Main content area */}
-          <QuestionFlowContainer Elements={data!} surveyID={surveyID} refetch={refetchFlow}/>
+          <QuestionFlowContainer
+            Elements={data!}
+            surveyID={surveyID}
+            refetch={refetchFlow}
+          />
         </Grid>
       </Grid>
     </Box>

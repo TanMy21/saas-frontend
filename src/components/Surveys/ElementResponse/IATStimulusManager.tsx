@@ -329,9 +329,7 @@ export const IATStimulusManager = ({
             mt: 1,
             px: 1,
             pt: 0.75,
-            pb: 0.75,
-            border: "1px solid #E2E8F0",
-            borderRadius: 2,
+            pb: 0.75,  
             bgcolor: "#FFFFFF",
           }}
         >
@@ -374,8 +372,7 @@ export const IATStimulusManager = ({
               height: 34,
               borderRadius: "50%",
               bgcolor: "#BE185D",
-              color: "white",
-              boxShadow: "0 6px 16px rgba(190,24,93,0.25)",
+              color: "white", 
               "&:hover": { bgcolor: "#9D174D" },
               "&.Mui-disabled": {
                 bgcolor: "#CBD5E1",

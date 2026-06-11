@@ -426,6 +426,8 @@ export interface ScreenLayoutProps {
   widthOverride?: string;
   marginBottomOveride?: string;
   marginTopOveride?: string;
+  alignItemsOveride?: string;
+  justifyContentOveride?: string;
 }
 
 export interface EditablePlainTextProps {
@@ -1011,6 +1013,8 @@ export interface QuestionUIConfig {
   iatRightKey?: string;
   iatShowKeyboardHints?: boolean;
   iatRandomizeStimuli?: boolean;
+  conceptFitLeftText?: string;
+  conceptFitRightText?: string;
 }
 
 export interface QuestionBackgroundColorProps {

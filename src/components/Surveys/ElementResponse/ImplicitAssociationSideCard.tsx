@@ -21,7 +21,7 @@ export const ImplicitAssociationSideCard = ({
         justifyContent: "center",
       }}
     >
-      <Typography sx={{ fontSize: 12, color: "#64748B", mb: 0.5 }}>
+      <Typography sx={{ fontSize: 16, color: "#64748B", mb: 0.5 }}>
         {keyLabel}
       </Typography>
 

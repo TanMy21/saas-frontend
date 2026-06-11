@@ -30,7 +30,7 @@ const SettingSaveStatus = ({
       icon: <CircularProgress size={13} thickness={5} />,
     },
     saved: {
-      label: message || "Changes saved",
+      label: message || "Saved",
       color: "#16A34A",
       icon: <CheckCircleOutlineIcon sx={{ fontSize: 15 }} />,
     },

@@ -1,16 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
-
-import { Box, Button, Typography } from "@mui/material";
-import { Check, Timer, X } from "lucide-react";
+import { Box, Typography } from "@mui/material";
 
 import { useGetOptionsOfQuestionQuery } from "../../../app/slices/optionApiSlice";
 import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
+import {
+  DEFAULT_CONCEPT_FIT_LEFT_TEXT,
+  DEFAULT_CONCEPT_FIT_RIGHT_TEXT,
+} from "../../../utils/constants";
 import { OptionType } from "../../../utils/types";
-
-const DEFAULT_TIMER_SECONDS = 8;
-
-type ConceptFitAnswer = "fit" | "unfit";
 
 export const ConceptFitResponseMobilePreview = () => {
   const question = useAppSelector(
@@ -20,12 +17,13 @@ export const ConceptFitResponseMobilePreview = () => {
   const questionID = question?.questionID;
   const uiConfig = question?.questionPreferences?.uiConfig || {};
 
-  const timeLimitMs =
-    typeof uiConfig.timeLimitMs === "number"
-      ? uiConfig.timeLimitMs
-      : DEFAULT_TIMER_SECONDS * 1000;
+  const conceptDisplayMode = uiConfig.conceptDisplayMode ?? "TEXT";
+  const showImageMode = conceptDisplayMode === "IMAGE";
 
-  const timeLimitSeconds = Math.max(1, Math.round(timeLimitMs / 1000));
+  const leftText = uiConfig.conceptFitLeftText || DEFAULT_CONCEPT_FIT_LEFT_TEXT;
+
+  const rightText =
+    uiConfig.conceptFitRightText || DEFAULT_CONCEPT_FIT_RIGHT_TEXT;
 
   const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
     questionID!,
@@ -34,85 +32,18 @@ export const ConceptFitResponseMobilePreview = () => {
     },
   );
 
-  const attributes = useMemo(() => options || [], [options]);
+  // The mobile preview intentionally shows only the first attribute.
+  const firstAttribute = options[0];
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, ConceptFitAnswer>>({});
-  const [score, setScore] = useState(0);
-  const [gameEnded, setGameEnded] = useState(false);
-  const [timerLeft, setTimerLeft] = useState(timeLimitSeconds);
-  const [timerActive, setTimerActive] = useState(true);
-
-  const currentAttribute = attributes[currentIndex];
-
-  /**
-   * Resets the mobile preview whenever options, selected question, or timer settings change.
-   */
-  useEffect(() => {
-    setCurrentIndex(0);
-    setAnswers({});
-    setScore(0);
-    setGameEnded(false);
-    setTimerLeft(timeLimitSeconds);
-    setTimerActive(true);
-  }, [questionID, options, timeLimitSeconds]);
-
-  /**
-   * Records a preview answer and moves to the next attribute.
-   * Since builder attributes do not currently provide correctness, this only simulates the interaction.
-   */
-  const handleAnswer = (isMatchedPressed: boolean) => {
-    if (gameEnded || !currentAttribute) return;
-
-    setAnswers((prev) => ({
-      ...prev,
-      [currentAttribute.optionID]: isMatchedPressed ? "fit" : "unfit",
-    }));
-
-    // Preview-only score: count "Fits Well" taps as match score.
-    if (isMatchedPressed) {
-      setScore((prev) => prev + 1);
-    }
-
-    if (currentIndex < attributes.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-      setTimerLeft(timeLimitSeconds);
-      return;
-    }
-
-    setGameEnded(true);
-    setTimerActive(false);
-  };
-
-  /**
-   * Runs the countdown for each active attribute card.
-   * When time reaches zero, the preview treats it like a missed/mismatch tap.
-   */
-  useEffect(() => {
-    if (gameEnded || !timerActive || attributes.length === 0) return;
-
-    if (timerLeft <= 0) {
-      handleAnswer(false);
-      return;
-    }
-
-    const timer = window.setInterval(() => {
-      setTimerLeft((prev) => Math.max(0, prev - 1));
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, [timerLeft, gameEnded, timerActive, currentIndex, attributes.length]);
-
-  const timerProgress = Math.max(
-    0,
-    Math.min(100, (timerLeft / timeLimitSeconds) * 100),
-  );
+  // Concept Fit image mode uses one uploaded stimulus image.
+  // Prefer the first available question image because desktop also shows a single uploaded image.
+  const conceptImage = question?.questionImages?.[0];
 
   return (
     <Box
       sx={{
         width: "100%",
-        minHeight: 540,
+        minHeight: 520,
         display: "flex",
         justifyContent: "center",
         mt: 2,
@@ -121,29 +52,17 @@ export const ConceptFitResponseMobilePreview = () => {
       <Box
         sx={{
           width: "92%",
-          minHeight: 540,
+          minHeight: 500,
           p: 2,
           borderRadius: "28px",
           bgcolor: "#FFFFFF",
-          background:
-            "linear-gradient(180deg, rgba(250,245,255,0.85) 0%, #FFFFFF 42%, rgba(250,245,255,0.45) 100%)",
-          border: "1px solid #E9D5FF",
-          boxShadow: "0 18px 45px rgba(88,28,135,0.12)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
           overflow: "hidden",
+          // border: "2px solid green",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            pt: 0.5,
-          }}
-        ></Box>
-
         <Box
           sx={{
             flex: 1,
@@ -154,11 +73,11 @@ export const ConceptFitResponseMobilePreview = () => {
             my: 1,
           }}
         >
-          {attributes.length === 0 ? (
+          {!firstAttribute ? (
             <Box
               sx={{
                 width: "100%",
-                minHeight: 190,
+                minHeight: 120,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -181,137 +100,128 @@ export const ConceptFitResponseMobilePreview = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                P: 2,
+                gap: 1.5,
+                p: 2,
               }}
             >
-              <Box
-                sx={{
-                  mb: 1.5,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 0.75,
-                  px: 1.5,
-                  py: 0.65,
-                  borderRadius: "999px",
-                  fontSize: 12,
-                  fontWeight: 900,
-                  border: "1px solid",
-                  bgcolor: timerLeft <= 2 ? "#FFF1F2" : "#FFFBEB",
-                  borderColor: timerLeft <= 2 ? "#FFE4E6" : "#FEF3C7",
-                  color: timerLeft <= 2 ? "#E11D48" : "#B45309",
-                  boxShadow: "0 4px 12px rgba(15,23,42,0.06)",
-                  animation:
-                    timerLeft <= 2 ? "pulseTimer 900ms infinite" : "none",
-                  "@keyframes pulseTimer": {
-                    "0%, 100%": {
-                      transform: "scale(1)",
-                    },
-                    "50%": {
-                      transform: "scale(1.04)",
-                    },
-                  },
-                }}
-              >
-                <Timer size={15} />
-                {timerLeft}s limit
-              </Box>
+              {showImageMode && conceptImage?.imageUrl && (
+                <Box
+                  sx={{
+                    width: "82%",
+                    maxHeight: 180,
+                    borderRadius: "22px",
+                    bgcolor: "#F8FAFC",
+                    border: "1px solid #E2E8F0",
+                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 10px 24px rgba(15,23,42,0.08)",
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={conceptImage.imageUrl}
+                    alt={conceptImage.altText || "Concept preview image"}
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      maxHeight: 180,
+
+                      // Preserves the uploaded image's original aspect ratio.
+                      objectFit: "contain",
+
+                      display: "block",
+                    }}
+                  />
+                </Box>
+              )}
+
+              {showImageMode && !conceptImage?.imageUrl && (
+                <Box
+                  sx={{
+                    width: "82%",
+                    minHeight: 120,
+                    borderRadius: "22px",
+                    bgcolor: "#F8FAFC",
+                    border: "1px dashed #CBD5E1",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    px: 2,
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "#94A3B8",
+                    }}
+                  >
+                    Upload a concept image to preview image mode.
+                  </Typography>
+                </Box>
+              )}
 
               <Box
                 sx={{
-                  width: "80%",
-                  minHeight: 150,
-                  position: "relative",
-                  overflow: "hidden",
+                  width: "82%",
+                  minHeight: 80,
                   bgcolor: "#FFFFFF",
                   border: "2px dashed #D8B4FE",
                   borderRadius: "28px",
-                  p: 3,
+                  p: showImageMode ? 2.2 : 3,
                   boxShadow: "0 12px 30px rgba(88,28,135,0.12)",
                   textAlign: "center",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  transition: "transform 120ms ease",
-                  "&:active": {
-                    transform: "scale(0.98)",
-                  },
                 }}
               >
                 <Typography
                   sx={{
-                    fontSize: 10,
-                    fontWeight: 900,
-                    color: "#94A3B8",
-                    textTransform: "uppercase",
-                    letterSpacing: 1.1,
-                    mb: 1,
-                  }}
-                >
-                  Attribute Association
-                </Typography>
-
-                <Typography
-                  sx={{
-                    fontSize: 20,
+                    fontSize: showImageMode ? 18 : 20,
                     fontWeight: 950,
                     color: "#6B21A8",
                     lineHeight: 1.25,
                     px: 1,
                   }}
                 >
-                  {currentAttribute?.text || "Untitled Attribute"}
+                  {firstAttribute.text || "Untitled Attribute"}
                 </Typography>
-
-                <Box
-                  sx={{
-                    position: "absolute",
-                    left: 0,
-                    bottom: 0,
-                    height: 6,
-                    width: `${timerProgress}%`,
-                    bgcolor: timerLeft <= 2 ? "#E11D48" : "#A855F7",
-                    transition:
-                      "width 1000ms linear, background-color 200ms ease",
-                  }}
-                />
               </Box>
             </Box>
           )}
         </Box>
 
-        {!gameEnded && attributes.length > 0 && (
+        {firstAttribute && (
           <Box
             sx={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              gap: 1.5,
-              pt: 1.5,
+              gap: 3,
+              pt: 1,
+
+              // border: "2px solid red",
             }}
           >
-            <Button
-              onClick={() => handleAnswer(false)}
+            <Box
               sx={{
-                py: 1.4,
+                py: 3,
                 borderRadius: "18px",
                 bgcolor: "#FFF1F2",
                 color: "#BE123C",
                 border: "1px solid #FFE4E6",
                 display: "flex",
                 flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
                 gap: 0.5,
-                textTransform: "none",
                 boxShadow: "0 6px 14px rgba(190,18,60,0.08)",
-                "&:hover": {
-                  bgcolor: "#FFE4E6",
-                },
-                "&:active": {
-                  transform: "scale(0.96)",
-                },
               }}
             >
-              <X size={21} strokeWidth={2.7} />
-
               <Typography
                 sx={{
                   fontSize: 12,
@@ -320,33 +230,25 @@ export const ConceptFitResponseMobilePreview = () => {
                   letterSpacing: 0.5,
                 }}
               >
-                Mismatch
+                {leftText}
               </Typography>
-            </Button>
+            </Box>
 
-            <Button
-              onClick={() => handleAnswer(true)}
+            <Box
               sx={{
-                py: 1.4,
+                py: 3,
                 borderRadius: "18px",
                 bgcolor: "#ECFDF5",
                 color: "#047857",
                 border: "1px solid #D1FAE5",
                 display: "flex",
                 flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
                 gap: 0.5,
-                textTransform: "none",
                 boxShadow: "0 6px 14px rgba(4,120,87,0.08)",
-                "&:hover": {
-                  bgcolor: "#D1FAE5",
-                },
-                "&:active": {
-                  transform: "scale(0.96)",
-                },
               }}
             >
-              <Check size={21} strokeWidth={2.7} />
-
               <Typography
                 sx={{
                   fontSize: 12,
@@ -355,9 +257,9 @@ export const ConceptFitResponseMobilePreview = () => {
                   letterSpacing: 0.5,
                 }}
               >
-                Fits Well
+                {rightText}
               </Typography>
-            </Button>
+            </Box>
           </Box>
         )}
       </Box>

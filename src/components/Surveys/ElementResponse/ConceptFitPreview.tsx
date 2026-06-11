@@ -1,14 +1,33 @@
+import { useEffect, useRef, useState } from "react";
+
 import { Box, Typography } from "@mui/material";
 
+import { useUpdateQuestionPreferenceUIConfigMutation } from "../../../app/slices/elementApiSlice";
+import { updateQuestionField } from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
-import { useAppSelector } from "../../../app/typedReduxHooks";
-import { DEFAULT_TIMER_SECONDS, timerDrain } from "../../../utils/constants";
+import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
+import useAuth from "../../../hooks/useAuth";
+import {
+  DEFAULT_CONCEPT_FIT_LEFT_TEXT,
+  DEFAULT_CONCEPT_FIT_RIGHT_TEXT,
+  DEFAULT_TIMER_SECONDS,
+  timerDrain,
+} from "../../../utils/constants";
+import { showToast } from "../../../utils/showToast";
+import { QuestionUIConfig } from "../../../utils/types";
+
+import { ConceptFitEditableResponseBox } from "./ConceptFitEditableResponseBox";
 
 export const ConceptFitPreview = ({
   firstAttribute,
 }: {
   firstAttribute?: string;
 }) => {
+  const dispatch = useAppDispatch();
+
+  const { can } = useAuth();
+  const canEditQuestion = can("UPDATE_QUESTION");
+
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion,
   );
@@ -16,12 +35,126 @@ export const ConceptFitPreview = ({
   const questionID = question?.questionID;
   const uiConfig = question?.questionPreferences?.uiConfig || {};
 
+  const [updateQuestionPreferenceUIConfig, { isLoading: isSavingConceptFit }] =
+    useUpdateQuestionPreferenceUIConfigMutation();
+
+  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [leftText, setLeftText] = useState(
+    uiConfig.conceptFitLeftText || DEFAULT_CONCEPT_FIT_LEFT_TEXT,
+  );
+
+  const [rightText, setRightText] = useState(
+    uiConfig.conceptFitRightText || DEFAULT_CONCEPT_FIT_RIGHT_TEXT,
+  );
+
   const timeLimitMs =
     questionID && typeof uiConfig.timeLimitMs === "number"
       ? uiConfig.timeLimitMs
       : DEFAULT_TIMER_SECONDS * 1000;
 
-  const timeLimitSeconds = Math.round(timeLimitMs / 1000);
+  const timeLimitSeconds = Math.max(1, Math.round(timeLimitMs / 1000));
+
+  /**
+   * Hydrates inline response labels when the selected question changes.
+   */
+  useEffect(() => {
+    setLeftText(uiConfig.conceptFitLeftText || DEFAULT_CONCEPT_FIT_LEFT_TEXT);
+    setRightText(
+      uiConfig.conceptFitRightText || DEFAULT_CONCEPT_FIT_RIGHT_TEXT,
+    );
+  }, [questionID, uiConfig.conceptFitLeftText, uiConfig.conceptFitRightText]);
+
+  /**
+   * Updates selected question uiConfig immediately so the preview stays live.
+   */
+  const updateConceptFitPreview = (
+    partialUiConfig: Partial<QuestionUIConfig>,
+  ) => {
+    dispatch(
+      updateQuestionField({
+        key: "questionPreferences",
+        value: {
+          ...question?.questionPreferences,
+          uiConfig: {
+            ...uiConfig,
+            ...partialUiConfig,
+          },
+        } as any,
+      }),
+    );
+  };
+
+  /**
+   * Saves the editable Concept Fit labels through the existing uiConfig endpoint.
+   */
+  const saveConceptFitLabels = async (
+    nextLeftText: string,
+    nextRightText: string,
+  ) => {
+    if (!questionID || !canEditQuestion) return;
+
+    const safeLeftText = nextLeftText.trim() || DEFAULT_CONCEPT_FIT_LEFT_TEXT;
+
+    const safeRightText =
+      nextRightText.trim() || DEFAULT_CONCEPT_FIT_RIGHT_TEXT;
+
+    const nextUiConfig = {
+      ...uiConfig,
+      conceptFitLeftText: safeLeftText,
+      conceptFitRightText: safeRightText,
+    };
+
+    try {
+      await updateQuestionPreferenceUIConfig({
+        questionID,
+        uiConfig: nextUiConfig,
+      }).unwrap();
+    } catch (error) {
+      console.error("Concept fit labels update error:", error);
+      showToast.error("Failed to update concept fit labels.");
+    }
+  };
+
+  /**
+   * Handles inline label edits and debounces the existing uiConfig mutation.
+   */
+  const handleConceptFitLabelChange = (
+    side: "left" | "right",
+    nextValue: string,
+  ) => {
+    if (!canEditQuestion) return;
+
+    const nextLeftText = side === "left" ? nextValue : leftText;
+    const nextRightText = side === "right" ? nextValue : rightText;
+
+    setLeftText(nextLeftText);
+    setRightText(nextRightText);
+
+    updateConceptFitPreview({
+      conceptFitLeftText: nextLeftText,
+      conceptFitRightText: nextRightText,
+    });
+
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      saveConceptFitLabels(nextLeftText, nextRightText);
+    }, 700);
+  };
+
+  /**
+   * Clears pending label save when preview unmounts.
+   */
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <Box
@@ -30,25 +163,9 @@ export const ConceptFitPreview = ({
         bgcolor: "#ECFEFF",
         borderRadius: 3,
         p: 2,
+        opacity: isSavingConceptFit ? 0.92 : 1,
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 1.5,
-        }}
-      >
-        <Typography sx={{ fontSize: 13, fontWeight: 800, color: "#0E7490" }}>
-          Concept fit preview
-        </Typography>
-
-        <Typography sx={{ fontSize: 13, fontWeight: 800, color: "#0891B2" }}>
-          {timeLimitSeconds}s
-        </Typography>
-      </Box>
-
       <Box
         sx={{
           display: "grid",
@@ -57,22 +174,13 @@ export const ConceptFitPreview = ({
           gap: 2,
         }}
       >
-        <Box
-          sx={{
-            border: "1px solid #67E8F9",
-            borderRadius: 2,
-            bgcolor: "#FFFFFF",
-            p: 1.5,
-            textAlign: "center",
-          }}
-        >
-          <Typography sx={{ fontSize: 12, color: "#64748B", mb: 0.5 }}>
-            E
-          </Typography>
-          <Typography sx={{ fontSize: 15, fontWeight: 800, color: "#0F172A" }}>
-            Fits
-          </Typography>
-        </Box>
+        <ConceptFitEditableResponseBox
+          keyLabel="E"
+          value={leftText}
+          placeholder={DEFAULT_CONCEPT_FIT_LEFT_TEXT}
+          disabled={!canEditQuestion}
+          onChange={(value) => handleConceptFitLabelChange("left", value)}
+        />
 
         <Box
           sx={{
@@ -91,49 +199,14 @@ export const ConceptFitPreview = ({
           </Typography>
         </Box>
 
-        <Box
-          sx={{
-            border: "1px solid #67E8F9",
-            borderRadius: 2,
-            bgcolor: "#FFFFFF",
-            p: 1.5,
-            textAlign: "center",
-          }}
-        >
-          <Typography sx={{ fontSize: 12, color: "#64748B", mb: 0.5 }}>
-            I
-          </Typography>
-          <Typography sx={{ fontSize: 15, fontWeight: 800, color: "#0F172A" }}>
-            Does not fit
-          </Typography>
-        </Box>
-      </Box>
-
-      <Box
-        sx={{
-          width: "100%",
-          height: 8,
-          borderRadius: 999,
-          bgcolor: "#CFFAFE",
-          overflow: "hidden",
-          mt: 1.5,
-        }}
-      >
-        <Box
-          key={timeLimitMs}
-          sx={{
-            width: "68%",
-            height: "100%",
-            borderRadius: 999,
-            bgcolor: "#0891B2",
-            animation: `${timerDrain} ${timeLimitMs}ms linear infinite`,
-          }}
+        <ConceptFitEditableResponseBox
+          keyLabel="I"
+          value={rightText}
+          placeholder={DEFAULT_CONCEPT_FIT_RIGHT_TEXT}
+          disabled={!canEditQuestion}
+          onChange={(value) => handleConceptFitLabelChange("right", value)}
         />
       </Box>
-
-      <Typography sx={{ mt: 1, fontSize: 12, color: "#0E7490" }}>
-        Participants quickly decide whether each attribute fits the concept.
-      </Typography>
     </Box>
   );
 };

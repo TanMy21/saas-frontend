@@ -2,14 +2,19 @@ import { Box } from "@mui/material";
 
 import { ScreenLayoutProps } from "../../utils/types";
 
-const ScreenRoot = ({ children, display }: ScreenLayoutProps) => {
+const ScreenRoot = ({
+  children,
+  display,
+  alignItemsOveride,
+  justifyContentOveride,
+}: ScreenLayoutProps) => {
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: alignItemsOveride?? "center",
+        justifyContent: justifyContentOveride ?? "center",
         p: display === "mobile" ? 0 : 0,
         transition: "all 300ms ease",
         margin: "auto",
