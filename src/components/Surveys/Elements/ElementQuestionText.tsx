@@ -14,10 +14,19 @@ import { useDebouncedElementDispatch } from "../../../hooks/useDebouncedElementD
 import { useEditController } from "../../../hooks/useEditController";
 import { useOutsideSave } from "../../../hooks/useOutsideSave";
 import { useAppTheme } from "../../../theme/useAppTheme";
-import { NON_NUMBERED_ELEMENT_TYPES } from "../../../utils/constants";
+import {
+  DEFAULT_DESCRIPTION_PLACEHOLDER_TEXT,
+  DEFAULT_QUESTION_PLACEHOLDER_TEXT,
+  NON_NUMBERED_ELEMENT_TYPES,
+} from "../../../utils/constants";
 import { sanitizeRichTextHtml } from "../../../utils/richTextUtils";
 import { ElementProps } from "../../../utils/types";
-import { getDefaultQuestionTextAlign, isOrderable } from "../../../utils/utils";
+import {
+  getDefaultQuestionTextAlign,
+  getEditableQuestionDescriptionValue,
+  getEditableQuestionTitleValue,
+  isOrderable,
+} from "../../../utils/utils";
 
 import { EditableLine } from "./EditableLine";
 import { EditableQuestionText } from "./EditableQuestionTextandDescription";
@@ -40,6 +49,9 @@ const ElementQuestionText = ({ display }: ElementProps) => {
     (state: RootState) => state.question.selectedQuestion,
   );
   const { questionID, order, text, description, type } = question || {};
+
+  const titleValue = getEditableQuestionTitleValue(text);
+  const descriptionValue = getEditableQuestionDescriptionValue(description);
 
   const displayOrder = useMemo(() => {
     if (!questionID) return order;
@@ -291,7 +303,8 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                 >
                   <EditableQuestionText
                     active={canEdit && editingTarget === "title"}
-                    value={text}
+                    value={titleValue}
+                    placeholder={DEFAULT_QUESTION_PLACEHOLDER_TEXT}
                     onStartEdit={() => {
                       if (!canEdit) return;
                       beginEdit("title");
@@ -351,8 +364,8 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             >
               <EditableQuestionText
                 active={canEdit && editingTarget === "description"}
-                value={description}
-                placeholder="Description (optional)"
+                value={descriptionValue}
+                placeholder={DEFAULT_DESCRIPTION_PLACEHOLDER_TEXT}
                 onStartEdit={() => {
                   if (!canEdit) return;
                   beginEdit("description");

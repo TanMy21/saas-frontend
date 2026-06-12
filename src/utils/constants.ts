@@ -25,6 +25,9 @@ import { TimedChoiceSettingsForm } from "../types/surveyBuilderTypes";
 
 import { NotificationSettings, QuestionType, TabId } from "./types";
 
+export const DEFAULT_QUESTION_PLACEHOLDER_TEXT = "Your question here";
+export const DEFAULT_DESCRIPTION_PLACEHOLDER_TEXT = "Description (optional)";
+
 export const LAST_WS_KEY = "lWSID";
 
 export const VIEW_MODE_KEY = "ws:vm";
@@ -43,10 +46,13 @@ export const MIN_RECOMMENDED_ATTRIBUTES = 4;
 export const MAX_TIMED_OPTION_LENGTH = 80;
 
 export const MAX_IAT_CATEGORY_LABEL_LENGTH = 40;
-
 export const MAX_IAT_STIMULI = 10;
+export const MIN_RECOMMENDED_IAT_STIMULI = 8; 
+export const MAX_IAT_ATTRIBUTE_LENGTH = 40;
+export const MAX_IAT_ATTRIBUTES_PER_GROUP = 10;
+export const MIN_IAT_ATTRIBUTES_PER_GROUP = 2;
 
-export const MIN_RECOMMENDED_IAT_STIMULI = 8;
+
 
 export const TIMED_ACCENT = "#F97316";
 

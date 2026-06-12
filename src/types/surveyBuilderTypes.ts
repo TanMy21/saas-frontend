@@ -96,13 +96,6 @@ export type QuestionImageAsset = {
   height?: number | null;
 };
 
-export type IATCategorySettingsForm = {
-  iatLeftCategoryLabel: string;
-  iatRightCategoryLabel: string;
-  iatLeftKey: string;
-  iatRightKey: string;
-};
-
 export type IATBehaviorSettingsForm = {
   iatShowKeyboardHints: boolean;
   iatRandomizeStimuli: boolean;
@@ -201,4 +194,92 @@ export type EditableQuestionTextProps = {
   onFormatted: () => void;
   onKeyDown?: (e: React.KeyboardEvent) => void;
   editorSx?: any;
+};
+
+export type IATGroup = "THEME_A" | "THEME_B";
+
+export type IATOptionSettings = {
+  iatGroup?: IATGroup;
+  iatStimulusType?: "ATTRIBUTE";
+};
+
+export type IATCategoryItem = {
+  id: string;
+  label: string;
+};
+
+export type IATUiConfig = {
+  iatBrandA?: IATCategoryItem;
+  iatBrandB?: IATCategoryItem;
+  iatThemeA?: IATCategoryItem;
+  iatThemeB?: IATCategoryItem;
+  iatLeftKey?: string;
+  iatRightKey?: string;
+};
+
+export type IATCategorySettingsForm = {
+  iatBrandALabel: string;
+  iatBrandBLabel: string;
+  iatThemeALabel: string;
+  iatThemeBLabel: string;
+  iatLeftKey: string;
+  iatRightKey: string;
+};
+
+export const DEFAULT_IAT_UI_CONFIG: Required<IATUiConfig> = {
+  iatBrandA: {
+    id: "brand_a",
+    label: "Brand A",
+  },
+  iatBrandB: {
+    id: "brand_b",
+    label: "Brand B",
+  },
+  iatThemeA: {
+    id: "theme_a",
+    label: "Association A",
+  },
+  iatThemeB: {
+    id: "theme_b",
+    label: "Association B",
+  },
+  iatLeftKey: "E",
+  iatRightKey: "I",
+};
+
+export type IATAttributeGroupPanelProps = {
+  qID?: string;
+  group: IATGroup;
+  title: string;
+  options: OptionType[];
+  allOptions: OptionType[];
+};
+
+export type IATCombinedBlockPreviewProps = {
+  centerStimulus: string;
+};
+
+export type IATCombinedSideCardProps = {
+  keyLabel: string;
+  brandLabel: string;
+  themeLabel: string;
+  canEdit: boolean;
+  onBrandUpdate: (value: string) => void;
+  onThemeUpdate: (value: string) => void;
+};
+
+export type IATInlineEditableTextProps = {
+  value: string;
+  canEdit: boolean;
+  fontSize: number;
+  fontWeight: number;
+  color: string;
+  onSave: (value: string) => void;
+};
+
+export type IATSettingsTextFieldProps = {
+  label: string;
+  value: string;
+  disabled: boolean;
+  onChange: (value: string) => void;
 };

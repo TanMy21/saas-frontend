@@ -990,6 +990,11 @@ export interface SurveyCanvasQuestion {
   options: OptionType[];
 }
 
+export type IATConfigItem = {
+  id: "brand_a" | "brand_b" | "theme_a" | "theme_b";
+  label: string;
+};
+
 export interface QuestionUIConfig {
   buttonText?: string;
   buttonTextYes?: string;
@@ -1015,6 +1020,10 @@ export interface QuestionUIConfig {
   iatRandomizeStimuli?: boolean;
   conceptFitLeftText?: string;
   conceptFitRightText?: string;
+  iatBrandA?: IATConfigItem;
+  iatBrandB?: IATConfigItem;
+  iatThemeA?: IATConfigItem;
+  iatThemeB?: IATConfigItem;
 }
 
 export interface QuestionBackgroundColorProps {
@@ -1299,6 +1308,7 @@ export interface OptionType {
   value: string;
   image: string;
   order: number;
+  settings?: any;
 }
 export interface ScaleResponseProps {
   display?: "desktop" | "mobile";

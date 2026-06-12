@@ -46,6 +46,8 @@ import {
 
 import {
   ALLOWED_IMAGE_TYPES,
+  DEFAULT_DESCRIPTION_PLACEHOLDER_TEXT,
+  DEFAULT_QUESTION_PLACEHOLDER_TEXT,
   DEFAULT_TIMED_CHOICE_CONFIG,
   DEFAULT_TIMER_SECONDS,
   MAX_IMAGE_SIZE_BYTES,
@@ -53,6 +55,7 @@ import {
   SINGLE_VALUE_TYPES,
   THREE_D_AREA_COLORS,
 } from "./constants";
+import { convertHtmlToPlainText } from "./richTextUtils";
 import { showToast } from "./showToast";
 import { EdgeStyle, LayoutMode, QuestionType, QuestionUIConfig } from "./types";
 
@@ -214,7 +217,13 @@ export const mergeHandlers =
     handlers.forEach((h) => h?.(e));
   };
 
-export const NO_CONDITION_TYPES = new Set<string>(["RANK", "END_SCREEN"]);
+export const NO_CONDITION_TYPES = new Set<string>([
+  "RANK",
+  "END_SCREEN",
+  "INFO_SCREEN",
+  "CONCEPT_FIT",
+  "IAT",
+]);
 export const isConditionlessType = (t?: string) =>
   !!t && NO_CONDITION_TYPES.has(t);
 
@@ -1110,16 +1119,17 @@ export const buildConceptFitUiConfig = (
 };
 
 export const getIATCategoryDefaults = (
-  uiConfig?: QuestionUIConfig,
+  uiConfig?: QuestionUIConfig | null,
 ): IATCategorySettingsForm => {
   return {
-    iatLeftCategoryLabel: uiConfig?.iatLeftCategoryLabel || "Left category",
-    iatRightCategoryLabel: uiConfig?.iatRightCategoryLabel || "Right category",
-    iatLeftKey: uiConfig?.iatLeftKey || "E",
-    iatRightKey: uiConfig?.iatRightKey || "I",
+    iatBrandALabel: uiConfig?.iatBrandA?.label ?? "Brand A",
+    iatBrandBLabel: uiConfig?.iatBrandB?.label ?? "Brand B",
+    iatThemeALabel: uiConfig?.iatThemeA?.label ?? "Association A",
+    iatThemeBLabel: uiConfig?.iatThemeB?.label ?? "Association B",
+    iatLeftKey: uiConfig?.iatLeftKey ?? "E",
+    iatRightKey: uiConfig?.iatRightKey ?? "I",
   };
 };
-
 export const getIATBehaviorDefaults = (
   uiConfig?: QuestionUIConfig,
 ): IATBehaviorSettingsForm => {
@@ -1143,15 +1153,28 @@ export const getIATBehaviorDefaults = (
 
 export const buildIATCategoryUiConfig = (
   data: IATCategorySettingsForm,
-  currentUiConfig: QuestionUIConfig = {},
+  currentUiConfig?: QuestionUIConfig | null,
 ): QuestionUIConfig => {
   return {
-    ...currentUiConfig,
-    iatLeftCategoryLabel: data.iatLeftCategoryLabel.trim() || "Left category",
-    iatRightCategoryLabel:
-      data.iatRightCategoryLabel.trim() || "Right category",
-    iatLeftKey: data.iatLeftKey.trim().toUpperCase() || "E",
-    iatRightKey: data.iatRightKey.trim().toUpperCase() || "I",
+    ...(currentUiConfig ?? {}),
+    iatBrandA: {
+      id: "brand_a",
+      label: data.iatBrandALabel.trim() || "Brand A",
+    },
+    iatBrandB: {
+      id: "brand_b",
+      label: data.iatBrandBLabel.trim() || "Brand B",
+    },
+    iatThemeA: {
+      id: "theme_a",
+      label: data.iatThemeALabel.trim() || "Association A",
+    },
+    iatThemeB: {
+      id: "theme_b",
+      label: data.iatThemeBLabel.trim() || "Association B",
+    },
+    iatLeftKey: data.iatLeftKey.trim().toUpperCase().slice(0, 1) || "E",
+    iatRightKey: data.iatRightKey.trim().toUpperCase().slice(0, 1) || "I",
   };
 };
 
@@ -1176,4 +1199,24 @@ export const getDefaultQuestionTextAlign = (type?: string | null) => {
   ];
 
   return centeredTypes.includes(type || "") ? "center" : "left";
+};
+
+export const getEditableQuestionTitleValue = (value?: string | null) => {
+  const plainValue = convertHtmlToPlainText(value || "").trim();
+
+  if (plainValue === DEFAULT_QUESTION_PLACEHOLDER_TEXT) {
+    return "";
+  }
+
+  return value || "";
+};
+
+export const getEditableQuestionDescriptionValue = (value?: string | null) => {
+  const plainValue = convertHtmlToPlainText(value || "").trim();
+
+  if (plainValue === DEFAULT_DESCRIPTION_PLACEHOLDER_TEXT) {
+    return "";
+  }
+
+  return value || "";
 };

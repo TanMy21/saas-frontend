@@ -10,16 +10,10 @@ export const ImplicitAssociationTestBuilderNote = () => {
         p: 2,
       }}
     >
-      <Typography sx={{ fontSize: 13, fontWeight: 800, color: "#334155", mb: 0.5 }}>
-        Setup note
-      </Typography>
-
       <Typography sx={{ fontSize: 13, color: "#64748B", lineHeight: 1.6 }}>
         IAT uses two targets, two attribute groups, practice blocks, and
-        reversed pairings. It does not use normal answer options.
+        reversed pairings
       </Typography>
     </Box>
   );
 };
-
- 

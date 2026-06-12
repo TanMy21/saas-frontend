@@ -101,8 +101,25 @@ const FlowConditionModal = ({
     Record<number, boolean>
   >({});
 
-  const displayOrder = (order?: number) =>
-    typeof order === "number" ? order + 1 : order;
+ 
+const headerNodeLabel = useMemo(() => {
+  const selectedLabel = selectedNode?.data?.label;
+
+  if (
+    selectedLabel !== undefined &&
+    selectedLabel !== null &&
+    String(selectedLabel).trim() !== ""
+  ) {
+    return String(selectedLabel);
+  }
+
+  const selectedType = String(selectedNode?.data?.element ?? "");
+
+  if (selectedType === "INFO_SCREEN") return "Info";
+  if (selectedType === "END_SCREEN") return "END";
+
+  return "";
+}, [selectedNode]);
 
   const addConditionBlock = () => {
     setConditions((prev) => [
@@ -255,11 +272,7 @@ const FlowConditionModal = ({
                     (selectedNode?.data?.element as keyof IconMapping)
                 ]
               }
-              label={
-                edgeFormData.sourceQuestionOrder !== -1
-                  ? displayOrder(edgeFormData.sourceQuestionOrder)
-                  : displayOrder(Number(selectedNode?.data?.order))
-              }
+              label={headerNodeLabel}
             />
 
             <Tooltip

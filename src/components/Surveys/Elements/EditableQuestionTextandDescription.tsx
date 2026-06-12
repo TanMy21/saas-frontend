@@ -5,6 +5,7 @@ import { Link } from "@tiptap/extension-link";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Color, TextStyle } from "@tiptap/extension-text-style";
 import { Underline as ul } from "@tiptap/extension-underline";
+import { Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import { StarterKit } from "@tiptap/starter-kit";
@@ -36,6 +37,17 @@ export const EditableQuestionText = ({
         blockquote: false,
         codeBlock: false,
         horizontalRule: false,
+      }),
+
+      /**
+       * Adds placeholder support and the is-editor-empty/is-empty classes.
+       */
+      Placeholder.configure({
+        placeholder,
+        showOnlyWhenEditable: false,
+        showOnlyCurrent: false,
+        emptyEditorClass: "is-editor-empty",
+        emptyNodeClass: "is-empty",
       }),
 
       ul,
@@ -88,7 +100,7 @@ export const EditableQuestionText = ({
 
     if (currentHTML !== nextHTML) {
       editor.commands.setContent(nextHTML, {
-        emitUpdate: false, // Prevents onUpdate from firing again while syncing external value.
+        emitUpdate: false,
       });
     }
   }, [editor, value]);
@@ -109,36 +121,41 @@ export const EditableQuestionText = ({
       }}
       sx={{
         cursor: active ? "text" : "pointer",
+
         "& .question-tiptap-editor": {
           outline: "none",
           minHeight: "1.2em",
-
           width: "100%",
           minWidth: 0,
-
           overflowWrap: "break-word",
           wordBreak: "break-word",
           whiteSpace: "pre-wrap",
-
           ...editorSx,
         },
+
         "& .question-tiptap-editor p": {
           margin: 0,
           overflowWrap: "break-word",
           wordBreak: "break-word",
           textAlign: "inherit",
         },
+
         "& .question-tiptap-editor a": {
           color: "inherit",
           textDecoration: "underline",
         },
-        "& .question-tiptap-editor.is-editor-empty:first-of-type::before": {
-          content: `"${placeholder}"`,
-          color: "rgba(0,0,0,0.35)",
+
+        /**
+         * Placeholder support for empty TipTap editor.
+         */
+        "& .question-tiptap-editor p.is-editor-empty:first-of-type::before": {
+          content: "attr(data-placeholder)",
+          color: "rgba(0,0,0,0.20)",
           float: "left",
           height: 0,
           pointerEvents: "none",
         },
+
         "& .question-tiptap-editor .tiptap": {
           width: "100%",
           maxWidth: "100%",
@@ -201,7 +218,6 @@ export const EditableQuestionText = ({
               type="color"
               onInput={(event) => {
                 const color = (event.target as HTMLInputElement).value;
-
                 editor.chain().focus().setColor(color).run();
               }}
               style={{

@@ -236,123 +236,169 @@ const QuestionFlowContainer = ({
     setEdges(laidWithStyle);
   };
 
-  useEffect(() => {
-    if (!Elements || !Array.isArray(Elements)) return;
+ useEffect(() => {
+  if (!Elements || !Array.isArray(Elements)) return;
 
-    const filtered = Elements.filter(
-      (q) =>
-        !["WELCOME_SCREEN", "EMAIL_CONTACT", "INSTRUCTIONS"].includes(q.type)
-    );
+  /**
+   * These screens should not appear as flow nodes.
+   */
+  const HIDDEN_FLOW_TYPES = new Set<string>([
+    "WELCOME_SCREEN",
+    "EMAIL_CONTACT",
+    "INSTRUCTIONS",
+  ]);
 
-    const ends = filtered.filter((q) => q.type === "END_SCREEN");
-    const questions = filtered.filter((q) => q.type !== "END_SCREEN");
+  /**
+   * These nodes can exist in the flow, but should not show a numbered badge.
+   */
+  const NON_NUMBERED_FLOW_TYPES = new Set<string>([
+    "INFO_SCREEN",
+    "END_SCREEN",
+  ]);
 
-    const sortedQuestions = [...questions].sort(
-      (a, b) => (a.order ?? 0) - (b.order ?? 0)
-    );
+  const filtered = Elements.filter((q) => !HIDDEN_FLOW_TYPES.has(q.type));
 
-    const sorted = [...sortedQuestions, ...ends];
+  const ends = filtered.filter((q) => q.type === "END_SCREEN");
+  const nonEndNodes = filtered.filter((q) => q.type !== "END_SCREEN");
 
-    const maxQuestionOrder = sortedQuestions.length
-      ? Math.max(...sortedQuestions.map((q) => q.order ?? 0))
-      : 0;
+  /**
+   * Flow sorting still uses the internal DB order.
+   * INFO_SCREEN stays in this list, so default edges/layout remain consistent.
+   */
+  const sortedNonEndNodes = [...nonEndNodes].sort(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0),
+  );
 
-    const idToVirtualOrder = new Map<string, number>();
-    sorted.forEach((q, i) => {
-      const virt =
-        q.type === "END_SCREEN" ? maxQuestionOrder + 1 + i : (q.order ?? 0);
-      idToVirtualOrder.set(q.questionID, virt);
-    });
+  const sorted = [...sortedNonEndNodes, ...ends];
 
-    // Compact the virtual orders to dense ranks 0..k-1 to remove gaps
-    const uniqueVirtuals = Array.from(
-      new Set(sorted.map((q) => idToVirtualOrder.get(q.questionID)!))
-    ).sort((a, b) => a - b);
-    const virtualToCompact = new Map<number, number>();
-    uniqueVirtuals.forEach((v, idx) => virtualToCompact.set(v, idx));
+  /**
+   * Internal flow rank is compact and includes INFO_SCREEN.
+   * Use this for layout, edge labels, and bypass gap checks.
+   */
+  const idToFlowRank = new Map<string, number>();
 
-    const idToCompactOrder = new Map<string, number>();
-    sorted.forEach((q) => {
-      idToCompactOrder.set(
-        q.questionID,
-        virtualToCompact.get(idToVirtualOrder.get(q.questionID)!)!
-      );
-    });
+  sorted.forEach((q, index) => {
+    idToFlowRank.set(q.questionID, index + 1);
+  });
 
-    const generatedNodes: Node[] = sorted.map((q) => ({
-      id: q.questionID,
-      data: {
-        label: q.type === "END_SCREEN" ? "END" : q.order,
-        questionID: q.questionID,
-        question: q.text,
-        order: idToCompactOrder.get(q.questionID)!,
-        element: q.type,
-      },
-      type: "questionNode",
-      position: { x: 0, y: 0 },
-    }));
+  /**
+   * Visible display order excludes INFO_SCREEN and END_SCREEN.
+   * Use this only for the number shown inside normal question nodes.
+   */
+  const numberedNodes = sorted.filter(
+    (q) => !NON_NUMBERED_FLOW_TYPES.has(q.type),
+  );
 
-    const defaultEdges: Edge[] = sorted.slice(0, -1).map((q, i) => ({
-      id: `e${q.questionID}-${sorted[i + 1].questionID}`,
-      source: q.questionID,
-      target: sorted[i + 1].questionID,
-      type: "custom-edge",
-      data: { bypass: false, edgeStyle },
-      immutable: true,
-    }));
+  const idToDisplayOrder = new Map<string, number>();
 
-    const bypassEdges: Edge[] = (questionConditions ?? [])
-      .map((condition: Condition) => {
-        // skip edges whose endpoints don’t exist
-        if (
-          !idToCompactOrder.has(condition.relatedQuestionID) ||
-          !idToCompactOrder.has(condition.goto_questionID)
-        ) {
-          return null;
-        }
+  numberedNodes.forEach((q, index) => {
+    idToDisplayOrder.set(q.questionID, index + 1);
+  });
 
-        const sOrder = idToCompactOrder.get(condition.relatedQuestionID)!;
-        const tOrder = idToCompactOrder.get(condition.goto_questionID)!;
+  /**
+   * Returns the label shown inside the node badge.
+   * INFO_SCREEN keeps internal order but does not show a question number.
+   */
+  const getNodeLabel = (q: (typeof sorted)[number]) => {
+    if (q.type === "END_SCREEN") return "END";
+    if (q.type === "INFO_SCREEN") return "Info";
 
-        return {
-          id: `bypass-${condition.relatedQuestionID}-${condition.goto_questionID}`,
-          source: condition.relatedQuestionID,
-          target: condition.goto_questionID,
-          type: "bypass-edge",
-          label: `${sOrder} → ${tOrder}`,
-          data: {
-            bypass: tOrder - sOrder > 1, //  gap check on compact ranks
-            sourceOrder: sOrder,
-            targetOrder: tOrder,
-            flowConditionID: condition.flowConditionID,
-            edgeStyle,
-          },
-        } as Edge;
-      })
-      .filter(Boolean) as Edge[];
+    return idToDisplayOrder.get(q.questionID) ?? "";
+  };
 
-    const allEdges = [...defaultEdges, ...bypassEdges];
+  const generatedNodes: Node[] = sorted.map((q) => ({
+    id: q.questionID,
+    data: {
+      label: getNodeLabel(q),
+      questionID: q.questionID,
+      question: q.text,
 
-    // Selected layout
-    const {
-      nodes: laidNodes,
-      edges: laidEdges,
-      overlays,
-    } = applyLayout(layout, generatedNodes, allEdges, {
-      clusters: {
-        getGroupId: (n) => (n.data as any)?.sectionId,
-        padding: 24,
-      },
-    });
+      /**
+       * Internal compact flow order.
+       * This includes INFO_SCREEN so flow routing stays consistent.
+       */
+      order: idToFlowRank.get(q.questionID)!,
 
-    const laidWithStyle = laidEdges.map((e) => ({
-      ...e,
-      data: { ...(e.data as any), edgeStyle },
-    }));
+      /**
+       * User-facing question number.
+       * This excludes INFO_SCREEN and END_SCREEN.
+       */
+      displayOrder: idToDisplayOrder.get(q.questionID) ?? null,
 
-    setNodes(overlays?.length ? [...overlays, ...laidNodes] : laidNodes);
-    setEdges(laidWithStyle);
-  }, [Elements, questionConditions, layout, edgeStyle]);
+      element: q.type,
+    },
+    type: "questionNode",
+    position: { x: 0, y: 0 },
+  }));
+
+  const defaultEdges: Edge[] = sorted.slice(0, -1).map((q, i) => ({
+    id: `e${q.questionID}-${sorted[i + 1].questionID}`,
+    source: q.questionID,
+    target: sorted[i + 1].questionID,
+    type: "custom-edge",
+    data: {
+      bypass: false,
+      edgeStyle,
+    },
+    immutable: true,
+  }));
+
+  const bypassEdges: Edge[] = (questionConditions ?? [])
+    .map((condition: Condition) => {
+      if (
+        !idToFlowRank.has(condition.relatedQuestionID) ||
+        !idToFlowRank.has(condition.goto_questionID)
+      ) {
+        return null;
+      }
+
+      const sourceFlowRank = idToFlowRank.get(condition.relatedQuestionID)!;
+      const targetFlowRank = idToFlowRank.get(condition.goto_questionID)!;
+
+      return {
+        id: `bypass-${condition.relatedQuestionID}-${condition.goto_questionID}`,
+        source: condition.relatedQuestionID,
+        target: condition.goto_questionID,
+        type: "bypass-edge",
+
+        /**
+         * Edge labels use internal flow rank, not visible question number.
+         * This keeps routing consistent even when INFO_SCREEN has no visible number.
+         */
+        label: `${sourceFlowRank} → ${targetFlowRank}`,
+
+        data: {
+          bypass: targetFlowRank - sourceFlowRank > 1,
+          sourceOrder: sourceFlowRank,
+          targetOrder: targetFlowRank,
+          flowConditionID: condition.flowConditionID,
+          edgeStyle,
+        },
+      } as Edge;
+    })
+    .filter(Boolean) as Edge[];
+
+  const allEdges = [...defaultEdges, ...bypassEdges];
+
+  const {
+    nodes: laidNodes,
+    edges: laidEdges,
+    overlays,
+  } = applyLayout(layout, generatedNodes, allEdges, {
+    clusters: {
+      getGroupId: (n) => (n.data as any)?.sectionId,
+      padding: 24,
+    },
+  });
+
+  const laidWithStyle = laidEdges.map((e) => ({
+    ...e,
+    data: { ...(e.data as any), edgeStyle },
+  }));
+
+  setNodes(overlays?.length ? [...overlays, ...laidNodes] : laidNodes);
+  setEdges(laidWithStyle);
+}, [Elements, questionConditions, layout, edgeStyle]);
 
   useEffect(() => {
     setTimeout(() => {

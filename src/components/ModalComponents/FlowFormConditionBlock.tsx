@@ -49,6 +49,7 @@ const FlowFormConditionBlock = ({
 
   const FormConditionComponent: Record<string, React.FC<FlowFormProps>> = {
     BINARY: FlowFormBinary,
+    DROPDOWN: FlowFormOptions,
     MEDIA: FlowFormOptions,
     MULTIPLE_CHOICE: FlowFormOptions,
     RADIO: FlowFormOptions,
@@ -57,6 +58,7 @@ const FlowFormConditionBlock = ({
     RANGE: FlowFormInput,
     RANK: FlowFormNoCondition,
     THREE_D: FlowForm3D,
+    TIMED_CHOICE: FlowFormBinary,
   };
 
   const [deleteCondition] = useDeleteConditionMutation();

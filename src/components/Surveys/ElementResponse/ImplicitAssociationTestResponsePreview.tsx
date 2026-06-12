@@ -1,10 +1,11 @@
 import { Box } from "@mui/material";
 
 import { useGetOptionsOfQuestionQuery } from "../../../app/slices/optionApiSlice";
+import { isIATOptionInGroup } from "../../../utils/iatUtils";
 import { ElementProps, OptionType } from "../../../utils/types";
 
-import { IATStimulusManager } from "./IATStimulusManager";
-import { ImplicitAssociationTestBlockPreview } from "./ImplicitAssociationTestBlockPreview";
+import { IATCombinedBlockPreview } from "./IATCombinedBlockPreview";
+import { IATGroupedAttributeManager } from "./IATGroupedAttributeManager";
 import { ImplicitAssociationTestBuilderNote } from "./ImplicitAssociationTestBuilderNote";
 
 export const ImplicitAssociationTestResponsePreview = ({
@@ -20,11 +21,18 @@ export const ImplicitAssociationTestResponsePreview = ({
     },
   );
 
-  const sortedStimuli = [...options].sort(
-    (a, b) => (a.order || 0) - (b.order || 0),
-  );
+  const sortedThemeAAttributes = [...options]
+    .filter((option) => isIATOptionInGroup(option.settings, "THEME_A"))
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  const firstStimulus = sortedStimuli[0]?.text || "Add stimuli";
+  const sortedThemeBAttributes = [...options]
+    .filter((option) => isIATOptionInGroup(option.settings, "THEME_B"))
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+  const firstStimulus =
+    sortedThemeAAttributes[0]?.text ||
+    sortedThemeBAttributes[0]?.text ||
+    "Add attributes";
 
   return (
     <Box
@@ -43,9 +51,9 @@ export const ImplicitAssociationTestResponsePreview = ({
           gap: 2.5,
         }}
       >
-        <ImplicitAssociationTestBlockPreview centerStimulus={firstStimulus} />
+        <IATCombinedBlockPreview centerStimulus={firstStimulus} />
 
-        <IATStimulusManager qID={qID} display={display} />
+        <IATGroupedAttributeManager qID={qID} display={display} />
 
         <ImplicitAssociationTestBuilderNote />
       </Box>

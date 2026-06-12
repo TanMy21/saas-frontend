@@ -1,14 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import KeyboardAltOutlinedIcon from "@mui/icons-material/KeyboardAltOutlined";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
-  InputAdornment,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -26,7 +23,6 @@ import {
   IATCategorySettingsForm,
   SettingSaveState,
 } from "../../../../types/surveyBuilderTypes";
-import { MAX_IAT_CATEGORY_LABEL_LENGTH } from "../../../../utils/constants";
 import {
   ElementSettingsProps,
   QuestionUIConfig,
@@ -36,6 +32,7 @@ import {
   getIATCategoryDefaults,
 } from "../../../../utils/utils";
 
+import { IATSettingsTextField } from "./IATSettingsTextField";
 import SettingSaveStatus from "./SettingSaveStatus";
 
 const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
@@ -54,56 +51,65 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
   const [formTouched, setFormTouched] = useState(false);
 
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastHydratedSignatureRef = useRef<string>("");
 
   const [updateQuestionPreferenceUIConfig, { isLoading: isSavingIAT }] =
     useUpdateQuestionPreferenceUIConfigMutation();
 
   const formDefaults = getIATCategoryDefaults(uiConfig);
 
-  const { control, reset, handleSubmit } = useForm<IATCategorySettingsForm>({
-    defaultValues: formDefaults,
-  });
+  const { control, reset, handleSubmit, getValues } =
+    useForm<IATCategorySettingsForm>({
+      defaultValues: formDefaults,
+    });
 
   const watchedValues = useWatch({ control });
 
   /**
    * Stores the last confirmed saved IAT category settings.
-   * This lets us show the save indicator only when there is an actual change.
+   * This lets the save indicator appear only when values differ from saved backend state.
    */
   const lastSavedIATCategoryRef = useRef<IATCategorySettingsForm>(formDefaults);
 
   /**
-   * Tracks the active question.
-   * This prevents Redux live-preview updates from resetting the form/status while editing.
+   * Creates a stable signature from the currently saved IAT uiConfig.
+   * This lets the form hydrate when uiConfig arrives asynchronously after the first render.
    */
-  const activeQuestionIDRef = useRef<string | undefined>(undefined);
+  const iatConfigSignature = JSON.stringify({
+    questionID,
+    brandA: uiConfig?.iatBrandA?.label ?? "",
+    brandB: uiConfig?.iatBrandB?.label ?? "",
+    themeA: uiConfig?.iatThemeA?.label ?? "",
+    themeB: uiConfig?.iatThemeB?.label ?? "",
+    leftKey: uiConfig?.iatLeftKey ?? "",
+    rightKey: uiConfig?.iatRightKey ?? "",
+  });
 
   /**
-   * Hydrates form from saved uiConfig only when the selected question changes.
-   * This keeps the save indicator hidden on initial render.
+   * Hydrates the form from saved uiConfig.
+   * This runs when the selected question changes or when the real uiConfig arrives from the backend.
    */
   useEffect(() => {
     if (!questionID) return;
 
-    if (activeQuestionIDRef.current === questionID) return;
+    /**
+     * Do not overwrite the user's current typing while there are unsaved edits.
+     */
+    if (formTouched) return;
 
-    activeQuestionIDRef.current = questionID;
+    /**
+     * Avoid unnecessary reset calls when the same saved config is already hydrated.
+     */
+    if (lastHydratedSignatureRef.current === iatConfigSignature) return;
 
     const nextDefaults = getIATCategoryDefaults(uiConfig);
 
+    lastHydratedSignatureRef.current = iatConfigSignature;
     lastSavedIATCategoryRef.current = nextDefaults;
 
     reset(nextDefaults);
-    setFormTouched(false);
     setSaveStatus("idle");
-  }, [
-    questionID,
-    uiConfig?.iatLeftCategoryLabel,
-    uiConfig?.iatRightCategoryLabel,
-    uiConfig?.iatLeftKey,
-    uiConfig?.iatRightKey,
-    reset,
-  ]);
+  }, [questionID, iatConfigSignature, formTouched, reset]);
 
   /**
    * Checks whether IAT category settings actually changed from the last saved backend state.
@@ -112,8 +118,10 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
     const lastSaved = lastSavedIATCategoryRef.current;
 
     return (
-      data.iatLeftCategoryLabel !== lastSaved.iatLeftCategoryLabel ||
-      data.iatRightCategoryLabel !== lastSaved.iatRightCategoryLabel ||
+      data.iatBrandALabel !== lastSaved.iatBrandALabel ||
+      data.iatBrandBLabel !== lastSaved.iatBrandBLabel ||
+      data.iatThemeALabel !== lastSaved.iatThemeALabel ||
+      data.iatThemeBLabel !== lastSaved.iatThemeBLabel ||
       data.iatLeftKey !== lastSaved.iatLeftKey ||
       data.iatRightKey !== lastSaved.iatRightKey
     );
@@ -122,10 +130,10 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
   /**
    * Marks this panel as dirty only when values differ from the saved baseline.
    */
-  const markFormTouched = (nextData?: IATCategorySettingsForm) => {
+  const markFormTouched = (nextData: IATCategorySettingsForm) => {
     if (!canEditQuestion) return;
 
-    if (nextData && !hasActualIATCategoryChange(nextData)) {
+    if (!hasActualIATCategoryChange(nextData)) {
       setFormTouched(false);
       setSaveStatus("idle");
       return;
@@ -145,12 +153,35 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
         value: {
           ...question?.questionPreferences,
           uiConfig: {
-            ...uiConfig,
+            ...(uiConfig ?? {}),
             ...partialUiConfig,
           },
         } as any,
       }),
     );
+  };
+
+  /**
+   * Updates one form field, updates Redux preview, and marks the form dirty if needed.
+   */
+  const handleIATFieldChange = (
+    fieldName: keyof IATCategorySettingsForm,
+    value: string,
+    partialUiConfig: Partial<QuestionUIConfig>,
+    onFieldChange: (value: string) => void,
+  ) => {
+    if (!canEditQuestion) return;
+
+    onFieldChange(value);
+    updateIATPreview(partialUiConfig);
+
+    /**
+     * Uses getValues so dirty detection is based on the latest form state.
+     */
+    markFormTouched({
+      ...getValues(),
+      [fieldName]: value,
+    });
   };
 
   /**
@@ -190,6 +221,15 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
        * Update saved baseline only after backend confirms the save.
        */
       lastSavedIATCategoryRef.current = data;
+      lastHydratedSignatureRef.current = JSON.stringify({
+        questionID,
+        brandA: nextUiConfig?.iatBrandA?.label ?? "",
+        brandB: nextUiConfig?.iatBrandB?.label ?? "",
+        themeA: nextUiConfig?.iatThemeA?.label ?? "",
+        themeB: nextUiConfig?.iatThemeB?.label ?? "",
+        leftKey: nextUiConfig?.iatLeftKey ?? "",
+        rightKey: nextUiConfig?.iatRightKey ?? "",
+      });
 
       setFormTouched(false);
       setSaveStatus("saved");
@@ -269,7 +309,7 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
             color: "#453F46",
           }}
         >
-          <Tooltip title="Configure IAT left/right categories and response keys">
+          <Tooltip title="Configure IAT brands, association groups, and response keys">
             <Typography>IAT categories</Typography>
           </Tooltip>
         </Box>
@@ -289,151 +329,101 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
           }}
         >
           <Controller
-            name="iatLeftCategoryLabel"
+            name="iatBrandALabel"
             control={control}
             render={({ field }) => (
-              <TextField
-                fullWidth
-                variant="standard"
-                disabled={!canEditQuestion}
+              <IATSettingsTextField
+                label="Concept A"
                 value={field.value ?? ""}
-                onChange={(event) => {
-                  if (!canEditQuestion) return;
-
-                  const value = event.target.value.slice(
-                    0,
-                    MAX_IAT_CATEGORY_LABEL_LENGTH,
-                  );
-
-                  field.onChange(value);
-
-                  updateIATPreview({
-                    iatLeftCategoryLabel: value,
-                  });
-
-                  /**
-                   * Builds the next expected form state so actual-change detection
-                   * does not depend on React Hook Form updating synchronously.
-                   */
-                  const nextData = {
-                    ...(watchedValues as IATCategorySettingsForm),
-                    iatLeftCategoryLabel: value,
-                  };
-
-                  markFormTouched(nextData);
-                }}
-                InputProps={{
-                  // Removes the default MUI standard underline.
-                  disableUnderline: true,
-
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {(field.value ?? "").length}/
-                      {MAX_IAT_CATEGORY_LABEL_LENGTH}
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  "& .MuiInputBase-input": {
-                    lineHeight: "1.5",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    cursor: canEditQuestion ? "text" : "not-allowed",
-                    fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
-                    fontWeight: 500,
-                  },
-                  "& .MuiInputBase-root": {
-                    borderRadius: "8px",
-                    height: "42px",
-                    fontSize: "15px",
-                    backgroundColor: "#F3F4F6",
-                    color: "#1F2937",
-                    px: 1.5,
-                    transition: "background-color 0.2s ease",
-                    "&:hover": {
-                      backgroundColor: "#E5E7EB",
+                disabled={!canEditQuestion}
+                onChange={(value) =>
+                  handleIATFieldChange(
+                    "iatBrandALabel",
+                    value,
+                    {
+                      iatBrandA: {
+                        id: "brand_a",
+                        label: value,
+                      },
                     },
-                    "&.Mui-focused": {
-                      backgroundColor: "#FFF7ED",
-                    },
-                  },
-                }}
+                    field.onChange,
+                  )
+                }
               />
             )}
           />
 
           <Controller
-            name="iatRightCategoryLabel"
+            name="iatBrandBLabel"
             control={control}
             render={({ field }) => (
-              <TextField
-                fullWidth
-                variant="standard"
-                disabled={!canEditQuestion}
+              <IATSettingsTextField
+                label="Concept B"
                 value={field.value ?? ""}
-                onChange={(event) => {
-                  if (!canEditQuestion) return;
-
-                  const value = event.target.value.slice(
-                    0,
-                    MAX_IAT_CATEGORY_LABEL_LENGTH,
-                  );
-
-                  field.onChange(value);
-
-                  updateIATPreview({
-                    iatRightCategoryLabel: value,
-                  });
-
-                  /**
-                   * Builds the next expected form state so actual-change detection
-                   * does not depend on React Hook Form updating synchronously.
-                   */
-                  const nextData = {
-                    ...(watchedValues as IATCategorySettingsForm),
-                    iatRightCategoryLabel: value,
-                  };
-
-                  markFormTouched(nextData);
-                }}
-                InputProps={{
-                  // Removes the default black underline from MUI standard variant.
-                  disableUnderline: true,
-
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {(field.value ?? "").length}/
-                      {MAX_IAT_CATEGORY_LABEL_LENGTH}
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  "& .MuiInputBase-input": {
-                    lineHeight: "1.5",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    cursor: canEditQuestion ? "text" : "not-allowed",
-                    fontFamily: `"Inter", "Segoe UI", "Roboto", sans-serif`,
-                    fontWeight: 500,
-                  },
-                  "& .MuiInputBase-root": {
-                    borderRadius: "8px",
-                    height: "42px",
-                    fontSize: "15px",
-                    backgroundColor: "#F3F4F6",
-                    color: "#1F2937",
-                    px: 1.5,
-                    transition: "background-color 0.2s ease",
-                    "&:hover": {
-                      backgroundColor: "#E5E7EB",
+                disabled={!canEditQuestion}
+                onChange={(value) =>
+                  handleIATFieldChange(
+                    "iatBrandBLabel",
+                    value,
+                    {
+                      iatBrandB: {
+                        id: "brand_b",
+                        label: value,
+                      },
                     },
-                    "&.Mui-focused": {
-                      backgroundColor: "#FFF7ED",
+                    field.onChange,
+                  )
+                }
+              />
+            )}
+          />
+
+          <Controller
+            name="iatThemeALabel"
+            control={control}
+            render={({ field }) => (
+              <IATSettingsTextField
+                label="Association Group A"
+                value={field.value ?? ""}
+                disabled={!canEditQuestion}
+                onChange={(value) =>
+                  handleIATFieldChange(
+                    "iatThemeALabel",
+                    value,
+                    {
+                      iatThemeA: {
+                        id: "theme_a",
+                        label: value,
+                      },
                     },
-                  },
-                }}
+                    field.onChange,
+                  )
+                }
+              />
+            )}
+          />
+
+          <Controller
+            name="iatThemeBLabel"
+            control={control}
+            render={({ field }) => (
+              <IATSettingsTextField
+                label="Association Group B"
+                value={field.value ?? ""}
+                disabled={!canEditQuestion}
+                onChange={(value) =>
+                  handleIATFieldChange(
+                    "iatThemeBLabel",
+                    value,
+                    {
+                      iatThemeB: {
+                        id: "theme_b",
+                        label: value,
+                      },
+                    },
+                    field.onChange,
+                  )
+                }
               />
             )}
           />

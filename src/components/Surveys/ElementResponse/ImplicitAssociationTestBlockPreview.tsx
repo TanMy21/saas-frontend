@@ -1,4 +1,4 @@
-import { Box, Chip, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
