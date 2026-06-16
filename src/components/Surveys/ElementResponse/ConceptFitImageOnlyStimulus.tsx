@@ -7,6 +7,8 @@ import {
   useReplaceQuestionImageMutation,
   useUploadQuestionImageMutation,
 } from "../../../app/slices/elementApiSlice";
+import { RootState } from "../../../app/store";
+import { useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
 import { ConceptFitStimulusLayoutProps } from "../../../types/surveyBuilderTypes";
 import { CONCEPT_FIT_IMAGE_ROLE } from "../../../utils/constants";
@@ -17,12 +19,17 @@ import { ConceptFitAttributeManager } from "./ConceptFitAttributeManager";
 export const ConceptFitImageOnlyStimulus = (
   props: ConceptFitStimulusLayoutProps,
 ) => {
-  const { qID, display, questionImages = [] } = props;
+  const question = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
+  );
+
+  const questionID = question?.questionID;
+  const conceptImage = question?.questionImages?.[0];
 
   const { can } = useAuth();
 
   const canEditQuestion = can("UPDATE_QUESTION");
-  const isMobile = display === "mobile";
+  // const isMobile = display === "mobile";
 
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
   const replaceInputRef = useRef<HTMLInputElement | null>(null);
@@ -36,21 +43,17 @@ export const ConceptFitImageOnlyStimulus = (
   const [removeQuestionImage, { isLoading: isDeleting }] =
     useRemoveQuestionImageMutation();
 
-  const conceptImage = questionImages.find(
-    (image) => image.role === CONCEPT_FIT_IMAGE_ROLE,
-  );
-
   const isBusy = isUploading || isReplacing || isDeleting;
 
   const handleUploadImage = async (file: File) => {
-    if (!qID || !canEditQuestion) return;
+    if (!questionID || !canEditQuestion) return;
 
     try {
       const formData = new FormData();
       formData.append("imgFile", file);
 
       await uploadQuestionImage({
-        questionID: qID,
+        questionID: questionID,
         role: CONCEPT_FIT_IMAGE_ROLE,
         formData,
       }).unwrap();
@@ -63,14 +66,14 @@ export const ConceptFitImageOnlyStimulus = (
   };
 
   const handleReplaceImage = async (file: File) => {
-    if (!qID || !conceptImage || !canEditQuestion) return;
+    if (!questionID || !conceptImage || !canEditQuestion) return;
 
     try {
       const formData = new FormData();
       formData.append("imgFile", file);
 
       await replaceQuestionImage({
-        questionID: qID,
+        questionID: questionID,
         questionImageID: conceptImage.questionImageID,
         formData,
       }).unwrap();
@@ -86,11 +89,11 @@ export const ConceptFitImageOnlyStimulus = (
    * Deletes the existing static Concept Fit image.
    */
   const handleDeleteImage = async () => {
-    if (!qID || !conceptImage || !canEditQuestion) return;
+    if (!questionID || !conceptImage || !canEditQuestion) return;
 
     try {
       await removeQuestionImage({
-        questionID: qID,
+        questionID,
         questionImageID: conceptImage.questionImageID,
       }).unwrap();
 
@@ -112,7 +115,7 @@ export const ConceptFitImageOnlyStimulus = (
     >
       <Box
         sx={{
-          width: isMobile ? "92%" : "72%",
+          width: "72%",
           display: "flex",
           flexDirection: "column",
           gap: 2.5,
@@ -120,15 +123,9 @@ export const ConceptFitImageOnlyStimulus = (
       >
         <Box
           sx={{
-            // border: conceptImage ? "1px solid #E2E8F0" : "1px dashed #CBD5E1",
-            // borderRadius: 3,
-            // bgcolor: conceptImage ? "#FFFFFF" : "#F8FAFC",
-            px: isMobile ? 2 : 3,
-            py: isMobile ? 2.5 : 3,
+            px: 3,
+            py: 3,
             textAlign: "center",
-            // boxShadow: conceptImage
-            //   ? "0 14px 34px rgba(15,23,42,0.08)"
-            //   : "none",
           }}
         >
           {conceptImage?.imageUrl ? (
@@ -139,17 +136,16 @@ export const ConceptFitImageOnlyStimulus = (
                 alt={conceptImage.altText || "Concept image"}
                 sx={{
                   width: "100%",
-                  maxWidth: isMobile ? 280 : 420,
-                  maxHeight: isMobile ? 180 : 260,
+                  maxWidth: 420,
+                  maxHeight: 260,
                   objectFit: "contain",
                   mx: "auto",
                   borderRadius: 2.5,
                   bgcolor: "#ffffff",
-                  // border: "1px solid #E2E8F0",
                 }}
               />
 
-              {!isMobile && canEditQuestion && (
+              {canEditQuestion && (
                 <Box
                   sx={{
                     display: "flex",
@@ -222,7 +218,7 @@ export const ConceptFitImageOnlyStimulus = (
                 Upload one static image for the concept being tested.
               </Typography>
 
-              {!isMobile && canEditQuestion && (
+              {canEditQuestion && (
                 <>
                   <Button
                     variant="contained"

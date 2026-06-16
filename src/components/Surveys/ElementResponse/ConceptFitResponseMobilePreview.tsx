@@ -21,7 +21,6 @@ export const ConceptFitResponseMobilePreview = () => {
   const showImageMode = conceptDisplayMode === "IMAGE";
 
   const leftText = uiConfig.conceptFitLeftText || DEFAULT_CONCEPT_FIT_LEFT_TEXT;
-
   const rightText =
     uiConfig.conceptFitRightText || DEFAULT_CONCEPT_FIT_RIGHT_TEXT;
 
@@ -32,51 +31,47 @@ export const ConceptFitResponseMobilePreview = () => {
     },
   );
 
-  // The mobile preview intentionally shows only the first attribute.
   const firstAttribute = options[0];
 
-  // Concept Fit image mode uses one uploaded stimulus image.
-  // Prefer the first available question image because desktop also shows a single uploaded image.
   const conceptImage = question?.questionImages?.[0];
 
   return (
     <Box
       sx={{
         width: "100%",
-        minHeight: 520,
+        minHeight: 480,
         display: "flex",
-        justifyContent: "center",
-        mt: 2,
+        mt: 0,
       }}
     >
       <Box
         sx={{
-          width: "92%",
-          minHeight: 500,
-          p: 2,
+          width: "98%",
+          minHeight: 400,
           borderRadius: "28px",
           bgcolor: "#FFFFFF",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
+          justifyContent: "flex-start",
+          alignItems: "center",
           overflow: "hidden",
           // border: "2px solid green",
         }}
       >
         <Box
           sx={{
-            flex: 1,
+            width: "100%",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            my: 1,
+            alignItems: "center", 
+            pt: 1.5,
+            px: 1.25,
           }}
         >
           {!firstAttribute ? (
             <Box
               sx={{
-                width: "100%",
+                width: "96%",
                 minHeight: 120,
                 display: "flex",
                 alignItems: "center",
@@ -101,22 +96,85 @@ export const ConceptFitResponseMobilePreview = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 gap: 1.5,
-                p: 2,
+                // border: "2px solid red",
               }}
             >
+              <Box
+                sx={{
+                  display: "grid",
+                  width: "96%",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 3,
+                  mb: 1,
+                  // border: "2px solid blue",
+                }}
+              >
+                <Box
+                  sx={{
+                    py: 3,
+                    borderRadius: "18px",
+                    bgcolor: "#FFF1F2",
+                    color: "#BE123C",
+                    border: "1px solid #FFE4E6",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 0.5,
+                    boxShadow: "0 6px 14px rgba(190,18,60,0.08)",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: 12,
+                      fontWeight: 900,
+                      textTransform: "uppercase",
+                      letterSpacing: 0.5,
+                    }}
+                  >
+                    {leftText}
+                  </Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    py: 3,
+                    borderRadius: "18px",
+                    bgcolor: "#ECFDF5",
+                    color: "#047857",
+                    border: "1px solid #D1FAE5",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 0.5,
+                    boxShadow: "0 6px 14px rgba(4,120,87,0.08)",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: 12,
+                      fontWeight: 900,
+                      textTransform: "uppercase",
+                      letterSpacing: 0.5,
+                    }}
+                  >
+                    {rightText}
+                  </Typography>
+                </Box>
+              </Box>
+
               {showImageMode && conceptImage?.imageUrl && (
                 <Box
                   sx={{
                     width: "82%",
                     maxHeight: 180,
                     borderRadius: "22px",
-                    bgcolor: "#F8FAFC",
-                    border: "1px solid #E2E8F0",
                     overflow: "hidden",
                     display: "flex",
+                    mb: 1,
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "0 10px 24px rgba(15,23,42,0.08)",
                   }}
                 >
                   <Box
@@ -127,10 +185,7 @@ export const ConceptFitResponseMobilePreview = () => {
                       width: "100%",
                       height: "100%",
                       maxHeight: 180,
-
-                      // Preserves the uploaded image's original aspect ratio.
                       objectFit: "contain",
-
                       display: "block",
                     }}
                   />
@@ -167,7 +222,7 @@ export const ConceptFitResponseMobilePreview = () => {
               <Box
                 sx={{
                   width: "82%",
-                  minHeight: 80,
+                  minHeight: 60,
                   bgcolor: "#FFFFFF",
                   border: "2px dashed #D8B4FE",
                   borderRadius: "28px",
@@ -195,73 +250,6 @@ export const ConceptFitResponseMobilePreview = () => {
             </Box>
           )}
         </Box>
-
-        {firstAttribute && (
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 3,
-              pt: 1,
-
-              // border: "2px solid red",
-            }}
-          >
-            <Box
-              sx={{
-                py: 3,
-                borderRadius: "18px",
-                bgcolor: "#FFF1F2",
-                color: "#BE123C",
-                border: "1px solid #FFE4E6",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 0.5,
-                boxShadow: "0 6px 14px rgba(190,18,60,0.08)",
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: 12,
-                  fontWeight: 900,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.5,
-                }}
-              >
-                {leftText}
-              </Typography>
-            </Box>
-
-            <Box
-              sx={{
-                py: 3,
-                borderRadius: "18px",
-                bgcolor: "#ECFDF5",
-                color: "#047857",
-                border: "1px solid #D1FAE5",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 0.5,
-                boxShadow: "0 6px 14px rgba(4,120,87,0.08)",
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: 12,
-                  fontWeight: 900,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.5,
-                }}
-              >
-                {rightText}
-              </Typography>
-            </Box>
-          </Box>
-        )}
       </Box>
     </Box>
   );

@@ -55,7 +55,7 @@ import {
   SINGLE_VALUE_TYPES,
   THREE_D_AREA_COLORS,
 } from "./constants";
-import { convertHtmlToPlainText } from "./richTextUtils";
+import { convertHtmlToPlainText, htmlToPlainText } from "./richTextUtils";
 import { showToast } from "./showToast";
 import { EdgeStyle, LayoutMode, QuestionType, QuestionUIConfig } from "./types";
 
@@ -1219,4 +1219,19 @@ export const getEditableQuestionDescriptionValue = (value?: string | null) => {
   }
 
   return value || "";
+};
+
+
+export const getElementPanelQuestionText = (text?: string | null) => {
+  const plainText = htmlToPlainText(text || "").trim();
+
+  if (!plainText) {
+    return DEFAULT_QUESTION_PLACEHOLDER_TEXT;
+  }
+
+  if (plainText === DEFAULT_QUESTION_PLACEHOLDER_TEXT) {
+    return DEFAULT_QUESTION_PLACEHOLDER_TEXT;
+  }
+
+  return plainText;
 };

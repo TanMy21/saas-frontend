@@ -21,7 +21,7 @@ export const ConceptFitElement = ({
         <TimedChoiceTimerPreview />
       </HeaderContainer>
 
-      <CenteredStack display={display}>
+      <CenteredStack display={display} marginTopOveride="-2%">
         {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
 

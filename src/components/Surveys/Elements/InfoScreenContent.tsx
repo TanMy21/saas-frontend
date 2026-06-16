@@ -26,10 +26,7 @@ import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
 import { useToast } from "../../../hooks/useToast";
-import {
-  extractUsedEditorImageIDs,
-  sanitizeRichTextHtml,
-} from "../../../utils/richTextUtils";
+import { extractUsedEditorImageIDs, sanitizeInfoScreenContentHtml } from "../../../utils/richTextUtils";
 import { showToast } from "../../../utils/showToast";
 import { ElementProps } from "../../../utils/types";
 import SettingSaveStatus from "../ElementSettings/ElementSettingsComponents/SettingSaveStatus";
@@ -162,7 +159,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
 
       if (isContentUpdateRef.current) return;
 
-      const sanitizedHtml = sanitizeRichTextHtml(editor.getHTML());
+      const sanitizedHtml = sanitizeInfoScreenContentHtml(editor.getHTML());
 
       dispatch(
         updateQuestionField({
@@ -184,7 +181,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
 
     try {
       setSaveStatus("saving");
-      const sanitizedHtml = sanitizeRichTextHtml(editor.getHTML());
+      const sanitizedHtml = sanitizeInfoScreenContentHtml(editor.getHTML());
 
       lastSavedHtmlRef.current = sanitizedHtml;
 
@@ -254,7 +251,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
         })
         .run();
 
-      const sanitizedHtml = sanitizeRichTextHtml(editor.getHTML());
+      const sanitizedHtml = sanitizeInfoScreenContentHtml(editor.getHTML());
 
       dispatch(
         updateQuestionField({

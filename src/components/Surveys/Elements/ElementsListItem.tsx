@@ -9,8 +9,8 @@ import useAuth from "../../../hooks/useAuth";
 import { nonOrderableTypes } from "../../../utils/constants";
 import { elementIcons } from "../../../utils/elementsConfig";
 import { getDisplayOrderForElement } from "../../../utils/elementsDisplayOrder";
-import { htmlToPlainText } from "../../../utils/richTextUtils";
 import { ElementListItemProps, IconMapping } from "../../../utils/types";
+import { getElementPanelQuestionText } from "../../../utils/utils";
 
 import ElementDropDownMenu from "./ElementDropDownMenu";
 
@@ -48,6 +48,8 @@ export const ElementsListItem = ({
           element,
           displayOrderMap,
         );
+
+        const elementDisplayText = getElementPanelQuestionText(element.text);
 
         const shouldDisplayOrder =
           displayOrder !== null &&
@@ -201,7 +203,7 @@ export const ElementsListItem = ({
                     }}
                   >
                     <Tooltip
-                      title={htmlToPlainText(element.text)}
+                      title={elementDisplayText}
                       placement="top"
                       enterDelay={500}
                       leaveDelay={100}
@@ -217,7 +219,7 @@ export const ElementsListItem = ({
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {htmlToPlainText(element.text)}
+                        {elementDisplayText}
                       </Typography>
                     </Tooltip>
                   </Box>

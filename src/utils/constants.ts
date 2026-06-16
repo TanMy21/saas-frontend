@@ -25,7 +25,7 @@ import { TimedChoiceSettingsForm } from "../types/surveyBuilderTypes";
 
 import { NotificationSettings, QuestionType, TabId } from "./types";
 
-export const DEFAULT_QUESTION_PLACEHOLDER_TEXT = "Your question here";
+export const DEFAULT_QUESTION_PLACEHOLDER_TEXT = "Your question here...";
 export const DEFAULT_DESCRIPTION_PLACEHOLDER_TEXT = "Description (optional)";
 
 export const LAST_WS_KEY = "lWSID";

@@ -1,5 +1,9 @@
 import DOMPurify from "dompurify";
 
+import {
+  RICH_TEXT_FONT_FAMILY_OPTIONS,
+  RICH_TEXT_FONT_SIZE_OPTIONS,
+} from "./constants";
 import { FormatTagType } from "./types";
 
 /**
@@ -458,7 +462,25 @@ export const normalizeHtml = (s?: string | null) =>
  * Defines the only rich-text tags your editor intentionally supports.
  * Do not add attributes unless the editor truly needs them.
  */
-const ALLOWED_RICH_TEXT_TAGS = ["strong", "em", "u", "br"];
+const ALLOWED_RICH_TEXT_TAGS = [
+  "p",
+  "span",
+  "strong",
+  "b",
+  "em",
+  "i",
+  "u",
+  "ul",
+  "ol",
+  "li",
+  "blockquote",
+  "a",
+  "img",
+  "br",
+  "h1",
+  "h2",
+  "h3",
+];
 
 /**
  * Sanitizes rich text produced by contentEditable before storing or rendering.
@@ -518,24 +540,6 @@ export const sanitizeRichTextHtml = (html?: string | null) => {
   return doc.body.innerHTML;
 };
 
-export const sanitizeInfoScreenHtml = (html?: string | null) => {
-  if (!html?.trim()) return "";
-
-  return DOMPurify.sanitize(html, {
-    USE_PROFILES: { html: true },
-    ADD_TAGS: ["img"],
-    ADD_ATTR: [
-      "src",
-      "alt",
-      "title",
-      "target",
-      "rel",
-      "style",
-      "data-public-id",
-    ],
-  });
-};
-
 /**
  * Sanitizes placeholder text before placing it inside fallback HTML.
  * This prevents placeholder values from becoming injectable markup.
@@ -573,4 +577,90 @@ export const extractUsedEditorImageIDs = (html: string) => {
   return Array.from(doc.querySelectorAll("img"))
     .map((img) => img.getAttribute("data-editor-image-id"))
     .filter((id): id is string => Boolean(id));
+};
+
+const ALLOWED_RICH_TEXT_FONT_SIZES = new Set(
+  RICH_TEXT_FONT_SIZE_OPTIONS.map((option) => option.value),
+);
+
+const ALLOWED_RICH_TEXT_FONT_FAMILIES = new Set(
+  RICH_TEXT_FONT_FAMILY_OPTIONS.map((option) => option.value),
+);
+
+const isAllowedRichTextFontSize = (value?: string | null) => {
+  if (!value) return false;
+
+  return ALLOWED_RICH_TEXT_FONT_SIZES.has(value.trim());
+};
+
+const isAllowedRichTextFontFamily = (value?: string | null) => {
+  if (!value) return false;
+
+  const normalized = value
+    .split(",")[0]
+    .replace(/"/g, "")
+    .replace(/'/g, "")
+    .trim();
+
+  return ALLOWED_RICH_TEXT_FONT_FAMILIES.has(normalized);
+};
+
+export const sanitizeInfoScreenContentHtml = (html?: string | null) => {
+  if (!html) {
+    return "";
+  }
+
+  const clean = DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ALLOWED_RICH_TEXT_TAGS,
+    ALLOWED_ATTR: [
+      "href",
+      "target",
+      "rel",
+      "style",
+      "src",
+      "alt",
+      "title",
+      "data-editor-image-id",
+      "data-public-id",
+    ],
+    KEEP_CONTENT: true,
+    USE_PROFILES: { html: true },
+  });
+
+  const doc = new DOMParser().parseFromString(clean, "text/html");
+
+  /**
+   * Keeps only supported inline styles from TipTap.
+   * This preserves text alignment, color, font size, and font family.
+   */
+  doc.body.querySelectorAll<HTMLElement>("[style]").forEach((el) => {
+    const textAlign = el.style.textAlign;
+    const color = el.style.color;
+    const fontSize = el.style.fontSize;
+    const fontFamily = el.style.fontFamily;
+
+    el.removeAttribute("style");
+
+    if (["left", "center", "right"].includes(textAlign)) {
+      el.style.textAlign = textAlign;
+    }
+
+    if (color) {
+      el.style.color = color;
+    }
+
+    if (isAllowedRichTextFontSize(fontSize)) {
+      el.style.fontSize = fontSize;
+    }
+
+    if (isAllowedRichTextFontFamily(fontFamily)) {
+      el.style.fontFamily = fontFamily;
+    }
+
+    if (!el.getAttribute("style")) {
+      el.removeAttribute("style");
+    }
+  });
+
+  return doc.body.innerHTML;
 };
