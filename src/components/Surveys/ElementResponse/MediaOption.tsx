@@ -20,7 +20,11 @@ import {
 import useAuth from "../../../hooks/useAuth";
 import { useKeyboardEditableRow } from "../../../hooks/useKeyboardEdit";
 import { MediaOptionProps } from "../../../utils/types";
-import { getSquareImageURL, mergeHandlers } from "../../../utils/utils";
+import {
+  getMediaOptionBadge,
+  getSquareImageURL,
+  mergeHandlers,
+} from "../../../utils/utils";
 import MediaElementCardIconBtns from "../../MediaElementCard/MediaElementCardIconBtns";
 import MediaElementImageUploadModal from "../../Modals/MediaElementImageUploadModal";
 import EnterToEditTooltip from "../../tooltip/EnterToEditTooltip";
@@ -61,6 +65,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
       if (next.trim() !== option.value.trim()) {
         await updateOptionTextandValue({
           optionID: option.optionID,
+          text: next,
           value: next,
         }).unwrap?.();
       }
@@ -299,7 +304,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
               mt: 0.5,
             }}
           >
-            {option.text}
+            {getMediaOptionBadge(option.order)}
           </Box>
         </Box>
         <EnterToEditTooltip

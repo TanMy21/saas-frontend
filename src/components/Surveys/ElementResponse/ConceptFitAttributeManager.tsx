@@ -48,7 +48,7 @@ export const ConceptFitAttributeManager = ({
         sx={{
           // border: "1px solid #E2E8F0",
           borderRadius: 2,
-          bgcolor: "#F8FAFC",
+          bgcolor: localOptions.length === 0 ? "transparent" : "#F8FAFC",
           p: 1.5,
           maxHeight: 340,
 
@@ -121,19 +121,6 @@ export const ConceptFitAttributeManager = ({
             )}
           </Droppable>
         </DragDropContext>
-
-        {localOptions.length === 0 && (
-          <Typography
-            sx={{
-              fontSize: 14,
-              color: "#64748B",
-              textAlign: "center",
-              py: 3,
-            }}
-          >
-            Add attribute words like Premium, Elegant, Cheap, or Trustworthy.
-          </Typography>
-        )}
       </Box>
 
       {canCreate && (
@@ -141,7 +128,7 @@ export const ConceptFitAttributeManager = ({
           sx={{
             position: "relative",
             width: "94%",
-            mx:"auto",
+            mx: "auto",
             px: 1,
             pt: 0.75,
             pb: 0.75,
@@ -155,7 +142,7 @@ export const ConceptFitAttributeManager = ({
             minRows={1}
             disabled={!canAddMore}
             inputRef={textareaRef}
-            placeholder="Type or paste attributes, one per line…"
+            placeholder="Add attributes like Premium, Affordable, or Trustworthy. One per line…"
             value={inputValue}
             onChange={(event) => setInputValue(event.target.value)}
             variant="standard"

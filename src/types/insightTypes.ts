@@ -22,6 +22,8 @@ export type InsightsFilters = {
   to?: string;
 };
 
+export type ResponseRecord = Record<string, unknown>;
+
 export type InsightTableColumnConfig = {
   label: string;
   icon?: LucideIcon;
@@ -153,6 +155,17 @@ export interface NormalizedQuestion {
   };
 }
 
+export interface NormalizedResponsesSummaryResponse {
+  surveyID: string;
+  filters: {
+    deviceType: string;
+    range: string;
+    from?: string | null;
+    to?: string | null;
+  };
+  questions: SummaryQuestion[];
+}
+
 export interface ResponsesSummaryQuestion {
   questionID: string;
   type: QuestionType;
@@ -187,6 +200,35 @@ export interface ResponsesSummaryQuestion {
     totalResponses: number;
     skipped: number;
   };
+
+  displayMode?: "TEXT" | "TEXT_IMAGE";
+  displayModeCounts?: Record<string, number>;
+  timing?: TimedChoiceTiming;
+
+  percentages?: {
+    left: number;
+    right: number;
+  };
+
+  attributes?: ConceptFitAttributeSummary[];
+  totalSubmissions?: number;
+  completedCount?: number;
+  completionPercentage?: number;
+  totalAttributeResponses?: number;
+
+  totalTrials?: number;
+  errorTrials?: number;
+  errorRate?: number;
+
+  rounds?: {
+    initial: IATRoundSummary;
+    reversed: IATRoundSummary;
+  };
+
+  comparison?: IATComparison;
+
+  pairingStrategies?: Record<string, number>;
+  schemaVersions?: Record<string, number>;
 
   result?: unknown;
 }
@@ -234,6 +276,26 @@ export interface SingleChoiceQuestion extends NormalizedQuestion {
 
 export interface SingleChoiceChartProps {
   question: SingleChoiceQuestion;
+}
+
+export interface DropdownChoiceOption {
+  optionID: string;
+  label: string;
+  count: number;
+  percentage: number;
+}
+
+export interface DropdownChoiceResult {
+  options: DropdownChoiceOption[];
+}
+
+export interface DropdownChoiceQuestion extends NormalizedQuestion {
+  type: "DROPDOWN";
+  result: DropdownChoiceResult;
+}
+
+export interface DropdownChoiceChartProps {
+  question: DropdownChoiceQuestion;
 }
 
 export interface MultipleChoiceOption {
@@ -380,15 +442,169 @@ export interface TextResponsesProps {
   question: TextQuestion;
 }
 
+export interface TimedChoiceOption {
+  optionID: string;
+  label: string;
+  value?: string | null;
+  image?: string | null;
+  count: number;
+  percentage: number;
+  avgResponseTimeMs: number;
+  medianResponseTimeMs: number;
+  overTimeCount: number;
+  overTimePercentage: number;
+}
+
+export interface TimedChoiceTiming {
+  meanResponseTimeMs: number;
+  medianResponseTimeMs: number;
+  minResponseTimeMs: number;
+  maxResponseTimeMs: number;
+  stdDevResponseTimeMs: number;
+  overTimeCount: number;
+  overTimePercentage: number;
+}
+
+export interface TimedChoiceResult {
+  displayMode: "TEXT" | "TEXT_IMAGE";
+  displayModeCounts?: Record<string, number>;
+  options: TimedChoiceOption[];
+  timing: TimedChoiceTiming;
+}
+
+export interface TimedChoiceQuestion extends NormalizedQuestion {
+  type: "TIMED_CHOICE";
+  result: TimedChoiceResult;
+}
+
+export interface TimedChoiceChartProps {
+  question: TimedChoiceQuestion;
+}
+
+export interface ConceptFitAttributeSummary {
+  attributeOptionID: string | null;
+  attributeText: string;
+  counts: {
+    left: number;
+    right: number;
+  };
+  percentages: {
+    left: number;
+    right: number;
+  };
+  total: number;
+  avgResponseTimeMs: number;
+  medianResponseTimeMs: number;
+}
+
+export interface ConceptFitTiming {
+  meanResponseTimeMs: number;
+  medianResponseTimeMs: number;
+  minResponseTimeMs: number;
+  maxResponseTimeMs: number;
+  stdDevResponseTimeMs: number;
+}
+
+export interface ConceptFitResult {
+  labels: {
+    left: string;
+    right: string;
+  };
+  counts: {
+    left: number;
+    right: number;
+  };
+  percentages: {
+    left: number;
+    right: number;
+  };
+  timing: ConceptFitTiming;
+  attributes: ConceptFitAttributeSummary[];
+  totalSubmissions: number;
+  completedCount: number;
+  completionPercentage: number;
+  totalAttributeResponses: number;
+}
+
+export interface ConceptFitQuestion extends NormalizedQuestion {
+  type: "CONCEPT_FIT";
+  result: ConceptFitResult;
+}
+
+export interface ConceptFitSummaryChartProps {
+  question: ConceptFitQuestion;
+}
+
+export interface IATTiming {
+  meanResponseTimeMs: number;
+  medianResponseTimeMs: number;
+  minResponseTimeMs: number;
+  maxResponseTimeMs: number;
+  stdDevResponseTimeMs: number;
+}
+
+export interface IATRoundSummary {
+  totalTrials: number;
+  meanResponseTimeMs: number;
+  medianResponseTimeMs: number;
+  stdDevResponseTimeMs: number;
+}
+
+export interface IATComparison {
+  averageDifferenceMs: number;
+  medianDifferenceMs: number;
+  associationDirection:
+    | "BRAND_A_WITH_THEME_A"
+    | "BRAND_A_WITH_THEME_B"
+    | "NEUTRAL";
+  strength: "STRONG" | "MODERATE" | "WEAK" | "NEUTRAL";
+}
+
+export interface IATResult {
+  totalSubmissions: number;
+  completedCount: number;
+  completionPercentage: number;
+  skippedCount: number;
+
+  totalTrials: number;
+  errorTrials: number;
+  errorRate: number;
+
+  timing: IATTiming;
+
+  rounds: {
+    initial: IATRoundSummary;
+    reversed: IATRoundSummary;
+  };
+
+  comparison: IATComparison;
+
+  pairingStrategies: Record<string, number>;
+  schemaVersions: Record<string, number>;
+}
+
+export interface IATQuestion extends NormalizedQuestion {
+  type: "IAT";
+  result: IATResult;
+}
+
+export interface IATSummaryChartProps {
+  question: IATQuestion;
+}
+
 export type SummaryQuestion =
   | BinaryQuestion
+  | ConceptFitQuestion
+  | DropdownChoiceQuestion
   | SingleChoiceQuestion
+  | IATQuestion
   | MultipleChoiceQuestion
   | MediaQuestion
   | NumberQuestion
   | RangeQuestion
   | RankQuestion
-  | TextQuestion;
+  | TextQuestion
+  | TimedChoiceQuestion;
 
 export interface QuestionSectionProps {
   surveyID: string;

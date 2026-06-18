@@ -226,7 +226,7 @@ export const IATAttributeGroupPanel = ({
                 : "#B45309",
           }}
         >
-          {options.length}/{MAX_IAT_ATTRIBUTES_PER_GROUP}
+          {options.length}/{MAX_IAT_ATTRIBUTES_PER_GROUP/2}
         </Typography>
       </Box>
 

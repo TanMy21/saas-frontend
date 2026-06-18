@@ -35,6 +35,10 @@ export const SETTINGS_TAB_KEY = "set:lat";
 
 export const MAX_DROPDOWN_OPTIONS = 100;
 
+export const ELEMENTS_PANEL_AUTO_SCROLL_EDGE_SIZE = 96;
+
+export const ELEMENTS_PANEL_AUTO_SCROLL_MAX_SPEED = 18;
+
 export const DROPDOWN_WARNING_COUNT = 30;
 
 export const MAX_TIMED_CHOICE_OPTIONS = 2;
@@ -47,14 +51,25 @@ export const MAX_TIMED_OPTION_LENGTH = 80;
 
 export const MAX_IAT_CATEGORY_LABEL_LENGTH = 40;
 export const MAX_IAT_STIMULI = 10;
-export const MIN_RECOMMENDED_IAT_STIMULI = 8; 
+export const MIN_RECOMMENDED_IAT_STIMULI = 8;
 export const MAX_IAT_ATTRIBUTE_LENGTH = 40;
 export const MAX_IAT_ATTRIBUTES_PER_GROUP = 10;
 export const MIN_IAT_ATTRIBUTES_PER_GROUP = 2;
 
-
-
 export const TIMED_ACCENT = "#F97316";
+
+export const TIMED_CHOICE_COLORS = ["#005BC4", "#EA580C"];
+export const TEXT_ROW_HEIGHT = 64;
+export const IMAGE_ROW_HEIGHT = 104;
+
+export const LEFT_COLOR = "#005BC4";
+export const RIGHT_COLOR = "#EA580C";
+export const TRACK_COLOR = "#F1F5F9";
+
+export const IAT_BLUE = "#005BC4";
+export const IAT_ORANGE = "#EA580C";
+export const IAT_SLATE = "#334155";
+export const IAT_TRACK = "#F1F5F9";
 
 export const DEFAULT_CONCEPT_FIT_LEFT_TEXT = "Fits";
 export const DEFAULT_CONCEPT_FIT_RIGHT_TEXT = "Does not fit";
@@ -76,6 +91,19 @@ export const DEFAULT_IAT_PREVIEW = {
   attributeB: "Cheap",
   stimulus: "Luxury",
 };
+
+export const MEDIA_OPTION_BADGES = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+] as const;
 
 export const RICH_TEXT_FONT_SIZE_OPTIONS = [
   { label: "12", value: "12px" },
@@ -557,4 +585,12 @@ export const NON_NUMBERED_ELEMENT_TYPES = new Set<string>([
   "EMAIL_CONTACT",
   "END_SCREEN",
   "INFO_SCREEN",
+]);
+
+export const EXCLUDED_RESPONSE_TABLE_TYPES = new Set([
+  "INFO_SCREEN",
+  "WELCOME_SCREEN",
+  "INSTRUCTIONS",
+  "END_SCREEN",
+  "CONSENT",
 ]);

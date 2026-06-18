@@ -1,5 +1,6 @@
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
-import { CirclePlus, Wand } from "lucide-react";
+import { Box, Button, IconButton, TextField } from "@mui/material";
+import { Wand } from "lucide-react";
+import { MdAdd } from "react-icons/md";
 
 import { DropdownManualAddProps } from "../../../types/surveyBuilderTypes";
 
@@ -22,21 +23,11 @@ export const DropdownManualAdd = ({
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
           alignItems: "center",
           gap: 1,
         }}
       >
-        <Typography
-          sx={{
-            fontSize: 13,
-            fontWeight: 700,
-            color: "#334155",
-          }}
-        >
-          Add options
-        </Typography>
-
         <Button
           onClick={onOpenAI}
           disabled={disabled}
@@ -68,14 +59,11 @@ export const DropdownManualAdd = ({
       <Box
         sx={{
           position: "relative",
-          width: "96%",
+          width: "98%",
           px: 1,
           pt: 0.75,
           pb: 0.75,
-          mt: 2,
-          border: "1px solid #E2E8F0",
-          borderRadius: 2,
-          bgcolor: "#FFFFFF",
+          mt: 4,
         }}
       >
         <TextField
@@ -125,7 +113,7 @@ export const DropdownManualAdd = ({
             },
           }}
         >
-          <CirclePlus size={20} />
+          <MdAdd size={20} />
         </IconButton>
       </Box>
     </Box>

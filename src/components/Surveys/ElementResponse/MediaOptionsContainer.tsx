@@ -123,7 +123,7 @@ const MediaOptionsContainer = ({
             },
             alignItems: "stretch",
             gap: { xs: 2, sm: 3, md: 4 },
-            width: { md: "96%", xl: "80%" },
+            width: { md: "96%", xl: "92%" },
             height: "auto",
             margin: "0 auto",
             padding: 1,

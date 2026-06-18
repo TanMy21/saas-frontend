@@ -26,7 +26,10 @@ import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
 import { useToast } from "../../../hooks/useToast";
-import { extractUsedEditorImageIDs, sanitizeInfoScreenContentHtml } from "../../../utils/richTextUtils";
+import {
+  extractUsedEditorImageIDs,
+  sanitizeInfoScreenContentHtml,
+} from "../../../utils/richTextUtils";
 import { showToast } from "../../../utils/showToast";
 import { ElementProps } from "../../../utils/types";
 import SettingSaveStatus from "../ElementSettings/ElementSettingsComponents/SettingSaveStatus";
@@ -39,6 +42,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
   const canEditQuestion = can("UPDATE_QUESTION");
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const lastSavedHtmlRef = useRef<string>("");
+  const baselineQuestionIDRef = useRef<string | undefined>(undefined);
   const isContentUpdateRef = useRef(false);
   const dispatch = useAppDispatch();
 
@@ -161,15 +165,20 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
 
       const sanitizedHtml = sanitizeInfoScreenContentHtml(editor.getHTML());
 
+      if (baselineQuestionIDRef.current !== questionID) return;
+
+      const hasUnsavedChanges = sanitizedHtml !== lastSavedHtmlRef.current;
+
       dispatch(
         updateQuestionField({
+            questionID,
           key: "description",
           value: sanitizedHtml,
         }),
       );
 
-      setFormTouched(true);
-      setSaveStatus("dirty");
+      setFormTouched(hasUnsavedChanges);
+      setSaveStatus(hasUnsavedChanges ? "dirty" : "saved");
     },
   });
 
@@ -183,8 +192,6 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
       setSaveStatus("saving");
       const sanitizedHtml = sanitizeInfoScreenContentHtml(editor.getHTML());
 
-      lastSavedHtmlRef.current = sanitizedHtml;
-
       await updateScreenElements({
         questionID,
         description: sanitizedHtml,
@@ -197,8 +204,11 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
         usedQuestionImageIDs: usedEditorImageIDs,
       }).unwrap();
 
+      lastSavedHtmlRef.current = sanitizedHtml;
+
       dispatch(
         updateQuestionField({
+            questionID,
           key: "description",
           value: sanitizedHtml,
         }),
@@ -255,6 +265,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
 
       dispatch(
         updateQuestionField({
+            questionID,
           key: "description",
           value: sanitizedHtml,
         }),
@@ -267,6 +278,18 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
       showToast.error("Failed to upload image.");
     }
   };
+
+  useEffect(() => {
+    if (!questionID || question?.questionID !== questionID) return;
+
+    if (baselineQuestionIDRef.current === questionID) return;
+
+    lastSavedHtmlRef.current = sanitizeInfoScreenContentHtml(initialHtml);
+
+    baselineQuestionIDRef.current = questionID;
+    setFormTouched(false);
+    setSaveStatus("saved");
+  }, [questionID, question?.questionID, initialHtml]);
 
   /**
    * Keeps editor content synced when switching selected question.

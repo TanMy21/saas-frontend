@@ -7,9 +7,7 @@ import {
   Button,
   CircularProgress,
   IconButton,
-  MenuItem,
   Modal,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,7 +15,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
-import { ChevronDown, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 
 import { useUpdateSurveyMutation } from "../../app/slices/surveysApiSlice";
@@ -40,7 +38,7 @@ const SurveySettingsModal = ({
     (state: RootState) => state.surveyCanvas.data,
   );
   const [publishToggled, setPublishToggled] = useState(false);
-  const { getSurveyCanvas, languages } = surveyCanvas ?? {};
+  const { getSurveyCanvas } = surveyCanvas ?? {};
   const surveySettings = getSurveyCanvas?.SurveySettings;
   const [updateSurvey, { isLoading, isSuccess, isError, error }] =
     useUpdateSurveyMutation();
@@ -474,7 +472,7 @@ const SurveySettingsModal = ({
               </Box>
 
               {/* Language */}
-              <Box sx={{ mb: 2 }}>
+              {/* <Box sx={{ mb: 2 }}>
                 <Typography
                   sx={{
                     fontWeight: 700,
@@ -562,7 +560,7 @@ const SurveySettingsModal = ({
                     {errors.language.message}
                   </Typography>
                 )}
-              </Box>
+              </Box> */}
 
               {/* Footer */}
               <Box

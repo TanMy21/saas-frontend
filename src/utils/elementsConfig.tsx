@@ -21,6 +21,9 @@ import {
 import { RxCardStack } from "react-icons/rx";
 
 import { BinaryChart } from "../components/Insights/visualizations/BinaryChart";
+import ConceptFitSummaryChart from "../components/Insights/visualizations/ConceptFitChart";
+import DropdownChoiceChart from "../components/Insights/visualizations/DropdownChoiceChart";
+import IATSummaryChart from "../components/Insights/visualizations/IATChart";
 import { MediaOptionsViz } from "../components/Insights/visualizations/MediaOptionsViz";
 import { MultipleChoiceChart } from "../components/Insights/visualizations/MultipleChoiceChart";
 import { NumericChart } from "../components/Insights/visualizations/NumericChart";
@@ -29,6 +32,7 @@ import { ScaleChart } from "../components/Insights/visualizations/ScaleChart";
 import { SingleChoiceChart } from "../components/Insights/visualizations/SingleChart";
 import { TextResponses } from "../components/Insights/visualizations/TextResponses";
 import { ThreeDOptionChart } from "../components/Insights/visualizations/ThreeDOptionChart";
+import TimedChoiceChart from "../components/Insights/visualizations/TimedChoiceChart";
 import BinaryElement from "../components/Surveys/Elements/BinaryElement";
 import CheckBoxElement from "../components/Surveys/Elements/CheckBoxElement";
 import ChoiceElement from "../components/Surveys/Elements/ChoiceElement";
@@ -456,9 +460,8 @@ export const summaryVisualizationMap: Record<
   NUMBER: NumericChart,
   RANK: RankingChart,
   TEXT: TextResponses,
-
-  // Temporary mappings until dedicated implicit-test report charts exist.
-  TIMED_CHOICE: SingleChoiceChart,
-  CONCEPT_FIT: MultipleChoiceChart,
-  IAT: SingleChoiceChart,
+  DROPDOWN: DropdownChoiceChart,
+  TIMED_CHOICE: TimedChoiceChart,
+  CONCEPT_FIT: ConceptFitSummaryChart,
+  IAT: IATSummaryChart,
 };

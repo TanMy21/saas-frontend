@@ -22,6 +22,8 @@ import { HiDownload } from "react-icons/hi";
 import { useParams } from "react-router-dom";
 
 import { useGetResultsQuery } from "../../app/slices/resultsApiSlice";
+import { EXCLUDED_RESPONSE_TABLE_TYPES } from "../../utils/constants";
+import { convertHtmlToPlainText } from "../../utils/richTextUtils";
 import { RowData } from "../../utils/types";
 import { formatResponse } from "../../utils/utils";
 import DownloadResponsesModal from "../Modals/DownloadResponsesModal";
@@ -50,7 +52,11 @@ const ResponsesTable = () => {
     surveyID!,
   );
 
-  const questions = results?.questions ?? [];
+  const questions = useMemo(() => {
+    return (results?.questions ?? []).filter(
+      (question) => !EXCLUDED_RESPONSE_TABLE_TYPES.has(question.type),
+    );
+  }, [results?.questions]);
   const participants = results?.participants ?? [];
 
   const handleSelectAll = () => {
@@ -83,8 +89,17 @@ const ResponsesTable = () => {
   const columns = useMemo<MRT_ColumnDef<RowData>[]>(() => {
     return questions.map((question) => ({
       accessorKey: question.questionID,
-      header: question.text,
-      size: question.type === "RANK" ? 500 : 180,
+      header: convertHtmlToPlainText(question.text),
+      size:
+        question.type === "RANK"
+          ? 500
+          : question.type === "CONCEPT_FIT"
+            ? 360
+            : question.type === "IAT"
+              ? 420
+              : question.type === "TIMED_CHOICE"
+                ? 240
+                : 180,
 
       Cell: ({ cell }: { cell: MRT_Cell<RowData> }) => {
         const value = formatResponse(cell.getValue(), question.type);

@@ -39,7 +39,7 @@ export const SurveyInsights = () => {
     device: filters.device,
   });
 
- // Summary card metrics
+  // Summary card metrics
   const metrics = useMemo(() => {
     if (!data) return null;
 
@@ -58,7 +58,7 @@ export const SurveyInsights = () => {
 
     return data.dropOffTable.map((q: any) => ({
       id: q.questionID,
-      number: `Q${q.order}`,
+      number: `Q${q.displayOrder ?? q.order}`,
       text: q.text,
       type: q.type,
       reached: q.reached,

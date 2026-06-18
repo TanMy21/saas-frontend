@@ -28,9 +28,6 @@ export const IATGroupedAttributeManager = ({
     },
   );
 
-  console.log("OPtions: ", options);
-
-
   const themeAOptions = [...options]
     .filter((option) => isIATOptionInGroup(option.settings, "THEME_A"))
     .sort((a, b) => (a.order || 0) - (b.order || 0));

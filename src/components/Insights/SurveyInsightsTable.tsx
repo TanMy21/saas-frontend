@@ -36,6 +36,15 @@ const INSIGHTS_COLUMNS: InsightTableColumnConfig[] = [
   { label: "Avg. Time", align: "right" },
 ];
 
+// helper component for numeric cells
+const NumericCell = ({ children }: { children: number }) => (
+  <TableCell align="right" sx={{ px: 3 }}>
+    <Typography fontFamily="monospace" fontWeight={600}>
+      {children.toLocaleString()}
+    </Typography>
+  </TableCell>
+);
+
 export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
   const [page, setPage] = useState(1);
 
@@ -247,14 +256,5 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
     </Box>
   );
 };
-
-// helper component for numeric cells
-const NumericCell = ({ children }: { children: number }) => (
-  <TableCell align="right" sx={{ px: 3 }}>
-    <Typography fontFamily="monospace" fontWeight={600}>
-      {children.toLocaleString()}
-    </Typography>
-  </TableCell>
-);
 
 export default SurveyInsightsTable;

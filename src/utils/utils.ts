@@ -31,6 +31,7 @@ import {
   NumberResult,
   RangeResult,
   RankOption,
+  ResponseRecord,
   ResponsesSummaryQuestion,
   SingleChoiceResult,
   SummaryQuestion,
@@ -51,11 +52,16 @@ import {
   DEFAULT_TIMED_CHOICE_CONFIG,
   DEFAULT_TIMER_SECONDS,
   MAX_IMAGE_SIZE_BYTES,
+  MEDIA_OPTION_BADGES,
   OPTION_TYPES,
   SINGLE_VALUE_TYPES,
   THREE_D_AREA_COLORS,
 } from "./constants";
-import { convertHtmlToPlainText, htmlToPlainText } from "./richTextUtils";
+import {
+  convertHtmlToPlainText,
+  htmlToPlainText,
+  stripSummaryHtml,
+} from "./richTextUtils";
 import { showToast } from "./showToast";
 import { EdgeStyle, LayoutMode, QuestionType, QuestionUIConfig } from "./types";
 
@@ -387,51 +393,28 @@ export function formatDateTime(date: Date | string): string {
   }).format(d);
 }
 
-export function formatResponse(
-  response: unknown,
-  questionType: string,
-): string {
-  if (response === null || response === undefined) {
-    return "No Response";
-  }
-
-  if (questionType === "EMAIL_CONTACT") {
-    return typeof response === "string" ? response : "";
-  }
-
-  if (questionType === "RANK" && Array.isArray(response)) {
-    return [...response]
-      .sort((a, b) => a.rank - b.rank)
-      .map((r) => `${r.rank}. ${r.value}`)
-      .join(", ");
-  }
-
-  if (
-    (questionType === "MEDIA" || questionType === "MULTIPLE_CHOICE") &&
-    Array.isArray(response)
-  ) {
-    return response.join(", ");
-  }
-
-  if (questionType === "RANGE" || questionType === "NUMBER") {
-    return response.toString();
-  }
-
-  if (typeof response === "string" || typeof response === "number") {
-    return response.toString();
-  }
-
-  return "";
-}
-
 export function normalizeQuestion(
-  q: ResponsesSummaryQuestion,
-): SummaryQuestion {
+  q: ResponsesSummaryQuestion | null | undefined,
+): SummaryQuestion | null {
+  if (!q || !q.questionID || !q.type) {
+    return null;
+  }
+
+  const meta = q.meta ?? {
+    totalResponses:
+      q.total ??
+      q.totalAnswered ??
+      q.totalRespondents ??
+      q.totalSubmissions ??
+      0,
+    skipped: q.skippedCount ?? 0,
+  };
+
   const base = {
     questionID: q.questionID,
     order: q.order,
     text: q.text,
-    meta: q.meta,
+    meta,
   };
 
   switch (q.type) {
@@ -440,80 +423,212 @@ export function normalizeQuestion(
       return {
         ...base,
         type: q.type,
-        result: q.result as BinaryResult,
+        result: (q.result as BinaryResult | undefined) ?? {
+          left: {
+            label: q.labels?.left ?? "Yes",
+            count: q.counts?.left ?? 0,
+          },
+          right: {
+            label: q.labels?.right ?? "No",
+            count: q.counts?.right ?? 0,
+          },
+        },
       };
 
     case "RADIO":
       return {
         ...base,
         type: "RADIO",
-        result: q.result as SingleChoiceResult,
+        result: (q.result as SingleChoiceResult | undefined) ?? {
+          options: q.options ?? [],
+        },
       };
 
-    case "MULTIPLE_CHOICE": {
-      const result = q.result as MultipleChoiceResult;
+    case "DROPDOWN":
+      return {
+        ...base,
+        type: "DROPDOWN",
+        result: {
+          options: q.options ?? [],
+        },
+      };
 
+    case "TIMED_CHOICE":
+      return {
+        ...base,
+        type: "TIMED_CHOICE",
+        result: {
+          displayMode: q.displayMode ?? "TEXT",
+          displayModeCounts: q.displayModeCounts ?? {},
+          options: q.options ?? [],
+          timing: q.timing ?? {
+            meanResponseTimeMs: 0,
+            medianResponseTimeMs: 0,
+            minResponseTimeMs: 0,
+            maxResponseTimeMs: 0,
+            stdDevResponseTimeMs: 0,
+            overTimeCount: 0,
+            overTimePercentage: 0,
+          },
+        },
+      };
+
+    case "CONCEPT_FIT":
+      return {
+        ...base,
+        type: "CONCEPT_FIT",
+        result: {
+          labels: q.labels ?? {
+            left: "Fits",
+            right: "Doesn't fit",
+          },
+          counts: q.counts ?? {
+            left: 0,
+            right: 0,
+          },
+          percentages: q.percentages ?? {
+            left: 0,
+            right: 0,
+          },
+          timing: q.timing ?? {
+            meanResponseTimeMs: 0,
+            medianResponseTimeMs: 0,
+            minResponseTimeMs: 0,
+            maxResponseTimeMs: 0,
+            stdDevResponseTimeMs: 0,
+          },
+          attributes: q.attributes ?? [],
+          totalSubmissions: q.totalSubmissions ?? q.total ?? 0,
+          completedCount: q.completedCount ?? 0,
+          completionPercentage: q.completionPercentage ?? 0,
+          totalAttributeResponses: q.totalAttributeResponses ?? 0,
+        },
+      };
+
+    case "IAT":
+      return {
+        ...base,
+        type: "IAT",
+        result: {
+          totalSubmissions: q.totalSubmissions ?? q.total ?? 0,
+          completedCount: q.completedCount ?? 0,
+          completionPercentage: q.completionPercentage ?? 0,
+          skippedCount: q.skippedCount ?? 0,
+
+          totalTrials: q.totalTrials ?? 0,
+          errorTrials: q.errorTrials ?? 0,
+          errorRate: q.errorRate ?? 0,
+
+          timing: q.timing ?? {
+            meanResponseTimeMs: 0,
+            medianResponseTimeMs: 0,
+            minResponseTimeMs: 0,
+            maxResponseTimeMs: 0,
+            stdDevResponseTimeMs: 0,
+          },
+
+          rounds: q.rounds ?? {
+            initial: {
+              totalTrials: 0,
+              meanResponseTimeMs: 0,
+              medianResponseTimeMs: 0,
+              stdDevResponseTimeMs: 0,
+            },
+            reversed: {
+              totalTrials: 0,
+              meanResponseTimeMs: 0,
+              medianResponseTimeMs: 0,
+              stdDevResponseTimeMs: 0,
+            },
+          },
+
+          comparison: q.comparison ?? {
+            averageDifferenceMs: 0,
+            medianDifferenceMs: 0,
+            associationDirection: "NEUTRAL",
+            strength: "NEUTRAL",
+          },
+
+          pairingStrategies: q.pairingStrategies ?? {},
+          schemaVersions: q.schemaVersions ?? {},
+        },
+      };
+
+    case "MULTIPLE_CHOICE":
       return {
         ...base,
         type: "MULTIPLE_CHOICE",
-        result,
+        result: (q.result as MultipleChoiceResult | undefined) ?? {
+          options: q.options ?? [],
+        },
       };
-    }
 
-    case "MEDIA": {
-      const result = q.result as MediaResult;
-
+    case "MEDIA":
       return {
         ...base,
         type: "MEDIA",
-        result,
+        result: (q.result as MediaResult | undefined) ?? {
+          options: q.options ?? [],
+        },
       };
-    }
 
     case "NUMBER":
       return {
         ...base,
         type: "NUMBER",
-        result: q.result as NumberResult,
+        result: (q.result as NumberResult | undefined) ?? {
+          ...(q.stats ?? {}),
+          distribution: q.distribution ?? [],
+        },
       };
 
-    case "RANGE": {
-      const result = q.result as RangeResult;
-
+    case "RANGE":
       return {
         ...base,
         type: "RANGE",
-        result,
+        result: (q.result as RangeResult | undefined) ?? {
+          scale: q.scale ?? 5,
+          mean: q.mean ?? 0,
+          median: q.median ?? 0,
+          stdDev: q.stdDev ?? 0,
+          distribution: q.distribution ?? [],
+        },
       };
-    }
 
     case "RANK":
       return {
         ...base,
         type: "RANK",
-        options: (q.result as { options: RankOption[] }).options,
+        options:
+          (q.result as { options?: RankOption[] } | undefined)?.options ??
+          (q.options as RankOption[] | undefined) ??
+          [],
+        total: q.total,
+        skippedCount: q.skippedCount,
       };
 
     case "TEXT": {
-      const result = q.result as {
-        total: number;
-        page: number;
-        pageSize: number;
-        responses: TextResponseItem[];
-      };
+      const result = q.result as
+        | {
+            total?: number;
+            page?: number;
+            pageSize?: number;
+            responses?: TextResponseItem[];
+          }
+        | undefined;
 
       return {
         ...base,
         type: "TEXT",
-        total: result.total,
-        page: result.page,
-        pageSize: result.pageSize,
-        responses: result.responses,
+        total: result?.total ?? q.total ?? 0,
+        page: result?.page ?? q.page ?? 1,
+        pageSize: result?.pageSize ?? q.pageSize ?? 10,
+        responses: result?.responses ?? q.responses ?? [],
       };
     }
 
     default:
-      throw new Error(`Unhandled question type`);
+      return null;
   }
 }
 
@@ -904,6 +1019,23 @@ export const HowItWorksSteps: Step[] = [
   },
 ];
 
+
+
+/**
+ * Returns a stable alphabetic badge for a media option's persisted 1-based order.
+ * Media options are limited to 10, so valid orders map from A through J.
+ */
+export const getMediaOptionBadge = (order: number): string => {
+  if (!Number.isInteger(order) || order < 1 || order > MEDIA_OPTION_BADGES.length) {
+    return "?";
+  }
+
+  return MEDIA_OPTION_BADGES[order - 1];
+};
+
+
+
+
 export const escapeHtml = (value: string) => {
   return value
     .replace(/&/g, "&amp;")
@@ -1012,17 +1144,18 @@ export const isPlaceholderQuestionText = (text?: string | null) => {
 };
 
 export const getSummaryQuestionTitle = (question: SummaryQuestion) => {
-  if (question.type === "THREE_D" && isPlaceholderQuestionText(question.text)) {
+  const plainText = stripSummaryHtml(question.text);
+
+  if (question.type === "THREE_D" && isPlaceholderQuestionText(plainText)) {
     return "3D interaction feedback";
   }
 
-  if (isPlaceholderQuestionText(question.text)) {
+  if (!plainText || isPlaceholderQuestionText(plainText)) {
     return "Untitled question";
   }
 
-  return question.text;
+  return plainText;
 };
-
 export const normalizeLinkUrl = (url: string) => {
   const trimmed = url.trim();
 
@@ -1221,7 +1354,6 @@ export const getEditableQuestionDescriptionValue = (value?: string | null) => {
   return value || "";
 };
 
-
 export const getElementPanelQuestionText = (text?: string | null) => {
   const plainText = htmlToPlainText(text || "").trim();
 
@@ -1234,4 +1366,321 @@ export const getElementPanelQuestionText = (text?: string | null) => {
   }
 
   return plainText;
+};
+
+const isRecord = (value: unknown): value is ResponseRecord => {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+};
+
+export const asNumber = (value: unknown): number | null => {
+  const num = Number(value);
+  return Number.isFinite(num) ? num : null;
+};
+
+export const formatSeconds = (value: unknown) => {
+  const num = asNumber(value);
+  if (num === null) return null;
+  return `${num.toFixed(2)}s`;
+};
+
+const getPlainValue = (value: unknown): string => {
+  if (value === null || value === undefined) return "";
+
+  if (typeof value === "string" || typeof value === "number") {
+    return String(value);
+  }
+
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => getPlainValue(item))
+      .filter(Boolean)
+      .join(", ");
+  }
+
+  if (isRecord(value)) {
+    return (
+      getPlainValue(value.selectedValue) ||
+      getPlainValue(value.value) ||
+      getPlainValue(value.text) ||
+      getPlainValue(value.label) ||
+      getPlainValue(value.answer) ||
+      ""
+    );
+  }
+
+  return "";
+};
+
+const formatTimedChoiceResponse = (response: unknown): string => {
+  if (!isRecord(response)) return getPlainValue(response);
+
+  const selectedValue = getPlainValue(response.selectedValue);
+
+  const timing = isRecord(response.timing) ? response.timing : {};
+
+  const responseTimeSeconds = asNumber(timing.responseTimeSeconds);
+  const responseAtTimeMs = asNumber(timing.responseAtTimeMs);
+  const responseTimeMs = asNumber(timing.responseTimeMs);
+
+  const seconds =
+    responseTimeSeconds ??
+    (responseAtTimeMs !== null ? responseAtTimeMs / 1000 : null) ??
+    (responseTimeMs !== null ? responseTimeMs / 1000 : null);
+
+  if (!selectedValue) return "";
+
+  return seconds !== null
+    ? `${selectedValue} · ${seconds.toFixed(2)}s`
+    : selectedValue;
+};
+
+const formatConceptFitResponse = (response: unknown): string => {
+  if (!isRecord(response)) return "";
+
+  const answers = Array.isArray(response.answers) ? response.answers : [];
+
+  if (!answers.length) return "";
+
+  const labels = isRecord(response.labels) ? response.labels : {};
+
+  const leftLabel = getPlainValue(labels.left) || "Fits";
+  const rightLabel = getPlainValue(labels.right) || "Doesn't";
+
+  const leftCount = answers.filter((answer) => {
+    if (!isRecord(answer)) return false;
+
+    return (
+      answer.selectedSide === "left" ||
+      answer.selectedValue === "FIT" ||
+      getPlainValue(answer.selectedLabel) === leftLabel
+    );
+  }).length;
+
+  const rightCount = answers.filter((answer) => {
+    if (!isRecord(answer)) return false;
+
+    return (
+      answer.selectedSide === "right" ||
+      answer.selectedValue === "DOES_NOT_FIT" ||
+      getPlainValue(answer.selectedLabel) === rightLabel
+    );
+  }).length;
+
+  const responseTimes = answers
+    .map((answer) => {
+      if (!isRecord(answer)) return null;
+      return asNumber(answer.selectedAtMs);
+    })
+    .filter((value): value is number => value !== null);
+
+  const avgMs =
+    responseTimes.length > 0
+      ? responseTimes.reduce((sum, value) => sum + value, 0) /
+        responseTimes.length
+      : null;
+
+  return [
+    `${leftLabel}: ${leftCount}`,
+    `${rightLabel}: ${rightCount}`,
+    avgMs !== null ? `${(avgMs / 1000).toFixed(2)}s avg` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+};
+
+const formatIATResponse = (response: unknown): string => {
+  if (!isRecord(response)) return "";
+
+  const answers = Array.isArray(response.answers) ? response.answers : [];
+
+  if (!answers.length) return "";
+
+  const answeredTrials = asNumber(response.answeredTrials) ?? answers.length;
+  const totalTrials = asNumber(response.totalTrials) ?? answers.length;
+
+  const responseTimes = answers
+    .map((answer) => {
+      if (!isRecord(answer)) return null;
+      return asNumber(answer.responseTimeMs);
+    })
+    .filter((value): value is number => value !== null);
+
+  const avgMs =
+    responseTimes.length > 0
+      ? responseTimes.reduce((sum, value) => sum + value, 0) /
+        responseTimes.length
+      : null;
+
+  const errorCount = answers.filter((answer) => {
+    if (!isRecord(answer)) return false;
+    return answer.isExpectedSide === false;
+  }).length;
+
+  const errorRate =
+    answers.length > 0 ? Math.round((errorCount / answers.length) * 100) : null;
+
+  return [
+    `${answeredTrials}/${totalTrials} trials`,
+    avgMs !== null ? `${Math.round(avgMs)}ms avg` : null,
+    errorRate !== null ? `${errorRate}% error` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+};
+
+export function formatResponse(
+  response: unknown,
+  questionType: string,
+): string {
+  if (response === null || response === undefined) {
+    return "No Response";
+  }
+
+  if (questionType === "EMAIL_CONTACT") {
+    return typeof response === "string" ? response : "";
+  }
+
+  if (questionType === "DROPDOWN") {
+    return getPlainValue(response);
+  }
+
+  if (questionType === "TIMED_CHOICE") {
+    return formatTimedChoiceResponse(response);
+  }
+
+  if (questionType === "CONCEPT_FIT") {
+    return formatConceptFitResponse(response);
+  }
+
+  if (questionType === "IAT") {
+    return formatIATResponse(response);
+  }
+
+  if (questionType === "RANK" && Array.isArray(response)) {
+    return [...response]
+      .sort((a, b) => {
+        const rankA = isRecord(a) ? (asNumber(a.rank) ?? 0) : 0;
+        const rankB = isRecord(b) ? (asNumber(b.rank) ?? 0) : 0;
+
+        return rankA - rankB;
+      })
+      .map((item) => {
+        if (!isRecord(item)) return getPlainValue(item);
+
+        const rank = getPlainValue(item.rank);
+        const value = getPlainValue(item.value);
+
+        return rank && value ? `${rank}. ${value}` : value;
+      })
+      .filter(Boolean)
+      .join(", ");
+  }
+
+  if (
+    (questionType === "MEDIA" || questionType === "MULTIPLE_CHOICE") &&
+    Array.isArray(response)
+  ) {
+    return response
+      .map((item) => getPlainValue(item))
+      .filter(Boolean)
+      .join(", ");
+  }
+
+  if (questionType === "RANGE" || questionType === "NUMBER") {
+    return response.toString();
+  }
+
+  if (typeof response === "string" || typeof response === "number") {
+    return response.toString();
+  }
+
+  return getPlainValue(response);
+}
+
+export const formatMs = (value?: number | null) => {
+  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
+    return "—";
+  }
+
+  if (value >= 1000) {
+    return `${(value / 1000).toFixed(2)}s`;
+  }
+
+  return `${Math.round(value)}ms`;
+};
+
+export const formatPercent = (value?: number | null) => {
+  if (typeof value !== "number" || !Number.isFinite(value)) return "0%";
+  return `${Math.round(value)}%`;
+};
+
+export const getSafePercent = (value: number | undefined, fallback: number) => {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  return fallback;
+};
+
+export const formatSignedMs = (value?: number | null) => {
+  if (typeof value !== "number" || !Number.isFinite(value)) return "—";
+
+  const sign = value > 0 ? "+" : "";
+  const abs = Math.abs(value);
+
+  if (abs >= 1000) {
+    return `${sign}${(value / 1000).toFixed(2)}s`;
+  }
+
+  return `${sign}${Math.round(value)}ms`;
+};
+
+export const prettifyConstant = (value?: string | null) => {
+  if (!value) return "—";
+
+  return value
+    .replace(/_/g, " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
+export const getStrengthColor = (strength?: string) => {
+  switch (strength) {
+    case "STRONG":
+      return {
+        bg: "#fee2e2",
+        fg: "#b91c1c",
+      };
+
+    case "MODERATE":
+      return {
+        bg: "#ffedd5",
+        fg: "#c2410c",
+      };
+
+    case "WEAK":
+      return {
+        bg: "#fef9c3",
+        fg: "#a16207",
+      };
+
+    default:
+      return {
+        bg: "#f1f5f9",
+        fg: "#475569",
+      };
+  }
+};
+
+export const getPrimaryStrategy = (strategies?: Record<string, number>) => {
+  const entries = Object.entries(strategies ?? {});
+
+  if (!entries.length) return null;
+
+  return entries.sort((a, b) => b[1] - a[1])[0];
+};
+
+export const getPrimarySchema = (schemas?: Record<string, number>) => {
+  const entries = Object.entries(schemas ?? {});
+
+  if (!entries.length) return null;
+
+  return entries.sort((a, b) => b[1] - a[1])[0];
 };

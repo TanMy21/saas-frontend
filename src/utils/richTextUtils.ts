@@ -22,6 +22,26 @@ export const isEmptyHTML = (html?: string | null) => {
   return stripped.length === 0;
 };
 
+
+export const stripSummaryHtml = (html?: string | null): string => {
+  if (!html) return "";
+
+  const withSpaces = html
+    .replace(/<br\s*\/?>/gi, " ")
+    .replace(/<\/(p|div|li|h[1-6]|blockquote)>/gi, " ")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\u00A0/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = withSpaces;
+
+  return textarea.value.trim();
+};
+
+ 
+
 /**
  * Retrieves the current text selection and range if it lies within the given root element.
  *

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Box, Typography } from "@mui/material";
 import { skipToken } from "@reduxjs/toolkit/query/react";
@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 
 import { useGetResponsesSummaryQuery } from "../../app/slices/resultsApiSlice";
 import { InsightsFilters } from "../../types/insightTypes";
-import { normalizeQuestion } from "../../utils/utils";
 import { SummarySkeleton } from "../LoadingSkeletons/SummarySkeleton";
 import { EmptyState } from "../States/EmptyState";
 
@@ -40,12 +39,13 @@ export const SummaryContainer = () => {
   const { data, isLoading, isFetching, error } =
     useGetResponsesSummaryQuery(queryArgs);
 
-  const normalizedQuestions = data?.questions.map(normalizeQuestion) ?? [];
+  const normalizedQuestions = useMemo(() => {
+    return Array.isArray(data?.questions) ? data.questions : [];
+  }, [data?.questions]);
 
   // Render helpers
   const showEmptyState =
     !isLoading && !isFetching && data && normalizedQuestions.length === 0;
-
 
   return (
     <Box minHeight="100vh" bgcolor="background.default">
@@ -112,7 +112,11 @@ export const SummaryContainer = () => {
           {/* ───────────── Data loaded ───────────── */}
           {!isLoading &&
             normalizedQuestions.map((question) => (
-              <QuestionSection key={question.questionID} question={question} surveyID={surveyID!} />
+              <QuestionSection
+                key={question.questionID}
+                question={question}
+                surveyID={surveyID!}
+              />
             ))}
 
           {/* ───────────── Background refetch indicator ───────────── */}

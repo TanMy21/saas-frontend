@@ -1,6 +1,7 @@
 import {
   GetInsightsArgs,
   GetResponsesSummaryArgs,
+  NormalizedResponsesSummaryResponse,
   ResponsesSummaryResponse,
 } from "../../types/insightTypes";
 import { InsightsResponse, ResultsResponse } from "../../utils/types";
@@ -41,7 +42,7 @@ export const resultsApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Results"],
     }),
     getResponsesSummary: builder.query<
-      ResponsesSummaryResponse,
+      NormalizedResponsesSummaryResponse,
       GetResponsesSummaryArgs
     >({
       query: ({
@@ -69,7 +70,7 @@ export const resultsApiSlice = apiSlice.injectEndpoints({
       transformResponse: (response: {
         success: boolean;
         data: ResponsesSummaryResponse;
-      }) => ({
+      }): NormalizedResponsesSummaryResponse => ({
         ...response.data,
         questions: normalizeResponsesSummary(response.data),
       }),

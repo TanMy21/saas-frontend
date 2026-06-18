@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
+import { QuestionImageAsset } from "../../types/surveyBuilderTypes";
 import { Element, QuestionState } from "../../utils/types";
 
 const initialState: QuestionState = {
@@ -27,6 +28,10 @@ const questionSlice = createSlice({
         questionImageTemplate: true,
         questionImageTemplateUrl: action.payload.url,
       };
+    },
+    setQuestionImages: (state, action: PayloadAction<QuestionImageAsset[]>) => {
+      if (!state.selectedQuestion) return;
+      state.selectedQuestion.questionImages = action.payload;
     },
     setBackgroundColor: (state, action: PayloadAction<string | null>) => {
       if (!state.selectedQuestion?.questionPreferences) return;
@@ -137,14 +142,25 @@ const questionSlice = createSlice({
       }
     },
 
-    updateQuestionField: <K extends keyof Element>(
-      state: QuestionState,
-      action: PayloadAction<{ key: K; value: Element[K] }>,
-    ) => {
-      if (state.selectedQuestion) {
-        state.selectedQuestion[action.payload.key] = action.payload.value;
-      }
-    },
+ updateQuestionField: <K extends keyof Element>(
+  state: QuestionState,
+  action: PayloadAction<{
+    questionID?: string;
+    key: K;
+    value: Element[K];
+  }>,
+) => {
+  if (!state.selectedQuestion) return;
+
+  if (
+    action.payload.questionID &&
+    state.selectedQuestion.questionID !== action.payload.questionID
+  ) {
+    return;
+  }
+
+  state.selectedQuestion[action.payload.key] = action.payload.value;
+},
 
     updateUIButtonText: (state, action: PayloadAction<string>) => {
       if (!state.selectedQuestion?.questionPreferences) return;
@@ -206,6 +222,7 @@ export const {
   setQuestion,
   setSelectedQuestionId,
   setTemplateImage,
+  setQuestionImages,
   setBackgroundColor,
   set3DModelModalOpen,
   removeBackgroundColor,

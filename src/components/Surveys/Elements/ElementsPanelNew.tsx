@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Box } from "@mui/material";
 import {
@@ -14,7 +14,11 @@ import { RootState, useAppDispatch } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
 import { useAppTheme } from "../../../theme/useAppTheme";
-import { nonOrderableTypes } from "../../../utils/constants";
+import {
+  ELEMENTS_PANEL_AUTO_SCROLL_EDGE_SIZE,
+  ELEMENTS_PANEL_AUTO_SCROLL_MAX_SPEED,
+  nonOrderableTypes,
+} from "../../../utils/constants";
 import { createDisplayOrderMap } from "../../../utils/elementsDisplayOrder";
 
 import { ElementsListItem } from "./ElementsListItem";
@@ -25,6 +29,7 @@ const ElementsPanel = () => {
   const dispatch = useAppDispatch();
   const [updateElementOrder] = useUpdateElementOrderMutation();
   const [newQuestionIds, setNewQuestionIds] = useState<Set<string>>(new Set());
+  const [isDragging, setIsDragging] = useState(false);
 
   const aiQuestionsJustAdded = useAppSelector(
     (state: RootState) => state.generateQuestionUI.aiQuestionsJustAdded,
@@ -36,6 +41,9 @@ const ElementsPanel = () => {
 
   const prevLengthRef = useRef(elements.length);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const dragPointerYRef = useRef<number | null>(null);
+  const isDraggingRef = useRef(false);
+  const autoScrollFrameRef = useRef<number | null>(null);
 
   const displayedQuestions = useMemo(() => {
     return [...elements].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
@@ -73,7 +81,127 @@ const ElementsPanel = () => {
     prevLengthRef.current = elements.length;
   }, [elements]);
 
+  /**
+   * Calculates and applies vertical auto-scroll when the active drag pointer
+   * is close to the top or bottom edge of the Elements panel.
+   */
+  const runAutoScroll = useCallback(() => {
+    const scrollContainer = scrollRef.current;
+    const pointerY = dragPointerYRef.current;
+
+    if (!isDraggingRef.current || !scrollContainer || pointerY === null) {
+      autoScrollFrameRef.current = null;
+      return;
+    }
+
+    const bounds = scrollContainer.getBoundingClientRect();
+
+    const topEdge = bounds.top + ELEMENTS_PANEL_AUTO_SCROLL_EDGE_SIZE;
+    const bottomEdge = bounds.bottom - ELEMENTS_PANEL_AUTO_SCROLL_EDGE_SIZE;
+
+    let scrollDelta = 0;
+
+    /**
+     * Scroll upward when the pointer is near the top edge.
+     * The closer the pointer is to the edge, the faster the scroll.
+     */
+    if (pointerY < topEdge) {
+      const distanceIntoEdge = topEdge - pointerY;
+      const intensity = Math.min(
+        distanceIntoEdge / ELEMENTS_PANEL_AUTO_SCROLL_EDGE_SIZE,
+        1,
+      );
+
+      scrollDelta = -Math.ceil(
+        ELEMENTS_PANEL_AUTO_SCROLL_MAX_SPEED * intensity,
+      );
+    }
+
+    /**
+     * Scroll downward when the pointer is near the bottom edge.
+     * The closer the pointer is to the edge, the faster the scroll.
+     */
+    if (pointerY > bottomEdge) {
+      const distanceIntoEdge = pointerY - bottomEdge;
+      const intensity = Math.min(
+        distanceIntoEdge / ELEMENTS_PANEL_AUTO_SCROLL_EDGE_SIZE,
+        1,
+      );
+
+      scrollDelta = Math.ceil(ELEMENTS_PANEL_AUTO_SCROLL_MAX_SPEED * intensity);
+    }
+
+    if (scrollDelta !== 0) {
+      scrollContainer.scrollTop += scrollDelta;
+    }
+
+    autoScrollFrameRef.current = requestAnimationFrame(runAutoScroll);
+  }, []);
+
+  /**
+   * Tracks the active drag pointer so edge auto-scroll can continue even when
+   * the pointer remains still near the top or bottom edge.
+   */
+  /**
+   * Tracks pointer movement while a question is being dragged.
+   * Capturing listeners help preserve tracking while drag-and-drop owns events.
+   */
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (event: MouseEvent) => {
+      dragPointerYRef.current = event.clientY;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+
+      if (touch) {
+        dragPointerYRef.current = touch.clientY;
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, true);
+    window.addEventListener("touchmove", handleTouchMove, true);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove, true);
+      window.removeEventListener("touchmove", handleTouchMove, true);
+    };
+  }, [isDragging]);
+
+  /**
+   * Starts edge auto-scrolling when a draggable survey element is picked up.
+   */
+  const handleDragStart = () => {
+    isDraggingRef.current = true;
+    setIsDragging(true);
+
+    if (autoScrollFrameRef.current === null) {
+      autoScrollFrameRef.current = requestAnimationFrame(runAutoScroll);
+    }
+  };
+
+  /**
+   * Stops edge auto-scroll and clears the active pointer state.
+   */
+  const stopAutoScroll = () => {
+    isDraggingRef.current = false;
+    setIsDragging(false);
+    dragPointerYRef.current = null;
+
+    if (autoScrollFrameRef.current !== null) {
+      cancelAnimationFrame(autoScrollFrameRef.current);
+      autoScrollFrameRef.current = null;
+    }
+  };
+
+  /**
+   * Persists the new question ordering after a valid drag-and-drop action.
+   */
   const onDragEnd = (result: DropResult) => {
+    stopAutoScroll();
+
     const { source, destination } = result;
 
     if (!destination) return;
@@ -102,6 +230,7 @@ const ElementsPanel = () => {
 
     const reordered = [...questions];
     const [moved] = reordered.splice(sourceIndex, 1);
+
     reordered.splice(destinationIndex, 0, moved);
 
     const updatedQuestions = reordered.map((q, index) => ({
@@ -126,12 +255,12 @@ const ElementsPanel = () => {
         console.error("Order update error:", err);
       });
   };
-
   return (
     <>
       {elements.length === 0 ? null : (
         <DragDropContext
-          onDragEnd={can("REORDER_QUESTION") ? onDragEnd : () => {}}
+          onDragStart={handleDragStart}
+          onDragEnd={can("REORDER_QUESTION") ? onDragEnd : stopAutoScroll}
         >
           <Droppable droppableId="elements">
             {(provided, snapshot) => (
@@ -145,14 +274,12 @@ const ElementsPanel = () => {
                   overflowY: "auto",
                   overflowX: "hidden",
                   maxWidth: { md: "100%", lg: "100%", xl: "100%" },
-                  maxHeight: "98%",
+                  maxHeight: "100%",
                   backgroundColor: snapshot.isDraggingOver
                     ? "#F8FAFF"
                     : "transparent",
                   transition: "background-color 0.2s ease",
-                  minHeight: snapshot.isDraggingOver
-                    ? displayedQuestions.length * 56 + 40
-                    : undefined,
+                  minHeight: 0,
                   ...scrollStyles.elementsPanel,
                 }}
               >

@@ -202,7 +202,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body: formData,
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: ["Elements", "Surveys"],
     }),
     upload3DModel: builder.mutation({
       query: ({ formData, questionID }) => ({
@@ -210,7 +210,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: formData,
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: ["Elements", "Surveys"],
     }),
     uploadQuestionImage: builder.mutation({
       query: ({ questionID, role, formData }) => ({
@@ -219,7 +219,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         body: formData,
         params: { role },
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: ["Elements", "Surveys"],
     }),
     replace3DModel: builder.mutation({
       query: ({ formData, questionID }) => ({
@@ -235,6 +235,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body: formData,
       }),
+      invalidatesTags: ["Elements", "Surveys"],
     }),
     toggleQuestionImageVisibility: builder.mutation({
       query: ({ questionID, questionImage }) => ({
@@ -271,14 +272,14 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         url: `/q/remove/img/${questionID}/${questionImageID}`,
         method: "POST",
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: ["Elements", "Surveys"],
     }),
     removeQuestionTemplateImage: builder.mutation({
       query: (questionID) => ({
         url: `/q/remove/template/${questionID}`,
         method: "POST",
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: ["Elements", "Surveys"],
     }),
     removeQuestionBackgroundColor: builder.mutation({
       query: (questionID) => ({
@@ -286,7 +287,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { questionID },
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: ["Elements", "Surveys"],
     }),
     syncEditorImages: builder.mutation({
       query: ({ questionID, usedQuestionImageIDs, role }) => ({
@@ -297,7 +298,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
           role,
         },
       }),
-      invalidatesTags: ["Elements"],
+      invalidatesTags: ["Elements", "Surveys"],
     }),
     mutateQuestionType: builder.mutation<any, MutateQuestionPayload>({
       query: ({ questionID, targetType, confirmOptionLoss }) => ({

@@ -63,7 +63,7 @@ export const ConceptFitResponseMobilePreview = () => {
             width: "100%",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center", 
+            alignItems: "center",
             pt: 1.5,
             px: 1.25,
           }}
@@ -79,9 +79,6 @@ export const ConceptFitResponseMobilePreview = () => {
                 textAlign: "center",
                 p: 3,
                 color: "#94A3B8",
-                border: "1px dashed #CBD5E1",
-                borderRadius: "22px",
-                bgcolor: "#F8FAFC",
               }}
             >
               <Typography sx={{ fontSize: 14, fontWeight: 700 }}>
