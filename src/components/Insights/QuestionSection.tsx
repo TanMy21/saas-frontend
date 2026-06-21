@@ -9,7 +9,11 @@ import {
 import { SummaryQuestionHeader } from "./SummaryQuestionHeader";
 import { ThreeDOptionChart } from "./visualizations/ThreeDOptionChart";
 
-export function QuestionSection({ question, surveyID }: QuestionSectionProps) {
+export function QuestionSection({
+  question,
+  surveyID,
+  displayOrder,
+}: QuestionSectionProps) {
   const config = questionTypeMap[question.type];
 
   const isThreeD = question.type === "THREE_D";
@@ -35,7 +39,7 @@ export function QuestionSection({ question, surveyID }: QuestionSectionProps) {
       }}
     >
       {/* Header */}
-      <SummaryQuestionHeader question={question} />
+      <SummaryQuestionHeader question={question} displayOrder={displayOrder} />
 
       {/* Visualization */}
       <Box

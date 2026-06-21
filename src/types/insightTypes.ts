@@ -609,6 +609,7 @@ export type SummaryQuestion =
 export interface QuestionSectionProps {
   surveyID: string;
   question: SummaryQuestion;
+  displayOrder:number;
 }
 
 export interface QuestionTypeBadgeProps {

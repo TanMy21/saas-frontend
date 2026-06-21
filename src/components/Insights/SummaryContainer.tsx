@@ -111,11 +111,12 @@ export const SummaryContainer = () => {
 
           {/* ───────────── Data loaded ───────────── */}
           {!isLoading &&
-            normalizedQuestions.map((question) => (
+            normalizedQuestions.map((question, index) => (
               <QuestionSection
                 key={question.questionID}
                 question={question}
                 surveyID={surveyID!}
+                displayOrder={index + 1}
               />
             ))}
 

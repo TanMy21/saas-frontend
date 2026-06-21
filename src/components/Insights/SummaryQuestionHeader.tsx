@@ -7,8 +7,10 @@ import { QuestionTypeBadge } from "./QuestionTypeBadge";
 
 export const SummaryQuestionHeader = ({
   question,
+  displayOrder,
 }: {
   question: SummaryQuestion;
+  displayOrder: number;
 }) => {
   return (
     <Box mb={3}>
@@ -42,7 +44,7 @@ export const SummaryQuestionHeader = ({
               flexShrink: 0,
             }}
           >
-            {question.order}
+            {displayOrder}
           </Box>
 
           <Typography

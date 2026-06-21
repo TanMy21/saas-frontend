@@ -112,7 +112,7 @@ const AddElementMenu = ({
   const dispatch = useAppDispatch();
   const { can, tier = "FREE" } = useAuth();
 
-  const canCreate3DQuestion =
+  const canCreatePremiumQuestion =
     can("CREATE_QUESTION") && hasMinimumPlan(tier, "PROFESSIONAL");
 
   const [createElement, { isLoading, isError, error }] =
@@ -136,8 +136,12 @@ const AddElementMenu = ({
   /**
    * Applies runtime plan gating for 3D without putting auth-dependent logic in config.
    */
-  const gatedQuestionItems: AddMenuItemConfig[] = canCreate3DQuestion
+  const gatedQuestionItems: AddMenuItemConfig[] = canCreatePremiumQuestion
     ? [threeDMenuItem]
+    : [];
+
+  const gatedImplicitMenuItems: AddMenuItemConfig[] = canCreatePremiumQuestion
+    ? implicitMenuItems
     : [];
 
   /**
@@ -294,12 +298,14 @@ const AddElementMenu = ({
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <AddMenuSection
-              title="Implicit"
-              items={implicitMenuItems}
-              isLoading={isLoading}
-              onAdd={handleMenuItemAdd}
-            />
+            {gatedImplicitMenuItems.length > 0 && (
+              <AddMenuSection
+                title="Implicit"
+                items={gatedImplicitMenuItems}
+                isLoading={isLoading}
+                onAdd={handleMenuItemAdd}
+              />
+            )}
 
             <Box sx={{ mt: 1 }}>
               <AddMenuSection

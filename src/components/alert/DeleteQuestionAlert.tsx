@@ -18,7 +18,6 @@ const DeleteQuestionAlert = ({ open }: DeleteQuestionAlertProps) => {
           position: "fixed",
           inset: 0,
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           p: 2,
@@ -33,51 +32,84 @@ const DeleteQuestionAlert = ({ open }: DeleteQuestionAlertProps) => {
             p: 3,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
             alignItems: "center",
             gap: 2.5,
           }}
         >
-          {/* Animation */}
+          {/* Shredder animation */}
           <Box
             sx={{
               width: 96,
-              height: 96,
+              height: 118,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "center",
-              overflow: "hidden",
             }}
           >
-            <motion.div
-              animate={{ y: [0, 40] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            {/* The icon is confined to this area and cannot pass below the divider. */}
+            <Box
+              sx={{
+                width: 64,
+                height: 52,
+                overflow: "hidden",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-start",
+              }}
             >
-              <FileText size={48} color={"#e53935"} />
-            </motion.div>
+              <motion.div
+                animate={{ y: [0, 58] }}
+                transition={{
+                  duration: 1.45,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                <FileText size={48} color="#e53935" />
+              </motion.div>
+            </Box>
 
+            {/* Divider stays above the document animation visually. */}
             <Divider
               sx={{
-                width: 48,
-                borderBottomWidth: 2,
+                width: 56,
+                borderBottomWidth: 2.5,
                 borderColor: "#e53935",
-                my: 1,
+                my: 0.5,
               }}
             />
 
-            <Box sx={{ display: "flex", gap: 0.5, mt: 0.5 }}>
-              {Array.from({ length: 5 }).map((_, i) => (
+            {/* Only shredded strips appear below the divider. */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "flex-start",
+                justifyContent: "center",
+                gap: 0.65,
+                height: 42,
+                overflow: "hidden",
+                mt: 0.5,
+              }}
+            >
+              {Array.from({ length: 5 }).map((_, index) => (
                 <motion.div
-                  key={i}
+                  key={index}
                   style={{
-                    width: 4,
-                    height: 32,
+                    width: 5,
+                    height: 34,
                     backgroundColor: "#e53935",
-                    borderRadius: 2,
+                    borderRadius: 3,
                   }}
-                  animate={{ y: [0, 20], opacity: [1, 0.2] }}
-                  transition={{ duration: 1, repeat: Infinity, delay: i * 0.1 }}
+                  animate={{
+                    y: [-10, 26],
+                    opacity: [0, 1, 0.15],
+                  }}
+                  transition={{
+                    duration: 0.95,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: index * 0.1,
+                  }}
                 />
               ))}
             </Box>
