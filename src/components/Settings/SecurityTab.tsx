@@ -5,14 +5,16 @@ import { Box, Stack, Typography, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
 
 import { useUpdatePasswordMutation } from "../../app/slices/authApiSlice";
+import { logOut } from "../../app/slices/authSlice";
+import { useAppDispatch } from "../../app/typedReduxHooks";
 import { useToast } from "../../hooks/useToast";
-import { AccountSettings } from "../../types/userTypes";
 import { updatePasswordSchema } from "../../utils/schema";
 import { UpdatePasswordFormData } from "../../utils/types";
 
 import LabeledField from "./LabelField";
 
-export default function SecurityTab({ user }: AccountSettings) {
+export default function SecurityTab() {
+  const dispatch = useAppDispatch();
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -40,6 +42,12 @@ export default function SecurityTab({ user }: AccountSettings) {
         currentPassword: data.currentPassword,
         newPassword: data.password,
       }).unwrap();
+      console.log("Pwd updated");
+
+      dispatch(logOut());
+      console.log("Dispatch  sent");
+      window.location.href = "/login?reason=password-updated";
+      console.log("location");
     } catch (e) {
       console.error(e);
     }

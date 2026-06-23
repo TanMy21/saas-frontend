@@ -186,6 +186,30 @@ export const LABELS: Record<
   },
 };
 
+
+export const authReasonMessages: Record<
+  string,
+  { severity: "success" | "error" | "warning" | "info"; message: string }
+> = {
+  "session-expired": {
+    severity: "error",
+    message: "Your session has expired. Please log in again.",
+  },
+  "password-updated": {
+    severity: "success",
+    message: "Password updated successfully. Please log in again.",
+  },
+  "logged-out": {
+    severity: "success",
+    message: "You have been logged out.",
+  },
+  unauthorized: {
+    severity: "error",
+    message: "Please log in to continue.",
+  },
+};
+
+
 export const timerDrain = keyframes`
   from {
     width: 100%;

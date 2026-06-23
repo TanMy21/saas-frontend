@@ -29,7 +29,7 @@ const PersistLogin = () => {
       isLoggingOutRef.current = true;
       await sendLogout().unwrap();
       dispatch(logOut());
-      navigate("/login?session=expired", { replace: true });
+      navigate("/login?reason=session-expired", { replace: true });
     } catch (err) {
       console.error(err);
     }

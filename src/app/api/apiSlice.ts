@@ -50,11 +50,11 @@ const baseQueryWithReauth: BaseQueryFn<
       ) {
         localStorage.removeItem("persist");
         localStorage.setItem("session_expired", "true");
-        window.location.replace("/login?session=expired");
+        window.location.replace("/login??reason=session-expired");
       }
 
       // return refreshResult;
-      return { data: undefined as any };
+      return { data: undefined };
     }
   }
 
@@ -82,7 +82,7 @@ export const apiSlice = createApi({
     "Insights",
     "QuestionPreferences",
     "Organization",
-    "Generate"
+    "Generate",
   ],
   endpoints: () => ({}),
 });

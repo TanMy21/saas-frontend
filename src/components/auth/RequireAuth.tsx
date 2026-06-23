@@ -49,7 +49,7 @@ const RequireAuth = () => {
   }
 
   return (
-    <Navigate to="/login?session=expired" state={{ from: location }} replace />
+    <Navigate to="/login?reason=unauthorized" state={{ from: location }} replace />
   );
 };
 

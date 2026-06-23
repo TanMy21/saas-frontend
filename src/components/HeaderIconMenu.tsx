@@ -55,7 +55,7 @@ const HeaderIconMenu = () => {
 
     dispatch(logOut());
 
-    window.location.href = "/login?session=expired";
+    window.location.href = "/login?reason=logged-out";
   };
 
   const onSettingsClick = () => {

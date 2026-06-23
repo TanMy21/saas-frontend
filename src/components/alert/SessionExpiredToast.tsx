@@ -5,17 +5,21 @@ import { SessionExpireToastProps } from "../../utils/types";
 export default function SessionExpiredToast({
   open,
   setOpen,
-  handleSessionExpired,
+  handleCloseComplete,
+  severity,
+  message,
 }: SessionExpireToastProps) {
   const handleClose = (
     _event?: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => {
     if (reason === "clickaway") return;
+
     setOpen(false);
+
     setTimeout(() => {
-      handleSessionExpired();
-    }, 3000);
+      handleCloseComplete();
+    }, 300);
   };
 
   return (
@@ -28,10 +32,10 @@ export default function SessionExpiredToast({
       <Alert
         variant="filled"
         onClose={handleClose}
-        severity="error"
+        severity={severity}
         sx={{ width: "100%" }}
       >
-        Your session has expired. Please log in again.
+        {message}
       </Alert>
     </Snackbar>
   );

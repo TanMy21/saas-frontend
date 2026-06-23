@@ -32,6 +32,7 @@ import LogoLoader from "../components/Loaders/LogoLoader";
 import usePersist from "../hooks/persist";
 import { useToast } from "../hooks/useToast";
 import { useAppTheme } from "../theme/useAppTheme";
+import { authReasonMessages } from "../utils/constants";
 import { loginSchema } from "../utils/schema";
 import { showToast } from "../utils/showToast";
 import { LoginFormData } from "../utils/types";
@@ -49,7 +50,8 @@ const Signin = () => {
   // const [googleAuthClicked, setGoogleAuthClicked] = useState(false);
   const [initialParams] = useState(() => new URLSearchParams(location.search));
   // const params = new URLSearchParams(location.search);
-  const sessionExpired = initialParams.get("session") === "expired";
+  const authReason = initialParams.get("reason");
+  const authNotice = authReason ? authReasonMessages[authReason] : null;
 
   const [login, { isLoading, isError, error }] = useLoginMutation();
   const [
@@ -106,7 +108,7 @@ const Signin = () => {
     }
   };
 
-  const handleSessionExpired = () => {
+  const handleAuthNoticeClose = () => {
     dispatch(logOut());
     navigate("/login", { replace: true });
   };
@@ -173,11 +175,13 @@ const Signin = () => {
 
   return (
     <>
-      {sessionExpired && (
+      {authNotice && (
         <SessionExpiredToast
           open={openToast}
           setOpen={setOpenToast}
-          handleSessionExpired={handleSessionExpired}
+          handleCloseComplete={handleAuthNoticeClose}
+          severity={authNotice.severity}
+          message={authNotice.message}
         />
       )}
       <Box
