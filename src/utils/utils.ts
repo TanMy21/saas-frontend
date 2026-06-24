@@ -1055,9 +1055,13 @@ export const validateShareURL = (shareURL: string) => {
   const parsedShareURL = new URL(shareURL);
   const parsedExpectedOrigin = new URL(expectedShareOrigin);
 
-  if (parsedShareURL.protocol !== "https:") {
-    throw new Error("Invalid share URL protocol");
-  }
+ const isLocalhost =
+  parsedShareURL.hostname === "localhost" ||
+  parsedShareURL.hostname === "127.0.0.1";
+
+if (parsedShareURL.protocol !== "https:" && !isLocalhost) {
+  throw new Error("Invalid share URL protocol");
+}
 
   if (parsedShareURL.origin !== parsedExpectedOrigin.origin) {
     throw new Error("Invalid share URL origin");

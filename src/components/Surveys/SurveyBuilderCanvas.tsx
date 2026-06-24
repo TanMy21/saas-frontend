@@ -152,17 +152,6 @@ const SurveyBuilderCanvas = ({
           </AnimatePresence>
         </Box>
       </DevicePreview>
-      <Box
-        sx={{
-          position: "sticky",
-          bottom: 0,
-          width: "100%",
-          height: "48px",
-          pointerEvents: "none",
-          zIndex: 2,
-          boxShadow: "0 -18px 24px -16px rgba(0,0,0,0.35) inset",
-        }}
-      />
     </Box>
   );
 };

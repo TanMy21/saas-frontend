@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-import FileUploadIcon from "@mui/icons-material/FileUpload";
-import { Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import { set3DModelModalOpen } from "../../../app/slices/elementSlice";
@@ -15,71 +14,92 @@ import FileUpload3D from "../../ModalComponents/FileUpload3D";
 import Upload3DModelModal from "../../Modals/Upload3DModelModal";
 
 import ThreeDMobileView from "./ThreeDMobileView";
+import { ThreeDModelEmptyState } from "./ThreeDModelEmptyState";
 import ThreeDView from "./ThreeDView";
 
 const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
   const isOpen3DModel = useAppSelector(
     (state) => state.question.is3DModelModalOpen,
   );
+
   const dispatch = useAppDispatch();
   const refetchCanvas = useSurveyCanvasRefetch();
   const isMobile = display === "mobile";
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
   const [overrideUrl, setOverrideUrl] = useState<string | null>(null);
   const [isReadyToView, setIsReadyToView] = useState(false);
 
   const { can, tier = "FREE" } = useAuth();
 
-  const canUpload3DModel =
-    can("UPDATE_QUESTION") && hasMinimumPlan(tier, "PROFESSIONAL");
+  const hasQuestionEditPermission = can("UPDATE_QUESTION");
+  const hasProfessionalPlan = hasMinimumPlan(tier, "PROFESSIONAL");
+
+  const canUpload3DModel = hasQuestionEditPermission && hasProfessionalPlan;
 
   const question = useSelector(
     (state: RootState) => state.question.selectedQuestion,
   );
-  const hasModel = !!question?.Model3D?.fileUrl;
+
+  const hasModel = Boolean(question?.Model3D?.fileUrl);
+
   const url = question?.Model3D?.fileUrl
     ? `${question.Model3D.fileUrl}?v=${question.Model3D.updatedAt}`
     : null;
 
-  const handleFileSelect = (file: File) => {
-    setUploadedFile(file);
+  /**
+   * Keeps FileUpload3D's selection lifecycle available without duplicating file state here.
+   */
+  const handleFileSelect = (_file: File) => {
+    // FileUpload3D owns validation and upload progress for the selected file.
   };
 
-  const handleUploadSuccess = (model: any) => {
-    setOverrideUrl(model?.fileUrl);
+  /**
+   * Immediately switches the viewer to the newly uploaded model URL.
+   */
+  const handleUploadSuccess = (model: { fileUrl?: string }) => {
+    setOverrideUrl(model?.fileUrl ?? null);
     setIsReadyToView(true);
+
     refetchCanvas();
     dispatch(set3DModelModalOpen(false));
   };
 
-  const handleUploadError = (msg: string) => {
-    console.error(msg);
+  /**
+   * Logs upload failures while FileUpload3D handles the user-facing error UI.
+   */
+  const handleUploadError = (message: string) => {
+    console.error(message);
   };
 
+  /**
+   * Closes the upload modal and refreshes the canvas to keep the model state current.
+   */
   const handleCloseModal = () => {
     refetchCanvas();
     dispatch(set3DModelModalOpen(false));
   };
 
+  /**
+   * Marks the element ready whenever the selected question receives a persisted model.
+   */
   useEffect(() => {
     setIsReadyToView(hasModel);
-  }, [question?.Model3D?.fileUrl]);
+  }, [hasModel]);
 
-  if (isReadyToView) {
+  if (isReadyToView && (overrideUrl || url)) {
     return (
-      <div
-        style={{
+      <Box
+        sx={{
           position: "relative",
           display: "flex",
           flexDirection: "column",
-          margin: "auto",
+          m: "auto",
           width: "100%",
           minHeight: isMobile ? "680px" : "660px",
           zIndex: 20,
-          // border: "2px solid blue",
         }}
       >
-        {display === "mobile" ? (
+        {isMobile ? (
           <ThreeDMobileView
             url={overrideUrl ?? url!}
             display={display}
@@ -92,41 +112,19 @@ const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
             showQuestion={showQuestion}
           />
         )}
-      </div>
+      </Box>
     );
   }
 
   return (
     <>
-      <div style={{ textAlign: "center" }}>
-        {canUpload3DModel && (
-          <Button
-            onClick={() => dispatch(set3DModelModalOpen(true))}
-            variant="contained"
-            startIcon={<FileUploadIcon />}
-            sx={{
-              bgcolor: "common.white",
-              color: "#2563EB",
-              borderRadius: 2.5,
-              px: 3,
-              py: 1.5,
-              fontWeight: 600,
-              textTransform: "none",
-              boxShadow: "none",
-              "&:hover": {
-                bgcolor: "rgba(255,255,255,0.92)",
-                boxShadow: "none",
-              },
-              transition: "background-color .2s ease",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 1,
-            }}
-          >
-            Upload Your Model
-          </Button>
-        )}
-      </div>
+      <ThreeDModelEmptyState
+        isMobile={isMobile}
+        canUpload3DModel={canUpload3DModel}
+        hasProfessionalPlan={hasProfessionalPlan}
+        onUpload={() => dispatch(set3DModelModalOpen(true))}
+      />
+
       {canUpload3DModel && (
         <Upload3DModelModal
           isOpen={isOpen3DModel}
