@@ -1019,22 +1019,21 @@ export const HowItWorksSteps: Step[] = [
   },
 ];
 
-
-
 /**
  * Returns a stable alphabetic badge for a media option's persisted 1-based order.
  * Media options are limited to 10, so valid orders map from A through J.
  */
 export const getMediaOptionBadge = (order: number): string => {
-  if (!Number.isInteger(order) || order < 1 || order > MEDIA_OPTION_BADGES.length) {
+  if (
+    !Number.isInteger(order) ||
+    order < 1 ||
+    order > MEDIA_OPTION_BADGES.length
+  ) {
     return "?";
   }
 
   return MEDIA_OPTION_BADGES[order - 1];
 };
-
-
-
 
 export const escapeHtml = (value: string) => {
   return value
@@ -1055,13 +1054,13 @@ export const validateShareURL = (shareURL: string) => {
   const parsedShareURL = new URL(shareURL);
   const parsedExpectedOrigin = new URL(expectedShareOrigin);
 
- const isLocalhost =
-  parsedShareURL.hostname === "localhost" ||
-  parsedShareURL.hostname === "127.0.0.1";
+  const isLocalhost =
+    parsedShareURL.hostname === "localhost" ||
+    parsedShareURL.hostname === "127.0.0.1";
 
-if (parsedShareURL.protocol !== "https:" && !isLocalhost) {
-  throw new Error("Invalid share URL protocol");
-}
+  if (parsedShareURL.protocol !== "https:" && !isLocalhost) {
+    throw new Error("Invalid share URL protocol");
+  }
 
   if (parsedShareURL.origin !== parsedExpectedOrigin.origin) {
     throw new Error("Invalid share URL origin");
@@ -1687,4 +1686,23 @@ export const getPrimarySchema = (schemas?: Record<string, number>) => {
   if (!entries.length) return null;
 
   return entries.sort((a, b) => b[1] - a[1])[0];
+};
+
+export const downloadExportFile = async (
+  fileUrl: string,
+  fileName?: string | null,
+) => {
+  const response = await fetch(fileUrl);
+  const blob = await response.blob();
+
+  const url = window.URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName || "export";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  window.URL.revokeObjectURL(url);
 };

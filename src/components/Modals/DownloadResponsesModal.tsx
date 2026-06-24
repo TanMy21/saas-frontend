@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -14,10 +16,12 @@ import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import {
   useExportSelectedResponsesMutation,
   useExportSurveyFullMutation,
+  useGetExportJobStatusQuery,
 } from "../../app/slices/exportDataApi";
 import { useToast } from "../../hooks/useToast";
 import { DownloadFormData, downloadDataSchema } from "../../utils/schema";
 import { DownloadResponsesModalProps } from "../../utils/types";
+import { downloadExportFile } from "../../utils/utils";
 
 const DownloadResponsesModal = ({
   rowData,
@@ -26,6 +30,7 @@ const DownloadResponsesModal = ({
   surveyID,
   mode,
 }: DownloadResponsesModalProps) => {
+  const [exportJobID, setExportJobID] = useState<string | null>(null);
   const {
     control,
     handleSubmit,
@@ -40,6 +45,11 @@ const DownloadResponsesModal = ({
 
   const selectedFormat = watch("fileFormatGroup");
 
+  const { data: exportJob } = useGetExportJobStatusQuery(exportJobID!, {
+    skip: !exportJobID,
+    pollingInterval: exportJobID ? 2000 : 0,
+  });
+
   const [
     exportSurveyFull,
     { isError: isFullError, error: fullError, isLoading: isFullLoading },
@@ -52,20 +62,19 @@ const DownloadResponsesModal = ({
     data,
   ) => {
     try {
-      if (mode === "ALL") {
-        await exportSurveyFull({
-          surveyID,
-          format: data.fileFormatGroup,
-        }).unwrap();
-      } else {
-        await exportSelectedResponses({
-          format: data.fileFormatGroup,
-          surveyID,
-          participantIDs: rowData,
-        }).unwrap();
-      }
+      const result =
+        mode === "ALL"
+          ? await exportSurveyFull({
+              surveyID,
+              format: data.fileFormatGroup,
+            }).unwrap()
+          : await exportSelectedResponses({
+              format: data.fileFormatGroup,
+              surveyID,
+              participantIDs: rowData,
+            }).unwrap();
 
-      handleClose();
+      setExportJobID(result.jobID);
     } catch (err) {
       console.error("Export failed", err);
     }
@@ -82,6 +91,21 @@ const DownloadResponsesModal = ({
     error: fullError,
     errorFallbackMessage: "Could not load the full data. Please try again.",
   });
+
+  useEffect(() => {
+    if (!exportJob) return;
+
+    if (exportJob.status === "COMPLETED" && exportJob.fileUrl) {
+      downloadExportFile(exportJob.fileUrl, exportJob.fileName);
+      setExportJobID(null);
+      handleClose();
+    }
+
+    if (exportJob.status === "FAILED") {
+      console.error(exportJob.errorMessage || "Export failed");
+      setExportJobID(null);
+    }
+  }, [exportJob, handleClose]);
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -309,7 +333,7 @@ const DownloadResponsesModal = ({
 
               <Button
                 type="submit"
-                disabled={isLoading || isFullLoading}
+                disabled={isLoading || isFullLoading || !!exportJobID}
                 sx={{
                   textTransform: "none",
                   bgcolor: "#2563eb",
@@ -318,7 +342,9 @@ const DownloadResponsesModal = ({
                 }}
                 variant="contained"
               >
-                {isLoading ? "Downloading..." : "Download"}
+                {exportJobID || isLoading || isFullLoading
+                  ? "Preparing export..."
+                  : "Download"}
               </Button>
             </Box>
           </form>
