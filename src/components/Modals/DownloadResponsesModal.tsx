@@ -36,6 +36,7 @@ const DownloadResponsesModal = ({
     handleSubmit,
     watch,
     formState: { errors },
+    reset,
   } = useForm<DownloadFormData>({
     resolver: zodResolver(downloadDataSchema),
     defaultValues: {
@@ -45,7 +46,7 @@ const DownloadResponsesModal = ({
 
   const selectedFormat = watch("fileFormatGroup");
 
-  const { data: exportJob } = useGetExportJobStatusQuery(exportJobID!, {
+  const { currentData: exportJob } = useGetExportJobStatusQuery(exportJobID!, {
     skip: !exportJobID,
     pollingInterval: exportJobID ? 2000 : 0,
   });
@@ -93,7 +94,16 @@ const DownloadResponsesModal = ({
   });
 
   useEffect(() => {
-    if (!exportJob) return;
+    if (!open) return;
+
+    setExportJobID(null);
+    reset({
+      fileFormatGroup: "csv",
+    });
+  }, [open, reset]);
+
+  useEffect(() => {
+    if (!open || !exportJobID || !exportJob) return;
 
     if (exportJob.status === "COMPLETED" && exportJob.fileUrl) {
       downloadExportFile(exportJob.fileUrl, exportJob.fileName);
@@ -105,7 +115,7 @@ const DownloadResponsesModal = ({
       console.error(exportJob.errorMessage || "Export failed");
       setExportJobID(null);
     }
-  }, [exportJob, handleClose]);
+  }, [exportJobID, exportJob, open, handleClose]);
 
   return (
     <Modal open={open} onClose={handleClose}>

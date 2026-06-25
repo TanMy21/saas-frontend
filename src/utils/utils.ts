@@ -1688,21 +1688,18 @@ export const getPrimarySchema = (schemas?: Record<string, number>) => {
   return entries.sort((a, b) => b[1] - a[1])[0];
 };
 
-export const downloadExportFile = async (
+export const downloadExportFile = (
   fileUrl: string,
   fileName?: string | null,
 ) => {
-  const response = await fetch(fileUrl);
-  const blob = await response.blob();
-
-  const url = window.URL.createObjectURL(blob);
-
   const a = document.createElement("a");
-  a.href = url;
+
+  a.href = fileUrl;
   a.download = fileName || "export";
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+
   document.body.appendChild(a);
   a.click();
   a.remove();
-
-  window.URL.revokeObjectURL(url);
 };

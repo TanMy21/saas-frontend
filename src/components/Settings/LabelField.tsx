@@ -17,40 +17,89 @@ type LabeledFieldProps = TextFieldProps & {
 };
 
 const LabeledField = forwardRef<HTMLInputElement, LabeledFieldProps>(
-  ({ topLabel, showPassword, onTogglePassword, sx, ...rest }, ref) => {
+  (
+    {
+      topLabel,
+      showPassword,
+      onTogglePassword,
+      sx,
+      InputProps,
+      type,
+      helperText,
+      ...rest
+    },
+    ref,
+  ) => {
+    const isPasswordField = type === "password";
+
     return (
       <FormControl fullWidth>
         <FormLabel
           sx={{
-            fontWeight: 600,
-            mb: 1,
-            lineHeight: 1.2,
-            color: "text.secondary",
+            mb: 0.85,
+            fontSize: "0.8125rem",
+            fontWeight: 700,
+            lineHeight: 1.25,
+            letterSpacing: "0.005em",
+            color: "#334155",
+
+            "&.Mui-focused": {
+              color: "#005BC4",
+            },
           }}
         >
           {topLabel}
         </FormLabel>
+
         <TextField
           {...rest}
           label={undefined}
           sx={sx}
-          margin="dense"
+          margin="none"
           inputRef={ref}
           type={
-            rest.type === "password"
+            isPasswordField
               ? showPassword
                 ? "text"
                 : "password"
-              : rest.type || "text"
+              : type || "text"
           }
+          helperText={helperText}
           InputProps={{
-            endAdornment: onTogglePassword && (
+            ...InputProps,
+
+            endAdornment: onTogglePassword ? (
               <InputAdornment position="end">
-                <IconButton onClick={onTogglePassword} edge="end">
+                <IconButton
+                  type="button"
+                  edge="end"
+                  size="small"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  onClick={onTogglePassword}
+                  sx={{
+                    mr: 0.25,
+                    color: "#64748B",
+
+                    "&:hover": {
+                      color: "#005BC4",
+                      backgroundColor: "rgba(0,116,235,0.07)",
+                    },
+                  }}
+                >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </IconButton>
               </InputAdornment>
+            ) : (
+              InputProps?.endAdornment
             ),
+          }}
+          FormHelperTextProps={{
+            sx: {
+              mx: 0.25,
+              mt: 0.7,
+              fontSize: "0.75rem",
+              lineHeight: 1.4,
+            },
           }}
         />
       </FormControl>

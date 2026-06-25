@@ -131,7 +131,7 @@ const Settings = () => {
                     <OrgMembers />
                   )}
 
-                  {activeTab === "security" && <SecurityTab user={user} />}
+                  {activeTab === "security" && <SecurityTab />}
 
                   {activeTab === "subscription" && <BillingTab user={user} />}
 

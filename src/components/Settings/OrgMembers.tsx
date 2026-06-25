@@ -10,6 +10,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { UserRoundPlus } from "lucide-react";
 
 import {
   useDeleteOrgUserMutation,
@@ -167,9 +168,15 @@ export const OrgMembers = () => {
               onClick={() =>
                 setDrawer({ open: true, mode: "add", member: null })
               }
-              sx={{ px: 2 }}
+              startIcon={<UserRoundPlus size={20} strokeWidth={2.2} />}
+              sx={{
+                px: 1,
+                "& .MuiButton-startIcon": {
+                  mr: 0.85,
+                },
+              }}
             >
-              Add Member
+              Add
             </Button>
           </Stack>
         )}

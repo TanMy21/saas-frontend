@@ -38,14 +38,14 @@ export const MembersTable = ({
   return (
     <Table
       sx={{
-        border: "1px solid #e5e7eb",
-        borderRadius: 4,
+        borderRadius: 2,
+
         overflow: "hidden",
-        mt:2,
+        mt: 2,
       }}
     >
       {/* HEADER */}
-      <TableHead sx={{ bgcolor: "#f8fafc", }}>
+      <TableHead sx={{ bgcolor: "#f8fafc" }}>
         <TableRow>
           <TableCell sx={headerCell}>User</TableCell>
           <TableCell sx={headerCell}>Email</TableCell>

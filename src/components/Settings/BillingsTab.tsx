@@ -73,14 +73,14 @@ export default function BillingTab({ user }: AccountSettings) {
               {user.tier}
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
+          {/* <Grid item xs={12} md={6}>
             <Typography color="text.secondary" component="span">
               Amount:
             </Typography>
             <Typography component="span" sx={{ fontWeight: 600, ml: 1 }}>
               {user.tier === "FREE" ? "$0.00/month" : "$29.00/month"}
             </Typography>
-          </Grid>
+          </Grid> */}
         </Grid>
 
         <Button
