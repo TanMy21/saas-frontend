@@ -12,7 +12,6 @@ import { Sparkles } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
-import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
 import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
 import { useToast } from "../../hooks/useToast";
@@ -29,6 +28,7 @@ export const GenerateSurveyForm = ({
   isError,
   error,
   handleClose,
+  setGenerationJobID,
 }: GenerateSurveyFormProps) => {
   const { surveyID } = useParams();
   const dispatch = useAppDispatch();
@@ -86,7 +86,7 @@ export const GenerateSurveyForm = ({
         }),
       );
 
-      await generateSurvey({
+      const response = await generateSurvey({
         surveyID: surveyID!,
         inputText: data.description,
         numberOfQuestions: data.numberOfQuestions,
@@ -94,27 +94,17 @@ export const GenerateSurveyForm = ({
         mode: "INITIAL",
       }).unwrap();
 
-      dispatch(
-        showOverlay({
-          message: "Structuring your survey...",
-          variant: "GENERATE",
-        }),
-      );
-      await delay(500);
+      setGenerationJobID(response.jobID);
 
       dispatch(
         showOverlay({
-          message: "Finalizing your survey...",
+          message: "Generating relevant questions...",
           variant: "GENERATE",
         }),
       );
-      await delay(400);
-
-      dispatch(setAiQuestionsJustAdded());
-
-      dispatch(hideOverlay());
     } catch (error) {
       console.error("Error generating survey:", error);
+      dispatch(hideOverlay());
     }
   };
 
@@ -456,7 +446,6 @@ export const GenerateSurveyForm = ({
             opacity: selectedTypes.length === 0 ? 0.6 : 1,
           }}
           startIcon={<Sparkles size={18} />}
-          onClick={handleSubmit(onSubmit)}
         >
           Generate Questions
         </Button>

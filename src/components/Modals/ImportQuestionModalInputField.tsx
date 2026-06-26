@@ -4,10 +4,8 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { Box, Button, TextField, Tooltip } from "@mui/material";
 import { ReplaceAll, SquarePlus } from "lucide-react";
 
-import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
 import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
-import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
 import { showToast } from "../../utils/showToast";
 import { ImportQuestionModalInputFieldProps } from "../../utils/types";
 import { ReplaceImportQuestionsDialog } from "../ModalComponents/ReplaceImportQuestionsDialog";
@@ -24,11 +22,11 @@ const ImportQuestionModalInputField = ({
   setImportBtnClicked,
   setAttemptedMode,
   handleClose,
+  setImportJobID,
 }: ImportQuestionModalInputFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [confirmReplaceOpen, setConfirmReplaceOpen] = useState(false);
   const dispatch = useAppDispatch();
-  const refetchCanvas = useSurveyCanvasRefetch();
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -61,43 +59,29 @@ const ImportQuestionModalInputField = ({
         }),
       );
 
-      await importQuestions({
+      const response = await importQuestions({
         surveyID,
         inputText: importText,
         mode,
       }).unwrap();
 
-      dispatch(
-        showOverlay({
-          message: "Structuring your survey...",
-          variant: "IMPORT",
-        }),
-      );
-      await delay(400);
+      setImportJobID(response.jobID);
 
       dispatch(
         showOverlay({
-          message: "Finalizing your survey...",
+          message: "Importing questions...",
           variant: "IMPORT",
         }),
       );
-      await delay(300);
-
-      dispatch(setAiQuestionsJustAdded());
-
-      setImportText("");
-      refetchCanvas();
-      showToast.success("Questions imported successfully.");
-      handleClose();
     } catch (error) {
       showToast.apiError(error, {
         fallbackMessage: "Failed to import questions.",
       });
       console.error(error);
-    } finally {
       dispatch(hideOverlay());
     }
   };
+
   return (
     <Box
       sx={{

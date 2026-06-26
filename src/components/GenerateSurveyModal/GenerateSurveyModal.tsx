@@ -3,11 +3,16 @@ import { useEffect, useState } from "react";
 import { Box, Modal } from "@mui/material";
 import { useParams } from "react-router-dom";
 
+import { apiSlice } from "../../app/api/apiSlice";
 import { useGetElementsForSurveyQuery } from "../../app/slices/elementApiSlice";
 import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
 import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
-import { useGenerateSurveyMutation } from "../../app/slices/surveysApiSlice";
+import {
+  useGenerateSurveyMutation,
+  useGetAIGenerationJobStatusQuery,
+} from "../../app/slices/surveysApiSlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
+import { useToast } from "../../hooks/useToast";
 import { GenerateSurveyState, nonOrderableTypes } from "../../utils/constants";
 import { GenerateSurveyModalProps } from "../../utils/types";
 
@@ -54,8 +59,18 @@ const GenerateSurveyModal = ({
   const [state, setState] = useState<GenerateSurveyState>(
     GenerateSurveyState.LOADING,
   );
+  const [generationJobID, setGenerationJobID] = useState<string | null>(null);
 
   const [generateSurvey, { isError, error }] = useGenerateSurveyMutation();
+
+  const {
+    data: generationJob,
+    isError: isGenerationJobError,
+    error: generationJobError,
+  } = useGetAIGenerationJobStatusQuery(generationJobID!, {
+    skip: !generationJobID,
+    pollingInterval: generationJobID ? 2000 : 0,
+  });
 
   const handleClose = () => {
     setOpenGenerate?.(false);
@@ -83,28 +98,24 @@ const GenerateSurveyModal = ({
         }),
       );
 
-      await generateSurvey({
+      const response = await generateSurvey({
         surveyID: surveyID!,
         numberOfQuestions: questionCount,
         questionTypes: [],
         mode: "REPLACE",
       }).unwrap();
 
-      dispatch(
-        showOverlay({
-          message: "Finalizing your new survey...",
-          variant: "GENERATE",
-        }),
-      );
-      await delay(500);
-
-      dispatch(setAiQuestionsJustAdded());
-
-      dispatch(hideOverlay());
+      setGenerationJobID(response.jobID);
     } catch (err) {
       console.error(err);
+      dispatch(hideOverlay());
     }
   };
+
+  useToast({
+    isError: isGenerationJobError,
+    error: generationJobError,
+  });
 
   useEffect(() => {
     if (openGenerate) {
@@ -115,6 +126,45 @@ const GenerateSurveyModal = ({
       );
     }
   }, [openGenerate, questionCount]);
+
+  useEffect(() => {
+    if (!generationJob) return;
+
+    if (
+      generationJob.status === "PENDING" ||
+      generationJob.status === "PROCESSING"
+    ) {
+      return;
+    }
+
+    if (generationJob.status === "COMPLETED") {
+      dispatch(
+        showOverlay({
+          message: "Finalizing your survey...",
+          variant: "GENERATE",
+        }),
+      );
+
+      dispatch(setAiQuestionsJustAdded());
+
+      dispatch(apiSlice.util.invalidateTags(["Surveys", "Elements"]));
+
+      setGenerationJobID(null);
+      dispatch(hideOverlay());
+      return;
+    }
+
+    if (
+      generationJob.status === "FAILED" ||
+      generationJob.status === "TIMED_OUT" ||
+      generationJob.status === "CANCELED"
+    ) {
+      console.error("AI generation failed:", generationJob);
+
+      setGenerationJobID(null);
+      dispatch(hideOverlay());
+    }
+  }, [generationJob, dispatch]);
 
   return (
     <Modal open={openGenerate} onClose={handleClose}>
@@ -129,6 +179,7 @@ const GenerateSurveyModal = ({
               error={error}
               setOpenGenerate={setOpenGenerate}
               handleClose={handleClose}
+              setGenerationJobID={setGenerationJobID}
             />
           ) : state === GenerateSurveyState.TOOLS ? (
             <GenerateSurveyTools
@@ -141,6 +192,7 @@ const GenerateSurveyModal = ({
               generateSurvey={generateSurvey}
               setOpenGenerate={setOpenGenerate}
               handleClose={handleClose}
+              setGenerationJobID={setGenerationJobID}
             />
           ) : state === GenerateSurveyState.REPLACE_CONFIRM ? (
             <GenerateSurveyReplaceConfirm

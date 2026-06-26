@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { Alert, Box, IconButton, Modal, Typography } from "@mui/material";
@@ -6,10 +6,18 @@ import { useParams } from "react-router-dom";
 
 import {
   useGetElementsForSurveyQuery,
+  useGetQuestionImportJobStatusQuery,
   useImportQuestionsMutation,
 } from "../../app/slices/elementApiSlice";
+import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
+import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
+import { useAppDispatch } from "../../app/typedReduxHooks";
+import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
+import { useToast } from "../../hooks/useToast";
 import { nonOrderableTypes } from "../../utils/constants";
+import { showToast } from "../../utils/showToast";
 import { ImportQuestionProps } from "../../utils/types";
+import { getEmptyTextMessage } from "../../utils/utils";
 
 import ImportQuestionModalInputField from "./ImportQuestionModalInputField";
 
@@ -19,38 +27,84 @@ const ImportQuestionsModal = ({
   setOpenImport,
 }: ImportQuestionProps) => {
   const { surveyID } = useParams();
+  const dispatch = useAppDispatch();
+  const refetchCanvas = useSurveyCanvasRefetch();
+
+  const [importJobID, setImportJobID] = useState<string | null>(null);
   const [importText, setImportText] = useState("");
   const [importBtnClicked, setImportBtnClicked] = useState(false);
   const [attemptedMode, setAttemptedMode] = useState<
     "INITIAL" | "APPEND" | "REPLACE" | null
   >(null);
-  const { data: elements = [] } = useGetElementsForSurveyQuery(surveyID!);
+
+  const { data: elements = [], refetch: refetchElements } =
+    useGetElementsForSurveyQuery(surveyID!);
+
   const existingQuestionsCount = elements.filter(
     (el) => el.type && !nonOrderableTypes.includes(el.type),
   ).length;
 
   const [importQuestions, { isLoading }] = useImportQuestionsMutation();
 
-  const getEmptyTextMessage = () => {
-    if (!attemptedMode) return "";
-
-    switch (attemptedMode) {
-      case "INITIAL":
-        return "Add some questions before importing.";
-      case "APPEND":
-        return "Add some questions to append them to the survey.";
-      case "REPLACE":
-        return "Add some questions before replacing the existing ones.";
-      default:
-        return "Add some questions before importing.";
-    }
-  };
+  const {
+    data: importJob,
+    isError: isImportJobError,
+    error: importJobError,
+  } = useGetQuestionImportJobStatusQuery(importJobID!, {
+    skip: !importJobID,
+    pollingInterval: importJobID ? 2000 : 0,
+  });
 
   const handleClose = () => {
     onClose?.();
     setOpenImport?.(false);
     setImportBtnClicked(false);
   };
+
+  useToast({
+    isError: isImportJobError,
+    error: importJobError,
+  });
+
+  useEffect(() => {
+    if (!importJob) return;
+
+    if (importJob.status === "PENDING" || importJob.status === "PROCESSING") {
+      return;
+    }
+
+    if (importJob.status === "COMPLETED") {
+      dispatch(
+        showOverlay({
+          message: "Finalizing your survey...",
+          variant: "IMPORT",
+        }),
+      );
+
+      dispatch(setAiQuestionsJustAdded());
+
+      setImportText("");
+      void refetchElements();
+      refetchCanvas();
+
+      showToast.success("Questions imported successfully.");
+
+      setImportJobID(null);
+      dispatch(hideOverlay());
+      return;
+    }
+
+    if (
+      importJob.status === "FAILED" ||
+      importJob.status === "TIMED_OUT" ||
+      importJob.status === "CANCELED"
+    ) {
+      showToast.error(importJob.errorMessage || "Failed to import questions.");
+
+      setImportJobID(null);
+      dispatch(hideOverlay());
+    }
+  }, [importJob, dispatch, refetchCanvas, refetchElements]);
 
   return (
     <Modal
@@ -143,20 +197,21 @@ const ImportQuestionsModal = ({
                 sx={{ mb: 2 }}
                 onClose={() => setImportBtnClicked(false)}
               >
-                {getEmptyTextMessage()}
+                {getEmptyTextMessage(attemptedMode)}
               </Alert>
             )}
 
             <ImportQuestionModalInputField
               importQuestions={importQuestions}
               surveyID={surveyID!}
-              isLoading={isLoading}
+              isLoading={isLoading || !!importJobID}
               importText={importText}
               setImportText={setImportText}
               setImportBtnClicked={setImportBtnClicked}
               setAttemptedMode={setAttemptedMode}
               handleClose={handleClose}
               existingQuestionsCount={existingQuestionsCount}
+              setImportJobID={setImportJobID}
             />
           </Box>
         </Box>

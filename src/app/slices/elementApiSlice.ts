@@ -11,6 +11,25 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       query: (questionID) => `/q/${questionID}`,
       providesTags: ["Elements"],
     }),
+    getQuestionImportJobStatus: builder.query<
+      {
+        jobID: string;
+        surveyID: string;
+        jobType: "SURVEY_GENERATION" | "QUESTION_IMPORT";
+        status:
+          | "PENDING"
+          | "PROCESSING"
+          | "COMPLETED"
+          | "FAILED"
+          | "CANCELED"
+          | "TIMED_OUT";
+        generatedCount?: number | null;
+        errorMessage?: string | null;
+      },
+      string
+    >({
+      query: (jobID) => `/q/import/job/${jobID}`,
+    }),
     createElement: builder.mutation({
       query: (data) => ({
         url: "/q/create",
@@ -22,8 +41,15 @@ export const elementApiSlice = apiSlice.injectEndpoints({
     importQuestions: builder.mutation<
       {
         message: string;
-        count: number;
-        mode: string;
+        jobID: string;
+        surveyID: string;
+        status:
+          | "PENDING"
+          | "PROCESSING"
+          | "COMPLETED"
+          | "FAILED"
+          | "CANCELED"
+          | "TIMED_OUT";
       },
       {
         surveyID: string;
@@ -37,10 +63,9 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         body: {
           surveyID,
           inputText,
-          ...(mode ? { mode } : {}), // only if provided
+          ...(mode ? { mode } : {}),
         },
       }),
-      invalidatesTags: ["Surveys", "Elements"],
     }),
     createScreenElement: builder.mutation({
       query: (data) => ({
@@ -318,6 +343,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetElementsForSurveyQuery,
   useGetElementByIDQuery,
+  useGetQuestionImportJobStatusQuery,
   useCreateElementMutation,
   useCreateScreenElementMutation,
   useUpdateElementTextMutation,

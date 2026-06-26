@@ -24,14 +24,20 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Surveys","Workspaces"],
+      invalidatesTags: ["Surveys", "Workspaces"],
     }),
     generateSurvey: builder.mutation<
       {
         message: string;
-        generatedCount: number;
-        totalQuestionCount: number;
-        mode: string;
+        jobID: string;
+        surveyID: string;
+        status:
+          | "PENDING"
+          | "PROCESSING"
+          | "COMPLETED"
+          | "FAILED"
+          | "CANCELED"
+          | "TIMED_OUT";
       },
       {
         surveyID: string;
@@ -55,10 +61,28 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
           inputText,
           numberOfQuestions,
           questionTypes,
-          ...(mode ? { mode } : {}), // only send if present
+          ...(mode ? { mode } : {}),
         },
       }),
-      invalidatesTags: ["Surveys", "Elements"],
+    }),
+    getAIGenerationJobStatus: builder.query<
+      {
+        jobID: string;
+        surveyID: string;
+        status:
+          | "PENDING"
+          | "PROCESSING"
+          | "COMPLETED"
+          | "FAILED"
+          | "CANCELED"
+          | "TIMED_OUT";
+        generatedCount?: number | null;
+        errorMessage?: string | null;
+      },
+      string
+    >({
+      query: (jobID) => `/s/generate/job/${jobID}`,
+      providesTags: ["Surveys", "Elements"],
     }),
     updateSurveyTitleandDescription: builder.mutation({
       query: ({ surveyID, title, description }) => ({
@@ -175,6 +199,7 @@ export const {
   useGetSurveyCanvasByIdQuery,
   useCreateSurveyMutation,
   useGenerateSurveyMutation,
+  useGetAIGenerationJobStatusQuery,
   useUpdateSurveyTitleandDescriptionMutation,
   useUpdateSurveyTagsMutation,
   useUpdateSurveyArchiveMutation,

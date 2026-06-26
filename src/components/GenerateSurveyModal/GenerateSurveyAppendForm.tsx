@@ -17,6 +17,7 @@ type Props = {
   onGenerate?: () => void;
   generateSurvey: any;
   setOpenGenerate?: (open: boolean) => void;
+  setGenerationJobID: (jobID: string) => void;
   handleClose: () => void;
 };
 
@@ -24,6 +25,7 @@ export const GenerateSurveyAppendForm = ({
   onBack,
   generateSurvey,
   handleClose,
+  setGenerationJobID,
 }: Props) => {
   const { surveyID } = useParams();
   const dispatch = useAppDispatch();
@@ -56,7 +58,7 @@ export const GenerateSurveyAppendForm = ({
         }),
       );
 
-      await generateSurvey({
+      const response = await generateSurvey({
         surveyID: surveyID!,
         inputText: data.description,
         numberOfQuestions: data.numberOfQuestions,
@@ -64,17 +66,17 @@ export const GenerateSurveyAppendForm = ({
         mode: "APPEND",
       }).unwrap();
 
+      setGenerationJobID(response.jobID);
+
       dispatch(
         showOverlay({
-          message: "Analyzing existing survey...",
+          message: "Generating additional questions...",
           variant: "GENERATE",
         }),
       );
-      await delay(500);
-
-      dispatch(hideOverlay());
     } catch (error) {
       console.error("Append generation failed", error);
+      dispatch(hideOverlay());
     }
   };
 
