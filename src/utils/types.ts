@@ -277,6 +277,7 @@ export interface ElementListItemProps {
   setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
   newQuestionIds?: Set<string>;
   displayOrderMap: Map<string, number>;
+  isReorderSaving?: boolean;
 }
 
 export interface ElementProps {

@@ -18,6 +18,7 @@ export const ElementsListItem = ({
   displayedQuestions,
   newQuestionIds,
   displayOrderMap,
+  isReorderSaving = false,
 }: ElementListItemProps) => {
   const { can } = useAuth();
   const dispatch = useAppDispatch();
@@ -28,7 +29,18 @@ export const ElementsListItem = ({
   );
 
   return (
-    <Box>
+    <Box
+      sx={{
+        "@keyframes reorderSavingShimmer": {
+          "0%": {
+            backgroundPosition: "120% 0",
+          },
+          "100%": {
+            backgroundPosition: "-120% 0",
+          },
+        },
+      }}
+    >
       {displayedQuestions.map((element, index) => {
         const isSystemScreen = nonOrderableTypes.includes(element.type);
         const isNew = newQuestionIds?.has(element.questionID);
@@ -64,7 +76,9 @@ export const ElementsListItem = ({
             key={element.questionID}
             draggableId={element.questionID}
             index={index}
-            isDragDisabled={isSystemScreen || !can("REORDER_QUESTION")}
+            isDragDisabled={
+              isSystemScreen || !can("REORDER_QUESTION") || isReorderSaving
+            }
           >
             {(provided, snapshot) => (
               <Box
@@ -88,7 +102,11 @@ export const ElementsListItem = ({
                     animationDelay: `${staggerIndex * 90}ms`,
                     opacity: 0,
                   }),
-                  opacity: snapshot.isDragging ? 0.98 : 1,
+                  opacity: isReorderSaving
+                    ? 0.62
+                    : snapshot.isDragging
+                      ? 0.98
+                      : 1,
                   boxShadow: snapshot.isDragging
                     ? "0 20px 40px rgba(0,0,0,0.22)"
                     : "none",
@@ -126,6 +144,15 @@ export const ElementsListItem = ({
                       transform: "none",
                     },
                   }),
+                  ...(isReorderSaving &&
+                    !isSystemScreen && {
+                      pointerEvents: "none",
+                      backgroundImage:
+                        "linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent)",
+                      backgroundSize: "220% 100%",
+                      animation:
+                        "reorderSavingShimmer 1.1s ease-in-out infinite",
+                    }),
                 }}
               >
                 <Box

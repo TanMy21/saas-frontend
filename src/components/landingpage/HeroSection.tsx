@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { MoveRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import mockup3dImg from "../../assets/3d_phone_mockup.webp";
+
 const HeroSection = () => {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const navigate = useNavigate();
@@ -87,10 +89,7 @@ const HeroSection = () => {
 
               {/* Right vertical image aligned closer to the main image */}
               <div className="hero-image-card hero-image-right">
-                <img
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=90"
-                  alt="Team planning"
-                />
+                <img src={mockup3dImg} alt="Team planning" />
               </div>
             </div>
           </div>

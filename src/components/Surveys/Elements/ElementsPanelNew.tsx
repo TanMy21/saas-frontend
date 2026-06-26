@@ -27,8 +27,10 @@ const ElementsPanel = () => {
   const { scrollStyles } = useAppTheme();
   const { can } = useAuth();
   const dispatch = useAppDispatch();
-  const [updateElementOrder] = useUpdateElementOrderMutation();
+  const [updateElementOrder, { isLoading: isReorderSaving }] =
+    useUpdateElementOrderMutation();
   const [newQuestionIds, setNewQuestionIds] = useState<Set<string>>(new Set());
+
   const [isDragging, setIsDragging] = useState(false);
 
   const aiQuestionsJustAdded = useAppSelector(
@@ -238,23 +240,26 @@ const ElementsPanel = () => {
       order: index + 1,
     }));
 
+    const previousElements = elements;
+
+    const systemElements = elements.filter((el) =>
+      nonOrderableTypes.includes(el.type),
+    );
+
+    const updated = [...systemElements, ...updatedQuestions].sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0),
+    );
+
+    dispatch(setElements(updated));
+
     updateElementOrder({ questions: updatedQuestions })
       .unwrap()
-      .then(() => {
-        const systemElements = elements.filter((el) =>
-          nonOrderableTypes.includes(el.type),
-        );
-
-        const updated = [...systemElements, ...updatedQuestions].sort(
-          (a, b) => (a.order ?? 0) - (b.order ?? 0),
-        );
-
-        dispatch(setElements(updated));
-      })
       .catch((err) => {
         console.error("Order update error:", err);
+        dispatch(setElements(previousElements));
       });
   };
+
   return (
     <>
       {elements.length === 0 ? null : (
@@ -288,6 +293,7 @@ const ElementsPanel = () => {
                   nonOrderableTypes={nonOrderableTypes}
                   newQuestionIds={newQuestionIds}
                   displayOrderMap={displayOrderMap}
+                  isReorderSaving={isReorderSaving}
                 />
 
                 {provided.placeholder}
