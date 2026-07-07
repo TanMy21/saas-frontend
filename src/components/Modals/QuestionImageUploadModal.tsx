@@ -11,6 +11,7 @@ import {
 import { ImageIcon, Loader2, Trash2, Upload, X } from "lucide-react";
 
 import { useUploadQuestionImageMutation } from "../../app/slices/elementApiSlice";
+import { useSurveyEditLock } from "../../hooks/useSurveyEditLock";
 import { useToast } from "../../hooks/useToast";
 import { QuestionImageUploadModalProps } from "../../utils/types";
 import { readImagePreview, validateImageFile } from "../../utils/utils";
@@ -23,6 +24,7 @@ const QuestionImageUploadModal = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const { isEditLocked, guardStrictEdit } = useSurveyEditLock();
 
   const [
     uploadQuestionImage,
@@ -35,6 +37,7 @@ const QuestionImageUploadModal = ({
   ] = useUploadQuestionImageMutation();
 
   const handleRemoveImage = () => {
+    if (!guardStrictEdit()) return;
     setSelectedFile(null);
     setPreview(null);
   };
@@ -93,6 +96,7 @@ const QuestionImageUploadModal = ({
   };
 
   const handleUpload = () => {
+    if (!guardStrictEdit()) return;
     if (selectedFile) {
       const formData = new FormData();
       formData.append("imgFile", selectedFile);
@@ -215,7 +219,7 @@ const QuestionImageUploadModal = ({
                   />
                   <IconButton
                     onClick={handleRemoveImage}
-                    disabled={isLoading}
+                    disabled={isLoading || isEditLocked}
                     sx={{
                       position: "absolute",
                       top: 12,

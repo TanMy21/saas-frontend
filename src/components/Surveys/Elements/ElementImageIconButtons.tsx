@@ -4,6 +4,7 @@ import { Box, IconButton, Tooltip } from "@mui/material";
 import { ImageOff, ImagePlus } from "lucide-react";
 
 import { useRemoveQuestionImageMutation } from "../../../app/slices/elementApiSlice";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
 import { QuestionImageUploadProps } from "../../../utils/types";
 import QuestionImageUploadModal from "../../Modals/QuestionImageUploadModal";
 
@@ -11,11 +12,14 @@ const ElementImageIconButtons = ({
   questionID,
   questionImageID,
 }: QuestionImageUploadProps) => {
+  const { isEditLocked, guardStrictEdit } = useSurveyEditLock();
+
   const [replaceImageModalOpen, setReplaceImageModalOpen] =
     useState<boolean>(false);
   const [removeQuestionImage] = useRemoveQuestionImageMutation();
 
   const handleRemoveImage = async () => {
+    if (!guardStrictEdit()) return;
     try {
       await removeQuestionImage({ questionID, questionImageID }).unwrap();
     } catch (error) {
@@ -39,6 +43,7 @@ const ElementImageIconButtons = ({
       <Tooltip title="Replace Image">
         <IconButton
           onClick={() => setReplaceImageModalOpen(true)}
+          disabled={isEditLocked}
           sx={{
             width: 38,
             height: 38,
@@ -58,15 +63,17 @@ const ElementImageIconButtons = ({
         </IconButton>
       </Tooltip>
 
-      <QuestionImageUploadModal
-        uploadImageModalOpen={replaceImageModalOpen}
-        setUploadImageModalOpen={setReplaceImageModalOpen}
-        questionID={questionID}
-      />
-
+      {isEditLocked && (
+        <QuestionImageUploadModal
+          uploadImageModalOpen={replaceImageModalOpen}
+          setUploadImageModalOpen={setReplaceImageModalOpen}
+          questionID={questionID}
+        />
+      )}
       <Tooltip title="Remove Image">
         <IconButton
           onClick={handleRemoveImage}
+          disabled={isEditLocked}
           sx={{
             width: 38,
             height: 38,

@@ -22,6 +22,8 @@ import {
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
 import { usePermission } from "../../../../context/PermissionContext";
+import { useSurveyEditLock } from "../../../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../../../utils/constants";
 import {
   htmlToPlainText,
   rewriteHtmlTextPreserveInlineTags,
@@ -36,6 +38,7 @@ import SettingSaveStatus from "./SettingSaveStatus";
 
 const QuestionContentSettings = () => {
   const dispatch = useAppDispatch();
+  const { confirmSoftEdit } = useSurveyEditLock();
   const { canEditQuestion } = usePermission();
 
   const question = useAppSelector(
@@ -177,6 +180,22 @@ const QuestionContentSettings = () => {
      * If there is no real change compared to the last saved backend state,
      * hide the indicator because nothing needs to be saved.
      */
+
+    if (
+      payload.questionText !== lastSavedBasicSettingsRef.current.questionText &&
+      !(await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_WORDING))
+    ) {
+      return;
+    }
+
+    if (
+      payload.questionDescription !==
+        lastSavedBasicSettingsRef.current.questionDescription &&
+      !(await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_DESCRIPTION))
+    ) {
+      return;
+    }
+
     if (!hasActualBasicSettingsChange(payload)) {
       setSaveStatus("idle");
       return;
@@ -397,6 +416,7 @@ const QuestionContentSettings = () => {
    * Updates showQuestion locally and saves only if the value actually changed.
    */
   const handleShowQuestionChange = async (value: boolean) => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE))) return;
     if (!canEditQuestion || !questionID) return;
 
     setLocalShowQuestion(value);
@@ -448,6 +468,7 @@ const QuestionContentSettings = () => {
    * Updates required locally and saves only if the value actually changed.
    */
   const handleRequiredChange = async (value: boolean) => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE))) return;
     if (!canEditQuestion || !questionID) return;
 
     setLocalRequired(value);

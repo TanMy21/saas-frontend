@@ -14,6 +14,7 @@ import { useParams } from "react-router-dom";
 
 import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
+import { useSurveyEditLock } from "../../hooks/useSurveyEditLock";
 import { useToast } from "../../hooks/useToast";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { questionTypes } from "../../utils/elementsConfig";
@@ -32,6 +33,7 @@ export const GenerateSurveyForm = ({
 }: GenerateSurveyFormProps) => {
   const { surveyID } = useParams();
   const dispatch = useAppDispatch();
+  const { guardStrictEdit } = useSurveyEditLock();
 
   const { scrollStyles } = useAppTheme();
 
@@ -67,6 +69,7 @@ export const GenerateSurveyForm = ({
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const onSubmit = async (data: GenerateSurveyFormData) => {
+    if (!guardStrictEdit()) return;
     try {
       handleClose(); // close modal
 

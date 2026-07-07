@@ -11,6 +11,8 @@ import { CircleX } from "lucide-react";
 
 import { useUpdateOptionTextandValueMutation } from "../../../app/slices/optionApiSlice";
 import { useKeyboardEditableRow } from "../../../hooks/useKeyboardEdit";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
 import { OptionType } from "../../../utils/types";
 import { mergeHandlers } from "../../../utils/utils";
 import EnterToEditTooltip from "../../tooltip/EnterToEditTooltip";
@@ -30,6 +32,8 @@ export const ConceptAttributeRow = ({
   canDelete: boolean;
   onDelete: (optionID: string) => void;
 }) => {
+  const { confirmSoftEdit } = useSurveyEditLock();
+
   const [hovered, setHovered] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
 
@@ -54,6 +58,7 @@ export const ConceptAttributeRow = ({
      */
     onSave: async (nextText) => {
       if (!canEdit) return;
+      if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
 
       const trimmedText = nextText.trim();
       if (!trimmedText) return;

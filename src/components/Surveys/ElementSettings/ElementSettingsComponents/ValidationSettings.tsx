@@ -19,12 +19,15 @@ import { toggleElementRequired } from "../../../../app/slices/elementSlice";
 import { RootState } from "../../../../app/store";
 import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
 import { usePermission } from "../../../../context/PermissionContext";
+import { useSurveyEditLock } from "../../../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../../../utils/constants";
 import { uiConfigPreferenceSchema } from "../../../../utils/schema";
 import { QuestionSetting } from "../../../../utils/types";
 
 const ValidationSettings = () => {
   const dispatch = useDispatch();
   const { canEditQuestion } = usePermission();
+  const { confirmSoftEdit } = useSurveyEditLock();
   const refetchCanvas = useSurveyCanvasRefetch();
   const question = useSelector(
     (state: RootState) => state.question.selectedQuestion,
@@ -52,6 +55,7 @@ const ValidationSettings = () => {
 
   const onSubmit = async (data: QuestionSetting) => {
     if (!canEditQuestion) return;
+    if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE)) return;
 
     try {
       const { required } = data;
@@ -140,7 +144,7 @@ const ValidationSettings = () => {
               width: "96%",
               height: "80%",
               marginLeft: "4%",
-               opacity: canEditQuestion ? 1 : 0.8,
+              opacity: canEditQuestion ? 1 : 0.8,
               // border: "2px solid red",
             }}
           >
@@ -166,7 +170,7 @@ const ValidationSettings = () => {
                       checked={field.value}
                       disabled={!canEditQuestion}
                       onChange={(event) => {
-                         if (!canEditQuestion) return;
+                        if (!canEditQuestion) return;
                         const value = event.target.checked;
                         field.onChange(value);
                         markFormTouched();

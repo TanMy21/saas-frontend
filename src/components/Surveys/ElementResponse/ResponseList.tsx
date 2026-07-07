@@ -15,7 +15,9 @@ import {
   useUpdateOptionOrderMutation,
 } from "../../../app/slices/optionApiSlice";
 import useAuth from "../../../hooks/useAuth";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
 import { useToast } from "../../../hooks/useToast";
+import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
 import { showToast } from "../../../utils/showToast";
 import { OptionType, ResponseListProps } from "../../../utils/types";
 import { MAX_OPTIONS } from "../../../utils/utils";
@@ -24,7 +26,7 @@ import ResponseListItem from "./ResponseListItem";
 
 const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
   const { can } = useAuth();
-
+  const { confirmSoftEdit } = useSurveyEditLock();
   const canCreate = can("CREATE_OPTION");
   const canReorder = can("REORDER_OPTION");
 
@@ -47,6 +49,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
   }, [inputValue]);
 
   const handleAddOptions = async () => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
     const lines = inputValue
       .split("\n")
       .map((l) => l.trim())

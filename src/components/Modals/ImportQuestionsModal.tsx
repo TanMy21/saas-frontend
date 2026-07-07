@@ -12,7 +12,7 @@ import {
 import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
 import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
-import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
+import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas"; 
 import { useToast } from "../../hooks/useToast";
 import { nonOrderableTypes } from "../../utils/constants";
 import { showToast } from "../../utils/showToast";
@@ -28,6 +28,7 @@ const ImportQuestionsModal = ({
 }: ImportQuestionProps) => {
   const { surveyID } = useParams();
   const dispatch = useAppDispatch();
+  
   const refetchCanvas = useSurveyCanvasRefetch();
 
   const [importJobID, setImportJobID] = useState<string | null>(null);

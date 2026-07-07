@@ -16,6 +16,8 @@ import { RootState } from "../../../app/store";
 import { useAppSelector, useAppDispatch } from "../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../context/BuilderRefetchCanvas";
 import useAuth from "../../../hooks/useAuth";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
 import { ElementDropDownMenuProps } from "../../../utils/types";
 import DeleteQuestionAlert from "../../alert/DeleteQuestionAlert";
 
@@ -25,6 +27,7 @@ const ElementDropDownMenu = ({
 }: ElementDropDownMenuProps) => {
   const dispatch = useAppDispatch();
   const { can } = useAuth();
+  const { confirmSoftEdit } = useSurveyEditLock();
   const refetchCanvas = useSurveyCanvasRefetch();
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [recentlyDeletedId, setRecentlyDeletedId] = useState<string | null>(
@@ -47,6 +50,7 @@ const ElementDropDownMenu = ({
   };
 
   const handleDuplicateElement = async () => {
+  if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE)) return;
     try {
       if (!can("CREATE_QUESTION")) return;
       setMenuAnchor(null);
@@ -62,6 +66,7 @@ const ElementDropDownMenu = ({
   };
 
   const handleDeleteElement = async () => {
+   if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE)) return;
     try {
       if (!can("DELETE_QUESTION")) return;
 
@@ -117,7 +122,12 @@ const ElementDropDownMenu = ({
         }}
       >
         {!isSystemScreen && can("CREATE_QUESTION") && (
-          <MenuItem onClick={handleDuplicateElement} sx={{ mx: 0.5, borderRadius: "12px"}}>Duplicate</MenuItem>
+          <MenuItem
+            onClick={handleDuplicateElement}
+            sx={{ mx: 0.5, borderRadius: "12px" }}
+          >
+            Duplicate
+          </MenuItem>
         )}
 
         {can("DELETE_QUESTION") && (

@@ -11,11 +11,13 @@ import {
 import { RootState } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
 import { useToast } from "../../../hooks/useToast";
 import { ConceptFitStimulusLayoutProps } from "../../../types/surveyBuilderTypes";
 import {
   MAX_CONCEPT_ATTRIBUTES,
   MIN_RECOMMENDED_ATTRIBUTES,
+  SOFT_EDIT_MESSAGES,
 } from "../../../utils/constants";
 import { showToast } from "../../../utils/showToast";
 import { ElementProps, OptionType } from "../../../utils/types";
@@ -23,8 +25,13 @@ import { ElementProps, OptionType } from "../../../utils/types";
 import { ConceptFitImageOnlyStimulus } from "./ConceptFitImageOnlyStimulus";
 import { ConceptTextOnlyStimulus } from "./ConceptTextOnlyStimulus";
 
-export const ConceptFitResponse = ({ qID, display, questionImages }: ElementProps) => {
+export const ConceptFitResponse = ({
+  qID,
+  display,
+  questionImages,
+}: ElementProps) => {
   const { can } = useAuth();
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const question = useAppSelector(
     (state: RootState) => state.question.selectedQuestion,
@@ -80,6 +87,7 @@ export const ConceptFitResponse = ({ qID, display, questionImages }: ElementProp
    * Each line becomes one attribute word.
    */
   const handleAddAttributes = async () => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
     const lines = inputValue
       .split("\n")
       .map((line) => line.trim())
@@ -118,6 +126,7 @@ export const ConceptFitResponse = ({ qID, display, questionImages }: ElementProp
    */
   const handleDeleteAttribute = async (optionID: string) => {
     if (!canDelete) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
 
     try {
       await deleteOption(optionID).unwrap();

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; 
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
   AccordionDetails,
@@ -13,6 +13,8 @@ import {
 import { useForm, Controller } from "react-hook-form";
 
 import { useUpdateScreenElementsMutation } from "../../../../app/slices/elementApiSlice";
+import { useSurveyEditLock } from "../../../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../../../utils/constants";
 import { welcomeSettingsSchema } from "../../../../utils/schema";
 import { QuestionSetting, ScreenSettingsProps } from "../../../../utils/types";
 
@@ -23,6 +25,7 @@ const ScreenSettings = ({
   qSettings,
 }: ScreenSettingsProps) => {
   const [updateScreenElements] = useUpdateScreenElementsMutation();
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const { buttonText } = qSettings || { buttonText: "Let's Start" };
 
@@ -30,7 +33,7 @@ const ScreenSettings = ({
     resolver: zodResolver(welcomeSettingsSchema),
     defaultValues: {
       questionText: qText,
-      description: qDescription,
+      questionDescription: qDescription,
       buttonText,
     },
   });
@@ -49,13 +52,16 @@ const ScreenSettings = ({
 
   const onSubmit = async (data: QuestionSetting) => {
     try {
-      const { questionText, description, buttonText } = data;
+      const { questionText, questionDescription, buttonText } = data;
 
       const config = { buttonText };
+
+      if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.WELCOME_COPY))) return;
+
       await updateScreenElements({
         questionID: qID,
         text: questionText,
-        description,
+        description: questionDescription,
         config,
       });
     } catch (error) {
@@ -162,7 +168,7 @@ const ScreenSettings = ({
             </Box>
             <Box mt={1}>
               <Controller
-                name="description"
+                name="questionDescription"
                 control={control}
                 render={({ field }) => (
                   <TextField

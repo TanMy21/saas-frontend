@@ -283,3 +283,15 @@ export type IATSettingsTextFieldProps = {
   disabled: boolean;
   onChange: (value: string) => void;
 };
+
+
+export type ConfirmOptions = {
+  message: string;
+  title?: string;
+  confirmText?: string;
+  cancelText?: string;
+};
+
+export type ConfirmRequest = ConfirmOptions & {
+  resolve: (value: boolean) => void;
+};

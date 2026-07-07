@@ -17,6 +17,8 @@ import {
 } from "../../../app/slices/optionApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import { useKeyboardEditableRow } from "../../../hooks/useKeyboardEdit";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
 import { ResponseListItemProps } from "../../../utils/types";
 import { mergeHandlers } from "../../../utils/utils";
 import EnterToEditTooltip from "../../tooltip/EnterToEditTooltip";
@@ -58,10 +60,11 @@ const ResponseListItem = ({
   display,
 }: ResponseListItemProps) => {
   const { can } = useAuth();
+
   const canReorder = can("REORDER_OPTION");
   const canEdit = can("UPDATE_OPTION");
   const canDelete = can("DELETE_OPTION");
-
+  const { confirmSoftEdit } = useSurveyEditLock();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [tipOpen, setTipOpen] = useState(false);
 
@@ -83,12 +86,12 @@ const ResponseListItem = ({
     siblingsSelector: '[data-role="response-item"]',
     onSave: async (nextText) => {
       if (!canEdit) return;
-
+      if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_LABEL)) return;
       if (nextText.trim() !== response.text.trim()) {
         await updateOptionTextandValue({
           optionID: response.optionID,
           text: nextText,
-          value: nextText,
+          value: response.value,
         }).unwrap?.();
       }
     },
@@ -103,6 +106,7 @@ const ResponseListItem = ({
    * Logs failures without interrupting the editor UI.
    */
   const deleteResponseItem = async (optionID: string) => {
+    if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE)) return;
     try {
       await deleteOption(optionID).unwrap();
     } catch (error) {

@@ -19,6 +19,8 @@ import {
 } from "../../../app/slices/optionApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import { useKeyboardEditableRow } from "../../../hooks/useKeyboardEdit";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
 import { MediaOptionProps } from "../../../utils/types";
 import {
   getMediaOptionBadge,
@@ -31,7 +33,7 @@ import EnterToEditTooltip from "../../tooltip/EnterToEditTooltip";
 
 const MediaOption = ({ option }: MediaOptionProps) => {
   const { can } = useAuth();
-
+  const { confirmSoftEdit } = useSurveyEditLock();
   const canEdit = can("UPDATE_OPTION");
   const canDelete = can("DELETE_OPTION");
   const canReorder = can("REORDER_OPTION");
@@ -62,6 +64,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
     siblingsSelector: '[data-role="media-item"]',
     onSave: async (next) => {
       if (!canEdit) return;
+      if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE)) return;
       if (next.trim() !== option.value.trim()) {
         await updateOptionTextandValue({
           optionID: option.optionID,
@@ -74,6 +77,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
 
   const deleteChoice = async () => {
     if (!canDelete) return;
+    if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE)) return;
     try {
       await deleteOption(option.optionID).unwrap();
     } catch (error) {

@@ -3,12 +3,18 @@ import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { useSelector } from "react-redux";
 
-import { set3DModelModalOpen } from "../../../app/slices/elementSlice";
+import { useUpload3DModelMutation } from "../../../app/slices/elementApiSlice";
+import {
+  set3DModelModalOpen,
+  setQuestion,
+  updateSelectedQuestion3DModel,
+} from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../context/BuilderRefetchCanvas";
 import useAuth from "../../../hooks/useAuth";
 import { hasMinimumPlan } from "../../../utils/planLimits";
+import { showToast } from "../../../utils/showToast";
 import { ElementProps } from "../../../utils/types";
 import FileUpload3D from "../../ModalComponents/FileUpload3D";
 import Upload3DModelModal from "../../Modals/Upload3DModelModal";
@@ -27,66 +33,128 @@ const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
   const isMobile = display === "mobile";
 
   const [overrideUrl, setOverrideUrl] = useState<string | null>(null);
-  const [isReadyToView, setIsReadyToView] = useState(false);
+  const [isWaitingForModel, setIsWaitingForModel] = useState(false);
 
   const { can, tier = "FREE" } = useAuth();
 
+  const [upload3DModel, { isLoading, isError, error }] =
+    useUpload3DModelMutation();
+
   const hasQuestionEditPermission = can("UPDATE_QUESTION");
   const hasProfessionalPlan = hasMinimumPlan(tier, "PROFESSIONAL");
-
   const canUpload3DModel = hasQuestionEditPermission && hasProfessionalPlan;
 
   const question = useSelector(
     (state: RootState) => state.question.selectedQuestion,
   );
 
-  const hasModel = Boolean(question?.Model3D?.fileUrl);
-
   const url = question?.Model3D?.fileUrl
     ? `${question.Model3D.fileUrl}?v=${question.Model3D.updatedAt}`
     : null;
 
-  /**
-   * Keeps FileUpload3D's selection lifecycle available without duplicating file state here.
-   */
-  const handleFileSelect = (_file: File) => {
-    // FileUpload3D owns validation and upload progress for the selected file.
+  const viewerUrl = overrideUrl ?? url;
+
+  const buildModelUrl = (model: { fileUrl: string; updatedAt?: string }) =>
+    `${model.fileUrl}?v=${model.updatedAt ?? Date.now()}`;
+
+  const handleUploadModel = async (file: File) => {
+    const formData = new FormData();
+    formData.append("modelFile", file);
+    formData.append("name", file.name);
+
+    try {
+      await upload3DModel({
+        formData,
+        questionID: qID!,
+      }).unwrap();
+
+      setIsWaitingForModel(true);
+      showToast.success("Model uploaded. Processing 3D model...");
+      return true;
+    } catch (error) {
+      console.error("Upload failed:", error);
+      showToast.error("Failed to upload 3D model.");
+      return false;
+    }
   };
 
-  /**
-   * Immediately switches the viewer to the newly uploaded model URL.
-   */
-  const handleUploadSuccess = (model: { fileUrl?: string }) => {
-    setOverrideUrl(model?.fileUrl ?? null);
-    setIsReadyToView(true);
-
-    refetchCanvas();
-    dispatch(set3DModelModalOpen(false));
-  };
-
-  /**
-   * Logs upload failures while FileUpload3D handles the user-facing error UI.
-   */
   const handleUploadError = (message: string) => {
     console.error(message);
   };
 
-  /**
-   * Closes the upload modal and refreshes the canvas to keep the model state current.
-   */
   const handleCloseModal = () => {
     refetchCanvas();
     dispatch(set3DModelModalOpen(false));
   };
 
-  /**
-   * Marks the element ready whenever the selected question receives a persisted model.
-   */
   useEffect(() => {
-    setIsReadyToView(hasModel);
-  }, [hasModel]);
+    if (!isWaitingForModel || viewerUrl) return;
 
-  if (isReadyToView && (overrideUrl || url)) {
+    let attempts = 0;
+    const maxAttempts = 30;
+
+    const intervalID = window.setInterval(() => {
+      attempts += 1;
+
+      const refetchResult = refetchCanvas() as any;
+
+      refetchResult
+        ?.then?.((result: any) => {
+          const questions =
+            result?.data?.getSurveyCanvas?.questions ??
+            result?.data?.questions ??
+            [];
+
+          const updatedQuestion = questions.find(
+            (item: any) => item.questionID === qID,
+          );
+
+          const model = updatedQuestion?.Model3D;
+
+          if (model?.fileUrl) {
+            dispatch(setQuestion(updatedQuestion));
+            dispatch(updateSelectedQuestion3DModel(model));
+            setOverrideUrl(buildModelUrl(model));
+            setIsWaitingForModel(false);
+            dispatch(set3DModelModalOpen(false));
+            showToast.success("3D model ready.");
+            window.clearInterval(intervalID);
+          }
+
+          if (attempts >= maxAttempts) {
+            setIsWaitingForModel(false);
+            dispatch(set3DModelModalOpen(false));
+            showToast.info(
+              "Model is still processing. Refresh in a moment if it does not appear.",
+            );
+            window.clearInterval(intervalID);
+          }
+        })
+        ?.catch?.((pollError: unknown) => {
+          console.error("Failed to refresh 3D model status:", pollError);
+
+          if (attempts >= maxAttempts) {
+            setIsWaitingForModel(false);
+            dispatch(set3DModelModalOpen(false));
+            showToast.info(
+              "Model is still processing. Refresh in a moment if it does not appear.",
+            );
+            window.clearInterval(intervalID);
+          }
+        });
+    }, 1500);
+
+    return () => window.clearInterval(intervalID);
+  }, [isWaitingForModel, viewerUrl, refetchCanvas, dispatch, qID]);
+
+  useEffect(() => {
+    if (!isError) return;
+
+    console.error("3D upload mutation error:", error);
+    showToast.error("Failed to upload 3D model.");
+  }, [isError, error]);
+
+  if (viewerUrl) {
     return (
       <Box
         sx={{
@@ -101,17 +169,35 @@ const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
       >
         {isMobile ? (
           <ThreeDMobileView
-            url={overrideUrl ?? url!}
+            url={viewerUrl}
             display={display}
             showQuestion={showQuestion}
           />
         ) : (
           <ThreeDView
-            url={overrideUrl ?? url!}
+            url={viewerUrl}
             display={display}
             showQuestion={showQuestion}
           />
         )}
+      </Box>
+    );
+  }
+
+  if (isWaitingForModel) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          minHeight: isMobile ? "380px" : "700px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#64748B",
+          fontWeight: 700,
+        }}
+      >
+        Processing 3D model...
       </Box>
     );
   }
@@ -133,8 +219,8 @@ const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
         >
           <FileUpload3D
             questionID={qID!}
-            onFileSelect={handleFileSelect}
-            onUploadSuccess={handleUploadSuccess}
+            isUploading={isLoading}
+            onUpload={handleUploadModel}
             onUploadError={handleUploadError}
           />
         </Upload3DModelModal>
@@ -142,5 +228,4 @@ const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
     </>
   );
 };
-
 export default ThreeDElement;

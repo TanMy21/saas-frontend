@@ -4,7 +4,7 @@ import { useUpdateQuestionPreferenceUIConfigMutation } from "../../../app/slices
 import { updateQuestionField } from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
-import useAuth from "../../../hooks/useAuth";
+import useAuth from "../../../hooks/useAuth"; 
 import { IATCombinedBlockPreviewProps } from "../../../types/surveyBuilderTypes";
 import { getIATUiConfig } from "../../../utils/iatUtils";
 import { showToast } from "../../../utils/showToast";
@@ -15,6 +15,7 @@ export const IATCombinedBlockPreview = ({
   centerStimulus,
 }: IATCombinedBlockPreviewProps) => {
   const { can } = useAuth();
+
   const canEditQuestion = can("UPDATE_QUESTION");
   const dispatch = useAppDispatch();
 
@@ -37,6 +38,7 @@ export const IATCombinedBlockPreview = ({
     label: string,
   ) => {
     if (!canEditQuestion || !questionID) return;
+     
 
     const cleanLabel = label.trim();
 

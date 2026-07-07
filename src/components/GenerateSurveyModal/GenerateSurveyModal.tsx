@@ -12,8 +12,9 @@ import {
   useGetAIGenerationJobStatusQuery,
 } from "../../app/slices/surveysApiSlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
+import { useSurveyEditLock } from "../../hooks/useSurveyEditLock";
 import { useToast } from "../../hooks/useToast";
-import { GenerateSurveyState, nonOrderableTypes } from "../../utils/constants";
+import { GenerateSurveyState, nonOrderableTypes, SOFT_EDIT_MESSAGES } from "../../utils/constants";
 import { GenerateSurveyModalProps } from "../../utils/types";
 
 import { GenerateSurveyAppendForm } from "./GenerateSurveyAppendForm";
@@ -50,6 +51,8 @@ const GenerateSurveyModal = ({
   setOpenGenerate,
 }: GenerateSurveyModalProps) => {
   const { surveyID } = useParams();
+  const {  confirmSoftEdit } = useSurveyEditLock();
+
   const dispatch = useAppDispatch();
   const { data: elements = [] } = useGetElementsForSurveyQuery(surveyID!);
   const questionCount = elements.filter(
@@ -79,6 +82,8 @@ const GenerateSurveyModal = ({
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const handleRepacleConfirm = async () => {
+   if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.SURVEY_CHANGE))) return;
+
     try {
       handleClose();
 

@@ -215,6 +215,7 @@ export type Model3D = {
   ktx2: boolean;
   showQuestion: boolean;
   updatedAt: string;
+  contentHash?:string;
 };
 
 export interface ThreeDViewProps {
@@ -378,8 +379,8 @@ export interface Modal3DModelProps {
 
 export interface FileUploadProps {
   questionID: string;
-  onFileSelect: (file: File) => void;
-  onUploadSuccess?: (model: any) => void;
+  isUploading?: boolean;
+  onUpload: (file: File) => Promise<boolean>;
   onUploadError?: (message: string) => void;
 }
 
@@ -1411,6 +1412,8 @@ export interface SurveyBuilderHeaderTabsProps {
 export interface SurveyCanvas {
   getSurveyCanvas: any;
   languages: any[];
+  hasResponses: boolean;
+  isEditLocked: boolean;
 }
 
 export interface SurveyPreferencesPanelProps {

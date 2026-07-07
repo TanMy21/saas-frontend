@@ -12,6 +12,8 @@ import { MdError } from "react-icons/md";
 
 import { useDeleteConditionMutation } from "../../app/slices/flowApiSlice";
 import useAuth from "../../hooks/useAuth";
+import { useSurveyEditLock } from "../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../utils/constants";
 import { elementIcons } from "../../utils/elementsConfig";
 import { convertHtmlToPlainText } from "../../utils/richTextUtils";
 import {
@@ -46,6 +48,7 @@ const FlowFormConditionBlock = ({
   const { can } = useAuth();
   const canEditFlow = can("UPDATE_FLOW");
   const canDeleteFlow = can("DELETE_FLOW");
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const FormConditionComponent: Record<string, React.FC<FlowFormProps>> = {
     BINARY: FlowFormBinary,
@@ -80,6 +83,8 @@ const FlowFormConditionBlock = ({
   }
 
   const handleDeleteCondition = async () => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.FLOW_CONDITION_DELETE)))
+      return;
     try {
       setConditions((prev) =>
         prev.filter((_cond, idx) => idx !== blockIndex - 1),

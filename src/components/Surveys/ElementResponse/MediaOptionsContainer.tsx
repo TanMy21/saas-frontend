@@ -21,7 +21,9 @@ import {
   useUpdateOptionOrderMutation,
 } from "../../../app/slices/optionApiSlice";
 import useAuth from "../../../hooks/useAuth";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
 import { useToast } from "../../../hooks/useToast";
+import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
 import { showToast } from "../../../utils/showToast";
 import { MediaOptionsContainerProps, OptionType } from "../../../utils/types";
 import { MAX_OPTIONS } from "../../../utils/utils";
@@ -33,7 +35,7 @@ const MediaOptionsContainer = ({
   display,
 }: MediaOptionsContainerProps) => {
   const { can } = useAuth();
-
+  const { confirmSoftEdit } = useSurveyEditLock();
   const canCreate = can("CREATE_OPTION");
   const canReorder = can("REORDER_OPTION");
 
@@ -45,12 +47,13 @@ const MediaOptionsContainer = ({
 
   const sensors = useSensors(useSensor(PointerSensor));
 
-  const [inputValue, setInputValue] = useState("");
+  const [_inputValue, setInputValue] = useState("");
 
   const disableInput = options.length >= MAX_OPTIONS;
 
   const addMedia = async () => {
     if (!canCreate) return;
+    if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE)) return;
 
     if (options.length >= MAX_OPTIONS) {
       showToast.info("Limit reached. You can add up to 10 options.");
@@ -142,6 +145,7 @@ const MediaOptionsContainer = ({
             <Box
               component="button"
               onClick={addMedia}
+              disabled={disableInput}
               sx={{
                 border: "2px dashed #d0d5ff",
                 borderRadius: "16px",

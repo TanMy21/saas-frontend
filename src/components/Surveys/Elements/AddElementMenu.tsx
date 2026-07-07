@@ -16,6 +16,7 @@ import { addElement } from "../../../app/slices/surveySlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
 import { useToast } from "../../../hooks/useToast";
 import { useAppTheme } from "../../../theme/useAppTheme";
 import { AddMenuItemConfig } from "../../../types/surveyBuilderTypes";
@@ -25,6 +26,7 @@ import {
   questionMenuItems,
   threeDMenuItem,
 } from "../../../utils/AddElementMenuConfig";
+import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
 import { hasMinimumPlan } from "../../../utils/planLimits";
 import { AddElementMenuProps, QuestionTypeKey } from "../../../utils/types";
 
@@ -111,6 +113,7 @@ const AddElementMenu = ({
   const { primary } = useAppTheme();
   const dispatch = useAppDispatch();
   const { can, tier = "FREE" } = useAuth();
+  const { isEditLocked, confirmSoftEdit } = useSurveyEditLock();
 
   const canCreatePremiumQuestion =
     can("CREATE_QUESTION") && hasMinimumPlan(tier, "PROFESSIONAL");
@@ -175,6 +178,7 @@ const AddElementMenu = ({
    */
   const handleElementAdd = async (type: QuestionTypeKey) => {
     if (isLoading) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE))) return;
 
     try {
       const newElement = await createElement({

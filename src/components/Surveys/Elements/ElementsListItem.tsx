@@ -5,7 +5,7 @@ import { Draggable } from "react-beautiful-dnd";
 import { setQuestion } from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
-import useAuth from "../../../hooks/useAuth";
+import useAuth from "../../../hooks/useAuth"; 
 import { nonOrderableTypes } from "../../../utils/constants";
 import { elementIcons } from "../../../utils/elementsConfig";
 import { getDisplayOrderForElement } from "../../../utils/elementsDisplayOrder";
@@ -22,8 +22,7 @@ export const ElementsListItem = ({
 }: ElementListItemProps) => {
   const { can } = useAuth();
   const dispatch = useAppDispatch();
-  const canReorder = can("REORDER_OPTION");
-
+  const canReorder = can("REORDER_OPTION"); 
   const selectedQuestionId = useAppSelector(
     (state: RootState) => state.question.selectedQuestionId,
   );

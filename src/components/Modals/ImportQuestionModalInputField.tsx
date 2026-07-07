@@ -6,6 +6,8 @@ import { ReplaceAll, SquarePlus } from "lucide-react";
 
 import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
+import { useSurveyEditLock } from "../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../utils/constants";
 import { showToast } from "../../utils/showToast";
 import { ImportQuestionModalInputFieldProps } from "../../utils/types";
 import { ReplaceImportQuestionsDialog } from "../ModalComponents/ReplaceImportQuestionsDialog";
@@ -27,6 +29,7 @@ const ImportQuestionModalInputField = ({
   const [isFocused, setIsFocused] = useState(false);
   const [confirmReplaceOpen, setConfirmReplaceOpen] = useState(false);
   const dispatch = useAppDispatch();
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -36,6 +39,8 @@ const ImportQuestionModalInputField = ({
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const handleImport = async (mode: "INITIAL" | "APPEND" | "REPLACE") => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE))) return;
+
     try {
       setAttemptedMode(mode);
       setImportBtnClicked(true);

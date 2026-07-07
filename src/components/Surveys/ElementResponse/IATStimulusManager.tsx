@@ -17,11 +17,13 @@ import {
   useUpdateOptionTextandValueMutation,
 } from "../../../app/slices/optionApiSlice";
 import useAuth from "../../../hooks/useAuth";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
 import { useToast } from "../../../hooks/useToast";
 import { IATStimulusManagerProps } from "../../../types/surveyBuilderTypes";
 import {
   MAX_IAT_STIMULI,
   MIN_RECOMMENDED_IAT_STIMULI,
+  SOFT_EDIT_MESSAGES,
 } from "../../../utils/constants";
 import { showToast } from "../../../utils/showToast";
 import { OptionType } from "../../../utils/types";
@@ -35,6 +37,7 @@ export const IATStimulusManager = ({
   const isMobile = display === "mobile";
 
   const { can } = useAuth();
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const canCreate = can("CREATE_OPTION");
   const canEdit = can("UPDATE_OPTION");
@@ -92,6 +95,7 @@ export const IATStimulusManager = ({
    */
   const handleAddStimuli = async () => {
     if (!qID || !canCreate) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
 
     const lines = inputValue
       .split("\n")
@@ -136,6 +140,7 @@ export const IATStimulusManager = ({
    */
   const handleUpdateStimulus = async (option: OptionType, nextText: string) => {
     if (!canEdit) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
 
     const cleanText = nextText.trim();
 
@@ -163,6 +168,7 @@ export const IATStimulusManager = ({
    */
   const handleDeleteStimulus = async (optionID: string) => {
     if (!canDelete) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
 
     try {
       await deleteOption(optionID).unwrap();
@@ -329,7 +335,7 @@ export const IATStimulusManager = ({
             mt: 1,
             px: 1,
             pt: 0.75,
-            pb: 0.75,  
+            pb: 0.75,
             bgcolor: "#FFFFFF",
           }}
         >
@@ -372,7 +378,7 @@ export const IATStimulusManager = ({
               height: 34,
               borderRadius: "50%",
               bgcolor: "#BE185D",
-              color: "white", 
+              color: "white",
               "&:hover": { bgcolor: "#9D174D" },
               "&.Mui-disabled": {
                 bgcolor: "#CBD5E1",

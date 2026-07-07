@@ -23,10 +23,12 @@ import {
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
 import { usePermission } from "../../../../context/PermissionContext";
+import { useSurveyEditLock } from "../../../../hooks/useSurveyEditLock";
 import {
   SettingSaveState,
   TimedChoiceSettingsForm,
 } from "../../../../types/surveyBuilderTypes";
+import { SOFT_EDIT_MESSAGES } from "../../../../utils/constants";
 import { ElementSettingsProps } from "../../../../utils/types";
 import {
   buildTimedChoiceUiConfig,
@@ -38,6 +40,7 @@ import SettingSaveStatus from "./SettingSaveStatus";
 const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
   const { canEditQuestion } = usePermission();
   const dispatch = useAppDispatch();
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const [saveStatus, setSaveStatus] = useState<SettingSaveState>("idle");
 
@@ -140,6 +143,8 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
    */
   const onSubmit = async (data: TimedChoiceSettingsForm) => {
     if (!canEditQuestion || !questionID) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.TIMED_CHOICE_SETTINGS)))
+      return;
 
     if (!hasActualTimedSettingsChange(data)) {
       setFormTouched(false);
@@ -260,18 +265,18 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
         </Box>
       </AccordionSummary>
 
-      <AccordionDetails sx={{ px: { md: 2, xl: 1 }, pb: 2, p:2 }}>
+      <AccordionDetails sx={{ px: { md: 2, xl: 1 }, pb: 2, p: 2 }}>
         <Box
           component="form"
           onSubmit={(event) => event.preventDefault()}
           sx={{
             display: "flex",
-            width:"92%",
+            width: "92%",
             flexDirection: "column",
             gap: 2,
             opacity: canEditQuestion ? 1 : 0.8,
             pointerEvents: canEditQuestion ? "auto" : "none",
-            mx:"auto"
+            mx: "auto",
           }}
         >
           <Box>

@@ -2,22 +2,22 @@ import { ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { PostHogProvider } from "posthog-js/react";
-import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
 // import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
-// import { ToastContainer } from "react-toastify";
 
+// import { ToastContainer } from "react-toastify";
 import store from "./app/store";
 import AppErrorBoundary from "./AppErrorBoundary";
 import AppToaster from "./components/alert/AppToaster";
+import { EditLockConfirmProvider } from "./context/EditLockConfirmContext";
 import GlobalFeedbackOverlays from "./layouts/GlobalFeedbackLayout";
 import { GlobalGenerateLoaderOverlay } from "./layouts/GlobalGenerateLoaderOverlay";
 import { GlobalImportLoaderOverlay } from "./layouts/GlobalImporLoaderOverlay";
 import router from "./routes/routes";
 import "./index.css";
 // import "react-toastify/dist/ReactToastify.css";
-import "../src/utils/analytics";
 import "../src/utils/sentry";
 import SessionInitializer from "./SessionInitializer";
 import electricBlueLightTheme from "./theme/electricBlueLightTheme";
@@ -26,9 +26,14 @@ import "./styles/marvel-devices.min.css";
 
 const options = {
   api_host: import.meta.env.VITE_POSTHOG_HOST,
+  autocapture: false,
+  mask_all_text: true,
+  session_recording: {
+    maskAllInputs: true,
+  },
 };
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
   <>
     <Provider store={store}>
@@ -40,10 +45,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               options={options}
             >
               <SessionInitializer>
-                <RouterProvider router={router} />
-                <GlobalFeedbackOverlays />
-                <GlobalImportLoaderOverlay />
-                <GlobalGenerateLoaderOverlay />
+                <EditLockConfirmProvider>
+                  <RouterProvider router={router} />
+                  <GlobalFeedbackOverlays />
+                  <GlobalImportLoaderOverlay />
+                  <GlobalGenerateLoaderOverlay />
+                </EditLockConfirmProvider>
               </SessionInitializer>
             </PostHogProvider>
           </LocalizationProvider>

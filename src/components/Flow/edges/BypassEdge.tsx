@@ -11,6 +11,8 @@ import {
 
 import { useDeleteConditionMutation } from "../../../app/slices/flowApiSlice";
 import useAuth from "../../../hooks/useAuth";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
 
 import { readEdgeStyle } from "./edgeStyle";
 
@@ -43,6 +45,7 @@ const BypassEdge = ({
   const { can } = useAuth();
   const canDelete = can("DELETE_FLOW");
   const { setEdges } = useReactFlow();
+  const { confirmSoftEdit } = useSurveyEditLock();
   const [deleteCondition] = useDeleteConditionMutation();
   const styleChoice = readEdgeStyle({ data } as any, "smoothstep");
 
@@ -102,6 +105,8 @@ const BypassEdge = ({
 
   const handleDeleteEdge = async (e: React.MouseEvent) => {
     if (!canDelete) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.FLOW_CONDITION_DELETE)))
+      return;
     e.stopPropagation();
     try {
       if (data?.flowConditionID) {

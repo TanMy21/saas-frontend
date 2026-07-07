@@ -37,6 +37,7 @@ import SettingSaveStatus from "./SettingSaveStatus";
 
 const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
   const { can } = useAuth();
+
   const canEditQuestion = can("UPDATE_QUESTION");
   const dispatch = useAppDispatch();
 

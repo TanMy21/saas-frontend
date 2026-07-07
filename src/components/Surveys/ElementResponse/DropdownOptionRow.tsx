@@ -11,6 +11,8 @@ import { CircleX } from "lucide-react";
 
 import { useUpdateOptionTextandValueMutation } from "../../../app/slices/optionApiSlice";
 import { useKeyboardEditableRow } from "../../../hooks/useKeyboardEdit";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
 import { OptionType } from "../../../utils/types";
 import { mergeHandlers } from "../../../utils/utils";
 import EnterToEditTooltip from "../../tooltip/EnterToEditTooltip";
@@ -32,6 +34,7 @@ export const DropdownOptionRow = ({
 }) => {
   const [hovered, setHovered] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const [updateOptionTextandValue] = useUpdateOptionTextandValueMutation();
 
@@ -56,6 +59,8 @@ export const DropdownOptionRow = ({
     onSave: async (nextText) => {
       if (!canEdit) return;
 
+      if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_LABEL)) return;
+
       const trimmedText = nextText.trim();
 
       if (!trimmedText) return;
@@ -64,7 +69,7 @@ export const DropdownOptionRow = ({
         await updateOptionTextandValue({
           optionID: option.optionID,
           text: trimmedText,
-          value: trimmedText,
+          value: option.value,
         }).unwrap?.();
       }
     },

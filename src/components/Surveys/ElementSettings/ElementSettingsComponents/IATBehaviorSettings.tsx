@@ -22,6 +22,7 @@ import {
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
 import useAuth from "../../../../hooks/useAuth";
+import { useSurveyEditLock } from "../../../../hooks/useSurveyEditLock";
 import {
   IATBehaviorSettingsForm,
   SettingSaveState,
@@ -39,6 +40,8 @@ import SettingSaveStatus from "./SettingSaveStatus";
 
 const IATBehaviorSettings = ({ qID }: ElementSettingsProps) => {
   const { can } = useAuth();
+  const { isEditLocked, guardStrictEdit } = useSurveyEditLock();
+
   const canEditQuestion = can("UPDATE_QUESTION");
   const dispatch = useAppDispatch();
 
@@ -94,6 +97,7 @@ const IATBehaviorSettings = ({ qID }: ElementSettingsProps) => {
    * Updates selected question in Redux for instant canvas preview.
    */
   const updateIATPreview = (partialUiConfig: Partial<QuestionUIConfig>) => {
+    if (!guardStrictEdit()) return;
     dispatch(
       updateQuestionField({
         key: "questionPreferences",
@@ -113,6 +117,7 @@ const IATBehaviorSettings = ({ qID }: ElementSettingsProps) => {
    */
   const onSubmit = async (data: IATBehaviorSettingsForm) => {
     if (!canEditQuestion || !questionID) return;
+    if (!guardStrictEdit()) return;
 
     const nextUiConfig = buildIATBehaviorUiConfig(data, uiConfig);
 
@@ -224,7 +229,7 @@ const IATBehaviorSettings = ({ qID }: ElementSettingsProps) => {
                 control={
                   <Switch
                     checked={field.value}
-                    disabled={!canEditQuestion}
+                    disabled={!canEditQuestion || isEditLocked}
                     onChange={(event) => {
                       const checked = event.target.checked;
 

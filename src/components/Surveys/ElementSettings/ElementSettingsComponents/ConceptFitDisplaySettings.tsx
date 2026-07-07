@@ -27,6 +27,7 @@ import {
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
 import useAuth from "../../../../hooks/useAuth";
+import { useSurveyEditLock } from "../../../../hooks/useSurveyEditLock";
 import {
   ConceptFitDisplayMode,
   ConceptFitSettingsForm,
@@ -35,6 +36,7 @@ import {
 import {
   CONCEPT_FIT_DISPLAY_MODE_OPTIONS,
   DEFAULT_TIMER_SECONDS,
+  SOFT_EDIT_MESSAGES,
 } from "../../../../utils/constants";
 import {
   ElementSettingsProps,
@@ -49,6 +51,8 @@ import SettingSaveStatus from "./SettingSaveStatus";
 
 const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
   const { can } = useAuth();
+  const { confirmSoftEdit } = useSurveyEditLock();
+
   const canEditQuestion = can("UPDATE_QUESTION");
   const dispatch = useAppDispatch();
 
@@ -131,8 +135,10 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
   /**
    * Marks this settings panel as dirty only when values differ from the saved baseline.
    */
-  const markFormTouched = (nextData?: ConceptFitSettingsForm) => {
+  const markFormTouched = async (nextData?: ConceptFitSettingsForm) => {
     if (!canEditQuestion) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.TIMED_CHOICE_SETTINGS)))
+      return;
 
     if (nextData && !hasActualConceptFitChange(nextData)) {
       setFormTouched(false);
@@ -147,9 +153,11 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
   /**
    * Updates selected question in Redux for instant canvas preview.
    */
-  const updateConceptFitPreview = (
+  const updateConceptFitPreview = async (
     partialUiConfig: Partial<QuestionUIConfig>,
   ) => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.TIMED_CHOICE_SETTINGS)))
+      return;
     dispatch(
       updateQuestionField({
         key: "questionPreferences",
@@ -170,6 +178,8 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
    */
   const onSubmit = async (data: ConceptFitSettingsForm) => {
     if (!canEditQuestion || !questionID) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.TIMED_CHOICE_SETTINGS)))
+      return;
 
     if (!hasActualConceptFitChange(data)) {
       setFormTouched(false);
@@ -292,8 +302,8 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
           onSubmit={(event) => event.preventDefault()}
           sx={{
             display: "flex",
-            width:"94%",
-            mx:"auto",
+            width: "94%",
+            mx: "auto",
             flexDirection: "column",
             gap: 2,
             opacity: canEditQuestion ? 1 : 0.8,
@@ -320,6 +330,7 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
                   <Select
                     disabled={!canEditQuestion}
                     value={field.value}
+                    defaultValue="Text Only"
                     onChange={(event) => {
                       if (!canEditQuestion) return;
 

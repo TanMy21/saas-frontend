@@ -145,7 +145,7 @@ export const RICH_TEXT_FONT_FAMILY_OPTIONS = [
 
 export const CONCEPT_FIT_DISPLAY_MODE_OPTIONS = [
   { label: "Text only", value: "TEXT" },
-  { label: "Image only", value: "IMAGE" },
+  { label: "Image", value: "IMAGE" },
   // { label: "Text + image", value: "TEXT_IMAGE" },
 ] as const;
 
@@ -186,7 +186,6 @@ export const LABELS: Record<
   },
 };
 
-
 export const authReasonMessages: Record<
   string,
   { severity: "success" | "error" | "warning" | "info"; message: string }
@@ -208,7 +207,6 @@ export const authReasonMessages: Record<
     message: "Please log in to continue.",
   },
 };
-
 
 export const timerDrain = keyframes`
   from {
@@ -618,3 +616,61 @@ export const EXCLUDED_RESPONSE_TABLE_TYPES = new Set([
   "END_SCREEN",
   "CONSENT",
 ]);
+
+export const SURVEY_EDIT_LOCKED_MESSAGE =
+  "This survey has responses. Changes that may affect existing results are locked.";
+
+export const SOFT_EDIT_MESSAGES = {
+  QUESTION_WORDING:
+    "This survey has responses. Wording changes may affect result comparison.",
+
+  QUESTION_DESCRIPTION:
+    "This survey has responses. Instruction changes may affect how future participants respond.",
+
+  QUESTION_CHANGE:
+    "This survey already has responses. Changing questions may affect how earlier and future responses compare. Continue?",
+
+  OPTION_CHANGE:
+    "This survey already has responses. Changing answer options may alter the meaning of existing answers. Continue?",
+
+  OPTION_LABEL:
+    "This survey has responses. Option wording changes may affect answer meaning.",
+
+  MODEL_3D_CHANGE:
+    "This survey already has responses. Changes to the 3D model may affect result comparison. Continue?",
+
+  WELCOME_COPY:
+    "This survey has responses. Welcome changes may affect participant context.",
+
+  DEFAULT: "This survey has responses. Changes may affect participant context.",
+
+  FLOW_CONDITION_CHANGE:
+    "This survey already has responses. Changing survey flow may affect which questions future participants see. Continue?",
+
+  FLOW_CONDITION_DELETE:
+    "This survey already has responses. Removing this condition may change which questions future participants see. Continue?",
+
+  INSTRUCTION_COPY:
+    "This survey has responses. Instruction changes may affect participant responses.",
+
+  INFO_COPY:
+    "This survey has responses. Information changes may affect participant context.",
+
+  SURVEY_TITLE:
+    "This survey has responses. Title changes may make results harder to compare.",
+
+  SURVEY_CHANGE:
+    "This survey has responses, may affect result comparison. Continue?",
+
+  TIMED_CHOICE_IAT_LAYOUT:
+    "This survey has responses. Layout changes may affect response speed.",
+
+  TIMED_CHOICE_SETTINGS:
+    "This survey already has responses. Changing these settings may affect result comparison. Continue?",
+
+  SURVEY_THEME:
+    "This survey has responses. Theme changes may affect participant experience.",
+
+  SHARE_LINK_REGENERATE:
+    "Regenerating this link will disable the current link. Existing responses are unaffected.",
+} as const;

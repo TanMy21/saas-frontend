@@ -20,8 +20,10 @@ import {
   useGetSurveyByIdQuery,
   useUpdateSurveyTitleandDescriptionMutation,
 } from "../../app/slices/surveysApiSlice";
+import { useSurveyEditLock } from "../../hooks/useSurveyEditLock";
 import { useToast } from "../../hooks/useToast";
 // import { useAppTheme } from "../../theme/useAppTheme";
+import { SOFT_EDIT_MESSAGES } from "../../utils/constants";
 import { titleDescriptionUpdateSchema } from "../../utils/schema";
 import {
   SurveyTitleAndDescription,
@@ -34,6 +36,8 @@ const SurveyTitleEditModal = ({
 }: SurveyTitleEditModalProps) => {
   // const { textStyles } = useAppTheme();
   const { surveyID } = useParams();
+  const { confirmSoftEdit } = useSurveyEditLock();
+
   const { data: survey } = useGetSurveyByIdQuery(surveyID, {
     skip: !surveyID,
     pollingInterval: 15000,
@@ -68,6 +72,8 @@ const SurveyTitleEditModal = ({
   };
 
   const submitUpdateData = async (data: SurveyTitleAndDescription) => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.SURVEY_TITLE))) return;
+
     try {
       const { title, description } = data;
       await updateSurveyTitleandDescription({ surveyID, title, description });

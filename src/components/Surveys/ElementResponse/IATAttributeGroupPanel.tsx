@@ -16,11 +16,13 @@ import {
   useUpdateOptionTextandValueMutation,
 } from "../../../app/slices/optionApiSlice";
 import useAuth from "../../../hooks/useAuth";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
 import { useToast } from "../../../hooks/useToast";
 import { IATAttributeGroupPanelProps } from "../../../types/surveyBuilderTypes";
 import {
   MAX_IAT_ATTRIBUTES_PER_GROUP,
   MIN_IAT_ATTRIBUTES_PER_GROUP,
+  SOFT_EDIT_MESSAGES,
 } from "../../../utils/constants";
 import { isIATOptionInGroup } from "../../../utils/iatUtils";
 import { showToast } from "../../../utils/showToast";
@@ -36,6 +38,7 @@ export const IATAttributeGroupPanel = ({
   allOptions,
 }: IATAttributeGroupPanelProps) => {
   const { can } = useAuth();
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const canCreate = can("CREATE_OPTION");
   const canEdit = can("UPDATE_OPTION");
@@ -54,8 +57,6 @@ export const IATAttributeGroupPanel = ({
     errorFallbackMessage: "Something went wrong.",
   });
 
-  console.log("Panel Options: ", options);
-
   const canAddMore = options.length < MAX_IAT_ATTRIBUTES_PER_GROUP;
 
   /**
@@ -64,6 +65,7 @@ export const IATAttributeGroupPanel = ({
    */
   const handleAddAttributes = async () => {
     if (!qID || !canCreate) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
 
     const lines = inputValue
       .split("\n")
@@ -72,10 +74,6 @@ export const IATAttributeGroupPanel = ({
       .slice(0, MAX_IAT_ATTRIBUTES_PER_GROUP - options.length);
 
     if (lines.length === 0) return;
-
-    console.log("In handler");
-
-    console.log("Sending: ", lines);
 
     try {
       await createNewOption({
@@ -89,8 +87,6 @@ export const IATAttributeGroupPanel = ({
           },
         })),
       }).unwrap();
-
-      console.log("Called");
 
       setInputValue("");
     } catch (error) {
@@ -108,6 +104,7 @@ export const IATAttributeGroupPanel = ({
     nextText: string,
   ) => {
     if (!canEdit) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
 
     const cleanText = nextText.trim();
 
@@ -135,6 +132,7 @@ export const IATAttributeGroupPanel = ({
    */
   const handleDeleteAttribute = async (optionID: string) => {
     if (!canDelete) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
 
     try {
       await deleteOption(optionID).unwrap();
@@ -226,7 +224,7 @@ export const IATAttributeGroupPanel = ({
                 : "#B45309",
           }}
         >
-          {options.length}/{MAX_IAT_ATTRIBUTES_PER_GROUP/2}
+          {options.length}/{MAX_IAT_ATTRIBUTES_PER_GROUP / 2}
         </Typography>
       </Box>
 

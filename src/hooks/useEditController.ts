@@ -1,7 +1,10 @@
 import { useCallback, useRef, useState } from "react";
 
+import { SOFT_EDIT_MESSAGES } from "../utils/constants";
 import { normalizeHtml } from "../utils/richTextUtils";
 import { EditControllerParams, EditTarget } from "../utils/types";
+
+import { useSurveyEditLock } from "./useSurveyEditLock";
 
 export function useEditController({
   questionID,
@@ -11,6 +14,8 @@ export function useEditController({
   updateElementDescription,
 }: EditControllerParams) {
   const [editingTarget, setEditingTarget] = useState<EditTarget>("none");
+
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const initialRef = useRef<{ title: string; description: string }>({
     title: "",
@@ -26,22 +31,30 @@ export function useEditController({
       };
       setEditingTarget(target);
     },
-    [text, description]
+    [text, description],
   );
 
-  const saveTitleIfChanged = useCallback(() => {
+  const saveTitleIfChanged = useCallback(async () => {
     if (!questionID) return;
+
     const next = normalizeHtml(text) || "Untitled";
     const prev = normalizeHtml(initialRef.current.title);
-    if (next !== prev) updateElementText({ questionID, text: next });
+    if (next === prev) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_WORDING))) return;
+
+    updateElementText({ questionID, text: next });
   }, [questionID, text, updateElementText]);
 
-  const saveDescriptionIfChanged = useCallback(() => {
+  const saveDescriptionIfChanged = useCallback(async () => {
     if (!questionID) return;
+
     const next = normalizeHtml(description);
     const prev = normalizeHtml(initialRef.current.description);
-    if (next !== prev)
-      updateElementDescription({ questionID, description: next });
+    if (next === prev) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_DESCRIPTION)))
+      return;
+
+    updateElementDescription({ questionID, description: next });
   }, [questionID, description, updateElementDescription]);
 
   const endEdit = useCallback(() => setEditingTarget("none"), []);

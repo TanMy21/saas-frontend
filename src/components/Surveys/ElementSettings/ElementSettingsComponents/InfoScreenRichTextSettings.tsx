@@ -43,17 +43,19 @@ import {
 import {
   useSyncEditorImagesMutation,
   useUpdateScreenElementsMutation,
-  useUploadEditorImageMutation,
+  useUploadQuestionImageMutation,
 } from "../../../../app/slices/elementApiSlice";
 import { updateQuestionField } from "../../../../app/slices/elementSlice";
 import { RootState, useAppDispatch } from "../../../../app/store";
 import { useAppSelector } from "../../../../app/typedReduxHooks";
 import { usePermission } from "../../../../context/PermissionContext";
+import { useSurveyEditLock } from "../../../../hooks/useSurveyEditLock";
 import { useToast } from "../../../../hooks/useToast";
 import { InfoScreenRichTextSettingsProps } from "../../../../types/surveyBuilderTypes";
 import {
   RICH_TEXT_FONT_FAMILY_OPTIONS,
   RICH_TEXT_FONT_SIZE_OPTIONS,
+  SOFT_EDIT_MESSAGES,
 } from "../../../../utils/constants";
 import {
   extractUsedEditorImageIDs,
@@ -103,6 +105,7 @@ export const InfoScreenRichTextSettings = ({
   qID,
 }: InfoScreenRichTextSettingsProps) => {
   const { canEditQuestion } = usePermission();
+  const { confirmSoftEdit } = useSurveyEditLock();
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const dispatch = useAppDispatch();
 
@@ -119,9 +122,9 @@ export const InfoScreenRichTextSettings = ({
     useUpdateScreenElementsMutation();
 
   const [
-    uploadEditorImage,
+    uploadQuestionImage,
     { isLoading: isUploadingEditorImage, isError, error },
-  ] = useUploadEditorImageMutation();
+  ] = useUploadQuestionImageMutation();
 
   const [syncEditorImages] = useSyncEditorImagesMutation();
 
@@ -214,6 +217,7 @@ export const InfoScreenRichTextSettings = ({
 
   const handleSaveRichText = async () => {
     if (!editor || !canEditQuestion || !questionID) return;
+    if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.INFO_COPY)) return;
 
     try {
       const sanitizedHtml = sanitizeRichTextHtml(editor.getHTML());
@@ -245,7 +249,7 @@ export const InfoScreenRichTextSettings = ({
       const formData = new FormData();
       formData.append("imgFile", file);
 
-      const result = await uploadEditorImage({
+      const result = await uploadQuestionImage({
         formData,
         questionID,
       }).unwrap();

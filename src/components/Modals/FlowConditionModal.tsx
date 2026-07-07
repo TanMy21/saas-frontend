@@ -20,7 +20,9 @@ import {
   useGetConditionsForQuestionQuery,
 } from "../../app/slices/flowApiSlice";
 import useAuth from "../../hooks/useAuth";
+import { useSurveyEditLock } from "../../hooks/useSurveyEditLock";
 import { validateConditions } from "../../utils/conditionValidation";
+import { SOFT_EDIT_MESSAGES } from "../../utils/constants";
 import { elementIcons } from "../../utils/elementsConfig";
 import { convertHtmlToPlainText } from "../../utils/richTextUtils";
 import {
@@ -50,6 +52,7 @@ const FlowConditionModal = ({
   refetch,
 }: FlowConditionModalProps) => {
   const { can } = useAuth();
+  const { confirmSoftEdit } = useSurveyEditLock();
   const canCreateFlow = can("CREATE_FLOW");
   const canEditFlow = can("UPDATE_FLOW");
   const questionID = selectedNode?.data?.questionID as string;
@@ -101,27 +104,29 @@ const FlowConditionModal = ({
     Record<number, boolean>
   >({});
 
- 
-const headerNodeLabel = useMemo(() => {
-  const selectedLabel = selectedNode?.data?.label;
+  const headerNodeLabel = useMemo(() => {
+    const selectedLabel = selectedNode?.data?.label;
 
-  if (
-    selectedLabel !== undefined &&
-    selectedLabel !== null &&
-    String(selectedLabel).trim() !== ""
-  ) {
-    return String(selectedLabel);
-  }
+    if (
+      selectedLabel !== undefined &&
+      selectedLabel !== null &&
+      String(selectedLabel).trim() !== ""
+    ) {
+      return String(selectedLabel);
+    }
 
-  const selectedType = String(selectedNode?.data?.element ?? "");
+    const selectedType = String(selectedNode?.data?.element ?? "");
 
-  if (selectedType === "INFO_SCREEN") return "Info";
-  if (selectedType === "END_SCREEN") return "END";
+    if (selectedType === "INFO_SCREEN") return "Info";
+    if (selectedType === "END_SCREEN") return "END";
 
-  return "";
-}, [selectedNode]);
+    return "";
+  }, [selectedNode]);
 
-  const addConditionBlock = () => {
+  const addConditionBlock = async () => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.FLOW_CONDITION_CHANGE)))
+      return;
+
     setConditions((prev) => [
       ...prev,
       {
@@ -141,8 +146,10 @@ const headerNodeLabel = useMemo(() => {
     }));
   };
 
-  const submitConditionData = (data: any) => {
+  const submitConditionData = async (data: any) => {
     if (!can("UPDATE_FLOW")) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.FLOW_CONDITION_CHANGE)))
+      return;
     try {
       setHasSubmitted(true);
 

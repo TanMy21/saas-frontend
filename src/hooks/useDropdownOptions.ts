@@ -8,10 +8,11 @@ import {
   useGetOptionsOfQuestionQuery,
   useUpdateOptionOrderMutation,
 } from "../app/slices/optionApiSlice";
-import { MAX_DROPDOWN_OPTIONS } from "../utils/constants";
+import { MAX_DROPDOWN_OPTIONS, SOFT_EDIT_MESSAGES } from "../utils/constants";
 import { showToast } from "../utils/showToast";
 import { OptionType } from "../utils/types";
 
+import { useSurveyEditLock } from "./useSurveyEditLock";
 
 export const useDropdownOptions = ({
   qID,
@@ -20,6 +21,7 @@ export const useDropdownOptions = ({
   qID: string;
   canDelete: boolean;
 }) => {
+  const { confirmSoftEdit } = useSurveyEditLock();
   const { data: options = [] as OptionType[] } =
     useGetOptionsOfQuestionQuery(qID);
 
@@ -57,6 +59,7 @@ export const useDropdownOptions = ({
    * Each non-empty line becomes one option until the dropdown reaches the 100-option limit.
    */
   const handleAddOptions = async () => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
     const lines = inputValue
       .split("\n")
       .map((line) => line.trim())
@@ -124,7 +127,7 @@ export const useDropdownOptions = ({
    */
   const handleDeleteOption = async (optionID: string) => {
     if (!canDelete) return;
-
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
     try {
       await deleteOption(optionID).unwrap();
     } catch (error) {
@@ -139,6 +142,7 @@ export const useDropdownOptions = ({
   const createReviewedOptions = async (
     generatedOptions: { text: string; value: string; order: number }[],
   ) => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return false;
     const cleanedOptions = generatedOptions
       .map((option) => ({
         text: option.text.trim(),

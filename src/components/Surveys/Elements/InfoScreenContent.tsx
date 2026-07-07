@@ -25,7 +25,9 @@ import { updateQuestionField } from "../../../app/slices/elementSlice";
 import { RootState } from "../../../app/store";
 import { useAppDispatch, useAppSelector } from "../../../app/typedReduxHooks";
 import useAuth from "../../../hooks/useAuth";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
 import { useToast } from "../../../hooks/useToast";
+import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
 import {
   extractUsedEditorImageIDs,
   sanitizeInfoScreenContentHtml,
@@ -39,6 +41,8 @@ import { InfoScreenEditorToolbar } from "./InfoScreenEditorToolbar";
 export const InfoScreenContent = ({ qID, display }: ElementProps) => {
   const isMobile = display === "mobile";
   const { can } = useAuth();
+  const { guardStrictEdit, confirmSoftEdit } = useSurveyEditLock();
+
   const canEditQuestion = can("UPDATE_QUESTION");
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const lastSavedHtmlRef = useRef<string>("");
@@ -171,7 +175,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
 
       dispatch(
         updateQuestionField({
-            questionID,
+          questionID,
           key: "description",
           value: sanitizedHtml,
         }),
@@ -187,6 +191,8 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
    */
   const handleSaveRichText = async () => {
     if (!editor || !canEditQuestion || !questionID) return;
+
+    if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.INFO_COPY)) return;
 
     try {
       setSaveStatus("saving");
@@ -208,7 +214,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
 
       dispatch(
         updateQuestionField({
-            questionID,
+          questionID,
           key: "description",
           value: sanitizedHtml,
         }),
@@ -228,6 +234,8 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
    */
   const handleUploadAndInsertImage = async (file: File) => {
     if (!editor || !questionID) return;
+
+    if (!guardStrictEdit()) return;
 
     try {
       const formData = new FormData();
@@ -265,7 +273,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
 
       dispatch(
         updateQuestionField({
-            questionID,
+          questionID,
           key: "description",
           value: sanitizedHtml,
         }),

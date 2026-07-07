@@ -16,7 +16,9 @@ import {
   useUploadQuestionImageMutation,
 } from "../../../app/slices/elementApiSlice";
 import { useUpdateOptionTextandValueMutation } from "../../../app/slices/optionApiSlice";
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
 import { QuestionImageAsset } from "../../../types/surveyBuilderTypes";
+import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
 import { showToast } from "../../../utils/showToast";
 import { OptionType } from "../../../utils/types";
 
@@ -39,6 +41,7 @@ export const TimedChoiceOptionCard = ({
 }) => {
   const [editText, setEditText] = useState(option.text);
   const [isEditing, setIsEditing] = useState(false);
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
   const replaceInputRef = useRef<HTMLInputElement | null>(null);
@@ -69,6 +72,7 @@ export const TimedChoiceOptionCard = ({
    */
   const handleSave = async () => {
     if (!canEdit) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
 
     const trimmedText = editText.trim();
 
@@ -95,6 +99,7 @@ export const TimedChoiceOptionCard = ({
    */
   const handleUploadImage = async (file: File) => {
     if (!qID || !imageRole || !canEdit) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
 
     try {
       const formData = new FormData();
@@ -141,6 +146,7 @@ export const TimedChoiceOptionCard = ({
    */
   const handleDeleteImage = async () => {
     if (!qID || !optionImage || !canEdit) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE))) return;
 
     try {
       await removeQuestionImageAsset({
@@ -296,7 +302,6 @@ export const TimedChoiceOptionCard = ({
                 onChange={async (event) => {
                   const file = event.target.files?.[0];
                   event.target.value = "";
-
                   if (!file) return;
 
                   await handleReplaceImage(file);
@@ -339,7 +344,6 @@ export const TimedChoiceOptionCard = ({
                     onChange={async (event) => {
                       const file = event.target.files?.[0];
                       event.target.value = "";
-
                       if (!file) return;
 
                       await handleUploadImage(file);

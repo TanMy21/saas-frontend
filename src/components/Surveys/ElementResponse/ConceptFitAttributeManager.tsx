@@ -2,10 +2,12 @@ import { Box, IconButton, TextField, Typography } from "@mui/material";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { MdAdd } from "react-icons/md";
 
+import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
 import { ConceptFitStimulusLayoutProps } from "../../../types/surveyBuilderTypes";
 import {
   MAX_CONCEPT_ATTRIBUTES,
   MIN_RECOMMENDED_ATTRIBUTES,
+  SOFT_EDIT_MESSAGES,
 } from "../../../utils/constants";
 
 import { ConceptAttributeRow } from "./ConceptAttributeRow";
@@ -27,6 +29,7 @@ export const ConceptFitAttributeManager = ({
   handleDeleteAttribute,
   handleDragEnd,
 }: ConceptFitStimulusLayoutProps) => {
+  const { confirmSoftEdit } = useSurveyEditLock();
   return (
     <>
       <ConceptFitPreview firstAttribute={localOptions[0]?.text} />
@@ -69,7 +72,9 @@ export const ConceptFitAttributeManager = ({
         }}
       >
         <DragDropContext
-          onDragEnd={(result) => {
+          onDragEnd={async (result) => {
+            if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE)))
+              return;
             if (!canReorder) return;
             handleDragEnd(result);
           }}

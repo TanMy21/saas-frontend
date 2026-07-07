@@ -21,6 +21,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
+import { useSurveyEditLock } from "../../../../hooks/useSurveyEditLock";
 import { orderedElementTypes } from "../../../../utils/constants";
 import { elementIcons, questionTypes } from "../../../../utils/elementsConfig";
 import { QuestionType } from "../../../../utils/types";
@@ -34,6 +35,7 @@ export const QuestionTypeMutationSettings = () => {
   );
 
   const dispatch = useAppDispatch();
+  const { isEditLocked, guardStrictEdit } = useSurveyEditLock();
 
   const { questionID, type } = question || {};
   const optionCount = question?.options?.length ?? 0;
@@ -84,6 +86,8 @@ export const QuestionTypeMutationSettings = () => {
 
   // Triggered when the dropdown changes.
   const changeType = async (newType: QuestionType) => {
+    if (!guardStrictEdit()) return;
+
     if (!questionID || newType === type) return;
 
     if (type && willLoseOptions(type as QuestionType, newType, optionCount)) {

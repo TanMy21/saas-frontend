@@ -12,7 +12,7 @@ import { clearAiQuestionsJustAdded } from "../../../app/slices/generateSurveyQue
 import { setElements } from "../../../app/slices/surveySlice";
 import { RootState, useAppDispatch } from "../../../app/store";
 import { useAppSelector } from "../../../app/typedReduxHooks";
-import useAuth from "../../../hooks/useAuth";
+import useAuth from "../../../hooks/useAuth"; 
 import { useAppTheme } from "../../../theme/useAppTheme";
 import {
   ELEMENTS_PANEL_AUTO_SCROLL_EDGE_SIZE,
@@ -202,6 +202,7 @@ const ElementsPanel = () => {
    * Persists the new question ordering after a valid drag-and-drop action.
    */
   const onDragEnd = (result: DropResult) => {
+  
     stopAutoScroll();
 
     const { source, destination } = result;
@@ -265,7 +266,11 @@ const ElementsPanel = () => {
       {elements.length === 0 ? null : (
         <DragDropContext
           onDragStart={handleDragStart}
-          onDragEnd={can("REORDER_QUESTION") ? onDragEnd : stopAutoScroll}
+          onDragEnd={
+            can("REORDER_QUESTION")  
+              ? onDragEnd
+              : stopAutoScroll
+          }
         >
           <Droppable droppableId="elements">
             {(provided, snapshot) => (

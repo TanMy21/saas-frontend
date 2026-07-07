@@ -74,6 +74,11 @@ export const EditableQuestionText = ({
       },
 
       handleKeyDown: (_view, event) => {
+        if (event.key === "Backspace") {
+          event.stopPropagation();
+          return false;
+        }
+
         if (event.key === "Escape" || event.key === "Enter") {
           onKeyDown?.(event as unknown as React.KeyboardEvent);
           return true;
@@ -87,9 +92,9 @@ export const EditableQuestionText = ({
       onChange(editor.getHTML());
     },
 
-    onSelectionUpdate: () => {
-      if (active) onFormatted();
-    },
+    // onSelectionUpdate: () => {
+    //   if (active) onFormatted();
+    // },
   });
 
   useEffect(() => {

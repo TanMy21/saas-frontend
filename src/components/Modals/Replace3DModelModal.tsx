@@ -29,9 +29,16 @@ import {
 } from "@mui/material";
 
 import { useReplace3DModelMutation } from "../../app/slices/elementApiSlice";
-import { updateSelectedQuestion3DModel } from "../../app/slices/elementSlice";
-import { useAppDispatch } from "../../app/typedReduxHooks";
+import {
+  setQuestion,
+  updateSelectedQuestion3DModel,
+} from "../../app/slices/elementSlice";
+import { RootState } from "../../app/store";
+import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
+import { useSurveyEditLock } from "../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../utils/constants";
+import { showToast } from "../../utils/showToast";
 import { Replace3DModelModalProps } from "../../utils/types";
 
 const Replace3DModelModal = ({
@@ -42,69 +49,182 @@ const Replace3DModelModal = ({
 }: Replace3DModelModalProps) => {
   const refetchCanvas = useSurveyCanvasRefetch();
   const dispatch = useAppDispatch();
+  const { confirmSoftEdit } = useSurveyEditLock();
+
+  const question = useAppSelector(
+    (state: RootState) => state.question.selectedQuestion,
+  );
+
   const [isDragOver, setIsDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [progress, setProgress] = useState(0);
+  const [isProcessingReplacement, setIsProcessingReplacement] = useState(false);
+  const [isReplacementComplete, setIsReplacementComplete] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const pollIntervalRef = useRef<number | null>(null);
 
   const acceptedFormats = useMemo(() => [".glb"], []);
-  const maxFileSize = 10 * 1024 * 1024; // 10MB
+  const maxFileSize = 10 * 1024 * 1024;
 
-  const [
-    replace3DModel,
-    { isLoading, isSuccess, error: mutationError, reset },
-  ] = useReplace3DModelMutation();
+  const [replace3DModel, { isLoading, error: mutationError, reset }] =
+    useReplace3DModelMutation();
+
+  const isBusy = isLoading || isProcessingReplacement;
+
+  const clearPollInterval = useCallback(() => {
+    if (pollIntervalRef.current) {
+      window.clearInterval(pollIntervalRef.current);
+      pollIntervalRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      clearPollInterval();
+    };
+  }, [clearPollInterval]);
 
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return "0 Bytes";
+
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
+
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   };
 
   const validateFile = (file: File): string | null => {
     const extension = "." + (file.name.split(".").pop()?.toLowerCase() || "");
+
     if (!acceptedFormats.includes(extension)) {
       return `Unsupported file format. Use: ${acceptedFormats.join(", ")}`;
     }
+
     if (file.size > maxFileSize) {
       return `File exceeds 10MB. Current size: ${formatFileSize(file.size)}`;
     }
+
     return null;
+  };
+
+  const hasModelChanged = (nextModel: any, previousModel: any) => {
+    if (!nextModel?.fileUrl) return false;
+    if (!previousModel) return true;
+
+    return (
+      nextModel.updatedAt !== previousModel.updatedAt ||
+      nextModel.contentHash !== previousModel.contentHash ||
+      nextModel.public_id !== previousModel.public_id ||
+      nextModel.fileUrl !== previousModel.fileUrl
+    );
   };
 
   const startSimulatedProgress = useCallback(() => {
     setProgress(0);
+
     let current = 0;
-    const id = setInterval(() => {
+
+    const id = window.setInterval(() => {
       current = Math.min(95, current + Math.random() * 12);
       setProgress(current);
     }, 180);
-    return () => clearInterval(id);
+
+    return () => window.clearInterval(id);
   }, []);
 
   const resetLocal = useCallback(() => {
+    clearPollInterval();
+
     setIsDragOver(false);
     setError(null);
     setSelectedFile(null);
     setProgress(0);
+    setIsProcessingReplacement(false);
+    setIsReplacementComplete(false);
+
     if (inputRef.current) {
       inputRef.current.value = "";
     }
+
     reset();
-  }, [reset]);
+  }, [clearPollInterval, reset]);
 
   const handleRequestClose = useCallback(() => {
-    if (isLoading) return;
+    if (isBusy) return;
+
     resetLocal();
     onClose();
-  }, [isLoading, onClose, resetLocal]);
+  }, [isBusy, onClose, resetLocal]);
+
+  const pollForReplacedModel = useCallback(
+    (previousModel: any) => {
+      clearPollInterval();
+
+      let attempts = 0;
+      const maxAttempts = 30;
+
+      pollIntervalRef.current = window.setInterval(() => {
+        attempts += 1;
+
+        const refetchResult = refetchCanvas() as any;
+
+        refetchResult
+          ?.then?.((result: any) => {
+            const questions =
+              result?.data?.getSurveyCanvas?.questions ??
+              result?.data?.questions ??
+              [];
+
+            const updatedQuestion = questions.find(
+              (item: any) => item.questionID === questionID,
+            );
+
+            const nextModel = updatedQuestion?.Model3D;
+
+            if (hasModelChanged(nextModel, previousModel)) {
+              dispatch(setQuestion(updatedQuestion));
+              dispatch(updateSelectedQuestion3DModel(nextModel));
+
+              setProgress(100);
+              setIsProcessingReplacement(false);
+              setIsReplacementComplete(true);
+
+              showToast.success("3D model replaced.");
+              clearPollInterval();
+              return;
+            }
+
+            if (attempts >= maxAttempts) {
+              setIsProcessingReplacement(false);
+              showToast.info(
+                "Replacement is still processing. Refresh in a moment if it does not appear.",
+              );
+              clearPollInterval();
+            }
+          })
+          ?.catch?.((pollError: unknown) => {
+            console.error("Failed to refresh replacement status:", pollError);
+
+            if (attempts >= maxAttempts) {
+              setIsProcessingReplacement(false);
+              showToast.info(
+                "Replacement is still processing. Refresh in a moment if it does not appear.",
+              );
+              clearPollInterval();
+            }
+          });
+      }, 1500);
+    },
+    [clearPollInterval, dispatch, questionID, refetchCanvas],
+  );
 
   const handleFileSelect = useCallback(
     async (file: File) => {
+      if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.MODEL_3D_CHANGE))) return;
+
       const validation = validateFile(file);
 
       if (validation) {
@@ -113,35 +233,50 @@ const Replace3DModelModal = ({
         return;
       }
 
+      const previousModel = question?.Model3D;
+
       setError(null);
       setSelectedFile(file);
+      setIsReplacementComplete(false);
+      setIsProcessingReplacement(false);
 
       const formData = new FormData();
       formData.append("modelFile", file);
+      formData.append("name", file.name);
 
       const stop = startSimulatedProgress();
 
       try {
-        const replaced = await replace3DModel({
+        await replace3DModel({
           formData,
           questionID,
         }).unwrap();
 
-        dispatch(updateSelectedQuestion3DModel(replaced));
-        setProgress(100);
-        refetchCanvas();
+        stop();
+        setIsProcessingReplacement(true);
+        showToast.success("Replacement uploaded. Processing 3D model...");
+        pollForReplacedModel(previousModel);
       } catch (e: any) {
+        stop();
+
         setError(
           typeof e?.data === "string"
             ? e.data
             : e?.data?.message || e?.error || "Failed to replace the model.",
         );
+
         setProgress(0);
-      } finally {
-        stop();
+        setIsProcessingReplacement(false);
       }
     },
-    [questionID, replace3DModel, startSimulatedProgress],
+    [
+      confirmSoftEdit,
+      pollForReplacedModel,
+      question?.Model3D,
+      questionID,
+      replace3DModel,
+      startSimulatedProgress,
+    ],
   );
 
   const onDragOver = useCallback<DragEventHandler<HTMLDivElement>>((e) => {
@@ -166,16 +301,21 @@ const Replace3DModelModal = ({
       e.preventDefault();
       e.stopPropagation();
       setIsDragOver(false);
-      const f = e.dataTransfer.files?.[0];
-      if (f) handleFileSelect(f);
+
+      const file = e.dataTransfer.files?.[0];
+      if (file) {
+        void handleFileSelect(file);
+      }
     },
     [handleFileSelect],
   );
 
   const onInputChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (e) => {
-      const f = e.target.files?.[0];
-      if (f) handleFileSelect(f);
+      const file = e.target.files?.[0];
+      if (file) {
+        void handleFileSelect(file);
+      }
     },
     [handleFileSelect],
   );
@@ -184,6 +324,7 @@ const Replace3DModelModal = ({
     if (open) {
       document.body.style.overflow = "hidden";
     }
+
     return () => {
       document.body.style.overflow = "unset";
     };
@@ -193,10 +334,11 @@ const Replace3DModelModal = ({
     <Dialog
       open={open}
       onClose={(_, reason) => {
-        // prevent accidental close during upload
-        if (isLoading) return;
-        if (reason === "backdropClick" || reason === "escapeKeyDown")
+        if (isBusy) return;
+
+        if (reason === "backdropClick" || reason === "escapeKeyDown") {
           handleRequestClose();
+        }
       }}
       fullWidth
       maxWidth="md"
@@ -232,7 +374,7 @@ const Replace3DModelModal = ({
         Replace 3D Model
         <IconButton
           onClick={handleRequestClose}
-          disabled={isLoading}
+          disabled={isBusy}
           sx={{
             p: 1,
             borderRadius: 2,
@@ -246,8 +388,7 @@ const Replace3DModelModal = ({
       </DialogTitle>
 
       <DialogContent sx={{ px: 3, py: 3 }}>
-        {/* Success */}
-        {isSuccess && !isLoading ? (
+        {isReplacementComplete ? (
           <Box sx={{ textAlign: "center", py: 5 }}>
             <Box
               sx={{
@@ -290,10 +431,12 @@ const Replace3DModelModal = ({
                   justifyContent="center"
                 >
                   <InsertDriveFileIcon color="primary" />
+
                   <Box>
                     <Typography sx={{ fontWeight: 600 }}>
                       {selectedFile.name}
                     </Typography>
+
                     <Typography variant="body2" color="text.secondary">
                       {formatFileSize(selectedFile.size)}
                     </Typography>
@@ -318,6 +461,7 @@ const Replace3DModelModal = ({
               >
                 Replace Again
               </Button>
+
               <Button variant="outlined" onClick={handleRequestClose}>
                 Done
               </Button>
@@ -325,8 +469,7 @@ const Replace3DModelModal = ({
           </Box>
         ) : (
           <>
-            {/* Uploading */}
-            {isLoading ? (
+            {isLoading || isProcessingReplacement ? (
               <Box sx={{ textAlign: "center", py: 5 }}>
                 <Box
                   sx={{
@@ -346,10 +489,15 @@ const Replace3DModelModal = ({
                 </Box>
 
                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-                  Replacing Model…
+                  {isLoading
+                    ? "Uploading Replacement..."
+                    : "Processing Replacement..."}
                 </Typography>
+
                 <Typography color="text.secondary" sx={{ mb: 3 }}>
-                  Please wait while we process your new 3D model.
+                  {isLoading
+                    ? "Please wait while we upload your new 3D model."
+                    : "Please wait while we process your new 3D model."}
                 </Typography>
 
                 <LinearProgress
@@ -361,6 +509,7 @@ const Replace3DModelModal = ({
                     "& .MuiLinearProgress-bar": { borderRadius: 5 },
                   }}
                 />
+
                 <Typography
                   variant="body2"
                   color="text.secondary"
@@ -370,9 +519,7 @@ const Replace3DModelModal = ({
                 </Typography>
               </Box>
             ) : (
-              // Idle (choose file)
               <Stack spacing={3} sx={{ mt: 2 }}>
-                {/* Current file warning */}
                 <Paper
                   variant="outlined"
                   sx={{
@@ -384,12 +531,14 @@ const Replace3DModelModal = ({
                 >
                   <Stack direction="row" spacing={1.5} alignItems="flex-start">
                     <ErrorIcon sx={{ color: "warning.main" }} />
+
                     <Box>
                       <Typography
                         sx={{ fontWeight: 600, color: "text.primary" }}
                       >
                         Current Model
                       </Typography>
+
                       <Typography
                         variant="body2"
                         sx={{ color: "text.secondary" }}
@@ -406,7 +555,6 @@ const Replace3DModelModal = ({
                   </Stack>
                 </Paper>
 
-                {/* Drop zone */}
                 <Box
                   onDragOver={onDragOver}
                   onDragEnter={onDragEnter}
@@ -454,6 +602,7 @@ const Replace3DModelModal = ({
                       ? "Drop your replacement file here"
                       : "Replace 3D Model"}
                   </Typography>
+
                   <Typography color="text.secondary" sx={{ mb: 3 }}>
                     {isDragOver
                       ? "Release to replace your 3D model"
@@ -474,13 +623,12 @@ const Replace3DModelModal = ({
                       accept={acceptedFormats.join(",")}
                       onChange={onInputChange}
                       onClick={(e) => {
-                        (e.currentTarget as HTMLInputElement).value = "";
+                        e.currentTarget.value = "";
                       }}
                     />
                   </Button>
                 </Box>
 
-                {/* Supported formats */}
                 <Paper
                   variant="outlined"
                   sx={{ p: 2.5, borderRadius: 2, bgcolor: "grey.50" }}
@@ -488,15 +636,17 @@ const Replace3DModelModal = ({
                   <Typography sx={{ fontWeight: 700, mb: 1.5 }}>
                     Supported Formats
                   </Typography>
+
                   <Stack direction="row" useFlexGap flexWrap="wrap" gap={1}>
-                    {acceptedFormats.map((f) => (
+                    {acceptedFormats.map((format) => (
                       <Chip
-                        key={f}
-                        label={f.toUpperCase()}
+                        key={format}
+                        label={format.toUpperCase()}
                         variant="outlined"
                       />
                     ))}
                   </Stack>
+
                   <Typography
                     variant="body2"
                     sx={{ mt: 1.5, color: "error.main", fontWeight: 600 }}
@@ -505,7 +655,6 @@ const Replace3DModelModal = ({
                   </Typography>
                 </Paper>
 
-                {/* Error block */}
                 {(error || mutationError) && (
                   <Paper
                     variant="outlined"
@@ -522,13 +671,21 @@ const Replace3DModelModal = ({
                       alignItems="flex-start"
                     >
                       <ErrorIcon sx={{ color: "error.main" }} />
+
                       <Box sx={{ flex: 1 }}>
                         <Typography
                           sx={{ fontWeight: 700, color: "error.dark", mb: 0.5 }}
                         >
                           Error Replacing Model
                         </Typography>
+
+                        {error && (
+                          <Typography variant="body2" color="error.main">
+                            {error}
+                          </Typography>
+                        )}
                       </Box>
+
                       <Button
                         size="small"
                         onClick={() => setError(null)}

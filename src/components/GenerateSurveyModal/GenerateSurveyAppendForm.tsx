@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 
 import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
+import { useSurveyEditLock } from "../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../utils/constants";
 
 type AppendFormData = {
   numberOfQuestions: number;
@@ -29,6 +31,7 @@ export const GenerateSurveyAppendForm = ({
 }: Props) => {
   const { surveyID } = useParams();
   const dispatch = useAppDispatch();
+  const { confirmSoftEdit } = useSurveyEditLock();
   const { control, handleSubmit } = useForm<AppendFormData>({
     defaultValues: {
       numberOfQuestions: 3,
@@ -39,6 +42,7 @@ export const GenerateSurveyAppendForm = ({
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const onSubmit = async (data: AppendFormData) => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE))) return;
     try {
       handleClose();
 
