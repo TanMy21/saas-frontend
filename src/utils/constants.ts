@@ -76,6 +76,12 @@ export const DEFAULT_CONCEPT_FIT_RIGHT_TEXT = "Does not fit";
 export const DEFAULT_CONCEPT_FIT_TIMER_MS = 3000;
 export const DEFAULT_CONCEPT_FIT_DISPLAY_MODE = "TEXT";
 
+export const VERIFICATION_EMAIL_KEY = "pendingVerificationEmail";
+export const RESEND_AVAILABLE_AT_KEY = "verificationResendAvailableAt";
+export const RESEND_COOLDOWN_MS = 60_000;
+
+export const OTP_PATTERN = /^\d{6}$/;
+
 export const DEFAULT_TIMED_CHOICE_CONFIG: TimedChoiceSettingsForm = {
   timeLimitSeconds: 3,
   showCountdown: true,

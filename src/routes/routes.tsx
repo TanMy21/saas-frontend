@@ -57,7 +57,7 @@ const router = createBrowserRouter([
       { path: "/forgot", element: <ForgotPassword /> },
       { path: "/reset", element: <ResetPassword /> },
       { path: "/invite/:token", element: <AcceptInvite /> },
-      { path: "/verify/:verificationCode", element: <VerifyUser /> },
+      { path: "/verify", element: <VerifyUser /> },
       { path: "/session-expired", element: <LoginAgain /> },
       {
         element: <PersistLogin />,

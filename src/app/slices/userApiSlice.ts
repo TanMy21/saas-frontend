@@ -1,3 +1,9 @@
+import {
+  RegistrationRequest,
+  RegistrationResponse,
+  ResendVerificationRequest,
+  ResendVerificationResponse,
+} from "../../types/userTypes";
 import { apiSlice } from "../api/apiSlice";
 
 export const usersApiSlice = apiSlice.injectEndpoints({
@@ -32,11 +38,14 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
-    resendVerificationEmail: builder.mutation({
-      query: (email) => ({
+    resendVerificationEmail: builder.mutation<
+      ResendVerificationResponse,
+      ResendVerificationRequest
+    >({
+      query: (body) => ({
         url: "/u/verify",
         method: "POST",
-        body: email,
+        body,
       }),
     }),
     resendOrgInvite: builder.mutation({
@@ -53,7 +62,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
-    addNewUser: builder.mutation({
+    addNewUser: builder.mutation<RegistrationResponse, RegistrationRequest>({
       query: (data) => ({
         url: "/register",
         method: "POST",

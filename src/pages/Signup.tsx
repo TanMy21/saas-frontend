@@ -21,33 +21,23 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useAddNewUserMutation } from "../app/slices/userApiSlice";
 import FormErrors from "../components/FormErrors";
-import { useToast } from "../hooks/useToast";
 import { useAppTheme } from "../theme/useAppTheme";
 import { registerSchema } from "../utils/schema";
 import { showToast } from "../utils/showToast";
 import { RegisterFormData } from "../utils/types";
+import {
+  savePendingVerificationEmail,
+  startVerificationResendCooldown,
+} from "../utils/verificationSession";
 
 const Signup = () => {
   const { primary, background, grey, shadows, gradient, borders, brand } =
     useAppTheme();
-  const [addNewUser, { isLoading, isSuccess, isError, error }] =
-    useAddNewUserMutation();
+  const [addNewUser, { isLoading }] = useAddNewUserMutation();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
-
-  useToast({
-    isSuccess,
-    isError,
-    error,
-    successMessage: "Registration successful. Check your email.",
-    errorFallbackMessage: "Registration failed. Please try again.",
-    successToastOptions: {
-      duration: 5000,
-    },
-    onSuccess: () => navigate("/login"),
-  });
 
   const {
     register,
@@ -58,9 +48,23 @@ const Signup = () => {
   });
 
   const submitRegisterData = async (data: RegisterFormData) => {
-    // eslint-disable-next-line
-    const { confirmPassword, ...newData } = data;
-    await addNewUser(newData);
+    const { confirmPassword, ...newUser } = data;
+
+    try {
+      const registeredUser = await addNewUser(newUser).unwrap();
+
+      savePendingVerificationEmail(registeredUser.email);
+      startVerificationResendCooldown();
+
+      showToast.success(
+        "Registration successful. Enter the code sent to your email.",
+      );
+      navigate("/verify");
+    } catch (error) {
+      showToast.apiError(error, {
+        fallbackMessage: "Registration failed. Please try again.",
+      });
+    }
   };
 
   const handleGoogleAuth = () => {

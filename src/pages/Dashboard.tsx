@@ -51,16 +51,30 @@ const Dashboard = () => {
   >(LAST_WS_KEY, null, (id) => {
     if (!workspaces?.length) return id;
 
-    if (id && workspaces.some((w: Workspace) => w.workspaceId === id)) {
+    const availableWorkspaces = workspaces
+      .filter((workspace: Workspace) => !workspace.isArchiveWorkspace)
+      .sort((a: Workspace, b: Workspace) =>
+        a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+      );
+
+    const storedWorkspaceIsValid =
+      id &&
+      availableWorkspaces.some(
+        (workspace: Workspace) => workspace.workspaceId === id,
+      );
+
+    if (storedWorkspaceIsValid) {
       return id;
     }
 
-    const myWorkspace = workspaces.find(
-      (w: Workspace) => w.name === "My Workspace",
+    const myWorkspace = availableWorkspaces.find(
+      (workspace: Workspace) =>
+        workspace.name.trim().toLowerCase() === "my workspace",
     );
-    if (myWorkspace) return myWorkspace.workspaceId;
 
-    return workspaces[0].workspaceId;
+    return (
+      myWorkspace?.workspaceId ?? availableWorkspaces[0]?.workspaceId ?? null
+    );
   });
 
   const archiveWorkspace = workspaces?.find(

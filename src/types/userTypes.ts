@@ -58,3 +58,36 @@ export interface OrgMember {
     verified: boolean;
   };
 }
+
+export interface RegistrationRequest {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  organization: string;
+}
+
+export interface RegistrationResponse {
+  id: string;
+  email: string;
+  verified: false;
+}
+
+export interface VerifyEmailRequest {
+  email: string;
+  otp: string;
+}
+
+export interface VerifyEmailResponse {
+  id: string;
+  email: string;
+  verified: true;
+}
+
+export interface ResendVerificationRequest {
+  email: string;
+}
+
+export interface ResendVerificationResponse {
+  message: string;
+}

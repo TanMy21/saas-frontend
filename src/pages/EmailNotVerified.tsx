@@ -1,62 +1,65 @@
 import { useEffect } from "react";
 
-import { Box, Container } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import { useSendLogoutMutation } from "../app/slices/authApiSlice";
-import {
-  useGetMeQuery,
-  useResendVerificationEmailMutation,
-} from "../app/slices/userApiSlice";
-import VerificationEmailSent from "../components/auth/VerificationEmailSent";
-import VerifyEmailCard from "../components/auth/VerifyEmailCard";
-import usePersist from "../hooks/persist";
-import { useToast } from "../hooks/useToast";
+import { useGetMeQuery } from "../app/slices/userApiSlice";
+import { savePendingVerificationEmail } from "../utils/verificationSession";
 
 const EmailNotVerified = () => {
   const navigate = useNavigate();
-  const [persist, setPersist] = usePersist();
-  const [resendVerificationEmail, { isLoading, isSuccess, isError, error }] =
-    useResendVerificationEmailMutation();
-
-  const [sendLogout, { isSuccess: isSuccessLogout }] = useSendLogoutMutation();
-
-  const { data: user } = useGetMeQuery("User");
-
-  const email = user?.email || "";
+  const {
+    data: user,
+    isLoading,
+    isFetching,
+    isError,
+    refetch,
+  } = useGetMeQuery("User");
 
   useEffect(() => {
-    if (isSuccessLogout) navigate("/");
-  }, [isSuccessLogout, navigate]);
+    if (!user?.email) {
+      return;
+    }
 
-  useToast({
-    isError,
-    error,
-  });
+    savePendingVerificationEmail(user.email);
+    navigate("/verify", { replace: true });
+  }, [navigate, user?.email]);
+
+  if (isLoading || isFetching || user?.email) {
+    return (
+      <Container component="main" maxWidth="sm">
+        <Box
+          sx={{
+            minHeight: "60vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
 
   return (
-    <Container component="main" maxWidth="xl">
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        {isSuccess ? (
-          <VerificationEmailSent email={email} />
-        ) : (
-          <VerifyEmailCard
-            resendVerificationEmail={resendVerificationEmail}
-            sendLogout={sendLogout}
-            setPersist={setPersist}
-            isLoading={isLoading}
-            isSuccess={isSuccess}
-            navigate={navigate}
-            email={email}
-          />
-        )}
+    <Container component="main" maxWidth="sm">
+      <Box sx={{ mt: 8, textAlign: "center" }}>
+        <Typography sx={{ mb: 2 }}>
+          {isError
+            ? "We couldn't load the email for this account."
+            : "No email address is available for verification."}
+        </Typography>
+
+        <Button variant="contained" onClick={() => void refetch()}>
+          Try again
+        </Button>
       </Box>
     </Container>
   );

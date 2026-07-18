@@ -1,3 +1,4 @@
+import { VerifyEmailRequest, VerifyEmailResponse } from "../../types/userTypes";
 import { AuthResponse, ILogoutResponse } from "../../utils/types";
 import { apiSlice } from "../api/apiSlice";
 
@@ -47,10 +48,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body: { currentPassword, newPassword },
       }),
     }),
-    verifyEmail: builder.query({
-      query: (verificationCode) => ({
-        url: `/verify/${verificationCode}`,
-        method: "GET",
+    verifyEmail: builder.mutation<VerifyEmailResponse, VerifyEmailRequest>({
+      query: (body) => ({
+        url: "/verify",
+        method: "POST",
+        body,
       }),
     }),
     sendLogout: builder.mutation<ILogoutResponse, void>({
@@ -106,7 +108,7 @@ export const {
   useCreateOrgMutation,
   useRefreshMutation,
   useForgotPasswordMutation,
-  useVerifyEmailQuery,
+  useVerifyEmailMutation,
   useLazyGoogleAuthQuery,
   useResetPasswordMutation,
   useUpdatePasswordMutation,

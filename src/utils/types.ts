@@ -32,6 +32,14 @@ export type AppErrorBoundaryProps = Readonly<{
   readonly children: React.ReactNode;
 }>;
 
+export type ApiError = {
+  status?: unknown;
+  data?: {
+    code?: unknown;
+    error?: unknown;
+  };
+};
+
 export type AuthInitialState = {
   token: string | null;
 };
@@ -215,7 +223,7 @@ export type Model3D = {
   ktx2: boolean;
   showQuestion: boolean;
   updatedAt: string;
-  contentHash?:string;
+  contentHash?: string;
 };
 
 export interface ThreeDViewProps {
