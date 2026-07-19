@@ -37,7 +37,7 @@ const RequireAuth = () => {
     return <div>Loading...</div>;
   }
 
-  if (isAuthenticated && isVerified) {
+  if (isAuthenticated && isVerified && !tokenExpired) {
     return <Outlet />;
   }
 
@@ -49,7 +49,11 @@ const RequireAuth = () => {
   }
 
   return (
-    <Navigate to="/login?reason=unauthorized" state={{ from: location }} replace />
+    <Navigate
+      to="/login?reason=unauthorized"
+      state={{ from: location }}
+      replace
+    />
   );
 };
 

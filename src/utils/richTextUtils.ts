@@ -22,7 +22,6 @@ export const isEmptyHTML = (html?: string | null) => {
   return stripped.length === 0;
 };
 
-
 export const stripSummaryHtml = (html?: string | null): string => {
   if (!html) return "";
 
@@ -39,8 +38,6 @@ export const stripSummaryHtml = (html?: string | null): string => {
 
   return textarea.value.trim();
 };
-
- 
 
 /**
  * Retrieves the current text selection and range if it lies within the given root element.
@@ -502,6 +499,68 @@ const ALLOWED_RICH_TEXT_TAGS = [
   "h3",
 ];
 
+const SAFE_LINK_PROTOCOLS = new Set(["https:", "mailto:", "tel:"]);
+const SAFE_IMAGE_PROTOCOLS = new Set(["https:"]);
+
+const sanitizeRichTextUrls = (doc: Document) => {
+  doc.body.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((anchor) => {
+    const href = anchor.getAttribute("href");
+
+    if (!href) {
+      anchor.removeAttribute("href");
+      anchor.removeAttribute("target");
+      anchor.removeAttribute("rel");
+      return;
+    }
+
+    try {
+      const url = new URL(href, window.location.origin);
+
+      if (!SAFE_LINK_PROTOCOLS.has(url.protocol)) {
+        anchor.removeAttribute("href");
+        anchor.removeAttribute("target");
+        anchor.removeAttribute("rel");
+        return;
+      }
+
+      anchor.setAttribute("href", url.toString());
+
+      if (anchor.getAttribute("target") === "_blank") {
+        anchor.setAttribute("rel", "noopener noreferrer");
+      } else {
+        anchor.removeAttribute("target");
+        anchor.removeAttribute("rel");
+      }
+    } catch {
+      anchor.removeAttribute("href");
+      anchor.removeAttribute("target");
+      anchor.removeAttribute("rel");
+    }
+  });
+
+  doc.body.querySelectorAll<HTMLImageElement>("img[src]").forEach((img) => {
+    const src = img.getAttribute("src");
+
+    if (!src) {
+      img.remove();
+      return;
+    }
+
+    try {
+      const url = new URL(src, window.location.origin);
+
+      if (!SAFE_IMAGE_PROTOCOLS.has(url.protocol)) {
+        img.remove();
+        return;
+      }
+
+      img.setAttribute("src", url.toString());
+    } catch {
+      img.remove();
+    }
+  });
+};
+
 /**
  * Sanitizes rich text produced by contentEditable before storing or rendering.
  * Only basic formatting tags are allowed; scripts, styles, links, images, spans, and attributes are removed.
@@ -533,6 +592,8 @@ export const sanitizeRichTextHtml = (html?: string | null) => {
   });
 
   const doc = new DOMParser().parseFromString(clean, "text/html");
+
+  sanitizeRichTextUrls(doc);
 
   /**
    * Keeps only supported text-align values from TipTap.
@@ -648,6 +709,8 @@ export const sanitizeInfoScreenContentHtml = (html?: string | null) => {
   });
 
   const doc = new DOMParser().parseFromString(clean, "text/html");
+
+  sanitizeRichTextUrls(doc);
 
   /**
    * Keeps only supported inline styles from TipTap.

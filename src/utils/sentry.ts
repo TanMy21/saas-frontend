@@ -1,5 +1,7 @@
 import * as Sentry from "@sentry/react";
 
+import { sanitizeTelemetryUrl } from "./sanitizeTelemetryUrl";
+
 Sentry.init({
   dsn: "https://73ad3f8180b4d91f9c16c7a975ca1644@o4508062467096576.ingest.de.sentry.io/4508183727571024",
   integrations: [
@@ -28,6 +30,34 @@ Sentry.init({
       event.request.data = "[Filtered]";
     }
 
+    if (event.request?.url) {
+      event.request.url = sanitizeTelemetryUrl(event.request.url);
+    }
+
+    if (
+      typeof event.request?.query_string === "string" &&
+      /(code|token|verificationCode|resetToken|inviteToken|accessToken|refreshToken)=/i.test(
+        event.request.query_string,
+      )
+    ) {
+      event.request.query_string = "[Filtered]";
+    }
+
     return event;
+  },
+  beforeBreadcrumb(breadcrumb) {
+    if (typeof breadcrumb.data?.url === "string") {
+      breadcrumb.data.url = sanitizeTelemetryUrl(breadcrumb.data.url);
+    }
+
+    if (typeof breadcrumb.data?.from === "string") {
+      breadcrumb.data.from = sanitizeTelemetryUrl(breadcrumb.data.from);
+    }
+
+    if (typeof breadcrumb.data?.to === "string") {
+      breadcrumb.data.to = sanitizeTelemetryUrl(breadcrumb.data.to);
+    }
+
+    return breadcrumb;
   },
 });

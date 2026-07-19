@@ -781,7 +781,7 @@ export const getEmbedCode = (shareURL: string) => {
 
   const safeEmbedURL = escapeHtml(embedURL.toString());
 
-  return `<iframe src="${safeEmbedURL}" width="100%" height="600" style="border:none;border-radius:8px;"></iframe>`;
+  return `<iframe src="${safeEmbedURL}" width="100%" height="600" style="border:none;border-radius:8px;" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
 };
 
 /**

@@ -10,44 +10,37 @@ const useAuth = () => {
   const token = useSelector(selectCurrentToken);
   const user = useSelector(selectUser);
 
+  const unauthenticatedState = {
+    email: "",
+    isAdmin: false,
+    isAuthenticated: false,
+    isVerified: false,
+    tokenExpired: true,
+    role: null,
+    tier: "FREE" as Tier,
+    permissions: [],
+    can: () => false,
+  };
+
   if (!token) {
-    return {
-      email: "",
-      role: null,
-      permissions: [],
-      can: () => false,
-    };
+    return unauthenticatedState;
   }
 
-  let isAdmin = false;
-  let isAuthenticated = false;
-  let isVerified = false;
-  let tokenExpired = false;
-
-  if (token) {
+  try {
     const decoded = jwtDecode<ICustomePayload>(token);
-    const { email, admin, verified, role } = decoded.UserInfo || {};
+    const { email = "", admin, verified, role = null } = decoded.UserInfo || {};
     const { exp } = decoded;
 
     const activeOrg = user?.activeOrg ?? null;
     const tier: Tier = (user?.tier as Tier) ?? "FREE";
     const permissions = activeOrg?.permissions || [];
 
+    const tokenExpired = !exp || exp * 1000 < Date.now();
+    const isAuthenticated = !tokenExpired;
+    const isVerified = Boolean(verified);
+    const isAdmin = Boolean(admin);
+
     const can = (permission: Permission) => permissions.includes(permission);
-
-    tokenExpired = exp! * 1000 < Date.now();
-
-    // if (!tokenExpired) {
-    isAuthenticated = true;
-    // }
-
-    if (verified) {
-      isVerified = true;
-    }
-
-    if (admin) {
-      isAdmin = true;
-    }
 
     return {
       email,
@@ -60,16 +53,9 @@ const useAuth = () => {
       permissions,
       can,
     };
+  } catch {
+    return unauthenticatedState;
   }
-
-  return {
-    email: "",
-    isAdmin,
-    isAuthenticated,
-    isVerified,
-    tokenExpired,
-    role: null,
-    can: () => false,
-  };
 };
+
 export default useAuth;

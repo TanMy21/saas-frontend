@@ -47,6 +47,8 @@ const Signin = () => {
   const [_persist, setPersist] = usePersist();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [openToast, setOpenToast] = useState<boolean>(true);
+  const hasLoggedInBefore =
+    localStorage.getItem("hasLoggedInBefore") === "true";
   // const [googleAuthClicked, setGoogleAuthClicked] = useState(false);
   const [initialParams] = useState(() => new URLSearchParams(location.search));
   // const params = new URLSearchParams(location.search);
@@ -71,14 +73,14 @@ const Signin = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const handlePersist = () => setPersist((prev) => !prev);
+  // const handlePersist = () => setPersist((prev) => !prev);
 
   const submitLoginData = async (data: LoginFormData) => {
     const { email, password } = data;
     try {
       const { accessToken } = await login({ email, password }).unwrap();
       dispatch(setCredentials({ accessToken }));
-      handlePersist();
+      setPersist(true);
       navigate("/dash");
     } catch (error) {
       showToast.apiError(error, {
@@ -231,18 +233,20 @@ const Signin = () => {
                   />
                 </Link>
               </Box>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: "bold",
-                  background: gradient.background,
-                  WebkitBackgroundClip: "text",
-                  color: "transparent",
-                  display: "inline-block",
-                }}
-              >
-                Welcome back
-              </Typography>
+              {hasLoggedInBefore && (
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: "bold",
+                    background: gradient.background,
+                    WebkitBackgroundClip: "text",
+                    color: "transparent",
+                    display: "inline-block",
+                  }}
+                >
+                  Welcome back
+                </Typography>
+              )}
               <Typography variant="body1" sx={{ color: grey[600] }}>
                 Create . Share . Learn
               </Typography>

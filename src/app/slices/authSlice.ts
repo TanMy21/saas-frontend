@@ -24,6 +24,7 @@ const authSlice = createSlice({
       state.email = payload.email;
       state.isAdmin = payload.isAdmin;
       localStorage.setItem("persist", "true");
+      localStorage.setItem("hasLoggedInBefore", "true");
     },
     logOut: (state) => {
       state.token = null;

@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { type BeforeSendFn } from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { createRoot } from "react-dom/client";
 // import { Toaster } from "react-hot-toast";
@@ -21,13 +22,37 @@ import "./index.css";
 import "../src/utils/sentry";
 import SessionInitializer from "./SessionInitializer";
 import electricBlueLightTheme from "./theme/electricBlueLightTheme";
-
 import "./styles/marvel-devices.min.css";
+import { sanitizeTelemetryUrl } from "./utils/sanitizeTelemetryUrl";
+
+const scrubPostHogEvent: BeforeSendFn = (event) => {
+  if (!event?.properties) return event;
+
+  const urlProperties = [
+    "$current_url",
+    "$pathname",
+    "$referrer",
+    "current_url",
+    "url",
+    "referrer",
+  ];
+
+  urlProperties.forEach((propertyName) => {
+    const value = event.properties[propertyName];
+
+    if (typeof value === "string") {
+      event.properties[propertyName] = sanitizeTelemetryUrl(value);
+    }
+  });
+
+  return event;
+};
 
 const options = {
   api_host: import.meta.env.VITE_POSTHOG_HOST,
   autocapture: false,
   mask_all_text: true,
+  before_send: scrubPostHogEvent,
   session_recording: {
     maskAllInputs: true,
   },
