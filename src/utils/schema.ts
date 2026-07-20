@@ -149,6 +149,24 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
+export const resetPasswordOtpSchema = z
+  .object({
+    otp: z
+      .string()
+      .regex(/^\d{6}$/, "Enter the complete six-digit reset code"),
+    password: z
+      .string()
+      .min(6, "Password must contain at least 6 characters")
+      .max(255, "Password is too long"),
+    confirmPassword: z
+      .string()
+      .min(1, "Please confirm your new password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
 export const rankSettingsSchema = z.object({
   required: z.boolean(),
   questionText: z
@@ -402,7 +420,6 @@ export const memberFormSchema = z.object({
 });
 
 export type MemberFormValues = z.infer<typeof memberFormSchema>;
-
 
 export const questionBasicSettingsSchema = z.object({
   questionText: z.string().min(1),

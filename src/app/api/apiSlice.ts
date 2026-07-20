@@ -61,7 +61,7 @@ const baseQueryWithReauth: BaseQueryFn<
   if (result?.error?.status === 429) {
     // Display a notification or alert to the user
     (result.error.data as { message: string }).message =
-      "Too many requests. Please wait for a minute and try again.";
+      "Too many requests. Please wait for 30 minutes and try again.";
   }
 
   return result;

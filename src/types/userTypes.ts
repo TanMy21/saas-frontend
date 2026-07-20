@@ -1,3 +1,7 @@
+import { z } from "zod";
+
+import { resetPasswordOtpSchema } from "../utils/schema";
+
 export type Role = "OWNER" | "ADMIN" | "EDITOR" | "ANALYST" | "VIEWER";
 
 export type Tier = "FREE" | "PROFESSIONAL" | "ENTERPRISE";
@@ -36,6 +40,8 @@ export interface User {
 export type AccountSettings = {
   user: User;
 };
+
+export type ResetPasswordOtpFormValues = z.infer<typeof resetPasswordOtpSchema>;
 
 export type CreateOrgUserFormData = {
   firstname: string;
@@ -91,3 +97,17 @@ export interface ResendVerificationRequest {
 export interface ResendVerificationResponse {
   message: string;
 }
+
+export type PasswordResetOtpFormProps = {
+  submittedEmail: string;
+  onUseDifferentEmail: () => void;
+  onResend: () => Promise<unknown>;
+  isResending: boolean;
+};
+
+export type SixDigitOtpInputProps = {
+  value: string;
+  onChange: (value: string) => void;
+  errorMessage?: string;
+  disabled?: boolean;
+};

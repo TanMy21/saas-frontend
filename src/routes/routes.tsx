@@ -16,7 +16,6 @@ import LoginAgain from "../pages/LoginAgain";
 import { Onboarding } from "../pages/OnboardingSSO";
 import { PendingInvites } from "../pages/PendingInvites";
 import QuestionFlow from "../pages/QuestionFlow";
-import ResetPassword from "../pages/ResetPassword";
 import Settings from "../pages/Settings";
 import Signin from "../pages/Signin";
 import Signup from "../pages/Signup";
@@ -55,7 +54,6 @@ const router = createBrowserRouter([
         ),
       },
       { path: "/forgot", element: <ForgotPassword /> },
-      { path: "/reset", element: <ResetPassword /> },
       { path: "/invite/:token", element: <AcceptInvite /> },
       { path: "/verify", element: <VerifyUser /> },
       { path: "/session-expired", element: <LoginAgain /> },

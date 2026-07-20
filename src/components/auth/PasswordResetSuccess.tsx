@@ -1,19 +1,155 @@
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import { Box, Button, Paper, Typography } from "@mui/material";
-import { ArrowLeftIcon } from "@mui/x-date-pickers";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Box,
+  Button,
+  InputAdornment,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { ArrowLeft, CheckCircleIcon, LockKeyholeIcon } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
+import { useResetPasswordMutation } from "../../app/slices/authApiSlice";
+import { useToast } from "../../hooks/useToast";
 import { useAppTheme } from "../../theme/useAppTheme";
-import { PasswordResetSuccessProps } from "../../utils/types";
+import {
+  PasswordResetOtpFormProps,
+  ResetPasswordOtpFormValues,
+} from "../../types/userTypes";
+import { resetPasswordOtpSchema } from "../../utils/schema";
+import FormErrors from "../FormErrors";
 
-const PasswordResetSuccess = ({
+import { SixDigitOtpInput } from "./SixDigitOtpInput";
+
+const PasswordResetOtpForm = ({
   submittedEmail,
-  reset,
-}: PasswordResetSuccessProps) => {
+  onUseDifferentEmail,
+  onResend,
+  isResending,
+}: PasswordResetOtpFormProps) => {
   const { primary, background, grey, textStyles, shadows } = useAppTheme();
+
+  const [
+    resetPassword,
+    {
+      isLoading: isResetting,
+      isSuccess: isPasswordResetSuccess,
+      isError,
+      error,
+    },
+  ] = useResetPasswordMutation();
+
+  useToast({
+    isError,
+    error,
+  });
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ResetPasswordOtpFormValues>({
+    resolver: zodResolver(resetPasswordOtpSchema),
+    defaultValues: {
+      otp: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const submitPasswordReset = async (values: ResetPasswordOtpFormValues) => {
+   console.log("Submitting password reset with values:", values.otp, values.password, submittedEmail);
+   
+    try {
+      await resetPassword({
+        email: submittedEmail,
+        otp: values.otp,
+        password: values.password,
+      }).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const resendCode = async () => {
+    try {
+      await onResend();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (isPasswordResetSuccess) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          minHeight: "60%",
+          bgcolor: background.soft1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          p: 3,
+        }}
+      >
+        <Box sx={{ width: "100%", maxWidth: 480 }}>
+          <Box sx={{ textAlign: "center", mb: 4 }}>
+            <Typography sx={textStyles.gradientSecondary}>
+              Password updated
+            </Typography>
+          </Box>
+
+          <Paper
+            sx={{
+              p: 4,
+              borderRadius: 3,
+              boxShadow: shadows[9],
+              textAlign: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: 64,
+                height: 64,
+                mx: "auto",
+                mb: 3,
+                bgcolor: background.soft1,
+                color: primary.main,
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <CheckCircleIcon style={{ fontSize: 36 }} />
+            </Box>
+
+            <Typography sx={textStyles.strongH6}>
+              Password reset successfully
+            </Typography>
+
+            <Typography sx={{ color: grey[920], mt: 1, mb: 3 }}>
+              You can now sign in using your new password.
+            </Typography>
+
+            <Link to="/login" style={{ textDecoration: "none" }}>
+              <Button fullWidth variant="gradientPrimary">
+                Continue to sign in
+              </Button>
+            </Link>
+          </Paper>
+        </Box>
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
+        width: "100%",
         minHeight: "60%",
         bgcolor: background.soft1,
         display: "flex",
@@ -22,110 +158,170 @@ const PasswordResetSuccess = ({
         p: 3,
       }}
     >
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: 480,
-        }}
-      >
-        {/* Header */}
+      <Box sx={{ width: "100%", maxWidth: 600 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Box
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 1,
-              mb: 1,
-            }}
-          >
-            <Typography sx={textStyles.gradientSecondary}>
-              Check your email
-            </Typography>
-          </Box>
+      
+
+          <Typography sx={{ color: grey[955], mt: 1 }}>
+            Enter the six-digit code sent to
+          </Typography>
+
+          <Typography sx={textStyles.strongH6}>{submittedEmail}</Typography>
         </Box>
 
-        {/* Main Card */}
         <Paper
           sx={{
             p: 4,
             borderRadius: 3,
             boxShadow: shadows[9],
-            textAlign: "center",
           }}
         >
-          {/* Email Icon */}
-          <Box sx={{ mb: 3, display: "flex", justifyContent: "center" }}>
-            <Box
-              sx={{
-                width: 64,
-                height: 64,
-                background: background.soft1,
-                color: primary.main,
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <MailOutlineIcon
-                style={{ color: primary.main, fontSize: "32px" }}
-              />
-            </Box>
-          </Box>
-
-          {/* Content */}
-          <Box sx={{ mb: 2 }}>
-            <Typography sx={textStyles.strongH6}>
-              Verification email sent
-            </Typography>
-            <Box sx={{ mt: 1, color: grey[920] }}>
-              <Typography>We've sent a verification email to:</Typography>
-              <Typography sx={textStyles.strongH6}>{submittedEmail}</Typography>
-              <Typography>
-                Click the link in the email to verify your account.
-              </Typography>
-            </Box>
-          </Box>
-          {/* Resend Button */}
-          <Box sx={{ mb: 3 }}>
-            <Typography
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                color: primary.main,
-              }}
-            >
-              Didn't receive the email?
-              <Button onClick={() => reset()} variant="textLink1">
-                Click to resend
-              </Button>
-            </Typography>
-          </Box>
-
-          {/* Back to Login */}
-          <Link
-            to="/login"
-            style={{ textDecoration: "none", color: primary.main }}
+          <form
+            onSubmit={handleSubmit(submitPasswordReset)}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.5rem",
+            }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 1,
-                color: primary.dark,
-                fontWeight: "medium",
-                "&:hover": { textDecoration: "underline" },
-              }}
-            >
-              <ArrowLeftIcon />
-              Back to login
+            <Controller
+              name="otp"
+              control={control}
+              render={({ field }) => (
+                <SixDigitOtpInput
+                  value={field.value}
+                  onChange={field.onChange}
+                  errorMessage={errors.otp?.message}
+                  disabled={isResetting || isResending}
+                />
+              )}
+            />
+
+            <Box>
+              <TextField
+                required
+                fullWidth
+                id="password"
+                type="password"
+                label="New password"
+                variant="filled"
+                autoComplete="new-password"
+                error={Boolean(errors.password)}
+                InputLabelProps={{
+                  style: { color: grey[600] },
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockKeyholeIcon style={{ color: grey[600] }} />
+                    </InputAdornment>
+                  ),
+                }}
+                {...register("password")}
+                sx={{
+                  "& .MuiFilledInput-root": {
+                    borderRadius: 4,
+                    backgroundColor: background.soft1,
+                    borderBottom: "none !important",
+                    "&:hover": {
+                      backgroundColor: background.soft1,
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: background.soft1,
+                    },
+                    "&:before, &:after": {
+                      display: "none",
+                    },
+                  },
+                }}
+              />
+
+              {errors.password && (
+                <FormErrors errors={errors.password.message} />
+              )}
             </Box>
-          </Link>
+
+            <Box>
+              <TextField
+                required
+                fullWidth
+                id="confirmPassword"
+                type="password"
+                label="Confirm new password"
+                variant="filled"
+                autoComplete="new-password"
+                error={Boolean(errors.confirmPassword)}
+                InputLabelProps={{
+                  style: { color: grey[600] },
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockKeyholeIcon style={{ color: grey[600] }} />
+                    </InputAdornment>
+                  ),
+                }}
+                {...register("confirmPassword")}
+                sx={{
+                  "& .MuiFilledInput-root": {
+                    borderRadius: 4,
+                    backgroundColor: background.soft1,
+                    borderBottom: "none !important",
+                    "&:hover": {
+                      backgroundColor: background.soft1,
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: background.soft1,
+                    },
+                    "&:before, &:after": {
+                      display: "none",
+                    },
+                  },
+                }}
+              />
+
+              {errors.confirmPassword && (
+                <FormErrors errors={errors.confirmPassword.message} />
+              )}
+            </Box>
+
+            <Button
+              type="submit"
+              disabled={isResetting || isResending}
+              fullWidth
+              variant="gradientPrimary"
+            >
+              {isResetting ? "Resetting password..." : "Reset password"}
+            </Button>
+
+            <Box sx={{ textAlign: "center" }}>
+              <Typography component="span" sx={{ color: grey[920] }}>
+                Didn't receive the code?
+              </Typography>
+
+              <Button
+                type="button"
+                onClick={resendCode}
+                disabled={isResending || isResetting}
+                variant="textLink1"
+              >
+                {isResending ? "Sending..." : "Resend code"}
+              </Button>
+            </Box>
+
+            <Button
+              type="button"
+              onClick={onUseDifferentEmail}
+              disabled={isResetting}
+              variant="textLink1"
+              fullWidth
+            >
+              <ArrowLeft style={{ marginRight: 8 }} />
+              Use a different email
+            </Button>
+          </form>
         </Paper>
 
-        {/* Footer Note */}
         <Typography
           sx={{
             color: grey[955],
@@ -134,12 +330,12 @@ const PasswordResetSuccess = ({
             mt: 3,
           }}
         >
-          Make sure to check your spam folder if you don't see the email in your
-          inbox.
+          The reset code expires after 10 minutes. Check your spam folder if you
+          don't see the email.
         </Typography>
       </Box>
     </Box>
   );
 };
 
-export default PasswordResetSuccess;
+export default PasswordResetOtpForm;

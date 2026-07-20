@@ -71,6 +71,8 @@ export const IAT_ORANGE = "#EA580C";
 export const IAT_SLATE = "#334155";
 export const IAT_TRACK = "#F1F5F9";
 
+export const OTP_LENGTH = 6;
+
 export const DEFAULT_CONCEPT_FIT_LEFT_TEXT = "Fits";
 export const DEFAULT_CONCEPT_FIT_RIGHT_TEXT = "Does not fit";
 export const DEFAULT_CONCEPT_FIT_TIMER_MS = 3000;

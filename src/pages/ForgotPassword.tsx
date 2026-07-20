@@ -4,18 +4,34 @@ import { Box, Container } from "@mui/material";
 
 import { useForgotPasswordMutation } from "../app/slices/authApiSlice";
 import PasswordResetForm from "../components/auth/PasswordResetForm";
-import PasswordResetSuccess from "../components/auth/PasswordResetSuccess";
+import PasswordResetOtpForm from "../components/auth/PasswordResetSuccess";
 import { useToast } from "../hooks/useToast";
 
 const ForgotPassword = () => {
   const [forgotPassword, { isSuccess, isError, error, isLoading, reset }] =
     useForgotPasswordMutation();
+
   const [submittedEmail, setSubmittedEmail] = useState("");
 
   useToast({
     isError,
     error,
   });
+
+  const resendPasswordResetOtp = async () => {
+    if (!submittedEmail) return;
+
+    try {
+      await forgotPassword(submittedEmail).unwrap();
+    } catch (error) {
+      console.error("Failed to resend password reset OTP:", error);
+    }
+  };
+
+  const useDifferentEmail = () => {
+    reset();
+    setSubmittedEmail("");
+  };
 
   return (
     <Container component="main" maxWidth="xl" sx={{ marginTop: "8%" }}>
@@ -38,9 +54,11 @@ const ForgotPassword = () => {
         >
           <Box>
             {isSuccess ? (
-              <PasswordResetSuccess
+              <PasswordResetOtpForm
                 submittedEmail={submittedEmail}
-                reset={reset}
+                onUseDifferentEmail={useDifferentEmail}
+                onResend={resendPasswordResetOtp}
+                isResending={isLoading}
               />
             ) : (
               <PasswordResetForm
