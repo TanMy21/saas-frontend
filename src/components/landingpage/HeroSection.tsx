@@ -4,6 +4,8 @@ import { MoveRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import mockup3dImg from "../../assets/3d_phone_mockup.webp";
+import builderImg from "../../assets/hero builder media.webp";
+import insightsImg from "../../assets/hero insights.webp";
 
 const HeroSection = () => {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
@@ -73,23 +75,17 @@ const HeroSection = () => {
             <div className="hero-collage">
               {/* Small square image aligned to the left/lower area of the main image */}
               <div className="hero-image-card hero-image-left">
-                <img
-                  src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=90"
-                  alt="User working on laptop"
-                />
+                <img src={insightsImg} alt="Survey Insights" />
               </div>
 
               {/* Main image gets the maximum visual weight */}
               <div className="hero-image-card hero-image-main">
-                <img
-                  src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1100&q=90"
-                  alt="Team discussion"
-                />
+                <img src={builderImg} alt="Survey builder" />
               </div>
 
               {/* Right vertical image aligned closer to the main image */}
               <div className="hero-image-card hero-image-right">
-                <img src={mockup3dImg} alt="Team planning" />
+                <img src={mockup3dImg} alt="3d mockup" />
               </div>
             </div>
           </div>

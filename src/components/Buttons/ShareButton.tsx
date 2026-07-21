@@ -33,31 +33,33 @@ const ShareButton = ({ surveyID, published }: PublishButtonProps) => {
     <Tooltip title={published ? "Share survey" : "Publish & share"}>
       <Button
         onClick={handleShare}
-        variant="contained"
+        // variant="contained"
         disabled={isLoading}
         sx={{
-          backgroundColor: "#7c3aed",
-          color: "#ffffff",
-          borderRadius: "20px",
+          // backgroundColor: "#7c3aed",
+          color: "#1b1a1a",
+          // borderRadius: "20px",
           px: 2,
           py: 1.2,
+          border:"none",
+          backgroundColor:"transparent",
           minWidth: "auto", // 🔥 important for icon-only
-          boxShadow: "0 2px 6px rgba(124,58,237,0.2)",
+          // boxShadow: "0 2px 6px rgba(124,58,237,0.2)",
           marginRight: 8,
           transition: "all 0.15s ease",
           "&:hover": {
-            backgroundColor: "#6d28d9",
-            boxShadow: "0 2px 16px rgba(124,58,237,0.1)",
+            backgroundColor: "transparent",
+            // boxShadow: "0 2px 16px rgba(124,58,237,0.1)",
             transform: "translateY(-1px)",
           },
 
           "&:active": {
             transform: "translateY(0px) scale(0.97)",
-            boxShadow: "0 2px 6px rgba(124,58,237,0.2)",
+            // boxShadow: "0 2px 6px rgba(124,58,237,0.2)",
           },
 
           "&:disabled": {
-            backgroundColor: "#c4b5fd",
+            backgroundColor: "#c1c0c5",
             color: "#ffffff",
           },
         }}
@@ -65,7 +67,7 @@ const ShareButton = ({ surveyID, published }: PublishButtonProps) => {
         {isLoading ? (
           <CircularProgress size={16} color="inherit" />
         ) : (
-          <Share2 size={18} />
+          <Share2 size={24} />
         )}
       </Button>
     </Tooltip>

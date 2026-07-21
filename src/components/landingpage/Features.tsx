@@ -1,73 +1,477 @@
 import { useEffect, useRef, useState } from "react";
 
-import { FeatureItem, FeaturesProps } from "../../types/landingTypes";
-import { features } from "../../utils/utils";
+import {
+  Box,
+  GitBranch,
+  GripVertical,
+  Layers,
+  MousePointerClick,
+  Palette,
+  PieChart,
+  Plus,
+  Route,
+  RotateCw,
+  Sparkles,
+  Split,
+  Type,
+  Workflow,
+} from "lucide-react";
+
+import threeDTypeQuestionImg from "../../assets/feature 3d type.webp";
+import createFeatureImg from "../../assets/feature create.webp";
+import flowFeatureImg from "../../assets/feature flow.webp";
+import insightsFeatureImg from "../../assets/feature insights.webp";
+import { FeaturesProps } from "../../types/landingTypes";
+
+// Defines the number of scroll-controlled feature panels in this section.
+const FEATURE_COUNT = 4;
 
 /**
- * getScrollViewportHeight
- * Returns the correct viewport height for either parent-container scroll or normal window scroll.
+ * Returns the viewport height of the custom scroll container when provided,
+ * otherwise returns the browser viewport height.
  */
 function getScrollViewportHeight(scrollParent: HTMLDivElement | null) {
   return scrollParent ? scrollParent.clientHeight : window.innerHeight;
 }
 
 /**
- * formatMultilineTitle
- * Converts "\n" in feature titles into line breaks for clean headline layout.
+ * Displays the right-side image mockup for the survey creation feature.
  */
-function formatMultilineTitle(title: string) {
-  return title.split("\n").map((line) => (
-    <span key={line}>
-      {line}
-      <br />
-    </span>
-  ));
+function CreateFeatureMockup() {
+  return (
+    // <div className="feature-mockup-panel feature-color-blue">
+    //   <div className="feature-mockup-dots" aria-hidden="true">
+    //     <span />
+    //     <span />
+    //     <span />
+    //   </div>
+
+    <div
+      className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card"
+    >
+      <img
+        className="feature-mockup-image"
+        src={createFeatureImg}
+        alt="Feedflo survey builder interface"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    // </div>
+  );
 }
 
 /**
- * FeatureMockup
- * Right-side placeholder mockup for the active feature.
- * Later you can replace this with real dashboard/survey/3D UI.
+ * Displays the right-side image mockup for the interactive 3D question feature.
  */
-function FeatureMockup({ feature }: { feature: FeatureItem }) {
-  const Icon = feature.icon;
-
+function ThreeDFeatureMockup() {
   return (
-    <div className={`feature-mockup-panel ${feature.color}`}>
-      <div className="feature-mockup-dots">
+    <div
+      className="feature-mockup-panel feature-mockup-image-panel feature-color-violet"
+    >
+      <div className="feature-mockup-dots" aria-hidden="true">
         <span />
         <span />
         <span />
       </div>
 
-      <div className="feature-mockup-card">
-        <div className="feature-mockup-icon">
-          <Icon size={32} />
-        </div>
-
-        <div className="feature-mockup-step">Step {feature.step}</div>
-
-        <div className="feature-mockup-title">{feature.label}</div>
-
-        <div className="feature-mockup-line" />
+      <div
+        className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card"
+      >
+        <img
+          className="feature-mockup-image"
+          src={threeDTypeQuestionImg}
+          alt="Interactive 3D product question inside a Feedflo survey"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     </div>
   );
 }
 
 /**
- * Features
- * Sticky scroll-driven feature section.
- * Active feature changes based on parent page scroll, similar to the UseCases section.
+ * Displays the right-side image mockup for conditional survey flow and logic.
+ */
+function FlowFeatureMockup() {
+  return (
+    <div
+      className="feature-mockup-panel feature-mockup-image-panel feature-color-emerald"
+    >
+      <div className="feature-mockup-dots" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+
+      <div
+        className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card"
+      >
+        <img
+          className="feature-mockup-image"
+          src={flowFeatureImg}
+          alt="Conditional survey flow connecting questions through branching logic"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Displays the right-side image mockup for survey insights and analysis.
+ */
+function InsightsFeatureMockup() {
+  return (
+    <div
+      className="feature-mockup-panel feature-mockup-image-panel feature-color-amber"
+    >
+      <div className="feature-mockup-dots" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+
+      <div
+        className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card"
+      >
+        <img
+          className="feature-mockup-image"
+          src={insightsFeatureImg}
+          alt="Feedflo feedback insights and response analysis dashboard"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Displays the content for the survey creation feature.
+ */
+function CreateFeatureContent({ isActive }: { isActive: boolean }) {
+  return (
+    <div
+      className={`feature-dynamic-item ${isActive ? "feature-active" : ""}`}
+      aria-hidden={!isActive}
+    >
+      <div className="feature-step-row">
+        <div className="feature-step-icon feature-color-blue">
+          <Plus size={20} />
+        </div>
+
+        <span className="feature-step-text">01 / Create Surveys</span>
+      </div>
+
+      <h3 className="feature-title">
+        Create beautiful surveys
+        <br />
+        in minutes
+      </h3>
+
+      <p className="feature-description">
+        Build engaging surveys with an intuitive builder. Choose from different
+        question types and customize the experience to match your research
+        needs.
+      </p>
+
+      <div className="feature-bullets">
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <GripVertical size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">Drag-and-drop builder</div>
+
+            <div className="feature-bullet-desc">
+              Create and organize surveys effortlessly
+            </div>
+          </div>
+        </div>
+
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <Type size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">Multiple question types</div>
+
+            <div className="feature-bullet-desc">
+              Use choices, ratings, media, timed tests, and more
+            </div>
+          </div>
+        </div>
+
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <Palette size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">Fully customizable</div>
+
+            <div className="feature-bullet-desc">
+              Match the survey experience to your brand
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Displays the content for the interactive 3D question feature.
+ */
+function ThreeDFeatureContent({ isActive }: { isActive: boolean }) {
+  return (
+    <div
+      className={`feature-dynamic-item ${isActive ? "feature-active" : ""}`}
+      aria-hidden={!isActive}
+    >
+      <div className="feature-step-row">
+        <div className="feature-step-icon feature-color-violet">
+          <Box size={20} />
+        </div>
+
+        <span className="feature-step-text">02 / 3D Questions</span>
+      </div>
+
+      <h3 className="feature-title">
+        Capture feedback
+        <br />
+        on real 3D products
+      </h3>
+
+      <p className="feature-description">
+        Let participants interact with 3D models directly inside surveys. They
+        can rotate, inspect, and respond to products such as packaging,
+        electronics, footwear, and prototypes.
+      </p>
+
+      <div className="feature-bullets">
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <RotateCw size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">Interactive 3D models</div>
+
+            <div className="feature-bullet-desc">
+              Participants can rotate, zoom, and inspect freely
+            </div>
+          </div>
+        </div>
+
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <MousePointerClick size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">Contextual feedback</div>
+
+            <div className="feature-bullet-desc">
+              Understand which product areas attract attention
+            </div>
+          </div>
+        </div>
+
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <Layers size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">
+              Product concept validation
+            </div>
+
+            <div className="feature-bullet-desc">
+              Test designs before manufacturing or launch
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Displays the content for conditional survey paths and branching logic.
+ */
+function FlowFeatureContent({ isActive }: { isActive: boolean }) {
+  return (
+    <div
+      className={`feature-dynamic-item ${isActive ? "feature-active" : ""}`}
+      aria-hidden={!isActive}
+    >
+      <div className="feature-step-row">
+        <div className="feature-step-icon feature-color-emerald">
+          <GitBranch size={20} />
+        </div>
+
+        <span className="feature-step-text">03 / Survey Logic</span>
+      </div>
+
+      <h3 className="feature-title">
+        Build smarter flows
+        <br />
+        with branching logic
+      </h3>
+
+      <p className="feature-description">
+        Guide each participant through the questions that matter based on their
+        answers. Create focused survey paths instead of forcing everyone through
+        the same sequence.
+      </p>
+
+      <div className="feature-bullets">
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <Split size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">Conditional branching</div>
+
+            <div className="feature-bullet-desc">
+              Send participants to the right next question
+            </div>
+          </div>
+        </div>
+
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <Route size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">
+              Personalized survey paths
+            </div>
+
+            <div className="feature-bullet-desc">
+              Show questions based on earlier responses
+            </div>
+          </div>
+        </div>
+
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <Workflow size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">Visual flow control</div>
+
+            <div className="feature-bullet-desc">
+              Understand how every question connects
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Displays the content for response analysis and feedback insights.
+ */
+function InsightsFeatureContent({ isActive }: { isActive: boolean }) {
+  return (
+    <div
+      className={`feature-dynamic-item ${isActive ? "feature-active" : ""}`}
+      aria-hidden={!isActive}
+    >
+      <div className="feature-step-row">
+        <div className="feature-step-icon feature-color-amber">
+          <PieChart size={20} />
+        </div>
+
+        <span className="feature-step-text">04 / Understand Insights</span>
+      </div>
+
+      <h3 className="feature-title">
+        Turn feedback into
+        <br />
+        clear, useful insights
+      </h3>
+
+      <p className="feature-description">
+        Combine participant answers with behavior signals such as hesitation,
+        answer changes, backtracking, and time spent to understand more than the
+        final response alone.
+      </p>
+
+      <div className="feature-bullets">
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <PieChart size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">Response analysis</div>
+
+            <div className="feature-bullet-desc">
+              Understand answer patterns at a glance
+            </div>
+          </div>
+        </div>
+
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <Sparkles size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">Behavior signals</div>
+
+            <div className="feature-bullet-desc">
+              See hesitation, changes, and interaction patterns
+            </div>
+          </div>
+        </div>
+
+        <div className="feature-bullet-item">
+          <div className="feature-bullet-icon">
+            <GitBranch size={18} />
+          </div>
+
+          <div>
+            <div className="feature-bullet-title">Actionable findings</div>
+
+            <div className="feature-bullet-desc">
+              Find what deserves attention and further research
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Displays the sticky, scroll-driven feature section and updates the active
+ * feature according to the user's progress through the section.
  */
 const Features = ({ scrollParentRef }: FeaturesProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  /**
+   * Registers scroll and resize listeners used to calculate the currently
+   * active feature panel.
+   */
   useEffect(() => {
     /**
-     * handleScroll
-     * Calculates scroll progress inside the Features section and maps it to the active feature index.
+     * Converts the current section scroll position into an active feature
+     * index between zero and three.
      */
     const handleScroll = () => {
       const container = containerRef.current;
@@ -78,10 +482,10 @@ const Features = ({ scrollParentRef }: FeaturesProps) => {
       const rect = container.getBoundingClientRect();
       const viewportHeight = getScrollViewportHeight(scrollParent);
 
-      // How much of this section has moved past the top of the viewport.
+      // Measures how far the feature section has travelled above the viewport.
       const scrollDistance = -rect.top;
 
-      // Total scroll distance available after one sticky viewport is removed.
+      // Removes one sticky viewport from the total available scroll distance.
       const scrollableHeight = Math.max(rect.height - viewportHeight, 1);
 
       if (scrollDistance <= 0) {
@@ -90,26 +494,29 @@ const Features = ({ scrollParentRef }: FeaturesProps) => {
       }
 
       if (scrollDistance >= scrollableHeight) {
-        setActiveIndex(features.length - 1);
+        setActiveIndex(FEATURE_COUNT - 1);
         return;
       }
 
-      // Converts current scroll position into progress between 0 and 1.
+      // Converts the current scroll distance into a value between zero and one.
       const progress = scrollDistance / scrollableHeight;
 
-      // Converts progress into the active feature index.
-      const nextIndex = Math.floor(progress * features.length);
+      // Converts progress into one of the four explicit feature indexes.
+      const nextIndex = Math.floor(progress * FEATURE_COUNT);
 
-      setActiveIndex(Math.min(nextIndex, features.length - 1));
+      setActiveIndex(Math.min(nextIndex, FEATURE_COUNT - 1));
     };
 
     const scrollParent = scrollParentRef?.current ?? null;
     const scrollTarget: HTMLElement | Window = scrollParent ?? window;
 
-    scrollTarget.addEventListener("scroll", handleScroll, { passive: true });
+    scrollTarget.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
     window.addEventListener("resize", handleScroll);
 
-    // Initializes correct active feature on mount.
+    // Calculates the correct active feature immediately after mounting.
     handleScroll();
 
     return () => {
@@ -124,8 +531,8 @@ const Features = ({ scrollParentRef }: FeaturesProps) => {
         ref={containerRef}
         className="feature-scroll-container"
         style={{
-          // One viewport of scroll distance for each feature.
-          height: `${features.length * 100}vh`,
+          // Gives each of the four features one viewport of scroll distance.
+          height: `${FEATURE_COUNT * 100}vh`,
         }}
       >
         <div className="feature-sticky-wrapper">
@@ -138,95 +545,86 @@ const Features = ({ scrollParentRef }: FeaturesProps) => {
                   </h2>
 
                   <p className="feature-main-subtitle">
-                    Create interactive surveys, capture richer responses, track
-                    behavior, and turn feedback into decisions.
+                    Create interactive surveys, guide participants through
+                    smarter flows, capture richer responses, and turn feedback
+                    into decisions.
                   </p>
                 </div>
 
                 <div className="feature-dynamic-content">
-                  {features.map((feature, index) => {
-                    const Icon = feature.icon;
+                  <CreateFeatureContent isActive={activeIndex === 0} />
 
-                    return (
-                      <div
-                        key={feature.key}
-                        className={`feature-dynamic-item ${
-                          activeIndex === index ? "feature-active" : ""
-                        }`}
-                      >
-                        <div className="feature-step-row">
-                          <div className={`feature-step-icon ${feature.color}`}>
-                            <Icon size={20} />
-                          </div>
+                  <ThreeDFeatureContent isActive={activeIndex === 1} />
 
-                          <span className="feature-step-text">
-                            {feature.step} / {feature.label}
-                          </span>
-                        </div>
+                  <FlowFeatureContent isActive={activeIndex === 2} />
 
-                        <h3 className="feature-title">
-                          {formatMultilineTitle(feature.title)}
-                        </h3>
-
-                        <p className="feature-description">
-                          {feature.description}
-                        </p>
-
-                        <div className="feature-bullets">
-                          {feature.bullets.map((bullet) => {
-                            const BulletIcon = bullet.icon;
-
-                            return (
-                              <div
-                                key={bullet.title}
-                                className="feature-bullet-item"
-                              >
-                                <div className="feature-bullet-icon">
-                                  <BulletIcon size={18} />
-                                </div>
-
-                                <div>
-                                  <div className="feature-bullet-title">
-                                    {bullet.title}
-                                  </div>
-
-                                  <div className="feature-bullet-desc">
-                                    {bullet.desc}
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
+                  <InsightsFeatureContent isActive={activeIndex === 3} />
                 </div>
               </div>
 
               <div className="feature-right-column">
-                {features.map((feature, index) => (
-                  <div
-                    key={feature.key}
-                    className={`feature-mockup-layer ${
-                      activeIndex === index ? "feature-active" : ""
-                    }`}
-                  >
-                    <FeatureMockup feature={feature} />
-                  </div>
-                ))}
+                <div
+                  className={`feature-mockup-layer ${
+                    activeIndex === 0 ? "feature-active" : ""
+                  }`}
+                  aria-hidden={activeIndex !== 0}
+                >
+                  <CreateFeatureMockup />
+                </div>
+
+                <div
+                  className={`feature-mockup-layer ${
+                    activeIndex === 1 ? "feature-active" : ""
+                  }`}
+                  aria-hidden={activeIndex !== 1}
+                >
+                  <ThreeDFeatureMockup />
+                </div>
+
+                <div
+                  className={`feature-mockup-layer ${
+                    activeIndex === 2 ? "feature-active" : ""
+                  }`}
+                  aria-hidden={activeIndex !== 2}
+                >
+                  <FlowFeatureMockup />
+                </div>
+
+                <div
+                  className={`feature-mockup-layer ${
+                    activeIndex === 3 ? "feature-active" : ""
+                  }`}
+                  aria-hidden={activeIndex !== 3}
+                >
+                  <InsightsFeatureMockup />
+                </div>
               </div>
             </div>
 
-            <div className="feature-progress">
-              {features.map((feature, index) => (
-                <div
-                  key={feature.key}
-                  className={`feature-progress-dot ${
-                    activeIndex === index ? "feature-active" : ""
-                  }`}
-                />
-              ))}
+            <div className="feature-progress" aria-label="Feature progress">
+              <div
+                className={`feature-progress-dot ${
+                  activeIndex === 0 ? "feature-active" : ""
+                }`}
+              />
+
+              <div
+                className={`feature-progress-dot ${
+                  activeIndex === 1 ? "feature-active" : ""
+                }`}
+              />
+
+              <div
+                className={`feature-progress-dot ${
+                  activeIndex === 2 ? "feature-active" : ""
+                }`}
+              />
+
+              <div
+                className={`feature-progress-dot ${
+                  activeIndex === 3 ? "feature-active" : ""
+                }`}
+              />
             </div>
           </div>
         </div>

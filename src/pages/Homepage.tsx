@@ -52,13 +52,15 @@ const Homepage = () => {
 
         <UseCases scrollParentRef={pageScrollRef} />
 
-        <section className="lp-section cta">
-          <div className="lp-container">
-            <CTA />
-          </div>
-        </section>
+        <div className="cta-footer-screen">
+          <section className="lp-section cta">
+            <div className="lp-container">
+              <CTA />
+            </div>
+          </section>
 
-        <Footer />
+          <Footer />
+        </div>
       </div>
     </>
   );

@@ -64,6 +64,7 @@ import {
 } from "./richTextUtils";
 import { showToast } from "./showToast";
 import { EdgeStyle, LayoutMode, QuestionType, QuestionUIConfig } from "./types";
+ 
 
 export const generateOptionLabel = (index: number, qType: string) => {
   if (qType === "RADIO" || qType === "MULTIPLE_CHOICE" || qType === "MEDIA") {
@@ -993,32 +994,7 @@ export const newWayItems = [
   },
 ];
 
-export const HowItWorksSteps: Step[] = [
-  {
-    title: "Create",
-    description:
-      "Build surveys with the question types, design, and flow you need.",
-    image:
-      "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=800",
-    alt: "Person working on a creative project outdoors",
-  },
-  {
-    title: "Share",
-    description: "Share by link, QR code, or embed it directly on your site.",
-    image:
-      "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=800",
-    alt: "Person focused on laptop in a studio",
-  },
-  {
-    title: "Understand",
-    description:
-      "See what users say, where they pause, and what their feedback really means.",
-    image:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800",
-    alt: "Woman observing feedback and insights",
-  },
-];
-
+ 
 /**
  * Returns a stable alphabetic badge for a media option's persisted 1-based order.
  * Media options are limited to 10, so valid orders map from A through J.

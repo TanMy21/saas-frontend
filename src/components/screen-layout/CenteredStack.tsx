@@ -16,7 +16,7 @@ const CenteredStack = ({
         maxWidth: display === "mobile" ? "92%" : "80%",
         display: "flex",
         alignItems: "flex-start",
-        border: "2px solid black",
+        // border: "2px solid black",
         gap: { xs: 1.5, md: 3 },
         mx: "auto",
         mt: marginTopOveride ?? "8%",

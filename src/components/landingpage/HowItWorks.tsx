@@ -1,14 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 
-import { HowItWorksSteps } from "../../utils/utils";
+import createImg from "../../assets/create.webp";
+import shareImg from "../../assets/share question.webp";
+import understandImg from "../../assets/understand2.webp";
 
+/**
+ * Displays the three fixed Feedflo workflow steps and reveals them
+ * when the section enters the visible part of the page.
+ */
 const HowItWorks = () => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   /**
-   * Watches the How It Works section and starts the reveal animation
-   * only when the section enters the visible scroll area.
+   * Observes the section and enables the entrance animation once
+   * approximately 25% of the section becomes visible.
    */
   useEffect(() => {
     const sectionElement = sectionRef.current;
@@ -17,22 +23,23 @@ const HowItWorks = () => {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
+        if (!entry.isIntersecting) return;
 
-          // Stops observing after the first reveal so animation runs only once.
-          observer.unobserve(sectionElement);
-        }
+        setIsVisible(true);
+
+        // Prevents the animation from replaying whenever the user scrolls back.
+        observer.unobserve(sectionElement);
       },
       {
-        // Starts animation when around 25% of the section is visible.
         threshold: 0.25,
       },
     );
 
     observer.observe(sectionElement);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   return (
@@ -41,7 +48,7 @@ const HowItWorks = () => {
       className={`how-section ${isVisible ? "how-visible" : ""}`}
     >
       <div className="how-container">
-        {/* Header */}
+        {/* Section heading */}
         <div className="how-header">
           <h2 className="how-title">Feedback to Insight</h2>
 
@@ -50,24 +57,70 @@ const HowItWorks = () => {
           </p>
         </div>
 
-        {/* Steps */}
         <div className="how-grid">
-          {HowItWorksSteps.map((step, index) => (
-            <div className="how-card" key={step.title}>
-              {/* Number badge */}
-              <div className="how-step-number">{index + 1}</div>
+          {/* Create step */}
+          <div className="how-card">
+            <div className="how-step-number">1</div>
 
-              {/* Image */}
-              <div className="how-image-wrap">
-                <img className="how-image" src={step.image} alt={step.alt} />
-              </div>
-
-              {/* Text */}
-              <h3 className="how-step-title">{step.title}</h3>
-
-              <p className="how-step-description">{step.description}</p>
+            <div className="how-image-wrap">
+              <img
+                className="how-image"
+                src={createImg}
+                alt="Feedflo survey creation interface"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
-          ))}
+
+            <h3 className="how-step-title">Create</h3>
+
+            <p className="how-step-description">
+              Build surveys with the question types, design, and flow you need.
+            </p>
+          </div>
+
+          {/* Share step */}
+          <div className="how-card">
+            <div className="how-step-number">2</div>
+
+            <div className="how-image-wrap">
+              <img
+                className="how-image"
+                src={shareImg}
+                alt="Feedflo survey sharing options with a link and QR code"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
+            <h3 className="how-step-title">Share</h3>
+
+            <p className="how-step-description">
+              Share by link, QR code, or embed it directly on your site.
+            </p>
+          </div>
+
+          {/* Understand step */}
+          <div className="how-card">
+            <div className="how-step-number">3</div>
+
+            <div className="how-image-wrap">
+              <img
+                className="how-image"
+                src={understandImg}
+                alt="Feedflo response and behavioural insights dashboard"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
+            <h3 className="how-step-title">Understand</h3>
+
+            <p className="how-step-description">
+              See what users say, where they pause, and what their feedback
+              really means.
+            </p>
+          </div>
         </div>
       </div>
     </section>

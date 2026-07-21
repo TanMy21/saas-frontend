@@ -16,8 +16,8 @@ const ResponseContainer = ({
         mt: marginTopOveride ?? "2%",
         mb: "4%",
         borderRadius: 2,
-        border: "1px solid",
-        borderColor: "divider",
+        // border: "1px solid",
+        // borderColor: "divider",
         px: { xs: 2, md: 1 },
         py: { xs: 2, md: 1 },
       }}

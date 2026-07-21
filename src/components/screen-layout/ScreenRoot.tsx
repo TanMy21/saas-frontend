@@ -21,7 +21,7 @@ const ScreenRoot = ({
         width: display === "mobile" ? "98%" : "96%",
         minHeight: "700px",
         zIndex: 20,
-        border: "2px solid red",
+        // border: "2px solid red",
       }}
     >
       {children}

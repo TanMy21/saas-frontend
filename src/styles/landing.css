@@ -197,7 +197,7 @@
   background: #eef5ff;
 
   /* Soft top edge so the section does not feel harsh. */
-  box-shadow: inset 0 1px 0 rgba(0, 116, 235, 0.08);
+  /* box-shadow: inset 0 1px 0 rgba(0, 116, 235, 0.08); */
   /* background:
     radial-gradient(circle at top left, rgba(0, 116, 235, 0.08), transparent 34%),
     #f3f7fc; */
@@ -227,6 +227,29 @@
   background: #fbf7ef;
   color: #ffffff;
   /* border: 2px solid red; */
+}
+
+/* Keeps the final CTA and footer together as one complete viewport. */
+.cta-footer-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #fbf7ef;
+}
+
+.cta-footer-screen > .lp-section.cta {
+  flex: 1 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.cta-footer-screen > .lp-section.cta > .lp-container {
+  width: 100%;
+}
+
+.cta-footer-screen > .footer {
+  flex-shrink: 0;
 }
 
 /* HERO SECTION  */
@@ -658,7 +681,7 @@
 @media (min-width: 900px) and (max-width: 1030px) and (min-height: 1300px) {
   .hero-collage {
 
-     --hero-image-gap: 18px;
+    --hero-image-gap: 18px;
     --hero-left-image-width: 160px;
     --hero-main-image-width: 560px;
     --hero-right-image-width: 168px;
@@ -1306,12 +1329,13 @@
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   transition: transform 500ms ease;
 }
 
 .how-card:hover .how-image {
-  transform: scale(1.05);
+  transform: none;
 }
 
 .how-step-title {
@@ -2479,7 +2503,7 @@
 
     /* Removes desktop scale and forces mobile panel to stay inside width. */
     transform: none;
-    width:92%;
+    width: 92%;
     max-width: 92%;
 
     aspect-ratio: 4 / 3;
@@ -3012,4 +3036,46 @@
   .footer-logo-text {
     font-size: 28px;
   }
+}
+
+
+
+/*features section*/
+
+/* Lets image-based feature panels use the full right-column area. */
+.feature-mockup-image-panel {
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+}
+
+/* Allows each asset image to fill the existing right-side mockup card. */
+.feature-mockup-image-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Expands every feature image card to the full size of its parent layer. */
+.feature-mockup-fill-card {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+/* Keeps all four feature images consistent inside the existing mockup layout. */
+.feature-mockup-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Prevents inactive feature content from receiving pointer interaction. */
+.feature-dynamic-item:not(.feature-active),
+.feature-mockup-layer:not(.feature-active) {
+  pointer-events: none;
 }

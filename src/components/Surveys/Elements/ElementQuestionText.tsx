@@ -206,7 +206,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             display: "flex",
             flexDirection: "column",
             width: "100%",
-            border: "2px solid green",
+            // border: "2px solid green",
           }}
         >
           <Box
@@ -215,7 +215,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               flexDirection: "column",
               marginX: "auto",
               width: "100%",
-              border: "2px solid blue",
+              // border: "2px solid blue",
             }}
           >
             {/* Title row */}
@@ -298,7 +298,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                         }),
                     textAlign: "left",
                     whiteSpace: "normal",
-                    border: "2px solid yellow",
+                    // border: "2px solid yellow",
                   }}
                 >
                   <EditableQuestionText
@@ -534,7 +534,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                         fontSize: "inherit",
                         lineHeight: "inherit",
                       },
-                      border: "2px solid green",
+                      // border: "2px solid green",
                     }}
                     typographySx={{
                       ...(show
