@@ -26,6 +26,15 @@ import { FeaturesProps } from "../../types/landingTypes";
 // Defines the number of scroll-controlled feature panels in this section.
 const FEATURE_COUNT = 4;
 
+// Matches each feature container to its source image so it can fill the
+// available area without being cropped or distorted.
+const FEATURE_IMAGE_ASPECT_RATIOS = [
+  "1639 / 960",
+  "1535 / 1024",
+  "1672 / 941",
+  "1254 / 1069",
+] as const;
+
 /**
  * Returns the viewport height of the custom scroll container when provided,
  * otherwise returns the browser viewport height.
@@ -53,6 +62,8 @@ function CreateFeatureMockup() {
         className="feature-mockup-image"
         src={createFeatureImg}
         alt="Feedflo survey builder interface"
+        width={1639}
+        height={960}
         loading="lazy"
         decoding="async"
       />
@@ -82,6 +93,8 @@ function ThreeDFeatureMockup() {
           className="feature-mockup-image"
           src={threeDTypeQuestionImg}
           alt="Interactive 3D product question inside a Feedflo survey"
+          width={1535}
+          height={1024}
           loading="lazy"
           decoding="async"
         />
@@ -111,6 +124,8 @@ function FlowFeatureMockup() {
           className="feature-mockup-image"
           src={flowFeatureImg}
           alt="Conditional survey flow connecting questions through branching logic"
+          width={1672}
+          height={941}
           loading="lazy"
           decoding="async"
         />
@@ -140,6 +155,8 @@ function InsightsFeatureMockup() {
           className="feature-mockup-image"
           src={insightsFeatureImg}
           alt="Feedflo feedback insights and response analysis dashboard"
+          width={1254}
+          height={1069}
           loading="lazy"
           decoding="async"
         />
@@ -562,7 +579,12 @@ const Features = ({ scrollParentRef }: FeaturesProps) => {
                 </div>
               </div>
 
-              <div className="feature-right-column">
+              <div
+                className="feature-right-column"
+                style={{
+                  aspectRatio: FEATURE_IMAGE_ASPECT_RATIOS[activeIndex],
+                }}
+              >
                 <div
                   className={`feature-mockup-layer ${
                     activeIndex === 0 ? "feature-active" : ""

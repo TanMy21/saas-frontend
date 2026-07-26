@@ -1,41 +1,76 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { MoveRight } from "lucide-react";
+import { MoveRight, X } from "lucide-react";
+import { flushSync } from "react-dom";
 import { useNavigate } from "react-router-dom";
 
 import mockup3dImg from "../../assets/3d_phone_mockup.webp";
-import builderImg from "../../assets/hero builder media.webp";
-import insightsImg from "../../assets/hero insights.webp";
 
 const HeroSection = () => {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const [isHeroVideoPlaying, setIsHeroVideoPlaying] = useState(false);
+  const heroVideoRef = useRef<HTMLVideoElement | null>(null);
   const navigate = useNavigate();
 
   const handleStartFlow = () => {
     navigate("/register");
   };
 
+  const playModalVideo = async () => {
+    const heroVideo = heroVideoRef.current;
+
+    if (!heroVideo) return;
+
+    try {
+      await heroVideo.play();
+      setIsHeroVideoPlaying(true);
+    } catch {
+      setIsHeroVideoPlaying(false);
+    }
+  };
+
   const openDemoModal = () => {
-    setIsDemoOpen(true);
+    flushSync(() => {
+      setIsDemoOpen(true);
+      setIsHeroVideoPlaying(false);
+    });
+
+    void playModalVideo();
   };
 
   const closeDemoModal = () => {
+    heroVideoRef.current?.pause();
+    setIsHeroVideoPlaying(false);
     setIsDemoOpen(false);
   };
 
   useEffect(() => {
+    if (!isDemoOpen) return;
+
+    const pageRoot = document.querySelector<HTMLElement>(".lp-root");
+    const previousPageOverflow = pageRoot?.style.overflowY ?? "";
+    const previousBodyOverflow = document.body.style.overflow;
+
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeDemoModal();
       }
     };
 
-    if (isDemoOpen) {
-      window.addEventListener("keydown", handleEscapeKey);
+    if (pageRoot) {
+      pageRoot.style.overflowY = "hidden";
     }
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleEscapeKey);
 
     return () => {
       window.removeEventListener("keydown", handleEscapeKey);
+      document.body.style.overflow = previousBodyOverflow;
+
+      if (pageRoot) {
+        pageRoot.style.overflowY = previousPageOverflow;
+      }
     };
   }, [isDemoOpen]);
 
@@ -59,28 +94,25 @@ const HeroSection = () => {
               <button className="hero-primary-btn" onClick={handleStartFlow}>
                 Start the flow <MoveRight />
               </button>
-
-              <button
-                type="button"
-                className="hero-secondary-btn"
-                onClick={openDemoModal}
-              >
-                Watch demo
-              </button>
             </div>
           </div>
 
           {/* Hero image collage */}
           <div className="hero-visual">
             <div className="hero-collage">
-              {/* Small square image aligned to the left/lower area of the main image */}
-              <div className="hero-image-card hero-image-left">
-                <img src={insightsImg} alt="Survey Insights" />
-              </div>
-
               {/* Main image gets the maximum visual weight */}
               <div className="hero-image-card hero-image-main">
-                <img src={builderImg} alt="Survey builder" />
+                <img
+                  src={import.meta.env.VITE_HERO_DEMO_POSTER_URL}
+                  alt="Feedflo product demo preview"
+                />
+
+                <button
+                  type="button"
+                  className="hero-demo-play-button"
+                  onClick={openDemoModal}
+                  aria-label="Open Feedflo product demo"
+                />
               </div>
 
               {/* Right vertical image aligned closer to the main image */}
@@ -92,47 +124,48 @@ const HeroSection = () => {
         </div>
       </section>
 
-      {/* Demo modal */}
       {isDemoOpen && (
-        <div className="demo-modal-overlay" onClick={closeDemoModal}>
+        <div className="hero-demo-modal-overlay" onClick={closeDemoModal}>
           <div
-            className="demo-modal"
+            className="hero-demo-modal"
             role="dialog"
             aria-modal="true"
-            aria-labelledby="demo-modal-title"
+            aria-label="Feedflo product demo"
             onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
-              className="demo-modal-close"
+              className="hero-demo-modal-close"
               onClick={closeDemoModal}
-              aria-label="Close demo popup"
+              aria-label="Close product demo"
             >
-              ×
+              <X aria-hidden="true" />
             </button>
 
-            <div className="demo-modal-header">
-              <p className="demo-modal-eyebrow">Product demo</p>
-            </div>
+            <div className="hero-demo-modal-video-shell">
+              <video
+                ref={heroVideoRef}
+                className="hero-demo-modal-video"
+                src={import.meta.env.VITE_HERO_DEMO_VIDEO_URL}
+                controls
+                controlsList="nodownload noplaybackrate"
+                preload="metadata"
+                playsInline
+                poster={import.meta.env.VITE_HERO_DEMO_POSTER_URL}
+                aria-label="Feedflo product demo video"
+                onPlaying={() => setIsHeroVideoPlaying(true)}
+                onPause={() => setIsHeroVideoPlaying(false)}
+                onEnded={() => setIsHeroVideoPlaying(false)}
+              />
 
-            <div className="demo-video-shell">
-              <div className="demo-video-placeholder">
-                <div className="demo-play-button">▶</div>
-
-                <div className="demo-video-text">
-                  <strong>Demo video placeholder</strong>
-                </div>
-              </div>
-            </div>
-
-            <div className="demo-modal-footer">
-              <button
-                type="button"
-                className="demo-modal-primary-btn"
-                onClick={closeDemoModal}
-              >
-                Got it
-              </button>
+              {!isHeroVideoPlaying && (
+                <button
+                  type="button"
+                  className="hero-demo-play-button hero-demo-modal-play-button"
+                  onClick={() => void playModalVideo()}
+                  aria-label="Play Feedflo product demo video"
+                />
+              )}
             </div>
           </div>
         </div>
