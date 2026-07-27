@@ -1,9 +1,16 @@
-import { Box, Typography } from "@mui/material";
+import { lazy, Suspense } from "react";
+
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 import { useAppSelector } from "../app/typedReduxHooks";
-import { ImportQuestionsLoader } from "../components/Loaders/ImportQuestionsLoader";
 
 import GlobalSimpleLoader from "./GlobalSimpleLoader";
+
+const ImportQuestionsLoader = lazy(() =>
+  import("../components/Loaders/ImportQuestionsLoader").then((module) => ({
+    default: module.ImportQuestionsLoader,
+  })),
+);
 
 export const GlobalImportLoaderOverlay = () => {
   const { overlayOpen, overlayMessage, overlayVariant } = useAppSelector(
@@ -15,6 +22,8 @@ export const GlobalImportLoaderOverlay = () => {
   if (overlayVariant === "SIMPLE") {
     return <GlobalSimpleLoader overlayMessage={overlayMessage} />;
   }
+
+  if (overlayVariant !== "IMPORT") return null;
 
   return (
     <Box
@@ -29,7 +38,9 @@ export const GlobalImportLoaderOverlay = () => {
         alignItems: "center",
       }}
     >
-      <ImportQuestionsLoader slow={false} />
+      <Suspense fallback={<CircularProgress size={40} />}>
+        <ImportQuestionsLoader slow={false} />
+      </Suspense>
 
       {overlayMessage && (
         <Typography

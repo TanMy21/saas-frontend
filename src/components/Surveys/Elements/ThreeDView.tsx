@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { IconButton } from "@mui/material";
@@ -10,10 +10,13 @@ import useAuth from "../../../hooks/useAuth";
 import { hasMinimumPlan } from "../../../utils/planLimits";
 import { ThreeDViewProps } from "../../../utils/types";
 import Model3dLoader from "../../Loaders/Model3dLoader";
-import Replace3DModelModal from "../../Modals/Replace3DModelModal";
 
 import ElementQuestionText from "./ElementQuestionText";
 import { Interactive3DModelViewer } from "./Interactive3DModelViewer";
+
+const Replace3DModelModal = lazy(
+  () => import("../../Modals/Replace3DModelModal"),
+);
 
 const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
   const [isOpenReplaceModal, setIsOpenReplaceModal] = useState(false);
@@ -219,13 +222,15 @@ const ThreeDView = ({ url, showQuestion, display }: ThreeDViewProps) => {
           </div>
         </div>
       </div>
-      {canReplace3DModel && (
-        <Replace3DModelModal
-          open={isOpenReplaceModal}
-          onClose={() => setIsOpenReplaceModal(false)}
-          questionID={questionID!}
-          currentFileName={modelFileName}
-        />
+      {canReplace3DModel && isOpenReplaceModal && questionID && (
+        <Suspense fallback={null}>
+          <Replace3DModelModal
+            open={isOpenReplaceModal}
+            onClose={() => setIsOpenReplaceModal(false)}
+            questionID={questionID}
+            currentFileName={modelFileName}
+          />
+        </Suspense>
       )}
     </>
   );

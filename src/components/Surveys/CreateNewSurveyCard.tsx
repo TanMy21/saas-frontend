@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
 import AddIcon from "@mui/icons-material/Add";
 import { Box, ButtonBase, Typography } from "@mui/material";
 
 import { useAppTheme } from "../../theme/useAppTheme";
 import { NewSurveyProps } from "../../utils/types";
-import NewSurveyModal from "../Modals/NewSurveyModal";
+
+const NewSurveyModal = lazy(() => import("../Modals/NewSurveyModal"));
 
 const CreateNewSurveyCard = ({
   workspaceId,
@@ -208,12 +209,16 @@ const CreateNewSurveyCard = ({
           </ButtonBase>
         )}
       </Box>
-      <NewSurveyModal
-        open={open}
-        onClose={() => setOpen(false)}
-        workspaceId={workspaceId!}
-        workspaceName={workspaceName!}
-      />
+      {open && (
+        <Suspense fallback={null}>
+          <NewSurveyModal
+            open={open}
+            onClose={() => setOpen(false)}
+            workspaceId={workspaceId!}
+            workspaceName={workspaceName!}
+          />
+        </Suspense>
+      )}
     </>
   );
 };

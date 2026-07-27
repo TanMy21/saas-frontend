@@ -1,5 +1,3 @@
-import Logo from "../../../public/Logo.png";
-
 const Footer = () => {
   return (
     <footer className="footer">
@@ -9,7 +7,14 @@ const Footer = () => {
           {/* Logo */}
           <div className="footer-logo">
             <div className="footer-logo-box">
-              <img src={Logo} alt="Feedflo logo" />
+              <img
+                src="/Logo.png"
+                alt="Feedflo logo"
+                width={410}
+                height={320}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
             <span className="footer-logo-text">eedflo</span>
           </div>

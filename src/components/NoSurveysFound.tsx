@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
 import { Box, Button, Typography } from "@mui/material";
 
 import empty from "../assets/empty.svg";
 import useAuth from "../hooks/useAuth";
 
-import NewSurveyModal from "./Modals/NewSurveyModal";
+const NewSurveyModal = lazy(() => import("./Modals/NewSurveyModal"));
 
 const NoSurveysFound = ({
   workspaceId,
@@ -79,13 +79,15 @@ const NoSurveysFound = ({
       )}
 
       {/* MODAL */}
-      {can?.("CREATE_SURVEY") && !isArchiveWorkspace && (
-        <NewSurveyModal
-          open={open}
-          onClose={() => setOpen(false)}
-          workspaceId={workspaceId}
-          workspaceName={workspaceName}
-        />
+      {can?.("CREATE_SURVEY") && !isArchiveWorkspace && open && (
+        <Suspense fallback={null}>
+          <NewSurveyModal
+            open={open}
+            onClose={() => setOpen(false)}
+            workspaceId={workspaceId}
+            workspaceName={workspaceName}
+          />
+        </Suspense>
       )}
     </Box>
   );

@@ -29,8 +29,8 @@ const FEATURE_COUNT = 4;
 // Matches each feature container to its source image so it can fill the
 // available area without being cropped or distorted.
 const FEATURE_IMAGE_ASPECT_RATIOS = [
-  "1639 / 960",
-  "1535 / 1024",
+  "1672 / 941",
+  "1535 / 889",
   "1672 / 941",
   "1254 / 1069",
 ] as const;
@@ -55,15 +55,13 @@ function CreateFeatureMockup() {
     //     <span />
     //   </div>
 
-    <div
-      className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card"
-    >
+    <div className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card">
       <img
         className="feature-mockup-image"
         src={createFeatureImg}
         alt="Feedflo survey builder interface"
-        width={1639}
-        height={960}
+        width={1672}
+        height={941}
         loading="lazy"
         decoding="async"
       />
@@ -77,24 +75,20 @@ function CreateFeatureMockup() {
  */
 function ThreeDFeatureMockup() {
   return (
-    <div
-      className="feature-mockup-panel feature-mockup-image-panel feature-color-violet"
-    >
+    <div className="feature-mockup-panel feature-mockup-image-panel feature-color-violet">
       <div className="feature-mockup-dots" aria-hidden="true">
         <span />
         <span />
         <span />
       </div>
 
-      <div
-        className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card"
-      >
+      <div className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card">
         <img
           className="feature-mockup-image"
           src={threeDTypeQuestionImg}
           alt="Interactive 3D product question inside a Feedflo survey"
           width={1535}
-          height={1024}
+          height={889}
           loading="lazy"
           decoding="async"
         />
@@ -108,18 +102,14 @@ function ThreeDFeatureMockup() {
  */
 function FlowFeatureMockup() {
   return (
-    <div
-      className="feature-mockup-panel feature-mockup-image-panel feature-color-emerald"
-    >
+    <div className="feature-mockup-panel feature-mockup-image-panel feature-color-emerald">
       <div className="feature-mockup-dots" aria-hidden="true">
         <span />
         <span />
         <span />
       </div>
 
-      <div
-        className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card"
-      >
+      <div className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card">
         <img
           className="feature-mockup-image"
           src={flowFeatureImg}
@@ -139,18 +129,14 @@ function FlowFeatureMockup() {
  */
 function InsightsFeatureMockup() {
   return (
-    <div
-      className="feature-mockup-panel feature-mockup-image-panel feature-color-amber"
-    >
+    <div className="feature-mockup-panel feature-mockup-image-panel feature-color-amber">
       <div className="feature-mockup-dots" aria-hidden="true">
         <span />
         <span />
         <span />
       </div>
 
-      <div
-        className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card"
-      >
+      <div className="feature-mockup-card feature-mockup-image-card feature-mockup-fill-card">
         <img
           className="feature-mockup-image"
           src={insightsFeatureImg}

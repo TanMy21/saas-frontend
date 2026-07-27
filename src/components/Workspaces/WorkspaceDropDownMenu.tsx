@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
 import EditIcon from "@mui/icons-material/Edit";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -14,8 +14,14 @@ import {
 import { Trash } from "lucide-react";
 
 import { WorkspaceDropDownMenu } from "../../utils/types";
-import DeleteWorkspaceModal from "../Modals/DeleteWorkspaceModal";
-import RenameWorkspaceModal from "../Modals/RenameWorkspaceModal";
+
+const DeleteWorkspaceModal = lazy(
+  () => import("../Modals/DeleteWorkspaceModal"),
+);
+
+const RenameWorkspaceModal = lazy(
+  () => import("../Modals/RenameWorkspaceModal"),
+);
 
 const WorkspaceDropDown = ({
   selectedWorkspace,
@@ -164,20 +170,25 @@ const WorkspaceDropDown = ({
           </Typography>
         </MenuItem>
       </Menu>
-
-      {/* Remame Modal */}
-      <RenameWorkspaceModal
-        open={openRenameModel}
-        onClose={() => setOpenRenameModel(false)}
-        selectedWorkspace={selectedWorkspace}
-        setSelectedWorkspace={setSelectedWorkspace}
-      />
-      {/* Delete Modal */}
-      <DeleteWorkspaceModal
-        open={openDeleteModel}
-        onClose={() => setOpenDeleteModel(false)}
-        selectedWorkspace={selectedWorkspace}
-      />
+      <Suspense fallback={null}>
+        {/* Remame Modal */}
+        {openRenameModel && (
+          <RenameWorkspaceModal
+            open={openRenameModel}
+            onClose={() => setOpenRenameModel(false)}
+            selectedWorkspace={selectedWorkspace}
+            setSelectedWorkspace={setSelectedWorkspace}
+          />
+        )}
+        {/* Delete Modal */}
+        {openDeleteModel && (
+          <DeleteWorkspaceModal
+            open={openDeleteModel}
+            onClose={() => setOpenDeleteModel(false)}
+            selectedWorkspace={selectedWorkspace}
+          />
+        )}
+      </Suspense>
     </Box>
   );
 };

@@ -98,7 +98,7 @@ export const EditableQuestionText = ({
   });
 
   useEffect(() => {
-    if (!editor) return;
+    if (!editor || editor.isDestroyed) return;
 
     const currentHTML = editor.getHTML();
     const nextHTML = value || "";
@@ -111,7 +111,7 @@ export const EditableQuestionText = ({
   }, [editor, value]);
 
   useEffect(() => {
-    if (!editor) return;
+    if (!editor || editor.isDestroyed) return;
 
     editor.setEditable(active);
   }, [editor, active]);

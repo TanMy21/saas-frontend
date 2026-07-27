@@ -1,4 +1,5 @@
 import { Box, Grid } from "@mui/material";
+import { ReactFlowProvider } from "@xyflow/react";
 import { useLocation, useParams } from "react-router-dom";
 
 import { useGetElementsForSurveyQuery } from "../app/slices/elementApiSlice";
@@ -29,60 +30,62 @@ const QuestionFlow = () => {
   );
 
   return (
-    <Box
-      sx={{
-        overflowX: "hidden",
-        overflowY: "hidden",
-        width: "100%",
-        height: "100%",
-      }}
-    >
-      <Grid container>
-        <Grid
-          item
-          display={"flex"}
-          flexDirection={"row"}
-          xs={12}
-          sx={{
-            position: "sticky",
-            top: "0",
-            width: "100%",
-            zIndex: "10",
-          }}
-        >
-          <SurveyBuilderHeader
-            survey={survey!}
-            workspaceId={workspaceId}
-            workspaceName={workspaceName}
-            title={title}
-          />
+    <ReactFlowProvider>
+      <Box
+        sx={{
+          overflowX: "hidden",
+          overflowY: "hidden",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <Grid container>
+          <Grid
+            item
+            display={"flex"}
+            flexDirection={"row"}
+            xs={12}
+            sx={{
+              position: "sticky",
+              top: "0",
+              width: "100%",
+              zIndex: "10",
+            }}
+          >
+            <SurveyBuilderHeader
+              survey={survey!}
+              workspaceId={workspaceId}
+              workspaceName={workspaceName}
+              title={title}
+            />
+          </Grid>
+          <Grid
+            item
+            xl={12}
+            lg={12}
+            md={12}
+            xs={12}
+            display={"flex"}
+            flexDirection={"row"}
+            justifyContent={"center"}
+            sx={{
+              width: "100%",
+              height: "92vh",
+              overflowX: "hidden",
+              overflowY: "hidden",
+              // border: "2px solid green",
+            }}
+          >
+            {/* Main content area */}
+            <QuestionFlowContainer
+              Elements={data!}
+              surveyID={surveyID}
+              refetch={refetchFlow}
+            />
+          </Grid>
         </Grid>
-        <Grid
-          item
-          xl={12}
-          lg={12}
-          md={12}
-          xs={12}
-          display={"flex"}
-          flexDirection={"row"}
-          justifyContent={"center"}
-          sx={{
-            width: "100%",
-            height: "92vh",
-            overflowX: "hidden",
-            overflowY: "hidden",
-            // border: "2px solid green",
-          }}
-        >
-          {/* Main content area */}
-          <QuestionFlowContainer
-            Elements={data!}
-            surveyID={surveyID}
-            refetch={refetchFlow}
-          />
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </ReactFlowProvider>
   );
 };
 

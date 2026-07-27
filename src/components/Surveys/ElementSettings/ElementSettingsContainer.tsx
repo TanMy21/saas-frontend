@@ -1,8 +1,10 @@
-import { Box } from "@mui/material";
+import { Suspense } from "react";
+
+import { Box, CircularProgress } from "@mui/material";
 
 import PermissionContext from "../../../context/PermissionContext";
 import useAuth from "../../../hooks/useAuth";
-import { elementSettingsComponents } from "../../../utils/elementsConfig";
+import { elementSettingsComponents } from "../../../utils/elementComponentRegistry";
 import {
   ElementSettingsContainerProps,
   QuestionTypeKey,
@@ -19,6 +21,7 @@ const ElementSettingsContainer = ({
   const ElementSettingsComponent =
     // firstQuestion
     elementSettingsComponents[question?.type as QuestionTypeKey];
+
   return (
     <>
       <PermissionContext.Provider value={{ canEditQuestion }}>
@@ -35,12 +38,27 @@ const ElementSettingsContainer = ({
             // border: "2px solid blue",
           }}
         >
-          {question?.type && (
-            <ElementSettingsComponent
-              qID={questionId!}
-              question={question}
-              canEdit={canEditQuestion}
-            />
+          {question?.type && questionId && ElementSettingsComponent && (
+            <Suspense
+              fallback={
+                <Box
+                  sx={{
+                    minHeight: 160,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CircularProgress size={24} />
+                </Box>
+              }
+            >
+              <ElementSettingsComponent
+                qID={questionId}
+                question={question}
+                canEdit={canEditQuestion}
+              />
+            </Suspense>
           )}
         </Box>
       </PermissionContext.Provider>

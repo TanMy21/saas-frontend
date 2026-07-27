@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 
 import UploadIcon from "@mui/icons-material/Upload";
 import { Box, IconButton, Tooltip } from "@mui/material";
@@ -17,10 +17,15 @@ import { RootState } from "../../app/store";
 import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import useAuth from "../../hooks/useAuth";
 import { DockItemProps, SurveyIslandProps } from "../../utils/types";
-import GenerateSurveyModal from "../GenerateSurveyModal/GenerateSurveyModal";
-import ShareSurveyModal from "../Modals/ShareSurveyModal";
-import SurveySettingsModal from "../Modals/SurveySettingsModal";
 import SnackbarAlert from "../SnackbarAlert";
+
+const GenerateSurveyModal = lazy(
+  () => import("../GenerateSurveyModal/GenerateSurveyModal"),
+);
+
+const ShareSurveyModal = lazy(() => import("../Modals/ShareSurveyModal"));
+
+const SurveySettingsModal = lazy(() => import("../Modals/SurveySettingsModal"));
 
 const DOCK_HEIGHT = 36;
 const DEFAULT_ICON_SIZE = 24;
@@ -196,6 +201,10 @@ const SurveyBuilderDock = ({
     (state: RootState) => state.surveyBuilder.isGenerateModalOpen,
   );
 
+  const shareModalOpen = useAppSelector((state: RootState) =>
+    Boolean(state.overlayUI.shareModalOpen),
+  );
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openGenerate, setOpenGenerate] = useState(openGenerateState);
   const [openSettings, setOpenSettings] = useState(false);
@@ -305,32 +314,35 @@ const SurveyBuilderDock = ({
             withDividerLeft={item.id === "import"}
           />
         ))}
+        <Suspense fallback={null}>
+          {shareModalOpen && (
+            <ShareSurveyModal
+              // open={shareOpen}
+              // setOpen={setShareOpen}
+              setShareBtnSelected={setShareBtnSelected}
+              openSnackbar={openSnackbar}
+              setOpenSnackbar={setOpenSnackbar}
+              shareID={shareID}
+              title={title}
+              isLocked={isLocked}
+            />
+          )}
 
-        <ShareSurveyModal
-          // open={shareOpen}
-          // setOpen={setShareOpen}
-          setShareBtnSelected={setShareBtnSelected}
-          openSnackbar={openSnackbar}
-          setOpenSnackbar={setOpenSnackbar}
-          shareID={shareID}
-          title={title}
-          isLocked={isLocked}
-        />
+          {can?.("UPDATE_SURVEY") && openSettings && (
+            <SurveySettingsModal
+              surveyID={surveyID!}
+              openSettings={openSettings}
+              setOpenSettings={setOpenSettings}
+            />
+          )}
 
-        {can?.("UPDATE_SURVEY") && (
-          <SurveySettingsModal
-            surveyID={surveyID!}
-            openSettings={openSettings}
-            setOpenSettings={setOpenSettings}
-          />
-        )}
-
-        {can?.("UPDATE_SURVEY") && (
-          <GenerateSurveyModal
-            openGenerate={openGenerate}
-            setOpenGenerate={setOpenGenerate}
-          />
-        )}
+          {can?.("UPDATE_SURVEY") && openGenerate && (
+            <GenerateSurveyModal
+              openGenerate={openGenerate}
+              setOpenGenerate={setOpenGenerate}
+            />
+          )}
+        </Suspense>
       </Box>
       <SnackbarAlert
         openSnackbar={openSnackbar}

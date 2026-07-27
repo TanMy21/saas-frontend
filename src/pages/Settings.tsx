@@ -1,22 +1,29 @@
-import { useCallback, useState } from "react";
+import { lazy, Suspense, useCallback, useState } from "react";
 
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 
 import { useGetMeQuery } from "../app/slices/userApiSlice";
 import { SettingsPageHeader } from "../components/DashBoardHeader";
-import BillingTab from "../components/Settings/BillingsTab";
 import AccountSettingsGeneral from "../components/Settings/GeneralSettings";
 import GlassCard from "../components/Settings/GlassCard";
-import { OrgMembers } from "../components/Settings/OrgMembers";
 // import NotificationsTab from "../components/Settings/NotificationsTab";
 import SaveBar from "../components/Settings/SaveBar";
-import SecurityTab from "../components/Settings/SecurityTab";
 import SidebarNav from "../components/Settings/SideBarNav";
 import useAuth from "../hooks/useAuth";
 import { useStoredState } from "../hooks/useStoredState";
 import { useAppTheme } from "../theme/useAppTheme";
 import { SETTINGS_TAB_KEY } from "../utils/constants";
 import { TabId } from "../utils/types";
+
+const BillingTab = lazy(() => import("../components/Settings/BillingsTab"));
+
+const SecurityTab = lazy(() => import("../components/Settings/SecurityTab"));
+
+const OrgMembers = lazy(() =>
+  import("../components/Settings/OrgMembers").then((module) => ({
+    default: module.OrgMembers,
+  })),
+);
 
 const Settings = () => {
   const { scrollStyles } = useAppTheme();
@@ -123,26 +130,41 @@ const Settings = () => {
                 }}
               >
                 <GlassCard>
-                  {activeTab === "general" && (
-                    <AccountSettingsGeneral user={user} />
-                  )}
+                  <Suspense
+                    fallback={
+                      <Box
+                        sx={{
+                          minHeight: 320,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <CircularProgress size={32} />
+                      </Box>
+                    }
+                  >
+                    {activeTab === "general" && (
+                      <AccountSettingsGeneral user={user} />
+                    )}
 
-                  {activeTab === "create-user" && can("INVITE_USER") && (
-                    <OrgMembers />
-                  )}
+                    {activeTab === "create-user" && can("INVITE_USER") && (
+                      <OrgMembers />
+                    )}
 
-                  {activeTab === "security" && <SecurityTab />}
+                    {activeTab === "security" && <SecurityTab />}
 
-                  {activeTab === "subscription" && <BillingTab user={user} />}
+                    {activeTab === "subscription" && <BillingTab user={user} />}
 
-                  {showSaveBar && (
-                    <SaveBar
-                      loading={isLoading}
-                      success={saveSuccess}
-                      onSave={handleSave}
-                      onCancel={() => {}}
-                    />
-                  )}
+                    {showSaveBar && (
+                      <SaveBar
+                        loading={isLoading}
+                        success={saveSuccess}
+                        onSave={handleSave}
+                        onCancel={() => {}}
+                      />
+                    )}
+                  </Suspense>
                 </GlassCard>
               </Box>
             </Box>

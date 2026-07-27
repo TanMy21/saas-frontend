@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
 import { Button } from "@mui/material";
 import { FileDown } from "lucide-react";
 
-import DownloadResponsesModal from "../Modals/DownloadResponsesModal";
+const DownloadResponsesModal = lazy(
+  () => import("../Modals/DownloadResponsesModal"),
+);
 
 export const ExportButton = ({ surveyID }: { surveyID: string }) => {
   const [open, setOpen] = useState(false);
@@ -40,13 +42,18 @@ export const ExportButton = ({ surveyID }: { surveyID: string }) => {
       </Button>
 
       {/* MODAL */}
-      <DownloadResponsesModal
-        open={open}
-        handleClose={() => setOpen(false)}
-        surveyID={surveyID}
-        rowData={[]}
-        mode={"ALL"}
-      />
+      {open && (
+        <Suspense fallback={null}>
+          {" "}
+          <DownloadResponsesModal
+            open={open}
+            handleClose={() => setOpen(false)}
+            surveyID={surveyID}
+            rowData={[]}
+            mode={"ALL"}
+          />
+        </Suspense>
+      )}
     </>
   );
 };

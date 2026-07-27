@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useMemo, useState } from "react";
 
 import { Box, Button, Tooltip } from "@mui/material";
 import {
@@ -26,7 +26,10 @@ import { EXCLUDED_RESPONSE_TABLE_TYPES } from "../../utils/constants";
 import { convertHtmlToPlainText } from "../../utils/richTextUtils";
 import { RowData } from "../../utils/types";
 import { formatResponse } from "../../utils/utils";
-import DownloadResponsesModal from "../Modals/DownloadResponsesModal";
+
+const DownloadResponsesModal = lazy(
+  () => import("../Modals/DownloadResponsesModal"),
+);
 
 const CustomIcons: Partial<MRT_Icons> = {
   FilterListIcon: () => <FaFilter />,
@@ -513,16 +516,21 @@ const ResponsesTable = () => {
           },
         }}
       />
-      <DownloadResponsesModal
-        rowData={rowData}
-        surveyID={surveyID!}
-        columns={columns}
-        setResponsesData={setResponsesData}
-        setDownloadFileFormat={setDownloadFileFormat}
-        open={openDownloadModal}
-        handleClose={handleClose}
-        mode="SELECTED"
-      />
+
+      {openDownloadModal && (
+        <Suspense fallback={null}>
+          <DownloadResponsesModal
+            rowData={rowData}
+            surveyID={surveyID!}
+            columns={columns}
+            setResponsesData={setResponsesData}
+            setDownloadFileFormat={setDownloadFileFormat}
+            open={openDownloadModal}
+            handleClose={handleClose}
+            mode="SELECTED"
+          />
+        </Suspense>
+      )}
     </>
   );
 };

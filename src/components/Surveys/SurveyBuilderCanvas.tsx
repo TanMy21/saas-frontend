@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { AnimatePresence, motion } from "motion/react";
 
 import { RootState } from "../../app/store";
 import { useAppSelector } from "../../app/typedReduxHooks";
-import { elementComponents } from "../../utils/elementsConfig";
+import { elementComponents } from "../../utils/elementComponentRegistry";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 import { Can } from "../auth/Can";
 import DevicePreview from "../DevicePreview";
@@ -115,7 +115,7 @@ const SurveyBuilderCanvas = ({
           }}
         >
           <AnimatePresence mode="wait">
-            {question?.type && (
+            {question?.type && QuestionComponent && (
               <motion.div
                 key={question?.questionID}
                 /** Enter animation */
@@ -132,20 +132,36 @@ const SurveyBuilderCanvas = ({
               >
                 {/* Element view */}
                 {question?.type && (
-                  <QuestionComponent
-                    key={question?.questionID}
-                    qID={question?.questionID}
-                    qNO={question?.order?.toString()}
-                    qText={question?.text}
-                    qDescription={question?.description}
-                    qType={question?.type}
-                    qImage={question?.questionImage}
-                    // qSettings={question?.config}
-                    display={display}
-                    showQuestion={
-                      question?.showQuestion ?? question?.Model3D?.showQuestion
+                  <Suspense
+                    fallback={
+                      <Box
+                        sx={{
+                          minHeight: 240,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <CircularProgress size={28} />
+                      </Box>
                     }
-                  />
+                  >
+                    <QuestionComponent
+                      key={question?.questionID}
+                      qID={question?.questionID}
+                      qNO={question?.order?.toString()}
+                      qText={question?.text}
+                      qDescription={question?.description}
+                      qType={question?.type}
+                      qImage={question?.questionImage}
+                      // qSettings={question?.config}
+                      display={display}
+                      showQuestion={
+                        question?.showQuestion ??
+                        question?.Model3D?.showQuestion
+                      }
+                    />
+                  </Suspense>
                 )}{" "}
               </motion.div>
             )}

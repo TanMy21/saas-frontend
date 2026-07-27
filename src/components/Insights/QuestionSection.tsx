@@ -1,13 +1,18 @@
-import { Box, Typography } from "@mui/material";
+import { lazy, Suspense } from "react";
+
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 import { QuestionSectionProps } from "../../types/insightTypes";
-import {
-  questionTypeMap,
-  summaryVisualizationMap,
-} from "../../utils/elementsConfig";
+import { questionTypeMap } from "../../utils/elementsConfig";
+import { summaryVisualizationMap } from "../../utils/summaryVisualizationRegistry";
 
 import { SummaryQuestionHeader } from "./SummaryQuestionHeader";
-import { ThreeDOptionChart } from "./visualizations/ThreeDOptionChart";
+
+const ThreeDOptionChart = lazy(() =>
+  import("./visualizations/ThreeDOptionChart").then((module) => ({
+    default: module.ThreeDOptionChart,
+  })),
+);
 
 export function QuestionSection({
   question,
@@ -47,15 +52,30 @@ export function QuestionSection({
           pl: { xs: 0, lg: "40px" },
         }}
       >
-        {isThreeD ? (
-          <ThreeDOptionChart question={question} surveyID={surveyID} />
-        ) : Visualization ? (
-          <Visualization question={question} />
-        ) : (
-          <Typography color="text.secondary" fontSize={14}>
-            Unsupported question type: {question.type}
-          </Typography>
-        )}
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                minHeight: 180,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <CircularProgress size={28} />
+            </Box>
+          }
+        >
+          {isThreeD ? (
+            <ThreeDOptionChart question={question} surveyID={surveyID} />
+          ) : Visualization ? (
+            <Visualization question={question} />
+          ) : (
+            <Typography color="text.secondary" fontSize={14}>
+              Unsupported question type: {question.type}
+            </Typography>
+          )}
+        </Suspense>
       </Box>
     </Box>
   );

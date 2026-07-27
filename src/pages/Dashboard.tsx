@@ -1,18 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 
 import { Box } from "@mui/material";
 
-import { closeFeedbackModal } from "../app/slices/feedbackSlice";
 import { fetchUser, selectUser } from "../app/slices/userSlice";
 import { useGetWorkspacesQuery } from "../app/slices/workspaceApiSlice";
 import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
 import SpinnerBackdrop from "../components/alert/SpinnerBackdrop";
 import { DashBoardHeader } from "../components/DashBoardHeader";
-import DeleteWorkspaceModal from "../components/Modals/DeleteWorkspaceModal";
-import FeedbackModal from "../components/Modals/FeedbackModal";
-import NewWorkspaceModal from "../components/Modals/NewWorkspaceModal";
-import RenameWorkspaceModal from "../components/Modals/RenameWorkspaceModal";
-import DashboardTour from "../components/tour/DashboardTour";
 import WorkspaceConsole from "../components/Workspaces/WorkspaceConsole";
 import useAuth from "../hooks/useAuth";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
@@ -21,6 +15,20 @@ import { useToast } from "../hooks/useToast";
 import { useAppTheme } from "../theme/useAppTheme";
 import { LAST_WS_KEY } from "../utils/constants";
 import { Workspace } from "../utils/types";
+
+const DeleteWorkspaceModal = lazy(
+  () => import("../components/Modals/DeleteWorkspaceModal"),
+);
+
+const NewWorkspaceModal = lazy(
+  () => import("../components/Modals/NewWorkspaceModal"),
+);
+
+const RenameWorkspaceModal = lazy(
+  () => import("../components/Modals/RenameWorkspaceModal"),
+);
+
+const DashboardTour = lazy(() => import("../components/tour/DashboardTour"));
 
 const Dashboard = () => {
   const { background, brand } = useAppTheme();
@@ -34,7 +42,6 @@ const Dashboard = () => {
     useState(false);
   const [deleteWorkspaceModalOpen, setDeleteWorkspaceModalOpen] =
     useState(false);
-  const { isFeedbackModalOpen } = useAppSelector((state) => state.feedbackUI);
 
   const {
     data: workspaces,
@@ -159,14 +166,16 @@ const Dashboard = () => {
           background: `linear-gradient(180deg, ${brand?.bgColor1 || "#f9fafb"} 0%, ${brand?.bgColor3 || "#F8F9FF"} 100%)`,
         }}
       >
-        {isTourEnabled && (
-          <DashboardTour
-            stepIndex={stepIndex}
-            runTour={runTour}
-            setStepIndex={setStepIndex}
-            setRunTour={setRunTour}
-          />
-        )}
+        <Suspense fallback={null}>
+          {isTourEnabled && (
+            <DashboardTour
+              stepIndex={stepIndex}
+              runTour={runTour}
+              setStepIndex={setStepIndex}
+              setRunTour={setRunTour}
+            />
+          )}
+        </Suspense>
 
         <Box
           sx={{
@@ -238,35 +247,31 @@ const Dashboard = () => {
           </Box>
         </Box>
       </Box>
+      <Suspense fallback={null}>
+        {can?.("CREATE_WORKSPACE") && newWorkspaceModalOpen && (
+          <NewWorkspaceModal
+            open={newWorkspaceModalOpen}
+            onClose={() => setNewWorkspaceModalOpen(false)}
+          />
+        )}
 
-      {can?.("CREATE_WORKSPACE") && (
-        <NewWorkspaceModal
-          open={newWorkspaceModalOpen}
-          onClose={() => setNewWorkspaceModalOpen(false)}
-        />
-      )}
+        {can?.("UPDATE_WORKSPACE") && renameWorkspaceModalOpen && (
+          <RenameWorkspaceModal
+            open={renameWorkspaceModalOpen}
+            onClose={() => setRenameWorkspaceModalOpen(false)}
+            selectedWorkspace={selectedWorkspace}
+            setSelectedWorkspace={handleSetWorkspace}
+          />
+        )}
 
-      {can?.("UPDATE_WORKSPACE") && (
-        <RenameWorkspaceModal
-          open={renameWorkspaceModalOpen}
-          onClose={() => setRenameWorkspaceModalOpen(false)}
-          selectedWorkspace={selectedWorkspace}
-          setSelectedWorkspace={handleSetWorkspace}
-        />
-      )}
-
-      {can?.("DELETE_WORKSPACE") && (
-        <DeleteWorkspaceModal
-          open={deleteWorkspaceModalOpen}
-          onClose={() => setDeleteWorkspaceModalOpen(false)}
-          selectedWorkspace={selectedWorkspace}
-        />
-      )}
-
-      <FeedbackModal
-        open={isFeedbackModalOpen}
-        onClose={() => dispatch(closeFeedbackModal())}
-      />
+        {can?.("DELETE_WORKSPACE") && deleteWorkspaceModalOpen && (
+          <DeleteWorkspaceModal
+            open={deleteWorkspaceModalOpen}
+            onClose={() => setDeleteWorkspaceModalOpen(false)}
+            selectedWorkspace={selectedWorkspace}
+          />
+        )}
+      </Suspense>
       <SpinnerBackdrop />
     </>
   );

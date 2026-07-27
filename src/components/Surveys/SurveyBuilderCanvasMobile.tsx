@@ -1,8 +1,10 @@
-import { Box } from "@mui/material";
+import { Suspense } from "react";
+
+import { Box, CircularProgress } from "@mui/material";
 
 import { RootState } from "../../app/store";
 import { useAppSelector } from "../../app/typedReduxHooks";
-import { elementComponents } from "../../utils/elementsConfig";
+import { elementComponents } from "../../utils/elementComponentRegistry";
 import { QuestionTypeKey, SurveyBuilderCanvasProps } from "../../utils/types";
 import DevicePreview from "../DevicePreview";
 
@@ -54,19 +56,34 @@ const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
           }}
         >
           {/* Element view */}
-          {question?.type && (
-            <QuestionComponent
-              qID={question?.questionID}
-              qNO={question?.order?.toString()}
-              qText={question?.text}
-              qDescription={question?.description}
-              qType={question?.type}
-              display={display}
-              qImage={question?.questionImage}
-              showQuestion={
-                question?.showQuestion ?? question?.Model3D?.showQuestion
+          {question?.type && QuestionComponent && (
+            <Suspense
+              fallback={
+                <Box
+                  sx={{
+                    minHeight: 240,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CircularProgress size={28} />
+                </Box>
               }
-            />
+            >
+              <QuestionComponent
+                qID={question?.questionID}
+                qNO={question?.order?.toString()}
+                qText={question?.text}
+                qDescription={question?.description}
+                qType={question?.type}
+                display={display}
+                qImage={question?.questionImage}
+                showQuestion={
+                  question?.showQuestion ?? question?.Model3D?.showQuestion
+                }
+              />
+            </Suspense>
           )}
         </Box>
       </Box>

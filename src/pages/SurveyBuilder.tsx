@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 
 import { Box } from "@mui/material";
 import { useLocation, useParams } from "react-router-dom";
@@ -10,10 +10,7 @@ import { setGenerateModalOpen } from "../app/slices/surveySlice";
 import { RootState } from "../app/store";
 import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
 import CanvasConsole from "../components/CanvasConsole";
-import GenerateSurveyModal from "../components/GenerateSurveyModal/GenerateSurveyModal";
 import LogoLoader from "../components/Loaders/LogoLoader";
-import CreateNewSurveyModal from "../components/Modals/CreateNewSurveyModal";
-import ImportQuestionsModal from "../components/Modals/ImportQuestionsModal";
 import ElementPreferencesPanel from "../components/Surveys/ElementPreferencesPanel";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
@@ -28,6 +25,18 @@ import useSurveyBuilderModalLocation from "../hooks/useSurveyBuilderModalLocatio
 import useSurveyBuilderStateReset from "../hooks/useSurveyBuilderStateReset";
 import useSyncQuestionsToElements from "../hooks/useSyncQuestionsToElements";
 import { Element } from "../utils/types";
+
+const GenerateSurveyModal = lazy(
+  () => import("../components/GenerateSurveyModal/GenerateSurveyModal"),
+);
+
+const CreateNewSurveyModal = lazy(
+  () => import("../components/Modals/CreateNewSurveyModal"),
+);
+
+const ImportQuestionsModal = lazy(
+  () => import("../components/Modals/ImportQuestionsModal"),
+);
 
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
@@ -266,24 +275,27 @@ const SurveyBuilder = () => {
               />
             </Box>
           </Box>
-          {can?.("CREATE_SURVEY") && (
-            <CreateNewSurveyModal
-              isOpen={openScratch}
-              onClose={() => setOpenScratch(false)}
-              surveyID={surveyID}
-              setSurveyTitle={setSurveyTitle}
-            />
-          )}
-          {can?.("CREATE_QUESTION") && (
-            <ImportQuestionsModal
-              isOpen={openImportLocal}
-              surveyID={surveyID}
-              onClose={() => setOpenImportLocal(false)}
-            />
-          )}
-          {can?.("CREATE_QUESTION") && (
-            <GenerateSurveyModal openGenerate={isOpenGenerate} />
-          )}
+
+          <Suspense fallback={null}>
+            {can?.("CREATE_SURVEY") && openScratch && (
+              <CreateNewSurveyModal
+                isOpen={openScratch}
+                onClose={() => setOpenScratch(false)}
+                surveyID={surveyID}
+                setSurveyTitle={setSurveyTitle}
+              />
+            )}
+            {can?.("CREATE_QUESTION") && openImportLocal && (
+              <ImportQuestionsModal
+                isOpen={openImportLocal}
+                surveyID={surveyID}
+                onClose={() => setOpenImportLocal(false)}
+              />
+            )}
+            {can?.("CREATE_QUESTION") && isOpenGenerate && (
+              <GenerateSurveyModal openGenerate={isOpenGenerate} />
+            )}
+          </Suspense>
         </Box>
       </SurveyCanvasRefetchContext.Provider>
     </>

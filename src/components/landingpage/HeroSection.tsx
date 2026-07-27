@@ -105,6 +105,8 @@ const HeroSection = () => {
                 <img
                   src={import.meta.env.VITE_HERO_DEMO_POSTER_URL}
                   alt="Feedflo product demo preview"
+                  loading="eager"
+                  fetchPriority="high"
                 />
 
                 <button
@@ -117,7 +119,14 @@ const HeroSection = () => {
 
               {/* Right vertical image aligned closer to the main image */}
               <div className="hero-image-card hero-image-right">
-                <img src={mockup3dImg} alt="3d mockup" />
+                <img
+                  src={mockup3dImg}
+                  alt="3D survey preview"
+                  width={623}
+                  height={961}
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
             </div>
           </div>

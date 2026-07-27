@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -34,10 +34,13 @@ import { useToast } from "../../hooks/useToast";
 import { showToast } from "../../utils/showToast";
 import { Workspace, SurveyDropDownMenuProps } from "../../utils/types";
 import { SurveyMenuItem } from "../MenuComponents/SurveyMenuItem";
-import DeleteSurveyModal from "../Modals/DeleteSurveyModal";
-import RenameSurveyModal from "../Modals/RenameSurveyModal";
-import SurveyTagsModal from "../Modals/SurveyTagsModal";
 import SnackbarAlert from "../SnackbarAlert";
+
+const DeleteSurveyModal = lazy(() => import("../Modals/DeleteSurveyModal"));
+
+const RenameSurveyModal = lazy(() => import("../Modals/RenameSurveyModal"));
+
+const SurveyTagsModal = lazy(() => import("../Modals/SurveyTagsModal"));
 
 const SurveyCardDropDownMenu = ({
   survey,
@@ -443,34 +446,34 @@ const SurveyCardDropDownMenu = ({
           </Box>
         )}
       </Menu>
+      <Suspense fallback={null}>
+        {/* Remame Modal */}
+        {can("UPDATE_SURVEY") && openRenameModal && (
+          <RenameSurveyModal
+            open={openRenameModal}
+            onClose={() => setOpenRenameModal(false)}
+            survey={survey}
+          />
+        )}
 
-      {/* Remame Modal */}
-      {can("UPDATE_SURVEY") && (
-        <RenameSurveyModal
-          open={openRenameModal}
-          onClose={() => setOpenRenameModal(false)}
-          survey={survey}
-        />
-      )}
+        {/* Delete Modal */}
+        {can("DELETE_SURVEY") && openDeleteModal && (
+          <DeleteSurveyModal
+            open={openDeleteModal}
+            onClose={() => setOpenDeleteModal(false)}
+            sID={survey.surveyID}
+            sTitle={survey.title}
+          />
+        )}
 
-      {/* Delete Modal */}
-      {can("DELETE_SURVEY") && (
-        <DeleteSurveyModal
-          open={openDeleteModal}
-          onClose={() => setOpenDeleteModal(false)}
-          sID={survey.surveyID}
-          sTitle={survey.title}
-        />
-      )}
-
-      {can("UPDATE_SURVEY") && (
-        <SurveyTagsModal
-          open={openTagsModal}
-          onClose={() => setOpenTagsModal(false)}
-          survey={survey}
-        />
-      )}
-
+        {can("UPDATE_SURVEY") && openTagsModal && (
+          <SurveyTagsModal
+            open={openTagsModal}
+            onClose={() => setOpenTagsModal(false)}
+            survey={survey}
+          />
+        )}
+      </Suspense>
       <SnackbarAlert
         openSnackbar={openSnackbar}
         handleCloseSnackbar={handleCloseSnackbar}

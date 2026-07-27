@@ -1,31 +1,55 @@
-import { ReactFlowProvider } from "@xyflow/react";
+import { lazy, Suspense } from "react";
+
 import { createBrowserRouter } from "react-router-dom";
 
 import PersistLogin from "../app/slices/PersistLogin";
 import RequireAuth from "../components/auth/RequireAuth";
-import SurveysListMain from "../components/Surveys/SurveysListMain";
+import RouteLogoLoader from "../components/Loaders/RouteLogoLoader";
 import PublicGuard from "../layouts/PublicGuard";
 import RootLayout from "../layouts/RootLayout";
-import { AcceptInvite } from "../pages/AcceptInvite";
-import Dashboard from "../pages/Dashboard";
-import EmailNotVerified from "../pages/EmailNotVerified";
 import ErrorPage from "../pages/ErrorPage";
-import ForgotPassword from "../pages/ForgotPassword";
-import Homepage from "../pages/Homepage";
-import LoginAgain from "../pages/LoginAgain";
-import { Onboarding } from "../pages/OnboardingSSO";
-import { PendingInvites } from "../pages/PendingInvites";
-import QuestionFlow from "../pages/QuestionFlow";
-import Settings from "../pages/Settings";
-import Signin from "../pages/Signin";
-import Signup from "../pages/Signup";
-import SurveyBuilder from "../pages/SurveyBuilder";
-import SurveyResults from "../pages/SurveyResults";
-import VerifyUser from "../pages/VerifyUser";
 
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const QuestionFlow = lazy(() => import("../pages/QuestionFlow"));
+const Settings = lazy(() => import("../pages/Settings"));
+const SurveyBuilder = lazy(() => import("../pages/SurveyBuilder"));
+const SurveyResults = lazy(() => import("../pages/SurveyResults"));
+const EmailNotVerified = lazy(() => import("../pages/EmailNotVerified"));
+
+const ForgotPassword = lazy(() => import("../pages/ForgotPassword"));
+const Homepage = lazy(() => import("../pages/Homepage"));
+const LoginAgain = lazy(() => import("../pages/LoginAgain"));
+const Signin = lazy(() => import("../pages/Signin"));
+const Signup = lazy(() => import("../pages/Signup"));
+const VerifyUser = lazy(() => import("../pages/VerifyUser"));
+
+const SurveysListMain = lazy(
+  () => import("../components/Surveys/SurveysListMain"),
+);
+const AcceptInvite = lazy(() =>
+  import("../pages/AcceptInvite").then((module) => ({
+    default: module.AcceptInvite,
+  })),
+);
+
+const Onboarding = lazy(() =>
+  import("../pages/OnboardingSSO").then((module) => ({
+    default: module.Onboarding,
+  })),
+);
+
+const PendingInvites = lazy(() =>
+  import("../pages/PendingInvites").then((module) => ({
+    default: module.PendingInvites,
+  })),
+);
 const router = createBrowserRouter([
   {
-    element: <RootLayout />,
+    element: (
+      <Suspense fallback={<RouteLogoLoader />}>
+        <RootLayout />
+      </Suspense>
+    ),
     errorElement: <ErrorPage />,
     children: [
       {
@@ -87,11 +111,7 @@ const router = createBrowserRouter([
               },
               {
                 path: "/s/flow/:surveyID",
-                element: (
-                  <ReactFlowProvider>
-                    <QuestionFlow />
-                  </ReactFlowProvider>
-                ),
+                element: <QuestionFlow />,
               },
               {
                 path: "/s/results/:surveyID",

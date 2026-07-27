@@ -1,14 +1,10 @@
 import { ThemeProvider } from "@mui/material";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { type BeforeSendFn } from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { createRoot } from "react-dom/client";
-// import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 
-// import { ToastContainer } from "react-toastify";
 import store from "./app/store";
 import AppErrorBoundary from "./AppErrorBoundary";
 import AppToaster from "./components/alert/AppToaster";
@@ -18,11 +14,9 @@ import { GlobalGenerateLoaderOverlay } from "./layouts/GlobalGenerateLoaderOverl
 import { GlobalImportLoaderOverlay } from "./layouts/GlobalImporLoaderOverlay";
 import router from "./routes/routes";
 import "./index.css";
-// import "react-toastify/dist/ReactToastify.css";
 import "../src/utils/sentry";
 import SessionInitializer from "./SessionInitializer";
 import electricBlueLightTheme from "./theme/electricBlueLightTheme";
-import "./styles/marvel-devices.min.css";
 import { sanitizeTelemetryUrl } from "./utils/sanitizeTelemetryUrl";
 
 const scrubPostHogEvent: BeforeSendFn = (event) => {
@@ -64,21 +58,19 @@ createRoot(document.getElementById("root")!).render(
     <Provider store={store}>
       <AppErrorBoundary>
         <ThemeProvider theme={electricBlueLightTheme}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <PostHogProvider
-              apiKey={import.meta.env.VITE_POSTHOG_KEY}
-              options={options}
-            >
-              <SessionInitializer>
-                <EditLockConfirmProvider>
-                  <RouterProvider router={router} />
-                  <GlobalFeedbackOverlays />
-                  <GlobalImportLoaderOverlay />
-                  <GlobalGenerateLoaderOverlay />
-                </EditLockConfirmProvider>
-              </SessionInitializer>
-            </PostHogProvider>
-          </LocalizationProvider>
+          <PostHogProvider
+            apiKey={import.meta.env.VITE_POSTHOG_KEY}
+            options={options}
+          >
+            <SessionInitializer>
+              <EditLockConfirmProvider>
+                <RouterProvider router={router} />
+                <GlobalFeedbackOverlays />
+                <GlobalImportLoaderOverlay />
+                <GlobalGenerateLoaderOverlay />
+              </EditLockConfirmProvider>
+            </SessionInitializer>
+          </PostHogProvider>
         </ThemeProvider>
       </AppErrorBoundary>
     </Provider>

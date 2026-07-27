@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button } from "@mui/material";
 
 import { NewSurveyProps } from "../../utils/types";
-import NewSurveyModal from "../Modals/NewSurveyModal";
+
+const NewSurveyModal = lazy(() => import("../Modals/NewSurveyModal"));
 
 const CreateNewSurveyBtn = ({ workspaceId, workspaceName }: NewSurveyProps) => {
   const [open, setOpen] = useState(false);
@@ -36,12 +37,17 @@ const CreateNewSurveyBtn = ({ workspaceId, workspaceName }: NewSurveyProps) => {
           <AddIcon />
           Create new survey
         </Button>
-        <NewSurveyModal
-          open={open}
-          setOpen={setOpen}
-          workspaceId={workspaceId!}
-          workspaceName={workspaceName!}
-        />
+        {open && (
+          <Suspense fallback={null}>
+            {" "}
+            <NewSurveyModal
+              open={open}
+              setOpen={setOpen}
+              workspaceId={workspaceId!}
+              workspaceName={workspaceName!}
+            />
+          </Suspense>
+        )}
       </Box>
     </>
   );

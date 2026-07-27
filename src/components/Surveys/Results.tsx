@@ -1,17 +1,27 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 
-import { AppBar, Box, Tab, Tabs } from "@mui/material";
+import { AppBar, Box, CircularProgress, Tab, Tabs } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 import useAuth from "../../hooks/useAuth";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { hasMinimumPlan } from "../../utils/planLimits";
-import { BehaviorInsights } from "../Behavior/BehaviorInsights";
 import { ExportButton } from "../Insights/ExportButton";
-import { SummaryContainer } from "../Insights/SummaryContainer";
 import { SurveyInsights } from "../Insights/SurveyInsights";
 
-import ResultResponses from "./ResultResponses";
+const ResultResponses = lazy(() => import("./ResultResponses"));
+
+const SummaryContainer = lazy(() =>
+  import("../Insights/SummaryContainer").then((module) => ({
+    default: module.SummaryContainer,
+  })),
+);
+
+const BehaviorInsights = lazy(() =>
+  import("../Behavior/BehaviorInsights").then((module) => ({
+    default: module.BehaviorInsights,
+  })),
+);
 
 const Results = () => {
   const { surveyID } = useParams();
@@ -211,7 +221,22 @@ const Results = () => {
             /* border: "2px solid red"*/
           }}
         >
-          {content}
+          <Suspense
+            fallback={
+              <Box
+                sx={{
+                  minHeight: 320,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <CircularProgress size={32} />
+              </Box>
+            }
+          >
+            {content}
+          </Suspense>
         </Box>
       </Box>
     </>

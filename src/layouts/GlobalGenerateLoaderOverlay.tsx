@@ -1,7 +1,12 @@
-import { Box, Typography } from "@mui/material";
+import { lazy, Suspense } from "react";
+
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 import { useAppSelector } from "../app/typedReduxHooks";
-import GenerateSurveyAnimation from "../components/Loaders/GenerateSurveyAnimation";
+
+const GenerateSurveyAnimation = lazy(
+  () => import("../components/Loaders/GenerateSurveyAnimation"),
+);
 
 export const GlobalGenerateLoaderOverlay = () => {
   const { overlayOpen, overlayMessage, overlayVariant } = useAppSelector(
@@ -75,7 +80,9 @@ export const GlobalGenerateLoaderOverlay = () => {
             // border: "1px solid red",
           }}
         >
-          <GenerateSurveyAnimation />
+          <Suspense fallback={<CircularProgress size={40} />}>
+            <GenerateSurveyAnimation />
+          </Suspense>
         </Box>
       </Box>
     </Box>

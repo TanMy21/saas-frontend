@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 
 import { Box, CircularProgress } from "@mui/material";
 import {
@@ -28,7 +28,6 @@ import {
   NodeData,
 } from "../../utils/types";
 import { isConditionlessType } from "../../utils/utils";
-import FlowConditionModal from "../Modals/FlowConditionModal";
 import { toastInfo } from "../toast/toastUtils";
 
 import BypassEdge from "./edges/BypassEdge";
@@ -38,6 +37,8 @@ import { applyLayout } from "./layouts/layoutManager";
 import { useLayoutMode } from "./layouts/useLayoutMode";
 import QuestionNode from "./QuestionNode";
 import ViewMenu from "./ViewMenu";
+
+const FlowConditionModal = lazy(() => import("../Modals/FlowConditionModal"));
 
 const nodeTypes = { questionNode: QuestionNode };
 
@@ -96,10 +97,10 @@ const QuestionFlowContainer = ({
 
     setEdgeFormData((prev) => ({
       ...prev,
-      sourceQuestionID: String(node.data?.questionID as string) || "",
+      sourceQuestionID: String(node.data?.questionID) || "",
       sourceQuestionOrder: Number((node.data?.order as number) ?? -1),
-      sourceQuestionText: String(node.data?.question as string) || "",
-      sourceQuestionIcon: String(node.data?.element as string) || "",
+      sourceQuestionText: String(node.data?.question) || "",
+      sourceQuestionIcon: String(node.data?.element) || "",
     }));
   };
 
@@ -212,8 +213,9 @@ const QuestionFlowContainer = ({
     setOpenConditions(true);
   };
 
-  const handleEdgesChange = async(changes: EdgeChange[]) => {
-     if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.FLOW_CONDITION_CHANGE))) return;
+  const handleEdgesChange = async (changes: EdgeChange[]) => {
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.FLOW_CONDITION_CHANGE)))
+      return;
     const updatedEdges = edges.filter((edge) => {
       const change = changes.find((c) => {
         if ("id" in c) {
@@ -489,24 +491,29 @@ const QuestionFlowContainer = ({
           />
         </ReactFlow>
       </Box>
-      <FlowConditionModal
-        nodes={nodes}
-        edges={edges}
-        openConditions={openConditions}
-        setOpenConditions={setOpenConditions}
-        selectedNode={selectedNode}
-        setSelectedNode={setSelectedNode}
-        edgeFormData={edgeFormData}
-        errors={errors}
-        setErrors={setErrors}
-        setEdges={setEdges}
-        isValidArray={isValidArray}
-        setIsValidArray={setIsValidArray}
-        conditions={conditions}
-        setConditions={setConditions}
-        Elements={Elements}
-        refetch={refetch}
-      />
+
+      {openConditions && (
+        <Suspense fallback={null}>
+          <FlowConditionModal
+            nodes={nodes}
+            edges={edges}
+            openConditions={openConditions}
+            setOpenConditions={setOpenConditions}
+            selectedNode={selectedNode}
+            setSelectedNode={setSelectedNode}
+            edgeFormData={edgeFormData}
+            errors={errors}
+            setErrors={setErrors}
+            setEdges={setEdges}
+            isValidArray={isValidArray}
+            setIsValidArray={setIsValidArray}
+            conditions={conditions}
+            setConditions={setConditions}
+            Elements={Elements}
+            refetch={refetch}
+          />
+        </Suspense>
+      )}
     </Box>
   );
 };

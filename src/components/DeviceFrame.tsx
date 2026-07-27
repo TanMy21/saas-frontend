@@ -2,6 +2,8 @@ import * as React from "react";
 
 import * as RDFS from "react-device-frameset";
 
+import "../styles/marvel-devices.min.css";
+
 /**
  * Resolves the component regardless of whether the lib exports:
  * - default

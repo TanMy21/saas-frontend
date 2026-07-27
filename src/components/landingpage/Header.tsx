@@ -1,7 +1,5 @@
 import { useNavigate } from "react-router-dom";
 
-import Logo from "../../../public/Logo.png";
-
 const Header = () => {
   const navigate = useNavigate();
 
@@ -14,7 +12,7 @@ const Header = () => {
         {/* Logo */}
         <div className="logo-wrapper">
           <div className="logo-box">
-            <img src={Logo} alt="logo" />
+            <img src="/Logo.png" alt="Feedflo" width={410} height={320} />
           </div>
           <span className="logo-text">eedflo</span>
         </div>
