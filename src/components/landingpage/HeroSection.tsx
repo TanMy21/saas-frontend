@@ -105,6 +105,8 @@ const HeroSection = () => {
                 <img
                   src={import.meta.env.VITE_HERO_DEMO_POSTER_URL}
                   alt="Feedflo product demo preview"
+                  width={1259}
+                  height={742}
                   loading="eager"
                   fetchPriority="high"
                 />
@@ -126,6 +128,7 @@ const HeroSection = () => {
                   height={961}
                   loading="lazy"
                   decoding="async"
+                  fetchPriority="low"
                 />
               </div>
             </div>

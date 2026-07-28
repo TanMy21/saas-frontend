@@ -1,15 +1,19 @@
-import { useRef, useState } from "react";
+import { lazy, useRef, useState } from "react";
 
-import CTA from "../components/landingpage/CTA";
-import Features from "../components/landingpage/Features";
-import Footer from "../components/landingpage/Footer";
+import DeferredSection from "../components/landingpage/DeferredSection";
 import Header from "../components/landingpage/Header";
 import HeroSection from "../components/landingpage/HeroSection";
-import HowItWorks from "../components/landingpage/HowItWorks";
 import ProblemSolution from "../components/landingpage/ProblemSolution";
-import UseCases from "../components/landingpage/UseCases";
 import SuccessfullLogoutToast from "../components/toast/SuccessfullLogoutToast";
 import "../styles/landing.css";
+
+const CTA = lazy(() => import("../components/landingpage/CTA"));
+const Features = lazy(() => import("../components/landingpage/Features"));
+const Footer = lazy(() => import("../components/landingpage/Footer"));
+const HowItWorks = lazy(
+  () => import("../components/landingpage/HowItWorks"),
+);
+const UseCases = lazy(() => import("../components/landingpage/UseCases"));
 
 const Homepage = () => {
   const params = new URLSearchParams(location.search);
@@ -44,23 +48,31 @@ const Homepage = () => {
 
         <section className="lp-section how">
           <div className="lp-container">
-            <HowItWorks />
+            <DeferredSection minHeight="700px" rootRef={pageScrollRef}>
+              <HowItWorks />
+            </DeferredSection>
           </div>
         </section>
 
-        <Features scrollParentRef={pageScrollRef} />
+        <DeferredSection minHeight="400vh" rootRef={pageScrollRef}>
+          <Features scrollParentRef={pageScrollRef} />
+        </DeferredSection>
 
-        <UseCases scrollParentRef={pageScrollRef} />
+        <DeferredSection minHeight="400vh" rootRef={pageScrollRef}>
+          <UseCases scrollParentRef={pageScrollRef} />
+        </DeferredSection>
 
-        <div className="cta-footer-screen">
-          <section className="lp-section cta">
-            <div className="lp-container">
-              <CTA />
-            </div>
-          </section>
+        <DeferredSection minHeight="100vh" rootRef={pageScrollRef}>
+          <div className="cta-footer-screen">
+            <section className="lp-section cta">
+              <div className="lp-container">
+                <CTA />
+              </div>
+            </section>
 
-          <Footer />
-        </div>
+            <Footer />
+          </div>
+        </DeferredSection>
       </div>
     </>
   );

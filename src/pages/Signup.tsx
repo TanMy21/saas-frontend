@@ -159,7 +159,7 @@ const Signup = () => {
                 }}
               >
                 <img
-                  src="/Logo.png"
+                  src="/Logo.webp"
                   alt="logo"
                   style={{
                     maxWidth: "80%",

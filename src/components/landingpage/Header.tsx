@@ -12,7 +12,7 @@ const Header = () => {
         {/* Logo */}
         <div className="logo-wrapper">
           <div className="logo-box">
-            <img src="/Logo.png" alt="Feedflo" width={410} height={320} />
+            <img src="/Logo.webp" alt="Feedflo" width={410} height={320} />
           </div>
           <span className="logo-text">eedflo</span>
         </div>

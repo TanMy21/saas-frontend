@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { newWayItems, oldWayItems } from "../../utils/utils";
+import { newWayItems, oldWayItems } from "../../data/landingPageData";
 
 const ProblemSolution = () => {
   // Tracks whether the section has entered the viewport once.

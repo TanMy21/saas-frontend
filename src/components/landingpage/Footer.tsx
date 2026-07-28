@@ -8,7 +8,7 @@ const Footer = () => {
           <div className="footer-logo">
             <div className="footer-logo-box">
               <img
-                src="/Logo.png"
+                src="/Logo.webp"
                 alt="Feedflo logo"
                 width={410}
                 height={320}

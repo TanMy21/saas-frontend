@@ -223,7 +223,7 @@ const Signin = () => {
               <Box sx={{ width: "60%", height: "60%", margin: "auto" }}>
                 <Link to="/" style={{ textDecoration: "none" }}>
                   <img
-                    src="/Logo.png"
+                    src="/Logo.webp"
                     alt="logo"
                     style={{
                       maxWidth: "25%",

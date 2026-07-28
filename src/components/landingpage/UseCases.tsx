@@ -4,8 +4,8 @@ import CustomerResearchImg from "../../assets/customer research.webp";
 import MarketingResearchImg from "../../assets/marketing research.webp";
 import PhysicalResearchImg from "../../assets/physical product.webp";
 import ProductResearchImg from "../../assets/product research.webp";
+import { useCases } from "../../data/landingPageData";
 import { UseCasesProps } from "../../types/landingTypes";
-import { useCases } from "../../utils/utils";
 
 function getScrollViewportHeight(scrollParent: HTMLDivElement | null) {
   return scrollParent ? scrollParent.clientHeight : window.innerHeight;

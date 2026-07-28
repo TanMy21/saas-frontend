@@ -3,8 +3,27 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/Logo.png" />
+  <link rel="icon" type="image/webp" href="/Logo.webp" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script>
+    if (window.location.pathname === "/") {
+      const preconnect = document.createElement("link");
+      preconnect.rel = "preconnect";
+      preconnect.href = "https://res.cloudinary.com";
+
+      const preload = document.createElement("link");
+      preload.rel = "preload";
+      preload.as = "image";
+      preload.type = "image/webp";
+      preload.href = "%VITE_HERO_DEMO_POSTER_URL%";
+      preload.setAttribute("fetchpriority", "high");
+
+      document.head.append(preconnect, preload);
+    }
+  </script>
+
+
   <title>Feedflo</title>
 </head>
 

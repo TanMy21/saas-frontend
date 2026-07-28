@@ -1,27 +1,6 @@
 import { ReactNode } from "react";
 
 import DOMPurify from "dompurify";
-import {
-  Box,
-  EyeOff,
-  Gauge,
-  GripVertical,
-  Layers,
-  LineChart,
-  MousePointerClick,
-  Palette,
-  PieChart,
-  Plus,
-  Image as Img,
-  RotateCw,
-  Sparkles,
-  TrendingUp,
-  Type,
-  Users,
-  Crosshair,
-  Activity,
-  CircleDot,
-} from "lucide-react";
 import { type Transition } from "motion/react";
 
 import {
@@ -37,7 +16,6 @@ import {
   SummaryQuestion,
   TextResponseItem,
 } from "../types/insightTypes";
-import { FeatureItem, Step, UseCase } from "../types/landingTypes";
 import {
   ConceptFitSettingsForm,
   IATBehaviorSettingsForm,
@@ -75,121 +53,6 @@ export const generateOptionLabel = (index: number, qType: string) => {
 
 export const getSquareImageURL = (url: string) =>
   url.replace("/upload/", "/upload/w_250,h_250,c_fill,g_auto/");
-
-export const features: FeatureItem[] = [
-  {
-    key: "create",
-    label: "Create Surveys",
-    icon: Plus,
-    step: "01",
-    title: "Create beautiful surveys\nin minutes",
-    description:
-      "Build engaging surveys with our intuitive builder. Choose from various question types and customize to match your needs.",
-    color: "feature-color-blue",
-    bullets: [
-      {
-        icon: GripVertical,
-        title: "Drag & drop builder",
-        desc: "Create surveys effortlessly",
-      },
-      {
-        icon: Type,
-        title: "Multiple question types",
-        desc: "Text, rating, choice, and more",
-      },
-      {
-        icon: Palette,
-        title: "Fully customizable",
-        desc: "Match your brand and style",
-      },
-    ],
-    cta: "Start Creating",
-  },
-  {
-    key: "threeD",
-    label: "3D Questions",
-    icon: Box,
-    step: "02",
-    title: "Capture feedback\non real 3D products",
-    description:
-      "Let users interact with 3D models directly inside surveys. Rotate, inspect, and respond to products like perfumes, shoes, packaging, and more.",
-    color: "feature-color-violet",
-    bullets: [
-      {
-        icon: RotateCw,
-        title: "Interactive 3D models",
-        desc: "Users can rotate, zoom, and explore freely",
-      },
-      {
-        icon: MousePointerClick,
-        title: "Contextual feedback",
-        desc: "Collect feedback based on what users actually see",
-      },
-      {
-        icon: Layers,
-        title: "Real product validation",
-        desc: "Test designs before manufacturing or launch",
-      },
-    ],
-    cta: "Try 3D Questions",
-  },
-  {
-    key: "track",
-    label: "Track Responses",
-    icon: LineChart,
-    step: "03",
-    title: "Monitor responses\nas they come in",
-    description:
-      "Watch real-time engagement, completion rates, and response trends with a live dashboard built for clarity.",
-    color: "feature-color-emerald",
-    bullets: [
-      {
-        icon: TrendingUp,
-        title: "Live response feed",
-        desc: "Updates the moment they arrive",
-      },
-      {
-        icon: Gauge,
-        title: "Completion rates",
-        desc: "See where people drop off",
-      },
-      {
-        icon: Users,
-        title: "Audience breakdown",
-        desc: "Segment by source and channel",
-      },
-    ],
-    cta: "View Dashboard",
-  },
-  {
-    key: "insights",
-    label: "Understand Insights",
-    icon: PieChart,
-    step: "04",
-    title: "Turn feedback into\nclear, smart insights",
-    description:
-      "Sentiment analysis, trending themes, and AI-generated recommendations help you act on feedback faster.",
-    color: "feature-color-amber",
-    bullets: [
-      {
-        icon: PieChart,
-        title: "Sentiment analysis",
-        desc: "Positive, neutral, negative at a glance",
-      },
-      {
-        icon: Sparkles,
-        title: "AI recommendations",
-        desc: "Smart next steps from every survey",
-      },
-      {
-        icon: TrendingUp,
-        title: "Top themes",
-        desc: "Surface what matters most",
-      },
-    ],
-    cta: "See Insights",
-  },
-];
 
 export const navItems = [
   {
@@ -923,78 +786,6 @@ export const hexToRgba = (hex: string, alpha: number) => {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-export const useCases: UseCase[] = [
-  {
-    eyebrow: "Customer research",
-    title: "Customer research",
-    description:
-      "Understand people’s needs, pain points, and expectations through richer feedback.",
-    mockupLabel: "Customer research",
-    color: "uc-color-blue",
-  },
-  {
-    eyebrow: "Product feedback",
-    title: "Product feedback",
-    description:
-      "Validate ideas, prioritize your roadmap, and understand what users actually need before building.",
-    mockupLabel: "Product feedback",
-    color: "uc-color-violet",
-  },
-  {
-    eyebrow: "Marketing research",
-    title: "Marketing research",
-    description:
-      "Test messaging, understand audience intent, and learn what makes people choose, trust, or ignore your offer.",
-    mockupLabel: "Marketing research",
-    color: "uc-color-emerald",
-  },
-  {
-    eyebrow: "Physical products",
-    title: "Physical product testing",
-    description:
-      "Collect feedback on physical products, packaging, and 3D experiences before launch.",
-    mockupLabel: "Physical product",
-    color: "uc-color-amber",
-  },
-];
-
-export const oldWayItems = [
-  {
-    icon: EyeOff,
-    title: "Hidden friction",
-    description: "Users hesitate, scroll, and change answers — unseen.",
-  },
-  {
-    icon: CircleDot,
-    title: "Surface-level responses",
-    description: "You get the responses, not the reason behind it.",
-  },
-  {
-    icon: Img,
-    title: "Flat product feedback",
-    description: "Images and text fall short for visual or physical products.",
-  },
-];
-
-export const newWayItems = [
-  {
-    icon: Crosshair,
-    title: "Intent-aware feedback",
-    description: "Connect responses with behavior to understand real intent.",
-  },
-  {
-    icon: Activity,
-    title: "Behavioral insights",
-    description: "Spot uncertainty, confusion, and confidence in interactions.",
-  },
-  {
-    icon: Box,
-    title: "3D product feedback",
-    description: "Let users explore products naturally before responding.",
-  },
-];
-
- 
 /**
  * Returns a stable alphabetic badge for a media option's persisted 1-based order.
  * Media options are limited to 10, so valid orders map from A through J.
