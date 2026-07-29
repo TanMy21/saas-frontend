@@ -122,7 +122,6 @@ export const QuestionTextTypographySettings = ({
   const markFormTouched = () => {
     if (!canEditQuestion) return;
     if (!formTouched) {
-      console.log("[markFormTouched] marked as true");
       setFormTouched(true);
     }
   };
@@ -135,7 +134,6 @@ export const QuestionTextTypographySettings = ({
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      console.log("[useEffect] timeout fired → submitting form");
       handleSubmit(isDesktop ? onSubmit : onSubmitMobile, (errors) => {
         console.error("[handleSubmit] validation failed:", errors);
       })();

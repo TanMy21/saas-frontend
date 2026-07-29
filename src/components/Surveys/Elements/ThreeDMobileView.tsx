@@ -15,7 +15,7 @@ const ThreeDMobileView = ({ url, display }: ThreeDViewProps) => {
       state.question.selectedQuestion?.Model3D?.showQuestion ?? false
   );
 
-  console.log("ThreeDMobileView showQuestion:", showQuestion);
+   
 
   return (
     <div

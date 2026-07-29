@@ -25,7 +25,7 @@ const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
     try {
       await retitleSurvey({ surveyID, title: surveyTitle });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     onClose();
   };

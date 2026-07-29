@@ -9,12 +9,6 @@ export const optionApiSlice = apiSlice.injectEndpoints({
     }),
     createNewOption: builder.mutation({
       query: (data) => {
-        /**
-         * Logs the exact request body RTK Query is about to send to POST /op/create.
-         * If settings exists here but not in the DB, the backend is stripping or ignoring it.
-         */
-        console.log("RTK createNewOption sending:", data);
-
         return {
           url: `/op/create`,
           method: "POST",

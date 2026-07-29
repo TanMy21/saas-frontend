@@ -18,15 +18,13 @@ const DashboardTour = ({
 
   const updateTourStatus = async (
     dashboardTourCompleted: boolean,
-    dashboardTourSkipped: boolean
+    dashboardTourSkipped: boolean,
   ) => {
     try {
-      console.log("Updating tour status clicked...");
-      const response = await updateUserTourStatus({
+      await updateUserTourStatus({
         hasCompletedDashboardTour: dashboardTourCompleted,
         hasSkippedDashboardTour: dashboardTourSkipped,
       }).unwrap();
-      console.log("Response: ", response);
     } catch (error) {
       console.error(error);
     }

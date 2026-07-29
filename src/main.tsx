@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 
+import "./utils/sentry";
 import store from "./app/store";
 import AppErrorBoundary from "./AppErrorBoundary";
 import AppToaster from "./components/alert/AppToaster";
@@ -14,7 +15,6 @@ import { GlobalGenerateLoaderOverlay } from "./layouts/GlobalGenerateLoaderOverl
 import { GlobalImportLoaderOverlay } from "./layouts/GlobalImporLoaderOverlay";
 import router from "./routes/routes";
 import "./index.css";
-import "../src/utils/sentry";
 import SessionInitializer from "./SessionInitializer";
 import electricBlueLightTheme from "./theme/electricBlueLightTheme";
 import { sanitizeTelemetryUrl } from "./utils/sanitizeTelemetryUrl";

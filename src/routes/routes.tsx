@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 
+import { wrapCreateBrowserRouterV6 } from "@sentry/react";
 import { createBrowserRouter } from "react-router-dom";
 
 import PersistLogin from "../app/slices/PersistLogin";
@@ -43,7 +44,11 @@ const PendingInvites = lazy(() =>
     default: module.PendingInvites,
   })),
 );
-const router = createBrowserRouter([
+
+const createSentryBrowserRouter =
+  wrapCreateBrowserRouterV6(createBrowserRouter);
+
+const router = createSentryBrowserRouter([
   {
     element: (
       <Suspense fallback={<RouteLogoLoader />}>

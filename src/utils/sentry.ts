@@ -1,11 +1,49 @@
-import * as Sentry from "@sentry/react";
+import { useEffect } from "react";
 
-import { sanitizeTelemetryUrl } from "./sanitizeTelemetryUrl";
+import * as Sentry from "@sentry/react";
+import {
+  createRoutesFromChildren,
+  matchRoutes,
+  useLocation,
+  useNavigationType,
+} from "react-router-dom";
+
+import {
+  sanitizeTelemetryText,
+  sanitizeTelemetryUrl,
+} from "./sanitizeTelemetryUrl";
+
+const sanitizeTelemetryValue = (value: unknown): unknown => {
+  if (typeof value === "string") {
+    return sanitizeTelemetryText(value);
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(sanitizeTelemetryValue);
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, nestedValue]) => [
+        key,
+        sanitizeTelemetryValue(nestedValue),
+      ]),
+    );
+  }
+
+  return value;
+};
 
 Sentry.init({
   dsn: "https://73ad3f8180b4d91f9c16c7a975ca1644@o4508062467096576.ingest.de.sentry.io/4508183727571024",
   integrations: [
-    Sentry.browserTracingIntegration(),
+    Sentry.reactRouterV6BrowserTracingIntegration({
+      useEffect,
+      useLocation,
+      useNavigationType,
+      createRoutesFromChildren,
+      matchRoutes,
+    }),
     Sentry.replayIntegration({
       maskAllText: true,
       blockAllMedia: true,
@@ -18,6 +56,14 @@ Sentry.init({
   // Session Replay
   replaysSessionSampleRate: import.meta.env.PROD ? 0 : 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
   replaysOnErrorSampleRate: import.meta.env.PROD ? 0.1 : 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+  beforeSendTransaction(event) {
+    return sanitizeTelemetryValue(event) as typeof event;
+  },
+
+  beforeSendSpan(span) {
+    return sanitizeTelemetryValue(span) as typeof span;
+  },
+
   beforeSend(event) {
     if (event.request?.headers) {
       delete event.request.headers.Authorization;
@@ -43,7 +89,7 @@ Sentry.init({
       event.request.query_string = "[Filtered]";
     }
 
-    return event;
+    return sanitizeTelemetryValue(event) as typeof event;
   },
   beforeBreadcrumb(breadcrumb) {
     if (typeof breadcrumb.data?.url === "string") {
@@ -58,6 +104,6 @@ Sentry.init({
       breadcrumb.data.to = sanitizeTelemetryUrl(breadcrumb.data.to);
     }
 
-    return breadcrumb;
+    return sanitizeTelemetryValue(breadcrumb) as typeof breadcrumb;
   },
 });

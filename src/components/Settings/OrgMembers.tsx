@@ -192,12 +192,6 @@ export const OrgMembers = () => {
             setDrawer({ open: true, mode: "edit", member: m })
           }
           onDelete={(m: any) => setDeleteDialog({ open: true, member: m })}
-          onResendInvite={(invite: any) => {
-            console.log("Resend invite", invite);
-          }}
-          onCancelInvite={(invite: any) => {
-            console.log("Cancel invite", invite);
-          }}
         />
       </Box>
 

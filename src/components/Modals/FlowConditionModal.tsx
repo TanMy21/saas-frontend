@@ -170,9 +170,6 @@ const FlowConditionModal = ({
         (condition: any) => condition.flowConditionID === "",
       );
 
-      console.log("🔍 Final form data before submit:", data);
-      console.log("🔍 Final formatted data before submit:", formattedData);
-
       const { isValidArray, globalIsValid, errorMap } =
         validateConditions(formattedData);
 
@@ -199,7 +196,7 @@ const FlowConditionModal = ({
       setIsValidArray(() => []);
       refetch();
     } catch (error) {
-      console.log("Error: ", error);
+      console.error("Error: ", error);
     }
   };
 

@@ -10,10 +10,17 @@ const SENSITIVE_QUERY_PARAMS = new Set([
   "refreshToken",
 ]);
 
+export const sanitizeTelemetryText = (value: string) =>
+  value
+    .replace(/(\/invite\/)[^/?#\s"'<>]+/gi, `$1${REDACTED}`)
+    .replace(/(\/verify\/)[^/?#\s"'<>]+/gi, `$1${REDACTED}`)
+    .replace(
+      /([?&](?:code|token|verificationCode|resetToken|inviteToken|accessToken|refreshToken)=)[^&#\s"'<>]*/gi,
+      `$1${REDACTED}`,
+    );
+
 const redactSensitivePath = (pathname: string) =>
-  pathname
-    .replace(/\/invite\/[^/?#]+/gi, `/invite/${REDACTED}`)
-    .replace(/\/verify\/[^/?#]+/gi, `/verify/${REDACTED}`);
+  sanitizeTelemetryText(pathname);
 
 export const sanitizeTelemetryUrl = (value?: string | null) => {
   if (!value) return value ?? "";
@@ -21,7 +28,9 @@ export const sanitizeTelemetryUrl = (value?: string | null) => {
   try {
     const isAbsolute = /^[a-z][a-z\d+\-.]*:/i.test(value);
     const baseOrigin =
-      typeof window !== "undefined" ? window.location.origin : "https://app.local";
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://app.local";
 
     const url = new URL(value, baseOrigin);
 
@@ -39,9 +48,6 @@ export const sanitizeTelemetryUrl = (value?: string | null) => {
 
     return `${url.pathname}${url.search}${url.hash}`;
   } catch {
-    return value
-      .replace(/([?&](code|token|verificationCode|resetToken|inviteToken|accessToken|refreshToken)=)[^&#]*/gi, `$1${REDACTED}`)
-      .replace(/\/invite\/[^/?#]+/gi, `/invite/${REDACTED}`)
-      .replace(/\/verify\/[^/?#]+/gi, `/verify/${REDACTED}`);
+    return sanitizeTelemetryText(value);
   }
 };

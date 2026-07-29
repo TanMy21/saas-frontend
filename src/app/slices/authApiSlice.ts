@@ -72,7 +72,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
             dispatch(apiSlice.util.resetApiState());
           }, 1000);
         } catch (err) {
-          console.log(err);
+          console.error(err);
         }
       },
     }),
@@ -94,7 +94,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
             }),
           );
         } catch (err) {
-          console.log(err);
+          console.error(err);
         }
       },
     }),

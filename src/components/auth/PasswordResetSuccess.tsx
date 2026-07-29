@@ -61,8 +61,6 @@ const PasswordResetOtpForm = ({
   });
 
   const submitPasswordReset = async (values: ResetPasswordOtpFormValues) => {
-   console.log("Submitting password reset with values:", values.otp, values.password, submittedEmail);
-   
     try {
       await resetPassword({
         email: submittedEmail,
@@ -160,8 +158,6 @@ const PasswordResetOtpForm = ({
     >
       <Box sx={{ width: "100%", maxWidth: 600 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-      
-
           <Typography sx={{ color: grey[955], mt: 1 }}>
             Enter the six-digit code sent to
           </Typography>

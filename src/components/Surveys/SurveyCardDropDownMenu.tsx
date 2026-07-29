@@ -167,7 +167,7 @@ const SurveyCardDropDownMenu = ({
         duration: 3000,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       dispatch(hideOverlay());
     }
@@ -182,7 +182,7 @@ const SurveyCardDropDownMenu = ({
         duration: 3000,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       handleClose();
       dispatch(hideOverlay());
@@ -201,7 +201,7 @@ const SurveyCardDropDownMenu = ({
         duration: 2000,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       dispatch(hideOverlay());
     }

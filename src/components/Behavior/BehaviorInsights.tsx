@@ -64,8 +64,6 @@ export const BehaviorInsights = () => {
   const showEmptySurvey = !isLoading && totalRows === 0 && !hasFilters;
   const showFilteredEmpty = !isLoading && totalRows === 0 && hasFilters;
 
-  console.log("Detail Data:", detailData);
-
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       <Box

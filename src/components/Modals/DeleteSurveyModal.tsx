@@ -46,7 +46,7 @@ const DeleteSurveyModal = ({
     if (input === expected) {
       await deleteSurvey(sID);
     } else {
-      console.log(error);
+      console.error(error);
     }
     reset({ confirmationText: "" });
     onClose();

@@ -78,7 +78,7 @@ const SurveyTitleEditModal = ({
       const { title, description } = data;
       await updateSurveyTitleandDescription({ surveyID, title, description });
     } catch (error) {
-      console.log("Error: ", error);
+      console.error("Error: ", error);
     }
   };
 

@@ -18,10 +18,9 @@ const SurveyBuilderTour = ({
 
   const updateTourStatus = async (
     builderTourCompleted: boolean,
-    builderTourSkipped: boolean
+    builderTourSkipped: boolean,
   ) => {
     try {
-      console.log("Updating tour status clicked...");
       await updateUserTourStatus({
         hasCompletedBuilderTour: builderTourCompleted,
         hasSkippedBuilderTour: builderTourSkipped,
@@ -129,8 +128,6 @@ const SurveyBuilderTour = ({
 
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { action, index, status, type } = data;
-
-    console.log("Type:", type);
 
     if (type === "step:after") {
       setStepIndex(index + (action === "prev" ? -1 : 1));

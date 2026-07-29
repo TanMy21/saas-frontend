@@ -20,8 +20,6 @@ export function BehaviorParticipantDetailDrawer({
 }: ParticipantDetailDrawerProps) {
   if (!participant) return null;
 
-  console.log("Participant Detail:", detail); // Debug log for detail data
-
   const summary = detail?.summary;
   const meta = detail?.meta;
 
