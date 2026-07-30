@@ -18,11 +18,13 @@ export function ThreeDBehaviorCanvas({
   clickedMeshes,
   surfaceClickSamples,
   autoRotate,
+  showRefocusButton = true,
 }: {
   modelUrl: string;
   clickedMeshes: ColoredClickedMeshArea[];
   surfaceClickSamples: SurfaceClickSample[];
   autoRotate: boolean;
+  showRefocusButton?: boolean;
 }) {
   return (
     <Canvas
@@ -59,6 +61,7 @@ export function ThreeDBehaviorCanvas({
           modelUrl={modelUrl}
           clickedMeshes={clickedMeshes}
           surfaceClickSamples={surfaceClickSamples}
+          showRefocusButton={showRefocusButton}
         />
       </Suspense>
 

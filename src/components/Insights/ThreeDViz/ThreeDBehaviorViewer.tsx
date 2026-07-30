@@ -90,6 +90,7 @@ export function ThreeDBehaviorViewer({
             clickedMeshes={clickedMeshes}
             surfaceClickSamples={surfaceClickSamples}
             autoRotate={autoRotate}
+            showRefocusButton={!isExpanded}
           />
         </Box>
       </Box>
@@ -122,7 +123,7 @@ export function ThreeDBehaviorViewer({
         >
           <Box>
             <Typography fontSize={15} fontWeight={700}>
-              Expanded 3D interaction view
+              3D interaction view
             </Typography>
 
             <Typography fontSize={12} color="text.secondary">

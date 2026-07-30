@@ -14,10 +14,12 @@ export function ThreeDHighlightResults({
   modelUrl,
   clickedMeshes,
   surfaceClickSamples,
+  showRefocusButton = true,
 }: {
   modelUrl: string;
   clickedMeshes: ColoredClickedMeshArea[];
   surfaceClickSamples: SurfaceClickSample[];
+  showRefocusButton?: boolean;
 }) {
   const { scene } = useGLTF(modelUrl, true);
 
@@ -106,7 +108,7 @@ export function ThreeDHighlightResults({
 
       <SurfaceClickMarkers samples={surfaceClickSamples} />
 
-      <ResultRefocusButton />
+      {showRefocusButton && <ResultRefocusButton />}
     </Bounds>
   );
 }
