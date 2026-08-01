@@ -17,7 +17,7 @@ const BinaryResponseNo = ({
 }: BinaryResponseProps) => {
   const { can } = useAuth();
   const canEdit = can("UPDATE_QUESTION");
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [_hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [tipOpen, setTipOpen] = useState(false);
 
   const [updateQuestionPreferenceUIConfig] =

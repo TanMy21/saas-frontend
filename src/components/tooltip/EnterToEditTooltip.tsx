@@ -34,18 +34,20 @@ const EnterToEditTooltip = ({
       arrow={false}
       componentsProps={{
         tooltip: {
-          sx: {
-            bgcolor: "#0f172a",
-            color: "#ffffff",
-            fontSize: "0.95rem",
-            fontWeight: 500,
-            letterSpacing: "0.3px",
-            borderRadius: "10px",
-            px: 2,
-            py: 1,
-            boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
-            ...tooltipSx,
-          },
+          sx: [
+            {
+              bgcolor: "#0f172a",
+              color: "#ffffff",
+              fontSize: "0.95rem",
+              fontWeight: 500,
+              letterSpacing: "0.3px",
+              borderRadius: "10px",
+              px: 2,
+              py: 1,
+              boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
+            },
+            ...(Array.isArray(tooltipSx) ? tooltipSx : [tooltipSx]),
+          ],
         },
       }}
       open={open}

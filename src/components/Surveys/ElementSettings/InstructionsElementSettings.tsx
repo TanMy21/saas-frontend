@@ -1,8 +1,6 @@
 import { Box } from "@mui/material";
 
-import { ElementSettingsProps } from "../../../utils/types";
-
-const InstructionsElementSettings = ({ qID }: ElementSettingsProps) => {
+const InstructionsElementSettings = () => {
   return (
     <Box
       sx={{

@@ -2,7 +2,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import toast, { ToastOptions } from "react-hot-toast";
+import { toast, ToastOptions } from "react-hot-toast";
 
 const colors = {
   info: "#2563EB",
@@ -12,7 +12,7 @@ const colors = {
 };
 
 export const toastInfo = (message: string) => {
-  toast.custom((t) => (
+  toast.custom((_t) => (
     <div
       style={{
         background: "#FEF9C3",

@@ -39,10 +39,9 @@ const CreateNewSurveyBtn = ({ workspaceId, workspaceName }: NewSurveyProps) => {
         </Button>
         {open && (
           <Suspense fallback={null}>
-            {" "}
             <NewSurveyModal
               open={open}
-              setOpen={setOpen}
+              onClose={() => setOpen(false)}
               workspaceId={workspaceId!}
               workspaceName={workspaceName!}
             />

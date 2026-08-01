@@ -10,8 +10,6 @@ import useAuth from "../../../hooks/useAuth";
 import {
   DEFAULT_CONCEPT_FIT_LEFT_TEXT,
   DEFAULT_CONCEPT_FIT_RIGHT_TEXT,
-  DEFAULT_TIMER_SECONDS,
-  timerDrain,
 } from "../../../utils/constants";
 import { showToast } from "../../../utils/showToast";
 import { QuestionUIConfig } from "../../../utils/types";
@@ -47,13 +45,6 @@ export const ConceptFitPreview = ({
   const [rightText, setRightText] = useState(
     uiConfig.conceptFitRightText || DEFAULT_CONCEPT_FIT_RIGHT_TEXT,
   );
-
-  const timeLimitMs =
-    questionID && typeof uiConfig.timeLimitMs === "number"
-      ? uiConfig.timeLimitMs
-      : DEFAULT_TIMER_SECONDS * 1000;
-
-  const timeLimitSeconds = Math.max(1, Math.round(timeLimitMs / 1000));
 
   /**
    * Hydrates inline response labels when the selected question changes.

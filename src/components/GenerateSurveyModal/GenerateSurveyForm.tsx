@@ -37,20 +37,15 @@ export const GenerateSurveyForm = ({
 
   const { scrollStyles } = useAppTheme();
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<GenerateSurveyFormData>({
-    resolver: zodResolver(generateSurveySchema),
-    defaultValues: {
-      description: "",
-      numberOfQuestions: 4,
-      selectedTypes: [],
-    },
-  });
+  const { control, handleSubmit, watch, setValue } =
+    useForm<GenerateSurveyFormData>({
+      resolver: zodResolver(generateSurveySchema),
+      defaultValues: {
+        description: "",
+        numberOfQuestions: 4,
+        selectedTypes: [],
+      },
+    });
 
   const selectedTypes = watch("selectedTypes") || [];
 

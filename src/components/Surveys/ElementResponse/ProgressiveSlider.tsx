@@ -48,7 +48,7 @@ const getSegmentBackground = (
   index: number,
   currentValue: number,
   totalSegments: number,
-  marks: Mark[]
+  marks: Mark[],
 ): string => {
   const progress = index / totalSegments;
   const isActive = marks[index].value < currentValue;
@@ -70,10 +70,10 @@ const getSegmentBackground = (
 
 const ProgressiveSlider = () => {
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
-  const { questionID, questionPreferences } = question || {};
+  const { questionPreferences } = question || {};
 
   const { minValue, maxValue } = questionPreferences?.uiConfig || {
     minValue: 1,
@@ -82,7 +82,7 @@ const ProgressiveSlider = () => {
 
   const marks = useMemo(
     () => generateMarks(minValue ?? 1, maxValue ?? 5),
-    [minValue, maxValue]
+    [minValue, maxValue],
   );
 
   const min = minValue ?? 1;
@@ -91,8 +91,8 @@ const ProgressiveSlider = () => {
   const [value, setValue] = useState<number>(Math.ceil((min + max) / 2));
 
   const handleSliderChange = (
-    event: Event,
-    newValue: number | number[]
+    _event: Event,
+    newValue: number | number[],
   ): void => {
     setValue(newValue as number);
   };
@@ -121,7 +121,7 @@ const ProgressiveSlider = () => {
             boxShadow: value === mark.value ? `0 0 0 4px #D2DEFF` : "none",
             transition: "background-color 0.2s ease, box-shadow 0.2s ease",
           }}
-        />
+        />,
       );
 
       labels.push(
@@ -140,7 +140,7 @@ const ProgressiveSlider = () => {
           }}
         >
           {mark.label}
-        </Box>
+        </Box>,
       );
 
       if (i < marks.length - 1) {
@@ -161,13 +161,13 @@ const ProgressiveSlider = () => {
                 i,
                 value,
                 marks.length - 1,
-                marks
+                marks,
               ),
               borderRadius: `${segmentThickness / 2}px`,
               left: `calc(${startPercent}% + ${tickSize / 2}px + ${STATIC_CONFIG.gap}px)`,
               width: `calc(${endPercent - startPercent}% - ${tickSize / 2}px - ${nextTickSize / 2}px - ${STATIC_CONFIG.gap * 2}px)`,
             }}
-          />
+          />,
         );
       }
     });

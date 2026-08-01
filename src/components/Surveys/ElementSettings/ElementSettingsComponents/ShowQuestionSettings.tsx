@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod"; 
+import { zodResolver } from "@hookform/resolvers/zod";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
-import { useToggle3DModelQuestionVisibilityMutation } from "../../../../app/slices/elementApiSlice";
+import { useToggleQuestionVisibilityMutation } from "../../../../app/slices/elementApiSlice";
 import { toggleShowQuestionfor3dType } from "../../../../app/slices/elementSlice";
 import { RootState } from "../../../../app/store";
 import {
@@ -37,7 +37,7 @@ const ShowQuestionSettings = () => {
   const showQuestion = question?.Model3D?.showQuestion;
 
   const [toggle3DModelQuestionVisibility] =
-    useToggle3DModelQuestionVisibilityMutation();
+    useToggleQuestionVisibilityMutation();
 
   const { handleSubmit, control, reset } = useForm<QuestionSetting>({
     resolver: zodResolver(uiConfigPreferenceSchema),

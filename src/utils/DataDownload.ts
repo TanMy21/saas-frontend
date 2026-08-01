@@ -1,18 +1,19 @@
 import { writeToString } from "fast-csv";
 import { saveAs } from "file-saver";
 import type { MRT_ColumnDef } from "material-react-table";
-import XLSX from "node-xlsx";
-import pdfMake from "pdfmake/build/pdfmake";
+import { build } from "node-xlsx";
+import { createPdf } from "pdfmake/build/pdfmake";
+import type { TDocumentDefinitions } from "pdfmake/interfaces";
 
 import { RowData } from "./types";
 
 export const exportToCsv = (
   selectedRows: RowData[],
-  columns: MRT_ColumnDef<RowData>[]
+  columns: MRT_ColumnDef<RowData>[],
 ) => {
   const headers = columns.map((col) => col.header);
   const csvRows = selectedRows.map((row) =>
-    columns.map((col) => row[col.accessorKey || ""])
+    columns.map((col) => row[col.accessorKey || ""]),
   );
 
   writeToString([headers, ...csvRows], { headers: true })
@@ -25,14 +26,14 @@ export const exportToCsv = (
 
 export const exportToXlsx = (
   selectedRows: RowData[],
-  columns: MRT_ColumnDef<RowData>[]
+  columns: MRT_ColumnDef<RowData>[],
 ) => {
   // Create headers from the columns
   const headers = columns.map((col) => col.header);
 
   // Map rows to match headers
   const data = selectedRows.map((row) =>
-    columns.map((col) => row[col.accessorKey as string] || "")
+    columns.map((col) => row[col.accessorKey as string] || ""),
   );
 
   // Combine headers and data
@@ -44,10 +45,11 @@ export const exportToXlsx = (
 
   // Create worksheet
 
-  const buffer = XLSX.build([
+  const buffer = build([
     { name: "mySheetName", data: worksheetData, options: sheetOptions },
   ]);
-  const blob = new Blob([buffer], {
+  const bytes = Uint8Array.from(buffer);
+  const blob = new Blob([bytes], {
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   });
   saveAs(blob, "export.xlsx");
@@ -55,18 +57,18 @@ export const exportToXlsx = (
 
 export const exportToPdf = (
   selectedRows: RowData[],
-  columns: MRT_ColumnDef<RowData>[]
+  columns: MRT_ColumnDef<RowData>[],
 ) => {
   // Create headers from the columns
   const headers = columns.map((col) => col.header);
 
   // Map rows to match headers
   const data = selectedRows.map((row) =>
-    columns.map((col) => row[col.accessorKey as string] || "")
+    columns.map((col) => String(row[col.accessorKey as string] ?? "")),
   );
 
   // Create document definition
-  const docDefinition = {
+  const docDefinition: TDocumentDefinitions = {
     content: [
       {
         table: {
@@ -79,5 +81,5 @@ export const exportToPdf = (
   };
 
   // Generate PDF and trigger download
-  pdfMake.createPdf(docDefinition).download("export.pdf");
+  createPdf(docDefinition).download("export.pdf");
 };

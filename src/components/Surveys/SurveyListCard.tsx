@@ -14,7 +14,7 @@ const SurveyListCard = ({
   workspaceId,
   workspaceName,
 }: SurveyListCardProps) => {
-  const { brand, background, grey, textStyles, borders, iconStyle,shadows } =
+  const { background, grey, textStyles, borders, iconStyle, shadows } =
     useAppTheme();
   const navigate = useNavigate();
 
@@ -43,7 +43,7 @@ const SurveyListCard = ({
         borderRadius: 3,
         border: borders.strong,
         mt: "12px",
-         boxShadow: shadows[8],
+        boxShadow: shadows[8],
         transition:
           "box-shadow 120ms ease, transform 120ms ease, border-color 120ms ease",
         cursor: "pointer",

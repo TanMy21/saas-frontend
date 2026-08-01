@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useForm, useWatch } from "react-hook-form";
 import { FiType } from "react-icons/fi";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import {
   useUpdateElementTypographyMobileViewMutation,
@@ -21,6 +21,7 @@ import {
 import { RootState } from "../../../../app/store";
 import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
 import { usePermission } from "../../../../context/PermissionContext";
+import { SettingSaveState } from "../../../../types/surveyBuilderTypes";
 import { TypographySettingsFormSchema } from "../../../../utils/schema";
 import {
   ScreenTypographySettingsProps,
@@ -42,8 +43,6 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   const typographySettings = useSelector(
     (state: RootState) => state.elementTypography,
   );
-
-  const dispatch = useDispatch();
 
   const isDesktop = fontSizeView === "desktop";
 

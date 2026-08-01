@@ -868,7 +868,7 @@ export function getRotationInspectionMessage(rotation: {
   fullRotationCompletedRate: number;
 }) {
   const viewedRate = rotation.viewedMultipleAnglesRate;
-  const fullRotationRate = rotation.fullRotationCompletedRate;
+  // const fullRotationRate = rotation.fullRotationCompletedRate;
 
   if (viewedRate >= 70) {
     return "Most users actively inspected the model from multiple angles before answering.";

@@ -73,20 +73,14 @@ const SurveyCardDropDownMenu = ({
 
   const [
     duplicateSurvey,
-    {
-      isSuccess: surveyDuplicated,
-      isError: isErrorDuplicateSurvey,
-      error: duplicateSurveyError,
-    },
+    { isError: isErrorDuplicateSurvey, error: duplicateSurveyError },
   ] = useDuplicateSurveyMutation();
   const [publishSurvey] = usePublishSurveyMutation();
-  const [copySurvey, { isSuccess, isError, error }] = useCopySurveyMutation();
+  const [copySurvey, { isError, error }] = useCopySurveyMutation();
   const [updateSurveyArchive, { isLoading: archiveLoading }] =
     useUpdateSurveyArchiveMutation();
-  const [
-    moveSurvey,
-    { isSuccess: moveSuccess, isError: moveIsError, error: moveError },
-  ] = useMoveSurveyMutation();
+  const [moveSurvey, { isError: moveIsError, error: moveError }] =
+    useMoveSurveyMutation();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setMenuAnchor(e.currentTarget);

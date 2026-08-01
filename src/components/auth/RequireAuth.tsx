@@ -1,16 +1,14 @@
 import { useEffect } from "react";
 
-import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { useLazyGoogleAuthQuery } from "../../app/slices/authApiSlice";
 import { selectCurrentToken, setCredentials } from "../../app/slices/authSlice";
-import { selectUser } from "../../app/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import useAuth from "../../hooks/useAuth";
 
 const RequireAuth = () => {
-  const user = useSelector(selectUser);
+  // const user = useSelector(selectUser);
   const accessToken = useAppSelector(selectCurrentToken);
   const { isAuthenticated, isVerified, tokenExpired } = useAuth();
   const location = useLocation();

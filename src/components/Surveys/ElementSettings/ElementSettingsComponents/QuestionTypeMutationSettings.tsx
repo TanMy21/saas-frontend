@@ -35,7 +35,7 @@ export const QuestionTypeMutationSettings = () => {
   );
 
   const dispatch = useAppDispatch();
-  const { isEditLocked, guardStrictEdit } = useSurveyEditLock();
+  const { guardStrictEdit } = useSurveyEditLock();
 
   const { questionID, type } = question || {};
   const optionCount = question?.options?.length ?? 0;

@@ -113,7 +113,7 @@ const AddElementMenu = ({
   const { primary } = useAppTheme();
   const dispatch = useAppDispatch();
   const { can, tier = "FREE" } = useAuth();
-  const { isEditLocked, confirmSoftEdit } = useSurveyEditLock();
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const canCreatePremiumQuestion =
     can("CREATE_QUESTION") && hasMinimumPlan(tier, "PROFESSIONAL");

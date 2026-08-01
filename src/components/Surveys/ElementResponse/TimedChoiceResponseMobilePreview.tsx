@@ -9,7 +9,6 @@ import {
   TimerPreviewProps,
 } from "../../../types/surveyBuilderTypes";
 import {
-  DEFAULT_TIMER_SECONDS,
   TIMED_ACCENT,
   TIMED_CHOICE_IMAGE_ROLES,
 } from "../../../utils/constants";
@@ -64,10 +63,7 @@ export function TimerPreview({
   );
 }
 
-export function MobileShell({
-  children,
-  accent = "#F97316",
-}: MobileShellProps) {
+export function MobileShell({ children }: MobileShellProps) {
   return (
     <Box
       sx={{
@@ -178,7 +174,7 @@ function TimedChoiceMobileOptionCard({
 
               // Reduced vertical height for the option label area.
               py: 0.9,
-              height:"32px",
+              height: "32px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -232,19 +228,11 @@ export function TimedChoiceResponseMobilePreview() {
     (state: RootState) => state.question.selectedQuestion,
   );
   const questionID = question?.questionID;
-  const uiConfig = question?.questionPreferences?.uiConfig || {};
 
   const { data: options = [] as OptionType[] } = useGetOptionsOfQuestionQuery(
     questionID!,
   );
 
-  const timeLimitMs =
-    question?.questionID === questionID &&
-    typeof uiConfig.timeLimitMs === "number"
-      ? uiConfig.timeLimitMs
-      : DEFAULT_TIMER_SECONDS * 1000;
-
-  const timeLimitSeconds = Math.round(timeLimitMs / 1000);
   const questionImages = question?.questionImages || [];
   const timedChoiceDisplayMode =
     question?.questionPreferences?.uiConfig?.timedChoiceDisplayMode ?? "TEXT";
@@ -253,8 +241,6 @@ export function TimedChoiceResponseMobilePreview() {
 
   return (
     <MobileShell accent={TIMED_ACCENT}>
-     
-
       <Box
         sx={{
           display: "flex",

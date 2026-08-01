@@ -5,12 +5,16 @@ import { useForm } from "react-hook-form";
 
 import { useDeleteSurveyMutation } from "../../app/slices/surveysApiSlice";
 import { useToast } from "../../hooks/useToast";
-import { SurveyDelete, SurveyRenameProps } from "../../utils/types";
+import { SurveyRenameProps } from "../../utils/types";
 import { ConfirmationInput } from "../ModalComponents/ConfirmationInput";
 import { DangerActions } from "../ModalComponents/DangerActions";
 import { DangerModalHeader } from "../ModalComponents/DangerModalHeader";
 import { DangerModalShell } from "../ModalComponents/DangerModalShell";
 import { DangerWarningBox } from "../ModalComponents/DangerWarningBox";
+
+type DeleteSurveyFormValues = {
+  confirmationText: string;
+};
 
 const DeleteSurveyModal = ({
   open,
@@ -27,7 +31,7 @@ const DeleteSurveyModal = ({
     handleSubmit,
     watch,
     formState: { errors, touchedFields },
-  } = useForm<SurveyRenameProps>({
+  } = useForm<DeleteSurveyFormValues>({
     mode: "onChange",
     defaultValues: { confirmationText: "" },
   });
@@ -40,14 +44,18 @@ const DeleteSurveyModal = ({
   const [deleteSurvey, { isSuccess, isError, error, isLoading }] =
     useDeleteSurveyMutation();
 
-  const handleDeleteSurvey = async (data: SurveyDelete) => {
-    const input = data.confirmationText?.trim();
+  const handleDeleteSurvey = async ({
+    confirmationText,
+  }: DeleteSurveyFormValues) => {
+    const input = confirmationText.trim();
     const expected = sTitle?.trim();
+
     if (input === expected) {
       await deleteSurvey(sID);
     } else {
       console.error(error);
     }
+
     reset({ confirmationText: "" });
     onClose();
   };

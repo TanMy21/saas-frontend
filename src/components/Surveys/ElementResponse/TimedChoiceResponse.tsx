@@ -28,7 +28,7 @@ export const TimedChoiceResponse = ({ qID, display }: ElementProps) => {
   const timedChoiceDisplayMode =
     question?.questionPreferences?.uiConfig?.timedChoiceDisplayMode ?? "TEXT";
 
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, _setInputValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   /**

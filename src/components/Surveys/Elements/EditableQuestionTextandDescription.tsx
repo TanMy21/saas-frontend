@@ -22,7 +22,6 @@ export const EditableQuestionText = ({
   placeholder = "Type here...",
   onStartEdit,
   onChange,
-  onFormatted,
   onKeyDown,
   editorSx,
 }: EditableQuestionTextProps) => {

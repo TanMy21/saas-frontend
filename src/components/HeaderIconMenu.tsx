@@ -24,7 +24,7 @@ const HeaderIconMenu = () => {
   const { brand, borders } = useAppTheme();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [persist, setPersist] = usePersist();
+  const [_persist, setPersist] = usePersist();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { data: user } = useGetMeQuery("User");

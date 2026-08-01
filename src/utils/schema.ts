@@ -8,16 +8,6 @@ dayjs.extend(isSameOrAfter);
 
 const hexColorRegex = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
 
-const isoDateField = z
-  .string()
-  .optional()
-  .refine((date) => !date || dayjs(date).isValid(), {
-    message: "Invalid date format",
-  })
-  .refine((date) => !date || dayjs(date).isSameOrAfter(dayjs(), "day"), {
-    message: "Date cannot be older than today",
-  });
-
 export const registerSchema: ZodType<RegisterFormData> = z
   .object({
     firstname: z
@@ -151,16 +141,12 @@ export const resetPasswordSchema = z
 
 export const resetPasswordOtpSchema = z
   .object({
-    otp: z
-      .string()
-      .regex(/^\d{6}$/, "Enter the complete six-digit reset code"),
+    otp: z.string().regex(/^\d{6}$/, "Enter the complete six-digit reset code"),
     password: z
       .string()
       .min(6, "Password must contain at least 6 characters")
       .max(255, "Password is too long"),
-    confirmPassword: z
-      .string()
-      .min(1, "Please confirm your new password"),
+    confirmPassword: z.string().min(1, "Please confirm your new password"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

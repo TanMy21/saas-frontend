@@ -1,20 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 
 import { CircularProgress } from "@mui/material";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import usePersist from "../../hooks/persist";
 import { useAppDispatch, useAppSelector } from "../typedReduxHooks";
 
-import { useRefreshMutation, useSendLogoutMutation } from "./authApiSlice";
-import { selectCurrentToken, logOut } from "./authSlice";
+import { useRefreshMutation } from "./authApiSlice";
+import { selectCurrentToken } from "./authSlice";
 import { fetchUser } from "./userSlice";
 
 const PersistLogin = () => {
   const [persist] = usePersist();
   const token = useAppSelector(selectCurrentToken);
   const isLoggingOutRef = useRef(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const [trueSuccess, setTrueSuccess] = useState(false);
@@ -22,18 +22,18 @@ const PersistLogin = () => {
   const [refresh, { isUninitialized, isLoading, isSuccess, isError }] =
     useRefreshMutation();
 
-  const [sendLogout] = useSendLogoutMutation();
+  // const [sendLogout] = useSendLogoutMutation();
 
-  const logoutUser = async () => {
-    try {
-      isLoggingOutRef.current = true;
-      await sendLogout().unwrap();
-      dispatch(logOut());
-      navigate("/login?reason=session-expired", { replace: true });
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const logoutUser = async () => {
+  //   try {
+  //     isLoggingOutRef.current = true;
+  //     await sendLogout().unwrap();
+  //     dispatch(logOut());
+  //     navigate("/login?reason=session-expired", { replace: true });
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   useEffect(() => {
     const verifyRefreshToken = async () => {

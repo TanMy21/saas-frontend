@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { QuestionTypeBadgeProps } from "../../types/insightTypes";
 import { questionTypeMap } from "../../utils/elementsConfig";
 
-export function QuestionTypeBadge({ type, className }: QuestionTypeBadgeProps) {
+export function QuestionTypeBadge({ type }: QuestionTypeBadgeProps) {
   const config = questionTypeMap[type];
 
   if (!config) return null;

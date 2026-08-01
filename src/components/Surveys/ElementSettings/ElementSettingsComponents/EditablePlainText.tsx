@@ -12,7 +12,7 @@ export default function EditablePlainText({
   readOnly = false,
 }: EditablePlainTextProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [text, setText] = useState<string>(value ?? "");
+  const [_text, setText] = useState<string>(value ?? "");
   const [isFocused, setIsFocused] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
 

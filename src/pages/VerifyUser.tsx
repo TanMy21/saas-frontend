@@ -8,7 +8,6 @@ import {
 } from "react";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import MarkEmailReadRoundedIcon from "@mui/icons-material/MarkEmailReadRounded";
 import {
   Alert,
   Box,

@@ -16,14 +16,15 @@ const QuestionImageAltTxt = () => {
 
   const dispatch = useDispatch();
   const question = useSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
-  const { questionID, questionImageAltTxt } = question || {};
+  const { questionID, questionImages } = question || {};
+  const { altText } = questionImages?.[0] || {};
 
   const { handleSubmit, control, reset } = useForm<QuestionImage>({
     resolver: zodResolver(questionImageSettingsSchema),
     defaultValues: {
-      questionImageAltTxt,
+      questionImageAltTxt: altText ?? "",
     },
   });
 
@@ -63,12 +64,10 @@ const QuestionImageAltTxt = () => {
   }, [watchedValues, formTouched, handleSubmit]);
 
   useEffect(() => {
-    if (questionImageAltTxt !== undefined) {
-      reset({
-        questionImageAltTxt,
-      });
-    }
-  }, [questionImageAltTxt, reset]);
+    reset({
+      questionImageAltTxt: altText ?? "",
+    });
+  }, [altText, reset]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>

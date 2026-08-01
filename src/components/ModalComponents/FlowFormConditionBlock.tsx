@@ -71,17 +71,6 @@ const FlowFormConditionBlock = ({
       edgeFormData.sourceQuestionIcon || (selectedNode?.data.element as string)
     ];
 
-  let noCondition = false;
-
-  if (
-    edgeFormData.sourceQuestionIcon === "RANK" ||
-    edgeFormData.sourceQuestionIcon === "THREE_D" ||
-    selectedNode?.data.element === "RANK" ||
-    selectedNode?.data.element === "THREE_D"
-  ) {
-    noCondition = true;
-  }
-
   const handleDeleteCondition = async () => {
     if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.FLOW_CONDITION_DELETE)))
       return;

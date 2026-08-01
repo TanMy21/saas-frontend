@@ -19,7 +19,7 @@ const SurveySearchBar = ({
   setTagOnly,
   setSearch,
 }: SurveySearchBarProps) => {
-  const { primary, brand, shadows, background, grey } = useAppTheme();
+  const { primary, shadows, background, grey } = useAppTheme();
 
   return (
     <>
@@ -123,7 +123,7 @@ const SurveySearchBar = ({
                       "&:hover": {
                         backgroundColor:
                           matchMode === "OR" ? background.soft4 : "transparent",
-                        color:  primary.main,
+                        color: primary.main,
                       },
                     }}
                   >
@@ -144,7 +144,9 @@ const SurveySearchBar = ({
                     backgroundColor: tagOnly ? background.soft4 : "transparent",
                     color: tagOnly ? primary.dark : primary.main,
                     "&:hover": {
-                      backgroundColor: tagOnly ? background.soft4 : "transparent",
+                      backgroundColor: tagOnly
+                        ? background.soft4
+                        : "transparent",
                       color: primary.dark,
                     },
                   }}

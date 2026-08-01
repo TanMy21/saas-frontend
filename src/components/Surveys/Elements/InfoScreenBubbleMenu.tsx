@@ -15,7 +15,10 @@ export const InfoScreenBubbleMenu = ({
   return (
     <BubbleMenu
       editor={editor}
-      tippyOptions={{ duration: 120 }}
+      options={{
+        placement: "top",
+        offset: 8,
+      }}
       shouldShow={({ editor }) => {
         return !editor.state.selection.empty;
       }}

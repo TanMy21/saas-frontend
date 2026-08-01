@@ -19,7 +19,6 @@ const FontSizeControl = ({
   canEdit,
 }: FontSizeControlProps) => {
   const dispatch = useDispatch();
-  const isMd = useMediaQuery("(min-width:900px) and (max-width:1280px)");
   const isXl = useMediaQuery("(min-width:1300px) and (max-width:1900px)");
 
   return (

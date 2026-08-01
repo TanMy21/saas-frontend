@@ -3,7 +3,6 @@ import { MoveRight } from "lucide-react";
 import { useSelector } from "react-redux";
 
 import { RootState } from "../../../app/store";
-import { useAppTheme } from "../../../theme/useAppTheme";
 import { ElementProps } from "../../../utils/types";
 import CenteredStack from "../../screen-layout/CenteredStack";
 import ResponseContainer from "../../screen-layout/ResponseContainer";
@@ -12,7 +11,6 @@ import ScreenRoot from "../../screen-layout/ScreenRoot";
 import ElementQuestionText from "./ElementQuestionText";
 
 const WelcomeScreenElement = ({ display, showQuestion }: ElementProps) => {
-  const { primary } = useAppTheme();
   const question = useSelector(
     (state: RootState) => state.question.selectedQuestion,
   );
@@ -22,8 +20,6 @@ const WelcomeScreenElement = ({ display, showQuestion }: ElementProps) => {
   const { buttonText } = questionPreferences?.uiConfig || {
     buttonText: "Next",
   };
-
-
 
   return (
     <ScreenRoot>

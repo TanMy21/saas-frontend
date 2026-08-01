@@ -10,10 +10,10 @@ import { useAppSelector } from "../../../app/typedReduxHooks";
 
 const ScaleCounter = () => {
   const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion
+    (state: RootState) => state.question.selectedQuestion,
   );
 
-  const { questionID, questionPreferences } = question || {};
+  const { questionPreferences } = question || {};
 
   const minValue = questionPreferences?.uiConfig?.minValue ?? 1;
   const maxValue = questionPreferences?.uiConfig?.maxValue ?? 5;

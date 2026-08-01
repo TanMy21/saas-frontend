@@ -11,8 +11,7 @@ import {
   removeTemplateImage,
 } from "../../app/slices/elementSlice";
 import { updateElementField } from "../../app/slices/surveySlice";
-import { RootState } from "../../app/store";
-import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
+import { useAppDispatch } from "../../app/typedReduxHooks";
 import {
   ElementBackgroundPreferencesRemoveButtonsProps,
   SurveyCanvasQuestionSettings,

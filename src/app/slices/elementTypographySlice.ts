@@ -16,7 +16,7 @@ const elementTypographySlice = createSlice({
   initialState: defaultState,
   reducers: {
     initializeTypography: (
-      state,
+      _state,
       action: PayloadAction<Partial<TypographySettingsForm>>
     ) => {
       return { ...defaultState, ...action.payload };

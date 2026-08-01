@@ -162,9 +162,9 @@ const SurveyBuilder = () => {
     localStorage.setItem(`sq:${surveyID}`, selectedQuestionId);
   }, [surveyID, selectedQuestionId]);
 
-  const isEditLocked = useAppSelector(
-    (state: RootState) => state.surveyCanvas.isEditLocked,
-  );
+  // const isEditLocked = useAppSelector(
+  //   (state: RootState) => state.surveyCanvas.isEditLocked,
+  // );
 
   if (isLoadingCanvas)
     return (

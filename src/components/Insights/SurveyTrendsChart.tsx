@@ -43,9 +43,16 @@ export const SurveyTrendsChart = ({ data, metric, color }: any) => {
           <YAxis hide domain={[0, 100]} />
 
           <Tooltip
-            formatter={(value?: number) => {
+            formatter={(value) => {
               if (value == null) return "";
-              return metric === "starts" ? value : `${value}%`;
+
+              const formattedValue = Array.isArray(value)
+                ? value.join(" – ")
+                : String(value);
+
+              return metric === "starts"
+                ? formattedValue
+                : `${formattedValue}%`;
             }}
             contentStyle={{
               backgroundColor: "#fff",

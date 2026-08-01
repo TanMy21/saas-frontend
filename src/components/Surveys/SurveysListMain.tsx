@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import GridViewIcon from "@mui/icons-material/GridView";
 import ListIcon from "@mui/icons-material/List";
@@ -11,7 +11,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from "@mui/material";
-import type { SelectChangeEvent } from "@mui/material";
+// import type { SelectChangeEvent } from "@mui/material";
 import { useOutletContext } from "react-router-dom";
 
 import {
@@ -22,24 +22,25 @@ import { Workspace } from "../../utils/types";
 import WorkspaceDropDown from "../Workspaces/WorkspaceDropDownMenu";
 
 import CreateNewSurveyBtn from "./CreateNewSurveyBtn";
-import GridLayout from "./GridLayout";
-import ListLayout from "./ListLayout";
 import SurveysNotFound from "./SurveysNotFound";
 
 const SurveysListMain = () => {
   // const { workspaces } = useOutletContext<WorkspacesProp>();
-  const { selectedWorkspace } = useOutletContext<{
+  const { selectedWorkspace, setSelectedWorkspace } = useOutletContext<{
     selectedWorkspace: Workspace;
+    setSelectedWorkspace: React.Dispatch<
+      React.SetStateAction<Workspace | undefined>
+    >;
   }>();
 
   const { workspaceId } = selectedWorkspace;
   const { data: surveys } = useGetWorkspaceSurveysQuery(
-    selectedWorkspace?.workspaceId
+    selectedWorkspace?.workspaceId,
   );
 
   const [updateWorkspaceName] = useUpdateWorkspaceNameMutation();
 
-  const [sortBy, setSortBy] = useState("Date created");
+  // const [sortBy, setSortBy] = useState("Date created");
   const [layout, setLayout] = useState<string | null>("grid");
   const [isEditing, setIsEditing] = useState(false);
 
@@ -51,34 +52,34 @@ const SurveysListMain = () => {
   //   (item) => item.workspaceId?.toString() === workspaceId
   // );
 
-  const sortedSurveys = useMemo(() => {
-    if (!Array.isArray(surveys)) return [];
+  // const sortedSurveys = useMemo(() => {
+  //   if (!Array.isArray(surveys)) return [];
 
-    switch (sortBy) {
-      case "Date created":
-        return [...surveys].sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      case "Date updated":
-        return [...surveys].sort(
-          (a, b) =>
-            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-        );
-      case "Alphabetically":
-        return [...surveys].sort((a, b) => a.title.localeCompare(b.title));
-      default:
-        return surveys;
-    }
-  }, [surveys, sortBy]);
+  //   switch (sortBy) {
+  //     case "Date created":
+  //       return [...surveys].sort(
+  //         (a, b) =>
+  //           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  //       );
+  //     case "Date updated":
+  //       return [...surveys].sort(
+  //         (a, b) =>
+  //           new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+  //       );
+  //     case "Alphabetically":
+  //       return [...surveys].sort((a, b) => a.title.localeCompare(b.title));
+  //     default:
+  //       return surveys;
+  //   }
+  // }, [surveys, sortBy]);
 
-  const handleSortChange = (event: SelectChangeEvent) => {
-    setSortBy(event.target.value);
-  };
+  // const handleSortChange = (event: SelectChangeEvent) => {
+  //   setSortBy(event.target.value);
+  // };
 
   const handleLayoutChange = (
     _event: React.MouseEvent<HTMLElement>,
-    newLayout: string | null
+    newLayout: string | null,
   ) => {
     setLayout(newLayout);
   };
@@ -150,7 +151,10 @@ const SurveysListMain = () => {
               </Box>
             </Box>
             <Box>
-              <WorkspaceDropDown workspaceName={selectedWorkspace?.name} />
+              <WorkspaceDropDown
+                selectedWorkspace={selectedWorkspace}
+                setSelectedWorkspace={setSelectedWorkspace}
+              />
             </Box>
           </Box>
           <Box
@@ -169,7 +173,6 @@ const SurveysListMain = () => {
               display={"flex"}
               sx={{ width: "400px", height: "50px" }}
             >
-             
               <Box id="survey-view-layout" ml={2}>
                 <ToggleButtonGroup
                   color="primary"
