@@ -12,7 +12,7 @@ export type ExportJobStatusResponse = {
   format: "CSV" | "XLSX";
   status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
   fileName?: string | null;
-  fileUrl?: string | null;
+  downloadUrl?: string | null;
   mimeType?: string | null;
   sizeBytes?: number | null;
   errorMessage?: string | null;

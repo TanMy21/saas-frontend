@@ -173,7 +173,7 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
         url: `/s/delete/${surveyID}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Surveys"],
+      invalidatesTags: ["Surveys", "Workspaces"],
     }),
     trackShareEvent: builder.mutation<
       { success: boolean },

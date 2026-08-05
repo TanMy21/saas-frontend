@@ -34,7 +34,8 @@ const ElementDropDownMenu = ({
     null,
   );
 
-  const [duplicateQuestion] = useDuplicateElementMutation();
+  const [duplicateQuestion, { isLoading: isDuplicateLoading }] =
+    useDuplicateElementMutation();
   const [deleteElement, { isLoading }] = useDeleteElementMutation();
 
   const elements = useAppSelector(
@@ -50,7 +51,7 @@ const ElementDropDownMenu = ({
   };
 
   const handleDuplicateElement = async () => {
-  if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE)) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE))) return;
     try {
       if (!can("CREATE_QUESTION")) return;
       setMenuAnchor(null);
@@ -66,7 +67,7 @@ const ElementDropDownMenu = ({
   };
 
   const handleDeleteElement = async () => {
-   if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE)) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.QUESTION_CHANGE))) return;
     try {
       if (!can("DELETE_QUESTION")) return;
 
@@ -125,6 +126,7 @@ const ElementDropDownMenu = ({
           <MenuItem
             onClick={handleDuplicateElement}
             sx={{ mx: 0.5, borderRadius: "12px" }}
+            disabled={isDuplicateLoading}
           >
             Duplicate
           </MenuItem>

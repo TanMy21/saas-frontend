@@ -1458,17 +1458,41 @@ export const getPrimarySchema = (schemas?: Record<string, number>) => {
 export const downloadExportFile = (
   fileUrl: string,
   fileName?: string | null,
+  accessToken?: string | null,
 ) => {
-  const a = document.createElement("a");
+  const requestUrl = new URL(fileUrl, window.location.origin);
+  const apiOrigin = new URL(
+    import.meta.env.VITE_BASE_URL as string,
+    window.location.origin,
+  ).origin;
+  const isApiDownload = requestUrl.origin === apiOrigin;
 
-  a.href = fileUrl;
-  a.download = fileName || "export";
-  a.target = "_blank";
-  a.rel = "noopener noreferrer";
+  return fetch(requestUrl, {
+    credentials: isApiDownload ? "include" : "omit",
+    headers: isApiDownload
+      ? {
+          ...(accessToken
+            ? { authorization: `Bearer ${accessToken}` }
+            : undefined),
+          "x-no-csrf": "present",
+        }
+      : undefined,
+  }).then(async (response) => {
+    if (!response.ok) {
+      throw new Error(`Export download failed with status ${response.status}`);
+    }
 
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+    const blobUrl = URL.createObjectURL(await response.blob());
+    const a = document.createElement("a");
+
+    a.href = blobUrl;
+    a.download = fileName || "export";
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.setTimeout(() => URL.revokeObjectURL(blobUrl), 0);
+  });
 };
 
 export const getEmptyTextMessage = (attemptedMode: string | null) => {

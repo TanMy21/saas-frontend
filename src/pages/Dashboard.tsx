@@ -66,9 +66,7 @@ const Dashboard = () => {
 
     const storedWorkspaceIsValid =
       id &&
-      availableWorkspaces.some(
-        (workspace: Workspace) => workspace.workspaceId === id,
-      );
+      workspaces.some((workspace: Workspace) => workspace.workspaceId === id);
 
     if (storedWorkspaceIsValid) {
       return id;

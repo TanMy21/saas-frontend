@@ -156,17 +156,6 @@ export const ThreeDModelEmptyState = ({
             <Upload size={20} strokeWidth={2.25} />
             Upload 3D Model
           </Box>
-
-          <Typography
-            sx={{
-              mt: 1.5,
-              color: "#94A3B8",
-              fontSize: "0.78rem",
-              fontWeight: 500,
-            }}
-          >
-            Participants will be able to interact with the model.
-          </Typography>
         </>
       )}
     </Box>

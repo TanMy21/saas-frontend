@@ -16,10 +16,13 @@ import {
   useDeleteOrgUserMutation,
   useGetOrgInvitesQuery,
   useGetOrgUsersQuery,
+  useResendOrgInviteMutation,
+  useRevokeOrgInviteMutation,
 } from "../../app/slices/userApiSlice";
 import useAuth from "../../hooks/useAuth";
 import { OrgMember } from "../../types/userTypes";
 import { hasMinimumPlan } from "../../utils/planLimits";
+import { showToast } from "../../utils/showToast";
 import { MemberDrawer } from "../OrgMembers/MemberDrawer";
 import { MembersTable } from "../OrgMembers/MembersTable";
 
@@ -61,6 +64,32 @@ export const OrgMembers = () => {
   );
 
   const [deleteOrgUser, { isLoading: deleting }] = useDeleteOrgUserMutation();
+
+  const [resendInvite] = useResendOrgInviteMutation();
+
+  const [revokeInvite] = useRevokeOrgInviteMutation();
+
+  const handleResendInvite = async (invite: any) => {
+    try {
+      await resendInvite(invite.inviteID).unwrap();
+      showToast.success("Invite resent successfully.");
+    } catch (err) {
+      showToast.apiError(err, {
+        fallbackMessage: "Failed to resend invite.",
+      });
+    }
+  };
+
+  const handleCancelInvite = async (invite: any) => {
+    try {
+      await revokeInvite(invite.inviteID).unwrap();
+      showToast.success("Invite cancelled successfully.");
+    } catch (err) {
+      showToast.apiError(err, {
+        fallbackMessage: "Failed to cancel invite.",
+      });
+    }
+  };
 
   useEffect(() => {
     if (!usersLoading && !invitesLoading) {
@@ -192,6 +221,8 @@ export const OrgMembers = () => {
             setDrawer({ open: true, mode: "edit", member: m })
           }
           onDelete={(m: any) => setDeleteDialog({ open: true, member: m })}
+          onResendInvite={handleResendInvite}
+          onCancelInvite={handleCancelInvite}
         />
       </Box>
 

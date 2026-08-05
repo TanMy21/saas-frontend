@@ -13,15 +13,45 @@ import {
 } from "@mui/material";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 
+import { selectCurrentToken } from "../../app/slices/authSlice";
 import {
   useExportSelectedResponsesMutation,
   useExportSurveyFullMutation,
   useGetExportJobStatusQuery,
 } from "../../app/slices/exportDataApi";
+import { useGetSurveyByIdQuery } from "../../app/slices/surveysApiSlice";
+import { useAppSelector } from "../../app/typedReduxHooks";
 import { useToast } from "../../hooks/useToast";
 import { DownloadFormData, downloadDataSchema } from "../../utils/schema";
 import { DownloadResponsesModalProps } from "../../utils/types";
 import { downloadExportFile } from "../../utils/utils";
+
+const getExportFileName = (
+  surveyName: string,
+  backendFileName: string | null | undefined,
+  mimeType: string | null | undefined,
+  format: "CSV" | "XLSX",
+) => {
+  const safeSurveyName =
+    surveyName
+      .trim()
+      .replace(/[<>:"/\\|?*]+/g, "-")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^[.-]+|[.-]+$/g, "") || "survey";
+  const now = new Date();
+  const date = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
+  const backendExtension = backendFileName?.match(/\.([a-z0-9]+)$/i)?.[1];
+  const extension =
+    backendExtension || (mimeType?.includes("zip") ? "zip" : undefined) ||
+    format.toLowerCase();
+
+  return `${safeSurveyName}_${date}.${extension.toLowerCase()}`;
+};
 
 const DownloadResponsesModal = ({
   rowData,
@@ -31,6 +61,7 @@ const DownloadResponsesModal = ({
   mode,
 }: DownloadResponsesModalProps) => {
   const [exportJobID, setExportJobID] = useState<string | null>(null);
+  const accessToken = useAppSelector(selectCurrentToken);
   const {
     control,
     handleSubmit,
@@ -45,6 +76,10 @@ const DownloadResponsesModal = ({
   });
 
   const selectedFormat = watch("fileFormatGroup");
+
+  const { data: survey } = useGetSurveyByIdQuery(surveyID, {
+    skip: !open,
+  });
 
   const { currentData: exportJob } = useGetExportJobStatusQuery(exportJobID!, {
     skip: !exportJobID,
@@ -105,17 +140,47 @@ const DownloadResponsesModal = ({
   useEffect(() => {
     if (!open || !exportJobID || !exportJob) return;
 
-    if (exportJob.status === "COMPLETED" && exportJob.fileUrl) {
-      downloadExportFile(exportJob.fileUrl, exportJob.fileName);
+    if (exportJob.status === "COMPLETED" && exportJob.downloadUrl) {
+      const fileName = survey?.title
+        ? getExportFileName(
+            survey.title,
+            exportJob.fileName,
+            exportJob.mimeType,
+            exportJob.format,
+          )
+        : exportJob.fileName;
+
       setExportJobID(null);
-      handleClose();
+      void downloadExportFile(
+        exportJob.downloadUrl,
+        fileName,
+        accessToken,
+      )
+        .then(handleClose)
+        .catch((error: unknown) => {
+          console.error("Could not download the completed export", error);
+        });
+      return;
+    }
+
+    if (exportJob.status === "COMPLETED") {
+      console.error("Export completed without a download URL");
+      setExportJobID(null);
+      return;
     }
 
     if (exportJob.status === "FAILED") {
       console.error(exportJob.errorMessage || "Export failed");
       setExportJobID(null);
     }
-  }, [exportJobID, exportJob, open, handleClose]);
+  }, [
+    accessToken,
+    exportJobID,
+    exportJob,
+    open,
+    handleClose,
+    survey?.title,
+  ]);
 
   return (
     <Modal open={open} onClose={handleClose}>
