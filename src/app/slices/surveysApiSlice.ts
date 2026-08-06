@@ -1,3 +1,7 @@
+import {
+  AIGenerationJob,
+  getAIGenerationJobStatusPath,
+} from "../../utils/aiGenerationJobFlow";
 import { apiSlice } from "../api/apiSlice";
 
 export const surveysApiSlice = apiSlice.injectEndpoints({
@@ -65,24 +69,8 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
-    getAIGenerationJobStatus: builder.query<
-      {
-        jobID: string;
-        surveyID: string;
-        status:
-          | "PENDING"
-          | "PROCESSING"
-          | "COMPLETED"
-          | "FAILED"
-          | "CANCELED"
-          | "TIMED_OUT";
-        generatedCount?: number | null;
-        errorMessage?: string | null;
-      },
-      string
-    >({
-      query: (jobID) => `/s/generate/job/${jobID}`,
-      providesTags: ["Surveys", "Elements"],
+    getAIGenerationJobStatus: builder.query<AIGenerationJob, string>({
+      query: getAIGenerationJobStatusPath,
     }),
     updateSurveyTitleandDescription: builder.mutation({
       query: ({ surveyID, title, description }) => ({

@@ -16,6 +16,7 @@ import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
 import { SurveyCanvasRefetchContext } from "../context/BuilderRefetchCanvas";
 // import useBuilderTourEnable from "../hooks/useBuilderTourEnable";
+import useAIGenerationJobPolling from "../hooks/useAIGenerationJobPolling";
 import useAuth from "../hooks/useAuth";
 import { useCanvasLoadingAndError } from "../hooks/useCanvasLoadingandError";
 import useFetchAuthenticatedUser from "../hooks/useFetchAuthenticatedUser";
@@ -100,6 +101,8 @@ const SurveyBuilder = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+
+  useAIGenerationJobPolling(refetchCanvas);
 
   const { getSurveyCanvas } = surveyCanvas ?? {};
   const {

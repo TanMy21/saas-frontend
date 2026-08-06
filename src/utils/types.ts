@@ -1279,6 +1279,7 @@ export interface SurveyBuilderState {
   elements: Element[];
   isShareModalOpen?: boolean;
   isGenerateModalOpen: boolean;
+  generationJobID: string | null;
 }
 
 export interface SurveyBuilderLeftSidebarProps {
