@@ -28,6 +28,8 @@ const FlowFormInput = ({
   };
   const [isFocused, setIsFocused] = useState(false);
   const conditions = watch("conditions");
+  const hasComparisonSelect =
+    questionType === "NUMBER" || questionType === "RANGE";
 
   if (
     typeof blockIndex === "number" &&
@@ -58,7 +60,7 @@ const FlowFormInput = ({
           px: 1.5,
           py: 0.8,
           height: "68%",
-          width: questionType === "NUMBER" ? "90%" : "100%",
+          width: hasComparisonSelect ? "90%" : "100%",
           borderRadius: "12px",
           bgcolor: "#f1f5f9",
           border: "1px solid #e2e8f0",
@@ -80,11 +82,11 @@ const FlowFormInput = ({
         {/* CONDITION TYPE */}
         <Box
           sx={{
-            width: questionType === "NUMBER" ? "120px" : "100px",
+            width: hasComparisonSelect ? "120px" : "100px",
             flexShrink: 0,
           }}
         >
-          {questionType === "NUMBER" ? (
+          {hasComparisonSelect ? (
             <Select
               disabled={readOnly}
               {...register(`conditions.${blockIndex}.conditionType`)}
