@@ -127,6 +127,9 @@ const Settings = () => {
               <Box
                 sx={{
                   width: { xs: "100%", lg: "75%" },
+                  "@media (width: 1280px), (width: 1366px)": {
+                    width: "calc(75% - 8%)",
+                  },
                 }}
               >
                 <GlassCard>

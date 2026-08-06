@@ -1,6 +1,11 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-interface SurveyCanvasState {
+import type {
+  CanvasView,
+  CanvasViewState,
+} from "../../types/surveyBuilderTypes";
+
+interface SurveyCanvasState extends CanvasViewState {
   data: any;
   hasResponses: boolean;
   isEditLocked: boolean;
@@ -10,6 +15,7 @@ const initialState: SurveyCanvasState = {
   data: null,
   hasResponses: false,
   isEditLocked: false,
+  view: "desktop",
 };
 
 const surveyCanvasSlice = createSlice({
@@ -26,8 +32,12 @@ const surveyCanvasSlice = createSlice({
       state.hasResponses = false;
       state.isEditLocked = false;
     },
+    setCanvasView: (state, action: PayloadAction<CanvasView>) => {
+      state.view = action.payload;
+    },
   },
 });
 
-export const { setSurveyCanvas, clearSurveyCanvas } = surveyCanvasSlice.actions;
+export const { setSurveyCanvas, clearSurveyCanvas, setCanvasView } =
+  surveyCanvasSlice.actions;
 export default surveyCanvasSlice.reducer;

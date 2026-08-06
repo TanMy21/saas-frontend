@@ -19,7 +19,6 @@ import SurveyBuilderDock from "./Surveys/SurveyBuilderDock";
 
 const CanvasConsole = ({
   display,
-  setDisplay,
   question,
   noElements,
   shareID,
@@ -65,7 +64,6 @@ const CanvasConsole = ({
       }}
     >
       <SurveyBuilderDock
-        setDisplay={setDisplay}
         shareID={shareID}
         published={published}
         onOpenImport={onOpenImport}

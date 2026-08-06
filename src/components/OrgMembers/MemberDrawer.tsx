@@ -21,6 +21,7 @@ export const MemberDrawer = ({
   mode,
   member,
   onClose,
+  onCreated,
   isLimitReached,
 }: any) => {
   const { role: actorRole } = useAuth();
@@ -35,15 +36,7 @@ export const MemberDrawer = ({
 
   const isOwner = userData?.role === "OWNER";
 
-  const [
-    createUser,
-    {
-      isLoading: creating,
-      isSuccess: createSuccess,
-      isError: createErrorFlag,
-      error: createError,
-    },
-  ] = useCreateNewUserMutation();
+  const [createUser, { isLoading: creating }] = useCreateNewUserMutation();
 
   const [
     updateUser,
@@ -101,26 +94,11 @@ export const MemberDrawer = ({
   }, [member, userData, isEdit]);
 
   useEffect(() => {
-    if (createSuccess) {
-      showToast.success("Member invited successfully.");
-      onClose();
-    }
-  }, [createSuccess]);
-
-  useEffect(() => {
     if (updateSuccess) {
       showToast.success("Member updated successfully.");
       onClose();
     }
   }, [updateSuccess]);
-
-  useEffect(() => {
-    if (createErrorFlag && createError) {
-      showToast.apiError(createError, {
-        fallbackMessage: "Could not invite member. Please try again.",
-      });
-    }
-  }, [createErrorFlag, createError]);
 
   useEffect(() => {
     if (updateErrorFlag && updateError) {
@@ -137,10 +115,19 @@ export const MemberDrawer = ({
         return;
       }
 
-      await createUser({
-        ...values,
-        email: values.email.toLowerCase(),
-      });
+      try {
+        await createUser({
+          ...values,
+          email: values.email.toLowerCase(),
+        }).unwrap();
+        await onCreated();
+        showToast.success("Member invited successfully.");
+        onClose();
+      } catch (error) {
+        showToast.apiError(error, {
+          fallbackMessage: "Could not invite member. Please try again.",
+        });
+      }
     } else {
       await updateUser({
         userID: member.userID,

@@ -68,7 +68,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: [{ type: "User", id: "LIST" }],
+      invalidatesTags: [{ type: "User" }],
     }),
     createNewUser: builder.mutation({
       query: (data) => ({
@@ -76,7 +76,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: [{ type: "User", id: "LIST" }],
+      invalidatesTags: [{ type: "User" }],
     }),
     updateUserInfo: builder.mutation({
       query: ({ firstname, lastname, email }) => ({

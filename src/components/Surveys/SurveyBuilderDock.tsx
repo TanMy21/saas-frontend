@@ -13,6 +13,7 @@ import {
   openPublishAlert,
   openShareModal,
 } from "../../app/slices/overlaySlice";
+import { setCanvasView } from "../../app/slices/surveyCanvasSlice";
 import { RootState } from "../../app/store";
 import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import useAuth from "../../hooks/useAuth";
@@ -39,15 +40,18 @@ const SEG_PAD = 4;
 type ViewValue = "mobile" | "desktop";
 
 const ViewIconSegment = ({
-  value = "desktop",
   onChange,
 }: {
   value?: ViewValue;
   onChange: (v: ViewValue) => void;
 }) => {
-  const [v, setV] = useState<ViewValue>(value);
+  const dispatch = useAppDispatch();
+
+  const toggleView = useAppSelector(
+    (state: RootState) => state.surveyCanvas.view,
+  );
+
   const setVal = (nv: ViewValue) => {
-    setV(nv);
     onChange(nv);
   };
 
@@ -86,7 +90,8 @@ const ViewIconSegment = ({
           position: "absolute",
           top: "50%",
           transform: "translateY(-50%)",
-          left: v === "mobile" ? SEG_PAD : SEG_PAD + SEG_SIZE + SEG_GAP,
+          left:
+            toggleView === "mobile" ? SEG_PAD : SEG_PAD + SEG_SIZE + SEG_GAP,
           width: SEG_SIZE,
           height: SEG_SIZE,
           borderRadius: "50%",
@@ -101,8 +106,11 @@ const ViewIconSegment = ({
       {/* Mobile */}
       <IconButton
         aria-label="Mobile view"
-        onClick={() => setVal("mobile")}
-        sx={baseBtnSx(v === "mobile")}
+        onClick={() => {
+          setVal("mobile");
+          dispatch(setCanvasView("mobile"));
+        }}
+        sx={baseBtnSx(toggleView === "mobile")}
       >
         <Tooltip
           title={"Mobile view"}
@@ -142,8 +150,11 @@ const ViewIconSegment = ({
       {/* Desktop */}
       <IconButton
         aria-label="Desktop view"
-        onClick={() => setVal("desktop")}
-        sx={baseBtnSx(v === "desktop")}
+        onClick={() => {
+          setVal("desktop");
+          dispatch(setCanvasView("desktop"));
+        }}
+        sx={baseBtnSx(toggleView === "desktop")}
       >
         <Tooltip
           title={"Desktop view"}
@@ -186,7 +197,6 @@ const ViewIconSegment = ({
 };
 
 const SurveyBuilderDock = ({
-  setDisplay,
   shareID,
   published,
   onOpenImport,
@@ -290,7 +300,7 @@ const SurveyBuilderDock = ({
           },
         }}
       >
-        <ViewIconSegment onChange={(val) => setDisplay(val)} />
+        <ViewIconSegment onChange={(val) => dispatch(setCanvasView(val))} />
 
         {can("UPDATE_SURVEY") && (
           <Box

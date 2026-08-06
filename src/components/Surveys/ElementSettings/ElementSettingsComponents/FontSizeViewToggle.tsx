@@ -1,10 +1,21 @@
 import { Box, IconButton, Paper } from "@mui/material";
 import { CiMobile3, CiMonitor } from "react-icons/ci";
 
+import { setCanvasView } from "../../../../app/slices/surveyCanvasSlice";
+import { RootState } from "../../../../app/store";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../app/typedReduxHooks";
 import { useAppTheme } from "../../../../theme/useAppTheme";
-import { TypographySettingsView } from "../../../../utils/types";
 
-const FontSizeViewToggle = ({ view, setView }: TypographySettingsView) => {
+const FontSizeViewToggle = () => {
+  const dispatch = useAppDispatch();
+
+  const toggleView = useAppSelector(
+    (state: RootState) => state.surveyCanvas.view,
+  );
+
   const { primary, grey } = useAppTheme();
 
   return (
@@ -21,17 +32,19 @@ const FontSizeViewToggle = ({ view, setView }: TypographySettingsView) => {
         }}
       >
         <IconButton
-          onClick={() => setView("desktop")}
+          onClick={() => {
+            dispatch(setCanvasView("desktop"));
+          }}
           title="Desktop font size"
           sx={{
             p: 1,
             borderRadius: 1,
             transition: "all 0.2s",
-            color: view === "desktop" ? primary.main : grey[700],
-            backgroundColor: view === "desktop" ? "white" : "transparent",
-            boxShadow: view === "desktop" ? 1 : "none",
+            color: toggleView === "desktop" ? primary.main : grey[700],
+            backgroundColor: toggleView === "desktop" ? "white" : "transparent",
+            boxShadow: toggleView === "desktop" ? 1 : "none",
             "&:hover": {
-              color: view === "desktop" ? primary.main : grey[700],
+              color: toggleView === "desktop" ? primary.main : grey[700],
             },
           }}
         >
@@ -39,17 +52,19 @@ const FontSizeViewToggle = ({ view, setView }: TypographySettingsView) => {
         </IconButton>
 
         <IconButton
-          onClick={() => setView("mobile")}
+          onClick={() => {
+            dispatch(setCanvasView("mobile"));
+          }}
           title="Mobile font size"
           sx={{
             p: 1,
             borderRadius: 1,
             transition: "all 0.2s",
-            color: view === "mobile" ? primary.main : grey[700],
-            backgroundColor: view === "mobile" ? "white" : "transparent",
-            boxShadow: view === "mobile" ? 1 : "none",
+            color: toggleView === "mobile" ? primary.main : grey[700],
+            backgroundColor: toggleView === "mobile" ? "white" : "transparent",
+            boxShadow: toggleView === "mobile" ? 1 : "none",
             "&:hover": {
-              color: view === "mobile" ? primary.main : grey[700],
+              color: toggleView === "mobile" ? primary.main : grey[700],
             },
           }}
         >

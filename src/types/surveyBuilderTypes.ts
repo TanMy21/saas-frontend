@@ -22,6 +22,14 @@ export interface ShareTabProps {
 
 export type TabType = "link" | "email" | "embed";
 
+
+export type CanvasView = "desktop" | "mobile";
+
+export type CanvasViewState = {
+  view: CanvasView;
+};
+
+
 export type AddMenuItemConfig = {
   label: string;
   type: QuestionTypeKey;

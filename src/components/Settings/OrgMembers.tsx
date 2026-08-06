@@ -49,19 +49,21 @@ export const OrgMembers = () => {
     member: null,
   });
 
-  const { data: usersData, isLoading: usersLoading } = useGetOrgUsersQuery(
-    undefined,
-    {
-      skip: !canManageOrgMembers,
-    },
-  );
+  const {
+    data: usersData,
+    isLoading: usersLoading,
+    refetch: refetchUsers,
+  } = useGetOrgUsersQuery(undefined, {
+    skip: !canManageOrgMembers,
+  });
 
-  const { data: invites, isLoading: invitesLoading } = useGetOrgInvitesQuery(
-    undefined,
-    {
-      skip: !canManageOrgMembers,
-    },
-  );
+  const {
+    data: invites,
+    isLoading: invitesLoading,
+    refetch: refetchInvites,
+  } = useGetOrgInvitesQuery(undefined, {
+    skip: !canManageOrgMembers,
+  });
 
   const [deleteOrgUser, { isLoading: deleting }] = useDeleteOrgUserMutation();
 
@@ -232,6 +234,7 @@ export const OrgMembers = () => {
         mode={drawer.mode}
         member={drawer.member}
         isLimitReached={isLimitReached}
+        onCreated={() => Promise.all([refetchUsers(), refetchInvites()])}
         onClose={() => setDrawer({ open: false, mode: "add", member: null })}
       />
 

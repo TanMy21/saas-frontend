@@ -49,11 +49,13 @@ const SurveyBuilder = () => {
   // const [stepIndex, setStepIndex] = useState(0);
   // const isTourEnabled = useBuilderTourEnable(user);
   const [_surveyTitle, setSurveyTitle] = useState<string>("");
-  const [display, setDisplay] = useState<"desktop" | "mobile">("desktop");
+
   const [_loading, setLoading] = useState(false);
   const [hasRestored, setHasRestored] = useState(false);
   const [openScratch, setOpenScratch] = useState(isOpen);
   const [openImportLocal, setOpenImportLocal] = useState(false);
+
+  const display = useAppSelector((state: RootState) => state.surveyCanvas.view);
 
   const elements = useAppSelector(
     (state: RootState) => state.surveyBuilder.elements,
@@ -248,8 +250,7 @@ const SurveyBuilder = () => {
               }}
             >
               <CanvasConsole
-                display={display}
-                setDisplay={setDisplay}
+                display={display}                
                 question={selectedQuestion}
                 noElements={noElements}
                 shareID={shareID}

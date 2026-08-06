@@ -116,7 +116,7 @@ export interface ColorPickerProps {
 
 export interface CanvasConsoleProps {
   display: "desktop" | "mobile";
-  setDisplay: React.Dispatch<React.SetStateAction<"desktop" | "mobile">>;
+  setDisplay?: React.Dispatch<React.SetStateAction<"desktop" | "mobile">>;
   onOpenImport: () => void;
   question: Element | null;
   shareID: string;
@@ -1383,7 +1383,7 @@ export interface SurveyTitleEditModalProps {
 }
 
 export interface SurveyIslandProps {
-  setDisplay: React.Dispatch<React.SetStateAction<"desktop" | "mobile">>;
+  setDisplay?: React.Dispatch<React.SetStateAction<"desktop" | "mobile">>;
   onOpenImport: () => void;
   shareID: string;
   published: boolean;

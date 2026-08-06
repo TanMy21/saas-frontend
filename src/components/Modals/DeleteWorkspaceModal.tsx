@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 import { useDeleteWorkspaceMutation } from "../../app/slices/workspaceApiSlice";
 // import { useAppTheme } from "../../theme/useAppTheme";
-import { useToast } from "../../hooks/useToast";
 import { showToast } from "../../utils/showToast";
 import { WorkspaceDelete, WorkspaceDeleteModalProps } from "../../utils/types";
 import { ConfirmationInput } from "../ModalComponents/ConfirmationInput";
@@ -43,19 +42,39 @@ const DeleteWorkspaceModal = ({
   const confirmationMatch =
     confirmationText === expectedText && confirmationText.length > 0;
 
-  const [deleteWorkspace, { isSuccess, isLoading, isError, error }] =
-    useDeleteWorkspaceMutation();
+  const [deleteWorkspace, { isLoading }] = useDeleteWorkspaceMutation();
 
   const handleDeleteWorkspace = async (data: WorkspaceDelete) => {
     const { confirmationText } = data;
-    if (confirmationText === name) {
-      await deleteWorkspace(workspaceId);
-      navigate("/dash");
-    } else {
+
+    if (confirmationText !== name) {
       showToast.error("Workspace name does not match.");
+      return;
     }
-    reset({ confirmationText: "" });
-    onClose();
+
+    try {
+      await deleteWorkspace(workspaceId).unwrap();
+      showToast.success("Workspace deleted!", { duration: 3000 });
+      reset({ confirmationText: "" });
+      onClose();
+      navigate("/dash");
+    } catch (deleteError: unknown) {
+      const status =
+        typeof deleteError === "object" &&
+        deleteError !== null &&
+        "status" in deleteError
+          ? deleteError.status
+          : undefined;
+
+      if (status === 409) {
+        showToast.error("The default or only workspace cannot be deleted.");
+        return;
+      }
+
+      showToast.apiError(deleteError, {
+        fallbackMessage: "Could not delete workspace.",
+      });
+    }
   };
 
   useEffect(() => {
@@ -64,17 +83,6 @@ const DeleteWorkspaceModal = ({
       setTimeout(() => setFocus("confirmationText"), 0);
     }
   }, [open, reset, setFocus]);
-
-  useToast({
-    isSuccess,
-    isError,
-    error,
-    successMessage: "Workspace deleted!",
-    errorFallbackMessage: "Could not delete workspace. Please try again.",
-    successToastOptions: {
-      duration: 3000,
-    },
-  });
 
   return (
     <DangerModalShell open={open} onClose={onClose}>

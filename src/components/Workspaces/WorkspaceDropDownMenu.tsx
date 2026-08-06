@@ -28,8 +28,8 @@ const WorkspaceDropDown = ({
   setSelectedWorkspace,
 }: WorkspaceDropDownMenu) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const [openRenameModel, setOpenRenameModel] = useState(false);
-  const [openDeleteModel, setOpenDeleteModel] = useState(false);
+  const [openRenameModal, setOpenRenameModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setMenuAnchor(e.currentTarget);
@@ -40,12 +40,12 @@ const WorkspaceDropDown = ({
   };
 
   const handleOpenModalRename = () => {
-    setOpenRenameModel(true);
+    setOpenRenameModal(true);
     handleClose();
   };
 
   const handleOpenModalDelete = () => {
-    setOpenDeleteModel(true);
+    setOpenDeleteModal(true);
     handleClose();
   };
 
@@ -171,20 +171,20 @@ const WorkspaceDropDown = ({
         </MenuItem>
       </Menu>
       <Suspense fallback={null}>
-        {/* Remame Modal */}
-        {openRenameModel && (
+        {/* Rename Modal */}
+        {openRenameModal && (
           <RenameWorkspaceModal
-            open={openRenameModel}
-            onClose={() => setOpenRenameModel(false)}
+            open={openRenameModal}
+            onClose={() => setOpenRenameModal(false)}
             selectedWorkspace={selectedWorkspace}
             setSelectedWorkspace={setSelectedWorkspace}
           />
         )}
         {/* Delete Modal */}
-        {openDeleteModel && (
+        {openDeleteModal && (
           <DeleteWorkspaceModal
-            open={openDeleteModel}
-            onClose={() => setOpenDeleteModel(false)}
+            open={openDeleteModal}
+            onClose={() => setOpenDeleteModal(false)}
             selectedWorkspace={selectedWorkspace}
           />
         )}

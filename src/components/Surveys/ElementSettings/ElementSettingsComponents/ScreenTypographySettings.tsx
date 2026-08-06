@@ -12,13 +12,13 @@ import {
 } from "@mui/material";
 import { useForm, useWatch } from "react-hook-form";
 import { FiType } from "react-icons/fi";
-import { useSelector } from "react-redux";
 
 import {
   useUpdateElementTypographyMobileViewMutation,
   useUpdateElementTypographyMutation,
 } from "../../../../app/slices/elementApiSlice";
 import { RootState } from "../../../../app/store";
+import { useAppSelector } from "../../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../../context/BuilderRefetchCanvas";
 import { usePermission } from "../../../../context/PermissionContext";
 import { SettingSaveState } from "../../../../types/surveyBuilderTypes";
@@ -36,11 +36,11 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
   const refetchCanvas = useSurveyCanvasRefetch();
   const { canEditQuestion } = usePermission();
 
-  const [fontSizeView, setFontSizeView] = useState<"desktop" | "mobile">(
-    "desktop",
+  const fontSizeView = useAppSelector(
+    (state: RootState) => state.surveyCanvas.view,
   );
 
-  const typographySettings = useSelector(
+  const typographySettings = useAppSelector(
     (state: RootState) => state.elementTypography,
   );
 
@@ -459,10 +459,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                   </Typography>
 
                   <Box>
-                    <FontSizeViewToggle
-                      view={fontSizeView}
-                      setView={setFontSizeView}
-                    />
+                    <FontSizeViewToggle />
                   </Box>
                 </Box>
 
@@ -529,10 +526,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                   </Typography>
 
                   <Box>
-                    <FontSizeViewToggle
-                      view={fontSizeView}
-                      setView={setFontSizeView}
-                    />
+                    <FontSizeViewToggle />
                   </Box>
                 </Box>
 
