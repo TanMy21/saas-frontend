@@ -7,6 +7,7 @@ const initialState: SurveyBuilderState = {
   isShareModalOpen: false,
   isGenerateModalOpen: false,
   generationJobID: null,
+  importJobID: null,
 };
 
 export const surveyBuilderSlice = createSlice({
@@ -24,6 +25,9 @@ export const surveyBuilderSlice = createSlice({
     },
     setGenerationJobID: (state, action: PayloadAction<string | null>) => {
       state.generationJobID = action.payload;
+    },
+    setImportJobID: (state, action: PayloadAction<string | null>) => {
+      state.importJobID = action.payload;
     },
     addElement: (state, action: PayloadAction<Element>) => {
       state.elements.push(action.payload);
@@ -66,6 +70,7 @@ export const {
   setShareModalOpen,
   setGenerateModalOpen,
   setGenerationJobID,
+  setImportJobID,
   addElement,
   deleteElementRedux,
   updateElementOrder,

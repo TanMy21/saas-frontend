@@ -1280,6 +1280,7 @@ export interface SurveyBuilderState {
   isShareModalOpen?: boolean;
   isGenerateModalOpen: boolean;
   generationJobID: string | null;
+  importJobID: string | null;
 }
 
 export interface SurveyBuilderLeftSidebarProps {

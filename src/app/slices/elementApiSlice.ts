@@ -22,6 +22,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
           | "COMPLETED"
           | "FAILED"
           | "CANCELED"
+          | "CANCELLED"
           | "TIMED_OUT";
         generatedCount?: number | null;
         errorMessage?: string | null;
@@ -49,6 +50,7 @@ export const elementApiSlice = apiSlice.injectEndpoints({
           | "COMPLETED"
           | "FAILED"
           | "CANCELED"
+          | "CANCELLED"
           | "TIMED_OUT";
       },
       {

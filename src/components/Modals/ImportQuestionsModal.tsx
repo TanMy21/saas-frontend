@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { Alert, Box, IconButton, Modal, Typography } from "@mui/material";
@@ -6,16 +6,11 @@ import { useParams } from "react-router-dom";
 
 import {
   useGetElementsForSurveyQuery,
-  useGetQuestionImportJobStatusQuery,
   useImportQuestionsMutation,
 } from "../../app/slices/elementApiSlice";
-import { setAiQuestionsJustAdded } from "../../app/slices/generateSurveyQuestionSlice";
-import { hideOverlay, showOverlay } from "../../app/slices/overlaySlice";
+import { setImportJobID } from "../../app/slices/surveySlice";
 import { useAppDispatch } from "../../app/typedReduxHooks";
-import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas"; 
-import { useToast } from "../../hooks/useToast";
 import { nonOrderableTypes } from "../../utils/constants";
-import { showToast } from "../../utils/showToast";
 import { ImportQuestionProps } from "../../utils/types";
 import { getEmptyTextMessage } from "../../utils/utils";
 
@@ -28,18 +23,14 @@ const ImportQuestionsModal = ({
 }: ImportQuestionProps) => {
   const { surveyID } = useParams();
   const dispatch = useAppDispatch();
-  
-  const refetchCanvas = useSurveyCanvasRefetch();
 
-  const [importJobID, setImportJobID] = useState<string | null>(null);
   const [importText, setImportText] = useState("");
   const [importBtnClicked, setImportBtnClicked] = useState(false);
   const [attemptedMode, setAttemptedMode] = useState<
     "INITIAL" | "APPEND" | "REPLACE" | null
   >(null);
 
-  const { data: elements = [], refetch: refetchElements } =
-    useGetElementsForSurveyQuery(surveyID!);
+  const { data: elements = [] } = useGetElementsForSurveyQuery(surveyID!);
 
   const existingQuestionsCount = elements.filter(
     (el) => el.type && !nonOrderableTypes.includes(el.type),
@@ -47,65 +38,15 @@ const ImportQuestionsModal = ({
 
   const [importQuestions, { isLoading }] = useImportQuestionsMutation();
 
-  const {
-    data: importJob,
-    isError: isImportJobError,
-    error: importJobError,
-  } = useGetQuestionImportJobStatusQuery(importJobID!, {
-    skip: !importJobID,
-    pollingInterval: importJobID ? 2000 : 0,
-  });
+  const handleImportStarted = (jobID: string) => {
+    dispatch(setImportJobID(jobID));
+  };
 
   const handleClose = () => {
     onClose?.();
     setOpenImport?.(false);
     setImportBtnClicked(false);
   };
-
-  useToast({
-    isError: isImportJobError,
-    error: importJobError,
-  });
-
-  useEffect(() => {
-    if (!importJob) return;
-
-    if (importJob.status === "PENDING" || importJob.status === "PROCESSING") {
-      return;
-    }
-
-    if (importJob.status === "COMPLETED") {
-      dispatch(
-        showOverlay({
-          message: "Finalizing your survey...",
-          variant: "IMPORT",
-        }),
-      );
-
-      dispatch(setAiQuestionsJustAdded());
-
-      setImportText("");
-      void refetchElements();
-      refetchCanvas();
-
-      showToast.success("Questions imported successfully.");
-
-      setImportJobID(null);
-      dispatch(hideOverlay());
-      return;
-    }
-
-    if (
-      importJob.status === "FAILED" ||
-      importJob.status === "TIMED_OUT" ||
-      importJob.status === "CANCELED"
-    ) {
-      showToast.error(importJob.errorMessage || "Failed to import questions.");
-
-      setImportJobID(null);
-      dispatch(hideOverlay());
-    }
-  }, [importJob, dispatch, refetchCanvas, refetchElements]);
 
   return (
     <Modal
@@ -205,14 +146,14 @@ const ImportQuestionsModal = ({
             <ImportQuestionModalInputField
               importQuestions={importQuestions}
               surveyID={surveyID!}
-              isLoading={isLoading || !!importJobID}
+              isLoading={isLoading}
               importText={importText}
               setImportText={setImportText}
               setImportBtnClicked={setImportBtnClicked}
               setAttemptedMode={setAttemptedMode}
               handleClose={handleClose}
               existingQuestionsCount={existingQuestionsCount}
-              setImportJobID={setImportJobID}
+              setImportJobID={handleImportStarted}
             />
           </Box>
         </Box>

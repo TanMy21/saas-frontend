@@ -20,6 +20,7 @@ import useAIGenerationJobPolling from "../hooks/useAIGenerationJobPolling";
 import useAuth from "../hooks/useAuth";
 import { useCanvasLoadingAndError } from "../hooks/useCanvasLoadingandError";
 import useFetchAuthenticatedUser from "../hooks/useFetchAuthenticatedUser";
+import useQuestionImportJobPolling from "../hooks/useQuestionImportJobPolling";
 import useSelectedQuestion from "../hooks/useSelectedQuestion";
 import useSortElements from "../hooks/useSortElements";
 import useSurveyBuilderModalLocation from "../hooks/useSurveyBuilderModalLocation";
@@ -103,6 +104,7 @@ const SurveyBuilder = () => {
   });
 
   useAIGenerationJobPolling(refetchCanvas);
+  useQuestionImportJobPolling(refetchCanvas);
 
   const { getSurveyCanvas } = surveyCanvas ?? {};
   const {
