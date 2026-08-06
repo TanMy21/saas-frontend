@@ -204,7 +204,7 @@ const QuestionContentSettings = () => {
     try {
       setSaveStatus("saving");
 
-      const updatedQuestion = await updateQuestionBasicSettings({
+      const { updatedQuestion } = await updateQuestionBasicSettings({
         questionID,
         text: payload.questionText,
         description: payload.questionDescription,

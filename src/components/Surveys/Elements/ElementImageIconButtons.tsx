@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Box, IconButton, Tooltip } from "@mui/material";
-import { ImageOff, ImagePlus } from "lucide-react";
+import { ImageOff  } from "lucide-react";
 
 import { useRemoveQuestionImageMutation } from "../../../app/slices/elementApiSlice";
 import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
@@ -34,35 +34,12 @@ const ElementImageIconButtons = ({
         width: "100%",
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "flex-end",
         alignItems: "center",
         backgroundColor: "transparent",
         transition: "opacity 0.3s ease",
       }}
     >
-      <Tooltip title="Replace Image">
-        <IconButton
-          onClick={() => setReplaceImageModalOpen(true)}
-          disabled={isEditLocked}
-          sx={{
-            width: 38,
-            height: 38,
-            borderRadius: "10px",
-            backgroundColor: "rgba(15, 23, 42, 0.78)",
-            color: "#FFFFFF",
-            border: "1px solid rgba(255, 255, 255, 0.65)",
-            boxShadow: "0 6px 18px rgba(0, 0, 0, 0.28)",
-            backdropFilter: "blur(8px)",
-            "&:hover": {
-              backgroundColor: "rgba(30, 41, 59, 0.92)",
-              color: "#FFFFFF",
-            },
-          }}
-        >
-          <ImagePlus size={22} strokeWidth={2.4} />
-        </IconButton>
-      </Tooltip>
-
       {isEditLocked && (
         <QuestionImageUploadModal
           uploadImageModalOpen={replaceImageModalOpen}

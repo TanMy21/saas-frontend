@@ -192,10 +192,10 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Elements"],
     }),
     updateQuestionImageAltTxt: builder.mutation({
-      query: ({ questionID, questionImageAltTxt }) => ({
-        url: `/q/img/alt`,
+      query: ({ questionID, questionImageAltTxt, role }) => ({
+        url: `/q/img/alttxt/${questionID}`,
         method: "PATCH",
-        body: { questionID, questionImageAltTxt },
+        body: { questionID, questionImageAltTxt, role },
       }),
       invalidatesTags: ["Elements"],
     }),

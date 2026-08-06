@@ -8,10 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useUpdateQuestionImageAltTxtMutation } from "../../../../app/slices/elementApiSlice";
 import { setImageAltText } from "../../../../app/slices/elementSlice";
 import { RootState } from "../../../../app/store";
+import useAuth from "../../../../hooks/useAuth";
 import { questionImageSettingsSchema } from "../../../../utils/schema";
 import { QuestionImage } from "../../../../utils/types";
 
 const QuestionImageAltTxt = () => {
+  const { role } = useAuth();
   const [updateQuestionImageAltTxt] = useUpdateQuestionImageAltTxtMutation();
 
   const dispatch = useDispatch();
@@ -39,6 +41,7 @@ const QuestionImageAltTxt = () => {
       await updateQuestionImageAltTxt({
         questionID,
         questionImageAltTxt,
+        role: "TEXT_IMAGE",
       }).unwrap();
       setFormTouched(false);
     } catch (error) {
