@@ -13,7 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 import TiptapImage from "@tiptap/extension-image";
-import TiptapLink from "@tiptap/extension-link";
 import { TextAlign } from "@tiptap/extension-text-align";
 import {
   Color,
@@ -21,7 +20,6 @@ import {
   FontSize,
   TextStyle,
 } from "@tiptap/extension-text-style";
-import TiptapUnderline from "@tiptap/extension-underline";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import {
@@ -161,8 +159,17 @@ export const InfoScreenRichTextSettings = ({
   });
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        link: {
+          openOnClick: false,
+          HTMLAttributes: {
+            target: "_blank",
+            rel: "noopener noreferrer",
+          },
+        },
+      }),
       TextStyle,
       Color,
       FontFamily,
@@ -172,21 +179,13 @@ export const InfoScreenRichTextSettings = ({
         alignments: ["left", "center", "right"],
         defaultAlignment: "left",
       }),
-      TiptapUnderline,
-      TiptapLink.configure({
-        openOnClick: false,
-        HTMLAttributes: {
-          target: "_blank",
-          rel: "noopener noreferrer",
-        },
-      }),
       EditorImage.configure({
         inline: false,
         allowBase64: false,
       }),
     ],
     content: initialHtml,
-    onUpdate: () => {
+    onUpdate: ({ editor }) => {
       if (!canEditQuestion) return;
 
       const sanitizedHtml = sanitizeRichTextHtml(editor.getHTML());
@@ -204,7 +203,7 @@ export const InfoScreenRichTextSettings = ({
 
   // keep editor content in sync with question description when question changes or when question is loaded
   useEffect(() => {
-    if (!editor) return;
+    if (!editor || editor.isDestroyed) return;
 
     const currentHtml = editor.getHTML();
 

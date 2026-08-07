@@ -66,6 +66,8 @@ const FlowFormConditionBlock = ({
 
   const [deleteCondition] = useDeleteConditionMutation();
 
+  console.log("Block condition", condition);
+
   const ConditionComponent =
     FormConditionComponent[
       edgeFormData.sourceQuestionIcon || (selectedNode?.data.element as string)

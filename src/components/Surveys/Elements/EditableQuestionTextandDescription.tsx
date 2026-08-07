@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 
 import { Box } from "@mui/material";
-import { Link } from "@tiptap/extension-link";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Color, TextStyle } from "@tiptap/extension-text-style";
-import { Underline as ul } from "@tiptap/extension-underline";
 import { Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
@@ -36,6 +34,11 @@ export const EditableQuestionText = ({
         blockquote: false,
         codeBlock: false,
         horizontalRule: false,
+        link: {
+          openOnClick: false,
+          autolink: true,
+          linkOnPaste: true,
+        },
       }),
 
       /**
@@ -49,16 +52,9 @@ export const EditableQuestionText = ({
         emptyNodeClass: "is-empty",
       }),
 
-      ul,
       TextStyle,
       Color.configure({
         types: ["textStyle"],
-      }),
-
-      Link.configure({
-        openOnClick: false,
-        autolink: true,
-        linkOnPaste: true,
       }),
 
       TextAlign.configure({

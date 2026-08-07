@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Box,
@@ -18,6 +18,7 @@ const FlowFormInput = ({
   register,
   watch,
   setValue,
+  setConditions,
   blockIndex,
   formErrors,
   handleInteraction,
@@ -28,8 +29,77 @@ const FlowFormInput = ({
   };
   const [isFocused, setIsFocused] = useState(false);
   const conditions = watch("conditions");
+  const isRange = questionType === "RANGE";
   const hasComparisonSelect =
     questionType === "NUMBER" || questionType === "RANGE";
+  const conditionTypeField = `conditions.${blockIndex}.conditionType`;
+  const conditionValueField = `conditions.${blockIndex}.conditionValue`;
+  const watchedRangeConditionType = isRange
+    ? watch(conditionTypeField)
+    : undefined;
+  const watchedRangeConditionValue = isRange
+    ? watch(conditionValueField)
+    : undefined;
+
+  useEffect(() => {
+    if (!isRange || typeof blockIndex !== "number") return;
+
+    setValue(
+      conditionTypeField,
+      condition.conditionType || "is-equal-to",
+    );
+    setValue(conditionValueField, condition.conditionValue ?? "");
+  }, [
+    blockIndex,
+    condition.conditionType,
+    condition.conditionValue,
+    conditionTypeField,
+    conditionValueField,
+    isRange,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    if (!isRange || typeof blockIndex !== "number") return;
+
+    const conditionIndex = blockIndex - 1;
+    const nextConditionType =
+      watchedRangeConditionType ??
+      condition.conditionType ??
+      "is-equal-to";
+    const nextConditionValue =
+      watchedRangeConditionValue ?? condition.conditionValue ?? "";
+
+    setConditions((prev) => {
+      const currentCondition = prev[conditionIndex];
+
+      if (
+        !currentCondition ||
+        (currentCondition.conditionType === nextConditionType &&
+          currentCondition.conditionValue === nextConditionValue)
+      ) {
+        return prev;
+      }
+
+      return prev.map((current, index) =>
+        index === conditionIndex
+          ? {
+              ...current,
+              conditionType: nextConditionType,
+              conditionValue: nextConditionValue,
+            }
+          : current,
+      );
+    });
+  }, [
+    blockIndex,
+    condition.conditionType,
+    condition.conditionValue,
+    isRange,
+    setConditions,
+    watchedRangeConditionType,
+    watchedRangeConditionValue,
+  ]);
 
   if (
     typeof blockIndex === "number" &&
@@ -90,7 +160,14 @@ const FlowFormInput = ({
             <Select
               disabled={readOnly}
               {...register(`conditions.${blockIndex}.conditionType`)}
-              defaultValue={"is-equal-to"}
+              {...(isRange
+                ? {
+                    value:
+                      watchedRangeConditionType ??
+                      condition.conditionType ??
+                      "is-equal-to",
+                  }
+                : { defaultValue: "is-equal-to" })}
               IconComponent={ChevronDown}
               renderValue={(selected) => {
                 const labelMap: Record<string, string> = {
@@ -232,7 +309,11 @@ const FlowFormInput = ({
             />
           ) : (
             <Tooltip
-              title={watch(`conditions.${blockIndex}.conditionValue`) || ""}
+              title={
+                (isRange
+                  ? watchedRangeConditionValue ?? condition.conditionValue
+                  : watch(`conditions.${blockIndex}.conditionValue`)) || ""
+              }
               placement="top"
               arrow
             >
@@ -240,6 +321,14 @@ const FlowFormInput = ({
                 <TextField
                   disabled={readOnly}
                   {...register(`conditions.${blockIndex}.conditionValue`)}
+                  {...(isRange
+                    ? {
+                        value:
+                          watchedRangeConditionValue ??
+                          condition.conditionValue ??
+                          "",
+                      }
+                    : {})}
                   size="small"
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}

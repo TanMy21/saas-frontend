@@ -181,7 +181,7 @@ const BypassEdge = ({
             userSelect: "none",
           }}
         >
-          <div>{`${sourceOrder + 1} ➝ ${targetOrder + 1}`}</div>
+          <div>{`${sourceOrder} ➝ ${targetOrder}`}</div>
           {canDelete && (
             <button
               onMouseDown={(e) => e.stopPropagation()}

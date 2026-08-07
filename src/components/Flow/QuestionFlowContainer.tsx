@@ -75,6 +75,8 @@ const QuestionFlowContainer = ({
   const { data: questionConditions, isLoading } =
     useGetAllConditionsForSurveyQuery(surveyID);
 
+  console.log("questionConditions", questionConditions);
+
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
     const qType = String(node.data?.element ?? "");
 

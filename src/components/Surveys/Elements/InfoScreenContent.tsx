@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Box } from "@mui/material";
 import { DragHandle } from "@tiptap/extension-drag-handle";
 import TiptapImage from "@tiptap/extension-image";
-import TiptapLink from "@tiptap/extension-link";
 import { TextAlign } from "@tiptap/extension-text-align";
 import {
   Color,
@@ -11,7 +10,6 @@ import {
   FontSize,
   TextStyle,
 } from "@tiptap/extension-text-style";
-import TiptapUnderline from "@tiptap/extension-underline";
 import { Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
@@ -41,7 +39,7 @@ import { InfoScreenEditorToolbar } from "./InfoScreenEditorToolbar";
 export const InfoScreenContent = ({ qID, display }: ElementProps) => {
   const isMobile = display === "mobile";
   const { can } = useAuth();
-  const { guardStrictEdit, confirmSoftEdit } = useSurveyEditLock();
+  const { confirmSoftEdit } = useSurveyEditLock();
 
   const canEditQuestion = can("UPDATE_QUESTION");
   const imageInputRef = useRef<HTMLInputElement | null>(null);
@@ -111,8 +109,17 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
   );
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        link: {
+          openOnClick: false,
+          HTMLAttributes: {
+            target: "_blank",
+            rel: "noopener noreferrer",
+          },
+        },
+      }),
       TextStyle,
       Color,
       FontFamily,
@@ -127,14 +134,6 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right"],
         defaultAlignment: "left",
-      }),
-      TiptapUnderline,
-      TiptapLink.configure({
-        openOnClick: false,
-        HTMLAttributes: {
-          target: "_blank",
-          rel: "noopener noreferrer",
-        },
       }),
       EditorImage.configure({
         inline: false,
@@ -192,7 +191,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
   const handleSaveRichText = async () => {
     if (!editor || !canEditQuestion || !questionID) return;
 
-    if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.INFO_COPY)) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.INFO_COPY))) return;
 
     try {
       setSaveStatus("saving");
@@ -235,7 +234,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
   const handleUploadAndInsertImage = async (file: File) => {
     if (!editor || !questionID) return;
 
-    if (!guardStrictEdit()) return;
+    if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.INFO_COPY))) return;
 
     try {
       const formData = new FormData();
@@ -304,7 +303,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
    */
 
   useEffect(() => {
-    if (!editor) return;
+    if (!editor || editor.isDestroyed) return;
 
     const currentHtml = editor.getHTML();
 
