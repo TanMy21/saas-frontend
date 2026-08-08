@@ -36,7 +36,7 @@ export const ConceptFitResponseMobilePreview = () => {
   const conceptImage = question?.questionImages?.[0];
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         minHeight: 480,
@@ -44,7 +44,7 @@ export const ConceptFitResponseMobilePreview = () => {
         mt: 0,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: "98%",
           minHeight: 400,
@@ -58,7 +58,7 @@ export const ConceptFitResponseMobilePreview = () => {
           // border: "2px solid green",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             width: "100%",
             display: "flex",
@@ -69,7 +69,7 @@ export const ConceptFitResponseMobilePreview = () => {
           }}
         >
           {!firstAttribute ? (
-            <Box
+            <Box component="div"
               sx={{
                 width: "96%",
                 minHeight: 120,
@@ -86,7 +86,7 @@ export const ConceptFitResponseMobilePreview = () => {
               </Typography>
             </Box>
           ) : (
-            <Box
+            <Box component="div"
               sx={{
                 width: "100%",
                 display: "flex",
@@ -96,7 +96,7 @@ export const ConceptFitResponseMobilePreview = () => {
                 // border: "2px solid red",
               }}
             >
-              <Box
+              <Box component="div"
                 sx={{
                   display: "grid",
                   width: "96%",
@@ -106,7 +106,7 @@ export const ConceptFitResponseMobilePreview = () => {
                   // border: "2px solid blue",
                 }}
               >
-                <Box
+                <Box component="div"
                   sx={{
                     py: 3,
                     borderRadius: "18px",
@@ -133,7 +133,7 @@ export const ConceptFitResponseMobilePreview = () => {
                   </Typography>
                 </Box>
 
-                <Box
+                <Box component="div"
                   sx={{
                     py: 3,
                     borderRadius: "18px",
@@ -162,7 +162,7 @@ export const ConceptFitResponseMobilePreview = () => {
               </Box>
 
               {showImageMode && conceptImage?.imageUrl && (
-                <Box
+                <Box component="div"
                   sx={{
                     width: "82%",
                     maxHeight: 180,
@@ -190,7 +190,7 @@ export const ConceptFitResponseMobilePreview = () => {
               )}
 
               {showImageMode && !conceptImage?.imageUrl && (
-                <Box
+                <Box component="div"
                   sx={{
                     width: "82%",
                     minHeight: 120,
@@ -216,7 +216,7 @@ export const ConceptFitResponseMobilePreview = () => {
                 </Box>
               )}
 
-              <Box
+              <Box component="div"
                 sx={{
                   width: "82%",
                   minHeight: 60,

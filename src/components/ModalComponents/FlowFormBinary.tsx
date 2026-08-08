@@ -63,7 +63,7 @@ const FlowFormBinary = ({
   ]);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         alignItems: "center",
@@ -71,7 +71,7 @@ const FlowFormBinary = ({
         width: "100%",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           alignItems: "center",
@@ -97,7 +97,7 @@ const FlowFormBinary = ({
         </Typography>
 
         {/* CONDITION */}
-        <Box
+        <Box component="div"
           sx={{
             px: 1,
             py: "2px",

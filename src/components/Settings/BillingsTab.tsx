@@ -13,12 +13,12 @@ import { AccountSettings } from "../../types/userTypes";
 export default function BillingTab({ user }: AccountSettings) {
   if (!user) {
     return (
-      <Box sx={{ p: 4 }}>
+      <Box component="div" sx={{ p: 4 }}>
         <Skeleton variant="text" width={200} height={32} />
 
         <Skeleton variant="text" width={300} height={20} sx={{ mt: 1 }} />
 
-        <Box sx={{ mt: 3 }}>
+        <Box component="div" sx={{ mt: 3 }}>
           <Skeleton
             variant="rectangular"
             height={120}
@@ -29,8 +29,8 @@ export default function BillingTab({ user }: AccountSettings) {
     );
   }
   return (
-    <Box sx={{ p: 4 }}>
-      <Box sx={{ mb: 3 }}>
+    <Box component="div" sx={{ p: 4 }}>
+      <Box component="div" sx={{ mb: 3 }}>
         <Typography variant="h5" fontWeight={800} color="text.primary">
           Subscription
         </Typography>
@@ -39,7 +39,7 @@ export default function BillingTab({ user }: AccountSettings) {
         </Typography>
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           border: "1px solid",
           borderColor: "rgba(148,163,184,0.35)",
@@ -49,7 +49,7 @@ export default function BillingTab({ user }: AccountSettings) {
         }}
       >
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
-          <Box>
+          <Box component="div">
             <Typography fontWeight={700}>Current Tier</Typography>
           </Box>
           <Chip

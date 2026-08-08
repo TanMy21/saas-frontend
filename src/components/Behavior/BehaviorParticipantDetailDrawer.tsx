@@ -41,7 +41,7 @@ export function BehaviorParticipantDetailDrawer({
         },
       }}
     >
-      <Box sx={{ px: 3, pt: 3, pb: 2 }}>
+      <Box component="div" sx={{ px: 3, pt: 3, pb: 2 }}>
         <Typography variant="h6" fontWeight={600}>
           Participant {participant.serialNumber}
         </Typography>
@@ -56,7 +56,7 @@ export function BehaviorParticipantDetailDrawer({
       {loading && <PariticpantBehaviorLoader />}
 
       {!loading && summary && meta && (
-        <Box
+        <Box component="div"
           sx={{
             px: 3,
             pb: 4,
@@ -66,7 +66,7 @@ export function BehaviorParticipantDetailDrawer({
           }}
         >
           {/* Status & Device */}
-          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+          <Box component="div" sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
             {status && (
               <Chip
                 variant="outlined"
@@ -89,8 +89,8 @@ export function BehaviorParticipantDetailDrawer({
           </Box>
 
           {/* Progress */}
-          <Box>
-            <Box
+          <Box component="div">
+            <Box component="div"
               sx={{
                 display: "grid",
                 gridTemplateColumns: "repeat(2, 1fr)",
@@ -116,7 +116,7 @@ export function BehaviorParticipantDetailDrawer({
           <Divider />
 
           {/* Aggregates */}
-          <Box>
+          <Box component="div">
             <Typography
               variant="caption"
               sx={{
@@ -131,7 +131,7 @@ export function BehaviorParticipantDetailDrawer({
               Interaction Summary
             </Typography>
 
-            <Box
+            <Box component="div"
               sx={{
                 display: "grid",
                 gridTemplateColumns: "repeat(3, 1fr)",
@@ -170,7 +170,7 @@ export function BehaviorParticipantDetailDrawer({
           <Divider />
 
           {/* Timeline */}
-          <Box>
+          <Box component="div">
             <Typography
               variant="caption"
               sx={{

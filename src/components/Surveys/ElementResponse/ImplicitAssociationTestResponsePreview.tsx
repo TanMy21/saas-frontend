@@ -35,7 +35,7 @@ export const ImplicitAssociationTestResponsePreview = ({
     "Add attributes";
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         display: "flex",
@@ -43,7 +43,7 @@ export const ImplicitAssociationTestResponsePreview = ({
         mt: 3,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: isMobile ? "92%" : "76%",
           display: "flex",

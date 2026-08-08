@@ -65,7 +65,7 @@ export const BehaviorInsights = () => {
   const showFilteredEmpty = !isLoading && totalRows === 0 && hasFilters;
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+    <Box component="div" sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       <Box
         component="main"
         sx={{
@@ -75,9 +75,9 @@ export const BehaviorInsights = () => {
           py: 4,
         }}
       >
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+        <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
           {/* FILTERS */}
-          <Box sx={{ display: "flex", gap: 2 }}>
+          <Box component="div" sx={{ display: "flex", gap: 2 }}>
             <InsightsFilterDropdown<"all" | "last_week" | "last_month">
               label="Time Range"
               value={preset ?? "all"}
@@ -104,7 +104,7 @@ export const BehaviorInsights = () => {
             />
           </Box>
 
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -112,7 +112,7 @@ export const BehaviorInsights = () => {
               animation: "fadeIn 0.2s ease-in",
             }}
           >
-            <Box>
+            <Box component="div">
               <Typography
                 variant="h6"
                 sx={{

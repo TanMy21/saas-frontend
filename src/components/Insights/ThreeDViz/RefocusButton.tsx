@@ -12,7 +12,7 @@ export function ResultRefocusButton() {
 
   return (
     <Html transform={false} fullscreen>
-      <Box
+      <Box component="div"
         sx={{
           position: "absolute",
           top: 10,

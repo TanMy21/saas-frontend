@@ -28,7 +28,7 @@ const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
 
   return (
     <DevicePreview display={display}>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -47,7 +47,7 @@ const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
           },
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             margin: "auto",
             width: "96%",
@@ -59,7 +59,7 @@ const SurveyBuilderCanvasMobile = ({ display }: SurveyBuilderCanvasProps) => {
           {question?.type && QuestionComponent && (
             <Suspense
               fallback={
-                <Box
+                <Box component="div"
                   sx={{
                     minHeight: 240,
                     display: "flex",

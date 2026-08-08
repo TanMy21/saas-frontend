@@ -72,7 +72,7 @@ const WorkspaceToolbar = ({
   }, [workspaceName]);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -84,7 +84,7 @@ const WorkspaceToolbar = ({
         // border: "2px solid yellow",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "flex-start",
@@ -182,7 +182,7 @@ const WorkspaceToolbar = ({
             }}
           >
             {isArchiveWorkspace ? (
-              <Box
+              <Box component="div"
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -209,7 +209,7 @@ const WorkspaceToolbar = ({
         )}
         {(can("UPDATE_WORKSPACE") || can("DELETE_WORKSPACE")) &&
           !isArchiveWorkspace && (
-            <Box>
+            <Box component="div">
               <WorkspaceDropDown
                 selectedWorkspace={selectedWorkspace}
                 setSelectedWorkspace={setSelectedWorkspace}
@@ -217,7 +217,7 @@ const WorkspaceToolbar = ({
             </Box>
           )}
       </Box>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "row",
@@ -230,7 +230,7 @@ const WorkspaceToolbar = ({
           // border: "2px solid orange",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             justifyContent: "flex-start",
@@ -245,7 +245,7 @@ const WorkspaceToolbar = ({
             setViewMode={setViewMode}
           />
         </Box>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -260,7 +260,7 @@ const WorkspaceToolbar = ({
             timeout={300}
             unmountOnExit
           >
-            <Box data-ignore-pager sx={{ width: "80%", height: "100%" }}>
+            <Box component="div" data-ignore-pager sx={{ width: "80%", height: "100%" }}>
               <SurveySearchBar
                 search={search}
                 setSearch={setSearch}
@@ -272,7 +272,7 @@ const WorkspaceToolbar = ({
             </Box>
           </Grow>
         </Box>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             justifyContent: "flex-end",

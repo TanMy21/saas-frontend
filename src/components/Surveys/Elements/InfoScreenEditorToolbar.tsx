@@ -47,7 +47,7 @@ export const InfoScreenEditorToolbar = ({
   onSave: () => void;
 }) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         position: "sticky",
         top: 12,

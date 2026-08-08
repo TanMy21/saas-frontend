@@ -24,12 +24,12 @@ const ShareEmbed = ({
   const embedCode = getEmbedCode(shareURL);
 
   return (
-    <Box>
+    <Box component="div">
       <Typography fontWeight={600} mb={1.5}>
         Embed code
       </Typography>
 
-      <Box
+      <Box component="div"
         sx={{
           position: "relative",
           bgcolor: "#F3F4F6",
@@ -69,7 +69,7 @@ const ShareEmbed = ({
         </Tooltip>
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "space-between",

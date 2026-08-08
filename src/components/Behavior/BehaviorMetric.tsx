@@ -4,7 +4,7 @@ import { BehaviorMetricProps } from "../../types/behaviorTypes";
 
 export function Metric({ label, value, sx }: BehaviorMetricProps) {
   return (
-    <Box
+    <Box component="div"
       sx={{
         p: 2,
         borderRadius: 2,

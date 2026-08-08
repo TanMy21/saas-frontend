@@ -44,6 +44,7 @@ const SessionInitializer = ({ children }: { children: React.ReactNode }) => {
   if (restoringSession) {
     return (
       <Box
+       component="div"
         sx={{
           minHeight: "100vh",
           display: "flex",

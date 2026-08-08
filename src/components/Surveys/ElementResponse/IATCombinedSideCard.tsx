@@ -13,7 +13,7 @@ export const IATCombinedSideCard = ({
   onThemeUpdate,
 }: IATCombinedSideCardProps) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid #F9A8D4",
         borderRadius: 2,

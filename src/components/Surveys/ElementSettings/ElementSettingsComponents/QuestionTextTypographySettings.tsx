@@ -42,8 +42,8 @@ export const QuestionTextTypographySettings = ({
 }: ScreenTypographySettingsProps) => {
   const refetchCanvas = useSurveyCanvasRefetch();
   const { canEditQuestion } = usePermission();
-  const [fontSizeView, setFontSizeView] = useState<"desktop" | "mobile">(
-    "desktop",
+  const fontSizeView = useAppSelector(
+    (state: RootState) => state.surveyCanvas.view,
   );
   const typographySettings = useAppSelector(
     (state: RootState) => state.elementTypography,
@@ -196,7 +196,7 @@ export const QuestionTextTypographySettings = ({
           aria-controls="typography-settings"
           id="typography-settings-header"
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -211,7 +211,7 @@ export const QuestionTextTypographySettings = ({
           </Box>
         </AccordionSummary>
         <AccordionDetails sx={{ px: { md: 2, xl: 1 }, pb: 2 }}>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -223,7 +223,7 @@ export const QuestionTextTypographySettings = ({
             }}
           >
             {/* === TEXT SETTINGS === */}
-            <Box sx={{ mb: 2 }}>
+            <Box component="div" sx={{ mb: 2 }}>
               <Typography
                 variant="subtitle1"
                 fontWeight={600}
@@ -233,7 +233,7 @@ export const QuestionTextTypographySettings = ({
                 Title
               </Typography>
               {/* Font Size */}
-              <Box
+              <Box component="div"
                 sx={{
                   display: "flex",
                   flexDirection: "column",
@@ -242,7 +242,7 @@ export const QuestionTextTypographySettings = ({
                   width: "96%",
                 }}
               >
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -262,7 +262,7 @@ export const QuestionTextTypographySettings = ({
                       color: "#444D5C",
                     }}
                   >
-                    <Box sx={{ display: { md: "none" } }}>
+                    <Box component="div" sx={{ display: { md: "none" } }}>
                       <FiType
                         style={{
                           marginBottom: "1%",
@@ -272,14 +272,11 @@ export const QuestionTextTypographySettings = ({
                     </Box>
                     Font size
                   </Typography>
-                  <Box>
-                    <FontSizeViewToggle
-                      view={fontSizeView}
-                      setView={setFontSizeView}
-                    />
+                  <Box component="div">
+                    <FontSizeViewToggle />
                   </Box>
                 </Box>
-                <Box>
+                <Box component="div">
                   <FontSizeControl
                     key={titleKey}
                     name={titleKey}
@@ -291,7 +288,7 @@ export const QuestionTextTypographySettings = ({
                 </Box>
               </Box>
               {/* Text Color */}
-              <Box sx={{ mb: 1, ml: 1, width: "96%" }}>
+              <Box component="div" sx={{ mb: 1, ml: 1, width: "96%" }}>
                 <Typography
                   variant="body2"
                   sx={{
@@ -306,7 +303,7 @@ export const QuestionTextTypographySettings = ({
                 >
                   <Palette style={{ color: "#752FEC" }} /> Color
                 </Typography>
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     justifyContent: "flex-start",

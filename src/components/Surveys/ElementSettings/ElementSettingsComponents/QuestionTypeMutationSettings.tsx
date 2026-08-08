@@ -113,7 +113,7 @@ export const QuestionTypeMutationSettings = () => {
         defaultExpanded
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -136,7 +136,7 @@ export const QuestionTypeMutationSettings = () => {
         </AccordionSummary>
 
         <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
-          <Box
+          <Box component="div"
             sx={{
               width: "96%",
               marginLeft: "2%",
@@ -172,7 +172,7 @@ export const QuestionTypeMutationSettings = () => {
               >
                 {availableTypes.map((q) => (
                   <MenuItem key={q!.type} value={q!.type}>
-                    <Box
+                    <Box component="div"
                       sx={{
                         display: "flex",
                         alignItems: "center",

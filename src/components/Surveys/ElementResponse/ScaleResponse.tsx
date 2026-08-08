@@ -7,7 +7,7 @@ import ScaleCounter from "./ScaleCounter";
 
 const ScaleResponse = ({ display }: ScaleResponseProps) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "80%",
         p: { xs: 2, sm: 3, md: 4, xl: 6 },

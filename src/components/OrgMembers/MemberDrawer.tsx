@@ -138,7 +138,7 @@ export const MemberDrawer = ({
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
-      <Box
+      <Box component="div"
         sx={{
           width: 420,
           display: "flex",
@@ -147,7 +147,7 @@ export const MemberDrawer = ({
         }}
       >
         {/* Header */}
-        <Box
+        <Box component="div"
           sx={{
             px: 4,
             py: 3,
@@ -168,7 +168,7 @@ export const MemberDrawer = ({
         </Box>
 
         {/* Body */}
-        <Box sx={{ px: 4, py: 3, flex: 1 }}>
+        <Box component="div" sx={{ px: 4, py: 3, flex: 1 }}>
           {isEdit && loadingUser ? (
             <Typography fontSize={14} color="text.secondary">
               Loading user...
@@ -186,7 +186,7 @@ export const MemberDrawer = ({
         </Box>
 
         {/* Footer */}
-        <Box
+        <Box component="div"
           sx={{
             px: 4,
             py: 3,

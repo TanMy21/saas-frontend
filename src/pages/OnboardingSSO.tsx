@@ -61,7 +61,7 @@ export const Onboarding = () => {
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         minHeight: "100vh",
         display: "flex",
@@ -71,7 +71,7 @@ export const Onboarding = () => {
         px: 2,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: "100%",
           maxWidth: 420,

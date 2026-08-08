@@ -70,7 +70,7 @@ export default function AccountSettingsGeneral({ user }: AccountSettings) {
 
       {/* Footer actions */}
 
-      <Box
+      <Box component="div"
         sx={{
           borderTop: "1px solid",
           borderColor: "divider",

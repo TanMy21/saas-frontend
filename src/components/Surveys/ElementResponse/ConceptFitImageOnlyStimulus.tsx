@@ -105,7 +105,7 @@ export const ConceptFitImageOnlyStimulus = (
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         display: "flex",
@@ -113,7 +113,7 @@ export const ConceptFitImageOnlyStimulus = (
         mt: 3,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: "72%",
           display: "flex",
@@ -121,7 +121,7 @@ export const ConceptFitImageOnlyStimulus = (
           gap: 2.5,
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             px: 3,
             py: 3,
@@ -129,7 +129,7 @@ export const ConceptFitImageOnlyStimulus = (
           }}
         >
           {conceptImage?.imageUrl ? (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+            <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
               <Box
                 component="img"
                 src={conceptImage.imageUrl}
@@ -146,7 +146,7 @@ export const ConceptFitImageOnlyStimulus = (
               />
 
               {canEditQuestion && (
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     justifyContent: "center",
@@ -203,7 +203,7 @@ export const ConceptFitImageOnlyStimulus = (
               />
             </Box>
           ) : (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+            <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
               <Typography
                 sx={{
                   fontSize: 13,

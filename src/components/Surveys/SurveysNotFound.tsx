@@ -8,7 +8,7 @@ const SurveysNotFound = () => {
   return (
     <>
       <Grid item sx={{ width: "400", height: "400" }}>
-        <Box
+        <Box component="div"
           display={"flex"}
           flexDirection={"column"}
           justifyItems={"center"}
@@ -18,13 +18,13 @@ const SurveysNotFound = () => {
             height: "72vh",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               width: "80%",
               height: "88%",
             }}
           >
-            <Box mt={2}>
+            <Box component="div" mt={2}>
               <Typography
                 variant="h5"
                 align="center"
@@ -37,7 +37,7 @@ const SurveysNotFound = () => {
                 No surveys are visible
               </Typography>
             </Box>
-            <Box
+            <Box component="div"
               display={"flex"}
               flexDirection={"column"}
               justifyItems={"center"}
@@ -46,7 +46,7 @@ const SurveysNotFound = () => {
             >
               <CreateNewSurveyBtn />
             </Box>
-            <Box
+            <Box component="div"
               display={"flex"}
               flexDirection={"column"}
               justifyItems={"center"}

@@ -21,7 +21,7 @@ const NoSurveysFound = ({
   const handleOpen = () => setOpen(true);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -33,7 +33,7 @@ const NoSurveysFound = ({
       }}
     >
       {/* --- SVG --- */}
-      <Box sx={{ width: 400, height: 400, mb: 0.5 }}>
+      <Box component="div" sx={{ width: 400, height: 400, mb: 0.5 }}>
         <img
           src={empty}
           style={{ width: "100%", height: "100%" }}

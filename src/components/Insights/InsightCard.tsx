@@ -24,7 +24,7 @@ const InsightCard = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -37,7 +37,7 @@ const InsightCard = ({
         borderRadius: "12px",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           width: "96%",
@@ -46,7 +46,7 @@ const InsightCard = ({
           // border: "2px solid blue",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -55,7 +55,7 @@ const InsightCard = ({
             // border: "2px solid yellow",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               justifyContent: "flex-start",
@@ -72,7 +72,7 @@ const InsightCard = ({
           >
             {title}
           </Box>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               justifyContent: "flex-start",
@@ -89,7 +89,7 @@ const InsightCard = ({
             {formatValue()}
           </Box>
         </Box>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             justifyContent: "end",
@@ -98,7 +98,7 @@ const InsightCard = ({
             // border: "2px solid purple",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -117,7 +117,7 @@ const InsightCard = ({
           </Box>
         </Box>
       </Box>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",

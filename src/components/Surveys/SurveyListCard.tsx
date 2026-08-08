@@ -25,7 +25,7 @@ const SurveyListCard = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       key={survey.surveyID}
       sx={{
         position: "relative",
@@ -94,7 +94,7 @@ const SurveyListCard = ({
         >
           <FeedIcon sx={iconStyle.listLayoutIcon} />
         </Avatar>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -110,7 +110,7 @@ const SurveyListCard = ({
           </Typography>
         </Box>
       </ButtonBase>
-      <Box
+      <Box component="div"
         sx={{
           width: "40%",
           display: "flex",
@@ -119,7 +119,7 @@ const SurveyListCard = ({
           // border: "2px solid black",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -138,7 +138,7 @@ const SurveyListCard = ({
             title={"Responses"}
           />
         </Box>
-        <Box sx={{ flexShrink: 0 }}>
+        <Box component="div" sx={{ flexShrink: 0 }}>
           <SurveyCardDropDownMenu
             survey={survey}
             workspaceId={workspaceId}
@@ -146,7 +146,7 @@ const SurveyListCard = ({
           />
         </Box>
       </Box>
-      <Box
+      <Box component="div"
         sx={{
           pointerEvents: "none",
           position: "absolute",

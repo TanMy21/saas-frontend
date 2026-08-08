@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 
 export const DangerWarningBox = ({ text }: { text: string }) => (
-  <Box
+  <Box component="div"
     sx={{
       display: "flex",
       width: "92%",

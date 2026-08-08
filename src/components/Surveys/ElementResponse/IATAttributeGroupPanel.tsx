@@ -191,7 +191,7 @@ export const IATAttributeGroupPanel = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid #E2E8F0",
         borderRadius: 3,
@@ -202,7 +202,7 @@ export const IATAttributeGroupPanel = ({
         gap: 1.25,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -231,7 +231,7 @@ export const IATAttributeGroupPanel = ({
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId={`iat-${group}-${qID}`}>
           {(provided) => (
-            <Box
+            <Box component="div"
               ref={provided.innerRef}
               {...provided.droppableProps}
               sx={{
@@ -255,7 +255,7 @@ export const IATAttributeGroupPanel = ({
                   isDragDisabled={!canReorder}
                 >
                   {(provided) => (
-                    <Box ref={provided.innerRef} {...provided.draggableProps}>
+                    <Box component="div" ref={provided.innerRef} {...provided.draggableProps}>
                       <IATStimulusRow
                         option={option}
                         index={index}
@@ -291,7 +291,7 @@ export const IATAttributeGroupPanel = ({
       </DragDropContext>
 
       {canCreate && (
-        <Box sx={{ position: "relative", bgcolor: "#FFFFFF", borderRadius: 2 }}>
+        <Box component="div" sx={{ position: "relative", bgcolor: "#FFFFFF", borderRadius: 2 }}>
           <TextField
             multiline
             minRows={1}

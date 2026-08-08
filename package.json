@@ -20,9 +20,10 @@
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.5",
     "@hookform/resolvers": "^3.3.4",
-    "@mui/icons-material": "5.15.14",
+    "@mui/icons-material": "5.18.0",
     "@mui/joy": "5.0.0-beta.32",
-    "@mui/material": "^5.15.14",
+    "@mui/material": "5.18.0",
+    "@mui/system": "5.18.0",
     "@mui/x-date-pickers": "^7.5.0",
     "@react-three/drei": "9.109.5",
     "@react-three/fiber": "8.18.0",
@@ -87,6 +88,7 @@
     "@types/react-dom": "^18.2.18",
     "@typescript-eslint/eslint-plugin": "^8.16.0",
     "@typescript-eslint/parser": "^8.16.0",
+    "@typescript/native": "npm:typescript@^7.0.2",
     "@vitejs/plugin-react": "^4.7.0",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
@@ -98,7 +100,12 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "i": "^0.3.7",
     "npm": "^10.5.0",
-    "typescript": "^5.4.5",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "vite": "^7.3.3"
+  },
+  "overrides": {
+    "@mui/system": "5.18.0",
+    "@mui/private-theming": "5.17.1",
+    "@mui/utils": "5.17.1"
   }
 }

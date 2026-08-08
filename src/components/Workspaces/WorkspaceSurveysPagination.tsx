@@ -16,7 +16,7 @@ const WorkspaceSurveysPagination = ({
   const end = Math.min(page * limit, total);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "row",
@@ -33,7 +33,7 @@ const WorkspaceSurveysPagination = ({
         // border: "2px solid blue",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "row",

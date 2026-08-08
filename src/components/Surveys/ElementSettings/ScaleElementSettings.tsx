@@ -18,7 +18,7 @@ const ScaleElementSettings = () => {
   const { questionID } = question || {};
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",

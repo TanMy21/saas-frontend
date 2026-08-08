@@ -35,7 +35,7 @@ const ForgotPassword = () => {
 
   return (
     <Container component="main" maxWidth="xl" sx={{ marginTop: "8%" }}>
-      <Box
+      <Box component="div"
         sx={{
           marginTop: 1,
           display: "flex",
@@ -43,7 +43,7 @@ const ForgotPassword = () => {
           alignItems: "center",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -52,7 +52,7 @@ const ForgotPassword = () => {
             p: 4,
           }}
         >
-          <Box>
+          <Box component="div">
             {isSuccess ? (
               <PasswordResetOtpForm
                 submittedEmail={submittedEmail}

@@ -68,7 +68,7 @@ const DropdownResponse = ({ qID, display }: ElementProps) => {
   });
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         display: "flex",
@@ -77,7 +77,7 @@ const DropdownResponse = ({ qID, display }: ElementProps) => {
         mt: 3,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: display === "mobile" ? "92%" : "62%",
           display: "flex",

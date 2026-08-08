@@ -24,7 +24,7 @@ const TimedChoiceTooltip = ({ active, payload }: any) => {
   const item = payload[0]?.payload;
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         bgcolor: "background.paper",
         border: "1px solid",
@@ -90,7 +90,7 @@ const TimedChoiceChart = ({ question }: TimedChoiceChartProps) => {
 
   if (!data.length) {
     return (
-      <Box sx={{ py: 2 }}>
+      <Box component="div" sx={{ py: 2 }}>
         <Typography fontSize={14} color="text.secondary">
           No timed choice responses yet.
         </Typography>
@@ -102,8 +102,8 @@ const TimedChoiceChart = ({ question }: TimedChoiceChartProps) => {
   const height = Math.max(data.length * rowHeight, rowHeight);
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box
+    <Box component="div" sx={{ width: "100%" }}>
+      <Box component="div"
         sx={{
           display: "flex",
           flexWrap: "wrap",
@@ -154,7 +154,7 @@ const TimedChoiceChart = ({ question }: TimedChoiceChartProps) => {
         />
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           gridTemplateColumns: isTextImageMode ? "36% 62%" : "30% 68%",
@@ -162,9 +162,9 @@ const TimedChoiceChart = ({ question }: TimedChoiceChartProps) => {
           width: "100%",
         }}
       >
-        <Box>
+        <Box component="div">
           {data.map((item) => (
-            <Box
+            <Box component="div"
               key={item.optionID}
               sx={{
                 height: rowHeight,
@@ -194,7 +194,7 @@ const TimedChoiceChart = ({ question }: TimedChoiceChartProps) => {
               )}
 
               {isTextImageMode && !item.image && (
-                <Box
+                <Box component="div"
                   sx={{
                     width: 56,
                     height: 56,
@@ -207,7 +207,7 @@ const TimedChoiceChart = ({ question }: TimedChoiceChartProps) => {
                 />
               )}
 
-              <Box sx={{ minWidth: 0 }}>
+              <Box component="div" sx={{ minWidth: 0 }}>
                 <Typography
                   fontSize={14}
                   fontWeight={700}
@@ -238,7 +238,7 @@ const TimedChoiceChart = ({ question }: TimedChoiceChartProps) => {
           ))}
         </Box>
 
-        <Box sx={{ height }}>
+        <Box component="div" sx={{ height }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}

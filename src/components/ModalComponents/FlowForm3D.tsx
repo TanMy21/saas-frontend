@@ -43,7 +43,7 @@ export const FlowForm3D = ({
   }, [data, condition.conditionValue, blockIndex, setConditions]);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         alignItems: "center",
@@ -52,7 +52,7 @@ export const FlowForm3D = ({
       }}
     >
       {/* IF PILL */}
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           alignItems: "center",
@@ -80,7 +80,7 @@ export const FlowForm3D = ({
         </Typography>
 
         {/* CONDITION */}
-        <Box
+        <Box component="div"
           sx={{
             px: 1.2,
             py: "4px",
@@ -103,7 +103,7 @@ export const FlowForm3D = ({
         />
 
         {/* VALUE SELECT */}
-        <Box sx={{ width: "140px", flexShrink: 0 }}>
+        <Box component="div" sx={{ width: "140px", flexShrink: 0 }}>
           <Controller
             control={control}
             defaultValue={condition.conditionValue ?? "Like"}
@@ -116,7 +116,7 @@ export const FlowForm3D = ({
                 IconComponent={ChevronDown}
                 renderValue={(selected) => (
                   <Tooltip title={selected} arrow>
-                    <Box
+                    <Box component="div"
                       sx={{
                         whiteSpace: "nowrap",
                         overflow: "hidden",

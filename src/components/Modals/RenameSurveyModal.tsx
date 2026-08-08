@@ -54,7 +54,7 @@ const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
         onSubmit={handleSubmit(renameSurvey)}
         sx={{ px: 2, pb: 0.5 }}
       >
-        <Box sx={{ mb: 1 }}>
+        <Box component="div" sx={{ mb: 1 }}>
           <Typography
             sx={{
               fontSize: 16,
@@ -88,7 +88,7 @@ const RenameSurveyModal = ({ open, onClose, survey }: SurveyRenameProps) => {
         </Box>
 
         {/* Actions */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Box component="div" sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Button type="submit" variant="modalSubmitBtn" disabled={isLoading}>
             {isLoading ? (
               <>

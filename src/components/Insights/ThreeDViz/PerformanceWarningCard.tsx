@@ -4,7 +4,7 @@ export function PerformanceWarningCard({ data }: { data: any }) {
   if (!data?.hasWarning) return null;
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         p: 2,
         border: "1px solid",

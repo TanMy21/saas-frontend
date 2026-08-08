@@ -19,7 +19,7 @@ const MediaElement = ({ qID, display, showQuestion }: ElementProps) => {
         {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
       <ResponseContainer display={display}>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -31,7 +31,7 @@ const MediaElement = ({ qID, display, showQuestion }: ElementProps) => {
             zIndex: 1,
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               transformOrigin: "bottom",
               display: "flex",

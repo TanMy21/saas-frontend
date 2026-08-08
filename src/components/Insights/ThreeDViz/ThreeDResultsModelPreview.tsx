@@ -8,7 +8,7 @@ export function ThreeDResultModelPreview({ modelUrl }: { modelUrl?: string }) {
   }
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid",
         borderColor: "divider",
@@ -18,14 +18,14 @@ export function ThreeDResultModelPreview({ modelUrl }: { modelUrl?: string }) {
         minHeight: 320,
       }}
     >
-      <Box sx={{ p: 2, borderBottom: "1px solid", borderColor: "divider" }}>
+      <Box component="div" sx={{ p: 2, borderBottom: "1px solid", borderColor: "divider" }}>
         <Typography fontWeight={700}>3D model preview</Typography>
         <Typography fontSize={13} color="text.secondary">
           Preview of the model used in this question.
         </Typography>
       </Box>
 
-      <Box sx={{ height: 320 }}>
+      <Box component="div" sx={{ height: 320 }}>
         <Interactive3DModelViewer
           key={modelUrl}
           src={modelUrl}

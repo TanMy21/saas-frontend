@@ -248,7 +248,7 @@ const BinaryOptionsSettings = () => {
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -266,7 +266,7 @@ const BinaryOptionsSettings = () => {
       </AccordionSummary>
 
       <AccordionDetails>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -277,9 +277,9 @@ const BinaryOptionsSettings = () => {
             cursor: canEditQuestion ? "default" : "not-allowed",
           }}
         >
-          <Box sx={{ fontWeight: 600, color: "#444D5C" }}>Button 1</Box>
+          <Box component="div" sx={{ fontWeight: 600, color: "#444D5C" }}>Button 1</Box>
 
-          <Box mt={1}>
+          <Box component="div" mt={1}>
             <Controller
               name="buttonTextYes"
               control={control}
@@ -359,7 +359,7 @@ const BinaryOptionsSettings = () => {
           </Box>
         </Box>
 
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -368,7 +368,7 @@ const BinaryOptionsSettings = () => {
             marginLeft: "2%",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               fontWeight: 500,
               color: "#3F3F46",
@@ -378,7 +378,7 @@ const BinaryOptionsSettings = () => {
             Button 2
           </Box>
 
-          <Box mt={1}>
+          <Box component="div" mt={1}>
             <Controller
               name="buttonTextNo"
               control={control}
@@ -459,7 +459,7 @@ const BinaryOptionsSettings = () => {
         </Box>
 
         {saveStatus !== "idle" && (
-          <Box sx={{ mt: 0.5, px: 1 }}>
+          <Box component="div" sx={{ mt: 0.5, px: 1 }}>
             <SettingSaveStatus
               state={isSavingBinaryOptions ? "saving" : saveStatus}
             />

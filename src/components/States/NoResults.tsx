@@ -5,7 +5,7 @@ import { NoResultsProps } from "../../types/behaviorTypes";
 
 export const NoResults = ({ onClearFilters }: NoResultsProps) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         mt: 6,
         p: 6,

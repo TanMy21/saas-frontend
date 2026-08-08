@@ -24,7 +24,7 @@ const CreateNewSurveyCard = ({
 
   return (
     <>
-      <Box
+      <Box component="div"
         sx={{
           position: "relative",
           overflow: "hidden",
@@ -97,7 +97,7 @@ const CreateNewSurveyCard = ({
             disabled={isSurveyLimitReached}
             focusRipple
           >
-            <Box
+            <Box component="div"
               className="plusIconWrap"
               sx={{
                 width: { md: 44, xl: 52 },
@@ -159,7 +159,7 @@ const CreateNewSurveyCard = ({
             disabled={isSurveyLimitReached}
             focusRipple
           >
-            <Box
+            <Box component="div"
               sx={{
                 ml: 1.5,
                 width: 48,
@@ -184,7 +184,7 @@ const CreateNewSurveyCard = ({
             >
               <AddIcon sx={{ fontSize: 24, color: primary.dark }} />
             </Box>
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 flexDirection: "column",

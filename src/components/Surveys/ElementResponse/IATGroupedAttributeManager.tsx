@@ -37,7 +37,7 @@ export const IATGroupedAttributeManager = ({
     .sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         bgcolor: "#FFFFFF",
         display: "grid",

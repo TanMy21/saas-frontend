@@ -9,7 +9,7 @@ const ListSurveyCardMetricIndicator = ({
 }: SurveyCardMetricIndicatorProps) => {
   const { textStyles } = useAppTheme();
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",

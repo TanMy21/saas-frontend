@@ -10,7 +10,7 @@ const WorkspaceSurveysListCount = ({
 
   return (
     <>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",

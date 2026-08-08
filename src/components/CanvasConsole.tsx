@@ -40,7 +40,7 @@ const CanvasConsole = ({
       (value) => {
         const next =
           typeof value === "function"
-            ? (value as (prev: boolean) => boolean)(publishAlertOpen!)
+            ? value(publishAlertOpen!)
             : value;
 
         if (next) dispatch(openPublishAlert());
@@ -54,7 +54,7 @@ const CanvasConsole = ({
   }
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -70,11 +70,11 @@ const CanvasConsole = ({
         title={title}
         isLocked={isLocked}
       />
-      <Box />
+      <Box component="div" />
 
       {isLocked && <SurveyLockedBanner />}
 
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "center",

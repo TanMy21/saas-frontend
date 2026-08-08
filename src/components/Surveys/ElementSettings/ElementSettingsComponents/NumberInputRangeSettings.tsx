@@ -258,7 +258,7 @@ const NumberInputRangeSettings = () => {
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -276,7 +276,7 @@ const NumberInputRangeSettings = () => {
       </AccordionSummary>
 
       <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
-        <Box
+        <Box component="div"
           mt={1}
           sx={{
             display: "flex",
@@ -287,7 +287,7 @@ const NumberInputRangeSettings = () => {
           }}
         >
           {/* MIN */}
-          <Box
+          <Box component="div"
             mt={1}
             sx={{
               display: "flex",
@@ -299,7 +299,7 @@ const NumberInputRangeSettings = () => {
               gap: { md: 1 },
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "flex-start",
@@ -315,7 +315,7 @@ const NumberInputRangeSettings = () => {
               Min number
             </Box>
 
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
@@ -389,7 +389,7 @@ const NumberInputRangeSettings = () => {
           </Box>
 
           {/* MAX */}
-          <Box
+          <Box component="div"
             mt={1}
             sx={{
               display: "flex",
@@ -401,7 +401,7 @@ const NumberInputRangeSettings = () => {
               gap: { md: 1 },
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "flex-start",
@@ -417,7 +417,7 @@ const NumberInputRangeSettings = () => {
               Max number
             </Box>
 
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
@@ -498,7 +498,7 @@ const NumberInputRangeSettings = () => {
           </Box>
 
           {saveStatus !== "idle" && (
-            <Box sx={{ mt: 1 }}>
+            <Box component="div" sx={{ mt: 1 }}>
               <SettingSaveStatus
                 state={isSavingNumberRange ? "saving" : saveStatus}
               />

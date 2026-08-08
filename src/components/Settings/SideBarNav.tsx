@@ -20,7 +20,7 @@ export default function SidebarNav({
   const { can } = useAuth();
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box component="div" sx={{ p: 3 }}>
       <List sx={{ gap: 1, display: "grid" }}>
         {TABS.filter((t) => t.id !== "create-user" || can("INVITE_USER")).map(
           (t) => {

@@ -10,7 +10,7 @@ const QuestionImageUpload = ({ questionID }: QuestionImageUploadProps) => {
   const [uploadImageModalOpen, setUploadImageModalOpen] =
     useState<boolean>(false);
   return (
-    <Box sx={{ mt: 2, mb: 2 }}>
+    <Box component="div" sx={{ mt: 2, mb: 2 }}>
       <Button
         fullWidth
         variant="outlined"

@@ -75,7 +75,7 @@ const QuestionFlowContainer = ({
   const { data: questionConditions, isLoading } =
     useGetAllConditionsForSurveyQuery(surveyID);
 
-  console.log("questionConditions", questionConditions);
+ 
 
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
     const qType = String(node.data?.element ?? "");
@@ -426,7 +426,7 @@ const QuestionFlowContainer = ({
 
   if (isLoading) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           margin: "0% auto",
@@ -443,7 +443,7 @@ const QuestionFlowContainer = ({
   }
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         margin: "0% auto",
@@ -458,7 +458,7 @@ const QuestionFlowContainer = ({
         overflow: "hidden",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: "100%",
           height: "100%",

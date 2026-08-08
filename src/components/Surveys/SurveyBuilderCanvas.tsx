@@ -50,7 +50,7 @@ const SurveyBuilderCanvas = ({
     elementComponents[question?.type as QuestionTypeKey];
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -107,7 +107,7 @@ const SurveyBuilderCanvas = ({
             </>
           )}
         </Can>
-        <Box
+        <Box component="div"
           sx={{
             margin: "auto",
             width: "96%",
@@ -134,7 +134,7 @@ const SurveyBuilderCanvas = ({
                 {question?.type && (
                   <Suspense
                     fallback={
-                      <Box
+                      <Box component="div"
                         sx={{
                           minHeight: 240,
                           display: "flex",

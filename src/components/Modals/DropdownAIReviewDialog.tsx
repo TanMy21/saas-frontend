@@ -42,7 +42,7 @@ export const DropdownAIReviewDialog = ({
         },
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           p: 2.5,
           borderBottom: "1px solid #E2E8F0",
@@ -52,7 +52,7 @@ export const DropdownAIReviewDialog = ({
           gap: 2,
         }}
       >
-        <Box>
+        <Box component="div">
           <Typography sx={{ fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
             Review generated options
           </Typography>
@@ -79,7 +79,7 @@ export const DropdownAIReviewDialog = ({
         </IconButton>
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           p: 2.5,
           maxHeight: 460,
@@ -171,7 +171,7 @@ export const DropdownAIReviewDialog = ({
         )}
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           p: 2,
           borderTop: "1px solid #E2E8F0",
@@ -186,7 +186,7 @@ export const DropdownAIReviewDialog = ({
           {options.length} option(s) ready to add
         </Typography>
 
-        <Box sx={{ display: "flex", gap: 1 }}>
+        <Box component="div" sx={{ display: "flex", gap: 1 }}>
           <Button
             onClick={onBack}
             sx={{

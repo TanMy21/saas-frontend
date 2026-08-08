@@ -13,7 +13,7 @@ function SplitSegmentContent({
   value: string;
 }) {
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -43,13 +43,13 @@ export function LikeDislikeSplitSummary({
   formatValue,
 }: LikeDislikeSplitSummaryProps) {
   return (
-    <Box
+    <Box component="div"
       sx={{
         p: 2,
         bgcolor: "background.paper",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           height: { xs: 86, sm: 104 },
@@ -59,7 +59,7 @@ export function LikeDislikeSplitSummary({
         }}
       >
         {/* Like split area */}
-        <Box
+        <Box component="div"
           sx={{
             width: `${likePercentage}%`,
             minWidth: likePercentage > 0 ? 48 : 0,
@@ -81,7 +81,7 @@ export function LikeDislikeSplitSummary({
         </Box>
 
         {/* Dislike split area */}
-        <Box
+        <Box component="div"
           sx={{
             width: `${dislikePercentage}%`,
             minWidth: dislikePercentage > 0 ? 48 : 0,

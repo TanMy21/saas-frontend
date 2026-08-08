@@ -132,7 +132,7 @@ const SurveySettingsModal = ({
 
   return (
     <Modal open={openSettings} onClose={handleClose}>
-      <Box
+      <Box component="div"
         sx={{
           position: "fixed",
           inset: 0,
@@ -145,7 +145,7 @@ const SurveySettingsModal = ({
           p: 2,
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             bgcolor: "#fff",
             borderRadius: 2,
@@ -160,7 +160,7 @@ const SurveySettingsModal = ({
           }}
         >
           {/* Header */}
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -171,8 +171,8 @@ const SurveySettingsModal = ({
               borderBottom: "1px solid #f3f4f6",
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Box
+            <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box component="div"
                 sx={{
                   width: 40,
                   height: 40,
@@ -214,11 +214,11 @@ const SurveySettingsModal = ({
           </Box>
 
           {/* Content */}
-          <Box sx={{ px: 4, py: 2, flex: 1, overflowY: "auto" }}>
+          <Box component="div" sx={{ px: 4, py: 2, flex: 1, overflowY: "auto" }}>
             <form onSubmit={handleSubmit(submitUpdateData)}>
               {/* publish toggle */}
 
-              <Box sx={{ mb: 3 }}>
+              <Box component="div" sx={{ mb: 3 }}>
                 <Typography
                   sx={{
                     fontWeight: 700,
@@ -230,7 +230,7 @@ const SurveySettingsModal = ({
                   {getSurveyCanvas?.published ? "Published" : "Draft"}
                 </Typography>
 
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -256,7 +256,7 @@ const SurveySettingsModal = ({
               </Box>
 
               {/* Title */}
-              <Box sx={{ mb: 2 }}>
+              <Box component="div" sx={{ mb: 2 }}>
                 <Typography
                   sx={{
                     fontSize: 14,
@@ -297,7 +297,7 @@ const SurveySettingsModal = ({
                 />
               </Box>
               {/* Description */}
-              <Box sx={{ mb: 1 }}>
+              <Box component="div" sx={{ mb: 1 }}>
                 <Typography
                   sx={{
                     fontSize: 14,
@@ -340,7 +340,7 @@ const SurveySettingsModal = ({
                 />
               </Box>
               {/* Survey Period */}
-              <Box sx={{ mb: 2 }}>
+              <Box component="div" sx={{ mb: 2 }}>
                 <Typography
                   sx={{
                     fontWeight: 700,
@@ -351,9 +351,9 @@ const SurveySettingsModal = ({
                 >
                   Survey Period
                 </Typography>
-                <Box sx={{ display: "flex", gap: 2 }}>
+                <Box component="div" sx={{ display: "flex", gap: 2 }}>
                   {/* Start Date */}
-                  <Box sx={{ width: "100%", maxWidth: 320 }}>
+                  <Box component="div" sx={{ width: "100%", maxWidth: 320 }}>
                     <Typography
                       sx={{
                         fontSize: 14,
@@ -411,7 +411,7 @@ const SurveySettingsModal = ({
                     />
                   </Box>
                   {/* End Date */}
-                  <Box sx={{ width: "100%", maxWidth: 320 }}>
+                  <Box component="div" sx={{ width: "100%", maxWidth: 320 }}>
                     <Typography
                       sx={{
                         fontSize: 14,
@@ -563,7 +563,7 @@ const SurveySettingsModal = ({
               </Box> */}
 
               {/* Footer */}
-              <Box
+              <Box component="div"
                 sx={{
                   display: "flex",
                   width: "100%",

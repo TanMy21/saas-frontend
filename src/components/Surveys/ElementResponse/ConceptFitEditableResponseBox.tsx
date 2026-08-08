@@ -14,7 +14,7 @@ export const ConceptFitEditableResponseBox = ({
   onChange: (value: string) => void;
 }) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid #67E8F9",
         borderRadius: 2,

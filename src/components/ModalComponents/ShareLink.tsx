@@ -46,13 +46,13 @@ const ShareLink = ({
     );
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-      <Box>
+    <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+      <Box component="div">
         <Typography variant="body2" fontWeight={600} mb={1}>
           Share Link
         </Typography>
 
-        <Box sx={{ display: "flex", gap: 1 }}>
+        <Box component="div" sx={{ display: "flex", gap: 1 }}>
           <TextField
             fullWidth
             value={shareURL}
@@ -98,7 +98,7 @@ const ShareLink = ({
       </Box>
 
       {/* QR */}
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           gap: 3,
@@ -108,7 +108,7 @@ const ShareLink = ({
           alignItems: "center",
         }}
       >
-        <Box
+        <Box component="div"
           ref={qrContainerRef}
           sx={{
             p: 2,
@@ -133,8 +133,8 @@ const ShareLink = ({
           />
         </Box>
 
-        <Box sx={{ flex: 1 }}>
-          <Box sx={{ mt: 1, display: "flex", gap: 2.5 }}>
+        <Box component="div" sx={{ flex: 1 }}>
+          <Box component="div" sx={{ mt: 1, display: "flex", gap: 2.5 }}>
             <Button
               size="small"
               onClick={downloadQR}

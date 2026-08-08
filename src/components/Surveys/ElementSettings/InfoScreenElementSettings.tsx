@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 
 const InfoScreenElementSettings = () => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",

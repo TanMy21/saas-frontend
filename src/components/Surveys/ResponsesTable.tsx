@@ -109,7 +109,7 @@ const ResponsesTable = () => {
 
         if (!value) {
           return (
-            <Box
+            <Box component="div"
               sx={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -189,17 +189,17 @@ const ResponsesTable = () => {
         enableRowVirtualization={rows.length > 100}
         icons={CustomIcons}
         renderTopToolbarCustomActions={({ table }) => (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MRT_ToggleDensePaddingButton table={table} />
             <MRT_ToggleFiltersButton table={table} />
             <MRT_ShowHideColumnsButton table={table} />
           </Box>
         )}
         renderToolbarInternalActions={({ table }) => (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <MRT_ToggleGlobalFilterButton table={table} />
             <Tooltip title="Download Responses">
-              <Box
+              <Box component="div"
                 onClick={() => handleDownload(table)}
                 sx={{
                   display: "flex",
@@ -237,7 +237,7 @@ const ResponsesTable = () => {
           if (selectedCount === 0 && !isAllSelected) return null;
 
           return (
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -247,7 +247,7 @@ const ResponsesTable = () => {
               }}
             >
               {/* LEFT */}
-              <Box
+              <Box component="div"
                 sx={{
                   display: "flex",
                   alignItems: "center",

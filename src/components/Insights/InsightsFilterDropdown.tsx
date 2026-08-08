@@ -77,7 +77,7 @@ export const InsightsFilterDropdown = <T extends string>({
       </Select>
 
       {/* Left icon */}
-      <Box
+      <Box component="div"
         sx={{
           position: "absolute",
           left: 14,

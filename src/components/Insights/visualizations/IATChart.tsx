@@ -48,7 +48,7 @@ const StatCard = ({
           };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         borderRadius: 2,
         border: "1px solid",
@@ -103,8 +103,8 @@ const RoundBar = ({
     maxMs > 0 ? Math.max(6, Math.min(100, (avgMs / maxMs) * 100)) : 0;
 
   return (
-    <Box>
-      <Box
+    <Box component="div">
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -112,7 +112,7 @@ const RoundBar = ({
           mb: 0.75,
         }}
       >
-        <Box sx={{ minWidth: 0 }}>
+        <Box component="div" sx={{ minWidth: 0 }}>
           <Typography fontSize={14} fontWeight={800} color="text.primary">
             {label}
           </Typography>
@@ -127,7 +127,7 @@ const RoundBar = ({
         </Typography>
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           height: 14,
           width: "100%",
@@ -136,7 +136,7 @@ const RoundBar = ({
           overflow: "hidden",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             height: "100%",
             width: `${width}%`,
@@ -194,7 +194,7 @@ const IATSummaryChart = ({ question }: IATSummaryChartProps) => {
 
   if (submissions === 0 || totalTrials === 0) {
     return (
-      <Box sx={{ py: 2 }}>
+      <Box component="div" sx={{ py: 2 }}>
         <Typography fontSize={14} color="text.secondary">
           No IAT responses yet.
         </Typography>
@@ -203,8 +203,8 @@ const IATSummaryChart = ({ question }: IATSummaryChartProps) => {
   }
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box
+    <Box component="div" sx={{ width: "100%" }}>
+      <Box component="div"
         sx={{
           display: "flex",
           flexWrap: "wrap",
@@ -277,7 +277,7 @@ const IATSummaryChart = ({ question }: IATSummaryChartProps) => {
         )}
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           gridTemplateColumns: {
@@ -317,7 +317,7 @@ const IATSummaryChart = ({ question }: IATSummaryChartProps) => {
         />
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           border: "1px solid",
           borderColor: "divider",
@@ -336,7 +336,7 @@ const IATSummaryChart = ({ question }: IATSummaryChartProps) => {
           Round comparison
         </Typography>
 
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <RoundBar
             label="Round 1 · Initial pairing"
             avgMs={initial.meanResponseTimeMs}
@@ -357,7 +357,7 @@ const IATSummaryChart = ({ question }: IATSummaryChartProps) => {
         </Box>
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           border: "1px solid",
           borderColor: "divider",
@@ -370,7 +370,7 @@ const IATSummaryChart = ({ question }: IATSummaryChartProps) => {
           Association summary
         </Typography>
 
-        <Box
+        <Box component="div"
           sx={{
             display: "grid",
             gridTemplateColumns: {
@@ -381,7 +381,7 @@ const IATSummaryChart = ({ question }: IATSummaryChartProps) => {
             alignItems: "stretch",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               borderRadius: 2,
               bgcolor: "#f8fafc",
@@ -407,7 +407,7 @@ const IATSummaryChart = ({ question }: IATSummaryChartProps) => {
             </Typography>
           </Box>
 
-          <Box
+          <Box component="div"
             sx={{
               borderRadius: 2,
               bgcolor: strengthColors.bg,

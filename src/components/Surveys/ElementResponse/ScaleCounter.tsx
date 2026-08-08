@@ -54,7 +54,7 @@ const ScaleCounter = () => {
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -64,7 +64,7 @@ const ScaleCounter = () => {
         fontFamily: "sans-serif",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           alignItems: "center",
@@ -81,7 +81,7 @@ const ScaleCounter = () => {
           <ArrowBackIosIcon fontSize="inherit" />
         </IconButton>
 
-        <Box
+        <Box component="div"
           sx={{
             width: 80,
             height: 80,

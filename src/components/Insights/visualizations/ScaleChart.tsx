@@ -29,12 +29,12 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
   const height = data.length * ROW_HEIGHT_SCALE;
 
   return (
-    <Box display="flex" flexDirection="column" gap={3}>
+    <Box component="div" display="flex" flexDirection="column" gap={3}>
       {/* ───────────────── Stats summary ───────────────── */}
-      <Box display="flex" flexWrap="wrap" gap={3} alignItems="center">
+      <Box component="div" display="flex" flexWrap="wrap" gap={3} alignItems="center">
         {/* Stars */}
-        <Box display="flex" alignItems="center" gap={1}>
-          <Box display="flex">
+        <Box component="div" display="flex" alignItems="center" gap={1}>
+          <Box component="div" display="flex">
             {Array.from({ length: question.result.scale }).map((_, i) => (
               <Star
                 key={i}
@@ -57,8 +57,8 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
         </Box>
 
         {/* Meta */}
-        <Box display="flex" gap={3} fontSize={14}>
-          <Box>
+        <Box component="div" display="flex" gap={3} fontSize={14}>
+          <Box component="div">
             <Typography component="span" color="text.secondary">
               Median:{" "}
             </Typography>
@@ -67,7 +67,7 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
             </Typography>
           </Box>
 
-          <Box>
+          <Box component="div">
             <Typography component="span" color="text.secondary">
               Std Dev:{" "}
             </Typography>
@@ -79,7 +79,7 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
       </Box>
 
       {/* ───────────────── Distribution rows ───────────────── */}
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           gridTemplateColumns: "56px 320px auto",
@@ -88,9 +88,9 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
         }}
       >
         {/* ───── Rating labels ───── */}
-        <Box>
+        <Box component="div">
           {data.map((item) => (
-            <Box
+            <Box component="div"
               key={item.label}
               sx={{
                 height: ROW_HEIGHT_SCALE,
@@ -108,7 +108,7 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
         </Box>
 
         {/* ───── Bars ───── */}
-        <Box sx={{ height, width: 320 }}>
+        <Box component="div" sx={{ height, width: 320 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
@@ -137,7 +137,7 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
                   const d = payload[0].payload;
 
                   return (
-                    <Box
+                    <Box component="div"
                       sx={{
                         backgroundColor: "background.paper",
                         borderRadius: 1,
@@ -167,9 +167,9 @@ export const ScaleChart = ({ question }: ScaleChartProps) => {
         </Box>
 
         {/* ───── Value column   ───── */}
-        <Box>
+        <Box component="div">
           {data.map((item) => (
-            <Box
+            <Box component="div"
               key={item.label}
               sx={{
                 height: ROW_HEIGHT_SCALE,

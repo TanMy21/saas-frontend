@@ -34,7 +34,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
 
   if (!attributes.length && totalAttributeResponses === 0) {
     return (
-      <Box sx={{ py: 2 }}>
+      <Box component="div" sx={{ py: 2 }}>
         <Typography fontSize={14} color="text.secondary">
           No concept fit responses yet.
         </Typography>
@@ -43,8 +43,8 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
   }
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box
+    <Box component="div" sx={{ width: "100%" }}>
+      <Box component="div"
         sx={{
           display: "flex",
           flexWrap: "wrap",
@@ -95,7 +95,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
         />
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           border: "1px solid",
           borderColor: "divider",
@@ -109,7 +109,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
           Overall split
         </Typography>
 
-        <Box
+        <Box component="div"
           sx={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
@@ -117,7 +117,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
             mb: 1.5,
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               borderRadius: 2,
               p: 1.5,
@@ -138,7 +138,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
             </Typography>
           </Box>
 
-          <Box
+          <Box component="div"
             sx={{
               borderRadius: 2,
               p: 1.5,
@@ -160,7 +160,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
           </Box>
         </Box>
 
-        <Box
+        <Box component="div"
           sx={{
             height: 14,
             width: "100%",
@@ -170,14 +170,14 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
             bgcolor: TRACK_COLOR,
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               width: `${Math.max(0, Math.min(100, leftPercentage))}%`,
               bgcolor: LEFT_COLOR,
             }}
           />
 
-          <Box
+          <Box component="div"
             sx={{
               width: `${Math.max(0, Math.min(100, rightPercentage))}%`,
               bgcolor: RIGHT_COLOR,
@@ -186,7 +186,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
         </Box>
       </Box>
 
-      <Box>
+      <Box component="div">
         <Typography
           fontSize={13}
           fontWeight={800}
@@ -196,7 +196,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
           Attribute breakdown
         </Typography>
 
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
+        <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
           {attributes.map((attribute) => {
             const total = attribute.total || 0;
 
@@ -214,7 +214,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
             );
 
             return (
-              <Box
+              <Box component="div"
                 key={attribute.attributeOptionID || attribute.attributeText}
                 sx={{
                   display: "grid",
@@ -224,7 +224,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
                   alignItems: "center",
                 }}
               >
-                <Box sx={{ minWidth: 0 }}>
+                <Box component="div" sx={{ minWidth: 0 }}>
                   <Typography
                     fontSize={14}
                     fontWeight={700}
@@ -244,8 +244,8 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
                   </Typography>
                 </Box>
 
-                <Box>
-                  <Box
+                <Box component="div">
+                  <Box component="div"
                     sx={{
                       height: 28,
                       width: "100%",
@@ -257,7 +257,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
                       borderColor: "divider",
                     }}
                   >
-                    <Box
+                    <Box component="div"
                       sx={{
                         width: `${Math.max(0, Math.min(100, attrLeftPercentage))}%`,
                         bgcolor: LEFT_COLOR,
@@ -274,7 +274,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
                       {attrLeftPercentage >= 18 ? attrLeftCount : ""}
                     </Box>
 
-                    <Box
+                    <Box component="div"
                       sx={{
                         width: `${Math.max(0, Math.min(100, attrRightPercentage))}%`,
                         bgcolor: RIGHT_COLOR,
@@ -292,7 +292,7 @@ const ConceptFitSummaryChart = ({ question }: ConceptFitSummaryChartProps) => {
                     </Box>
                   </Box>
 
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",

@@ -82,8 +82,8 @@ const DeleteSurveyModal = ({
     <DangerModalShell open={open} onClose={onClose}>
       <DangerModalHeader title="Delete this survey?" onClose={onClose} />
 
-      <Box sx={{ px: 4, py: 4 }}>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+      <Box component="div" sx={{ px: 4, py: 4 }}>
+        <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
           <DangerWarningBox text="You will lose all the data associated with this survey." />
 
           <Typography sx={{ fontWeight: 600 }}>

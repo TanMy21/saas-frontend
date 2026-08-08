@@ -149,8 +149,8 @@ export const SixDigitOtpInput = ({
   };
 
   return (
-    <Box>
-      <Box
+    <Box component="div">
+      <Box component="div"
         role="group"
         aria-label="Six-digit password reset code"
         sx={{
@@ -226,7 +226,7 @@ export const SixDigitOtpInput = ({
       </Box>
 
       {errorMessage && (
-        <Box sx={{ mt: 1 }}>
+        <Box component="div" sx={{ mt: 1 }}>
           <FormErrors errors={errorMessage} />
         </Box>
       )}

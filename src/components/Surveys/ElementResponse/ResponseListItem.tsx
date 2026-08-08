@@ -127,7 +127,7 @@ const ResponseListItem = ({
       onOpenChange={setTipOpen}
       autoHideMs={1800}
     >
-      <Box
+      <Box component="div"
         {...(canEdit ? editProps : {})}
         tabIndex={canEdit ? 0 : -1}
         onFocus={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
@@ -208,7 +208,7 @@ const ResponseListItem = ({
         onMouseLeave={() => setHoveredIndex(null)}
       >
         {display === "desktop" && canReorder && (
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -232,7 +232,7 @@ const ResponseListItem = ({
         )}
 
         {isRadioOption && (
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -272,7 +272,7 @@ const ResponseListItem = ({
         )}
 
         {isCheckboxOption && (
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -316,7 +316,7 @@ const ResponseListItem = ({
         )}
 
         {(isNumberedOption || (!isRadioOption && !isCheckboxOption)) && (
-          <Box
+          <Box component="div"
             tabIndex={-1}
             sx={{
               display: "flex",
@@ -341,7 +341,7 @@ const ResponseListItem = ({
           </Box>
         )}
 
-        <Box
+        <Box component="div"
           sx={{
             ...(display === "mobile" && { width: "92%" }),
             minWidth: 0,
@@ -396,7 +396,7 @@ const ResponseListItem = ({
             </ClickAwayListener>
           ) : (
             <>
-              <Box
+              <Box component="div"
                 onClick={() => {
                   if (!canEdit) return;
 

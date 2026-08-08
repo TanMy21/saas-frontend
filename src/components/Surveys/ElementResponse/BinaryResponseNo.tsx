@@ -63,7 +63,7 @@ const BinaryResponseNo = ({
       onOpenChange={setTipOpen}
       autoHideMs={1800}
     >
-      <Box
+      <Box component="div"
         {...(canEdit ? editProps : {})}
         tabIndex={canEdit ? 0 : -1}
         onFocus={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
@@ -110,7 +110,7 @@ const BinaryResponseNo = ({
         onMouseEnter={() => setHoveredIndex(index!)}
         onMouseLeave={() => setHoveredIndex(null)}
       >
-        <Box sx={{ flexGrow: 1 }}>
+        <Box component="div" sx={{ flexGrow: 1 }}>
           {isEditing ? (
             <ClickAwayListener onClickAway={handleClickAway}>
               <TextField
@@ -129,7 +129,7 @@ const BinaryResponseNo = ({
               />
             </ClickAwayListener>
           ) : (
-            <Box
+            <Box component="div"
               onClick={safeEnterEdit}
               sx={{
                 py: 1,

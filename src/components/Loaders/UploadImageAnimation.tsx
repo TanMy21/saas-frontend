@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 const UploadImageAnimation = () => {
   return (
     <AnimatePresence>
-      <Box
+      <Box component="div"
         sx={{
           position: "fixed",
           inset: 0,
@@ -15,7 +15,7 @@ const UploadImageAnimation = () => {
           p: 2,
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             bgcolor: "#ffffff",
             borderRadius: 2,
@@ -32,7 +32,7 @@ const UploadImageAnimation = () => {
           }}
         >
           {/* Animated icon square */}
-          <Box
+          <Box component="div"
             sx={{
               position: "relative",
               overflow: "hidden",

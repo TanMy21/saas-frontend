@@ -186,7 +186,7 @@ const DownloadResponsesModal = ({
     <Modal open={open} onClose={handleClose}>
       <>
         {/* BACKDROP */}
-        <Box
+        <Box component="div"
           onClick={handleClose}
           sx={{
             position: "fixed",
@@ -197,7 +197,7 @@ const DownloadResponsesModal = ({
         />
 
         {/* MODAL */}
-        <Box
+        <Box component="div"
           sx={{
             position: "absolute",
             top: "50%",
@@ -213,7 +213,7 @@ const DownloadResponsesModal = ({
           }}
         >
           {/* HEADER */}
-          <Box
+          <Box component="div"
             sx={{
               px: 3,
               py: 2.5,
@@ -222,11 +222,11 @@ const DownloadResponsesModal = ({
               justifyContent: "space-between",
             }}
           >
-            <Box>
-              <Box sx={{ fontSize: "1.2rem", fontWeight: 600 }}>
+            <Box component="div">
+              <Box component="div" sx={{ fontSize: "1.2rem", fontWeight: 600 }}>
                 Export Responses
               </Box>
-              <Box sx={{ fontSize: "0.85rem", color: "#64748b", mt: 0.5 }}>
+              <Box component="div" sx={{ fontSize: "0.85rem", color: "#64748b", mt: 0.5 }}>
                 Choose a format to download your survey data.
               </Box>
             </Box>
@@ -244,14 +244,14 @@ const DownloadResponsesModal = ({
 
           {/* BODY */}
           <form onSubmit={handleSubmit(handleDownloadFormSubmit)}>
-            <Box sx={{ px: 3, py: 3 }}>
+            <Box component="div" sx={{ px: 3, py: 3 }}>
               <FormControl error={!!errors.fileFormatGroup} fullWidth>
                 <Controller
                   name="fileFormatGroup"
                   control={control}
                   render={({ field }) => (
                     <RadioGroup {...field}>
-                      <Box
+                      <Box component="div"
                         sx={{
                           display: "grid",
                           gridTemplateColumns: "1fr 1fr",
@@ -259,7 +259,7 @@ const DownloadResponsesModal = ({
                         }}
                       >
                         {/* CSV CARD */}
-                        <Box
+                        <Box component="div"
                           onClick={() => field.onChange("csv")}
                           sx={{
                             cursor: "pointer",
@@ -280,13 +280,13 @@ const DownloadResponsesModal = ({
                             },
                           }}
                         >
-                          <Box
+                          <Box component="div"
                             sx={{
                               display: "flex",
                               justifyContent: "space-between",
                             }}
                           >
-                            <Box
+                            <Box component="div"
                               sx={{
                                 p: 1,
                                 borderRadius: "8px",
@@ -300,22 +300,22 @@ const DownloadResponsesModal = ({
                             </Box>
 
                             {selectedFormat === "csv" && (
-                              <Box sx={{ color: "#2563eb" }}>✔</Box>
+                              <Box component="div" sx={{ color: "#2563eb" }}>✔</Box>
                             )}
                           </Box>
 
-                          <Box sx={{ mt: 2 }}>
-                            <Box sx={{ fontWeight: 600, fontSize: "0.9rem" }}>
+                          <Box component="div" sx={{ mt: 2 }}>
+                            <Box component="div" sx={{ fontWeight: 600, fontSize: "0.9rem" }}>
                               CSV Document
                             </Box>
-                            <Box sx={{ fontSize: "0.75rem", color: "#6b7280" }}>
+                            <Box component="div" sx={{ fontSize: "0.75rem", color: "#6b7280" }}>
                               Best for data analysis tools
                             </Box>
                           </Box>
                         </Box>
 
                         {/* XLSX CARD */}
-                        <Box
+                        <Box component="div"
                           onClick={() => field.onChange("xlsx")}
                           sx={{
                             cursor: "pointer",
@@ -336,13 +336,13 @@ const DownloadResponsesModal = ({
                             },
                           }}
                         >
-                          <Box
+                          <Box component="div"
                             sx={{
                               display: "flex",
                               justifyContent: "space-between",
                             }}
                           >
-                            <Box
+                            <Box component="div"
                               sx={{
                                 p: 1,
                                 borderRadius: "8px",
@@ -356,15 +356,15 @@ const DownloadResponsesModal = ({
                             </Box>
 
                             {selectedFormat === "xlsx" && (
-                              <Box sx={{ color: "#10b981" }}>✔</Box>
+                              <Box component="div" sx={{ color: "#10b981" }}>✔</Box>
                             )}
                           </Box>
 
-                          <Box sx={{ mt: 2 }}>
-                            <Box sx={{ fontWeight: 600, fontSize: "0.9rem" }}>
+                          <Box component="div" sx={{ mt: 2 }}>
+                            <Box component="div" sx={{ fontWeight: 600, fontSize: "0.9rem" }}>
                               Excel (XLSX)
                             </Box>
-                            <Box sx={{ fontSize: "0.75rem", color: "#6b7280" }}>
+                            <Box component="div" sx={{ fontSize: "0.75rem", color: "#6b7280" }}>
                               Best for spreadsheets
                             </Box>
                           </Box>
@@ -383,7 +383,7 @@ const DownloadResponsesModal = ({
             </Box>
 
             {/* FOOTER */}
-            <Box
+            <Box component="div"
               sx={{
                 px: 3,
                 py: 2,

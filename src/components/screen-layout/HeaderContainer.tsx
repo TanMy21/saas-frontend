@@ -10,7 +10,7 @@ const HeaderContainer = ({
   // className = "",
 }: ScreenLayoutProps) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: display === "mobile" ? "92%" : "98%",
         maxWidth: display === "mobile" ? "92%" : "98%",

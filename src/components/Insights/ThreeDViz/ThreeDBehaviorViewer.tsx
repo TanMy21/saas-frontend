@@ -26,7 +26,7 @@ export function ThreeDBehaviorViewer({
 
   if (!modelUrl) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           border: "1px solid",
           borderColor: "divider",
@@ -43,7 +43,7 @@ export function ThreeDBehaviorViewer({
 
   return (
     <>
-      <Box
+      <Box component="div"
         sx={{
           border: "1px solid",
           borderColor: "divider",
@@ -53,7 +53,7 @@ export function ThreeDBehaviorViewer({
         }}
       >
         {/* Viewer header with expand action */}
-        <Box
+        <Box component="div"
           sx={{
             height: 42,
             px: 1.5,
@@ -84,7 +84,7 @@ export function ThreeDBehaviorViewer({
         </Box>
 
         {/* Normal embedded viewer */}
-        <Box sx={{ height }}>
+        <Box component="div" sx={{ height }}>
           <ThreeDBehaviorCanvas
             modelUrl={modelUrl}
             clickedMeshes={clickedMeshes}
@@ -109,7 +109,7 @@ export function ThreeDBehaviorViewer({
           },
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             height: 52,
             px: 2,
@@ -121,7 +121,7 @@ export function ThreeDBehaviorViewer({
             bgcolor: "background.paper",
           }}
         >
-          <Box>
+          <Box component="div">
             <Typography fontSize={15} fontWeight={700}>
               3D interaction view
             </Typography>
@@ -146,7 +146,7 @@ export function ThreeDBehaviorViewer({
             bgcolor: "#f8fafc",
           }}
         >
-          <Box sx={{ height: "calc(86vh - 52px)" }}>
+          <Box component="div" sx={{ height: "calc(86vh - 52px)" }}>
             <ThreeDBehaviorCanvas
               modelUrl={modelUrl}
               clickedMeshes={clickedMeshes}

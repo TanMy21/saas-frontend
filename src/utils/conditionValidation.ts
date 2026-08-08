@@ -1,8 +1,7 @@
 import { Condition } from "./types";
 
 export const validateConditions = (conditions: Condition[]) => {
-  // console.log("\n🔍 Running validateConditions...");
-  // console.log("Received conditions:", JSON.stringify(conditions, null, 2));
+  
   let globalIsValid = true;
   const errorMap: Record<number, string[]> = {};
   const isValidArray: boolean[] = [];

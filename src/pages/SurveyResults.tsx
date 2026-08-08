@@ -12,7 +12,7 @@ const SurveyResults = () => {
   const { title } = (survey as Survey) || "";
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         height: "100vh",
         display: "flex",
@@ -21,7 +21,7 @@ const SurveyResults = () => {
       }}
     >
       {/* Fixed Header */}
-      <Box
+      <Box component="div"
         sx={{
           flexShrink: 0,
           position: "sticky",
@@ -39,7 +39,7 @@ const SurveyResults = () => {
       </Box>
 
       {/* Main content area */}
-      <Box
+      <Box component="div"
         sx={{
           flex: 1,
           minHeight: 0,

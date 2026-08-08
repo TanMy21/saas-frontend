@@ -20,7 +20,7 @@ export function TimerPreview({
   label = "Time",
 }: TimerPreviewProps) {
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "inline-flex",
         alignItems: "center",
@@ -65,7 +65,7 @@ export function TimerPreview({
 
 export function MobileShell({ children }: MobileShellProps) {
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         display: "flex",
@@ -73,7 +73,7 @@ export function MobileShell({ children }: MobileShellProps) {
         mt: 2,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: "92%",
           minHeight: 520,
@@ -102,7 +102,7 @@ function TimedChoiceMobileOptionCard({
   const showImage = displayMode === "IMAGE" && Boolean(imageUrl);
 
   return (
-    <Box
+    <Box component="div"
       role="button"
       tabIndex={0}
       sx={{
@@ -137,7 +137,7 @@ function TimedChoiceMobileOptionCard({
     >
       {showImage ? (
         <>
-          <Box
+          <Box component="div"
             sx={{
               width: "100%",
               bgcolor: "#ffffff",
@@ -168,7 +168,7 @@ function TimedChoiceMobileOptionCard({
             />
           </Box>
 
-          <Box
+          <Box component="div"
             sx={{
               px: 1.5,
 
@@ -197,7 +197,7 @@ function TimedChoiceMobileOptionCard({
           </Box>
         </>
       ) : (
-        <Box
+        <Box component="div"
           sx={{
             flex: 1,
             display: "flex",
@@ -241,7 +241,7 @@ export function TimedChoiceResponseMobilePreview() {
 
   return (
     <MobileShell accent={TIMED_ACCENT}>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -274,7 +274,7 @@ export function TimedChoiceResponseMobilePreview() {
             );
           })
         ) : (
-          <Box
+          <Box component="div"
             sx={{
               flex: 1,
               minHeight: 260,

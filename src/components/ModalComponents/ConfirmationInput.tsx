@@ -27,8 +27,8 @@ export const ConfirmationInput = ({
     />
 
     {confirmationText !== "" && (
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1, ml: 1 }}>
-        <Box
+      <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1, ml: 1 }}>
+        <Box component="div"
           sx={{
             width: 10,
             height: 10,

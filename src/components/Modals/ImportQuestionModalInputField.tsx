@@ -88,7 +88,7 @@ const ImportQuestionModalInputField = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         position: "relative",
         borderRadius: "12px",
@@ -108,7 +108,7 @@ const ImportQuestionModalInputField = ({
         overflow: "hidden",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           height: "100%",
           overflow: "auto",
@@ -160,7 +160,7 @@ const ImportQuestionModalInputField = ({
       {/* Placeholder Overlay */}
       {importText.length === 0 && <ImportQuestionModalPlaceholderTxt />}
       {/* Upload Button */}
-      <Box
+      <Box component="div"
         sx={{
           position: "absolute",
           bottom: 8,
@@ -169,7 +169,7 @@ const ImportQuestionModalInputField = ({
       >
         {existingQuestionsCount > 0 ? (
           <>
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 alignItems: "center",

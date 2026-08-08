@@ -14,9 +14,9 @@ import { ThreeDHeatmapInsightsSection } from "./ThreeDHeatmapInsightsSection";
 
 function ThreeDBehaviorInsightsSkeleton() {
   return (
-    <Box display="flex" flexDirection="column" gap={3}>
+    <Box component="div" display="flex" flexDirection="column" gap={3}>
       {/* Summary card skeleton row */}
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           gridTemplateColumns: {
@@ -28,7 +28,7 @@ function ThreeDBehaviorInsightsSkeleton() {
         }}
       >
         {Array.from({ length: 4 }).map((_, index) => (
-          <Box
+          <Box component="div"
             key={index}
             sx={{
               border: "1px solid",
@@ -45,7 +45,7 @@ function ThreeDBehaviorInsightsSkeleton() {
       </Box>
 
       {/* Behavior comparison skeleton */}
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
@@ -57,7 +57,7 @@ function ThreeDBehaviorInsightsSkeleton() {
       </Box>
 
       {/* Heatmap and model area skeleton */}
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
@@ -113,7 +113,7 @@ export function ThreeDBehaviorInsights({
 
   if (!data) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           border: "1px solid",
           borderColor: "divider",
@@ -129,7 +129,7 @@ export function ThreeDBehaviorInsights({
   }
 
   return (
-    <Box display="flex" flexDirection="column" gap={4}>
+    <Box component="div" display="flex" flexDirection="column" gap={4}>
       {/* Summary cards should appear before the model heatmap. */}
       <ThreeDBehaviorSummaryCards data={data} />
 

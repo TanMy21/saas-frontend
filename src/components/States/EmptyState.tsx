@@ -3,7 +3,7 @@ import { Inbox } from "lucide-react";
 
 export const EmptyState = () => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         mt: 6,
         p: 6,

@@ -25,7 +25,7 @@ export const IATStimulusRow = ({
   }, [option.text]);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         alignItems: "center",
@@ -37,7 +37,7 @@ export const IATStimulusRow = ({
         py: 0.75,
       }}
     >
-      <Box
+      <Box component="div"
         {...dragHandleProps}
         sx={{
           width: 24,

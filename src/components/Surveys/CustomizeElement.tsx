@@ -4,8 +4,8 @@ import { IOSSwitch } from "./Switch";
 
 const CustomizeElement = () => {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <Box
+    <Box component="div" sx={{ display: "flex", flexDirection: "column" }}>
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -13,7 +13,7 @@ const CustomizeElement = () => {
           minHeight: "100px",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -23,14 +23,14 @@ const CustomizeElement = () => {
             minHeight: "200px",
           }}
         >
-          <Box mt={1}>
+          <Box component="div" mt={1}>
             <Typography
               sx={{ fontSize: "16px", color: "black", fontWeight: "bold" }}
             >
               Settings
             </Typography>
           </Box>
-          <Box
+          <Box component="div"
             mt={1}
             sx={{
               display: "flex",
@@ -39,21 +39,21 @@ const CustomizeElement = () => {
               alignItems: "center",
             }}
           >
-            <Box>
+            <Box component="div">
               <Typography>Required</Typography>
             </Box>
-            <Box>
+            <Box component="div">
               <IOSSwitch sx={{ m: 1 }} />
             </Box>
           </Box>
-          <Box
+          <Box component="div"
             mt={1}
             sx={{
               display: "flex",
               flexDirection: "column",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -61,14 +61,14 @@ const CustomizeElement = () => {
                 alignItems: "center",
               }}
             >
-              <Box>
+              <Box component="div">
                 <Typography>Button</Typography>
               </Box>
-              <Box>
+              <Box component="div">
                 <IOSSwitch sx={{ m: 1 }} />
               </Box>
             </Box>
-            <Box mt={1}>
+            <Box component="div" mt={1}>
               <TextField
                 sx={{
                   width: "96%",
@@ -91,10 +91,10 @@ const CustomizeElement = () => {
             </Box>
           </Box>
         </Box>
-        <Box></Box>
+        <Box component="div"></Box>
       </Box>
-      <Box sx={{ width: "100%", minHeight: "200px" }}>
-        <Box
+      <Box component="div" sx={{ width: "100%", minHeight: "200px" }}>
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -106,14 +106,14 @@ const CustomizeElement = () => {
             borderBottom: "1px solid #DADADA",
           }}
         >
-          <Box sx={{ marginLeft: "4%" }}>
+          <Box component="div" sx={{ marginLeft: "4%" }}>
             <Typography
               sx={{ fontSize: "16px", color: "black", fontWeight: "bold" }}
             >
               Image
             </Typography>
           </Box>
-          <Box sx={{ marginRight: "4%" }}>
+          <Box component="div" sx={{ marginRight: "4%" }}>
             <Button
               disableElevation
               variant="contained"

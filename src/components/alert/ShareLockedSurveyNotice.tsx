@@ -3,7 +3,7 @@ import { ShieldAlert } from "lucide-react";
 
 const ShareLockedSurveyNotice = () => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         mx: 3,
         mt: 2,
@@ -17,7 +17,7 @@ const ShareLockedSurveyNotice = () => {
         backgroundColor: "#FFF5F6",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: 28,
           height: 28,
@@ -33,7 +33,7 @@ const ShareLockedSurveyNotice = () => {
         <ShieldAlert size={17} />
       </Box>
 
-      <Box sx={{ minWidth: 0 }}>
+      <Box component="div" sx={{ minWidth: 0 }}>
         <Typography
           sx={{
             fontSize: "13px",

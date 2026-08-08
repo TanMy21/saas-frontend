@@ -11,7 +11,7 @@ const SurveysViewModeToggle = ({
 }: SurveyViewModeProps) => {
   const { primary, background } = useAppTheme();
   return (
-    <Box
+    <Box component="div"
       sx={{
         position: "relative",
         display: "inline-flex",
@@ -28,7 +28,7 @@ const SurveysViewModeToggle = ({
         "@media (prefers-reduced-motion: reduce)": { transition: "none" },
       }}
     >
-      <Box
+      <Box component="div"
         aria-hidden
         sx={{
           position: "absolute",

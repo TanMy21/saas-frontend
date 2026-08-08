@@ -8,12 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useUpdateQuestionImageAltTxtMutation } from "../../../../app/slices/elementApiSlice";
 import { setImageAltText } from "../../../../app/slices/elementSlice";
 import { RootState } from "../../../../app/store";
-import useAuth from "../../../../hooks/useAuth";
 import { questionImageSettingsSchema } from "../../../../utils/schema";
 import { QuestionImage } from "../../../../utils/types";
 
 const QuestionImageAltTxt = () => {
-  const { role } = useAuth();
   const [updateQuestionImageAltTxt] = useUpdateQuestionImageAltTxtMutation();
 
   const dispatch = useDispatch();
@@ -73,7 +71,7 @@ const QuestionImageAltTxt = () => {
   }, [altText, reset]);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+    <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       <Typography sx={{ fontSize: 16, fontWeight: 600, color: "#3F3F46" }}>
         Image alt text
       </Typography>

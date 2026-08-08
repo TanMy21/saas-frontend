@@ -9,7 +9,7 @@ export const RoleBadge = ({ role }: { role: string }) => {
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         px: 1.5,
         py: 0.5,

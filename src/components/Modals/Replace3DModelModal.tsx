@@ -389,8 +389,8 @@ const Replace3DModelModal = ({
 
       <DialogContent sx={{ px: 3, py: 3 }}>
         {isReplacementComplete ? (
-          <Box sx={{ textAlign: "center", py: 5 }}>
-            <Box
+          <Box component="div" sx={{ textAlign: "center", py: 5 }}>
+            <Box component="div"
               sx={{
                 width: 64,
                 height: 64,
@@ -432,7 +432,7 @@ const Replace3DModelModal = ({
                 >
                   <InsertDriveFileIcon color="primary" />
 
-                  <Box>
+                  <Box component="div">
                     <Typography sx={{ fontWeight: 600 }}>
                       {selectedFile.name}
                     </Typography>
@@ -470,8 +470,8 @@ const Replace3DModelModal = ({
         ) : (
           <>
             {isLoading || isProcessingReplacement ? (
-              <Box sx={{ textAlign: "center", py: 5 }}>
-                <Box
+              <Box component="div" sx={{ textAlign: "center", py: 5 }}>
+                <Box component="div"
                   sx={{
                     width: 64,
                     height: 64,
@@ -532,7 +532,7 @@ const Replace3DModelModal = ({
                   <Stack direction="row" spacing={1.5} alignItems="flex-start">
                     <ErrorIcon sx={{ color: "warning.main" }} />
 
-                    <Box>
+                    <Box component="div">
                       <Typography
                         sx={{ fontWeight: 600, color: "text.primary" }}
                       >
@@ -555,7 +555,7 @@ const Replace3DModelModal = ({
                   </Stack>
                 </Paper>
 
-                <Box
+                <Box component="div"
                   onDragOver={onDragOver}
                   onDragEnter={onDragEnter}
                   onDragLeave={onDragLeave}
@@ -578,7 +578,7 @@ const Replace3DModelModal = ({
                     },
                   }}
                 >
-                  <Box
+                  <Box component="div"
                     sx={{
                       width: 80,
                       height: 80,
@@ -672,7 +672,7 @@ const Replace3DModelModal = ({
                     >
                       <ErrorIcon sx={{ color: "error.main" }} />
 
-                      <Box sx={{ flex: 1 }}>
+                      <Box component="div" sx={{ flex: 1 }}>
                         <Typography
                           sx={{ fontWeight: 700, color: "error.dark", mb: 0.5 }}
                         >

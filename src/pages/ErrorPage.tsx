@@ -6,7 +6,7 @@ import { useAppTheme } from "../theme/useAppTheme";
 const ErrorPage = () => {
   const { primary } = useAppTheme();
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -17,7 +17,7 @@ const ErrorPage = () => {
         // border: "2px solid red",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -32,7 +32,7 @@ const ErrorPage = () => {
         <img src="/error_500.svg" style={{ width: "100%", height: "100%" }} />
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",

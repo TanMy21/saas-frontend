@@ -47,7 +47,7 @@ export const ConceptFitAttributeManager = ({
           : ""}
       </Typography>
 
-      <Box
+      <Box component="div"
         sx={{
           // border: "1px solid #E2E8F0",
           borderRadius: 2,
@@ -81,7 +81,7 @@ export const ConceptFitAttributeManager = ({
         >
           <Droppable droppableId={`concept-fit-attributes-${qID}`}>
             {(provided) => (
-              <Box
+              <Box component="div"
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 sx={{
@@ -98,7 +98,7 @@ export const ConceptFitAttributeManager = ({
                     isDragDisabled={!canReorder}
                   >
                     {(provided) => (
-                      <Box
+                      <Box component="div"
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
@@ -129,7 +129,7 @@ export const ConceptFitAttributeManager = ({
       </Box>
 
       {canCreate && (
-        <Box
+        <Box component="div"
           sx={{
             position: "relative",
             width: "94%",

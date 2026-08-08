@@ -14,7 +14,7 @@ export const BaseModal = ({
 }: BaseModalProps) => {
   return (
     <Modal open={open} onClose={onClose}>
-      <Box
+      <Box component="div"
         sx={{
           width,
           bgcolor: "#fff",
@@ -26,7 +26,7 @@ export const BaseModal = ({
         }}
       >
         {/* Header */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -36,8 +36,8 @@ export const BaseModal = ({
           }}
         >
           {/* Left */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-            <Box
+          <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+            <Box component="div"
               sx={{
                 p: 1,
                 backgroundColor: "#EFF6FF",
@@ -48,7 +48,7 @@ export const BaseModal = ({
               {icon}
             </Box>
 
-            <Box>
+            <Box component="div">
               <Typography
                 sx={{
                   fontWeight: 600,
@@ -91,7 +91,7 @@ export const BaseModal = ({
         </Box>
 
         {/* Content */}
-        <Box sx={{ px: 2 }}>{children}</Box>
+        <Box component="div" sx={{ px: 2 }}>{children}</Box>
       </Box>
     </Modal>
   );

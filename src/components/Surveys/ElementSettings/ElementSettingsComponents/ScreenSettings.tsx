@@ -107,7 +107,7 @@ const ScreenSettings = ({
           aria-controls="panel1-content"
           id="panel1-header"
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -123,7 +123,7 @@ const ScreenSettings = ({
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -133,8 +133,8 @@ const ScreenSettings = ({
               // border: "2px solid red",
             }}
           >
-            <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>Question Text</Box>
-            <Box mt={1}>
+            <Box component="div" sx={{ fontWeight: 500, color: "#3F3F46" }}>Question Text</Box>
+            <Box component="div" mt={1}>
               <Controller
                 name="questionText"
                 control={control}
@@ -163,10 +163,10 @@ const ScreenSettings = ({
                 )}
               />
             </Box>
-            <Box sx={{ marginTop: "2%", fontWeight: 500, color: "#3F3F46" }}>
+            <Box component="div" sx={{ marginTop: "2%", fontWeight: 500, color: "#3F3F46" }}>
               Description
             </Box>
-            <Box mt={1}>
+            <Box component="div" mt={1}>
               <Controller
                 name="questionDescription"
                 control={control}
@@ -211,10 +211,10 @@ const ScreenSettings = ({
                 )}
               />
             </Box>
-            <Box sx={{ marginTop: "2%", fontWeight: 500, color: "#3F3F46" }}>
+            <Box component="div" sx={{ marginTop: "2%", fontWeight: 500, color: "#3F3F46" }}>
               Button
             </Box>
-            <Box mt={1}>
+            <Box component="div" mt={1}>
               <Controller
                 name="buttonText"
                 control={control}
@@ -246,7 +246,7 @@ const ScreenSettings = ({
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <Box
+                          <Box component="div"
                             sx={{ fontSize: "12px", color: "#9E9E9E", pr: 1 }}
                           >
                             {inputLength}/24

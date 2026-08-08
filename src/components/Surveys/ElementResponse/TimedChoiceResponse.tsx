@@ -43,7 +43,7 @@ export const TimedChoiceResponse = ({ qID, display }: ElementProps) => {
   }, [inputValue]);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         display: "flex",
@@ -51,7 +51,7 @@ export const TimedChoiceResponse = ({ qID, display }: ElementProps) => {
         mt: 3,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: display === "mobile" ? "92%" : "72%",
           display: "flex",
@@ -59,7 +59,7 @@ export const TimedChoiceResponse = ({ qID, display }: ElementProps) => {
           gap: 2.5,
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: display === "mobile" ? "column" : "row",

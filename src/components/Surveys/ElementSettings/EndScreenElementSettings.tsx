@@ -7,7 +7,7 @@ import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypograp
 
 const EndScreenElementSettings = ({ qID }: ElementSettingsProps) => {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box component="div" sx={{ display: "flex", flexDirection: "column" }}>
       <QuestionContentSettings />
       <ScreenTypographySettings key={qID} qID={qID} />
     </Box>

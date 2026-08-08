@@ -31,7 +31,7 @@ const QuestionFlow = () => {
 
   return (
     <ReactFlowProvider>
-      <Box
+      <Box component="div"
         sx={{
           overflowX: "hidden",
           overflowY: "hidden",

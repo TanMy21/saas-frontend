@@ -28,7 +28,7 @@ export const ElementsListItem = ({
   );
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         "@keyframes reorderSavingShimmer": {
           "0%": {
@@ -80,7 +80,7 @@ export const ElementsListItem = ({
             }
           >
             {(provided, snapshot) => (
-              <Box
+              <Box component="div"
                 key={element.questionID}
                 ref={provided.innerRef}
                 {...provided.draggableProps}
@@ -154,7 +154,7 @@ export const ElementsListItem = ({
                     }),
                 }}
               >
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -166,7 +166,7 @@ export const ElementsListItem = ({
                 >
                   {/* Drag Handle */}
                   {!isSystemScreen && (
-                    <Box
+                    <Box component="div"
                       {...provided.dragHandleProps}
                       sx={{
                         display: "flex",
@@ -221,7 +221,7 @@ export const ElementsListItem = ({
                   </Typography>
 
                   {/* Question Text */}
-                  <Box
+                  <Box component="div"
                     sx={{
                       flex: 1,
                       minWidth: 0,
@@ -252,7 +252,7 @@ export const ElementsListItem = ({
 
                   {/* Menu  */}
                   {canShowMenu && (
-                    <Box
+                    <Box component="div"
                       sx={{
                         display: "flex",
                         alignItems: "center",

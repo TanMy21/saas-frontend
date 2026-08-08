@@ -11,6 +11,7 @@ export const ImportQuestionsLoader = ({
 }) => {
   return (
     <Box
+      component="div"
       sx={{
         width: "100%",
         height: "100%",
@@ -20,6 +21,7 @@ export const ImportQuestionsLoader = ({
       }}
     >
       <Box
+        component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -41,6 +43,7 @@ export const ImportQuestionsLoader = ({
 
         {/* Step Progress */}
         <Box
+          component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -63,6 +66,7 @@ export const ImportQuestionsLoader = ({
 
         {/* Loader animation  */}
         <Box
+          component="div"
           sx={{
             position: "relative",
             width: 110,

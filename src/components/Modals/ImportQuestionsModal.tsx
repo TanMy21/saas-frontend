@@ -55,7 +55,7 @@ const ImportQuestionsModal = ({
       aria-labelledby="Import questions modal"
       aria-describedby="Import questions to your survey by pasting them in the text area"
     >
-      <Box
+      <Box component="div"
         sx={{
           position: "absolute",
           top: "50%",
@@ -68,7 +68,7 @@ const ImportQuestionsModal = ({
           overflow: "hidden",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -79,7 +79,7 @@ const ImportQuestionsModal = ({
             // border: "2px solid blue",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               width: "100%",
@@ -100,7 +100,7 @@ const ImportQuestionsModal = ({
             >
               Import questions
             </Typography>
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -122,7 +122,7 @@ const ImportQuestionsModal = ({
               </IconButton>
             </Box>
           </Box>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",

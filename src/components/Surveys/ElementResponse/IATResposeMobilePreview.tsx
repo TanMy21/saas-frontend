@@ -8,7 +8,7 @@ import { ElementProps, OptionType } from "../../../utils/types";
 
 const IATMobileStimulusCard = ({ stimulus }: { stimulus: string }) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         position: "relative",
         borderRadius: 5,
@@ -21,7 +21,7 @@ const IATMobileStimulusCard = ({ stimulus }: { stimulus: string }) => {
         overflow: "hidden",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           position: "absolute",
           inset: 0,
@@ -59,7 +59,7 @@ const IATMobileTapTarget = ({
   const isLeft = side === "left";
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         position: "relative",
         overflow: "hidden",
@@ -87,7 +87,7 @@ const IATMobileTapTarget = ({
       >
         Tap
       </Typography>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -166,7 +166,7 @@ export const IATMobilePreview = ({ qID, display }: ElementProps) => {
   const previewStimulus = allAttributes[0]?.text || "Add attributes";
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         minHeight: 450,
@@ -175,7 +175,7 @@ export const IATMobilePreview = ({ qID, display }: ElementProps) => {
         mt: 3,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: display === "mobile" ? "96%" : "76%",
           maxWidth: "96%",
@@ -185,7 +185,7 @@ export const IATMobilePreview = ({ qID, display }: ElementProps) => {
       >
         <IATMobileStimulusCard stimulus={previewStimulus} />
 
-        <Box
+        <Box component="div"
           sx={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",

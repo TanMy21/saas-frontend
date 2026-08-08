@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 
 export const ImplicitAssociationTestBuilderNote = () => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px dashed #CBD5E1",
         borderRadius: 2,

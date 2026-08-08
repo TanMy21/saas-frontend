@@ -250,7 +250,7 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
         aria-controls="timed-choice-settings-content"
         id="timed-choice-settings-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -279,7 +279,7 @@ const TimedChoiceSettings = ({ qID }: ElementSettingsProps) => {
             mx: "auto",
           }}
         >
-          <Box>
+          <Box component="div">
             <Typography
               sx={{
                 fontWeight: 700,

@@ -26,7 +26,7 @@ export const GlobalImportLoaderOverlay = () => {
   if (overlayVariant !== "IMPORT") return null;
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         position: "fixed",
         inset: 0,

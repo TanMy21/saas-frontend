@@ -57,7 +57,7 @@ export const MemberRow = ({
     >
       {/* USER NAME */}
       <TableCell>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Avatar
             sx={{
               width: 36,

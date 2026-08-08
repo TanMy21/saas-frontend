@@ -77,7 +77,7 @@ export const IATCombinedBlockPreview = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid #FBCFE8",
         bgcolor: "#FDF2F8",
@@ -85,7 +85,7 @@ export const IATCombinedBlockPreview = ({
         p: 2,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           gridTemplateColumns: { xs: "1fr", sm: "1fr auto 1fr" },
@@ -102,7 +102,7 @@ export const IATCombinedBlockPreview = ({
           onThemeUpdate={(value) => updateIATInlineLabel("iatThemeA", value)}
         />
 
-        <Box
+        <Box component="div"
           sx={{
             minWidth: { xs: "100%", sm: 150 },
             borderRadius: 2,

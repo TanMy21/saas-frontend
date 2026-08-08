@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Box, Popover } from "@mui/material";
 import { Chrome } from "@uiw/react-color";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 
 import { useUpdateQuestionBackgroundColorMutation } from "../../../../app/slices/elementApiSlice";
 import { setBackgroundColor } from "../../../../app/slices/elementSlice";
@@ -96,7 +96,7 @@ const QuestionBackgroundColor = ({
       onClose={() => setColorAnchorEl(null)}
       anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
     >
-      <Box sx={{ p: 2 }}>
+      <Box component="div" sx={{ p: 2 }}>
         <Chrome
           color={localColor}
           onChange={handleColorChange}

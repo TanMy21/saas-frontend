@@ -82,7 +82,7 @@ const PasswordResetOtpForm = ({
 
   if (isPasswordResetSuccess) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           width: "100%",
           minHeight: "60%",
@@ -93,8 +93,8 @@ const PasswordResetOtpForm = ({
           p: 3,
         }}
       >
-        <Box sx={{ width: "100%", maxWidth: 480 }}>
-          <Box sx={{ textAlign: "center", mb: 4 }}>
+        <Box component="div" sx={{ width: "100%", maxWidth: 480 }}>
+          <Box component="div" sx={{ textAlign: "center", mb: 4 }}>
             <Typography sx={textStyles.gradientSecondary}>
               Password updated
             </Typography>
@@ -108,7 +108,7 @@ const PasswordResetOtpForm = ({
               textAlign: "center",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 width: 64,
                 height: 64,
@@ -145,7 +145,7 @@ const PasswordResetOtpForm = ({
   }
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         minHeight: "60%",
@@ -156,8 +156,8 @@ const PasswordResetOtpForm = ({
         p: 3,
       }}
     >
-      <Box sx={{ width: "100%", maxWidth: 600 }}>
-        <Box sx={{ textAlign: "center", mb: 4 }}>
+      <Box component="div" sx={{ width: "100%", maxWidth: 600 }}>
+        <Box component="div" sx={{ textAlign: "center", mb: 4 }}>
           <Typography sx={{ color: grey[955], mt: 1 }}>
             Enter the six-digit code sent to
           </Typography>
@@ -193,7 +193,7 @@ const PasswordResetOtpForm = ({
               )}
             />
 
-            <Box>
+            <Box component="div">
               <TextField
                 required
                 fullWidth
@@ -237,7 +237,7 @@ const PasswordResetOtpForm = ({
               )}
             </Box>
 
-            <Box>
+            <Box component="div">
               <TextField
                 required
                 fullWidth
@@ -290,7 +290,7 @@ const PasswordResetOtpForm = ({
               {isResetting ? "Resetting password..." : "Reset password"}
             </Button>
 
-            <Box sx={{ textAlign: "center" }}>
+            <Box component="div" sx={{ textAlign: "center" }}>
               <Typography component="span" sx={{ color: grey[920] }}>
                 Didn't receive the code?
               </Typography>

@@ -199,7 +199,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
   return (
     <>
       {display === "desktop" ? (
-        <Box
+        <Box component="div"
           ref={rootRef}
           sx={{
             transformOrigin: "bottom",
@@ -209,7 +209,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             // border: "2px solid green",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -219,7 +219,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             }}
           >
             {/* Title row */}
-            <Box
+            <Box component="div"
               onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
                 e.stopPropagation();
               }}
@@ -237,7 +237,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               }}
             >
               {show && (
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     flexDirection: "row",
@@ -260,7 +260,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   />
                 </Box>
               )}
-              <Box
+              <Box component="div"
                 sx={{
                   ...(show
                     ? {
@@ -282,7 +282,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   // border: "2px solid purple",
                 }}
               >
-                <Box
+                <Box component="div"
                   sx={{
                     ...(show
                       ? {
@@ -344,7 +344,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             </Box>
 
             {/* Description row */}
-            <Box
+            <Box component="div"
               onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
                 if (editingTarget !== "none") e.preventDefault();
               }}
@@ -399,7 +399,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
           </Box>
         </Box>
       ) : (
-        <Box
+        <Box component="div"
           ref={rootRef}
           sx={{
             transformOrigin: "bottom",
@@ -409,7 +409,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             // border: "2px solid green",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -419,7 +419,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
             }}
           >
             {/* Title row */}
-            <Box
+            <Box component="div"
               onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
                 if (editingTarget !== "none") e.preventDefault();
               }}
@@ -438,7 +438,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
               }}
             >
               {show && (
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     flexDirection: "row",
@@ -460,7 +460,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   />
                 </Box>
               )}
-              <Box
+              <Box component="div"
                 sx={{
                   ...(show
                     ? {
@@ -479,7 +479,7 @@ const ElementQuestionText = ({ display }: ElementProps) => {
                   // border: "2px solid purple",
                 }}
               >
-                <Box
+                <Box component="div"
                   sx={{
                     ...(show
                       ? {

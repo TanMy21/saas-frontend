@@ -8,7 +8,7 @@ const ResponseContainer = ({
   // className = "",
 }: ScreenLayoutProps) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: display === "desktop" ? "80%" : "96%",
         maxWidth: display === "desktop" ? "80%" : "92%",

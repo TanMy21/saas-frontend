@@ -15,7 +15,7 @@ const ListLayout = ({
 }: WorkspaceLayoutProps) => {
   const { can } = useAuth();
   return (
-    <Box
+    <Box component="div"
       sx={{
         marginTop: "1%",
         width: "100%",

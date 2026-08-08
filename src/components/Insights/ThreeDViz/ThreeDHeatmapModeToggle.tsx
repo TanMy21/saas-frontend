@@ -16,7 +16,7 @@ export function ThreeDHeatmapModeToggle({
   ];
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "inline-flex",
         border: "1px solid",

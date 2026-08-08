@@ -16,7 +16,7 @@ const GridLayout = ({
 }: WorkspaceLayoutProps) => {
   const { can } = useAuth();
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "grid",
         boxSizing: "border-box",

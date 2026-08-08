@@ -274,7 +274,7 @@ const ElementsPanel = () => {
         >
           <Droppable droppableId="elements">
             {(provided, snapshot) => (
-              <Box
+              <Box component="div"
                 ref={(node: HTMLDivElement | null) => {
                   provided.innerRef(node);
                   scrollRef.current = node;

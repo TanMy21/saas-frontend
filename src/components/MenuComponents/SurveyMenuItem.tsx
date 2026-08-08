@@ -51,7 +51,7 @@ export const SurveyMenuItem = ({
       }}
     >
       {/* left */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
+      <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
         {icon}
         {label}
       </Box>

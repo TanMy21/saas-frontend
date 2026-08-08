@@ -16,7 +16,7 @@ export const GlobalGenerateLoaderOverlay = () => {
   if (!overlayOpen || overlayVariant !== "GENERATE") return null;
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         position: "fixed",
         inset: 0,
@@ -28,7 +28,7 @@ export const GlobalGenerateLoaderOverlay = () => {
         alignItems: "center",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -68,7 +68,7 @@ export const GlobalGenerateLoaderOverlay = () => {
         </Typography>
 
         {/* Animation */}
-        <Box
+        <Box component="div"
           sx={{
             position: "relative",
             mt: "8%",

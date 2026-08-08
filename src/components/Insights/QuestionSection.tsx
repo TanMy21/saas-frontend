@@ -47,14 +47,14 @@ export function QuestionSection({
       <SummaryQuestionHeader question={question} displayOrder={displayOrder} />
 
       {/* Visualization */}
-      <Box
+      <Box component="div"
         sx={{
           pl: { xs: 0, lg: "40px" },
         }}
       >
         <Suspense
           fallback={
-            <Box
+            <Box component="div"
               sx={{
                 minHeight: 180,
                 display: "flex",

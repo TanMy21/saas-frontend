@@ -10,7 +10,7 @@ export const ConceptTextOnlyStimulus = (
   const { display } = props;
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         display: "flex",
@@ -18,7 +18,7 @@ export const ConceptTextOnlyStimulus = (
         mt: 3,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: display === "mobile" ? "92%" : "72%",
           display: "flex",

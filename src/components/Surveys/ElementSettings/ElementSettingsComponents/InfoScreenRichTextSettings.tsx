@@ -326,7 +326,7 @@ export const InfoScreenRichTextSettings = ({
         aria-controls="info-screen-rich-text-content"
         id="info-screen-rich-text-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -341,8 +341,8 @@ export const InfoScreenRichTextSettings = ({
       </AccordionSummary>
 
       <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-          <Box
+        <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+          <Box component="div"
             sx={{
               position: "sticky",
               top: 12,
@@ -590,7 +590,7 @@ export const InfoScreenRichTextSettings = ({
             {formTouched ? "Unsaved changes" : "Content saved"}
           </Typography>
 
-          <Box
+          <Box component="div"
             sx={{
               border: "1px solid #E2E8F0",
               borderRadius: 2,

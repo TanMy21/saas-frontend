@@ -117,8 +117,8 @@ const SurveysListMain = () => {
             justifyContent={"space-between"}
             sx={{ minWidth: "16%", maxWidth: "30%", p: 1 }}
           >
-            <Box>
-              <Box onDoubleClick={handleDoubleClick}>
+            <Box component="div">
+              <Box component="div" onDoubleClick={handleDoubleClick}>
                 {isEditing ? (
                   <TextField
                     id="outlined-basic"
@@ -150,7 +150,7 @@ const SurveysListMain = () => {
                 )}
               </Box>
             </Box>
-            <Box>
+            <Box component="div">
               <WorkspaceDropDown
                 selectedWorkspace={selectedWorkspace}
                 setSelectedWorkspace={setSelectedWorkspace}
@@ -162,7 +162,7 @@ const SurveysListMain = () => {
             display={"flex"}
             justifyContent={"space-between"}
           >
-            <Box id="new-survey-btn">
+            <Box component="div" id="new-survey-btn">
               <CreateNewSurveyBtn
                 workspaceId={selectedWorkspace?.workspaceId}
                 workspaceName={selectedWorkspace?.name}
@@ -173,7 +173,7 @@ const SurveysListMain = () => {
               display={"flex"}
               sx={{ width: "400px", height: "50px" }}
             >
-              <Box id="survey-view-layout" ml={2}>
+              <Box component="div" id="survey-view-layout" ml={2}>
                 <ToggleButtonGroup
                   color="primary"
                   value={layout}
@@ -239,7 +239,7 @@ const SurveysListMain = () => {
               surveys?.length === 0 ? (
                 <SurveysNotFound />
               ) : layout === "grid" ? (
-                <Box
+                <Box component="div"
                   display={"flex"}
                   flexDirection={"row"}
                   ml={2}

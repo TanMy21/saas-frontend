@@ -8,7 +8,7 @@ import { QuestionTypeMutationSettings } from "./ElementSettingsComponents/Questi
 const ThreeDElementSettings = () => {
   const { canEditQuestion } = usePermission();
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",

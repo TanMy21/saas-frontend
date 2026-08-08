@@ -88,10 +88,10 @@ const QuestionImageDimensions = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Box sx={{ mb: 2 }}>
+      <Box component="div" sx={{ mb: 2 }}>
         {/* Image Width */}
-        <Box sx={{ mb: 1, width: "98%" }}>
-          <Box
+        <Box component="div" sx={{ mb: 1, width: "98%" }}>
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -157,7 +157,7 @@ const QuestionImageDimensions = () => {
             />
           </Box>
           {/* Slider */}
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -187,8 +187,8 @@ const QuestionImageDimensions = () => {
           </Box>
         </Box>
         {/* Image Height */}
-        <Box sx={{ mb: 1, width: "98%" }}>
-          <Box
+        <Box component="div" sx={{ mb: 1, width: "98%" }}>
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -254,7 +254,7 @@ const QuestionImageDimensions = () => {
             />
           </Box>
           {/* Slider below, syncs as before */}
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",

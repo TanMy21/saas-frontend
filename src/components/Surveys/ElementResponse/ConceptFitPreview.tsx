@@ -148,7 +148,7 @@ export const ConceptFitPreview = ({
   }, []);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid #A5F3FC",
         bgcolor: "#ECFEFF",
@@ -157,7 +157,7 @@ export const ConceptFitPreview = ({
         opacity: isSavingConceptFit ? 0.92 : 1,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           gridTemplateColumns: "1fr auto 1fr",
@@ -173,7 +173,7 @@ export const ConceptFitPreview = ({
           onChange={(value) => handleConceptFitLabelChange("left", value)}
         />
 
-        <Box
+        <Box component="div"
           sx={{
             minWidth: 130,
             borderRadius: 2,

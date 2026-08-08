@@ -137,7 +137,7 @@ const NewSurveyModal = ({
         },
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           outline: "none",
           display: "flex",
@@ -146,7 +146,7 @@ const NewSurveyModal = ({
           height: "100vh",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             bgcolor: "#fff",
             borderRadius: 4,
@@ -160,7 +160,7 @@ const NewSurveyModal = ({
           }}
         >
           {/* Header */}
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -170,8 +170,8 @@ const NewSurveyModal = ({
               pb: 2,
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Box
+            <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box component="div"
                 sx={{
                   p: 1,
                   backgroundColor: "#EFF6FF",
@@ -187,7 +187,7 @@ const NewSurveyModal = ({
                   style={{ width: 28, height: 28, color: "#2563EB" }}
                 />
               </Box>
-              <Box>
+              <Box component="div">
                 <Typography
                   variant="h6"
                   sx={{ fontWeight: 600, color: "grey.900" }}
@@ -217,13 +217,13 @@ const NewSurveyModal = ({
           </Box>
 
           {/* Options */}
-          <Box sx={{ mt: 4, px: 4, pb: 4, pt: 0 }}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box component="div" sx={{ mt: 4, px: 4, pb: 4, pt: 0 }}>
+            <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               {createSurveyOptions.map((option) => {
                 const Icon = option.icon;
                 const isHovered = hoveredOption === option.id;
                 return (
-                  <Box
+                  <Box component="div"
                     key={option.id}
                     onMouseEnter={() => setHoveredOption(option.id)}
                     onMouseLeave={() => setHoveredOption(null)}
@@ -252,7 +252,7 @@ const NewSurveyModal = ({
                       },
                     }}
                   >
-                    <Box
+                    <Box component="div"
                       sx={{
                         display: "flex",
                         alignItems: "start",
@@ -263,7 +263,7 @@ const NewSurveyModal = ({
                         borderRadius: 3,
                       }}
                     >
-                      <Box
+                      <Box component="div"
                         sx={{
                           p: 1.2,
                           borderRadius: 2.5,
@@ -287,8 +287,8 @@ const NewSurveyModal = ({
                           }}
                         />
                       </Box>
-                      <Box sx={{ flex: 1, minWidth: 0 }}>
-                        <Box
+                      <Box component="div" sx={{ flex: 1, minWidth: 0 }}>
+                        <Box component="div"
                           sx={{
                             display: "flex",
                             alignItems: "center",
@@ -339,8 +339,8 @@ const NewSurveyModal = ({
           </Box>
 
           {/* Footer */}
-          <Box sx={{ px: 4, pb: 4, pt: 0 }}>
-            <Box
+          <Box component="div" sx={{ px: 4, pb: 4, pt: 0 }}>
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",

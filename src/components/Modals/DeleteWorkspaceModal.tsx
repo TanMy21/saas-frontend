@@ -88,7 +88,7 @@ const DeleteWorkspaceModal = ({
     <DangerModalShell open={open} onClose={onClose}>
       <DangerModalHeader title="Delete this Workspace?" onClose={onClose} />
 
-      <Box sx={{ px: 4, py: 4 }}>
+      <Box component="div" sx={{ px: 4, py: 4 }}>
         <DangerWarningBox text="You will lose all the data..." />
 
         <Typography sx={{ mt: 2, ml: 1, mb: 1 }}>

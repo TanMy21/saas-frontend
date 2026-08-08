@@ -176,7 +176,7 @@ const HeaderIconMenu = () => {
         <AccountMenuItem
           icon={<CreditCardIcon style={{ color: "#A0A7B2" }} />}
           label={
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -185,11 +185,11 @@ const HeaderIconMenu = () => {
               }}
             >
               {/* Left text */}
-              <Box>Plan</Box>
+              <Box component="div">Plan</Box>
 
               {/* Right side */}
-              <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                <Box
+              <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                <Box component="div"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -208,7 +208,7 @@ const HeaderIconMenu = () => {
                 </Box>
 
                 {currentTier.action && (
-                  <Box
+                  <Box component="div"
                     sx={{
                       fontSize: "12px",
                       fontWeight: 600,

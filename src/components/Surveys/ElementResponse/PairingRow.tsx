@@ -10,7 +10,7 @@ export const PairingRow = ({
   right: string;
 }) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "grid",
         gridTemplateColumns: { xs: "1fr", sm: "80px 1fr 1fr" },
@@ -22,7 +22,7 @@ export const PairingRow = ({
         {label}
       </Typography>
 
-      <Box
+      <Box component="div"
         sx={{
           borderRadius: 1.5,
           bgcolor: "#F8FAFC",
@@ -36,7 +36,7 @@ export const PairingRow = ({
         {left}
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           borderRadius: 1.5,
           bgcolor: "#F8FAFC",

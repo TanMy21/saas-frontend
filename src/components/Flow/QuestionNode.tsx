@@ -17,7 +17,7 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
   const canConnect = !isConditionlessType(qType);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -40,7 +40,7 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
         isConnectable={isConnectable}
         style={{ visibility: "hidden" }}
       />
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           float: "left",
@@ -50,7 +50,7 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
           // border: "2px solid black",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -65,7 +65,7 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
             borderRadius: "8px",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -77,7 +77,7 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
           >
             {elementIcons[data.element as unknown as keyof IconMapping]}
           </Box>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -92,7 +92,7 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
           </Box>
         </Box>
       </Box>
-      <Box
+      <Box component="div"
         sx={{
           padding: "4%",
           marginTop: "4%",
@@ -109,7 +109,7 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
         </Typography>
       </Box>
       {qType === "END_SCREEN" ? null : (
-        <Box
+        <Box component="div"
           sx={{
             position: "absolute",
             right: "-1px",
@@ -129,7 +129,7 @@ const QuestionNode = ({ data, isConnectable }: NodeProps<StingNode>) => {
               zIndex: 1,
             }}
           />
-          <Box
+          <Box component="div"
             sx={{
               position: "absolute",
               right: "-6px",

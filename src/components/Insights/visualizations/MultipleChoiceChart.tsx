@@ -27,7 +27,7 @@ export const MultipleChoiceChart = ({ question }: MultipleChoiceChartProps) => {
   const height = data.length * ROW_HEIGHT;
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box component="div" sx={{ width: "100%" }}>
       {/* Helper text */}
       <Typography
         sx={{
@@ -40,7 +40,7 @@ export const MultipleChoiceChart = ({ question }: MultipleChoiceChartProps) => {
       </Typography>
 
       {/* ───────────── Grid layout ───────────── */}
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           gridTemplateColumns: "32% 68%",
@@ -49,9 +49,9 @@ export const MultipleChoiceChart = ({ question }: MultipleChoiceChartProps) => {
         }}
       >
         {/* Labels */}
-        <Box>
+        <Box component="div">
           {data.map((item) => (
-            <Box
+            <Box component="div"
               key={item.label}
               sx={{
                 height: ROW_HEIGHT,
@@ -72,7 +72,7 @@ export const MultipleChoiceChart = ({ question }: MultipleChoiceChartProps) => {
         </Box>
 
         {/* Bars */}
-        <Box sx={{ height }}>
+        <Box component="div" sx={{ height }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}

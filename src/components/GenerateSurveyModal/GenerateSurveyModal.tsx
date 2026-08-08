@@ -117,8 +117,8 @@ const GenerateSurveyModal = ({
 
   return (
     <Modal open={openGenerate} onClose={handleClose}>
-      <Box sx={modalOverlaySx}>
-        <Box sx={modalContainerSx}>
+      <Box component="div" sx={modalOverlaySx}>
+        <Box component="div" sx={modalContainerSx}>
           <GenerateSurveyHeader state={state} onClose={handleClose} />
 
           {state === GenerateSurveyState.INITIAL_CONFIG ? (

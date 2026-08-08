@@ -50,7 +50,7 @@ const WorkspaceDropDown = ({
   };
 
   return (
-    <Box id="workspace-dropdown-menu">
+    <Box component="div" id="workspace-dropdown-menu">
       <IconButton
         aria-label="more"
         aria-controls="long-menu"

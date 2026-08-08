@@ -6,7 +6,7 @@ const GlobalSimpleLoader = ({
   overlayMessage?: string;
 }) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         position: "fixed",
         inset: 0,
@@ -18,7 +18,7 @@ const GlobalSimpleLoader = ({
         alignItems: "center",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -37,7 +37,7 @@ const GlobalSimpleLoader = ({
           },
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             width: 42,
             height: 42,
@@ -53,7 +53,7 @@ const GlobalSimpleLoader = ({
           }}
         />
 
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",

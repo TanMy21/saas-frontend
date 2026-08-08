@@ -48,11 +48,11 @@ export const SummaryContainer = () => {
     !isLoading && !isFetching && data && normalizedQuestions.length === 0;
 
   return (
-    <Box minHeight="100vh" bgcolor="background.default">
+    <Box component="div" minHeight="100vh" bgcolor="background.default">
       <SummaryControls filters={filters} setFilters={setFilters} />
 
       <Box component="main" px={{ xs: 3, lg: 4 }} py={4}>
-        <Box
+        <Box component="div"
           mx="auto"
           maxWidth={960}
           display="flex"
@@ -61,7 +61,7 @@ export const SummaryContainer = () => {
         >
           {/* ───────────── Invalid custom range ───────────── */}
           {!isCustomRangeValid && (
-            <Box
+            <Box component="div"
               p={3}
               borderRadius={2}
               border="1px dashed"
@@ -86,7 +86,7 @@ export const SummaryContainer = () => {
 
           {/* ───────────── Error state ───────────── */}
           {error && !isLoading && (
-            <Box p={3}>
+            <Box component="div" p={3}>
               <Typography color="error.main" fontWeight={600}>
                 Failed to load responses
               </Typography>
@@ -98,7 +98,7 @@ export const SummaryContainer = () => {
 
           {/* ───────────── Empty state ───────────── */}
           {showEmptyState && (
-            <Box
+            <Box component="div"
               p={6}
               borderRadius={3}
               border="1px dashed"
@@ -122,7 +122,7 @@ export const SummaryContainer = () => {
 
           {/* ───────────── Background refetch indicator ───────────── */}
           {isFetching && !isLoading && (
-            <Box
+            <Box component="div"
               position="fixed"
               bottom={24}
               right={24}

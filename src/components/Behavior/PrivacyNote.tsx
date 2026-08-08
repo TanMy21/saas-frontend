@@ -3,7 +3,7 @@ import { ShieldIcon } from "lucide-react";
 
 export const PrivacyNote = () => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         alignItems: "flex-start",

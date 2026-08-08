@@ -19,14 +19,14 @@ export function BehaviorTimeline({ timeline }: BehaviorTimelineProps) {
     );
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box component="div" sx={{ display: "flex", flexDirection: "column" }}>
       {flattened.map((event, index) => {
         const config = behaviorEventConfig[event.type];
         const Icon = config.icon;
         const isLast = index === flattened.length - 1;
 
         return (
-          <Box
+          <Box component="div"
             key={`${event.type}-${index}`}
             sx={{
               position: "relative",
@@ -36,7 +36,7 @@ export function BehaviorTimeline({ timeline }: BehaviorTimelineProps) {
             }}
           >
             {!isLast && (
-              <Box
+              <Box component="div"
                 sx={{
                   position: "absolute",
                   left: 15,
@@ -49,7 +49,7 @@ export function BehaviorTimeline({ timeline }: BehaviorTimelineProps) {
             )}
 
             {/* Icon */}
-            <Box
+            <Box component="div"
               sx={{
                 width: 32,
                 height: 32,
@@ -64,8 +64,8 @@ export function BehaviorTimeline({ timeline }: BehaviorTimelineProps) {
             </Box>
 
             {/* Content */}
-            <Box sx={{ flex: 1 }}>
-              <Box
+            <Box component="div" sx={{ flex: 1 }}>
+              <Box component="div"
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -81,7 +81,7 @@ export function BehaviorTimeline({ timeline }: BehaviorTimelineProps) {
               </Box>
 
               {event.durationMs && (
-                <Box
+                <Box component="div"
                   sx={{
                     mt: 1,
                     display: "inline-block",
@@ -98,7 +98,7 @@ export function BehaviorTimeline({ timeline }: BehaviorTimelineProps) {
               )}
 
               {event.count && (
-                <Box
+                <Box component="div"
                   sx={{
                     mt: 1,
                     fontSize: 12,

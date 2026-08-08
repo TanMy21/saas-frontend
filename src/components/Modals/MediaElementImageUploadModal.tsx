@@ -131,7 +131,7 @@ const MediaElementImageUploadModal = ({
       {isLoading ? (
         <UploadImageAnimation />
       ) : (
-        <Box
+        <Box component="div"
           sx={{
             position: "fixed",
             inset: 0,
@@ -143,7 +143,7 @@ const MediaElementImageUploadModal = ({
           }}
         >
           {/* Modal content box */}
-          <Box
+          <Box component="div"
             sx={{
               position: "relative",
               bgcolor: "common.white",
@@ -160,7 +160,7 @@ const MediaElementImageUploadModal = ({
             }}
           >
             {/* Header */}
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -171,7 +171,7 @@ const MediaElementImageUploadModal = ({
               }}
             >
               <Stack direction="row" spacing={1.5} alignItems="center">
-                <Box sx={{ p: 1, bgcolor: "blue.50", borderRadius: 2 }}>
+                <Box component="div" sx={{ p: 1, bgcolor: "blue.50", borderRadius: 2 }}>
                   <ImageIcon size={28} color="#2563eb" />
                 </Box>
                 <Typography
@@ -198,10 +198,10 @@ const MediaElementImageUploadModal = ({
             </Box>
 
             {/* Content */}
-            <Box sx={{ p: 3 }}>
+            <Box component="div" sx={{ p: 3 }}>
               {preview ? (
-                <Box>
-                  <Box
+                <Box component="div">
+                  <Box component="div"
                     sx={{
                       position: "relative",
                       overflow: "hidden",
@@ -243,7 +243,7 @@ const MediaElementImageUploadModal = ({
                       <Trash2 size={16} />
                     </IconButton>
                   </Box>
-                  <Box sx={{ mt: 2, textAlign: "center", color: "grey.600" }}>
+                  <Box component="div" sx={{ mt: 2, textAlign: "center", color: "grey.600" }}>
                     <Typography fontWeight={500}>
                       {selectedFile?.name}
                     </Typography>
@@ -253,7 +253,7 @@ const MediaElementImageUploadModal = ({
                   </Box>
                 </Box>
               ) : (
-                <Box
+                <Box component="div"
                   onDragEnter={handleDragEnter}
                   onDragLeave={handleDragLeave}
                   onDragOver={handleDragOver}
@@ -285,7 +285,7 @@ const MediaElementImageUploadModal = ({
                   />
 
                   <Stack spacing={2} alignItems="center">
-                    <Box
+                    <Box component="div"
                       sx={{
                         p: 2,
                         borderRadius: "50%",
@@ -298,7 +298,7 @@ const MediaElementImageUploadModal = ({
                         color={isDragOver ? "#2563eb" : "#6b7280"}
                       />
                     </Box>
-                    <Box>
+                    <Box component="div">
                       <Typography
                         variant="body1"
                         sx={{ fontWeight: 600, color: "grey.900", mb: 1 }}
@@ -321,7 +321,7 @@ const MediaElementImageUploadModal = ({
                         </Typography>
                       </Typography>
                     </Box>
-                    <Box
+                    <Box component="div"
                       sx={{
                         fontSize: 14,
                         color: "grey.500",
@@ -339,7 +339,7 @@ const MediaElementImageUploadModal = ({
             </Box>
 
             {/* Footer */}
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",

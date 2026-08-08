@@ -18,7 +18,7 @@ const CheckBoxElement = ({ qID, display, showQuestion }: ElementProps) => {
         {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
       <ResponseContainer display={display}>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",

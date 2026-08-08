@@ -15,7 +15,7 @@ export const DropdownOptionManager = ({
   onDelete,
 }: DropdownOptionManagerProps) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid #E2E8F0",
         borderRadius: 2,
@@ -47,7 +47,7 @@ export const DropdownOptionManager = ({
       >
         <Droppable droppableId={`dropdown-options-${qID}`}>
           {(provided) => (
-            <Box
+            <Box component="div"
               ref={provided.innerRef}
               {...provided.droppableProps}
               sx={{
@@ -64,7 +64,7 @@ export const DropdownOptionManager = ({
                   isDragDisabled={!canReorder}
                 >
                   {(provided) => (
-                    <Box
+                    <Box component="div"
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}

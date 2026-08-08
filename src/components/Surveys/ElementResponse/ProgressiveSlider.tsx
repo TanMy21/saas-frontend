@@ -107,7 +107,7 @@ const ProgressiveSlider = () => {
       const tickSize = getTickSize(i);
 
       visibleTicks.push(
-        <Box
+        <Box component="div"
           key={`tick-${mark.value}`}
           sx={{
             position: "absolute",
@@ -125,7 +125,7 @@ const ProgressiveSlider = () => {
       );
 
       labels.push(
-        <Box
+        <Box component="div"
           key={`label-${mark.value}`}
           sx={{
             position: "absolute",
@@ -150,7 +150,7 @@ const ProgressiveSlider = () => {
         const endPercent = valueToPercent(marks[i + 1].value, min, max);
 
         segments.push(
-          <Box
+          <Box component="div"
             key={`segment-${i}`}
             sx={{
               position: "absolute",
@@ -176,8 +176,8 @@ const ProgressiveSlider = () => {
   }, [value, min, max, marks]);
 
   return (
-    <Box sx={{ width: "100%", py: 4, px: 2 }}>
-      <Box sx={{ position: "relative", height: "40px", mb: 3 }}>
+    <Box component="div" sx={{ width: "100%", py: 4, px: 2 }}>
+      <Box component="div" sx={{ position: "relative", height: "40px", mb: 3 }}>
         <CustomTrackContainer>
           {sliderElements.segments}
           {sliderElements.visibleTicks}
@@ -208,7 +208,7 @@ const ProgressiveSlider = () => {
           }}
         />
 
-        <Box sx={{ position: "relative", height: "20px" }}>
+        <Box component="div" sx={{ position: "relative", height: "20px" }}>
           {sliderElements.labels}
         </Box>
       </Box>

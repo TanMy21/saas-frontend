@@ -281,7 +281,7 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
         aria-controls="concept-fit-display-settings-content"
         id="concept-fit-display-settings-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -310,7 +310,7 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
             pointerEvents: canEditQuestion ? "auto" : "none",
           }}
         >
-          <Box>
+          <Box component="div">
             <Typography
               sx={{
                 fontWeight: 700,
@@ -389,7 +389,7 @@ const ConceptFitDisplaySettings = ({ qID }: ElementSettingsProps) => {
             name="timeLimitSeconds"
             control={control}
             render={({ field }) => (
-              <Box>
+              <Box component="div">
                 <Typography
                   sx={{
                     fontWeight: 700,

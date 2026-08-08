@@ -20,7 +20,7 @@ export const SummaryCard = ({
       justifyContent: "space-between",
     }}
   >
-    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Box component="div" sx={{ display: "flex", justifyContent: "space-between" }}>
       <Typography variant="caption" fontWeight={700} color="text.secondary">
         {label}
       </Typography>
@@ -32,7 +32,7 @@ export const SummaryCard = ({
       )}
     </Box>
 
-    <Box>
+    <Box component="div">
       <Typography variant="h6" fontWeight={700}>
         {value}
       </Typography>

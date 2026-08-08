@@ -383,7 +383,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
           aria-controls="typography-settings"
           id="typography-settings-header"
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -399,7 +399,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
         </AccordionSummary>
 
         <AccordionDetails sx={{ px: { md: 2, xl: 1 }, pb: 2 }}>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -409,7 +409,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
               pointerEvents: canEditQuestion ? "auto" : "none",
             }}
           >
-            <Box sx={{ mb: 2 }}>
+            <Box component="div" sx={{ mb: 2 }}>
               <Typography
                 variant="subtitle1"
                 fontWeight={600}
@@ -419,7 +419,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                 Title
               </Typography>
 
-              <Box
+              <Box component="div"
                 sx={{
                   display: "flex",
                   flexDirection: "column",
@@ -428,7 +428,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                   width: "96%",
                 }}
               >
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -447,7 +447,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                       color: "#444D5C",
                     }}
                   >
-                    <Box sx={{ display: { md: "none" } }}>
+                    <Box component="div" sx={{ display: { md: "none" } }}>
                       <FiType
                         style={{
                           marginBottom: "1%",
@@ -458,12 +458,12 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     Font size
                   </Typography>
 
-                  <Box>
+                  <Box component="div">
                     <FontSizeViewToggle />
                   </Box>
                 </Box>
 
-                <Box>
+                <Box component="div">
                   <FontSizeControl
                     key={titleKey}
                     name={titleKey}
@@ -476,7 +476,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
               </Box>
             </Box>
 
-            <Box>
+            <Box component="div">
               <Typography
                 variant="subtitle1"
                 fontWeight={600}
@@ -486,7 +486,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                 Description
               </Typography>
 
-              <Box
+              <Box component="div"
                 sx={{
                   display: "flex",
                   flexDirection: "column",
@@ -495,7 +495,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                   width: "96%",
                 }}
               >
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -514,7 +514,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                       color: "#444D5C",
                     }}
                   >
-                    <Box sx={{ display: { md: "none" } }}>
+                    <Box component="div" sx={{ display: { md: "none" } }}>
                       <FiType
                         style={{
                           marginBottom: "1%",
@@ -525,12 +525,12 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
                     Font size
                   </Typography>
 
-                  <Box>
+                  <Box component="div">
                     <FontSizeViewToggle />
                   </Box>
                 </Box>
 
-                <Box>
+                <Box component="div">
                   <FontSizeControl
                     key={descriptionKey}
                     name={descriptionKey}
@@ -544,7 +544,7 @@ const ScreenTypographySettings = ({ qID }: ScreenTypographySettingsProps) => {
             </Box>
 
             {saveStatus !== "idle" && (
-              <Box sx={{ mt: 1.5 }}>
+              <Box component="div" sx={{ mt: 1.5 }}>
                 <SettingSaveStatus
                   state={isSavingTypography ? "saving" : saveStatus}
                 />

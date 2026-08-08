@@ -1,7 +1,7 @@
 import { Box, Skeleton } from "@mui/material";
 
 export const SummarySkeleton = () => (
-  <Box
+  <Box component="div"
     p={3}
     borderRadius={2}
     border="1px solid"

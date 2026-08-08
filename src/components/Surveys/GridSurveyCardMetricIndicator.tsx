@@ -9,7 +9,7 @@ const GridSurveyCardMetricIndicator = ({
 }: SurveyCardMetricIndicatorProps) => {
   const { background, textStyles } = useAppTheme();
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -25,7 +25,7 @@ const GridSurveyCardMetricIndicator = ({
         padding: { xs: 0.5, sm: 1},
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -38,7 +38,7 @@ const GridSurveyCardMetricIndicator = ({
       >
         <Typography sx={textStyles.metricLabelValue}>{value}</Typography>
       </Box>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "center",

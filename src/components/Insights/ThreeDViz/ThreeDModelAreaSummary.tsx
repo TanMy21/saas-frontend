@@ -16,14 +16,14 @@ export const ThreeDModelAreaSummary = ({
   }
 
   return (
-    <Box>
+    <Box component="div">
       <Typography fontWeight={700} mb={1}>
         Most interacted model areas
       </Typography>
 
-      <Box display="flex" flexDirection="column" gap={1}>
+      <Box component="div" display="flex" flexDirection="column" gap={1}>
         {areas.map((area) => (
-          <Box
+          <Box component="div"
             key={`${area.meshName}-${area.materialName ?? "none"}`}
             sx={{
               display: "flex",
@@ -36,8 +36,8 @@ export const ThreeDModelAreaSummary = ({
               bgcolor: `${area.color}10`,
             }}
           >
-            <Box display="flex" alignItems="flex-start" gap={1.25}>
-              <Box
+            <Box component="div" display="flex" alignItems="flex-start" gap={1.25}>
+              <Box component="div"
                 sx={{
                   width: 10,
                   height: 10,
@@ -48,7 +48,7 @@ export const ThreeDModelAreaSummary = ({
                 }}
               />
 
-              <Box>
+              <Box component="div">
                 <Typography fontWeight={600}>{area.label}</Typography>
 
                 <Typography fontSize={12} color="text.secondary">

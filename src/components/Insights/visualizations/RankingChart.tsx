@@ -29,13 +29,13 @@ export const RankingChart = ({ question }: RankingChartProps) => {
   // const maxLast = Math.max(...question.options.map((o) => o.lastPlace)) || 0;
 
   return (
-    <Box display="flex" flexDirection="column" gap={1.5}>
+    <Box component="div" display="flex" flexDirection="column" gap={1.5}>
       <Typography fontSize={14} fontWeight={600} color="text.secondary">
         Ranked by top preference
       </Typography>
 
       {/* Scroll container */}
-      <Box
+      <Box component="div"
         sx={{
           pr: 1,
           ...scrollStyles.elementsPanel,
@@ -51,7 +51,7 @@ export const RankingChart = ({ question }: RankingChartProps) => {
           const data = [{ value: strength }];
 
           return (
-            <Box
+            <Box component="div"
               key={option.optionID}
               sx={{
                 display: "grid",
@@ -64,7 +64,7 @@ export const RankingChart = ({ question }: RankingChartProps) => {
               }}
             >
               {/* ───── Rank / Medal ───── */}
-              <Box display="flex" justifyContent="center" pt={0.5}>
+              <Box component="div" display="flex" justifyContent="center" pt={0.5}>
                 {index < 3 ? (
                   <Medal size={20} color={medalColors[index]} />
                 ) : (
@@ -79,7 +79,7 @@ export const RankingChart = ({ question }: RankingChartProps) => {
               </Box>
 
               {/* ───── Middle Column ───── */}
-              <Box display="flex" flexDirection="column" gap={0.5}>
+              <Box component="div" display="flex" flexDirection="column" gap={0.5}>
                 {/* Label */}
                 <Typography fontSize={16} fontWeight={600} noWrap>
                   {option.label}
@@ -105,7 +105,7 @@ export const RankingChart = ({ question }: RankingChartProps) => {
                 )} */}
 
                 {/* Bar */}
-                <Box sx={{ height: 16, mt: 0.5 }}>
+                <Box component="div" sx={{ height: 16, mt: 0.5 }}>
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={data}
@@ -127,7 +127,7 @@ export const RankingChart = ({ question }: RankingChartProps) => {
               </Box>
 
               {/* ───── Right Column ───── */}
-              <Box
+              <Box component="div"
                 display="flex"
                 justifyContent="flex-end"
                 alignItems="flex-start"

@@ -23,7 +23,7 @@ const SpinnerBackdrop = () => {
         backdropFilter: "blur(6px)",
       })}
     >
-      <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
+      <Box component="div" display="flex" flexDirection="column" alignItems="center" gap={1}>
         <CircularProgress size={48} />
         <Typography
           variant="body2"

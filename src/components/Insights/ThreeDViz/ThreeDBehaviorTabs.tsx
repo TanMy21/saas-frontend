@@ -24,7 +24,7 @@ export function ThreeDBehaviorDetailsTabs({
   const [activeTab, setActiveTab] = useState<ThreeDInsightTab>("by-answer");
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid",
         borderColor: "divider",
@@ -33,7 +33,7 @@ export function ThreeDBehaviorDetailsTabs({
         p: 2,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "inline-flex",
           alignItems: "center",
@@ -93,7 +93,7 @@ export function ThreeDBehaviorDetailsTabs({
       </Box>
 
       {/* Tab content */}
-      <Box sx={{ pt: 3 }}>
+      <Box component="div" sx={{ pt: 3 }}>
         {activeTab === "by-answer" && <ThreeDBehaviorByAnswer data={data} />}
 
         {activeTab === "viewport" && (

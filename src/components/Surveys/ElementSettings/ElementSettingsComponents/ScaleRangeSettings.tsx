@@ -267,7 +267,7 @@ const ScaleRangeSettings = () => {
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -285,7 +285,7 @@ const ScaleRangeSettings = () => {
       </AccordionSummary>
 
       <AccordionDetails>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -295,7 +295,7 @@ const ScaleRangeSettings = () => {
           }}
         >
           {/* MIN */}
-          <Box>
+          <Box component="div">
             <Controller
               name="minValue"
               control={control}
@@ -366,7 +366,7 @@ const ScaleRangeSettings = () => {
             />
           </Box>
 
-          <Box
+          <Box component="div"
             sx={{
               fontSize: "20px",
               fontWeight: 600,
@@ -378,7 +378,7 @@ const ScaleRangeSettings = () => {
           </Box>
 
           {/* MAX */}
-          <Box>
+          <Box component="div">
             <Controller
               name="maxValue"
               control={control}
@@ -456,7 +456,7 @@ const ScaleRangeSettings = () => {
         </Box>
 
         {saveStatus !== "idle" && (
-          <Box sx={{ mt: 0.5 }}>
+          <Box component="div" sx={{ mt: 0.5 }}>
             <SettingSaveStatus
               state={isSavingScaleRange ? "saving" : saveStatus}
             />

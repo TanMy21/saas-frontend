@@ -29,7 +29,7 @@ export const BinaryChart = ({ question }: BinaryChartProps) => {
   const noWidth = noPercent === 100 ? "100%" : `${noPercent}%`;
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         maxWidth: 720,
@@ -41,7 +41,7 @@ export const BinaryChart = ({ question }: BinaryChartProps) => {
         // border:"2px solid black",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           height: 88,
@@ -52,7 +52,7 @@ export const BinaryChart = ({ question }: BinaryChartProps) => {
         }}
       >
         {/* YES */}
-        <Box
+        <Box component="div"
           sx={{
             width: animate ? yesWidth : "50%",
             transition: "width 0.9s cubic-bezier(0.2,0.8,0.2,1)",
@@ -71,7 +71,7 @@ export const BinaryChart = ({ question }: BinaryChartProps) => {
         </Box>
 
         {/* NO */}
-        <Box
+        <Box component="div"
           sx={{
             width: animate ? noWidth : "50%",
             transition: "width 0.9s cubic-bezier(0.2,0.8,0.2,1)",
@@ -90,7 +90,7 @@ export const BinaryChart = ({ question }: BinaryChartProps) => {
         </Box>
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -98,7 +98,7 @@ export const BinaryChart = ({ question }: BinaryChartProps) => {
         }}
       >
         {/* Yes legend */}
-        <Box>
+        <Box component="div">
           <Typography fontSize={14} fontWeight={600}>
             {result?.left?.label || "Yes"}
           </Typography>
@@ -109,7 +109,7 @@ export const BinaryChart = ({ question }: BinaryChartProps) => {
         </Box>
 
         {/* No legend */}
-        <Box textAlign="right">
+        <Box component="div" textAlign="right">
           <Typography fontSize={14} fontWeight={600}>
             {result?.right?.label || "No"}
           </Typography>

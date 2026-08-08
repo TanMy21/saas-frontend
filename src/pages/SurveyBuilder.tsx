@@ -175,7 +175,7 @@ const SurveyBuilder = () => {
 
   if (isLoadingCanvas)
     return (
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           width: "100%",
@@ -193,7 +193,7 @@ const SurveyBuilder = () => {
     <>
       {/* <ScrollbarStyle /> */}
       <SurveyCanvasRefetchContext.Provider value={refetchCanvas}>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -204,7 +204,7 @@ const SurveyBuilder = () => {
           }}
         >
           {/* Header */}
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               width: "100%",
@@ -222,7 +222,7 @@ const SurveyBuilder = () => {
             />
           </Box>
           {/* Builder */}
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -233,7 +233,7 @@ const SurveyBuilder = () => {
               overflow: "hidden",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 width: "16%",
                 height: "94vh",
@@ -247,7 +247,7 @@ const SurveyBuilder = () => {
                 elements={elements}
               />
             </Box>
-            <Box
+            <Box component="div"
               sx={{
                 width: { md: "64%", xl: "68%" },
                 height: "94vh",
@@ -265,7 +265,7 @@ const SurveyBuilder = () => {
                 onOpenImport={() => setOpenImportLocal(true)}
               />
             </Box>
-            <Box
+            <Box component="div"
               sx={{
                 width: { md: "24%", xl: "16%" },
                 height: "100%",

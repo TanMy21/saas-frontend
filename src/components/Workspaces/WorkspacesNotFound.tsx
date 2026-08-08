@@ -16,7 +16,7 @@ const WorkspacesNotFound = ({ handleOpen, setStepIndex }: WorkspacesProp) => {
           height: "400",
         }}
       >
-        <Box
+        <Box component="div"
           display={"flex"}
           flexDirection={"column"}
           justifyItems={"center"}
@@ -26,13 +26,13 @@ const WorkspacesNotFound = ({ handleOpen, setStepIndex }: WorkspacesProp) => {
             height: "72vh",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               width: "80%",
               height: "88%",
             }}
           >
-            <Box mt={2}>
+            <Box component="div" mt={2}>
               <Typography
                 variant="h5"
                 align="center"
@@ -45,7 +45,7 @@ const WorkspacesNotFound = ({ handleOpen, setStepIndex }: WorkspacesProp) => {
                 No workspace found
               </Typography>
             </Box>
-            <Box
+            <Box component="div"
               display={"flex"}
               flexDirection={"column"}
               justifyItems={"center"}
@@ -58,7 +58,7 @@ const WorkspacesNotFound = ({ handleOpen, setStepIndex }: WorkspacesProp) => {
                 setStepIndex={setStepIndex}
               />
             </Box>
-            <Box
+            <Box component="div"
               display={"flex"}
               flexDirection={"column"}
               justifyItems={"center"}

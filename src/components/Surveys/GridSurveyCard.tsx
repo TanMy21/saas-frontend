@@ -24,7 +24,7 @@ const GridSurveyCard = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       key={survey.surveyID}
       sx={{
         display: "flex",
@@ -56,7 +56,7 @@ const GridSurveyCard = ({
         },
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -66,7 +66,7 @@ const GridSurveyCard = ({
           // border: "2px solid red",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -96,7 +96,7 @@ const GridSurveyCard = ({
               // border: "2px solid blue",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "flex-start",
@@ -118,7 +118,7 @@ const GridSurveyCard = ({
               created: {formatDate(survey.createdAt)}
             </Typography>
           </ButtonBase>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -137,7 +137,7 @@ const GridSurveyCard = ({
           </Box>
         </Box>
         {/* Divider */}
-        <Box
+        <Box component="div"
           sx={{
             width: "98%",
             mx: "auto",
@@ -148,7 +148,7 @@ const GridSurveyCard = ({
         />
 
         {/* Metrics */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -182,7 +182,7 @@ const GridSurveyCard = ({
           </ButtonBase>
         </Box>
       </Box>
-      <Box
+      <Box component="div"
         sx={{
           pointerEvents: "none",
           position: "absolute",

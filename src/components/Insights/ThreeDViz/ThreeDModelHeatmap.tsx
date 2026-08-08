@@ -9,7 +9,7 @@ export function ThreeDModelHeatmapLegend({
 }) {
   if (!clickedMeshes.length) {
     return (
-      <Box sx={{ p: 2, borderTop: "1px solid", borderColor: "divider" }}>
+      <Box component="div" sx={{ p: 2, borderTop: "1px solid", borderColor: "divider" }}>
         <Typography color="text.secondary" fontSize={13}>
           No direct model area clicks were recorded.
         </Typography>
@@ -18,14 +18,14 @@ export function ThreeDModelHeatmapLegend({
   }
 
   return (
-    <Box sx={{ p: 2, borderTop: "1px solid", borderColor: "divider" }}>
+    <Box component="div" sx={{ p: 2, borderTop: "1px solid", borderColor: "divider" }}>
       <Typography fontSize={13} fontWeight={700} mb={1}>
         Highlighted generic areas
       </Typography>
 
-      <Box display="flex" flexDirection="column" gap={1}>
+      <Box component="div" display="flex" flexDirection="column" gap={1}>
         {clickedMeshes.slice(0, 6).map((area) => (
-          <Box
+          <Box component="div"
             key={`${area.meshName}-${area.materialName ?? "none"}`}
             sx={{
               display: "flex",
@@ -38,8 +38,8 @@ export function ThreeDModelHeatmapLegend({
               gap: 2,
             }}
           >
-            <Box>
-              <Box display="flex" alignItems="center" gap={1}>
+            <Box component="div">
+              <Box component="div" display="flex" alignItems="center" gap={1}>
                 <Typography fontSize={13} fontWeight={600}>
                   {area.label}
                 </Typography>

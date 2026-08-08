@@ -35,7 +35,7 @@ const WelcomeScreenElement = ({ display, showQuestion }: ElementProps) => {
         display={display}
         widthOverride={display === "mobile" ? "98%" : "8px"}
       >
-        <Box
+        <Box component="div"
           sx={{
             transformOrigin: "bottom",
             display: "flex",
@@ -91,7 +91,7 @@ const WelcomeScreenElement = ({ display, showQuestion }: ElementProps) => {
               {buttonText}
             </Box>
 
-            <Box
+            <Box component="div"
               className="hover-icon"
               sx={{
                 width: 0,

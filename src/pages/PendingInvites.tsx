@@ -74,7 +74,7 @@ export const PendingInvites = () => {
 
   if (isLoading) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           height: "100vh",
@@ -89,7 +89,7 @@ export const PendingInvites = () => {
 
   if (!invites.length) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           height: "100vh",
@@ -103,7 +103,7 @@ export const PendingInvites = () => {
   }
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         minHeight: "100vh",
         display: "flex",

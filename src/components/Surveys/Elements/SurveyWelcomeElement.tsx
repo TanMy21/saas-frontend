@@ -10,7 +10,7 @@ const SurveyWelcomeElement = ({ display }: SurveyWelcomeElementProps) => {
   const subtextFontSize = display === "mobile" ? "16px" : "20px";
 
   return (
-    <Box
+    <Box component="div"
       display={"flex"}
       flexDirection={"column"}
       justifyContent={"start"}
@@ -21,7 +21,7 @@ const SurveyWelcomeElement = ({ display }: SurveyWelcomeElementProps) => {
       zIndex={20}
       // border={"2px solid red"}
     >
-      <Box
+      <Box component="div"
         display={"flex"}
         flexDirection={"column"}
         justifyContent={"flex-end"}
@@ -33,7 +33,7 @@ const SurveyWelcomeElement = ({ display }: SurveyWelcomeElementProps) => {
           <GoArrowUpLeft />
         </Typography>
       </Box>
-      <Box
+      <Box component="div"
         display={"flex"}
         flexDirection={"column"}
         justifyContent={"start"}

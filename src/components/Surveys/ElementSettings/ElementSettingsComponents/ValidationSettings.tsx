@@ -120,7 +120,7 @@ const ValidationSettings = () => {
           aria-controls="panel1-content"
           id="panel1-header"
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -137,7 +137,7 @@ const ValidationSettings = () => {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -148,7 +148,7 @@ const ValidationSettings = () => {
               // border: "2px solid red",
             }}
           >
-            <Box
+            <Box component="div"
               mt={1}
               sx={{
                 display: "flex",
@@ -160,8 +160,8 @@ const ValidationSettings = () => {
                 height: "80%",
               }}
             >
-              <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>Required</Box>
-              <Box mt={1}>
+              <Box component="div" sx={{ fontWeight: 500, color: "#3F3F46" }}>Required</Box>
+              <Box component="div" mt={1}>
                 <Controller
                   name="required"
                   control={control}

@@ -8,7 +8,7 @@ export const Stat = ({
   value: number | string;
 }) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         borderRadius: 2,
         bgcolor: "action.hover",

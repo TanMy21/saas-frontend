@@ -68,13 +68,13 @@ export default function SecurityTab() {
   });
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "92%",
         p: { xs: 2.5, sm: 4 },
       }}
     >
-      <Box sx={{ mb: 4 }}>
+      <Box component="div" sx={{ mb: 4 }}>
         <Typography
           component="h2"
           sx={{
@@ -101,7 +101,7 @@ export default function SecurityTab() {
       </Box>
 
       <form onSubmit={handleSubmit(submitUpdatedPassword)}>
-        <Box sx={passwordSectionSx}>
+        <Box component="div" sx={passwordSectionSx}>
           <Stack spacing={2.25}>
             <LabeledField
               topLabel="Current password"
@@ -152,7 +152,7 @@ export default function SecurityTab() {
             />
           </Stack>
 
-          <Box
+          <Box component="div"
             sx={{
               mt: 3,
               pt: 2.5,

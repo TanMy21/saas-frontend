@@ -171,7 +171,7 @@ const WorkspaceConsole = ({
   });
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -183,7 +183,7 @@ const WorkspaceConsole = ({
         // border: "2px solid blue",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "row",
@@ -216,7 +216,7 @@ const WorkspaceConsole = ({
           setSelectedWorkspace={setSelectedWorkspace}
         />
       </Box>
-      <Box
+      <Box component="div"
         ref={containerRef}
         sx={{
           position: "relative",
@@ -232,7 +232,7 @@ const WorkspaceConsole = ({
         }}
       >
         {isFetching && !isLoading && (
-          <Box
+          <Box component="div"
             sx={{
               position: "absolute",
               top: 12,
@@ -264,7 +264,7 @@ const WorkspaceConsole = ({
           />
         )}
       </Box>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "row",
@@ -281,7 +281,7 @@ const WorkspaceConsole = ({
           timeout={300}
           unmountOnExit
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "row",

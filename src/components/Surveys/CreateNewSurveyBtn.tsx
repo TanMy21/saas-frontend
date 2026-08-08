@@ -13,7 +13,7 @@ const CreateNewSurveyBtn = ({ workspaceId, workspaceName }: NewSurveyProps) => {
 
   return (
     <>
-      <Box>
+      <Box component="div">
         <Button
           sx={{
             display: "flex",

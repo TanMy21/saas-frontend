@@ -34,7 +34,7 @@ export const MutateConfirmationDialog = ({
         }}
       >
         {/* Warning badge */}
-        <Box
+        <Box component="div"
           sx={{
             width: 40,
             height: 40,

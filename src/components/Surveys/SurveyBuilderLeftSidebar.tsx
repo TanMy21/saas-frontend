@@ -35,7 +35,7 @@ const SurveyBuilderLeftSidebar = ({
   }, [elements]);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -45,7 +45,7 @@ const SurveyBuilderLeftSidebar = ({
         overflow: "hidden",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "row",
@@ -59,7 +59,7 @@ const SurveyBuilderLeftSidebar = ({
         }}
       >
         {/* Menu */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -72,7 +72,7 @@ const SurveyBuilderLeftSidebar = ({
             mx: "auto",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -94,7 +94,7 @@ const SurveyBuilderLeftSidebar = ({
             >
               Questions
             </Typography>
-            <Box
+            <Box component="div"
               aria-label={`question count ${questionCount}`}
               sx={{
                 px: 1,
@@ -111,7 +111,7 @@ const SurveyBuilderLeftSidebar = ({
               {questionCount}
             </Box>
           </Box>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",

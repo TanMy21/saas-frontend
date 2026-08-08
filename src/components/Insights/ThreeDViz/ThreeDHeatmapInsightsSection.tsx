@@ -13,7 +13,7 @@ export function ThreeDHeatmapInsightsSection({
   activeHeatmapData,
 }: ThreeDHeatmapInsightsSectionProps) {
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "grid",
         gridTemplateColumns: { xs: "1fr", lg: "1.6fr 1fr" },

@@ -8,7 +8,7 @@ export const DangerModalShell = ({
   children,
 }: DangerModalShellProps) => (
   <Modal open={open} onClose={onClose} disableEnforceFocus>
-    <Box
+    <Box component="div"
       sx={{
         position: "fixed",
         inset: 0,
@@ -19,7 +19,7 @@ export const DangerModalShell = ({
         p: 2,
       }}
     >
-      <Box
+      <Box component="div"
         onClick={onClose}
         sx={{
           position: "absolute",
@@ -29,8 +29,8 @@ export const DangerModalShell = ({
         }}
       />
 
-      <Box sx={{ position: "relative", width: "100%", maxWidth: 500 }}>
-        <Box
+      <Box component="div" sx={{ position: "relative", width: "100%", maxWidth: 500 }}>
+        <Box component="div"
           sx={{
             bgcolor: "#fff",
             borderRadius: 2,

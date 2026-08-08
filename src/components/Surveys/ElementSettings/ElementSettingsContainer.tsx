@@ -25,7 +25,7 @@ const ElementSettingsContainer = ({
   return (
     <>
       <PermissionContext.Provider value={{ canEditQuestion }}>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -41,7 +41,7 @@ const ElementSettingsContainer = ({
           {question?.type && questionId && ElementSettingsComponent && (
             <Suspense
               fallback={
-                <Box
+                <Box component="div"
                   sx={{
                     minHeight: 160,
                     display: "flex",

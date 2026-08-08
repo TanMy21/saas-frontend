@@ -52,10 +52,10 @@ const WorkspacesDropDownMenu = ({
   };
 
   return (
-    <Box sx={{ maxWidth: "360px", mx: "auto" }}>
+    <Box component="div" sx={{ maxWidth: "360px", mx: "auto" }}>
       {/* Header with Dropdown */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Box sx={{ flex: 1, position: "relative" }}>
+      <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box component="div" sx={{ flex: 1, position: "relative" }}>
           <Button onClick={handleClick} variant="headerBtn1">
             {selectedWorkspace?.name || "Select Workspace"}
             <ExpandMoreIcon sx={iconStyle.expandMore} />
@@ -78,7 +78,7 @@ const WorkspacesDropDownMenu = ({
               },
             }}
           >
-            <Box sx={{ px: 2, py: 1 }}>
+            <Box component="div" sx={{ px: 2, py: 1 }}>
               <Typography variant="caption" sx={{ color: grey[700] }}>
                 YOUR WORKSPACES
               </Typography>
@@ -118,7 +118,7 @@ const WorkspacesDropDownMenu = ({
                 </MenuItem>
               ))}
             {hasArchived && archiveWorkspace && (
-              <Box>
+              <Box component="div">
                 <Divider sx={{ my: 0.5 }} />
                 <MenuItem
                   disabled={archivedCount === 0}
@@ -143,7 +143,7 @@ const WorkspacesDropDownMenu = ({
                 >
                   <Archive fontSize="small" />
                   Archived{" "}
-                  <Box sx={{ fontSize: 18, fontWeight: 600 }}>
+                  <Box component="div" sx={{ fontSize: 18, fontWeight: 600 }}>
                     {`(${archivedCount})`}
                   </Box>
                 </MenuItem>

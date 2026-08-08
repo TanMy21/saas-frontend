@@ -45,7 +45,7 @@ const AddMenuItem = ({
       disabled={Boolean(isLoading || item.disabled)}
       title={item.title || ""}
     >
-      <Box display="flex" alignItems="center" gap={1.25}>
+      <Box component="div" display="flex" alignItems="center" gap={1.25}>
         <Typography sx={{ fontSize: 24, color: item.color, lineHeight: 1 }}>
           {item.icon}
         </Typography>
@@ -74,7 +74,7 @@ const AddMenuSection = ({
 }) => {
   return (
     <>
-      <Box sx={{ px: 1, py: 0.75 }}>
+      <Box component="div" sx={{ px: 1, py: 0.75 }}>
         <Typography
           sx={{
             fontSize: 12,
@@ -311,7 +311,7 @@ const AddElementMenu = ({
               />
             )}
 
-            <Box sx={{ mt: 1 }}>
+            <Box component="div" sx={{ mt: 1 }}>
               <AddMenuSection
                 title="Screens"
                 items={screenMenuItems}

@@ -13,7 +13,7 @@ const DeleteQuestionAlert = ({ open }: DeleteQuestionAlertProps) => {
         backdrop: { style: { backgroundColor: "rgba(0,0,0,0.35)" } },
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           position: "fixed",
           inset: 0,
@@ -23,7 +23,7 @@ const DeleteQuestionAlert = ({ open }: DeleteQuestionAlertProps) => {
           p: 2,
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             width: { xs: 320, sm: 360 },
             bgcolor: "#fff",
@@ -37,7 +37,7 @@ const DeleteQuestionAlert = ({ open }: DeleteQuestionAlertProps) => {
           }}
         >
           {/* Shredder animation */}
-          <Box
+          <Box component="div"
             sx={{
               width: 96,
               height: 118,
@@ -47,7 +47,7 @@ const DeleteQuestionAlert = ({ open }: DeleteQuestionAlertProps) => {
             }}
           >
             {/* The icon is confined to this area and cannot pass below the divider. */}
-            <Box
+            <Box component="div"
               sx={{
                 width: 64,
                 height: 52,
@@ -80,7 +80,7 @@ const DeleteQuestionAlert = ({ open }: DeleteQuestionAlertProps) => {
             />
 
             {/* Only shredded strips appear below the divider. */}
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 alignItems: "flex-start",

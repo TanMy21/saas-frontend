@@ -7,7 +7,7 @@ import {
 
 const MetricRow = ({ label, value }: { label: string; value: string }) => {
   return (
-    <Box display="flex" justifyContent="space-between" py={0.75}>
+    <Box component="div" display="flex" justifyContent="space-between" py={0.75}>
       <Typography fontSize={14} color="text.secondary">
         {label}
       </Typography>
@@ -26,7 +26,7 @@ const BehaviorGroupCard = ({
   summary: ThreeDBehaviorGroupSummary;
 }) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid",
         borderColor: "divider",
@@ -75,7 +75,7 @@ export const ThreeDBehaviorByAnswer = ({
   const dislike = data.behaviorByAnswer.dislike;
 
   return (
-    <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
+    <Box component="div" display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
       <BehaviorGroupCard title="Liked users" summary={like} />
       <BehaviorGroupCard title="Disliked users" summary={dislike} />
     </Box>

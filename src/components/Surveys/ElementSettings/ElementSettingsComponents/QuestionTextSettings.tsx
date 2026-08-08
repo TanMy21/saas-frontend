@@ -147,7 +147,7 @@ export const QuestionTextSettings = () => {
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -165,7 +165,7 @@ export const QuestionTextSettings = () => {
         </Box>
       </AccordionSummary>
       <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -175,8 +175,8 @@ export const QuestionTextSettings = () => {
             // border: "2px solid red",
           }}
         >
-          <Box sx={{ fontWeight: 500, color: "#3F3F46", mb: 1 }}>Text</Box>
-          <Box mt={1}>
+          <Box component="div" sx={{ fontWeight: 500, color: "#3F3F46", mb: 1 }}>Text</Box>
+          <Box component="div" mt={1}>
             <Controller
               name="questionText"
               control={control}

@@ -212,7 +212,7 @@ const NavigationButtonTextSettings = () => {
           aria-controls="navigation-button-settings-content"
           id="navigation-button-settings-header"
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -230,7 +230,7 @@ const NavigationButtonTextSettings = () => {
         </AccordionSummary>
 
         <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -241,11 +241,11 @@ const NavigationButtonTextSettings = () => {
               pointerEvents: canEditQuestion ? "auto" : "none",
             }}
           >
-            <Box sx={{ marginTop: "2%", fontWeight: 500, color: "#3F3F46" }}>
+            <Box component="div" sx={{ marginTop: "2%", fontWeight: 500, color: "#3F3F46" }}>
               Button
             </Box>
 
-            <Box mt={1}>
+            <Box component="div" mt={1}>
               <Controller
                 name="buttonText"
                 control={control}
@@ -279,7 +279,7 @@ const NavigationButtonTextSettings = () => {
                       disableUnderline: true,
                       endAdornment: (
                         <InputAdornment position="end">
-                          <Box
+                          <Box component="div"
                             sx={{
                               fontSize: "12px",
                               color: "#9E9E9E",
@@ -332,7 +332,7 @@ const NavigationButtonTextSettings = () => {
             </Box>
 
             {saveStatus !== "idle" && (
-              <Box sx={{ mt: 0.5 }}>
+              <Box component="div" sx={{ mt: 0.5 }}>
                 <SettingSaveStatus
                   state={
                     isSavingNavigationButtonText ? "saving" : saveStatus

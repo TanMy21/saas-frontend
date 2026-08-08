@@ -20,7 +20,7 @@ const BinaryResponseContainer = ({ display }: BinaryResponseProps) => {
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -34,7 +34,7 @@ const BinaryResponseContainer = ({ display }: BinaryResponseProps) => {
         // border: "2px solid green",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",

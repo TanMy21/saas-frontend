@@ -7,7 +7,7 @@ import { PairingRow } from "./PairingRow";
 
 export const ImplicitAssociationTestPairingPreview = () => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid #E2E8F0",
         borderRadius: 3,
@@ -19,7 +19,7 @@ export const ImplicitAssociationTestPairingPreview = () => {
         Pairing logic
       </Typography>
 
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+      <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
         <PairingRow
           label="Block 1"
           left={`${DEFAULT_IAT_PREVIEW.targetA} + ${DEFAULT_IAT_PREVIEW.attributeA}`}

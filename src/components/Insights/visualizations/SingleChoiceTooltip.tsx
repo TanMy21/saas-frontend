@@ -8,7 +8,7 @@ export const SingleChoiceTooltip = ({ active, payload, label }: any) => {
   const pct = Math.round(data.percentage);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         backgroundColor: "background.paper",
         borderRadius: 1,

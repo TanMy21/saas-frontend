@@ -56,7 +56,7 @@ export const TimedChoiceTimerPreview = ({ qID }: Pick<ElementProps, "qID">) => {
   }, [timeLimitMs, timeLimitSeconds]);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "90%",
         mx: "auto",
@@ -66,7 +66,7 @@ export const TimedChoiceTimerPreview = ({ qID }: Pick<ElementProps, "qID">) => {
         justifyContent: "flex-end",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           position: "relative",
           width: 38,
@@ -106,7 +106,7 @@ export const TimedChoiceTimerPreview = ({ qID }: Pick<ElementProps, "qID">) => {
           }}
         />
 
-        <Box
+        <Box component="div"
           sx={{
             width: 27,
             height: 27,

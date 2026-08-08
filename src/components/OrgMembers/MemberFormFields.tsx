@@ -48,7 +48,7 @@ export const MemberFormFields = ({
       />
 
       {/* Role */}
-      <Box>
+      <Box component="div">
         <Typography fontSize={14} fontWeight={600} mb={1}>
           Role
         </Typography>
@@ -73,7 +73,7 @@ export const MemberFormFields = ({
                 desc: "Can view and analyze data",
               },
             ].map((role) => (
-              <Box
+              <Box component="div"
                 key={role.value}
                 onClick={() => setValue("role", role.value)}
                 sx={{
@@ -92,7 +92,7 @@ export const MemberFormFields = ({
                       : "transparent",
                 }}
               >
-                <Box
+                <Box component="div"
                   sx={{
                     width: 16,
                     height: 16,
@@ -107,7 +107,7 @@ export const MemberFormFields = ({
                   }}
                 >
                   {roleValue === role.value && (
-                    <Box
+                    <Box component="div"
                       sx={{
                         width: 8,
                         height: 8,
@@ -118,7 +118,7 @@ export const MemberFormFields = ({
                   )}
                 </Box>
 
-                <Box>
+                <Box component="div">
                   <Typography fontSize={14} fontWeight={600}>
                     {role.label}
                   </Typography>
@@ -130,7 +130,7 @@ export const MemberFormFields = ({
             ))}
           </Stack>
         ) : (
-          <Box
+          <Box component="div"
             sx={{
               px: 2,
               py: 1.5,

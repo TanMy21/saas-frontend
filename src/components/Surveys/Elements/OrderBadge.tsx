@@ -12,7 +12,7 @@ export function OrderBadge({
 }: OrderBadgeProps) {
   if (!show) return null;
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         justifyContent: "center",

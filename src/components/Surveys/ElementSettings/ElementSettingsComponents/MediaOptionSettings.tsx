@@ -226,7 +226,7 @@ const MediaOptionSettings = () => {
         aria-controls="media-option-settings-content"
         id="media-option-settings-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -242,7 +242,7 @@ const MediaOptionSettings = () => {
       </AccordionSummary>
 
       <AccordionDetails>
-        <Box
+        <Box component="div"
           mt={1}
           sx={{
             display: "flex",
@@ -252,9 +252,9 @@ const MediaOptionSettings = () => {
             marginTop: "0%",
           }}
         >
-          <Box sx={{ fontWeight: 500 }}>Multiple selection</Box>
+          <Box component="div" sx={{ fontWeight: 500 }}>Multiple selection</Box>
 
-          <Box mt={1}>
+          <Box component="div" mt={1}>
             <Controller
               name="multipleSelection"
               control={control}
@@ -281,7 +281,7 @@ const MediaOptionSettings = () => {
         </Box>
 
         {saveStatus !== "idle" && (
-          <Box sx={{ mt: 0.5 }}>
+          <Box component="div" sx={{ mt: 0.5 }}>
             <SettingSaveStatus
               state={isSavingMediaOptions ? "saving" : saveStatus}
             />

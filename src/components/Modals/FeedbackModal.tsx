@@ -96,7 +96,7 @@ const FeedbackModal = ({ open, onClose }: FeedbackModalProps) => {
       />
 
       {/* Form */}
-      <Box sx={{ mt: 1.5 }}>
+      <Box component="div" sx={{ mt: 1.5 }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Title */}
           <FormField
@@ -130,7 +130,7 @@ const FeedbackModal = ({ open, onClose }: FeedbackModalProps) => {
           <FeedbackScreenshotUpload file={file} setFile={setFile} />
 
           {/* Footer */}
-          <Box
+          <Box component="div"
             sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}
           >
             <Button onClick={onClose} variant="modalCancelBtn">

@@ -44,6 +44,7 @@ export const EditLockConfirmProvider = ({
       <Dialog open={!!request} onClose={handleCancel} maxWidth="xs" fullWidth>
         <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Box
+            component="div"
             sx={{
               width: 36,
               height: 36,

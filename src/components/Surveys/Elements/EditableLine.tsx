@@ -258,7 +258,7 @@ export function EditableLine({
   const empty = isEmptyHTML(displayHTML);
 
   return (
-    <Box
+    <Box component="div"
       ref={containerRef}
       sx={{
         display: "flex",
@@ -327,7 +327,7 @@ export function EditableLine({
 
       {/* Formatting pill */}
       {showBar && canShowFormatPill && (
-        <Box
+        <Box component="div"
           sx={{
             position: "absolute",
             top: barPos.top,

@@ -65,7 +65,7 @@ const SurveyBuilderHeader = ({
       }}
     >
       <Toolbar disableGutters>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -78,7 +78,7 @@ const SurveyBuilderHeader = ({
         >
           {/* -------------------   Workspace name and survey title ------------------- */}
 
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -98,7 +98,7 @@ const SurveyBuilderHeader = ({
 
           {/* -------------------   Tabs ------------------------------------------- */}
 
-          <Box
+          <Box component="div"
             id="survey-builder-tabs"
             sx={{
               display: "flex",
@@ -120,7 +120,7 @@ const SurveyBuilderHeader = ({
 
           {/* -------------------  Header icon and publish button ------------------- */}
 
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",

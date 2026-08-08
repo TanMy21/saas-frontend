@@ -7,7 +7,7 @@ import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypograp
 
 const DropdownElementSettings = ({ qID }: ElementSettingsProps) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",

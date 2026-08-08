@@ -131,7 +131,7 @@ const QuestionImageUploadModal = ({
         },
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           position: "fixed",
           inset: 0,
@@ -143,7 +143,7 @@ const QuestionImageUploadModal = ({
         }}
       >
         {/* Modal content box */}
-        <Box
+        <Box component="div"
           sx={{
             position: "relative",
             bgcolor: "common.white",
@@ -160,7 +160,7 @@ const QuestionImageUploadModal = ({
           }}
         >
           {/* Header */}
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -171,7 +171,7 @@ const QuestionImageUploadModal = ({
             }}
           >
             <Stack direction="row" spacing={1.5} alignItems="center">
-              <Box sx={{ p: 1, bgcolor: "blue.50", borderRadius: 2 }}>
+              <Box component="div" sx={{ p: 1, bgcolor: "blue.50", borderRadius: 2 }}>
                 <ImageIcon size={28} color="#2563eb" />
               </Box>
               <Typography
@@ -198,10 +198,10 @@ const QuestionImageUploadModal = ({
           </Box>
 
           {/* Content */}
-          <Box sx={{ p: 3 }}>
+          <Box component="div" sx={{ p: 3 }}>
             {preview ? (
-              <Box>
-                <Box
+              <Box component="div">
+                <Box component="div"
                   sx={{
                     position: "relative",
                     overflow: "hidden",
@@ -243,7 +243,7 @@ const QuestionImageUploadModal = ({
                     <Trash2 size={16} />
                   </IconButton>
                 </Box>
-                <Box sx={{ mt: 2, textAlign: "center", color: "grey.600" }}>
+                <Box component="div" sx={{ mt: 2, textAlign: "center", color: "grey.600" }}>
                   <Typography fontWeight={500}>{selectedFile?.name}</Typography>
                   <Typography variant="body2">
                     {((selectedFile?.size || 0) / 1024 / 1024).toFixed(2)} MB
@@ -251,7 +251,7 @@ const QuestionImageUploadModal = ({
                 </Box>
               </Box>
             ) : (
-              <Box
+              <Box component="div"
                 onDragEnter={handleDragEnter}
                 onDragLeave={handleDragLeave}
                 onDragOver={handleDragOver}
@@ -283,7 +283,7 @@ const QuestionImageUploadModal = ({
                 />
 
                 <Stack spacing={2} alignItems="center">
-                  <Box
+                  <Box component="div"
                     sx={{
                       p: 2,
                       borderRadius: "50%",
@@ -296,7 +296,7 @@ const QuestionImageUploadModal = ({
                       color={isDragOver ? "#2563eb" : "#6b7280"}
                     />
                   </Box>
-                  <Box>
+                  <Box component="div">
                     <Typography
                       variant="body1"
                       sx={{ fontWeight: 600, color: "grey.900", mb: 1 }}
@@ -319,7 +319,7 @@ const QuestionImageUploadModal = ({
                       </Typography>
                     </Typography>
                   </Box>
-                  <Box
+                  <Box component="div"
                     sx={{
                       fontSize: 14,
                       color: "grey.500",
@@ -335,7 +335,7 @@ const QuestionImageUploadModal = ({
           </Box>
 
           {/* Footer */}
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               justifyContent: "flex-end",

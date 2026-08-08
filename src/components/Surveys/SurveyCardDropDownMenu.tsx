@@ -301,7 +301,7 @@ const SurveyCardDropDownMenu = ({
       >
         {/* Parent Menu */}
         {currentMenu === "parent" && (
-          <Box>
+          <Box component="div">
             <SurveyMenuItem
               icon={<SquareArrowOutUpRight />}
               label="Open"
@@ -400,7 +400,7 @@ const SurveyCardDropDownMenu = ({
 
         {/* Nested Copy To Menu */}
         {currentMenu === "copy to" && can?.("CREATE_SURVEY") && (
-          <Box>
+          <Box component="div">
             <SurveyMenuItem
               icon={<ChevronLeftIcon />}
               label="Copy To"
@@ -421,7 +421,7 @@ const SurveyCardDropDownMenu = ({
 
         {/* Nested Move To Menu */}
         {currentMenu === "move to" && can?.("UPDATE_SURVEY") && (
-          <Box>
+          <Box component="div">
             <SurveyMenuItem
               icon={<ChevronLeftIcon />}
               label="Move To"

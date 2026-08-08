@@ -20,7 +20,7 @@ const FlowFormOptions = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         alignItems: "center",
@@ -29,7 +29,7 @@ const FlowFormOptions = ({
       }}
     >
       {/* IF PILL */}
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           alignItems: "center",
@@ -57,7 +57,7 @@ const FlowFormOptions = ({
         </Typography>
 
         {/* CONDITION TYPE SELECT */}
-        <Box sx={{ width: "110px", flexShrink: 0 }}>
+        <Box component="div" sx={{ width: "110px", flexShrink: 0 }}>
           <Select
             disabled={readOnly}
             {...register(`conditions.${blockIndex}.conditionType`)}
@@ -67,7 +67,7 @@ const FlowFormOptions = ({
               const label = conditionLabelMap[selected] || "";
               return (
                 <Tooltip title={label} arrow>
-                  <Box
+                  <Box component="div"
                     sx={{
                       whiteSpace: "nowrap",
                       overflow: "hidden",
@@ -108,7 +108,7 @@ const FlowFormOptions = ({
         </Box>
 
         {/* VALUE SELECT */}
-        <Box sx={{ width: "160px", flexShrink: 0 }}>
+        <Box component="div" sx={{ width: "160px", flexShrink: 0 }}>
           <Select
             disabled={readOnly}
             {...register(`conditions.${blockIndex}.conditionValue`)}
@@ -133,7 +133,7 @@ const FlowFormOptions = ({
               const label = selectedOption?.value || "";
               return (
                 <Tooltip title={label} arrow>
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       alignItems: "center",
@@ -142,10 +142,10 @@ const FlowFormOptions = ({
                     }}
                   >
                     {/* order */}
-                    <Box sx={{ flexShrink: 0 }}>{selectedOption?.order}</Box>
+                    <Box component="div" sx={{ flexShrink: 0 }}>{selectedOption?.order}</Box>
 
                     {/* text */}
-                    <Box
+                    <Box component="div"
                       sx={{
                         whiteSpace: "nowrap",
                         overflow: "hidden",
@@ -184,7 +184,7 @@ const FlowFormOptions = ({
                 value={option.value}
                 sx={{ mx: 0.5, borderRadius: "10px" }}
               >
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -194,10 +194,10 @@ const FlowFormOptions = ({
                   }}
                 >
                   {/* order */}
-                  <Box sx={{ flexShrink: 0 }}>{option.order}</Box>
+                  <Box component="div" sx={{ flexShrink: 0 }}>{option.order}</Box>
 
                   {/* text */}
-                  <Box
+                  <Box component="div"
                     sx={{
                       flex: 1,
                       minWidth: 0,

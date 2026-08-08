@@ -112,7 +112,7 @@ export const GenerateSurveyForm = ({
   });
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         flex: 1,
         overflowY: "auto",
@@ -129,7 +129,7 @@ export const GenerateSurveyForm = ({
         autoComplete="off"
       >
         {/* Topic Input */}
-        <Box sx={{ mb: 3 }}>
+        <Box component="div" sx={{ mb: 3 }}>
           <Typography
             sx={{
               fontWeight: 600,
@@ -167,7 +167,7 @@ export const GenerateSurveyForm = ({
         </Box>
 
         {/* Question Count */}
-        <Box sx={{ mb: 3 }}>
+        <Box component="div" sx={{ mb: 3 }}>
           <Typography
             sx={{
               fontWeight: 600,
@@ -211,7 +211,7 @@ export const GenerateSurveyForm = ({
         </Box>
 
         {/* Question Types */}
-        <Box sx={{ mb: 3 }}>
+        <Box component="div" sx={{ mb: 3 }}>
           <Typography
             sx={{
               fontWeight: 600,
@@ -227,7 +227,7 @@ export const GenerateSurveyForm = ({
 
           {/* Selected Types */}
           {selectedTypes.length > 0 && (
-            <Box
+            <Box component="div"
               sx={{
                 mt: 2,
                 p: 2,
@@ -246,14 +246,14 @@ export const GenerateSurveyForm = ({
               >
                 Selected types ({selectedTypes.length})
               </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
+              <Box component="div" sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
                 {selectedTypes.map((questionType) => {
                   const type = questionTypes.find(
                     (t) => t.type === questionType,
                   );
                   return (
                     type && (
-                      <Box
+                      <Box component="div"
                         key={questionType}
                         sx={{
                           position: "relative",
@@ -315,7 +315,7 @@ export const GenerateSurveyForm = ({
           )}
 
           {/* Available Types */}
-          <Box sx={{ mt: 3 }}>
+          <Box component="div" sx={{ mt: 3 }}>
             <Typography
               sx={{
                 fontWeight: 500,
@@ -357,14 +357,14 @@ export const GenerateSurveyForm = ({
                         },
                       }}
                     >
-                      <Box
+                      <Box component="div"
                         sx={{
                           display: "flex",
                           alignItems: "center",
                           gap: 1.5,
                         }}
                       >
-                        <Box
+                        <Box component="div"
                           sx={{
                             width: 32,
                             height: 32,
@@ -391,7 +391,7 @@ export const GenerateSurveyForm = ({
       </form>
 
       {/* Footer */}
-      <Box
+      <Box component="div"
         sx={{
           px: 1,
           py: 1.5,

@@ -159,7 +159,7 @@ const Signin = () => {
 
   if (isLoading)
     return (
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           width: "100%",
@@ -196,7 +196,7 @@ const Signin = () => {
             "radial-gradient(125% 125% at 50% 10%, #fff 40%, #0074EB 100%)",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             minHeight: "100vh",
             display: "flex",
@@ -205,14 +205,14 @@ const Signin = () => {
             p: 3,
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               width: "100%",
               maxWidth: 480,
               marginTop: "-4%",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -220,7 +220,7 @@ const Signin = () => {
                 mb: 3,
               }}
             >
-              <Box sx={{ width: "60%", height: "60%", margin: "auto" }}>
+              <Box component="div" sx={{ width: "60%", height: "60%", margin: "auto" }}>
                 <Link to="/" style={{ textDecoration: "none" }}>
                   <img
                     src="/Logo.webp"
@@ -339,7 +339,7 @@ const Signin = () => {
                   }}
                 />
 
-                <Box
+                <Box component="div"
                   sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}
                 >
                   <Link

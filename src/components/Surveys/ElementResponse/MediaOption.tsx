@@ -86,7 +86,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
   };
 
   return (
-    <Box
+    <Box component="div"
       ref={setNodeRef}
       sx={{
         transform: CSS.Transform.toString(transform),
@@ -112,7 +112,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
         },
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           width: "100%",
@@ -124,7 +124,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <Box
+        <Box component="div"
           sx={{
             flexGrow: 1,
             borderRadius: 1,
@@ -147,7 +147,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
               }}
             />
           ) : (
-            <Box
+            <Box component="div"
               onClick={() => {
                 if (!canEdit) return;
                 setUploadImageModalOpen(true);
@@ -173,7 +173,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
           )}
         </Box>
         {isHovered && (
-          <Box
+          <Box component="div"
             sx={{
               position: "absolute",
               display: "flex",
@@ -186,7 +186,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
               pointerEvents: "none",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -218,7 +218,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
                 </IconButton>
               )}
             </Box>
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -233,7 +233,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
                 <MediaElementCardIconBtns optionID={option.optionID} />
               )}
             </Box>
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -266,7 +266,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
           </Box>
         )}
       </Box>
-      <Box
+      <Box component="div"
         sx={{
           position: "relative",
           display: "flex",
@@ -281,7 +281,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
           // border: "1px solid red",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -293,7 +293,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
             height: "auto",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -316,7 +316,7 @@ const MediaOption = ({ option }: MediaOptionProps) => {
           onOpenChange={setTipOpen}
           autoHideMs={1800}
         >
-          <Box
+          <Box component="div"
             {...(canEdit ? editProps : {})}
             tabIndex={canEdit ? 0 : -1}
             onDoubleClick={() => {

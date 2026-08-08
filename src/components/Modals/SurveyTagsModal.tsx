@@ -89,7 +89,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
         },
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           outline: "none",
           display: "flex",
@@ -99,7 +99,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
           p: 2,
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             bgcolor: "#fff",
             borderRadius: 2,
@@ -113,7 +113,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
           }}
         >
           {/* Header */}
-          <Box
+          <Box component="div"
             sx={{
               position: "relative",
               px: 2,
@@ -137,7 +137,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
             >
               <CloseIcon style={{ width: 28, height: 28, color: "#6b7280" }} />
             </IconButton>
-            <Box
+            <Box component="div"
               sx={{
                 p: 2,
                 bgcolor: "#eff6ff",
@@ -152,7 +152,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
             >
               <TagIcon style={{ width: 28, height: 28, color: "#2563eb" }} />
             </Box>
-            <Box>
+            <Box component="div">
               <Typography fontWeight={700} fontSize={24} color="#1e293b">
                 Survey Tags
               </Typography>
@@ -167,11 +167,11 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
           </Box>
 
           {/* Content */}
-          <Box sx={{ px: 4, py: 2 }}>
+          <Box component="div" sx={{ px: 4, py: 2 }}>
             {/* Input */}
-            <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-              <Box sx={{ flex: 1, position: "relative" }}>
-                <Box
+            <Box component="div" sx={{ display: "flex", gap: 2, mb: 3 }}>
+              <Box component="div" sx={{ flex: 1, position: "relative" }}>
+                <Box component="div"
                   sx={{
                     position: "absolute",
                     left: 12,
@@ -284,11 +284,11 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
             )}
 
             {/* Tags */}
-            <Box sx={{ mb: 5, minHeight: 64 }}>
+            <Box component="div" sx={{ mb: 5, minHeight: 64 }}>
               {tags.length > 0 ? (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
+                <Box component="div" sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
                   {tags.map((tag, index) => (
-                    <Box
+                    <Box component="div"
                       key={index}
                       sx={{
                         display: "flex",
@@ -348,7 +348,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
                   ))}
                 </Box>
               ) : (
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     flexDirection: "column",
@@ -356,7 +356,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
                     py: 1,
                   }}
                 >
-                  <Box
+                  <Box component="div"
                     sx={{
                       width: 60,
                       height: 60,
@@ -381,7 +381,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
           </Box>
 
           {/* Footer */}
-          <Box
+          <Box component="div"
             sx={{
               px: 2,
               py: 2,
@@ -390,7 +390,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
               borderRadius: "0 0 16px 16px",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -400,7 +400,7 @@ const SurveyTagsModal = ({ open, onClose, survey }: SurveyTagsModalProps) => {
               <Typography sx={{ fontSize: 13, color: "#64748b" }}>
                 Tags help organize and filter your surveys
               </Typography>
-              <Box sx={{ display: "flex", gap: 2 }}>
+              <Box component="div" sx={{ display: "flex", gap: 2 }}>
                 <Button
                   onClick={onClose}
                   sx={{

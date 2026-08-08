@@ -92,7 +92,7 @@ export const DropdownOptionRow = ({
       onOpenChange={setTipOpen}
       autoHideMs={1800}
     >
-      <Box
+      <Box component="div"
         {...(canEdit ? editProps : {})}
         tabIndex={canEdit ? 0 : -1}
         onFocus={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
@@ -160,7 +160,7 @@ export const DropdownOptionRow = ({
           {index + 1}
         </Typography>
 
-        <Box
+        <Box component="div"
           sx={{
             flex: 1,
             minWidth: 0,
@@ -185,7 +185,7 @@ export const DropdownOptionRow = ({
               />
             </ClickAwayListener>
           ) : (
-            <Box
+            <Box component="div"
               onClick={() => {
                 if (!canEdit) return;
 

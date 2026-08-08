@@ -76,7 +76,7 @@ export const ThreeDModelEmptyState = ({
   };
 
   const content = (
-    <Box
+    <Box component="div"
       sx={{
         position: "relative",
         zIndex: 1,
@@ -86,7 +86,7 @@ export const ThreeDModelEmptyState = ({
         maxWidth: 430,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: isMobile ? 72 : 80,
           height: isMobile ? 72 : 80,
@@ -136,7 +136,7 @@ export const ThreeDModelEmptyState = ({
 
       {canUpload3DModel && (
         <>
-          <Box
+          <Box component="div"
             sx={{
               display: "inline-flex",
               alignItems: "center",
@@ -176,5 +176,5 @@ export const ThreeDModelEmptyState = ({
     );
   }
 
-  return <Box sx={surfaceStyles}>{content}</Box>;
+  return <Box component="div" sx={surfaceStyles}>{content}</Box>;
 };

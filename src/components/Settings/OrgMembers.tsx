@@ -103,7 +103,7 @@ export const OrgMembers = () => {
 
   if (!canManageOrgMembers) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           placeItems: "center",
@@ -111,7 +111,7 @@ export const OrgMembers = () => {
           px: 3,
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             width: "100%",
             maxWidth: 520,
@@ -160,7 +160,7 @@ export const OrgMembers = () => {
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -168,7 +168,7 @@ export const OrgMembers = () => {
       }}
     >
       {/* Header */}
-      <Box
+      <Box component="div"
         sx={{
           px: 4,
           py: 3,
@@ -179,7 +179,7 @@ export const OrgMembers = () => {
           alignItems: "center",
         }}
       >
-        <Box>
+        <Box component="div">
           <Typography fontSize={20} fontWeight={700}>
             Team Members
           </Typography>
@@ -214,7 +214,7 @@ export const OrgMembers = () => {
       </Box>
 
       {/* Table */}
-      <Box sx={{ flex: 1, px: 2 }}>
+      <Box component="div" sx={{ flex: 1, px: 2 }}>
         <MembersTable
           members={usersData?.members || []}
           invites={invites || []}

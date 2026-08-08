@@ -17,7 +17,7 @@ export const CardOption = ({
   const isSecondary = variant === "secondary";
 
   return (
-    <Box
+    <Box component="div"
       onClick={onClick}
       sx={{
         p: 2.5,
@@ -38,7 +38,7 @@ export const CardOption = ({
         },
       }}
     >
-      <Box sx={{ flex: 1 }}>
+      <Box component="div" sx={{ flex: 1 }}>
         <Typography
           sx={{
             fontWeight: 600,

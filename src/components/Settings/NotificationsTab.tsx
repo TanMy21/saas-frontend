@@ -11,8 +11,8 @@ export default function NotificationsTab({
   onToggle: (key: keyof NotificationSettings) => void;
 }) {
   return (
-    <Box sx={{ p: 4 }}>
-      <Box sx={{ mb: 3 }}>
+    <Box component="div" sx={{ p: 4 }}>
+      <Box component="div" sx={{ mb: 3 }}>
         <Typography variant="h5" fontWeight={800} color="text.primary">
           Notification Preferences
         </Typography>
@@ -25,7 +25,7 @@ export default function NotificationsTab({
         {Object.entries(value).map(([k, v]) => {
           const key = k as keyof NotificationSettings;
           return (
-            <Box
+            <Box component="div"
               key={k}
               sx={{
                 border: "1px solid",
@@ -38,7 +38,7 @@ export default function NotificationsTab({
                 bgcolor: "rgba(255,255,255,0.6)",
               }}
             >
-              <Box>
+              <Box component="div">
                 <Typography fontWeight={700}>{LABELS[key].title}</Typography>
                 <Typography variant="body2" color="text.secondary">
                   {LABELS[key].desc}

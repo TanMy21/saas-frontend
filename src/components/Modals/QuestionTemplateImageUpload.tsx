@@ -139,7 +139,7 @@ const QuestionTemplateImageUpload = ({
         },
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           position: "absolute",
           top: "50%",
@@ -153,7 +153,7 @@ const QuestionTemplateImageUpload = ({
         }}
       >
         {/* Header */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -163,7 +163,7 @@ const QuestionTemplateImageUpload = ({
             borderBottom: "1px solid #F1F2F4",
           }}
         >
-          <Box>
+          <Box component="div">
             <Typography
               sx={{ fontSize: 18, fontWeight: 600, color: "#111827" }}
             >
@@ -188,9 +188,9 @@ const QuestionTemplateImageUpload = ({
         </Box>
 
         {/* Body */}
-        <Box sx={{ p: 3 }}>
+        <Box component="div" sx={{ p: 3 }}>
           {!preview ? (
-            <Box
+            <Box component="div"
               sx={{
                 position: "relative",
                 border: "2px dashed #D1D5DB",
@@ -204,7 +204,7 @@ const QuestionTemplateImageUpload = ({
                 },
               }}
             >
-              <Box
+              <Box component="div"
                 sx={{
                   mx: "auto",
                   width: 64,
@@ -246,7 +246,7 @@ const QuestionTemplateImageUpload = ({
               </Typography>
 
               {/* Constraints */}
-              <Box sx={{ mt: 2, color: "#9CA3AF", fontSize: 8 }}>
+              <Box component="div" sx={{ mt: 2, color: "#9CA3AF", fontSize: 8 }}>
                 <Typography>Supported: JPEG, PNG, WebP</Typography>
                 <Typography>Maximum size: 5MB</Typography>
               </Box>
@@ -262,8 +262,8 @@ const QuestionTemplateImageUpload = ({
               />
             </Box>
           ) : (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-              <Box
+            <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+              <Box component="div"
                 sx={{
                   position: "relative",
                   backgroundColor: "#F9FAFB",
@@ -278,7 +278,7 @@ const QuestionTemplateImageUpload = ({
                 />
 
                 {isLoading && (
-                  <Box
+                  <Box component="div"
                     sx={{
                       position: "absolute",
                       inset: 0,
@@ -288,7 +288,7 @@ const QuestionTemplateImageUpload = ({
                       backgroundColor: "rgba(0,0,0,0.2)",
                     }}
                   >
-                    <Box
+                    <Box component="div"
                       sx={{
                         width: 36,
                         height: 36,
@@ -328,7 +328,7 @@ const QuestionTemplateImageUpload = ({
 
               {/* File info */}
               {selectedFile && (
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -339,7 +339,7 @@ const QuestionTemplateImageUpload = ({
                     backgroundColor: "#fff",
                   }}
                 >
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       alignItems: "center",
@@ -347,7 +347,7 @@ const QuestionTemplateImageUpload = ({
                       minWidth: 0,
                     }}
                   >
-                    <Box
+                    <Box component="div"
                       sx={{
                         width: 40,
                         height: 40,
@@ -362,7 +362,7 @@ const QuestionTemplateImageUpload = ({
                       {/* Simple image glyph using MUI icon */}
                       <ImageIcon sx={{ fontSize: 20, color: "#2563EB" }} />
                     </Box>
-                    <Box sx={{ minWidth: 0 }}>
+                    <Box component="div" sx={{ minWidth: 0 }}>
                       <Typography
                         sx={{
                           fontSize: 14,
@@ -383,7 +383,7 @@ const QuestionTemplateImageUpload = ({
                     </Box>
                   </Box>
 
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     {isLoading ? (
                       <Typography
                         sx={{ fontSize: 12, fontWeight: 600, color: "#2563EB" }}
@@ -405,7 +405,7 @@ const QuestionTemplateImageUpload = ({
         </Box>
 
         {/* Footer actions */}
-        <Box
+        <Box component="div"
           sx={{
             px: 3,
             py: 2,

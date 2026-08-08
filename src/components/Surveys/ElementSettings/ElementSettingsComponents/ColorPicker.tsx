@@ -9,14 +9,14 @@ const ColorPicker = ({ color, setColor, canEdit }: ColorPickerProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <Box
+      <Box component="div"
         onClick={(e) => {
           if (!canEdit) return;
           setAnchorEl(e.currentTarget);
@@ -38,7 +38,7 @@ const ColorPicker = ({ color, setColor, canEdit }: ColorPickerProps) => {
         onClose={() => setAnchorEl(null)}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
-        <Box sx={{ p: 2 }}>
+        <Box component="div" sx={{ p: 2 }}>
           <Chrome
             color={color}
             onChange={(color) => {

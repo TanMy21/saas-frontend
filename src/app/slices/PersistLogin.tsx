@@ -37,7 +37,6 @@ const PersistLogin = () => {
 
   useEffect(() => {
     const verifyRefreshToken = async () => {
-      // console.log("verifying refresh token");
       try {
         //const response =
         await refresh();
@@ -72,7 +71,7 @@ const PersistLogin = () => {
   let content;
   if (!persist) {
     // persist: no
-    // console.log("no persist");
+
     content = <Outlet />;
   } else if (isLoading) {
     //persist: yes, token: no

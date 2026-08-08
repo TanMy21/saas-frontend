@@ -23,7 +23,7 @@ const TextElement = ({ display, showQuestion }: ElementProps) => {
       {/* Image container */}
 
       {questionImage && (
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -48,7 +48,7 @@ const TextElement = ({ display, showQuestion }: ElementProps) => {
         {showQuestion && <ElementQuestionText display={display} />}
       </CenteredStack>
       <ResponseContainer display={display}>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",

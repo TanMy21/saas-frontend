@@ -106,7 +106,7 @@ const QuestionImageSettings = () => {
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -123,7 +123,7 @@ const QuestionImageSettings = () => {
         </Box>
       </AccordionSummary>
       <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -132,7 +132,7 @@ const QuestionImageSettings = () => {
             // border: "2px solid red",
           }}
         >
-          <Box
+          <Box component="div"
             mt={1}
             sx={{
               display: "flex",
@@ -144,9 +144,9 @@ const QuestionImageSettings = () => {
               height: "80%",
             }}
           >
-            <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>Image</Box>
+            <Box component="div" sx={{ fontWeight: 500, color: "#3F3F46" }}>Image</Box>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Box mt={1}>
+              <Box component="div" mt={1}>
                 <Controller
                   name="questionImage"
                   control={control}
@@ -172,7 +172,7 @@ const QuestionImageSettings = () => {
             </form>
           </Box>
           {questionImage && (
-            <Box
+            <Box component="div"
               sx={{
                 opacity: canEditQuestion ? 1 : 0.6,
                 pointerEvents: canEditQuestion ? "auto" : "none",

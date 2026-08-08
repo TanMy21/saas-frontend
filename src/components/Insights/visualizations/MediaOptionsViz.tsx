@@ -6,7 +6,7 @@ export const MediaOptionsViz = ({ question }: MediaOptionsVizProps) => {
   const total = question.meta.totalResponses;
 
   return (
-    <Box
+    <Box component="div"
       display="grid"
       gridTemplateColumns={{
         xs: "repeat(2, 1fr)",
@@ -18,7 +18,7 @@ export const MediaOptionsViz = ({ question }: MediaOptionsVizProps) => {
         const percentage = total > 0 ? (option.count / total) * 100 : 0;
 
         return (
-          <Box
+          <Box component="div"
             key={option.optionID}
             sx={{
               position: "relative",
@@ -38,7 +38,7 @@ export const MediaOptionsViz = ({ question }: MediaOptionsVizProps) => {
             }}
           >
             {/* Image */}
-            <Box
+            <Box component="div"
               sx={{
                 aspectRatio: "3 / 2",
                 overflow: "hidden",
@@ -57,7 +57,7 @@ export const MediaOptionsViz = ({ question }: MediaOptionsVizProps) => {
                   }}
                 />
               ) : (
-                <Box
+                <Box component="div"
                   sx={{
                     width: "100%",
                     height: "100%",
@@ -75,7 +75,7 @@ export const MediaOptionsViz = ({ question }: MediaOptionsVizProps) => {
             </Box>
 
             {/* Gradient overlay */}
-            <Box
+            <Box component="div"
               sx={{
                 position: "absolute",
                 inset: 0,
@@ -85,7 +85,7 @@ export const MediaOptionsViz = ({ question }: MediaOptionsVizProps) => {
             />
 
             {/* Label + value */}
-            <Box
+            <Box component="div"
               sx={{
                 position: "absolute",
                 insetX: 0,
@@ -102,7 +102,7 @@ export const MediaOptionsViz = ({ question }: MediaOptionsVizProps) => {
             </Box>
 
             {/* Percentage badge */}
-            <Box
+            <Box component="div"
               sx={{
                 position: "absolute",
                 top: 8,

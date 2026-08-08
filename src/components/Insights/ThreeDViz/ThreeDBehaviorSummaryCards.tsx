@@ -12,7 +12,7 @@ export const BehaviorMetricCard = ({
   helper: string;
 }) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid",
         borderColor: "divider",
@@ -70,7 +70,7 @@ export const ThreeDBehaviorSummaryCards = ({
   const summary = data.behaviorSummary;
 
   return (
-    <Box
+    <Box component="div"
       display="grid"
       gridTemplateColumns={{
         xs: "1fr",

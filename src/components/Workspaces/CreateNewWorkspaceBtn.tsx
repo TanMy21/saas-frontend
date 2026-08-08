@@ -6,7 +6,7 @@ import { WorkspacesProp } from "../../utils/types";
 const CreateNewWorkspaceBtn = ({ handleOpen }: WorkspacesProp) => {
   return (
     <>
-      <Box sx={{ mt: 1 }}>
+      <Box component="div" sx={{ mt: 1 }}>
         <Button
           sx={{
             backgroundColor: "##6152EF",

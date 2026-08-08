@@ -338,7 +338,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
   });
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         display: "flex",
@@ -346,7 +346,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
         mt: 3,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: "92%",
           maxWidth: 980,
@@ -385,7 +385,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
         )}
 
         {!isMobile && (
-          <Box
+          <Box component="div"
             sx={{
               position: "sticky",
               top: 68,
@@ -400,7 +400,7 @@ export const InfoScreenContent = ({ qID, display }: ElementProps) => {
           </Box>
         )}
 
-        <Box
+        <Box component="div"
           sx={{
             p: isMobile ? 2 : 3,
             minHeight: isMobile ? 260 : 360,

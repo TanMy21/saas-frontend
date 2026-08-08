@@ -546,7 +546,7 @@ const QuestionContentSettings = () => {
         aria-controls="question-content-settings"
         id="question-content-settings-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -562,7 +562,7 @@ const QuestionContentSettings = () => {
       </AccordionSummary>
 
       <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -572,9 +572,9 @@ const QuestionContentSettings = () => {
             opacity: canEditQuestion ? 1 : 0.8,
           }}
         >
-          <Box sx={{ fontWeight: 500, color: "#3F3F46", mb: 1 }}>Text</Box>
+          <Box component="div" sx={{ fontWeight: 500, color: "#3F3F46", mb: 1 }}>Text</Box>
 
-          <Box mt={1}>
+          <Box component="div" mt={1}>
             <Controller
               name="questionText"
               control={control}
@@ -599,7 +599,7 @@ const QuestionContentSettings = () => {
             />
           </Box>
 
-          <Box
+          <Box component="div"
             sx={{
               marginTop: "2%",
               fontWeight: 500,
@@ -610,7 +610,7 @@ const QuestionContentSettings = () => {
             Description
           </Box>
 
-          <Box mt={1}>
+          <Box component="div" mt={1}>
             <Controller
               name="questionDescription"
               control={control}
@@ -640,7 +640,7 @@ const QuestionContentSettings = () => {
             />
           </Box>
 
-          <Box
+          <Box component="div"
             sx={{
               mt: 1,
               pt: 1.5,
@@ -650,7 +650,7 @@ const QuestionContentSettings = () => {
               gap: 1.25,
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -658,7 +658,7 @@ const QuestionContentSettings = () => {
                 width: "98%",
               }}
             >
-              <Box>
+              <Box component="div">
                 <Typography sx={{ fontWeight: 500, color: "#3F3F46" }}>
                   Show question
                 </Typography>
@@ -673,7 +673,7 @@ const QuestionContentSettings = () => {
               />
             </Box>
 
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -681,7 +681,7 @@ const QuestionContentSettings = () => {
                 width: "98%",
               }}
             >
-              <Box>
+              <Box component="div">
                 <Typography sx={{ fontWeight: 500, color: "#3F3F46" }}>
                   Response required
                 </Typography>

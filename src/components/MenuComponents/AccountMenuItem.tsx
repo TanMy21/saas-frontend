@@ -37,11 +37,11 @@ export const AccountMenuItem = ({
         ...sx,
       }}
     >
-      <Box sx={{ width: 24, display: "flex", justifyContent: "center" }}>
+      <Box component="div" sx={{ width: 24, display: "flex", justifyContent: "center" }}>
         {icon}
       </Box>
 
-      <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>{label}</Box>
+      <Box component="div" sx={{ flex: 1, display: "flex", alignItems: "center" }}>{label}</Box>
     </MenuItem>
   );
 };

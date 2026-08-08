@@ -108,7 +108,7 @@ export const AcceptInvite = () => {
 
   if (isInviteLoading) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           minHeight: "100vh",
           bgcolor: grey[50],
@@ -130,7 +130,7 @@ export const AcceptInvite = () => {
 
   if (!token || isInviteError || !invite) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           minHeight: "100vh",
           bgcolor: grey[50],
@@ -140,7 +140,7 @@ export const AcceptInvite = () => {
           px: 2,
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             margin: "auto",
             width: "100%",
@@ -148,7 +148,7 @@ export const AcceptInvite = () => {
             textAlign: "center",
           }}
         >
-          <Box sx={{ mb: 4 }}>
+          <Box component="div" sx={{ mb: 4 }}>
             <Typography sx={textStyles.strongH4}>Invalid invite</Typography>
             <Typography sx={{ color: grey[900] }}>
               This invite link is no longer valid
@@ -163,7 +163,7 @@ export const AcceptInvite = () => {
             }}
           >
             <Stack spacing={3}>
-              <Box
+              <Box component="div"
                 sx={{
                   width: "98",
                   height: 80,
@@ -172,7 +172,7 @@ export const AcceptInvite = () => {
                   mx: "auto",
                 }}
               >
-                <Box
+                <Box component="div"
                   sx={{
                     width: 64,
                     height: 64,
@@ -188,7 +188,7 @@ export const AcceptInvite = () => {
                 </Box>
               </Box>
 
-              <Box
+              <Box component="div"
                 sx={{
                   display: "flex",
                   justifyContent: "center",
@@ -204,7 +204,7 @@ export const AcceptInvite = () => {
                 </Typography>
               </Box>
 
-              <Box>
+              <Box component="div">
                 <Typography sx={{ color: grey[900] }}>
                   Please contact
                 </Typography>
@@ -231,7 +231,7 @@ export const AcceptInvite = () => {
   // Success card display before redirecting to login
   if (isAcceptSuccess) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           minHeight: "100vh",
           bgcolor: grey[50],
@@ -265,7 +265,7 @@ export const AcceptInvite = () => {
   }
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         minHeight: "100vh",
         bgcolor: grey[50],
@@ -288,7 +288,7 @@ export const AcceptInvite = () => {
       >
         <Stack spacing={3}>
           <Stack spacing={1} alignItems="center" textAlign="center">
-            <Box
+            <Box component="div"
               sx={{
                 width: 40,
                 height: 40,
@@ -312,7 +312,7 @@ export const AcceptInvite = () => {
             </Typography>
           </Stack>
 
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -323,7 +323,7 @@ export const AcceptInvite = () => {
               border: `1px solid ${grey[200]}`,
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 width: 36,
                 height: 36,
@@ -339,7 +339,7 @@ export const AcceptInvite = () => {
               {initials}
             </Box>
 
-            <Box sx={{ minWidth: 0 }}>
+            <Box component="div" sx={{ minWidth: 0 }}>
               <Typography
                 sx={{
                   fontSize: 10,
@@ -355,10 +355,10 @@ export const AcceptInvite = () => {
             </Box>
           </Box>
 
-          <Box>
+          <Box component="div">
             <Typography sx={{ fontSize: 13, mb: 1 }}>New Password</Typography>
 
-            <Box sx={{ position: "relative" }}>
+            <Box component="div" sx={{ position: "relative" }}>
               <TextField
                 fullWidth
                 type={showPw ? "text" : "password"}
@@ -388,12 +388,12 @@ export const AcceptInvite = () => {
             )}
           </Box>
 
-          <Box>
+          <Box component="div">
             <Typography sx={{ fontSize: 13, mb: 1 }}>
               Repeat Password
             </Typography>
 
-            <Box sx={{ position: "relative" }}>
+            <Box component="div" sx={{ position: "relative" }}>
               <TextField
                 fullWidth
                 type={showConfirm ? "text" : "password"}

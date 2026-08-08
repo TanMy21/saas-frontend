@@ -10,7 +10,7 @@ export const GenerateSurveyReplaceConfirm = ({
   onConfirm: () => void;
 }) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         p: 2,
         textAlign: "center",
@@ -25,7 +25,7 @@ export const GenerateSurveyReplaceConfirm = ({
       </Typography>
 
       {/* Action row */}
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "flex-end", 

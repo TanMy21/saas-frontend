@@ -7,7 +7,7 @@ import ScreenTypographySettings from "./ScreenTypographySettings";
 
 const InstructionScreenSettings = ({ qID }: ElementSettingsProps) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",

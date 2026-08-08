@@ -1,7 +1,7 @@
 import { Box, Skeleton } from "@mui/material";
 
 export const SurveyInsightsSkeleton = () => (
-  <Box>
+  <Box component="div">
     <Skeleton height={80} width={1200} sx={{ mx: "auto" }} />
     <Skeleton height={120} width={1200} sx={{ mx: "auto" }} />
     <Skeleton height={200} width={1200} sx={{ mx: "auto" }} />

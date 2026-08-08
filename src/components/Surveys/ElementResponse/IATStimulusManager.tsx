@@ -209,7 +209,7 @@ export const IATStimulusManager = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         bgcolor: "#FFFFFF",
         p: isMobile ? 1.5 : 2,
@@ -218,7 +218,7 @@ export const IATStimulusManager = ({
         gap: 1.5,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -238,7 +238,7 @@ export const IATStimulusManager = ({
         </Typography>
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           border: "1px solid #E2E8F0",
           borderRadius: 2,
@@ -265,7 +265,7 @@ export const IATStimulusManager = ({
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId={`iat-stimuli-${qID}`}>
             {(provided) => (
-              <Box
+              <Box component="div"
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 sx={{
@@ -282,7 +282,7 @@ export const IATStimulusManager = ({
                     isDragDisabled={!canReorder}
                   >
                     {(provided) => (
-                      <Box
+                      <Box component="div"
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         sx={{
@@ -327,7 +327,7 @@ export const IATStimulusManager = ({
       </Box>
 
       {canCreate && !isMobile && (
-        <Box
+        <Box component="div"
           sx={{
             position: "relative",
             width: "94%",

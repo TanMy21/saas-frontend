@@ -7,7 +7,7 @@ export const DangerModalHeader = ({
   title,
   onClose,
 }: DangerModalHeaderProps) => (
-  <Box
+  <Box component="div"
     sx={{
       px: 2,
       pt: 4,
@@ -15,9 +15,9 @@ export const DangerModalHeader = ({
       borderBottom: "1px solid #f3f4f6",
     }}
   >
-    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-      <Box sx={{ display: "flex", gap: 2 }}>
-        <Box
+    <Box component="div" sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Box component="div" sx={{ display: "flex", gap: 2 }}>
+        <Box component="div"
           sx={{
             width: 48,
             height: 48,

@@ -156,7 +156,7 @@ const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
 
   if (viewerUrl) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           position: "relative",
           display: "flex",
@@ -186,7 +186,7 @@ const ThreeDElement = ({ qID, display, showQuestion }: ElementProps) => {
 
   if (isWaitingForModel) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           width: "100%",
           minHeight: isMobile ? "380px" : "700px",

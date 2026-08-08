@@ -31,7 +31,7 @@ const GenerateSurveyLoader = ({
   }, []);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "row",
@@ -42,7 +42,7 @@ const GenerateSurveyLoader = ({
         height: "96%",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -107,7 +107,7 @@ const GenerateSurveyLoader = ({
         )}
 
         {/* Animation */}
-        <Box
+        <Box component="div"
           sx={{
             position: "relative",
             height: 400,

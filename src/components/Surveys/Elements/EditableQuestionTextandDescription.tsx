@@ -114,7 +114,7 @@ export const EditableQuestionText = ({
   if (!editor) return null;
 
   return (
-    <Box
+    <Box component="div"
       onClick={(e) => {
         e.stopPropagation();
         onStartEdit();
@@ -175,7 +175,7 @@ export const EditableQuestionText = ({
     >
       {active && canEditQuestion && (
         <BubbleMenu editor={editor}>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               gap: 0.5,

@@ -53,7 +53,7 @@ const PasswordResetForm = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         minHeight: "60%",
@@ -64,15 +64,15 @@ const PasswordResetForm = ({
         p: 3,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: "100%",
           maxWidth: 600,
         }}
       >
         {/* Header */}
-        <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Box
+        <Box component="div" sx={{ textAlign: "center", mb: 4 }}>
+          <Box component="div"
             sx={{
               display: "inline-flex",
               alignItems: "center",
@@ -105,7 +105,7 @@ const PasswordResetForm = ({
             }}
           >
             {/* Email Input */}
-            <Box>
+            <Box component="div">
               <TextField
                 margin="normal"
                 required
@@ -174,7 +174,7 @@ const PasswordResetForm = ({
 
             {/* Back to Sign In */}
             <Link to="/login" style={{ textDecoration: "none" }}>
-              <Box
+              <Box component="div"
                 sx={{
                   display: "flex",
                   alignItems: "center",

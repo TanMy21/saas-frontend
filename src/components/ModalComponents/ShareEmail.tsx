@@ -38,8 +38,8 @@ const ShareEmail = ({
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-      <Box
+    <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <Box component="div"
         onClick={handleCopyTemplate}
         sx={{
           position: "relative",
@@ -58,7 +58,7 @@ const ShareEmail = ({
         }}
       >
         {/* Top-right icon */}
-        <Box
+        <Box component="div"
           sx={{
             position: "absolute",
             top: 10,
@@ -84,7 +84,7 @@ const ShareEmail = ({
       </Box>
 
       {/* Survey Link Card */}
-      <Box
+      <Box component="div"
         onClick={() => copy(shareURL, "email_link", "SHARE_LINK_COPIED")}
         sx={{
           position: "relative",
@@ -103,7 +103,7 @@ const ShareEmail = ({
         }}
       >
         {/* Top-right icon */}
-        <Box
+        <Box component="div"
           sx={{
             position: "absolute",
             top: 10,

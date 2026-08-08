@@ -11,7 +11,7 @@ const ElementPreferencesPanel = ({
 }: SurveyPreferencesPanelProps) => {
   const { scrollStyles } = useAppTheme();
   return (
-    <Box
+    <Box component="div"
       id="question-settings"
       sx={{
         display: "flex",

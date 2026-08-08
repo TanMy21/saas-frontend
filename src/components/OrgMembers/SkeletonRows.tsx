@@ -4,7 +4,7 @@ export const SkeletonRows = () => {
   return (
     <>
       {[...Array(4)].map((_, i) => (
-        <Box
+        <Box component="div"
           key={i}
           sx={{
             display: "flex",
@@ -15,7 +15,7 @@ export const SkeletonRows = () => {
           }}
         >
           <Skeleton variant="circular" width={40} height={40} />
-          <Box sx={{ flex: 1 }}>
+          <Box component="div" sx={{ flex: 1 }}>
             <Skeleton width="40%" />
             <Skeleton width="60%" />
           </Box>

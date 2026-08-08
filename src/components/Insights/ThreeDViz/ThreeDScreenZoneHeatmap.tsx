@@ -15,12 +15,12 @@ export const ThreeDScreenZoneHeatmap = ({
   const maxValue = Math.max(1, ...Object.values(summary));
 
   return (
-    <Box>
+    <Box component="div">
       <Typography fontWeight={700} mb={1}>
         Viewer interaction heatmap
       </Typography>
 
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
@@ -33,7 +33,7 @@ export const ThreeDScreenZoneHeatmap = ({
           const intensity = count / maxValue;
 
           return (
-            <Box
+            <Box component="div"
               key={zone}
               sx={{
                 height: 88,

@@ -23,7 +23,7 @@ const SurveyNavigation = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "row",
@@ -37,7 +37,7 @@ const SurveyNavigation = ({
         gap: 1.5,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "row",
@@ -72,7 +72,7 @@ const SurveyNavigation = ({
         </IconButton>
       </Box>
       {/* Divider */}
-      <Box
+      <Box component="div"
         sx={{
           alignSelf: "stretch",
           width: "1px",
@@ -82,7 +82,7 @@ const SurveyNavigation = ({
       />
 
       {/* Titles */}
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -93,7 +93,7 @@ const SurveyNavigation = ({
           // border: "2px solid blue",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -123,7 +123,7 @@ const SurveyNavigation = ({
             {defaultWorkspaceName} &nbsp;
           </NavLink>
         </Box>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -135,7 +135,7 @@ const SurveyNavigation = ({
           }}
         >
           <Tooltip title={survey?.title || ""} placement="bottom" arrow={false}>
-            <Box
+            <Box component="div"
               sx={{
                 fontSize: "16px",
                 fontWeight: 600,
@@ -151,7 +151,7 @@ const SurveyNavigation = ({
           </Tooltip>
 
           {isLocked && (
-            <Box
+            <Box component="div"
               sx={{
                 display: "inline-flex",
                 alignItems: "center",

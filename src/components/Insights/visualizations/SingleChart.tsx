@@ -37,7 +37,7 @@ export const SingleChoiceChart = ({ question }: SingleChoiceChartProps) => {
   const height = data.length * ROW_HEIGHT_SINGLE_CHOICE;
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "grid",
         gridTemplateColumns: "30% 68%",
@@ -46,9 +46,9 @@ export const SingleChoiceChart = ({ question }: SingleChoiceChartProps) => {
       }}
     >
       {/* Labels */}
-      <Box>
+      <Box component="div">
         {data.map((item) => (
-          <Box
+          <Box component="div"
             key={item.label}
             sx={{
               height: ROW_HEIGHT_SINGLE_CHOICE,
@@ -69,7 +69,7 @@ export const SingleChoiceChart = ({ question }: SingleChoiceChartProps) => {
       </Box>
 
       {/* Bars */}
-      <Box sx={{ height }}>
+      <Box component="div" sx={{ height }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}

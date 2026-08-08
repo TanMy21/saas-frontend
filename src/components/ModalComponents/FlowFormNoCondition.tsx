@@ -10,7 +10,7 @@ const FlowFormNoCondition = () =>
   // }: FlowFormProps
   {
     return (
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "row",
@@ -19,7 +19,7 @@ const FlowFormNoCondition = () =>
           maxHeight: "40px",
         }}
       >
-        <Box sx={{ width: "24%", height: "96%" }}>
+        <Box component="div" sx={{ width: "24%", height: "96%" }}>
           <Typography
             sx={{ color: "red", fontSize: "24px", fontWeight: "bold" }}
           >

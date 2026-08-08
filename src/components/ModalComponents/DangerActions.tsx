@@ -9,7 +9,7 @@ export const DangerActions = ({
   loadingText,
   confirmationMatch,
 }: DangerActionButtonProps) => (
-  <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end", mt: 1 }}>
+  <Box component="div" sx={{ display: "flex", gap: 2, justifyContent: "flex-end", mt: 1 }}>
     <Button
       onClick={onClose}
       variant="outlined"

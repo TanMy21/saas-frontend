@@ -110,7 +110,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
   });
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         transformOrigin: "bottom",
         display: "flex",
@@ -118,7 +118,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
         width: "100%",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -132,7 +132,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
         }}
       >
         {/* LIST */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -150,7 +150,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
           >
             <Droppable droppableId="responses">
               {(provided) => (
-                <Box
+                <Box component="div"
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   sx={{
@@ -170,7 +170,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
                       isDragDisabled={!canReorder}
                     >
                       {(provided) => (
-                        <Box
+                        <Box component="div"
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
@@ -206,7 +206,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
         </Box>
 
         {canCreate && (
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -217,7 +217,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
               // border: "2px solid black",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 position: "relative",
                 width: display === "mobile" ? "92%" : "76%",
@@ -289,7 +289,7 @@ const ResponseList = ({ qID, qType, display }: ResponseListProps) => {
             </Box>
 
             {/* Count line */}
-            <Box sx={{ width: display === "mobile" ? "92%" : "80%", mt: "2%" }}>
+            <Box component="div" sx={{ width: display === "mobile" ? "92%" : "80%", mt: "2%" }}>
               <Typography
                 variant="body2"
                 sx={{ color: "#64748B", textAlign: "right" }}

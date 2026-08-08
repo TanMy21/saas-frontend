@@ -27,7 +27,7 @@ export function QuestionTypeBadge({ type }: QuestionTypeBadgeProps) {
       }}
     >
       {/* Icon */}
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           alignItems: "center",

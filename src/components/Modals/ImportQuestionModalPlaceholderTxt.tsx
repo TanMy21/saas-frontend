@@ -5,7 +5,7 @@ import { useAppTheme } from "../../theme/useAppTheme";
 const ImportQuestionModalPlaceholderTxt = () => {
   const { grey } = useAppTheme();
   return (
-    <Box
+    <Box component="div"
       sx={{
         position: "absolute",
         top: 0,
@@ -40,7 +40,7 @@ const ImportQuestionModalPlaceholderTxt = () => {
         How satisfied are you with our customer service?
       </Typography>
       {/* Indented options */}
-      <Box sx={{ pl: 2, color: grey[700] }}>
+      <Box component="div" sx={{ pl: 2, color: grey[700] }}>
         <Typography sx={{ color: grey[700] }}>A) Very satisfied</Typography>
         <Typography sx={{ color: grey[700] }}>B) Satisfied</Typography>
         <Typography sx={{ color: grey[700] }}>C) Neutral</Typography>
@@ -66,7 +66,7 @@ const ImportQuestionModalPlaceholderTxt = () => {
         How satisfied are you with our customer service?
       </Typography>
       {/* Indented options without labels */}
-      <Box sx={{ pl: 2 }}>
+      <Box component="div" sx={{ pl: 2 }}>
         <Typography sx={{ color: grey[700] }}>Very satisfied</Typography>
         <Typography sx={{ color: grey[700] }}>Satisfied</Typography>
         <Typography sx={{ color: grey[700] }}>Neutral</Typography>

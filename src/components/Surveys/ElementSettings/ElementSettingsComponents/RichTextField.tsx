@@ -15,7 +15,7 @@ export function RichTextField({
   readOnly = false,
 }: RichTextFieldProps) {
   return (
-    <Box
+    <Box component="div"
       sx={{
         borderRadius: "8px",
         height,

@@ -3,7 +3,7 @@ import { ShieldAlert } from "lucide-react";
 
 const SurveyLockedBanner = () => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "68%",
         minHeight: "44px",
@@ -20,7 +20,7 @@ const SurveyLockedBanner = () => {
         marginBottom: 0,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: 32,
           height: 32,
@@ -36,7 +36,7 @@ const SurveyLockedBanner = () => {
         <ShieldAlert size={24} />
       </Box>
 
-      <Box sx={{ minWidth: 0 }}>
+      <Box component="div" sx={{ minWidth: 0 }}>
         <Typography
           sx={{
             fontSize: "16px",

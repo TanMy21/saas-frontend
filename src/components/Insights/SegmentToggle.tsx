@@ -24,7 +24,7 @@ export function SegmentToggle({
 }: SegmentToggleProps) {
   return (
     // Root container (replaces inline-flex + bg-muted + p-1)
-    <Box
+    <Box component="div"
       className={className}
       sx={{
         display: "inline-flex",

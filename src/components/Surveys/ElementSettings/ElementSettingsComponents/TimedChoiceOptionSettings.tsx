@@ -366,7 +366,7 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
         aria-controls="timed-choice-options-content"
         id="timed-choice-options-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -382,7 +382,7 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
       </AccordionSummary>
 
       <AccordionDetails sx={{ px: { md: 2, xl: 1 }, pb: 2 }}>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -390,7 +390,7 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
             p: 1,
           }}
         >
-          <Box>
+          <Box component="div">
             <Typography
               sx={{
                 fontWeight: 700,
@@ -467,7 +467,7 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
             />
           </Box>
 
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -481,7 +481,7 @@ const TimedChoiceOptionSettings = ({ qID, canEdit }: ElementSettingsProps) => {
               const value = localValues[option.optionID] || "";
 
               return (
-                <Box key={option.optionID}>
+                <Box component="div" key={option.optionID}>
                   <Typography
                     sx={{
                       fontWeight: 700,

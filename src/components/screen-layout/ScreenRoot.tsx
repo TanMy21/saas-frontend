@@ -9,7 +9,7 @@ const ScreenRoot = ({
   justifyContentOveride,
 }: ScreenLayoutProps) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",

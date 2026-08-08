@@ -19,11 +19,11 @@ export const TextResponses = ({ question }: TextResponsesProps) => {
     : question.responses;
 
   return (
-    <Box display="flex" flexDirection="column" gap={2}>
+    <Box component="div" display="flex" flexDirection="column" gap={2}>
       {/* ───────────────── Controls ───────────────── */}
-      <Box display="flex" alignItems="center" gap={2}>
+      <Box component="div" display="flex" alignItems="center" gap={2}>
         {/* Search */}
-        <Box
+        <Box component="div"
           sx={{
             position: "relative",
             flex: 1,
@@ -50,7 +50,7 @@ export const TextResponses = ({ question }: TextResponsesProps) => {
         </Box>
 
         {/* View toggle */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             border: "1px solid",
@@ -92,7 +92,7 @@ export const TextResponses = ({ question }: TextResponsesProps) => {
       </Typography>
 
       {/* ───────────────── Responses ───────────────── */}
-      <Box
+      <Box component="div"
         sx={{
           maxHeight: 384, // max-h-96
           overflowY: "auto",
@@ -107,7 +107,7 @@ export const TextResponses = ({ question }: TextResponsesProps) => {
         }}
       >
         {filteredResponses.map((response) => (
-          <Box
+          <Box component="div"
             key={response.responseID}
             sx={{
               ...(viewMode === "cards"
@@ -132,7 +132,7 @@ export const TextResponses = ({ question }: TextResponsesProps) => {
         ))}
 
         {filteredResponses.length === 0 && (
-          <Box py={4} textAlign="center">
+          <Box component="div" py={4} textAlign="center">
             <Typography color="text.secondary">
               No responses match your search.
             </Typography>

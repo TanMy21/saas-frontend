@@ -58,7 +58,7 @@ const CreateNewSurveyModal = ({
 
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Box
+      <Box component="div"
         sx={{
           position: "absolute",
           top: "50%",
@@ -75,7 +75,7 @@ const CreateNewSurveyModal = ({
           transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -85,8 +85,8 @@ const CreateNewSurveyModal = ({
             pb: 2,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Box
+          <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box component="div"
               sx={{
                 p: 1,
                 backgroundColor: "#EFF6FF",
@@ -98,7 +98,7 @@ const CreateNewSurveyModal = ({
             >
               <Plus style={{ width: 20, height: 20, color: "#2563EB" }} />
             </Box>
-            <Box>
+            <Box component="div">
               <Typography
                 variant="h6"
                 sx={{ fontWeight: 600, color: "grey.900" }}
@@ -137,7 +137,7 @@ const CreateNewSurveyModal = ({
           sx={{ px: 3, pb: 3 }}
         >
           {/* Survey name */}
-          <Box sx={{ mb: 3 }}>
+          <Box component="div" sx={{ mb: 3 }}>
             <Typography
               component="label"
               htmlFor="surveyName"
@@ -194,7 +194,7 @@ const CreateNewSurveyModal = ({
           </Box>
 
           {/* Survey description */}
-          <Box sx={{ mb: 4 }}>
+          <Box component="div" sx={{ mb: 4 }}>
             <Typography
               component="label"
               htmlFor="surveyDescription"
@@ -250,7 +250,7 @@ const CreateNewSurveyModal = ({
             />
           </Box>
 
-          <Box sx={{ display: "flex", gap: 2 }}>
+          <Box component="div" sx={{ display: "flex", gap: 2 }}>
             <Button
               type="button"
               onClick={onClose}

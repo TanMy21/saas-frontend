@@ -29,9 +29,9 @@ export const NumericChart = ({ question }: NumericChartProps) => {
   }));
 
   return (
-    <Box display="flex" flexDirection="column" gap={3}>
+    <Box component="div" display="flex" flexDirection="column" gap={3}>
       {/* ───────────────── Stats grid ───────────────── */}
-      <Box
+      <Box component="div"
         display="grid"
         gridTemplateColumns={{
           xs: "repeat(2, 1fr)",
@@ -47,7 +47,7 @@ export const NumericChart = ({ question }: NumericChartProps) => {
       </Box>
 
       {/* ───────────────── Distribution chart ───────────────── */}
-      <Box height={192}>
+      <Box component="div" height={192}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}

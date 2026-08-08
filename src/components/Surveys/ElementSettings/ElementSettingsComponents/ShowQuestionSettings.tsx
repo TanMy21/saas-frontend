@@ -116,7 +116,7 @@ const ShowQuestionSettings = () => {
           aria-controls="panel1-content"
           id="panel1-header"
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -133,7 +133,7 @@ const ShowQuestionSettings = () => {
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -143,7 +143,7 @@ const ShowQuestionSettings = () => {
               // border: "2px solid red",
             }}
           >
-            <Box
+            <Box component="div"
               mt={1}
               sx={{
                 display: "flex",
@@ -155,10 +155,10 @@ const ShowQuestionSettings = () => {
                 height: "80%",
               }}
             >
-              <Box sx={{ fontWeight: 500, color: "#3F3F46" }}>
+              <Box component="div" sx={{ fontWeight: 500, color: "#3F3F46" }}>
                 Show question
               </Box>
-              <Box mt={1}>
+              <Box component="div" mt={1}>
                 <Controller
                   name="showQuestion"
                   control={control}

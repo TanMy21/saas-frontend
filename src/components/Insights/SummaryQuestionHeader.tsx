@@ -13,14 +13,14 @@ export const SummaryQuestionHeader = ({
   displayOrder: number;
 }) => {
   return (
-    <Box mb={3}>
-      <Box
+    <Box component="div" mb={3}>
+      <Box component="div"
         display="flex"
         alignItems="flex-start"
         justifyContent="space-between"
         gap={2}
       >
-        <Box
+        <Box component="div"
           display="flex"
           alignItems="flex-start"
           gap={2}
@@ -29,7 +29,7 @@ export const SummaryQuestionHeader = ({
             minWidth: 0,
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               width: 28,
               height: 28,
@@ -60,7 +60,7 @@ export const SummaryQuestionHeader = ({
           </Typography>
         </Box>
 
-        <Box
+        <Box component="div"
           sx={{
             flexShrink: 0,
             alignSelf: "flex-start",
@@ -71,7 +71,7 @@ export const SummaryQuestionHeader = ({
       </Box>
 
       {/* Metadata */}
-      <Box mt={1} ml="40px" display="flex" flexWrap="wrap" gap={2}>
+      <Box component="div" mt={1} ml="40px" display="flex" flexWrap="wrap" gap={2}>
         <Typography variant="body2" color="text.secondary">
           {question.meta.totalResponses} responses
         </Typography>

@@ -42,7 +42,7 @@ const SettingSaveStatus = ({
   }[state];
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         alignItems: "center",
@@ -51,7 +51,7 @@ const SettingSaveStatus = ({
         minHeight: 20,
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", color: config.color }}>
+      <Box component="div" sx={{ display: "flex", alignItems: "center", color: config.color }}>
         {config.icon}
       </Box>
 

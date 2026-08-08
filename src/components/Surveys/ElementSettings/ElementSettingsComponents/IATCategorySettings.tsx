@@ -301,7 +301,7 @@ const IATCategorySettings = ({ qID }: ElementSettingsProps) => {
         aria-controls="iat-category-settings-content"
         id="iat-category-settings-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",

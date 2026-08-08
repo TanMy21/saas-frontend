@@ -12,7 +12,7 @@ export const DropdownManualAdd = ({
   onOpenAI,
 }: DropdownManualAddProps) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -20,7 +20,7 @@ export const DropdownManualAdd = ({
         mt: 1,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "flex-end",
@@ -56,7 +56,7 @@ export const DropdownManualAdd = ({
         </Button>
       </Box>
 
-      <Box
+      <Box component="div"
         sx={{
           position: "relative",
           width: "98%",

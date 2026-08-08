@@ -32,7 +32,7 @@ export function ThreeDHeatmapCard({
   const coloredClickedMeshes = activeHeatmapData.clickedMeshes;
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid",
         borderColor: "divider",
@@ -46,7 +46,7 @@ export function ThreeDHeatmapCard({
       }}
     >
       {/* Header and filter   */}
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           alignItems: { xs: "flex-start", sm: "center" },
@@ -55,7 +55,7 @@ export function ThreeDHeatmapCard({
           flexDirection: { xs: "column", sm: "row" },
         }}
       >
-        <Box>
+        <Box component="div">
           <Typography fontSize={16} fontWeight={700} color="text.primary">
             Where viewers clicked on the model
           </Typography>
@@ -72,7 +72,7 @@ export function ThreeDHeatmapCard({
       </Box>
 
       {/* 3D heatmap viewer */}
-      <Box
+      <Box component="div"
         sx={{
           overflow: "hidden",
           borderRadius: 2,
@@ -87,15 +87,15 @@ export function ThreeDHeatmapCard({
       </Box>
 
       {/* Clicked regions */}
-      <Box>
+      <Box component="div">
         <Typography fontSize={14} fontWeight={600} color="text.primary" mb={1}>
           Clicked regions
         </Typography>
 
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+        <Box component="div" sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
           {coloredClickedMeshes.length ? (
             coloredClickedMeshes.map((area) => (
-              <Box
+              <Box component="div"
                 key={`${area.meshName}-${area.materialName ?? "none"}`}
                 sx={{
                   display: "inline-flex",
@@ -110,7 +110,7 @@ export function ThreeDHeatmapCard({
                 }}
               >
                 {/* Color dot maps   */}
-                <Box
+                <Box component="div"
                   sx={{
                     width: 9,
                     height: 9,
@@ -138,8 +138,8 @@ export function ThreeDHeatmapCard({
       </Box>
 
       {/* Explanation accordion */}
-      <Box>
-        <Box
+      <Box component="div">
+        <Box component="div"
           onClick={() => setIsHelpOpen((prev) => !prev)}
           sx={{
             display: "inline-flex",
@@ -171,7 +171,7 @@ export function ThreeDHeatmapCard({
         </Box>
 
         <Collapse in={isHelpOpen}>
-          <Box sx={{ pt: 1 }}>
+          <Box component="div" sx={{ pt: 1 }}>
             <Typography fontSize={12} color="text.secondary" lineHeight={1.6}>
               Colored regions show the top interacted generic model areas. Each
               color maps to an Area label below the model.Blue dots show

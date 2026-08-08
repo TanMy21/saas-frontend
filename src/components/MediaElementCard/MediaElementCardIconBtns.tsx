@@ -24,7 +24,7 @@ const MediaElementCardIconBtns = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       className="control-buttons"
       sx={{
         display: "flex",

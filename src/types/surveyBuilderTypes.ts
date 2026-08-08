@@ -1,6 +1,9 @@
 import { ReactNode } from "react";
 
-import { type DropResult } from "react-beautiful-dnd";
+import {
+  type DraggableProvidedDragHandleProps,
+  type DropResult,
+} from "react-beautiful-dnd";
 
 import {
   ElementImageAsset,
@@ -22,13 +25,11 @@ export interface ShareTabProps {
 
 export type TabType = "link" | "email" | "embed";
 
-
 export type CanvasView = "desktop" | "mobile";
 
 export type CanvasViewState = {
   view: CanvasView;
 };
-
 
 export type AddMenuItemConfig = {
   label: string;
@@ -125,7 +126,7 @@ export type IATStimulusRowProps = {
   canEdit: boolean;
   canDelete: boolean;
   canReorder: boolean;
-  dragHandleProps?: any;
+  dragHandleProps?: DraggableProvidedDragHandleProps | null;
   onUpdate: (option: OptionType, nextText: string) => Promise<void>;
   onDelete: (optionID: string) => Promise<void>;
 };
@@ -291,7 +292,6 @@ export type IATSettingsTextFieldProps = {
   disabled: boolean;
   onChange: (value: string) => void;
 };
-
 
 export type ConfirmOptions = {
   message: string;

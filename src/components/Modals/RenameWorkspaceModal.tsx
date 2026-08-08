@@ -94,7 +94,7 @@ const RenameWorkspaceModal = ({
         />
 
         {/* Actions */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+        <Box component="div" sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
           <Button type="submit" disabled={isLoading} variant="modalSubmitBtn">
             {isLoading ? (
               <>

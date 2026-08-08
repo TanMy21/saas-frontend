@@ -221,7 +221,7 @@ const FlowConditionModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box
+      <Box component="div"
         sx={{
           position: "absolute",
           top: "50%",
@@ -241,7 +241,7 @@ const FlowConditionModal = ({
         }}
       >
         {/* ---------------- HEADER ---------------- */}
-        <Box
+        <Box component="div"
           sx={{
             px: 3,
             py: 2,
@@ -254,7 +254,7 @@ const FlowConditionModal = ({
             position: "relative",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Chip
               sx={{
                 bgcolor: "#eef2ff",
@@ -320,7 +320,7 @@ const FlowConditionModal = ({
         </Box>
 
         {/* ---------------- SCROLL AREA ---------------- */}
-        <Box
+        <Box component="div"
           sx={{
             flex: 1,
             overflowY: "auto",
@@ -332,7 +332,7 @@ const FlowConditionModal = ({
             id="conditions-form"
             onSubmit={handleSubmit(submitConditionData)}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -340,7 +340,7 @@ const FlowConditionModal = ({
               }}
             >
               {isLoading || isFetching ? (
-                <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
+                <Box component="div" sx={{ display: "flex", justifyContent: "center", py: 6 }}>
                   <CircularProgress />
                 </Box>
               ) : (
@@ -375,7 +375,7 @@ const FlowConditionModal = ({
 
               {/* ADD CONDITION */}
               {canCreateFlow && (
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     justifyContent: "center",
@@ -415,7 +415,7 @@ const FlowConditionModal = ({
         </Box>
 
         {/* ---------------- FOOTER ---------------- */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             justifyContent: "flex-end",
@@ -432,7 +432,7 @@ const FlowConditionModal = ({
             zIndex: 2,
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               gap: 1.5,

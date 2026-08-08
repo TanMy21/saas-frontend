@@ -4,7 +4,7 @@ type Props = React.PropsWithChildren<{ sx?: any }>;
 
 export default function GlassCard({ children, sx }: Props) {
   return (
-    <Box
+    <Box component="div"
       sx={{
         bgcolor: "rgba(255,255,255,0.7)",
         backdropFilter: "blur(6px)",

@@ -28,7 +28,7 @@ const ElementImageIconButtons = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       className="control-buttons"
       sx={{
         width: "100%",

@@ -43,7 +43,7 @@ const ShareSurveyModal = ({
 
   return (
     <Modal open={Boolean(open)} onClose={handleClose}>
-      <Box
+      <Box component="div"
         sx={{
           maxWidth: 520,
           mx: "auto",
@@ -55,7 +55,7 @@ const ShareSurveyModal = ({
         }}
       >
         {/* HEADER */}
-        <Box
+        <Box component="div"
           sx={{
             px: 3,
             py: 1.2,
@@ -71,7 +71,7 @@ const ShareSurveyModal = ({
           </IconButton>
         </Box>
 
-        <Box>
+        <Box component="div">
           <ShareModalTabs tab={tab} setTab={setTab} />
         </Box>
 
@@ -79,7 +79,7 @@ const ShareSurveyModal = ({
         {isLocked && <ShareLockedSurveyNotice />}
 
         {/* CONTENT */}
-        <Box sx={{ p: 3 }}>
+        <Box component="div" sx={{ p: 3 }}>
           {/* LINK TAB */}
           {tab === "link" && (
             <ShareLink

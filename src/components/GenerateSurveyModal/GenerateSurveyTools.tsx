@@ -10,7 +10,7 @@ export const GenerateSurveyTools = ({
   onReplace: () => void;
 }) => {
   return (
-    <Box sx={{ p:2, gap: 2, display: "flex", flexDirection: "column" }}>
+    <Box component="div" sx={{ p:2, gap: 2, display: "flex", flexDirection: "column" }}>
       <CardOption
         title="Generate Additional Questions"
         description="Append new questions to the end of your survey."

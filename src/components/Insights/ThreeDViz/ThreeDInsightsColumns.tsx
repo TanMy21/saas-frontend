@@ -11,7 +11,7 @@ function ThreeDInsightCard({
   children: React.ReactNode;
 }) {
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid",
         borderColor: "divider",
@@ -50,7 +50,7 @@ export function ThreeDInsightsColumn({
   const zoom = data.insights?.zoomInspection;
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+    <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
       <ThreeDInsightCard title="Did inspecting change the verdict?">
         {firstImpression ? (
           <>

@@ -30,7 +30,7 @@ export const GenerateSurveyHeader = ({
   };
 
   return (
-    <Box sx={headerSx}>
+    <Box component="div" sx={headerSx}>
       <Typography sx={{ fontSize: 22, fontWeight: 700 }}>
         {titleMap[state]}
       </Typography>

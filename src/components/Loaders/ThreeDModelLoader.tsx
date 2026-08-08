@@ -4,7 +4,7 @@ import { Html } from "@react-three/drei";
 const ThreeDModelLoader = () => {
   return (
     <Html center>
-      <Box
+      <Box component="div"
         sx={{
           px: 1.5,
           py: 1,

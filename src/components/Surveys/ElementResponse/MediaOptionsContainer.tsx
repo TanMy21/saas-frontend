@@ -116,7 +116,7 @@ const MediaOptionsContainer = ({
         items={options.map((option) => option.optionID)}
         strategy={rectSortingStrategy}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "grid",
             gridTemplateColumns: {

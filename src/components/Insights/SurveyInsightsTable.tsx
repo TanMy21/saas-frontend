@@ -58,7 +58,7 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
   const endItem = Math.min(page * ITEMS_PER_PAGE, questions.length);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         overflow: "hidden",
@@ -92,7 +92,7 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
                     color: "rgba(15,23,42,0.7)",
                   }}
                 >
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       alignItems: "center",
@@ -160,7 +160,7 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
                 <NumericCell>{q?.dropped!}</NumericCell>
 
                 <TableCell align="right" sx={{ px: 3 }}>
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -196,7 +196,7 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
       </TableContainer>
 
       {/* Pagination */}
-      <Box
+      <Box component="div"
         sx={{
           px: 3,
           py: 2,
@@ -221,7 +221,7 @@ export const SurveyInsightsTable = ({ questions }: SurveyInsightTable) => {
           </Typography>
         </Typography>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton disabled={page === 1} onClick={() => setPage(page - 1)}>
             <ChevronLeft size={18} />
           </IconButton>

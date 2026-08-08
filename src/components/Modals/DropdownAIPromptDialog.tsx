@@ -41,7 +41,7 @@ export const DropdownAIPromptDialog = ({
         },
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           p: 2.5,
           borderBottom: "1px solid #E2E8F0",
@@ -51,7 +51,7 @@ export const DropdownAIPromptDialog = ({
           gap: 2,
         }}
       >
-        <Box>
+        <Box component="div">
           <Typography sx={{ fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
             Generate dropdown options
           </Typography>
@@ -78,7 +78,7 @@ export const DropdownAIPromptDialog = ({
         </IconButton>
       </Box>
 
-      <Box sx={{ p: 2.5, display: "flex", flexDirection: "column", gap: 2 }}>
+      <Box component="div" sx={{ p: 2.5, display: "flex", flexDirection: "column", gap: 2 }}>
         <TextField
           multiline
           minRows={4}
@@ -113,7 +113,7 @@ export const DropdownAIPromptDialog = ({
           }}
         />
 
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             justifyContent: "flex-end",

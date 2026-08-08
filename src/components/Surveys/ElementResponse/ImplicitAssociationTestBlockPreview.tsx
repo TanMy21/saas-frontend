@@ -23,7 +23,7 @@ export const ImplicitAssociationTestBlockPreview = ({
     uiConfig.iatRightCategoryLabel || DEFAULT_IAT_PREVIEW.targetB;
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         border: "1px solid #FBCFE8",
         bgcolor: "#FDF2F8",
@@ -31,7 +31,7 @@ export const ImplicitAssociationTestBlockPreview = ({
         p: 2,
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "grid",
           gridTemplateColumns: { xs: "1fr", sm: "1fr auto 1fr" },
@@ -41,7 +41,7 @@ export const ImplicitAssociationTestBlockPreview = ({
       >
         <ImplicitAssociationSideCard keyLabel="E" title={leftCategory} />
 
-        <Box
+        <Box component="div"
           sx={{
             minWidth: { xs: "100%", sm: 150 },
             borderRadius: 2,

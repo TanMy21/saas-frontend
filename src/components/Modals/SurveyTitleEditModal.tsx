@@ -113,7 +113,7 @@ const SurveyTitleEditModal = ({
       aria-describedby="edit-survey-modal-description"
       closeAfterTransition
     >
-      <Box
+      <Box component="div"
         sx={{
           position: "absolute",
           top: "50%",
@@ -128,7 +128,7 @@ const SurveyTitleEditModal = ({
         }}
       >
         {/* Header */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -138,11 +138,11 @@ const SurveyTitleEditModal = ({
             gap: 2,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Box sx={{ p: 1, bgcolor: "#EFF6FF", borderRadius: 2 }}>
+          <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box component="div" sx={{ p: 1, bgcolor: "#EFF6FF", borderRadius: 2 }}>
               <FileText size={20} color="#2563EB" />
             </Box>
-            <Box>
+            <Box component="div">
               <Typography
                 sx={{ fontSize: 20, fontWeight: 600, color: "#111827" }}
               >
@@ -172,9 +172,9 @@ const SurveyTitleEditModal = ({
 
         {/* Content */}
         <form onSubmit={handleSubmit(submitUpdateData)}>
-          <Box sx={{ p: 3, pb: 2 }}>
+          <Box component="div" sx={{ p: 3, pb: 2 }}>
             {/* Title */}
-            <Box sx={{ mb: 2 }}>
+            <Box component="div" sx={{ mb: 2 }}>
               <Typography
                 sx={{ fontSize: 14, fontWeight: 700, mb: 1, color: "#374151" }}
               >
@@ -210,7 +210,7 @@ const SurveyTitleEditModal = ({
               />
             </Box>
             {/* Description */}
-            <Box sx={{ mb: 1 }}>
+            <Box component="div" sx={{ mb: 1 }}>
               <Typography
                 sx={{ fontSize: 14, fontWeight: 700, mb: 1, color: "#374151" }}
               >
@@ -251,7 +251,7 @@ const SurveyTitleEditModal = ({
 
           {/* Footer */}
           <Divider />
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",

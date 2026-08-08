@@ -22,7 +22,7 @@ const FontSizeControl = ({
   const isXl = useMediaQuery("(min-width:1300px) and (max-width:1900px)");
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: { md: "column", xl: "row" },
@@ -33,7 +33,7 @@ const FontSizeControl = ({
         p: { md: "2px" },
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           alignItems: "center",
@@ -97,7 +97,7 @@ const FontSizeControl = ({
         />
       </Box>
       {isXl && (
-        <Box
+        <Box component="div"
           sx={{
             display: { md: "none", xl: "flex" },
             justifyContent: { md: "center" },

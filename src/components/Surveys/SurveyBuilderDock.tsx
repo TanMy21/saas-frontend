@@ -72,7 +72,7 @@ const ViewIconSegment = ({
   });
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         position: "relative",
         display: "inline-flex",
@@ -85,7 +85,7 @@ const ViewIconSegment = ({
       }}
     >
       {/* sliding thumb */}
-      <Box
+      <Box component="div"
         sx={{
           position: "absolute",
           top: "50%",
@@ -121,7 +121,7 @@ const ViewIconSegment = ({
             modifiers: [{ name: "offset", options: { offset: [0, -12] } }],
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -165,7 +165,7 @@ const ViewIconSegment = ({
             modifiers: [{ name: "offset", options: { offset: [0, -12] } }],
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               width: "100%",
@@ -273,7 +273,7 @@ const SurveyBuilderDock = ({
 
   return (
     <>
-      <Box
+      <Box component="div"
         sx={{
           position: "sticky",
           left: 0,
@@ -303,7 +303,7 @@ const SurveyBuilderDock = ({
         <ViewIconSegment onChange={(val) => dispatch(setCanvasView(val))} />
 
         {can("UPDATE_SURVEY") && (
-          <Box
+          <Box component="div"
             sx={{
               width: 1,
               height: 28,
@@ -425,7 +425,7 @@ const DockItem = ({
           },
         }}
       >
-        <Box sx={{ fontSize: DEFAULT_ICON_SIZE, lineHeight: 0 }}>{icon}</Box>
+        <Box component="div" sx={{ fontSize: DEFAULT_ICON_SIZE, lineHeight: 0 }}>{icon}</Box>
       </IconButton>
     </Tooltip>
   );

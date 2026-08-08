@@ -16,7 +16,7 @@ export default function SaveBar({
   onCancel: () => void;
 }) {
   return (
-    <Box
+    <Box component="div"
       sx={{
         borderTop: "1px solid",
         borderColor: "divider",
@@ -25,7 +25,7 @@ export default function SaveBar({
       }}
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Box>
+        <Box component="div">
           {success && (
             <Stack
               direction="row"

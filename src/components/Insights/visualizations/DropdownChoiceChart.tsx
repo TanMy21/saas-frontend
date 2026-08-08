@@ -36,7 +36,7 @@ const DropdownChoiceChart = ({ question }: DropdownChoiceChartProps) => {
 
   if (!data.length) {
     return (
-      <Box
+      <Box component="div"
         sx={{
           py: 2,
           color: "text.secondary",
@@ -56,7 +56,7 @@ const DropdownChoiceChart = ({ question }: DropdownChoiceChartProps) => {
   );
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "grid",
         gridTemplateColumns: "30% 68%",
@@ -64,9 +64,9 @@ const DropdownChoiceChart = ({ question }: DropdownChoiceChartProps) => {
         width: "100%",
       }}
     >
-      <Box>
+      <Box component="div">
         {data.map((item) => (
-          <Box
+          <Box component="div"
             key={item.label}
             sx={{
               height: ROW_HEIGHT_SINGLE_CHOICE,
@@ -87,7 +87,7 @@ const DropdownChoiceChart = ({ question }: DropdownChoiceChartProps) => {
         ))}
       </Box>
 
-      <Box sx={{ height }}>
+      <Box component="div" sx={{ height }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}

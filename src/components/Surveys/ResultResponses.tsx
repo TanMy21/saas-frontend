@@ -5,7 +5,7 @@ import ResponsesTable from "./ResponsesTable";
 const ResultResponses = () => {
   return (
     <>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",

@@ -74,7 +74,7 @@ const SurveySearchBar = ({
           endAdornment: (
             <InputAdornment position="end">
               {/* AND/OR Toggle Group */}
-              <Box
+              <Box component="div"
                 sx={{
                   display: "flex",
                   backgroundColor: background.paper,

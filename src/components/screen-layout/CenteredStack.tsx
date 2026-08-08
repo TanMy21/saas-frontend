@@ -10,7 +10,7 @@ const CenteredStack = ({
   // className = "",
 }: ScreenLayoutProps) => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: display === "mobile" ? "92%" : "80%",
         maxWidth: display === "mobile" ? "92%" : "80%",

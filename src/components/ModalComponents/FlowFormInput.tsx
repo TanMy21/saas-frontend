@@ -113,7 +113,7 @@ const FlowFormInput = ({
   }
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         alignItems: "center",
@@ -122,7 +122,7 @@ const FlowFormInput = ({
       }}
     >
       {/* IF PILL */}
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           alignItems: "center",
@@ -150,7 +150,7 @@ const FlowFormInput = ({
         </Typography>
 
         {/* CONDITION TYPE */}
-        <Box
+        <Box component="div"
           sx={{
             width: hasComparisonSelect ? "120px" : "100px",
             flexShrink: 0,
@@ -180,7 +180,7 @@ const FlowFormInput = ({
                 const label = labelMap[selected] || "";
                 return (
                   <Tooltip title={label} placement="top" arrow>
-                    <Box
+                    <Box component="div"
                       sx={{
                         whiteSpace: "nowrap",
                         overflow: "hidden",
@@ -243,7 +243,7 @@ const FlowFormInput = ({
               </MenuItem>
             </Select>
           ) : (
-            <Box
+            <Box component="div"
               sx={{
                 px: 1,
                 py: "4px",
@@ -262,7 +262,7 @@ const FlowFormInput = ({
         </Box>
 
         {/* VALUE INPUT */}
-        <Box
+        <Box component="div"
           sx={{
             width: "100px",
             flexShrink: 0,
@@ -317,7 +317,7 @@ const FlowFormInput = ({
               placement="top"
               arrow
             >
-              <Box>
+              <Box component="div">
                 <TextField
                   disabled={readOnly}
                   {...register(`conditions.${blockIndex}.conditionValue`)}

@@ -58,7 +58,7 @@ const Results = () => {
 
   return (
     <>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -66,7 +66,7 @@ const Results = () => {
           height: "100%",
         }}
       >
-        <Box sx={{ width: "100%", height: "48px" }}>
+        <Box component="div" sx={{ width: "100%", height: "48px" }}>
           <AppBar
             position="static"
             elevation={0}
@@ -83,7 +83,7 @@ const Results = () => {
               // border: "2px solid red",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -199,7 +199,7 @@ const Results = () => {
               </Tabs>
             </Box>
 
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 width: "400px",
@@ -211,7 +211,7 @@ const Results = () => {
             </Box>
           </AppBar>
         </Box>
-        <Box
+        <Box component="div"
           sx={{
             minHeight: 0,
             flex: 1,
@@ -223,7 +223,7 @@ const Results = () => {
         >
           <Suspense
             fallback={
-              <Box
+              <Box component="div"
                 sx={{
                   minHeight: 320,
                   display: "flex",

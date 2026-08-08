@@ -66,7 +66,7 @@ const FlowFormConditionBlock = ({
 
   const [deleteCondition] = useDeleteConditionMutation();
 
-  console.log("Block condition", condition);
+  
 
   const ConditionComponent =
     FormConditionComponent[
@@ -100,7 +100,7 @@ const FlowFormConditionBlock = ({
 
   return (
     <>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           alignItems: "center",
@@ -121,7 +121,7 @@ const FlowFormConditionBlock = ({
         }}
       >
         {/* CONDITION NUMBER */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             width: "4%",
@@ -129,7 +129,7 @@ const FlowFormConditionBlock = ({
             // border: "2px solid red",
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               minWidth: "28px",
               height: "28px",
@@ -147,7 +147,7 @@ const FlowFormConditionBlock = ({
           </Box>
         </Box>
         {/* IF BLOCK */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             width: "40%",
@@ -175,7 +175,7 @@ const FlowFormConditionBlock = ({
           ) : null}
         </Box>
         {/* ARROW */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -188,7 +188,7 @@ const FlowFormConditionBlock = ({
           <MoveRight size={24} color={"#94a3b8"} />
         </Box>
         {/* THEN BLOCK */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -216,7 +216,7 @@ const FlowFormConditionBlock = ({
           </Typography>
 
           {/* TARGET SELECT */}
-          <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Box component="div" sx={{ flex: 1, minWidth: 0 }}>
             <Controller
               control={control}
               name={`conditions.${blockIndex}.goto_questionID`}
@@ -236,7 +236,7 @@ const FlowFormConditionBlock = ({
                     IconComponent={ChevronDown}
                     renderValue={() => (
                       <Tooltip title={label} placement="top" arrow>
-                        <Box
+                        <Box component="div"
                           sx={{
                             display: "flex",
                             alignItems: "center",
@@ -246,14 +246,14 @@ const FlowFormConditionBlock = ({
                           }}
                         >
                           {/* icon */}
-                          <Box sx={{ fontSize: "18px", flexShrink: 0 }}>
+                          <Box component="div" sx={{ fontSize: "18px", flexShrink: 0 }}>
                             {selectedElement &&
                               elementIcons[
                                 selectedElement.type as keyof IconMapping
                               ]}
                           </Box>
                           {/* text */}
-                          <Box
+                          <Box component="div"
                             sx={{
                               flex: 1,
                               minWidth: 0,
@@ -303,7 +303,7 @@ const FlowFormConditionBlock = ({
                         value={element.questionID}
                         sx={{ mx: 0.5, borderRadius: "10px" }}
                       >
-                        <Box
+                        <Box component="div"
                           sx={{
                             display: "flex",
                             alignItems: "center",
@@ -312,11 +312,11 @@ const FlowFormConditionBlock = ({
                             minWidth: 0,
                           }}
                         >
-                          <Box sx={{ fontSize: "18px", flexShrink: 0 }}>
+                          <Box component="div" sx={{ fontSize: "18px", flexShrink: 0 }}>
                             {elementIcons[element.type as keyof IconMapping]}
                           </Box>
 
-                          <Box
+                          <Box component="div"
                             sx={{
                               flex: 1,
                               minWidth: 0,
@@ -337,7 +337,7 @@ const FlowFormConditionBlock = ({
           </Box>
         </Box>
         {/* DELETE */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             justifyContent: "flex-start",
@@ -369,7 +369,7 @@ const FlowFormConditionBlock = ({
       </Box>
       {errors.length > 0 &&
         errors.map((error: string, idx: number) => (
-          <Box
+          <Box component="div"
             key={idx}
             sx={{
               width: "88%",

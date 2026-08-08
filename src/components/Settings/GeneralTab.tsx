@@ -77,14 +77,14 @@ export default function GeneralTab({
   userEmailReadonly?: boolean;
 }) {
   return (
-    <Box
+    <Box component="div"
       sx={{
         maxWidth: 820,
         p: { xs: 2.5, sm: 4 },
       }}
     >
       {/* Clear page hierarchy: title explains the area, subtitle explains the outcome. */}
-      <Box sx={{ mb: 3.5 }}>
+      <Box component="div" sx={{ mb: 3.5 }}>
         <Typography
           component="h2"
           sx={{

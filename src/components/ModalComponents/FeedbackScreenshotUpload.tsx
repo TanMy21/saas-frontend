@@ -35,9 +35,9 @@ const FeedbackScreenshotUpload = ({
   };
 
   return (
-    <Box sx={{ mb: 2 }}>
+    <Box component="div" sx={{ mb: 2 }}>
       {!file ? (
-        <Box
+        <Box component="div"
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           onClick={() => inputRef.current?.click()}
@@ -77,7 +77,7 @@ const FeedbackScreenshotUpload = ({
           />
         </Box>
       ) : (
-        <Box
+        <Box component="div"
           sx={{
             border: "1px solid #e5e7eb",
             borderRadius: 3,

@@ -16,7 +16,7 @@ const SurveysCollection = ({
   const layoutContainerHeightLG = viewMode === "list" ? "72vh" : "72%";
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "row",

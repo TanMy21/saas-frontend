@@ -101,7 +101,7 @@ const NewWorkspaceModal = ({ open, onClose }: NewWorkspaceModalProps) => {
         />
 
         {/* Actions */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+        <Box component="div" sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
           <Button type="submit" variant="modalSubmitBtn" disabled={isLoading}>
             {isLoading ? (
               <>

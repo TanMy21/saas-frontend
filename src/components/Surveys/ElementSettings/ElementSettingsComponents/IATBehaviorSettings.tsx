@@ -192,7 +192,7 @@ const IATBehaviorSettings = ({ qID }: ElementSettingsProps) => {
         aria-controls="iat-behavior-settings-content"
         id="iat-behavior-settings-header"
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",

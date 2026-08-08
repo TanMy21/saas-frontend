@@ -17,7 +17,7 @@ import { InsightsFilterDropdown } from "./InsightsFilterDropdown";
 export function SummaryControls({ filters, setFilters }: SummaryControlsProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box
+      <Box component="div"
         position="relative"
         top={0}
         zIndex={10}
@@ -25,7 +25,7 @@ export function SummaryControls({ filters, setFilters }: SummaryControlsProps) {
         px={{ xs: 3, lg: 4 }}
         py={2.5}
       >
-        <Box
+        <Box component="div"
           maxWidth={960}
           mx="auto"
           display="flex"
@@ -33,7 +33,7 @@ export function SummaryControls({ filters, setFilters }: SummaryControlsProps) {
           gap={2}
           justifyContent="space-between"
         >
-          <Box
+          <Box component="div"
             sx={{
               display: "inline-flex",
               alignItems: "center",
@@ -60,7 +60,7 @@ export function SummaryControls({ filters, setFilters }: SummaryControlsProps) {
             />
 
             {filters.time === "custom" && (
-              <Box display="flex" gap={4} mt={1}>
+              <Box component="div" display="flex" gap={4} mt={1}>
                 <DatePicker
                   value={filters.from ? dayjs(filters.from) : null}
                   onChange={(value) =>

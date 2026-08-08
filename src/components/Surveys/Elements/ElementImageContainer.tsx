@@ -25,7 +25,7 @@ const ElementImageContainer = () => {
   const questionImageID = firstImage?.questionImageID;
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "row",
@@ -38,7 +38,7 @@ const ElementImageContainer = () => {
         // border: "2px solid red",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "row",
@@ -54,7 +54,7 @@ const ElementImageContainer = () => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <Box
+        <Box component="div"
           key={imageUrl}
           sx={{
             display: "flex",
@@ -80,7 +80,7 @@ const ElementImageContainer = () => {
               }}
             />
           ) : (
-            <Box
+            <Box component="div"
               onClick={() => setUploadImageModalOpen(true)}
               sx={{
                 display: "flex",
@@ -101,7 +101,7 @@ const ElementImageContainer = () => {
           />
         </Box>
         {isHovered && (
-          <Box
+          <Box component="div"
             sx={{
               position: "absolute",
               top: "4%",

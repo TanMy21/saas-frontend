@@ -18,8 +18,8 @@ export const AccountProfileSection = ({ firstname, email, brand }: any) => {
         },
       }}
     >
-      <Box display={"flex"}>
-        <Box mt={1}>
+      <Box component="div" display={"flex"}>
+        <Box component="div" mt={1}>
           <Avatar
             sx={{
               width: 56,
@@ -31,13 +31,13 @@ export const AccountProfileSection = ({ firstname, email, brand }: any) => {
             {email?.charAt(0).toUpperCase()}
           </Avatar>
         </Box>
-        <Box ml={2}>
+        <Box component="div" ml={2}>
           <Typography
             sx={{ color: "black", fontWeight: "bold", fontSize: "16px" }}
           >
             {firstname}
           </Typography>
-          <Box sx={{ fontSize: "12px" }}>{email}</Box>
+          <Box component="div" sx={{ fontSize: "12px" }}>{email}</Box>
         </Box>
       </Box>
     </MenuItem>

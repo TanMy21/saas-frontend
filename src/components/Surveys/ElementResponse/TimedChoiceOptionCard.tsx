@@ -162,7 +162,7 @@ export const TimedChoiceOptionCard = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         position: "relative",
         flex: 1,
@@ -181,7 +181,7 @@ export const TimedChoiceOptionCard = ({
       }}
     >
       {isImageMode && (
-        <Box
+        <Box component="div"
           sx={{
             mb: 1.5,
             border: optionImage ? "1px solid #E2E8F0" : "1px dashed #CBD5E1",
@@ -192,7 +192,7 @@ export const TimedChoiceOptionCard = ({
           }}
         >
           {optionImage?.imageUrl ? (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <Box
                 component="img"
                 src={optionImage.imageUrl}
@@ -210,7 +210,7 @@ export const TimedChoiceOptionCard = ({
               />
 
               {canEdit && (
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     justifyContent: "center",
@@ -309,7 +309,7 @@ export const TimedChoiceOptionCard = ({
               />
             </Box>
           ) : (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <Typography sx={{ fontSize: 12, color: "#64748B" }}>
                 Upload image for option {index === 0 ? "A" : "B"}
               </Typography>

@@ -89,7 +89,7 @@ export const ConceptAttributeRow = ({
       onOpenChange={setTipOpen}
       autoHideMs={1800}
     >
-      <Box
+      <Box component="div"
         {...(canEdit ? editProps : {})}
         tabIndex={canEdit ? 0 : -1}
         onFocus={mergeHandlers<React.FocusEvent<HTMLDivElement>>(
@@ -157,7 +157,7 @@ export const ConceptAttributeRow = ({
           {index + 1}
         </Typography>
 
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box component="div" sx={{ flex: 1, minWidth: 0 }}>
           {isEditing ? (
             <ClickAwayListener onClickAway={handleClickAway}>
               <TextField
@@ -175,7 +175,7 @@ export const ConceptAttributeRow = ({
               />
             </ClickAwayListener>
           ) : (
-            <Box
+            <Box component="div"
               onClick={() => {
                 if (!canEdit) return;
 

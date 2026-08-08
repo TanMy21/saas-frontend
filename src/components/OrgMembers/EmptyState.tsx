@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 
 export const EmptyState = () => {
   return (
-    <Box
+    <Box component="div"
       sx={{
         py: 10,
         textAlign: "center",

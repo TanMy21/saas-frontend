@@ -29,7 +29,7 @@ export function BehaviorSignalMetricCard({
   }[variant];
 
   return (
-    <Box
+    <Box component="div"
       className={className}
       sx={{
         position: "relative",
@@ -47,7 +47,7 @@ export function BehaviorSignalMetricCard({
       }}
     >
       {/* Header row */}
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           alignItems: "flex-start",
@@ -56,14 +56,14 @@ export function BehaviorSignalMetricCard({
         }}
       >
         {/* Label + icon */}
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             alignItems: "center",
             gap: 1,
           }}
         >
-          {icon && <Box sx={{ color: "text.secondary" }}>{icon}</Box>}
+          {icon && <Box component="div" sx={{ color: "text.secondary" }}>{icon}</Box>}
 
           <Typography
             variant="body2"
@@ -108,7 +108,7 @@ export function BehaviorSignalMetricCard({
       </Box>
 
       {/* Value */}
-      <Box
+      <Box component="div"
         sx={{
           mt: 1,
           display: "flex",
@@ -134,7 +134,7 @@ export function BehaviorSignalMetricCard({
 
       {/* Trend */}
       {trend && trendValue && (
-        <Box
+        <Box component="div"
           sx={{
             mt: 1,
             display: "flex",

@@ -66,7 +66,7 @@ const Settings = () => {
 
   return (
     <>
-      <Box
+      <Box component="div"
         sx={{
           height: "100vh",
           display: "flex",
@@ -75,7 +75,7 @@ const Settings = () => {
         }}
       >
         {/* Header */}
-        <Box
+        <Box component="div"
           sx={{
             position: "sticky",
             top: 0,
@@ -87,7 +87,7 @@ const Settings = () => {
         </Box>
 
         {/* Main Layout */}
-        <Box
+        <Box component="div"
           sx={{
             width: "100%",
             margin: "auto",
@@ -96,7 +96,7 @@ const Settings = () => {
             ...scrollStyles.builderMain,
           }}
         >
-          <Box
+          <Box component="div"
             sx={{
               width: "100%",
               px: { xs: 2, sm: 3, lg: 6 },
@@ -104,7 +104,7 @@ const Settings = () => {
               pb: "4%",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 maxWidth: 1280,
                 mx: "auto",
@@ -113,7 +113,7 @@ const Settings = () => {
               }}
             >
               {/* Sidebar */}
-              <Box
+              <Box component="div"
                 sx={{
                   width: { xs: "100%", lg: "25%" },
                 }}
@@ -124,7 +124,7 @@ const Settings = () => {
               </Box>
 
               {/* Main Content */}
-              <Box
+              <Box component="div"
                 sx={{
                   width: { xs: "100%", lg: "75%" },
                   "@media (width: 1280px), (width: 1366px)": {
@@ -135,7 +135,7 @@ const Settings = () => {
                 <GlassCard>
                   <Suspense
                     fallback={
-                      <Box
+                      <Box component="div"
                         sx={{
                           minHeight: 320,
                           display: "flex",

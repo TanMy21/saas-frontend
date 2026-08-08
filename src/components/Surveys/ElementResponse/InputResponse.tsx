@@ -10,7 +10,7 @@ const InputResponse = ({
 }: InputResponseProps) => {
   const { primary } = useAppTheme();
   return (
-    <Box
+    <Box component="div"
       sx={{
         transformOrigin: "bottom",
         display: "flex",
@@ -19,7 +19,7 @@ const InputResponse = ({
         // border: "2px dashed red",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -58,7 +58,7 @@ const InputResponse = ({
             },
           }}
         />
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",

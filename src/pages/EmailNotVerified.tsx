@@ -34,7 +34,7 @@ const EmailNotVerified = () => {
   if (isLoading || isFetching || user?.email) {
     return (
       <Container component="main" maxWidth="sm">
-        <Box
+        <Box component="div"
           sx={{
             minHeight: "60vh",
             display: "flex",
@@ -50,7 +50,7 @@ const EmailNotVerified = () => {
 
   return (
     <Container component="main" maxWidth="sm">
-      <Box sx={{ mt: 8, textAlign: "center" }}>
+      <Box component="div" sx={{ mt: 8, textAlign: "center" }}>
         <Typography sx={{ mb: 2 }}>
           {isError
             ? "We couldn't load the email for this account."

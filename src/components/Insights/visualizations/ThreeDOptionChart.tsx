@@ -35,7 +35,7 @@ export const ThreeDOptionChart = ({
     `${count.toLocaleString()} (${pct.toFixed(1)}%)`;
 
   return (
-    <Box display="flex" flexDirection="column" gap={3}>
+    <Box component="div" display="flex" flexDirection="column" gap={3}>
       {/* Like/Dislike Split*/}
       <LikeDislikeSplitSummary
         likeCount={result.left.count}

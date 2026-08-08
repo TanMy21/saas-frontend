@@ -23,7 +23,7 @@ export const InfoScreenBubbleMenu = ({
         return !editor.state.selection.empty;
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           gap: 0.5,

@@ -152,7 +152,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -175,7 +175,7 @@ const Dashboard = () => {
           )}
         </Suspense>
 
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             position: "sticky",
@@ -195,7 +195,7 @@ const Dashboard = () => {
             archivedCount={archivedCount}
           />
         </Box>
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -209,7 +209,7 @@ const Dashboard = () => {
         >
           {/* content area */}
           {/* Main content area */}
-          <Box
+          <Box component="div"
             sx={{
               flexGrow: 1,
               width: "100%",
@@ -218,7 +218,7 @@ const Dashboard = () => {
               overflowX: "hidden",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 margin: "auto",

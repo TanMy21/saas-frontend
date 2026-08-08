@@ -6,7 +6,7 @@ const LoginAgain = () => {
   const { background, grey, shadows, text } = useAppTheme();
   return (
     <Container component="main" maxWidth="xl">
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           width: "100%",
@@ -14,7 +14,7 @@ const LoginAgain = () => {
           alignItems: "center",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             minHeight: "60%",
             marginTop: "8%",
@@ -25,7 +25,7 @@ const LoginAgain = () => {
             p: 3,
           }}
         >
-          <Box sx={{ width: "100%", maxWidth: 640 }}>
+          <Box component="div" sx={{ width: "100%", maxWidth: 640 }}>
             {/* Main Card */}
             <Paper
               sx={{
@@ -35,8 +35,8 @@ const LoginAgain = () => {
               }}
             >
               {/* Email Status */}
-              <Box sx={{ mb: 1 }}>
-                <Box
+              <Box component="div" sx={{ mb: 1 }}>
+                <Box component="div"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -67,7 +67,7 @@ const LoginAgain = () => {
               </Box>
 
               {/* Resend Email Button */}
-              <Box sx={{ mb: 1 }}>
+              <Box component="div" sx={{ mb: 1 }}>
                 <Button
                   fullWidth
                   variant="gradientPrimary"

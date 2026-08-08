@@ -78,7 +78,7 @@ const Signup = () => {
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         height: "100vh",
@@ -88,7 +88,7 @@ const Signup = () => {
         // border: "3px solid red",
       }}
     >
-      <Box
+      <Box component="div"
         sx={{
           width: { xs: "100%", sm: "100%", md: "80%", lg: "80%", xl: "80%" },
           minHeight: "auto",
@@ -103,7 +103,7 @@ const Signup = () => {
           // border: "2px solid green",
         }}
       >
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -129,7 +129,7 @@ const Signup = () => {
           }}
         >
           {/* Logo */}
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -139,7 +139,7 @@ const Signup = () => {
               // border: "2px solid red",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 display: "flex",
                 margin: "auto",
@@ -171,7 +171,7 @@ const Signup = () => {
             </Box>
           </Box>
           {/* text */}
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -191,7 +191,7 @@ const Signup = () => {
             </Typography>
           </Box>
           {/* form */}
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -201,7 +201,7 @@ const Signup = () => {
               // border: "2px solid red",
             }}
           >
-            <Box
+            <Box component="div"
               sx={{
                 width: "100%",
                 height: {
@@ -218,7 +218,7 @@ const Signup = () => {
               }}
             >
               <form onSubmit={handleSubmit(submitRegisterData)}>
-                <Box
+                <Box component="div"
                   sx={{
                     display: "flex",
                     flexDirection: "column",
@@ -229,7 +229,7 @@ const Signup = () => {
                   }}
                 >
                   {/* firstname & lastname */}
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       flexDirection: {
@@ -247,7 +247,7 @@ const Signup = () => {
                       // border: "2px solid red",
                     }}
                   >
-                    <Box
+                    <Box component="div"
                       sx={{
                         display: "flex",
                         width: {
@@ -288,7 +288,7 @@ const Signup = () => {
                         <FormErrors errors={errors.firstname.message} />
                       )}
                     </Box>
-                    <Box
+                    <Box component="div"
                       sx={{
                         display: "flex",
                         width: {
@@ -330,7 +330,7 @@ const Signup = () => {
                     </Box>
                   </Box>
                   {/* email */}
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       flexDirection: "row",
@@ -374,7 +374,7 @@ const Signup = () => {
                     )}
                   </Box>
                   {/* password */}
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       flexDirection: "row",
@@ -433,7 +433,7 @@ const Signup = () => {
                     )}
                   </Box>
                   {/* confirmPassword */}
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       flexDirection: "row",
@@ -494,7 +494,7 @@ const Signup = () => {
                     )}
                   </Box>
                   {/* organization */}
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       flexDirection: "row",
@@ -540,7 +540,7 @@ const Signup = () => {
                     )}
                   </Box>
                   {/* create button */}
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       flexDirection: "row",
@@ -571,7 +571,7 @@ const Signup = () => {
                     or continue with
                   </Divider>
                   {/* sso button */}
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       flexDirection: "row",
@@ -610,7 +610,7 @@ const Signup = () => {
 
           {/* footer: already have an account */}
 
-          <Box
+          <Box component="div"
             sx={{
               display: "flex",
               flexDirection: "row",

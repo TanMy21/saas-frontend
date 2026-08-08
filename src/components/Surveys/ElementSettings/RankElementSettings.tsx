@@ -10,7 +10,7 @@ import ScreenTypographySettings from "./ElementSettingsComponents/ScreenTypograp
 const RankElementSettings = ({ qID }: ElementSettingsProps) => {
   const { canEditQuestion } = usePermission();
   return (
-    <Box
+    <Box component="div"
       sx={{
         display: "flex",
         flexDirection: "column",

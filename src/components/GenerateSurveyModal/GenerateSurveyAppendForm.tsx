@@ -85,7 +85,7 @@ export const GenerateSurveyAppendForm = ({
   };
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         p: 4,
         display: "flex",
@@ -94,7 +94,7 @@ export const GenerateSurveyAppendForm = ({
       }}
     >
       {/* Back */}
-      <Box
+      <Box component="div"
         onClick={onBack}
         sx={{
           display: "flex",
@@ -114,7 +114,7 @@ export const GenerateSurveyAppendForm = ({
       </Typography>
 
       {/* Question Count */}
-      <Box sx={{ mb: 1 }}>
+      <Box component="div" sx={{ mb: 1 }}>
         <Typography
           sx={{
             fontWeight: 600,
@@ -177,7 +177,7 @@ export const GenerateSurveyAppendForm = ({
       />
 
       {/* Info Box */}
-      <Box
+      <Box component="div"
         sx={{
           p: 2,
           borderRadius: 2,
@@ -191,7 +191,7 @@ export const GenerateSurveyAppendForm = ({
       </Box>
 
       {/* Footer */}
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "flex-end",

@@ -34,7 +34,7 @@ export function BehaviorParticipantsTable({
   const endItem = Math.min(page * pageSize, totalRows);
 
   return (
-    <Box
+    <Box component="div"
       sx={{
         width: "100%",
         overflow: "hidden",
@@ -116,7 +116,7 @@ export function BehaviorParticipantsTable({
 
                 {/* Device */}
                 <TableCell sx={{ px: 3 }}>
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       alignItems: "center",
@@ -136,7 +136,7 @@ export function BehaviorParticipantsTable({
 
                 {/* Progress */}
                 <TableCell align="center" sx={{ px: 3 }}>
-                  <Box
+                  <Box component="div"
                     sx={{
                       display: "flex",
                       alignItems: "center",
@@ -144,7 +144,7 @@ export function BehaviorParticipantsTable({
                       gap: 1,
                     }}
                   >
-                    <Box
+                    <Box component="div"
                       sx={{
                         height: 6,
                         width: 64,
@@ -153,7 +153,7 @@ export function BehaviorParticipantsTable({
                         overflow: "hidden",
                       }}
                     >
-                      <Box
+                      <Box component="div"
                         sx={{
                           height: "100%",
                           borderRadius: 999,
@@ -215,7 +215,7 @@ export function BehaviorParticipantsTable({
       </Table>
 
       {/* Pagination Footer */}
-      <Box
+      <Box component="div"
         sx={{
           px: 3,
           py: 2,
@@ -240,7 +240,7 @@ export function BehaviorParticipantsTable({
           )}
         </Typography>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton
             disabled={page === 1}
             onClick={() => onPageChange(page - 1)}
