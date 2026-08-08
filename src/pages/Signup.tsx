@@ -69,7 +69,7 @@ const Signup = () => {
 
   const handleGoogleAuth = () => {
     try {
-      window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google/callback`;
+      window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google`;
     } catch (err: any) {
       showToast.apiError(err, {
         fallbackMessage: "Google sign-in failed. Please try again.",
