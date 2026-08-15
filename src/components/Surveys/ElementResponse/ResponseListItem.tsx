@@ -33,7 +33,6 @@ const OPTION_TEXT = "#334155";
 const OPTION_MUTED_TEXT = "#64748B";
 const OPTION_MUTED_ICON = "#CBD5E1";
 
-const OPTION_INDICATOR_BG = "#F8FAFC";
 const OPTION_INDICATOR_BORDER = "#E2E8F0";
 const OPTION_NUMBER_BG = "#F1F5F9";
 const OPTION_NUMBER_TEXT = "#64748B";
@@ -237,12 +236,11 @@ const ResponseListItem = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              ...(display === "mobile" && { marginLeft: 1 }),
-              height: 30,
-              width: 30,
-              borderRadius: "50%",
-              backgroundColor: OPTION_INDICATOR_BG,
-              border: `1px solid ${OPTION_INDICATOR_BORDER}`,
+              marginLeft: 1,
+              height: 20,
+              width: 20,
+              color: "#CFD3D9",
+              transform: "scale(1.25)",
               flexShrink: 0,
             }}
           >
@@ -250,13 +248,16 @@ const ResponseListItem = ({
               checked={false}
               tabIndex={-1}
               sx={{
-                transform: "scale(1)",
                 padding: 0,
-                color: OPTION_MUTED_ICON,
+                color: "#CFD3D9",
+
+                "& .MuiSvgIcon-root": {
+                  fontSize: 20,
+                },
 
                 // Uses brand blue if this option becomes checked later.
                 "&.Mui-checked": {
-                  color: OPTION_BRAND,
+                  color: "#005BC4",
                 },
 
                 "&:hover": {
@@ -277,12 +278,11 @@ const ResponseListItem = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              ...(display === "mobile" && { marginLeft: 1 }),
-              height: 30,
-              width: 30,
-              borderRadius: "9px",
-              backgroundColor: OPTION_INDICATOR_BG,
-              border: `1px solid ${OPTION_INDICATOR_BORDER}`,
+              marginLeft: 1,
+              height: 20,
+              width: 20,
+              color: "#CFD3D9",
+              transform: "scale(1.25)",
               flexShrink: 0,
             }}
           >
@@ -290,16 +290,16 @@ const ResponseListItem = ({
               checked={false}
               tabIndex={-1}
               sx={{
-                transform: "scale(1)",
                 padding: 0,
-                color: OPTION_MUTED_ICON,
+                color: "#CFD3D9",
 
                 // Uses brand blue if this option becomes checked later.
                 "&.Mui-checked": {
-                  color: OPTION_BRAND,
+                  color: "#005BC4",
                 },
 
                 "& .MuiSvgIcon-root": {
+                  fontSize: 20,
                   borderRadius: 1,
                 },
 
