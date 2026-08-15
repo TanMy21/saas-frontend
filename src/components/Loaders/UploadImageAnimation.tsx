@@ -1,11 +1,13 @@
 import { Box, Typography } from "@mui/material";
-import { ArrowUp, CloudUpload, Image } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
+
+import uploadAnimation from "../../assets/upload.svg";
 
 const UploadImageAnimation = () => {
   return (
     <AnimatePresence>
-      <Box component="div"
+      <Box
+        component="div"
         sx={{
           position: "fixed",
           inset: 0,
@@ -15,9 +17,10 @@ const UploadImageAnimation = () => {
           p: 2,
         }}
       >
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
-            bgcolor: "#ffffff",
+            bgcolor: "rgba(255, 255, 255, 0.90)",
             borderRadius: 2,
             boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
             px: 3,
@@ -32,7 +35,8 @@ const UploadImageAnimation = () => {
           }}
         >
           {/* Animated icon square */}
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               position: "relative",
               overflow: "hidden",
@@ -40,37 +44,23 @@ const UploadImageAnimation = () => {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              width: { xs: "22vmin", sm: "16vmin", md: "12vmin" },
+              width: { xs: "32vmin", sm: "24vmin", md: "18vmin" },
               aspectRatio: "1 / 1",
-              minWidth: 84,
-              maxWidth: 120,
+              minWidth: 140,
+              maxWidth: 200,
               borderRadius: 2,
             }}
           >
-            <CloudUpload
-              size={48}
-              style={{
-                color: "#6b7280",
-                position: "absolute",
-                top: 8,
-                opacity: 0.5,
+            <Box
+              component="img"
+              src={uploadAnimation}
+              alt="Uploading image"
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
               }}
             />
-
-            <motion.div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                position: "absolute",
-              }}
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: -50, opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <ArrowUp size={24} style={{ color: "#3b82f6" }} />
-              <Image size={32} style={{ color: "#3b82f6", marginTop: 4 }} />
-            </motion.div>
           </Box>
 
           <Typography

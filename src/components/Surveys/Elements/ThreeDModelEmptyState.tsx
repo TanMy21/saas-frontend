@@ -17,12 +17,6 @@ export const ThreeDModelEmptyState = ({
       ? "3D model upload unavailable"
       : "3D models require Professional";
 
-  const description = canUpload3DModel
-    ? "Upload a model"
-    : hasProfessionalPlan
-      ? "You do not have permission to upload a model for this question."
-      : "Upgrade to Professional or Enterprise to upload interactive 3D models.";
-
   const surfaceStyles = {
     position: "relative",
     width: "100%",
@@ -76,7 +70,8 @@ export const ThreeDModelEmptyState = ({
   };
 
   const content = (
-    <Box component="div"
+    <Box
+      component="div"
       sx={{
         position: "relative",
         zIndex: 1,
@@ -86,7 +81,8 @@ export const ThreeDModelEmptyState = ({
         maxWidth: 430,
       }}
     >
-      <Box component="div"
+      <Box
+        component="div"
         sx={{
           width: isMobile ? 72 : 80,
           height: isMobile ? 72 : 80,
@@ -123,20 +119,10 @@ export const ThreeDModelEmptyState = ({
         {title}
       </Typography>
 
-      <Typography
-        sx={{
-          maxWidth: 390,
-          color: "#64748B",
-          fontSize: isMobile ? "0.9rem" : "0.95rem",
-          lineHeight: 1.6,
-        }}
-      >
-        {description}
-      </Typography>
-
       {canUpload3DModel && (
         <>
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               display: "inline-flex",
               alignItems: "center",
@@ -176,5 +162,9 @@ export const ThreeDModelEmptyState = ({
     );
   }
 
-  return <Box component="div" sx={surfaceStyles}>{content}</Box>;
+  return (
+    <Box component="div" sx={surfaceStyles}>
+      {content}
+    </Box>
+  );
 };

@@ -286,7 +286,9 @@ export const Interactive3DModelViewer = ({
             background={false}
             backgroundIntensity={1.2}
           />
-        ) : null}
+        ) : (
+          <Environment preset="city" background={false} />
+        )}
         {/* Model */}
         <Suspense
           fallback={
