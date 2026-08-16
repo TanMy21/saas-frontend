@@ -417,10 +417,7 @@ const Replace3DModelModal = ({
                 sx={{
                   mt: 2,
                   p: 2,
-                  borderRadius: 2,
-                  bgcolor: "primary.50",
-                  borderColor: "primary.100",
-                  maxWidth: 420,
+                  maxWidth: 700,
                   mx: "auto",
                 }}
               >

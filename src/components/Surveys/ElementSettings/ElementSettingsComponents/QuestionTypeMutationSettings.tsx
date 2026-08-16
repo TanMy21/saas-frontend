@@ -22,7 +22,7 @@ import {
   useAppSelector,
 } from "../../../../app/typedReduxHooks";
 import { useSurveyEditLock } from "../../../../hooks/useSurveyEditLock";
-import { orderedElementTypes } from "../../../../utils/constants";
+import { mutationElementTypes } from "../../../../utils/constants";
 import { elementIcons, questionTypes } from "../../../../utils/elementsConfig";
 import { QuestionType } from "../../../../utils/types";
 import { willLoseOptions } from "../../../../utils/utils";
@@ -47,8 +47,8 @@ export const QuestionTypeMutationSettings = () => {
     (type as QuestionType) || "",
   );
 
-  // Order defined by orderedElementTypes.
-  const availableTypes = orderedElementTypes
+  // Order defined by mutationElementTypes.
+  const availableTypes = mutationElementTypes
     .map((t) => questionTypes.find((q) => q.type === t))
     .filter(Boolean);
 
@@ -113,7 +113,8 @@ export const QuestionTypeMutationSettings = () => {
         defaultExpanded
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -136,7 +137,8 @@ export const QuestionTypeMutationSettings = () => {
         </AccordionSummary>
 
         <AccordionDetails sx={{ px: { md: 1, xl: 1 }, pb: 2 }}>
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               width: "96%",
               marginLeft: "2%",
@@ -172,7 +174,8 @@ export const QuestionTypeMutationSettings = () => {
               >
                 {availableTypes.map((q) => (
                   <MenuItem key={q!.type} value={q!.type}>
-                    <Box component="div"
+                    <Box
+                      component="div"
                       sx={{
                         display: "flex",
                         alignItems: "center",

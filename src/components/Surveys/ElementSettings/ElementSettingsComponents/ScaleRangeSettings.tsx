@@ -43,10 +43,8 @@ const ScaleRangeSettings = () => {
 
   const { questionID, questionPreferences } = question || {};
 
-  const { minValue, maxValue } = questionPreferences?.uiConfig || {
-    minValue: undefined,
-    maxValue: undefined,
-  };
+  const minValue = questionPreferences?.uiConfig?.minValue ?? 1;
+  const maxValue = questionPreferences?.uiConfig?.maxValue ?? 5;
 
   const { handleSubmit, control, reset, setValue, getValues } =
     useForm<QuestionUIConfig>({
@@ -76,7 +74,9 @@ const ScaleRangeSettings = () => {
    * Stores the last successfully saved slider range.
    * This avoids comparing against Redux live-preview values.
    */
-  const lastSavedRangeRef = useRef({
+  const lastSavedRangeRef = useRef<
+    Pick<QuestionUIConfig, "minValue" | "maxValue">
+  >({
     minValue,
     maxValue,
   });

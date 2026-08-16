@@ -462,6 +462,7 @@ export const elementStartTypes = [
   "EMAIL_CONTACT",
 ];
 
+
 export const orderedElementTypes = [
   "BINARY",
   "MEDIA",
@@ -479,6 +480,20 @@ export const orderedElementTypes = [
   "CONCEPT_FIT",
   "IAT",
   "INFO_SCREEN",
+];
+
+export const mutationElementTypes = [
+  "BINARY",
+  "MEDIA",
+  "MULTIPLE_CHOICE",
+  "NUMBER",
+  "RADIO",
+  "RANGE",
+  "RANK",
+  "TEXT",
+  "THREE_D",
+  // New ordered types.
+  "DROPDOWN",
 ];
 
 export const OPTION_TYPES: QuestionType[] = [
