@@ -454,6 +454,9 @@ const electricBlueLightTheme = createTheme({
       styleOverrides: {
         body: {
           scrollbarColor: "#CBD5E0 #F1F5F9",
+          "@supports (-moz-appearance: none)": {
+            scrollbarWidth: "thin",
+          },
           "&::-webkit-scrollbar": {
             width: 8,
             height: 8,
@@ -701,6 +704,10 @@ const electricBlueLightTheme = createTheme({
       overflowY: "hidden",
       width: "100%",
       height: "100%",
+      "@supports (-moz-appearance: none)": {
+        scrollbarWidth: "thin",
+        scrollbarColor: "#61A5D2 #f1f1f1",
+      },
       "&::-webkit-scrollbar": {
         width: "10px",
       },
@@ -716,6 +723,10 @@ const electricBlueLightTheme = createTheme({
       },
     },
     conditionsScroll: {
+      "@supports (-moz-appearance: none)": {
+        scrollbarWidth: "thin",
+        scrollbarColor: "#005BC4 #f1f1f1",
+      },
       "&::-webkit-scrollbar": {
         width: "8px",
       },
@@ -732,6 +743,10 @@ const electricBlueLightTheme = createTheme({
     },
     builderMain: {
       scrollbarGutter: "stable both-edges",
+      "@supports (-moz-appearance: none)": {
+        scrollbarWidth: "thin",
+        scrollbarColor: "#005BC4 #f1f1f1",
+      },
       "&::-webkit-scrollbar": {
         width: "10px",
       },
@@ -748,6 +763,10 @@ const electricBlueLightTheme = createTheme({
     },
     elementsPanel: {
       // scrollbarGutter: "stable both-edges",
+      "@supports (-moz-appearance: none)": {
+        scrollbarWidth: "thin",
+        scrollbarColor: "#005BC4 #f1f1f1",
+      },
       "&::-webkit-scrollbar": {
         width: "8px",
       },

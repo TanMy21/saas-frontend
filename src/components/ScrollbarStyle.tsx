@@ -3,6 +3,13 @@ import { GlobalStyles } from "@mui/material";
 const ScrollbarStyle = () => (
   <GlobalStyles
     styles={`
+      @supports (-moz-appearance: none) {
+        * {
+          scrollbar-width: thin;
+          scrollbar-color: #61A5D2 #f1f1f1;
+        }
+      }
+
       ::-webkit-scrollbar {
         width: 10px; /* Scrollbar width */
       }

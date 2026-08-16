@@ -50,7 +50,7 @@ const QuestionBackgroundColor = ({
       } catch (error) {
         console.error("Failed to update background color:", error);
       }
-    }, 400),
+    }, 800),
   );
 
   const handleColorChange = (color: any) => {
@@ -93,7 +93,10 @@ const QuestionBackgroundColor = ({
     <Popover
       open={Boolean(colorAnchorEl)}
       anchorEl={colorAnchorEl}
-      onClose={() => setColorAnchorEl(null)}
+      onClose={() => {
+        debouncedSaveRef.current.flush();
+        setColorAnchorEl(null);
+      }}
       anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
     >
       <Box component="div" sx={{ p: 2 }}>

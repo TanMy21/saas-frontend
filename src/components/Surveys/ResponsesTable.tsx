@@ -472,6 +472,10 @@ const ResponsesTable = () => {
         muiTableContainerProps={{
           sx: {
             maxHeight: "70vh",
+            "@supports (-moz-appearance: none)": {
+              scrollbarWidth: "thin",
+              scrollbarColor: "#d4d4d8 #f4f4f5",
+            },
             "&::-webkit-scrollbar": {
               width: "12px",
               height: "12px",

@@ -12,6 +12,12 @@
   scrollbar-color: #0074eb #eef2f7;
 }
 
+@supports (-moz-appearance: none) {
+  .lp-root {
+    scrollbar-width: thin;
+  }
+}
+
 
 /* Chrome / Edge / Safari scrollbar width */
 .lp-root::-webkit-scrollbar {
