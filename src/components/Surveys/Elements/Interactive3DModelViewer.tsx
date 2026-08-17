@@ -10,6 +10,7 @@ import {
 } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Focus } from "lucide-react";
+import { suspend } from "suspend-react";
 import * as THREE from "three";
 
 import {
@@ -20,6 +21,18 @@ import {
   ViewName,
 } from "../../../utils/types";
 import Model3dLoader from "../../Loaders/Model3dLoader";
+
+const loadCityEnvironment = () =>
+  import("@pmndrs/assets/hdri/city.exr").then((module) => module.default);
+
+function SelfHostedCityEnvironment() {
+  return (
+    <Environment
+      files={suspend(loadCityEnvironment, ["city-environment"])}
+      background={false}
+    />
+  );
+}
 
 function setInitialView({
   camera,
@@ -287,7 +300,9 @@ export const Interactive3DModelViewer = ({
             backgroundIntensity={1.2}
           />
         ) : (
-          <Environment preset="city" background={false} />
+          <Suspense fallback={null}>
+            <SelfHostedCityEnvironment />
+          </Suspense>
         )}
         {/* Model */}
         <Suspense

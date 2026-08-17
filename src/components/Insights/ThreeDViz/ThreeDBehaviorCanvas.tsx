@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import { Environment, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import { suspend } from "suspend-react";
 import * as THREE from "three";
 
 import {
@@ -12,6 +13,18 @@ import {
 import ThreeDModelLoader from "../../Loaders/ThreeDModelLoader";
 
 import { ThreeDHighlightResults } from "./ThreeDHighlightResults";
+
+const loadCityEnvironment = () =>
+  import("@pmndrs/assets/hdri/city.exr").then((module) => module.default);
+
+function SelfHostedCityEnvironment() {
+  return (
+    <Environment
+      files={suspend(loadCityEnvironment, ["city-environment"])}
+      background={false}
+    />
+  );
+}
 
 export function ThreeDBehaviorCanvas({
   modelUrl,
@@ -54,9 +67,9 @@ export function ThreeDBehaviorCanvas({
       <directionalLight position={[3, 5, 2]} intensity={1.2} castShadow />
       <directionalLight position={[-3, 2, -2]} intensity={0.35} />
 
-      <Environment preset="city" background={false} />
-
       <Suspense fallback={<ThreeDModelLoader />}>
+        <SelfHostedCityEnvironment />
+
         <ThreeDHighlightResults
           modelUrl={modelUrl}
           clickedMeshes={clickedMeshes}
