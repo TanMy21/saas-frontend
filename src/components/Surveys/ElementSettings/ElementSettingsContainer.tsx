@@ -29,7 +29,7 @@ const ElementSettingsContainer = ({
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: { md: "80%", xl: "100%" },
+            width: "100%",
             height: "100%",
             left: "0%",
             m: 0,
