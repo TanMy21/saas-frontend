@@ -7,6 +7,7 @@ import { useAppTheme } from "../../theme/useAppTheme";
 import { SurveyPreferencesPanelProps } from "../../utils/types";
 
 import ElementSettingsContainer from "./ElementSettings/ElementSettingsContainer";
+import SurveyBuilderChat from "./SurveyBuilderChat";
 
 const ElementPreferencesPanel = ({
   questionId,
@@ -160,17 +161,13 @@ const ElementPreferencesPanel = ({
         aria-labelledby="question-chat-tab"
         sx={{
           display: activeTab === "chat" ? "flex" : "none",
-          alignItems: "center",
-          justifyContent: "center",
           width: "100%",
           flex: 1,
           minHeight: 0,
           overflow: "hidden",
         }}
       >
-        <Typography sx={{ color: "#64748B", fontWeight: 500 }}>
-          Assistant
-        </Typography>
+        <SurveyBuilderChat />
       </Box>
     </Box>
   );
