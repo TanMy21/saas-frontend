@@ -29,6 +29,7 @@ import useSurveyBuilderModalLocation from "../hooks/useSurveyBuilderModalLocatio
 import useSurveyBuilderStateReset from "../hooks/useSurveyBuilderStateReset";
 import useSyncQuestionsToElements from "../hooks/useSyncQuestionsToElements";
 import { SurveyBuilderResizeHandle } from "../styles/surveyBuilderStyles";
+import { COMPACT_PANEL_WIDTH } from "../utils/constants";
 import { Element } from "../utils/types";
 
 const GenerateSurveyModal = lazy(
@@ -61,6 +62,7 @@ const SurveyBuilder = () => {
   const [hasRestored, setHasRestored] = useState(false);
   const [openScratch, setOpenScratch] = useState(isOpen);
   const [openImportLocal, setOpenImportLocal] = useState(false);
+  const [isQuestionsPanelCompact, setIsQuestionsPanelCompact] = useState(false);
 
   const display = useAppSelector((state: RootState) => state.surveyCanvas.view);
 
@@ -181,6 +183,7 @@ const SurveyBuilder = () => {
   if (isLoadingCanvas)
     return (
       <Box
+        component="div"
         sx={{
           display: "flex",
           width: "100%",
@@ -199,6 +202,7 @@ const SurveyBuilder = () => {
       {/* <ScrollbarStyle /> */}
       <SurveyCanvasRefetchContext.Provider value={refetchCanvas}>
         <Box
+          component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -210,6 +214,7 @@ const SurveyBuilder = () => {
         >
           {/* Header */}
           <Box
+            component="div"
             sx={{
               display: "flex",
               width: "100%",
@@ -241,9 +246,16 @@ const SurveyBuilder = () => {
             <Panel
               id="survey-builder-questions"
               defaultSize="16%"
-              minSize={48}
+              minSize={COMPACT_PANEL_WIDTH}
               maxSize={400}
               groupResizeBehavior="preserve-pixel-size"
+              onResize={({ inPixels }) => {
+                const isCompact = inPixels <= COMPACT_PANEL_WIDTH + 0.5;
+
+                setIsQuestionsPanelCompact((current) =>
+                  current === isCompact ? current : isCompact,
+                );
+              }}
             >
               <Box
                 component="div"
@@ -257,6 +269,7 @@ const SurveyBuilder = () => {
                 <SurveyBuilderLeftSidebar
                   surveyID={surveyID}
                   elements={elements}
+                  compact={isQuestionsPanelCompact}
                 />
               </Box>
             </Panel>

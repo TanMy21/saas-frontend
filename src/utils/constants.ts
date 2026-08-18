@@ -33,6 +33,8 @@ export const LAST_WS_KEY = "lWSID";
 export const VIEW_MODE_KEY = "ws:vm";
 export const SETTINGS_TAB_KEY = "set:lat";
 
+export const COMPACT_PANEL_WIDTH = 48;
+
 export const MAX_DROPDOWN_OPTIONS = 100;
 
 export const ELEMENTS_PANEL_AUTO_SCROLL_EDGE_SIZE = 96;
