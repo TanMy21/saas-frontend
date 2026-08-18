@@ -71,6 +71,7 @@
     "react-joyride": "^2.9.3",
     "react-qr-code": "^2.0.18",
     "react-redux": "^9.1.0",
+    "react-resizable-panels": "^4.12.3",
     "react-router-dom": "^6.21.3",
     "recharts": "^3.6.0",
     "suspend-react": "^0.1.3",

@@ -1,6 +1,8 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
+import { styled, useTheme } from "@mui/material/styles";
+import { Group, Panel, Separator } from "react-resizable-panels";
 import { useLocation, useParams } from "react-router-dom";
 
 import { setQuestion, setSelectedQuestionId } from "../app/slices/elementSlice";
@@ -40,11 +42,59 @@ const ImportQuestionsModal = lazy(
   () => import("../components/Modals/ImportQuestionsModal"),
 );
 
+const SurveyBuilderResizeHandle = styled(Separator)(() => ({
+  position: "relative",
+  width: 12,
+  backgroundColor: "#F8FAFC",
+  cursor: "col-resize",
+  outline: "none",
+  transition: "background-color 160ms ease",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: "50%",
+    width: 1,
+    transform: "translateX(-50%)",
+    backgroundColor: "#E2E8F0",
+    transition: "background-color 160ms ease, width 160ms ease",
+  },
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    width: 6,
+    height: 30,
+    transform: "translate(-50%, -50%)",
+    borderRadius: 999,
+    backgroundImage:
+      "radial-gradient(circle, #94A3B8 1.5px, transparent 1.6px)",
+    backgroundPosition: "center",
+    backgroundSize: "6px 7px",
+    backgroundRepeat: "repeat-y",
+    transition: "background-color 160ms ease",
+  },
+  "&:hover, &[data-separator='active'], &[data-separator='focus']": {
+    backgroundColor: "#F1F5F9",
+  },
+  "&:hover::before, &[data-separator='active']::before, &[data-separator='focus']::before": {
+    backgroundColor: "#CBD5E1",
+  },
+  "&:hover::after, &[data-separator='active']::after, &[data-separator='focus']::after": {
+    backgroundImage:
+      "radial-gradient(circle, #64748B 1.5px, transparent 1.6px)",
+  },
+}));
+
 const SurveyBuilder = () => {
   const { surveyID } = useParams();
   const { can } = useAuth();
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const theme = useTheme();
+  const isWideLayout = useMediaQuery(theme.breakpoints.up("xl"));
 
   const { isOpen, isOpenImport, isOpenGenerate } =
     useSurveyBuilderModalLocation(location);
@@ -222,65 +272,97 @@ const SurveyBuilder = () => {
             />
           </Box>
           {/* Builder */}
-          <Box component="div"
-            sx={{
-              display: "flex",
-              flexDirection: "row",
+          <Group
+            id="survey-builder-layout"
+            orientation="horizontal"
+            resizeTargetMinimumSize={{ fine: 12, coarse: 24 }}
+            style={{
               width: "100%",
               minHeight: 0,
               height: "calc(100vh - 64px)",
               flexGrow: 1,
-              overflow: "hidden",
             }}
           >
-            <Box component="div"
-              sx={{
-                width: "16%",
-                height: "94vh",
-                flexShrink: 0,
-                backgroundColor: "white",
-                borderRight: "2px solid #E5E7EB",
-              }}
+            <Panel
+              id="survey-builder-questions"
+              defaultSize="16%"
+              minSize={48}
+              maxSize={400}
+              groupResizeBehavior="preserve-pixel-size"
             >
-              <SurveyBuilderLeftSidebar
-                surveyID={surveyID}
-                elements={elements}
-              />
-            </Box>
-            <Box component="div"
-              sx={{
-                width: { md: "64%", xl: "68%" },
-                height: "94vh",
-                flexShrink: 0,
-              }}
+              <Box
+                component="div"
+                sx={{
+                  width: "100%",
+                  height: "94vh",
+                  minWidth: 0,
+                  backgroundColor: "white",
+                }}
+              >
+                <SurveyBuilderLeftSidebar
+                  surveyID={surveyID}
+                  elements={elements}
+                />
+              </Box>
+            </Panel>
+
+            <SurveyBuilderResizeHandle
+              id="survey-builder-questions-resize-handle"
+              aria-label="Resize questions panel and survey canvas"
+              title="Drag to resize panels"
+            />
+
+            <Panel
+              id="survey-builder-canvas"
+              defaultSize={isWideLayout ? "68%" : "60%"}
+              minSize={600}
             >
-              <CanvasConsole
-                display={display}                
-                question={selectedQuestion}
-                noElements={noElements}
-                shareID={shareID}
-                published={published}
-                title={title}
-                isLocked={isLocked}
-                onOpenImport={() => setOpenImportLocal(true)}
-              />
-            </Box>
-            <Box component="div"
-              sx={{
-                width: { md: "24%", xl: "16%" },
-                height: "100%",
-                flexShrink: 0,
-                backgroundColor: "white",
-                borderLeft: "2px solid #E5E7EB",
-                // border: "2px solid green",
-              }}
+              <Box
+                component="div"
+                sx={{ width: "100%", height: "94vh", minWidth: 0 }}
+              >
+                <CanvasConsole
+                  display={display}
+                  question={selectedQuestion}
+                  noElements={noElements}
+                  shareID={shareID}
+                  published={published}
+                  title={title}
+                  isLocked={isLocked}
+                  onOpenImport={() => setOpenImportLocal(true)}
+                />
+              </Box>
+            </Panel>
+
+            <SurveyBuilderResizeHandle
+              id="survey-builder-settings-resize-handle"
+              aria-label="Resize survey canvas and question settings panel"
+              title="Drag to resize panels"
+            />
+
+            <Panel
+              id="survey-builder-settings"
+              defaultSize={isWideLayout ? "16%" : "24%"}
+              minSize={48}
+              maxSize={560}
+              groupResizeBehavior="preserve-pixel-size"
             >
-              <ElementPreferencesPanel
-                questionId={selectedQuestionId}
-                question={selectedQuestion}
-              />
-            </Box>
-          </Box>
+              <Box
+                component="div"
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  minWidth: 0,
+                  backgroundColor: "white",
+                }}
+              >
+                <ElementPreferencesPanel
+                  questionId={selectedQuestionId}
+                  question={selectedQuestion}
+                />
+              </Box>
+            </Panel>
+          </Group>
 
           <Suspense fallback={null}>
             {can?.("CREATE_SURVEY") && openScratch && (
