@@ -16,6 +16,7 @@ import {
   InsightsFilters,
   TimeFilter,
 } from "../../types/insightTypes";
+import { htmlToPlainText } from "../../utils/richTextUtils";
 import { SurveyInsightsSkeleton } from "../LoadingSkeletons/SurveyInsightsSkeleton";
 
 import { InsightsFilterDropdown } from "./InsightsFilterDropdown";
@@ -71,7 +72,8 @@ export const SurveyInsights = () => {
 
   if (isLoading) {
     return (
-      <Box component="div"
+      <Box
+        component="div"
         sx={{
           p: { xs: 2, sm: 4 },
           pb: 10,
@@ -83,10 +85,14 @@ export const SurveyInsights = () => {
   }
 
   return (
-    <Box component="div" sx={{ bgcolor: "#f9fafb", p: { xs: 2, sm: 3 }, pb: 10 }}>
+    <Box
+      component="div"
+      sx={{ bgcolor: "#f9fafb", p: { xs: 2, sm: 3 }, pb: 10 }}
+    >
       <Box component="div" sx={{ maxWidth: 1200, mx: "auto" }}>
         <Box component="div" sx={{ py: 1, mb: 2 }}>
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -96,7 +102,8 @@ export const SurveyInsights = () => {
             }}
           >
             {/* LEFT: Filters */}
-            <Box component="div"
+            <Box
+              component="div"
               sx={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -130,7 +137,8 @@ export const SurveyInsights = () => {
             </Box>
 
             {/* RIGHT: Active filter context & clear filter*/}
-            <Box component="div"
+            <Box
+              component="div"
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -192,7 +200,8 @@ export const SurveyInsights = () => {
           </Box>
         </Box>
 
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
@@ -219,7 +228,7 @@ export const SurveyInsights = () => {
               metrics?.biggestDropOff && (
                 <>
                   <strong>{`Q${metrics.biggestDropOff.order}. `}</strong>
-                  {metrics.biggestDropOff.text}
+                  {htmlToPlainText(metrics.biggestDropOff.text)}
                 </>
               )
             }
@@ -228,7 +237,8 @@ export const SurveyInsights = () => {
           />
         </Box>
 
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             backgroundColor: "#ffffff",
             border: "1px solid #e5e7eb",
@@ -238,7 +248,8 @@ export const SurveyInsights = () => {
           }}
         >
           {/* Header */}
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               display: "flex",
               justifyContent: "space-between",
@@ -258,7 +269,8 @@ export const SurveyInsights = () => {
             </Typography>
 
             {/* Metric Toggle */}
-            <Box component="div"
+            <Box
+              component="div"
               sx={{
                 display: "flex",
                 backgroundColor: "#f3f4f6",
