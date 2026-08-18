@@ -1287,6 +1287,7 @@ export interface SurveyBuilderLeftSidebarProps {
   surveyID?: string;
   setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
   elements: Element[];
+  compact?: boolean;
 }
 
 export interface SurveyListCardProps {
