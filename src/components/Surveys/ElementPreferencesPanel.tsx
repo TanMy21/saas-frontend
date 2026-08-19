@@ -129,7 +129,7 @@ const ElementPreferencesPanel = ({
               component="span"
               sx={{ fontSize: "0.875rem", fontWeight: 600, lineHeight: 1 }}
             >
-              Chat
+              Assistant
             </Typography>
           </ButtonBase>
         </Box>
@@ -168,7 +168,9 @@ const ElementPreferencesPanel = ({
           overflow: "hidden",
         }}
       >
-        <Typography sx={{ color: "#64748B", fontWeight: 500 }}>chat</Typography>
+        <Typography sx={{ color: "#64748B", fontWeight: 500 }}>
+          Assistant
+        </Typography>
       </Box>
     </Box>
   );
