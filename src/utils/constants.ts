@@ -41,6 +41,12 @@ export const ELEMENTS_PANEL_AUTO_SCROLL_EDGE_SIZE = 96;
 
 export const ELEMENTS_PANEL_AUTO_SCROLL_MAX_SPEED = 18;
 
+export const STORAGE_VERSION = 1;
+export const STORAGE_KEY_PREFIX = "survey-builder-assistant";
+
+export const ASSISTANT_MESSAGE_PAGE_SIZE = 50;
+export const ASSISTANT_JOB_POLLING_INTERVAL = 1500;
+
 export const DROPDOWN_WARNING_COUNT = 30;
 
 export const MAX_TIMED_CHOICE_OPTIONS = 2;

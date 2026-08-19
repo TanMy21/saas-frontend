@@ -1,12 +1,10 @@
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 
 import { ComposerPrimitive } from "@assistant-ui/react";
 import { IconButton, styled, Tooltip, Typography } from "@mui/material";
-import { ArrowUp, Paperclip } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 
-import { useSurveyBuilderChat } from "../SurveyBuilderChatContext";
-
-import DocumentUploadButton from "./DocumentUploadButton";
+import { useSurveyBuilderAssistant } from "../SurveyBuilderAssistantContext";
 
 const Box = styled("div")({});
 const PulseDot = styled("span")({});
@@ -43,6 +41,7 @@ const ComposerInput = styled(ComposerPrimitive.Input)(() => ({
   fontSize: "0.875rem",
   lineHeight: 1.45,
   "&::placeholder": { color: "#94A3B8" },
+  "&:disabled": { cursor: "not-allowed", color: "#64748B" },
 }));
 
 const ComposerSend = styled(ComposerPrimitive.Send)(() => ({
@@ -63,34 +62,42 @@ const ComposerSend = styled(ComposerPrimitive.Send)(() => ({
   "&:disabled": { cursor: "default", opacity: 0.32 },
 }));
 
-const ChatComposer = (): ReactElement => {
-  const { isRunning, uploadDocument } = useSurveyBuilderChat();
+const AssistantComposer = (): ReactElement => {
+  const {
+    canSendMessages,
+    isCommitting,
+    isGenerating,
+    isInitializing,
+    isSending,
+  } = useSurveyBuilderAssistant();
+
+  const isBusy =
+    isInitializing || isSending || isGenerating || isCommitting;
+
+  const placeholder = isCommitting
+    ? "Creating survey questions…"
+    : isGenerating || isSending
+      ? "The assistant is working…"
+      : "Paste questions or tell the assistant what to create…";
+
+  const helperText = isCommitting
+    ? "Creating questions in your survey"
+    : isGenerating || isSending
+      ? "Processing your request"
+      : "Messages can contain up to 10,000 characters";
 
   return (
     <Box sx={{ px: 2, pt: 1, pb: 1.5, flexShrink: 0 }}>
       <ComposerRoot>
-        <Tooltip title="Attach a source document" arrow>
-          <span>
-            <DocumentUploadButton
-              mode="generate"
-              onFileSelected={uploadDocument}
-              disabled={isRunning}
-              aria-label="Attach a source document"
-              sx={{ minWidth: 32, width: 32, height: 32, p: 0, borderRadius: 2 }}
-            >
-              <Paperclip size={17} aria-hidden="true" />
-            </DocumentUploadButton>
-          </span>
-        </Tooltip>
-
         <ComposerInput
-          placeholder="Ask about the document…"
-          aria-label="Chat message"
+          maxLength={10_000}
+          placeholder={placeholder}
+          aria-label="Assistant message"
           rows={1}
         />
 
-        {isRunning ? (
-          <Tooltip title="Generating a response" arrow>
+        {isBusy ? (
+          <Tooltip title="Assistant is working" arrow>
             <span>
               <IconButton disabled size="small" sx={{ width: 32, height: 32 }}>
                 <PulseDot
@@ -99,9 +106,13 @@ const ChatComposer = (): ReactElement => {
                     height: 10,
                     borderRadius: "50%",
                     backgroundColor: "#94A3B8",
-                    animation: "survey-chat-pulse 1s ease-in-out infinite",
-                    "@keyframes survey-chat-pulse": {
-                      "0%, 100%": { opacity: 0.35, transform: "scale(0.85)" },
+                    animation:
+                      "survey-assistant-pulse 1s ease-in-out infinite",
+                    "@keyframes survey-assistant-pulse": {
+                      "0%, 100%": {
+                        opacity: 0.35,
+                        transform: "scale(0.85)",
+                      },
                       "50%": { opacity: 1, transform: "scale(1)" },
                     },
                   }}
@@ -111,19 +122,30 @@ const ChatComposer = (): ReactElement => {
           </Tooltip>
         ) : (
           <Tooltip title="Send message" arrow>
-            <ComposerSend aria-label="Send message">
-              <ArrowUp size={17} aria-hidden="true" />
-            </ComposerSend>
+            <span>
+              <ComposerSend
+                disabled={!canSendMessages}
+                aria-label="Send assistant message"
+              >
+                <ArrowUp size={17} aria-hidden="true" />
+              </ComposerSend>
+            </span>
           </Tooltip>
         )}
       </ComposerRoot>
+
       <Typography
-        sx={{ mt: 0.75, color: "#94A3B8", fontSize: "0.6875rem", textAlign: "center" }}
+        sx={{
+          mt: 0.75,
+          color: "#94A3B8",
+          fontSize: "0.6875rem",
+          textAlign: "center",
+        }}
       >
-        Simulation only · No survey data is changed
+        {helperText}
       </Typography>
     </Box>
   );
 };
 
-export default ChatComposer;
+export default AssistantComposer;
