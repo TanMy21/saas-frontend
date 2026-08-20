@@ -320,4 +320,5 @@ export interface SurveyBuilderState {
   elements: Element[];
   isShareModalOpen?: boolean;
   activeContextPanel: SurveyBuilderContextPanel;
+  assistantOpenRequestID: number;
 }

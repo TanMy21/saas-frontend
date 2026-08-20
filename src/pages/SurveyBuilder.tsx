@@ -1,8 +1,8 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 import { Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Group, Panel } from "react-resizable-panels";
+import { Group, Panel, usePanelRef } from "react-resizable-panels";
 import { useLocation, useParams } from "react-router-dom";
 
 import { setQuestion, setSelectedQuestionId } from "../app/slices/elementSlice";
@@ -27,7 +27,10 @@ import useSurveyBuilderModalLocation from "../hooks/useSurveyBuilderModalLocatio
 import useSurveyBuilderStateReset from "../hooks/useSurveyBuilderStateReset";
 import useSyncQuestionsToElements from "../hooks/useSyncQuestionsToElements";
 import { SurveyBuilderResizeHandle } from "../styles/surveyBuilderStyles";
-import { COMPACT_PANEL_WIDTH } from "../utils/constants";
+import {
+  COMPACT_PANEL_WIDTH,
+  CONTEXT_PANEL_MAX_WIDTH,
+} from "../utils/constants";
 import { Element } from "../utils/types";
 
 const CreateNewSurveyModal = lazy(
@@ -41,6 +44,9 @@ const SurveyBuilder = () => {
   const location = useLocation();
   const theme = useTheme();
   const isWideLayout = useMediaQuery(theme.breakpoints.up("xl"));
+  const contextPanelDefaultSize = isWideLayout ? "16%" : "24%";
+  const settingsPanelRef = usePanelRef();
+  const settingsPanelWidthRef = useRef<number | null>(null);
 
   const { isOpen, isOpenAssistant } = useSurveyBuilderModalLocation(location);
   // const [stepIndex, setStepIndex] = useState(0);
@@ -53,6 +59,14 @@ const SurveyBuilder = () => {
   const [isQuestionsPanelCompact, setIsQuestionsPanelCompact] = useState(false);
 
   const display = useAppSelector((state: RootState) => state.surveyCanvas.view);
+
+  const activeContextPanel = useAppSelector(
+    (state: RootState) => state.surveyBuilder.activeContextPanel,
+  );
+
+  const assistantOpenRequestID = useAppSelector(
+    (state: RootState) => state.surveyBuilder.assistantOpenRequestID,
+  );
 
   const elements = useAppSelector(
     (state: RootState) => state.surveyBuilder.elements,
@@ -128,6 +142,33 @@ const SurveyBuilder = () => {
 
   useSortElements(elements, selectedQuestionId, dispatch);
   useSelectedQuestion(selectedQuestion, dispatch);
+
+  useEffect(() => {
+    if (isLoadingCanvas) return;
+    if (activeContextPanel !== "assistant") return;
+    if (assistantOpenRequestID === 0) return;
+
+    settingsPanelRef.current?.resize(CONTEXT_PANEL_MAX_WIDTH);
+  }, [
+    activeContextPanel,
+    assistantOpenRequestID,
+    isLoadingCanvas,
+    settingsPanelRef,
+  ]);
+
+  useEffect(() => {
+    if (isLoadingCanvas) return;
+    if (activeContextPanel !== "settings") return;
+
+    settingsPanelRef.current?.resize(
+      settingsPanelWidthRef.current ?? contextPanelDefaultSize,
+    );
+  }, [
+    activeContextPanel,
+    contextPanelDefaultSize,
+    isLoadingCanvas,
+    settingsPanelRef,
+  ]);
 
   useEffect(() => {
     if (isOpenAssistant) {
@@ -286,11 +327,17 @@ const SurveyBuilder = () => {
             />
 
             <Panel
+              panelRef={settingsPanelRef}
               id="survey-builder-settings"
               defaultSize={isWideLayout ? "16%" : "24%"}
               minSize={48}
-              maxSize={560}
+              maxSize={CONTEXT_PANEL_MAX_WIDTH}
               groupResizeBehavior="preserve-pixel-size"
+              onResize={({ inPixels }) => {
+                if (activeContextPanel === "settings") {
+                  settingsPanelWidthRef.current = inPixels;
+                }
+              }}
             >
               <Box
                 component="div"

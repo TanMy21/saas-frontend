@@ -7,6 +7,7 @@ const initialState: SurveyBuilderState = {
   elements: [],
   isShareModalOpen: false,
   activeContextPanel: "settings",
+  assistantOpenRequestID: 0,
 };
 
 export const surveyBuilderSlice = createSlice({
@@ -15,15 +16,22 @@ export const surveyBuilderSlice = createSlice({
   reducers: {
     openSurveyBuilderAssistant: (state) => {
       state.activeContextPanel = "assistant";
+      state.assistantOpenRequestID += 1;
     },
 
     openSurveyBuilderSettings: (state) => {
       state.activeContextPanel = "settings";
+      state.assistantOpenRequestID += 1;
     },
 
     toggleSurveyBuilderAssistant: (state) => {
-      state.activeContextPanel =
-        state.activeContextPanel === "assistant" ? "settings" : "assistant";
+      if (state.activeContextPanel === "assistant") {
+        state.activeContextPanel = "settings";
+        return;
+      }
+
+      state.activeContextPanel = "assistant";
+      state.assistantOpenRequestID += 1;
     },
 
     setElements: (state, action: PayloadAction<Element[]>) => {

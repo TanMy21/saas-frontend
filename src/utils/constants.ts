@@ -34,6 +34,8 @@ export const SETTINGS_TAB_KEY = "set:lat";
 
 export const COMPACT_PANEL_WIDTH = 48;
 
+export const CONTEXT_PANEL_MAX_WIDTH = 560;
+
 export const MAX_DROPDOWN_OPTIONS = 100;
 
 export const ELEMENTS_PANEL_AUTO_SCROLL_EDGE_SIZE = 96;
