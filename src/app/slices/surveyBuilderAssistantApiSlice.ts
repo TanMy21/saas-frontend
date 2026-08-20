@@ -32,6 +32,7 @@ export const surveyBuilderAssistantApiSlice = apiSlice.injectEndpoints({
       GetAssistantThreadArgs
     >({
       query: ({ surveyID, threadID }) => threadPath(surveyID, threadID),
+      keepUnusedDataFor: 0,
     }),
 
     getSurveyBuilderAssistantMessages: builder.query<
@@ -45,6 +46,7 @@ export const surveyBuilderAssistantApiSlice = apiSlice.injectEndpoints({
           ...(beforeSequence !== undefined ? { beforeSequence } : {}),
         },
       }),
+      keepUnusedDataFor: 0,
     }),
 
     sendSurveyBuilderAssistantMessage: builder.mutation<
@@ -67,6 +69,7 @@ export const surveyBuilderAssistantApiSlice = apiSlice.injectEndpoints({
     >({
       query: ({ surveyID, threadID, jobID }) =>
         `${threadPath(surveyID, threadID)}/jobs/${jobID}`,
+      keepUnusedDataFor: 0,
     }),
 
     commitSurveyBuilderAssistantDraft: builder.mutation<

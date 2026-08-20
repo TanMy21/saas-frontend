@@ -18,8 +18,10 @@ import type {
   AssistantMessage,
   AssistantSurveyPreviewPart,
   AssistantTextPart,
+  SurveyOrderPreviewProps,
 } from "../../../../types/surveyBuilderAssistant.types";
 import { useSurveyBuilderAssistant } from "../SurveyBuilderAssistantContext";
+import { isAssistantThreadReadOnly } from "../surveyBuilderAssistantLifecycle";
 
 const Box = styled("div")({});
 
@@ -30,11 +32,7 @@ const formatQuestionType = (type: string) =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
-const TextPart = ({
-  part,
-}: {
-  part: AssistantTextPart;
-}): ReactElement => (
+const TextPart = ({ part }: { part: AssistantTextPart }): ReactElement => (
   <Typography
     sx={{
       color: "inherit",
@@ -123,7 +121,8 @@ const SurveyPreviewPart = ({
           </Typography>
           <Typography sx={{ mt: 0.2, color: "#64748B", fontSize: "0.68rem" }}>
             {part.questions.length} question
-            {part.questions.length === 1 ? "" : "s"} · Draft version {part.draftVersion}
+            {part.questions.length === 1 ? "" : "s"} · Draft version{" "}
+            {part.draftVersion}
           </Typography>
         </Box>
 
@@ -231,6 +230,40 @@ const SurveyPreviewPart = ({
   </Paper>
 );
 
+export function SurveyOrderPreview({ part }: SurveyOrderPreviewProps) {
+  return (
+    <div className="space-y-3 rounded-lg border p-4">
+      <div>
+        <p className="font-medium">Proposed question order</p>
+        <p className="text-sm text-muted-foreground">
+          {part.requestedGrouping}
+        </p>
+      </div>
+
+      <ol className="space-y-2">
+        {part.questions.map((question) => (
+          <li
+            key={`${question.proposedPosition}-${question.text}`}
+            className="flex items-start gap-3 rounded-md border p-3"
+          >
+            <span className="font-medium">{question.proposedPosition}.</span>
+
+            <div>
+              <p>{question.text}</p>
+
+              {question.moved && (
+                <p className="text-xs text-muted-foreground">
+                  Moved from position {question.previousPosition}
+                </p>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 const ApprovalControlsPart = ({
   part,
 }: {
@@ -239,9 +272,12 @@ const ApprovalControlsPart = ({
   const { commitDraft, isCommitting, isGenerating, thread } =
     useSurveyBuilderAssistant();
 
-  const isCommitted =
-    thread?.status === "COMPLETED" || thread?.stage === "COMMITTED";
+  const isCommitted = thread?.stage === "COMMITTED";
+  const isReadOnly = isAssistantThreadReadOnly(thread);
   const questionCount = thread?.draft.questions.length ?? 0;
+  const isReorder = thread?.draft.commitMode === "REORDER";
+
+  const hasApprovableDraft = isReorder || questionCount > 0;
 
   if (isCommitted) {
     return (
@@ -258,12 +294,37 @@ const ApprovalControlsPart = ({
       >
         <Stack direction="row" spacing={1} alignItems="flex-start">
           <CheckCircle2 size={18} color="#16A34A" aria-hidden="true" />
+
           <Typography
-            sx={{ color: "#166534", fontSize: "0.75rem", lineHeight: 1.5 }}
+            sx={{
+              color: "#166534",
+              fontSize: "0.75rem",
+              lineHeight: 1.5,
+            }}
           >
-            The approved questions were added to the survey.
+            The approved survey changes were applied.
           </Typography>
         </Stack>
+      </Paper>
+    );
+  }
+
+  if (isReadOnly) {
+    return (
+      <Paper
+        variant="outlined"
+        sx={{
+          width: "100%",
+          p: 1.25,
+          borderColor: "#E2E8F0",
+          borderRadius: 2.5,
+          backgroundColor: "#F8FAFC",
+          boxSizing: "border-box",
+        }}
+      >
+        <Typography sx={{ color: "#64748B", fontSize: "0.75rem" }}>
+          This previous chat is read-only.
+        </Typography>
       </Paper>
     );
   }
@@ -281,21 +342,36 @@ const ApprovalControlsPart = ({
       }}
     >
       <Typography
-        sx={{ color: "#0F172A", fontSize: "0.78rem", fontWeight: 700 }}
+        sx={{
+          color: "#0F172A",
+          fontSize: "0.78rem",
+          fontWeight: 700,
+        }}
       >
-        Ready to create these questions?
+        {isReorder
+          ? "Ready to apply this question order?"
+          : "Ready to create these questions?"}
       </Typography>
+
       <Typography
-        sx={{ mt: 0.35, color: "#64748B", fontSize: "0.7rem", lineHeight: 1.45 }}
+        sx={{
+          mt: 0.35,
+          color: "#64748B",
+          fontSize: "0.7rem",
+          lineHeight: 1.45,
+        }}
       >
-        This appends the latest draft to the survey. You can continue asking for
-        changes before approving.
+        {isReorder
+          ? "This will reorder the existing survey questions. No questions will be created or deleted."
+          : "This appends the latest draft to the survey. You can continue asking for changes before approving."}
       </Typography>
 
       <Button
         fullWidth
         variant="contained"
-        disabled={isCommitting || isGenerating || questionCount === 0}
+        disabled={
+          isReadOnly || isCommitting || isGenerating || !hasApprovableDraft
+        }
         onClick={() => void commitDraft(part.draftVersion)}
         startIcon={
           isCommitting ? (
@@ -313,12 +389,21 @@ const ApprovalControlsPart = ({
           textTransform: "none",
           fontSize: "0.75rem",
           fontWeight: 650,
-          "&:hover": { backgroundColor: "#334155", boxShadow: "none" },
+          "&:hover": {
+            backgroundColor: "#334155",
+            boxShadow: "none",
+          },
         }}
       >
         {isCommitting
-          ? "Creating questions…"
-          : `Create ${questionCount} question${questionCount === 1 ? "" : "s"}`}
+          ? isReorder
+            ? "Applying reorder…"
+            : "Creating questions…"
+          : isReorder
+            ? "Apply reorder"
+            : `Create ${questionCount} question${
+                questionCount === 1 ? "" : "s"
+              }`}
       </Button>
     </Paper>
   );
@@ -338,6 +423,8 @@ const AssistantMessageParts = ({
           return <TextPart key={key} part={part} />;
         case "survey-preview":
           return <SurveyPreviewPart key={key} part={part} />;
+        case "survey-order-preview":
+          return <SurveyOrderPreview part={part} />;
         case "approval-controls":
           return <ApprovalControlsPart key={key} part={part} />;
       }

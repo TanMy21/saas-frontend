@@ -32,12 +32,21 @@ import {
 
 import {
   convertAssistantMessageToRuntime,
+  createAssistantFailureMessage,
   createOptimisticAssistantMessage,
   getAssistantAppendMessageText,
+  isAssistantFailureLikeMessage,
   mergeAssistantMessages,
+  normalizeAssistantMessageForDisplay,
   parseAssistantApiError,
 } from "./SurveyBuilderAssistantAdapters";
 import { SurveyBuilderAssistantContext } from "./SurveyBuilderAssistantContext";
+import {
+  canSendAssistantThreadMessage,
+  isAssistantThreadCommitted,
+  isAssistantThreadProcessing,
+  isAssistantThreadReadOnly,
+} from "./surveyBuilderAssistantLifecycle";
 import {
   clearAssistantActiveJobID,
   clearAssistantSession,
@@ -72,6 +81,7 @@ export const SurveyBuilderAssistantProvider = ({
   const initializationSurveyIDRef = useRef<string | null>(null);
   const handledJobIDRef = useRef<string | null>(null);
   const pendingCommitRef = useRef<PendingCommitRequest | null>(null);
+  const createThreadInFlightRef = useRef(false);
 
   const [createThread] = useCreateSurveyBuilderAssistantThreadMutation();
 
@@ -85,6 +95,11 @@ export const SurveyBuilderAssistantProvider = ({
   const [commitAssistantDraft, { isLoading: isCommitting }] =
     useCommitSurveyBuilderAssistantDraftMutation();
 
+  const shouldPollActiveJob =
+    Boolean(activeJobID) &&
+    thread?.status === "ACTIVE" &&
+    !isAssistantThreadCommitted(thread);
+
   const { data: activeJob, error: activeJobError } =
     useGetSurveyBuilderAssistantJobQuery(
       {
@@ -93,28 +108,41 @@ export const SurveyBuilderAssistantProvider = ({
         jobID: activeJobID ?? "",
       },
       {
-        skip: !assistantSurveyID || !thread?.threadID || !activeJobID,
-        pollingInterval: activeJobID ? ASSISTANT_JOB_POLLING_INTERVAL : 0,
+        skip:
+          !assistantSurveyID ||
+          !thread?.threadID ||
+          !activeJobID ||
+          !shouldPollActiveJob,
+        pollingInterval: shouldPollActiveJob
+          ? ASSISTANT_JOB_POLLING_INTERVAL
+          : 0,
         refetchOnMountOrArgChange: true,
       },
     );
 
   const displayMessages = useMemo(() => {
-    if (!optimisticMessage) return messages;
+    const mergedMessages = optimisticMessage
+      ? mergeAssistantMessages(messages, [optimisticMessage])
+      : messages;
 
-    return mergeAssistantMessages(messages, [optimisticMessage]);
+    return mergedMessages.map(normalizeAssistantMessageForDisplay);
   }, [messages, optimisticMessage]);
 
   const isGenerating =
-    Boolean(activeJobID) &&
+    shouldPollActiveJob &&
     (!activeJob ||
       activeJob.status === "PENDING" ||
       activeJob.status === "PROCESSING");
 
+  useEffect(() => {
+    if (!activeJobID || !isAssistantThreadReadOnly(thread)) return;
+
+    setActiveJobID(null);
+    clearAssistantActiveJobID(assistantSurveyID);
+  }, [activeJobID, assistantSurveyID, thread]);
+
   const canSendMessages =
-    thread !== null &&
-    thread.stage !== "PROCESSING" &&
-    thread.stage !== "COMMITTING" &&
+    canSendAssistantThreadMessage(thread) &&
     !isInitializing &&
     !isSending &&
     !isGenerating &&
@@ -160,6 +188,26 @@ export const SurveyBuilderAssistantProvider = ({
     setNextBeforeSequence(latestMessages.nextBeforeSequence);
   }, [assistantSurveyID, getMessages, getThread, thread?.threadID]);
 
+  const createAndStoreThread = useCallback(async () => {
+    if (!assistantSurveyID || createThreadInFlightRef.current) return null;
+
+    createThreadInFlightRef.current = true;
+
+    try {
+      const createdThread = await createThread({
+        surveyID: assistantSurveyID,
+      }).unwrap();
+
+      writeAssistantSession(assistantSurveyID, {
+        threadID: createdThread.threadID,
+      });
+
+      return createdThread;
+    } finally {
+      createThreadInFlightRef.current = false;
+    }
+  }, [assistantSurveyID, createThread]);
+
   const initializeAssistant = useCallback(async () => {
     if (!assistantSurveyID) {
       setErrorMessage("A survey is required to start the assistant.");
@@ -180,7 +228,10 @@ export const SurveyBuilderAssistantProvider = ({
     let restoredJobID: string | null = storedSession?.activeJobID ?? null;
 
     try {
-      if (storedSession?.threadID) {
+      if (!storedSession?.threadID) {
+        loadedThread = await createAndStoreThread();
+        restoredJobID = null;
+      } else {
         try {
           loadedThread = await getThread({
             surveyID: assistantSurveyID,
@@ -192,20 +243,22 @@ export const SurveyBuilderAssistantProvider = ({
             "Unable to load the saved assistant thread.",
           );
 
-          if (parsedError.status === 404) {
-            clearAssistantSession(assistantSurveyID);
-            restoredJobID = null;
-          } else {
-            throw error;
-          }
+          if (parsedError.status !== 404) throw error;
+
+          clearAssistantSession(assistantSurveyID);
+          restoredJobID = null;
+          loadedThread = await createAndStoreThread();
         }
       }
 
-      if (!loadedThread) {
-        loadedThread = await createThread({
-          surveyID: assistantSurveyID,
-        }).unwrap();
+      if (!loadedThread) return;
 
+      const canRestoreJob =
+        loadedThread.status === "ACTIVE" &&
+        !isAssistantThreadCommitted(loadedThread) &&
+        Boolean(restoredJobID);
+
+      if (!canRestoreJob) {
         restoredJobID = null;
       }
 
@@ -232,7 +285,7 @@ export const SurveyBuilderAssistantProvider = ({
     } finally {
       setIsInitializing(false);
     }
-  }, [assistantSurveyID, createThread, getThread, loadInitialMessages]);
+  }, [assistantSurveyID, createAndStoreThread, getThread, loadInitialMessages]);
 
   useEffect(() => {
     if (
@@ -252,7 +305,14 @@ export const SurveyBuilderAssistantProvider = ({
       isRetry: boolean,
       targetThread: AssistantThread | null = thread,
     ) => {
-      if (!targetThread?.threadID || isSending || isGenerating) return;
+      if (
+        !targetThread?.threadID ||
+        !canSendAssistantThreadMessage(targetThread) ||
+        isSending ||
+        isGenerating
+      ) {
+        return;
+      }
 
       setErrorMessage(null);
 
@@ -353,63 +413,20 @@ export const SurveyBuilderAssistantProvider = ({
         message: normalizedMessage,
       };
 
-      let targetThread = thread;
-
-      if (
-        targetThread?.status !== "ACTIVE" ||
-        targetThread.stage === "COMMITTED"
-      ) {
-        setIsInitializing(true);
-        setErrorMessage(null);
-
-        try {
-          targetThread = await createThread({
-            surveyID: assistantSurveyID,
-          }).unwrap();
-
-          writeAssistantSession(assistantSurveyID, {
-            threadID: targetThread.threadID,
-          });
-
-          handledJobIDRef.current = null;
-          pendingCommitRef.current = null;
-
-          setThread(targetThread);
-          setMessages([]);
-          setOptimisticMessage(null);
-          setPendingMessage(null);
-          setActiveJobID(null);
-          setHasMoreMessages(false);
-          setNextBeforeSequence(null);
-        } catch (error) {
-          const parsedError = parseAssistantApiError(
-            error,
-            "A new assistant thread could not be created.",
-          );
-
-          setErrorMessage(parsedError.message);
-          return;
-        } finally {
-          setIsInitializing(false);
-        }
-      }
-
-      if (!targetThread) return;
-
       setPendingMessage(request);
-      await submitMessageRequest(request, false, targetThread);
+      await submitMessageRequest(request, false, thread);
     },
-    [
-      assistantSurveyID,
-      canSendMessages,
-      createThread,
-      submitMessageRequest,
-      thread,
-    ],
+    [canSendMessages, submitMessageRequest, thread],
   );
 
   const retryMessage = useCallback(async () => {
-    if (!pendingMessage || isSending || isGenerating || isCommitting) {
+    if (
+      !pendingMessage ||
+      !canSendMessages ||
+      isSending ||
+      isGenerating ||
+      isCommitting
+    ) {
       return;
     }
 
@@ -418,6 +435,7 @@ export const SurveyBuilderAssistantProvider = ({
     isCommitting,
     isGenerating,
     isSending,
+    canSendMessages,
     pendingMessage,
     submitMessageRequest,
   ]);
@@ -438,9 +456,12 @@ export const SurveyBuilderAssistantProvider = ({
     clearAssistantActiveJobID(assistantSurveyID);
 
     void (async () => {
+      let responseReloadFailed = false;
+
       try {
         await refreshThreadAndMessages();
       } catch (error) {
+        responseReloadFailed = true;
         const parsedError = parseAssistantApiError(
           error,
           "The assistant finished, but its response could not be loaded.",
@@ -453,14 +474,25 @@ export const SurveyBuilderAssistantProvider = ({
 
       if (activeJob.status === "COMPLETED") {
         setPendingMessage(null);
-        setErrorMessage(null);
+        if (!responseReloadFailed) setErrorMessage(null);
         return;
       }
 
-      setErrorMessage(
-        activeJob.errorMessage ||
-          "The survey assistant could not process the request.",
-      );
+      if (!responseReloadFailed) setErrorMessage(null);
+      setMessages((current) => {
+        const latestMessage = current.at(-1);
+
+        if (latestMessage && isAssistantFailureLikeMessage(latestMessage)) {
+          return current;
+        }
+
+        return mergeAssistantMessages(current, [
+          createAssistantFailureMessage(
+            activeJob,
+            (latestMessage?.sequence ?? 0) + 1,
+          ),
+        ]);
+      });
     })();
   }, [activeJob, activeJobID, assistantSurveyID, refreshThreadAndMessages]);
 
@@ -521,7 +553,16 @@ export const SurveyBuilderAssistantProvider = ({
 
   const commitDraft = useCallback(
     async (draftVersion: number) => {
-      if (!thread?.threadID || isCommitting || isGenerating || isSending) {
+      if (
+        !thread?.threadID ||
+        thread.status !== "ACTIVE" ||
+        isAssistantThreadProcessing(thread) ||
+        isAssistantThreadCommitted(thread) ||
+        isAssistantThreadReadOnly(thread) ||
+        isCommitting ||
+        isGenerating ||
+        isSending
+      ) {
         return;
       }
 
@@ -583,13 +624,14 @@ export const SurveyBuilderAssistantProvider = ({
       refetchCanvas,
       refreshThreadAndMessages,
       assistantSurveyID,
-      thread?.threadID,
+      thread,
     ],
   );
 
   const createNewThread = useCallback(async () => {
     if (
       !assistantSurveyID ||
+      createThreadInFlightRef.current ||
       isInitializing ||
       isSending ||
       isGenerating ||
@@ -602,13 +644,9 @@ export const SurveyBuilderAssistantProvider = ({
     setErrorMessage(null);
 
     try {
-      const createdThread = await createThread({
-        surveyID: assistantSurveyID,
-      }).unwrap();
+      const createdThread = await createAndStoreThread();
 
-      writeAssistantSession(assistantSurveyID, {
-        threadID: createdThread.threadID,
-      });
+      if (!createdThread) return;
 
       handledJobIDRef.current = null;
       pendingCommitRef.current = null;
@@ -620,22 +658,39 @@ export const SurveyBuilderAssistantProvider = ({
       setActiveJobID(null);
       setHasMoreMessages(false);
       setNextBeforeSequence(null);
+
+      try {
+        await loadInitialMessages(createdThread.threadID);
+      } catch (error) {
+        const parsedError = parseAssistantApiError(
+          error,
+          "The new chat was created, but its messages could not be loaded.",
+        );
+
+        setErrorMessage(parsedError.message);
+      }
     } catch (error) {
       const parsedError = parseAssistantApiError(
         error,
         "A new assistant thread could not be created.",
       );
 
-      setErrorMessage(parsedError.message);
+      setErrorMessage(
+        parsedError.status === 409 &&
+          parsedError.code === "SURVEY_BUILDER_THREAD_BUSY"
+          ? "Please wait for the current operation to finish before starting a new chat."
+          : parsedError.message,
+      );
     } finally {
       setIsInitializing(false);
     }
   }, [
-    createThread,
+    createAndStoreThread,
     isCommitting,
     isGenerating,
     isInitializing,
     isSending,
+    loadInitialMessages,
     assistantSurveyID,
   ]);
 

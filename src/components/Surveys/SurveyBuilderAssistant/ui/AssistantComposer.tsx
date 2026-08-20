@@ -69,27 +69,40 @@ const AssistantComposer = (): ReactElement => {
     isGenerating,
     isInitializing,
     isSending,
+    thread,
   } = useSurveyBuilderAssistant();
 
-  const isBusy =
-    isInitializing || isSending || isGenerating || isCommitting;
+  const isBusy = isInitializing || isSending || isGenerating || isCommitting;
 
-  const placeholder = isCommitting
-    ? "Creating survey questions…"
-    : isGenerating || isSending
-      ? "The assistant is working…"
-      : "Paste questions or tell the assistant what to create…";
+  const placeholder = !thread
+    ? "Preparing the assistant…"
+    : thread.status === "ARCHIVED"
+      ? "This chat is archived"
+      : thread.status === "COMPLETED"
+        ? "This chat is read-only"
+        : isCommitting
+          ? "Creating survey questions…"
+          : isGenerating || isSending
+            ? "The assistant is working…"
+            : "Paste questions or tell the assistant what to create…";
 
-  const helperText = isCommitting
-    ? "Creating questions in your survey"
-    : isGenerating || isSending
-      ? "Processing your request"
-      : "Messages can contain up to 10,000 characters";
+  const helperText = !thread
+    ? "Starting a new chat"
+    : thread.status === "ARCHIVED"
+      ? "Archived chats cannot accept messages"
+      : thread.status === "COMPLETED"
+        ? "Previous chats are read-only"
+        : isCommitting
+          ? "Creating questions in your survey"
+          : isGenerating || isSending
+            ? "Processing..."
+            : "Messages can contain up to 10,000 characters";
 
   return (
     <Box sx={{ px: 2, pt: 1, pb: 1.5, flexShrink: 0 }}>
       <ComposerRoot>
         <ComposerInput
+          disabled={!canSendMessages}
           maxLength={10_000}
           placeholder={placeholder}
           aria-label="Assistant message"
@@ -106,8 +119,7 @@ const AssistantComposer = (): ReactElement => {
                     height: 10,
                     borderRadius: "50%",
                     backgroundColor: "#94A3B8",
-                    animation:
-                      "survey-assistant-pulse 1s ease-in-out infinite",
+                    animation: "survey-assistant-pulse 1s ease-in-out infinite",
                     "@keyframes survey-assistant-pulse": {
                       "0%, 100%": {
                         opacity: 0.35,

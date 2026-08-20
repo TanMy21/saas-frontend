@@ -1,16 +1,20 @@
 import type { ReactElement } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { MessagePrimitive } from "@assistant-ui/react";
 import {
   Button,
   CircularProgress,
+  IconButton,
   Stack,
   styled,
+  Tooltip,
   Typography,
 } from "@mui/material";
-import { Bot, RefreshCw } from "lucide-react";
+import { Bot, Check, Copy, RefreshCw } from "lucide-react";
 
 import type { AssistantMessage as AssistantMessageData } from "../../../../types/surveyBuilderAssistant.types";
+import { safeCopyText } from "../../../../utils/utils";
 import { useSurveyBuilderAssistant } from "../SurveyBuilderAssistantContext";
 
 import AssistantMessageParts from "./AssistantMessageParts";
@@ -41,9 +45,50 @@ const AssistantMessage = ({
   message: AssistantMessageData;
 }): ReactElement => {
   const { retryMessage } = useSurveyBuilderAssistant();
+  const [isCopied, setIsCopied] = useState(false);
+  const copyResetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const isUser = message.role === "USER";
   const isPending = message.status === "PENDING";
   const isFailed = message.status === "FAILED";
+
+  const userMessageText = useMemo(
+    () =>
+      message.content.parts
+        .filter((part) => part.type === "text")
+        .map((part) => (part.type === "text" ? part.text : ""))
+        .join("\n")
+        .trim(),
+    [message.content.parts],
+  );
+
+  useEffect(
+    () => () => {
+      if (copyResetTimeoutRef.current) {
+        clearTimeout(copyResetTimeoutRef.current);
+      }
+    },
+    [],
+  );
+
+  const handleCopyMessage = async () => {
+    if (!userMessageText) return;
+
+    const copied = await safeCopyText(userMessageText);
+
+    if (!copied) return;
+
+    if (copyResetTimeoutRef.current) {
+      clearTimeout(copyResetTimeoutRef.current);
+    }
+
+    setIsCopied(true);
+    copyResetTimeoutRef.current = setTimeout(() => {
+      setIsCopied(false);
+      copyResetTimeoutRef.current = null;
+    }, 1600);
+  };
 
   const assistantLabel =
     message.role === "SYSTEM"
@@ -92,14 +137,14 @@ const AssistantMessage = ({
               px: isUser ? 1.25 : 0,
               py: isUser ? 0.9 : 0,
               borderRadius: isUser ? "14px 14px 4px 14px" : 0,
-              color: isUser ? "#FFFFFF" : "#334155",
-              backgroundColor: isUser ? "#0F172A" : "transparent",
+              color: isUser ? "#FFFFFF" : "#2a2a46",
+              backgroundColor: isUser ? "#4F46E5" : "transparent",
             }}
           >
             <AssistantMessageParts message={message} />
           </Box>
 
-          {isUser && (isPending || isFailed) && (
+          {isUser && (
             <Stack
               direction="row"
               justifyContent="flex-end"
@@ -107,6 +152,29 @@ const AssistantMessage = ({
               spacing={0.5}
               sx={{ mt: 0.4 }}
             >
+              <Tooltip title={isCopied ? "Copied" : "Copy"} arrow>
+                <span>
+                  <IconButton
+                    size="small"
+                    disabled={!userMessageText}
+                    aria-label={isCopied ? "Message copied" : "Copy message"}
+                    onClick={() => void handleCopyMessage()}
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      color: isCopied ? "#15803D" : "#64748B",
+                      "&:hover": { backgroundColor: "#F1F5F9" },
+                    }}
+                  >
+                    {isCopied ? (
+                      <Check size={13} aria-hidden="true" />
+                    ) : (
+                      <Copy size={13} aria-hidden="true" />
+                    )}
+                  </IconButton>
+                </span>
+              </Tooltip>
+
               {isPending ? (
                 <>
                   <CircularProgress size={10} thickness={5} />
@@ -114,7 +182,7 @@ const AssistantMessage = ({
                     Sending…
                   </Typography>
                 </>
-              ) : (
+              ) : isFailed ? (
                 <Button
                   size="small"
                   onClick={() => void retryMessage()}
@@ -129,7 +197,7 @@ const AssistantMessage = ({
                 >
                   Retry
                 </Button>
-              )}
+              ) : null}
             </Stack>
           )}
         </Box>

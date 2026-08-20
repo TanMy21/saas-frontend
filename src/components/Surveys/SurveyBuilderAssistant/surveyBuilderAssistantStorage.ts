@@ -6,6 +6,9 @@ import { STORAGE_KEY_PREFIX, STORAGE_VERSION } from "../../../utils/constants";
 
 const getStorageKey = (surveyID: string) => `${STORAGE_KEY_PREFIX}:${surveyID}`;
 
+const ASSISTANT_SURVEY_DELETED_EVENT =
+  "survey-builder-assistant:survey-deleted";
+
 const canUseLocalStorage = () =>
   typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 
@@ -131,13 +134,58 @@ export const clearAssistantActiveJobID = (surveyID: string): void => {
 };
 
 export const clearAssistantSession = (surveyID: string): void => {
-  if (!canUseLocalStorage() || !isNonEmptyString(surveyID)) {
+  if (!isNonEmptyString(surveyID)) {
     return;
   }
 
-  try {
-    window.localStorage.removeItem(getStorageKey(surveyID));
-  } catch {
-    // Local storage may be unavailable or restricted.
+  const storageKey = getStorageKey(surveyID);
+
+  if (canUseLocalStorage()) {
+    try {
+      window.localStorage.removeItem(storageKey);
+    } catch {
+      // Local storage may be unavailable or restricted.
+    }
   }
+
+  if (typeof window !== "undefined") {
+    try {
+      window.sessionStorage.removeItem(storageKey);
+    } catch {
+      // Session storage may be unavailable or restricted.
+    }
+  }
+};
+
+export const notifyAssistantSurveyDeleted = (surveyID: string): void => {
+  if (typeof window === "undefined" || !isNonEmptyString(surveyID)) return;
+
+  clearAssistantSession(surveyID);
+  window.dispatchEvent(
+    new CustomEvent(ASSISTANT_SURVEY_DELETED_EVENT, {
+      detail: { surveyID },
+    }),
+  );
+};
+
+export const subscribeToAssistantSurveyDeleted = (
+  surveyID: string,
+  onDeleted: () => void,
+) => {
+  if (typeof window === "undefined" || !isNonEmptyString(surveyID)) {
+    return () => undefined;
+  }
+
+  const handleDeleted = (event: Event) => {
+    const deletedSurveyID = (event as CustomEvent<{ surveyID?: string }>).detail
+      ?.surveyID;
+
+    if (deletedSurveyID === surveyID) onDeleted();
+  };
+
+  window.addEventListener(ASSISTANT_SURVEY_DELETED_EVENT, handleDeleted);
+
+  return () => {
+    window.removeEventListener(ASSISTANT_SURVEY_DELETED_EVENT, handleDeleted);
+  };
 };

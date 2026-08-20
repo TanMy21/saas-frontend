@@ -77,7 +77,6 @@ export type SurveyBuilderChatContextValue = {
   resetConversation: () => void;
 };
 
- 
 export type ISODateString = string;
 
 export type AssistantThreadStage =
@@ -152,6 +151,7 @@ export interface AssistantDraftQuestion {
 
 export interface AssistantDraft {
   schemaVersion: number;
+  commitMode: "APPEND" | "REPLACE_ALL" | "REORDER";
   version: number;
   title: string;
   description: string | null;
@@ -186,8 +186,23 @@ export interface AssistantTextPart {
 export interface AssistantSurveyPreviewPart {
   type: "survey-preview";
   draftVersion: number;
+  commitMode: "APPEND" | "REPLACE_ALL" | "REORDER";
   title: string;
   questions: AssistantDraftQuestion[];
+}
+
+export interface AssistantSurveyOrderPreviewQuestion {
+  text: string;
+  previousPosition: number;
+  proposedPosition: number;
+  moved: boolean;
+}
+
+export interface AssistantSurveyOrderPreviewPart {
+  type: "survey-order-preview";
+  draftVersion: number;
+  requestedGrouping: string;
+  questions: AssistantSurveyOrderPreviewQuestion[];
 }
 
 export interface AssistantApprovalControlsPart {
@@ -198,6 +213,7 @@ export interface AssistantApprovalControlsPart {
 export type AssistantMessagePart =
   | AssistantTextPart
   | AssistantSurveyPreviewPart
+  | AssistantSurveyOrderPreviewPart
   | AssistantApprovalControlsPart;
 
 export interface AssistantMessageContent {
@@ -355,3 +371,7 @@ export interface OptimisticAssistantMessageInput {
   message: string;
   sequence: number;
 }
+
+export type SurveyOrderPreviewProps = {
+  part: AssistantSurveyOrderPreviewPart;
+};

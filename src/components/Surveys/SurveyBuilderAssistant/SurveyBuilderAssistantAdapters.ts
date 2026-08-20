@@ -3,8 +3,10 @@ import type { AppendMessage } from "@assistant-ui/react";
 import {
   AssistantApiError,
   AssistantApprovalControlsPart,
+  AssistantJob,
   AssistantMessage,
   AssistantMessagePart,
+  AssistantSurveyOrderPreviewPart,
   AssistantSurveyPreviewPart,
   AssistantTextPart,
   OptimisticAssistantMessageInput,
@@ -13,6 +15,11 @@ import {
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
+
+const TECHNICAL_ERROR_CODE_PATTERN = /\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+){2,}\b/;
+
+export const ASSISTANT_RESPONSE_FAILURE_MESSAGE =
+  "I couldn’t complete that response. Please try again or rephrase your request.";
 
 const createValidDate = (value: string) => {
   const date = new Date(value);
@@ -35,9 +42,71 @@ export const isAssistantSurveyPreviewPart = (
   part: AssistantMessagePart,
 ): part is AssistantSurveyPreviewPart => part.type === "survey-preview";
 
+export const isAssistantSurveyOrderPreviewPart = (
+  part: AssistantMessagePart,
+): part is AssistantSurveyOrderPreviewPart =>
+  part.type === "survey-order-preview";
+
 export const isAssistantApprovalControlsPart = (
   part: AssistantMessagePart,
 ): part is AssistantApprovalControlsPart => part.type === "approval-controls";
+
+export const isAssistantFailureLikeMessage = (message: AssistantMessage) => {
+  if (message.role === "USER") return false;
+
+  const containsTechnicalError = message.content.parts.some(
+    (part) =>
+      part.type === "text" && TECHNICAL_ERROR_CODE_PATTERN.test(part.text),
+  );
+
+  return (
+    message.status === "FAILED" ||
+    Boolean(message.errorCode) ||
+    containsTechnicalError
+  );
+};
+
+export const normalizeAssistantMessageForDisplay = (
+  message: AssistantMessage,
+): AssistantMessage => {
+  if (!isAssistantFailureLikeMessage(message)) return message;
+
+  return {
+    ...message,
+    role: "ASSISTANT",
+    status: "COMPLETED",
+    errorCode: null,
+    content: {
+      parts: [
+        {
+          type: "text",
+          text: ASSISTANT_RESPONSE_FAILURE_MESSAGE,
+        },
+      ],
+    },
+  };
+};
+
+export const createAssistantFailureMessage = (
+  job: AssistantJob,
+  sequence: number,
+): AssistantMessage => ({
+  messageID: `assistant-failure-${job.jobID}`,
+  role: "ASSISTANT",
+  status: "COMPLETED",
+  sequence,
+  authorUserID: null,
+  content: {
+    parts: [
+      {
+        type: "text",
+        text: ASSISTANT_RESPONSE_FAILURE_MESSAGE,
+      },
+    ],
+  },
+  errorCode: null,
+  createdAt: job.completedAt ?? new Date().toISOString(),
+});
 
 export const getAssistantMessageText = (message: AssistantMessage) => {
   const text = message.content.parts
@@ -159,14 +228,20 @@ export const parseAssistantApiError = (
       ? rawStatus
       : null;
 
+  const getSafeMessage = (value: unknown) =>
+    typeof value === "string" &&
+    value.trim().length > 0 &&
+    !TECHNICAL_ERROR_CODE_PATTERN.test(value)
+      ? value
+      : fallbackMessage;
+
   if (isObject(error.data)) {
     const data = error.data as Partial<AssistantApiError>;
 
     return {
       status,
       code: typeof data.code === "string" ? data.code : null,
-      message:
-        typeof data.message === "string" ? data.message : fallbackMessage,
+      message: getSafeMessage(data.message),
     };
   }
 
@@ -174,13 +249,13 @@ export const parseAssistantApiError = (
     return {
       status,
       code: null,
-      message: error.data,
+      message: getSafeMessage(error.data),
     };
   }
 
   return {
     status,
     code: null,
-    message: typeof error.error === "string" ? error.error : fallbackMessage,
+    message: getSafeMessage(error.error),
   };
 };

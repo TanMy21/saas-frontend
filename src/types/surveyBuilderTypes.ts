@@ -303,3 +303,16 @@ export type ConfirmOptions = {
 export type ConfirmRequest = ConfirmOptions & {
   resolve: (value: boolean) => void;
 };
+
+
+export type SurveyOrderPreviewPart = {
+  type: "survey-order-preview";
+  draftVersion: number;
+  requestedGrouping: string;
+  questions: Array<{
+    text: string;
+    previousPosition: number;
+    proposedPosition: number;
+    moved: boolean;
+  }>;
+};

@@ -1,6 +1,12 @@
 import type { ReactElement } from "react";
 
-import { CircularProgress, Paper, Stack, styled, Typography } from "@mui/material";
+import {
+  CircularProgress,
+  Paper,
+  Stack,
+  styled,
+  Typography,
+} from "@mui/material";
 import { Sparkles } from "lucide-react";
 
 import { useSurveyBuilderAssistant } from "../SurveyBuilderAssistantContext";

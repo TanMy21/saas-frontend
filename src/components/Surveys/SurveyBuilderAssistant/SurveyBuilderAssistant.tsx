@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ThreadPrimitive } from "@assistant-ui/react";
 import {
@@ -8,17 +8,20 @@ import {
   CircularProgress,
   Paper,
   styled,
-  Tooltip,
   Typography,
 } from "@mui/material";
-import { RotateCcw, Sparkles, X } from "lucide-react";
+import { MessageSquarePlus, Sparkles, X } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import { useAppTheme } from "../../../theme/useAppTheme";
-import type { AssistantThreadStage } from "../../../types/surveyBuilderAssistant.types";
+import type {
+  AssistantThread,
+  AssistantThreadStage,
+} from "../../../types/surveyBuilderAssistant.types";
 
 import { useSurveyBuilderAssistant } from "./SurveyBuilderAssistantContext";
 import { SurveyBuilderAssistantProvider } from "./SurveyBuilderAssistantProvider";
+import { subscribeToAssistantSurveyDeleted } from "./surveyBuilderAssistantStorage";
 import AssistantComposer from "./ui/AssistantComposer";
 import AssistantEmptyState from "./ui/AssistantEmptyState";
 import AssistantMessage from "./ui/AssistantMessage";
@@ -34,12 +37,19 @@ const getStageLabel = (stage?: AssistantThreadStage) => {
     case "COMMITTING":
       return "Creating questions";
     case "COMMITTED":
-      return "Completed";
+      return "Questions created";
     case "FAILED":
       return "Needs attention";
     default:
       return "Ready";
   }
+};
+
+const getThreadStateLabel = (thread: AssistantThread | null) => {
+  if (thread?.status === "ARCHIVED") return "Archived";
+  if (thread?.status === "COMPLETED") return "Previous chat";
+
+  return getStageLabel(thread?.stage);
 };
 
 const AssistantWorkingIndicator = (): ReactElement => (
@@ -54,7 +64,7 @@ const AssistantWorkingIndicator = (): ReactElement => (
   >
     <CircularProgress size={14} thickness={4.5} />
     <Typography sx={{ fontSize: "0.7rem" }}>
-      The assistant is preparing a response…
+      Working on it…
     </Typography>
   </Box>
 );
@@ -83,13 +93,15 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
 
   const isBusy =
     isInitializing || isSending || isGenerating || isCommitting;
-  const stageLabel = getStageLabel(thread?.stage);
+  const stageLabel = getThreadStateLabel(thread);
   const stageColor =
-    thread?.stage === "FAILED"
-      ? "#B91C1C"
-      : thread?.stage === "COMMITTED"
-        ? "#15803D"
-        : "#475569";
+    thread?.status === "ARCHIVED" || thread?.status === "COMPLETED"
+      ? "#64748B"
+      : thread?.stage === "FAILED"
+        ? "#B91C1C"
+        : thread?.stage === "COMMITTED"
+          ? "#15803D"
+          : "#475569";
 
   return (
     <ThreadPrimitive.Root
@@ -150,29 +162,32 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
           </Box>
         </Box>
 
-        <Tooltip title="Start a new assistant thread" arrow>
-          <span>
-            <ButtonBase
-              disabled={isBusy}
-              aria-label="Start a new assistant thread"
-              onClick={() => void createNewThread()}
-              sx={{
-                width: 30,
-                height: 30,
-                flexShrink: 0,
-                borderRadius: 1.75,
-                color: "#64748B",
-                "&:hover": {
-                  color: "#0F172A",
-                  backgroundColor: "#F1F5F9",
-                },
-                "&.Mui-disabled": { opacity: 0.4 },
-              }}
-            >
-              <RotateCcw size={15} aria-hidden="true" />
-            </ButtonBase>
-          </span>
-        </Tooltip>
+        <Button
+          size="small"
+          variant="text"
+          disabled={isBusy}
+          aria-label="New chat"
+          onClick={() => void createNewThread()}
+          startIcon={<MessageSquarePlus size={14} aria-hidden="true" />}
+          sx={{
+            minWidth: 0,
+            minHeight: 30,
+            px: 1,
+            flexShrink: 0,
+            borderRadius: 1.75,
+            color: "#475569",
+            textTransform: "none",
+            fontSize: "0.7rem",
+            fontWeight: 650,
+            "&:hover": {
+              color: "#0F172A",
+              backgroundColor: "#F1F5F9",
+            },
+            "&.Mui-disabled": { opacity: 0.4 },
+          }}
+        >
+          New chat
+        </Button>
       </Box>
 
       {errorMessage && (
@@ -285,10 +300,22 @@ const MissingSurveyAssistant = (): ReactElement => (
   </Paper>
 );
 
-const SurveyBuilderAssistant = (): ReactElement => {
+const SurveyBuilderAssistant = (): ReactElement | null => {
   const { surveyID } = useParams<{ surveyID: string }>();
+  const [isSurveyDeleted, setIsSurveyDeleted] = useState(false);
+
+  useEffect(() => {
+    if (!surveyID) return;
+
+    setIsSurveyDeleted(false);
+
+    return subscribeToAssistantSurveyDeleted(surveyID, () => {
+      setIsSurveyDeleted(true);
+    });
+  }, [surveyID]);
 
   if (!surveyID) return <MissingSurveyAssistant />;
+  if (isSurveyDeleted) return null;
 
   return (
     <SurveyBuilderAssistantProvider surveyID={surveyID}>
