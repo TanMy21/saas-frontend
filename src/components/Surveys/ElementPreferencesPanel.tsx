@@ -1,8 +1,11 @@
-import { useState } from "react";
-
 import { Box, ButtonBase, Typography } from "@mui/material";
 import { MessageSquareText, SlidersHorizontal } from "lucide-react";
 
+import {
+  openSurveyBuilderAssistant,
+  openSurveyBuilderSettings,
+} from "../../app/slices/surveySlice";
+import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { SurveyPreferencesPanelProps } from "../../utils/types";
 
@@ -14,7 +17,11 @@ const ElementPreferencesPanel = ({
   question,
 }: SurveyPreferencesPanelProps) => {
   const { scrollStyles } = useAppTheme();
-  const [activeTab, setActiveTab] = useState<"settings" | "assistant">("settings");
+  const dispatch = useAppDispatch();
+
+  const activeTab = useAppSelector(
+    (state) => state.surveyBuilder.activeContextPanel,
+  );
 
   return (
     <Box
@@ -64,7 +71,7 @@ const ElementPreferencesPanel = ({
             id="question-settings-tab"
             aria-controls="question-settings-panel"
             aria-selected={activeTab === "settings"}
-            onClick={() => setActiveTab("settings")}
+            onClick={() => dispatch(openSurveyBuilderSettings())}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -102,7 +109,7 @@ const ElementPreferencesPanel = ({
             id="question-assistant-tab"
             aria-controls="question-assistant-panel"
             aria-selected={activeTab === "assistant"}
-            onClick={() => setActiveTab("assistant")}
+            onClick={() => dispatch(openSurveyBuilderAssistant())}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -113,7 +120,8 @@ const ElementPreferencesPanel = ({
               px: 1,
               borderRadius: 1.5,
               color: activeTab === "assistant" ? "#0F172A" : "#64748B",
-              backgroundColor: activeTab === "assistant" ? "#FFFFFF" : "transparent",
+              backgroundColor:
+                activeTab === "assistant" ? "#FFFFFF" : "transparent",
               boxShadow:
                 activeTab === "assistant"
                   ? "0 1px 2px rgba(15, 23, 42, 0.10)"

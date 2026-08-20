@@ -1,34 +1,38 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-import { Element, SurveyBuilderState } from "../../utils/types";
+import { SurveyBuilderState } from "../../types/surveyBuilderTypes";
+import { Element } from "../../utils/types";
 
 const initialState: SurveyBuilderState = {
   elements: [],
   isShareModalOpen: false,
-  isGenerateModalOpen: false,
-  generationJobID: null,
-  importJobID: null,
+  activeContextPanel: "settings",
 };
 
 export const surveyBuilderSlice = createSlice({
   name: "surveyBuilder",
   initialState,
   reducers: {
+    openSurveyBuilderAssistant: (state) => {
+      state.activeContextPanel = "assistant";
+    },
+
+    openSurveyBuilderSettings: (state) => {
+      state.activeContextPanel = "settings";
+    },
+
+    toggleSurveyBuilderAssistant: (state) => {
+      state.activeContextPanel =
+        state.activeContextPanel === "assistant" ? "settings" : "assistant";
+    },
+
     setElements: (state, action: PayloadAction<Element[]>) => {
       state.elements = action.payload;
     },
     setShareModalOpen: (state, action: PayloadAction<boolean>) => {
       state.isShareModalOpen = action.payload;
     },
-    setGenerateModalOpen: (state, action: PayloadAction<boolean>) => {
-      state.isGenerateModalOpen = action.payload;
-    },
-    setGenerationJobID: (state, action: PayloadAction<string | null>) => {
-      state.generationJobID = action.payload;
-    },
-    setImportJobID: (state, action: PayloadAction<string | null>) => {
-      state.importJobID = action.payload;
-    },
+
     addElement: (state, action: PayloadAction<Element>) => {
       state.elements.push(action.payload);
     },
@@ -68,13 +72,14 @@ export const surveyBuilderSlice = createSlice({
 export const {
   setElements,
   setShareModalOpen,
-  setGenerateModalOpen,
-  setGenerationJobID,
-  setImportJobID,
+
   addElement,
   deleteElementRedux,
   updateElementOrder,
   updateElementField,
+  openSurveyBuilderAssistant,
+  openSurveyBuilderSettings,
+  toggleSurveyBuilderAssistant,
 } = surveyBuilderSlice.actions;
 
 export default surveyBuilderSlice.reducer;

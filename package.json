@@ -11,7 +11,7 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "lint:cache": "eslint --cache --fix .",
     "preview": "vite preview",
-    "test": "node --test tests/aiGenerationJobFlow.test.mjs"
+    "test": "node --test "
   },
   "dependencies": {
     "@assistant-ui/react": "^0.15.15",

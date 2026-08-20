@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 
 import { FeedbackTypeUI } from "../types/feedBackTypes";
-import { LoaderMode } from "../types/modalTypes";
 import { TimedChoiceSettingsForm } from "../types/surveyBuilderTypes";
 
 import { NotificationSettings, QuestionType, TabId } from "./types";
@@ -419,43 +418,6 @@ export const behaviorEventConfig = {
     sx: { bgcolor: "#6B7280", color: "#FFFFFF" },
   },
 } as const;
-
-export enum GenerateSurveyState {
-  INITIAL_CONFIG = "INITIAL_CONFIG",
-  TOOLS = "TOOLS",
-  APPEND_CONFIG = "APPEND_CONFIG",
-  REPLACE_CONFIRM = "REPLACE_CONFIRM",
-  LOADING = "LOADING",
-}
-
-export const loaderMessages: Record<LoaderMode, string[]> = {
-  INITIAL: [
-    "Analyzing your input...",
-    "Designing question structure...",
-    "Generating your survey...",
-    "Finalizing survey setup...",
-  ],
-
-  APPEND: [
-    "Reviewing existing questions...",
-    "Generating additional questions...",
-    "Integrating new questions...",
-    "Updating survey flow...",
-  ],
-
-  REPLACE: [
-    "Preparing to replace questions...",
-    "Generating a new question set...",
-    "Rebuilding survey structure...",
-    "Finalizing replacement...",
-  ],
-};
-
-export const loaderTitles: Record<LoaderMode, string> = {
-  INITIAL: "Generating your survey...",
-  APPEND: "Adding questions to your survey...",
-  REPLACE: "Replacing your survey questions...",
-};
 
 export const nonOrderableTypes = [
   "WELCOME_SCREEN",

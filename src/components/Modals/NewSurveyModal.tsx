@@ -3,12 +3,10 @@ import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
 import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
-import { ArrowRight, Edit3, Sparkles, Upload } from "lucide-react";
+import { ArrowRight, Edit3, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { useCreateSurveyMutation } from "../../app/slices/surveysApiSlice";
-import { setGenerateModalOpen } from "../../app/slices/surveySlice";
-import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 // import { useAppTheme } from "../../theme/useAppTheme";
 import { useToast } from "../../hooks/useToast";
 import { NewSurveyModalProps } from "../../utils/types";
@@ -21,11 +19,8 @@ const NewSurveyModal = ({
 }: NewSurveyModalProps) => {
   // const { background } = useAppTheme();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+
   const [hoveredOption, setHoveredOption] = useState<string | null>(null);
-  const openGenerate = useAppSelector(
-    (state) => state.surveyBuilder.isGenerateModalOpen,
-  );
 
   const [createSurvey, { isError, error, isLoading }] =
     useCreateSurveyMutation();
@@ -48,7 +43,7 @@ const NewSurveyModal = ({
     }
   };
 
-  const handleImportQuestions = async () => {
+  const handleOpenAssistant = async () => {
     try {
       const surveyCreated = await createSurvey({
         workspaceId,
@@ -56,25 +51,11 @@ const NewSurveyModal = ({
 
       if (surveyCreated) {
         navigate(`/survey/${surveyCreated.surveyID}`, {
-          state: { workspaceId, workspaceName, openImport: true },
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleGenerateQuestions = async () => {
-    try {
-      const surveyCreated = await createSurvey({
-        workspaceId,
-      }).unwrap();
-
-      dispatch(setGenerateModalOpen(true));
-
-      if (surveyCreated) {
-        navigate(`/survey/${surveyCreated.surveyID}`, {
-          state: { workspaceId, workspaceName, openGenerate },
+          state: {
+            workspaceId,
+            workspaceName,
+            openAssistant: true,
+          },
         });
       }
     } catch (error) {
@@ -94,27 +75,18 @@ const NewSurveyModal = ({
       iconColor: "#2563eb",
       onClick: handleCreateFromScratch,
     },
+
     {
-      id: "upload",
-      icon: Upload,
-      title: "Upload questions",
-      description: "Import your existing questions from a file or document",
-      gradient: "linear-gradient(90deg,#10b981,#059669)",
-      bgColor: "#ecfdf5",
-      iconColor: "#059669",
-      onClick: handleImportQuestions,
-    },
-    {
-      id: "generate",
+      id: "assistant",
       icon: Sparkles,
-      title: "AI-powered generation",
+      title: "Build with AI assistant",
       description:
-        "Let AI create intelligent questions based on your survey topic",
+        "Create a survey through an interactive conversation with the assistant",
       gradient: "linear-gradient(90deg,#1e3a8a,#1d4ed8)",
-      bgColor: " #eff6ff",
+      bgColor: "#eff6ff",
       iconColor: "#1d4ed8",
       hoverGradient: "linear-gradient(90deg,#1e40af,#1e3a8a)",
-      onClick: handleGenerateQuestions,
+      onClick: handleOpenAssistant,
     },
   ];
 

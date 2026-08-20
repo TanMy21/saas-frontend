@@ -1,5 +1,3 @@
-export type LoaderMode = "INITIAL" | "APPEND" | "REPLACE";
-
 export interface BaseModalProps {
   open: boolean;
   onClose: () => void;

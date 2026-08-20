@@ -1,12 +1,17 @@
 import { Box, Typography } from "@mui/material";
 
-const GlobalSimpleLoader = ({
-  overlayMessage,
-}: {
-  overlayMessage?: string;
-}) => {
+import { useAppSelector } from "../app/typedReduxHooks";
+
+const GlobalSimpleLoader = () => {
+  const { overlayOpen, overlayMessage, overlayVariant } = useAppSelector(
+    (state) => state.overlayUI,
+  );
+
+  if (!overlayOpen || overlayVariant !== "SIMPLE") return null;
+
   return (
     <Box
+      component="div"
       sx={{
         position: "fixed",
         inset: 0,
@@ -19,6 +24,7 @@ const GlobalSimpleLoader = ({
       }}
     >
       <Box
+        component="div"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -38,6 +44,7 @@ const GlobalSimpleLoader = ({
         }}
       >
         <Box
+          component="div"
           sx={{
             width: 42,
             height: 42,
@@ -54,6 +61,7 @@ const GlobalSimpleLoader = ({
         />
 
         <Box
+          component="div"
           sx={{
             display: "flex",
             alignItems: "center",

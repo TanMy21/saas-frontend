@@ -23,7 +23,6 @@ const CanvasConsole = ({
   noElements,
   shareID,
   published,
-  onOpenImport,
   title,
   isLocked,
 }: CanvasConsoleProps) => {
@@ -66,7 +65,6 @@ const CanvasConsole = ({
       <SurveyBuilderDock
         shareID={shareID}
         published={published}
-        onOpenImport={onOpenImport}
         title={title}
         isLocked={isLocked}
       />

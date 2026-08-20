@@ -18,12 +18,12 @@ const overlaySlice = createSlice({
       s,
       a: PayloadAction<{
         message?: string;
-        variant?: "IMPORT" | "GENERATE" | "FEEDBACK" | "SIMPLE";
+        variant?: "FEEDBACK" | "SIMPLE";
       }>,
     ) => {
       s.overlayOpen = true;
       s.overlayMessage = a.payload.message;
-      s.overlayVariant = a.payload.variant || "IMPORT";
+      s.overlayVariant = a.payload.variant || "SIMPLE";
     },
 
     hideOverlay: (s) => {

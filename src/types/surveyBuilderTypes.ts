@@ -7,6 +7,7 @@ import {
   ElementProps,
   OptionType,
   QuestionTypeKey,
+  Element,
 } from "../utils/types";
 
 import { GeneratedDropdownOption } from "./genTypes";
@@ -22,13 +23,11 @@ export interface ShareTabProps {
 
 export type TabType = "link" | "email" | "embed";
 
-
 export type CanvasView = "desktop" | "mobile";
 
 export type CanvasViewState = {
   view: CanvasView;
 };
-
 
 export type AddMenuItemConfig = {
   label: string;
@@ -292,7 +291,6 @@ export type IATSettingsTextFieldProps = {
   onChange: (value: string) => void;
 };
 
-
 export type ConfirmOptions = {
   message: string;
   title?: string;
@@ -303,7 +301,6 @@ export type ConfirmOptions = {
 export type ConfirmRequest = ConfirmOptions & {
   resolve: (value: boolean) => void;
 };
-
 
 export type SurveyOrderPreviewPart = {
   type: "survey-order-preview";
@@ -316,3 +313,11 @@ export type SurveyOrderPreviewPart = {
     moved: boolean;
   }>;
 };
+
+export type SurveyBuilderContextPanel = "settings" | "assistant";
+
+export interface SurveyBuilderState {
+  elements: Element[];
+  isShareModalOpen?: boolean;
+  activeContextPanel: SurveyBuilderContextPanel;
+}

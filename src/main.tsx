@@ -11,8 +11,7 @@ import AppErrorBoundary from "./AppErrorBoundary";
 import AppToaster from "./components/alert/AppToaster";
 import { EditLockConfirmProvider } from "./context/EditLockConfirmContext";
 import GlobalFeedbackOverlays from "./layouts/GlobalFeedbackLayout";
-import { GlobalGenerateLoaderOverlay } from "./layouts/GlobalGenerateLoaderOverlay";
-import { GlobalImportLoaderOverlay } from "./layouts/GlobalImporLoaderOverlay";
+import GlobalSimpleLoader from "./layouts/GlobalSimpleLoader";
 import router from "./routes/routes";
 import "./index.css";
 import SessionInitializer from "./SessionInitializer";
@@ -65,9 +64,8 @@ createRoot(document.getElementById("root")!).render(
             <SessionInitializer>
               <EditLockConfirmProvider>
                 <RouterProvider router={router} />
+                <GlobalSimpleLoader />
                 <GlobalFeedbackOverlays />
-                <GlobalImportLoaderOverlay />
-                <GlobalGenerateLoaderOverlay />
               </EditLockConfirmProvider>
             </SessionInitializer>
           </PostHogProvider>
