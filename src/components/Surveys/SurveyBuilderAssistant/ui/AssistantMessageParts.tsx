@@ -93,142 +93,211 @@ const SurveyPreviewPart = ({
   part,
 }: {
   part: AssistantSurveyPreviewPart;
-}): ReactElement => (
-  <Paper
-    variant="outlined"
-    sx={{
-      width: "100%",
-      borderColor: "#E2E8F0",
-      borderRadius: 2.5,
-      overflow: "hidden",
-      boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
-      boxSizing: "border-box",
-    }}
-  >
-    <Box sx={{ px: 1.5, py: 1.25, backgroundColor: "#F8FAFC" }}>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        spacing={1}
-      >
-        <Box sx={{ minWidth: 0 }}>
-          <Typography
-            noWrap
-            sx={{ color: "#0F172A", fontSize: "0.8rem", fontWeight: 750 }}
-          >
-            {part.title || "Survey draft"}
-          </Typography>
-          <Typography sx={{ mt: 0.2, color: "#64748B", fontSize: "0.68rem" }}>
-            {part.questions.length} question
-            {part.questions.length === 1 ? "" : "s"} · Draft version{" "}
-            {part.draftVersion}
-          </Typography>
-        </Box>
+}): ReactElement => {
+  const isReplaceAll = part.commitMode === "REPLACE_ALL";
+  const replacedQuestionCount = part.replacedQuestionCount ?? 0;
 
-        <Box
+  return (
+    <Paper
+      variant="outlined"
+      sx={{
+        width: "100%",
+        borderColor: isReplaceAll ? "#F59E0B" : "#E2E8F0",
+        borderRadius: 2.5,
+        overflow: "hidden",
+        boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
+        boxSizing: "border-box",
+      }}
+    >
+      <Box
+        sx={{
+          px: 1.5,
+          py: 1.25,
+          backgroundColor: isReplaceAll ? "#FFFBEB" : "#F8FAFC",
+        }}
+      >
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={1}
+        >
+          <Box sx={{ minWidth: 0 }}>
+            <Typography
+              noWrap
+              sx={{
+                color: isReplaceAll ? "#92400E" : "#0F172A",
+                fontSize: "0.8rem",
+                fontWeight: 750,
+              }}
+            >
+              {part.title ||
+                (isReplaceAll ? "Replacement survey draft" : "Survey draft")}
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: 0.2,
+                color: isReplaceAll ? "#B45309" : "#64748B",
+                fontSize: "0.68rem",
+              }}
+            >
+              {part.questions.length} question
+              {part.questions.length === 1 ? "" : "s"} · Draft version{" "}
+              {part.draftVersion}
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: "grid",
+              placeItems: "center",
+              width: 30,
+              height: 30,
+              flexShrink: 0,
+              borderRadius: 1.75,
+              color: isReplaceAll ? "#B45309" : "#4F46E5",
+              backgroundColor: isReplaceAll ? "#FEF3C7" : "#EEF2FF",
+            }}
+          >
+            <FileText size={16} aria-hidden="true" />
+          </Box>
+        </Stack>
+      </Box>
+
+      <Divider />
+
+      {isReplaceAll && (
+        <>
+          <Box
+            sx={{
+              px: 1.5,
+              py: 1.25,
+              color: "#92400E",
+              backgroundColor: "#FFFBEB",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: "0.74rem",
+                fontWeight: 750,
+                lineHeight: 1.45,
+              }}
+            >
+              This is a complete replacement preview.
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: 0.35,
+                fontSize: "0.69rem",
+                lineHeight: 1.5,
+              }}
+            >
+              {replacedQuestionCount} current question
+              {replacedQuestionCount === 1 ? "" : "s"} will be removed and{" "}
+              {part.questions.length} replacement question
+              {part.questions.length === 1 ? "" : "s"} will be created.
+              {part.removesFlowLogic !== false &&
+                " Existing flow logic tied to the current questions will also be removed."}
+            </Typography>
+          </Box>
+
+          <Divider />
+        </>
+      )}
+
+      {part.questions.length === 0 ? (
+        <Typography
           sx={{
-            display: "grid",
-            placeItems: "center",
-            width: 30,
-            height: 30,
-            flexShrink: 0,
-            borderRadius: 1.75,
-            color: "#4F46E5",
-            backgroundColor: "#EEF2FF",
+            px: 1.5,
+            py: 2,
+            color: "#64748B",
+            fontSize: "0.72rem",
           }}
         >
-          <FileText size={16} aria-hidden="true" />
-        </Box>
-      </Stack>
-    </Box>
-
-    <Divider />
-
-    {part.questions.length === 0 ? (
-      <Typography
-        sx={{ px: 1.5, py: 2, color: "#64748B", fontSize: "0.72rem" }}
-      >
-        This draft does not contain any questions yet.
-      </Typography>
-    ) : (
-      <Stack divider={<Divider flexItem />}>
-        {part.questions.map((question, index) => (
-          <Box key={question.draftQuestionID} sx={{ px: 1.5, py: 1.25 }}>
-            <Stack direction="row" spacing={0.75} alignItems="flex-start">
-              <Typography
-                sx={{
-                  minWidth: 18,
-                  color: "#64748B",
-                  fontSize: "0.7rem",
-                  fontWeight: 750,
-                  lineHeight: 1.5,
-                }}
-              >
-                {index + 1}.
-              </Typography>
-
-              <Box sx={{ minWidth: 0, flex: 1 }}>
+          This draft does not contain any questions yet.
+        </Typography>
+      ) : (
+        <Stack divider={<Divider flexItem />}>
+          {part.questions.map((question, index) => (
+            <Box key={question.draftQuestionID} sx={{ px: 1.5, py: 1.25 }}>
+              <Stack direction="row" spacing={0.75} alignItems="flex-start">
                 <Typography
                   sx={{
-                    color: "#0F172A",
-                    fontSize: "0.75rem",
-                    fontWeight: 650,
-                    lineHeight: 1.45,
-                    overflowWrap: "anywhere",
+                    minWidth: 18,
+                    color: "#64748B",
+                    fontSize: "0.7rem",
+                    fontWeight: 750,
+                    lineHeight: 1.5,
                   }}
                 >
-                  {question.text}
+                  {index + 1}.
                 </Typography>
 
-                {question.description && (
+                <Box sx={{ minWidth: 0, flex: 1 }}>
                   <Typography
                     sx={{
-                      mt: 0.4,
-                      color: "#64748B",
-                      fontSize: "0.69rem",
+                      color: "#0F172A",
+                      fontSize: "0.75rem",
+                      fontWeight: 650,
                       lineHeight: 1.45,
-                      whiteSpace: "pre-wrap",
+                      overflowWrap: "anywhere",
                     }}
                   >
-                    {question.description}
+                    {question.text}
                   </Typography>
-                )}
 
-                <Stack direction="row" spacing={0.5} sx={{ mt: 0.7 }}>
-                  <Chip
-                    size="small"
-                    label={formatQuestionType(question.type)}
-                    sx={{
-                      height: 20,
-                      color: "#475569",
-                      backgroundColor: "#F1F5F9",
-                      fontSize: "0.625rem",
-                    }}
-                  />
-                  {question.required && (
+                  {question.description && (
+                    <Typography
+                      sx={{
+                        mt: 0.4,
+                        color: "#64748B",
+                        fontSize: "0.69rem",
+                        lineHeight: 1.45,
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      {question.description}
+                    </Typography>
+                  )}
+
+                  <Stack direction="row" spacing={0.5} sx={{ mt: 0.7 }}>
                     <Chip
                       size="small"
-                      label="Required"
+                      label={formatQuestionType(question.type)}
                       sx={{
                         height: 20,
-                        color: "#4338CA",
-                        backgroundColor: "#EEF2FF",
+                        color: "#475569",
+                        backgroundColor: "#F1F5F9",
                         fontSize: "0.625rem",
                       }}
                     />
-                  )}
-                </Stack>
 
-                <QuestionOptions question={question} />
-              </Box>
-            </Stack>
-          </Box>
-        ))}
-      </Stack>
-    )}
-  </Paper>
-);
+                    {question.required && (
+                      <Chip
+                        size="small"
+                        label="Required"
+                        sx={{
+                          height: 20,
+                          color: "#4338CA",
+                          backgroundColor: "#EEF2FF",
+                          fontSize: "0.625rem",
+                        }}
+                      />
+                    )}
+                  </Stack>
+
+                  <QuestionOptions question={question} />
+                </Box>
+              </Stack>
+            </Box>
+          ))}
+        </Stack>
+      )}
+    </Paper>
+  );
+};
 
 export function SurveyOrderPreview({ part }: SurveyOrderPreviewProps) {
   return (
@@ -274,10 +343,49 @@ const ApprovalControlsPart = ({
 
   const isCommitted = thread?.stage === "COMMITTED";
   const isReadOnly = isAssistantThreadReadOnly(thread);
-  const questionCount = thread?.draft.questions.length ?? 0;
-  const isReorder = thread?.draft.commitMode === "REORDER";
+
+  const commitMode = part.commitMode ?? thread?.draft.commitMode ?? "APPEND";
+
+  const questionCount =
+    part.questionCount ?? thread?.draft.questions.length ?? 0;
+
+  const replacedQuestionCount =
+    part.replacedQuestionCount ??
+    thread?.draft.replacementProposal?.replacedQuestionCount ??
+    0;
+
+  const isReplaceAll = commitMode === "REPLACE_ALL";
+  const isReorder = commitMode === "REORDER";
 
   const hasApprovableDraft = isReorder || questionCount > 0;
+
+  const title = isReplaceAll
+    ? "Replace all current questions?"
+    : isReorder
+      ? "Ready to apply this question order?"
+      : "Ready to create these questions?";
+
+  const description = isReplaceAll
+    ? `${replacedQuestionCount} current question${
+        replacedQuestionCount === 1 ? "" : "s"
+      } will be removed and ${questionCount} replacement question${
+        questionCount === 1 ? "" : "s"
+      } will be created. Existing flow logic tied to the old questions will also be removed.`
+    : isReorder
+      ? "This will reorder the existing survey questions. No questions will be created or deleted."
+      : "This appends the latest draft to the survey. You can continue asking for changes before approving.";
+
+  const buttonLabel = isReplaceAll
+    ? `Replace with ${questionCount} question${questionCount === 1 ? "" : "s"}`
+    : isReorder
+      ? "Apply reorder"
+      : `Create ${questionCount} question${questionCount === 1 ? "" : "s"}`;
+
+  const committingLabel = isReplaceAll
+    ? "Replacing questions…"
+    : isReorder
+      ? "Applying reorder…"
+      : "Creating questions…";
 
   if (isCommitted) {
     return (
@@ -335,35 +443,31 @@ const ApprovalControlsPart = ({
       sx={{
         width: "100%",
         p: 1.25,
-        borderColor: "#C7D2FE",
+        borderColor: isReplaceAll ? "#F59E0B" : "#C7D2FE",
         borderRadius: 2.5,
-        backgroundColor: "#F8FAFF",
+        backgroundColor: isReplaceAll ? "#FFFBEB" : "#F8FAFF",
         boxSizing: "border-box",
       }}
     >
       <Typography
         sx={{
-          color: "#0F172A",
+          color: isReplaceAll ? "#92400E" : "#0F172A",
           fontSize: "0.78rem",
           fontWeight: 700,
         }}
       >
-        {isReorder
-          ? "Ready to apply this question order?"
-          : "Ready to create these questions?"}
+        {title}
       </Typography>
 
       <Typography
         sx={{
           mt: 0.35,
-          color: "#64748B",
+          color: isReplaceAll ? "#92400E" : "#64748B",
           fontSize: "0.7rem",
           lineHeight: 1.45,
         }}
       >
-        {isReorder
-          ? "This will reorder the existing survey questions. No questions will be created or deleted."
-          : "This appends the latest draft to the survey. You can continue asking for changes before approving."}
+        {description}
       </Typography>
 
       <Button
@@ -384,26 +488,18 @@ const ApprovalControlsPart = ({
           mt: 1.1,
           minHeight: 36,
           borderRadius: 2,
-          backgroundColor: "#0F172A",
+          backgroundColor: isReplaceAll ? "#B45309" : "#0F172A",
           boxShadow: "none",
           textTransform: "none",
           fontSize: "0.75rem",
           fontWeight: 650,
           "&:hover": {
-            backgroundColor: "#334155",
+            backgroundColor: isReplaceAll ? "#92400E" : "#334155",
             boxShadow: "none",
           },
         }}
       >
-        {isCommitting
-          ? isReorder
-            ? "Applying reorder…"
-            : "Creating questions…"
-          : isReorder
-            ? "Apply reorder"
-            : `Create ${questionCount} question${
-                questionCount === 1 ? "" : "s"
-              }`}
+        {isCommitting ? committingLabel : buttonLabel}
       </Button>
     </Paper>
   );

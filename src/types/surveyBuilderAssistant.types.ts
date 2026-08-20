@@ -4,6 +4,8 @@ import { STORAGE_VERSION } from "../utils/constants";
 
 export type SurveyChatRole = "assistant" | "user";
 
+export type AssistantCommitMode = "APPEND" | "REPLACE_ALL" | "REORDER";
+
 export type SurveyChatMessageKind =
   | "welcome"
   | "text"
@@ -151,7 +153,8 @@ export interface AssistantDraftQuestion {
 
 export interface AssistantDraft {
   schemaVersion: number;
-  commitMode: "APPEND" | "REPLACE_ALL" | "REORDER";
+  commitMode: AssistantCommitMode;
+  replacementProposal?: AssistantReplacementProposal | null;
   version: number;
   title: string;
   description: string | null;
@@ -186,7 +189,9 @@ export interface AssistantTextPart {
 export interface AssistantSurveyPreviewPart {
   type: "survey-preview";
   draftVersion: number;
-  commitMode: "APPEND" | "REPLACE_ALL" | "REORDER";
+  commitMode: AssistantCommitMode;
+  replacedQuestionCount?: number | null;
+  removesFlowLogic?: boolean;
   title: string;
   questions: AssistantDraftQuestion[];
 }
@@ -208,6 +213,9 @@ export interface AssistantSurveyOrderPreviewPart {
 export interface AssistantApprovalControlsPart {
   type: "approval-controls";
   draftVersion: number;
+  commitMode?: AssistantCommitMode;
+  questionCount?: number;
+  replacedQuestionCount?: number | null;
 }
 
 export type AssistantMessagePart =
@@ -375,3 +383,8 @@ export interface OptimisticAssistantMessageInput {
 export type SurveyOrderPreviewProps = {
   part: AssistantSurveyOrderPreviewPart;
 };
+
+export interface AssistantReplacementProposal {
+  baseQuestionHash: string;
+  replacedQuestionCount: number;
+}
