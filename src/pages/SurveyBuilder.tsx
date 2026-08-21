@@ -16,6 +16,7 @@ import LogoLoader from "../components/Loaders/LogoLoader";
 import ElementPreferencesPanel from "../components/Surveys/ElementPreferencesPanel";
 import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
+import { SurveyBuilderResizeHandle } from "../components/Surveys/SurveyBuilderResizeHandle";
 import { SurveyCanvasRefetchContext } from "../context/BuilderRefetchCanvas";
 // import useBuilderTourEnable from "../hooks/useBuilderTourEnable";
 import useAuth from "../hooks/useAuth";
@@ -26,7 +27,6 @@ import useSortElements from "../hooks/useSortElements";
 import useSurveyBuilderModalLocation from "../hooks/useSurveyBuilderModalLocation";
 import useSurveyBuilderStateReset from "../hooks/useSurveyBuilderStateReset";
 import useSyncQuestionsToElements from "../hooks/useSyncQuestionsToElements";
-import { SurveyBuilderResizeHandle } from "../styles/surveyBuilderStyles";
 import {
   COMPACT_PANEL_WIDTH,
   CONTEXT_PANEL_MAX_WIDTH,
