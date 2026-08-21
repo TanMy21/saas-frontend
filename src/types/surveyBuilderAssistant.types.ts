@@ -141,6 +141,14 @@ export interface AssistantIATConfig {
   themeB: string;
 }
 
+export interface AssistantGenerationRequirements {
+  topic: string | null;
+  description: string | null;
+  questionCount: number | null;
+  questionTypes: AssistantDraftQuestion["type"][];
+  chooseQuestionTypesForMe: boolean;
+}
+
 export interface AssistantDraftQuestion {
   draftQuestionID: string;
   text: string;
@@ -162,10 +170,12 @@ export interface AssistantDraft {
 }
 
 export interface AssistantWorkflowState {
-  lastIntent: string | null;
-  lastActionName: string | null;
-  missingFields: string[];
-  draftVersion: number;
+  lastIntent?: string | null;
+  lastActionName?: string | null;
+  missingFields?: string[];
+  draftVersion?: number;
+  activeMode?: "IMPORT" | "GENERATE" | null;
+  generationRequirements?: AssistantGenerationRequirements | null;
 }
 
 export interface AssistantThread {
