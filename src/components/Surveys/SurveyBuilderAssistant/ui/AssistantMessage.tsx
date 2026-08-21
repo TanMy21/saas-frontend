@@ -18,6 +18,7 @@ import { safeCopyText } from "../../../../utils/utils";
 import { useSurveyBuilderAssistant } from "../SurveyBuilderAssistantContext";
 
 import AssistantMessageParts from "./AssistantMessageParts";
+import { GenerationQuestionTypePickerSlot } from "./GenerationQuestionTypePicker";
 
 const Box = styled("div")({});
 
@@ -44,7 +45,15 @@ const AssistantMessage = ({
 }: {
   message: AssistantMessageData;
 }): ReactElement => {
-  const { retryMessage } = useSurveyBuilderAssistant();
+  const {
+    canSendMessages,
+    isGenerating,
+    isSending,
+    messages,
+    retryMessage,
+    sendMessage,
+    thread,
+  } = useSurveyBuilderAssistant();
   const [isCopied, setIsCopied] = useState(false);
   const copyResetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -61,6 +70,17 @@ const AssistantMessage = ({
         .join("\n")
         .trim(),
     [message.content.parts],
+  );
+
+  const latestCompletedAssistantMessageID = useMemo(
+    () =>
+      [...messages]
+        .reverse()
+        .find(
+          (candidate) =>
+            candidate.role === "ASSISTANT" && candidate.status === "COMPLETED",
+        )?.messageID ?? null,
+    [messages],
   );
 
   useEffect(
@@ -143,6 +163,22 @@ const AssistantMessage = ({
           >
             <AssistantMessageParts message={message} />
           </Box>
+
+          {!isUser && (
+            <Box sx={{ mt: 1 }}>
+              <GenerationQuestionTypePickerSlot
+                message={message}
+                latestCompletedAssistantMessageID={
+                  latestCompletedAssistantMessageID
+                }
+                thread={thread}
+                canSendMessages={canSendMessages}
+                isGenerating={isGenerating}
+                isSending={isSending}
+                sendMessage={sendMessage}
+              />
+            </Box>
+          )}
 
           {isUser && (
             <Stack
