@@ -1,19 +1,27 @@
-import { useState } from "react";
-
 import { Box, ButtonBase, Typography } from "@mui/material";
 import { MessageSquareText, SlidersHorizontal } from "lucide-react";
 
+import {
+  openSurveyBuilderAssistant,
+  openSurveyBuilderSettings,
+} from "../../app/slices/surveySlice";
+import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { SurveyPreferencesPanelProps } from "../../utils/types";
 
 import ElementSettingsContainer from "./ElementSettings/ElementSettingsContainer";
+import SurveyBuilderChat from "./SurveyBuilderAssistant";
 
 const ElementPreferencesPanel = ({
   questionId,
   question,
 }: SurveyPreferencesPanelProps) => {
   const { scrollStyles } = useAppTheme();
-  const [activeTab, setActiveTab] = useState<"settings" | "chat">("settings");
+  const dispatch = useAppDispatch();
+
+  const activeTab = useAppSelector(
+    (state) => state.surveyBuilder.activeContextPanel,
+  );
 
   return (
     <Box
@@ -63,7 +71,7 @@ const ElementPreferencesPanel = ({
             id="question-settings-tab"
             aria-controls="question-settings-panel"
             aria-selected={activeTab === "settings"}
-            onClick={() => setActiveTab("settings")}
+            onClick={() => dispatch(openSurveyBuilderSettings())}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -98,10 +106,10 @@ const ElementPreferencesPanel = ({
 
           <ButtonBase
             role="tab"
-            id="question-chat-tab"
-            aria-controls="question-chat-panel"
-            aria-selected={activeTab === "chat"}
-            onClick={() => setActiveTab("chat")}
+            id="question-assistant-tab"
+            aria-controls="question-assistant-panel"
+            aria-selected={activeTab === "assistant"}
+            onClick={() => dispatch(openSurveyBuilderAssistant())}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -111,10 +119,11 @@ const ElementPreferencesPanel = ({
               minHeight: 36,
               px: 1,
               borderRadius: 1.5,
-              color: activeTab === "chat" ? "#0F172A" : "#64748B",
-              backgroundColor: activeTab === "chat" ? "#FFFFFF" : "transparent",
+              color: activeTab === "assistant" ? "#0F172A" : "#64748B",
+              backgroundColor:
+                activeTab === "assistant" ? "#FFFFFF" : "transparent",
               boxShadow:
-                activeTab === "chat"
+                activeTab === "assistant"
                   ? "0 1px 2px rgba(15, 23, 42, 0.10)"
                   : "none",
               transition:
@@ -129,7 +138,7 @@ const ElementPreferencesPanel = ({
               component="span"
               sx={{ fontSize: "0.875rem", fontWeight: 600, lineHeight: 1 }}
             >
-              Chat
+              Assistant
             </Typography>
           </ButtonBase>
         </Box>
@@ -156,19 +165,17 @@ const ElementPreferencesPanel = ({
       <Box
         component="div"
         role="tabpanel"
-        id="question-chat-panel"
-        aria-labelledby="question-chat-tab"
+        id="question-assistant-panel"
+        aria-labelledby="question-assistant-tab"
         sx={{
-          display: activeTab === "chat" ? "flex" : "none",
-          alignItems: "center",
-          justifyContent: "center",
+          display: activeTab === "assistant" ? "flex" : "none",
           width: "100%",
           flex: 1,
           minHeight: 0,
           overflow: "hidden",
         }}
       >
-        <Typography sx={{ color: "#64748B", fontWeight: 500 }}>chat</Typography>
+        <SurveyBuilderChat />
       </Box>
     </Box>
   );

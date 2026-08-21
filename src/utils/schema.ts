@@ -361,17 +361,6 @@ export const updateUserInfoSchema = z.object({
     .optional(),
 });
 
-export const generateSurveySchema = z.object({
-  description: z.string().min(5, "Description must be at least 5 characters"),
-  numberOfQuestions: z
-    .number()
-    .min(4, "At least four questions are required")
-    .max(50, "Maximum 50 questions are allowed"),
-  selectedTypes: z
-    .array(z.string())
-    .min(1, "Select at least one question type"),
-});
-
 export const OrgRoles = ["ADMIN", "EDITOR", "ANALYST", "VIEWER"] as const;
 
 export type OrgRole = (typeof OrgRoles)[number];

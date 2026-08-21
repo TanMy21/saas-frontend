@@ -11,6 +11,7 @@ import { DangerActions } from "../ModalComponents/DangerActions";
 import { DangerModalHeader } from "../ModalComponents/DangerModalHeader";
 import { DangerModalShell } from "../ModalComponents/DangerModalShell";
 import { DangerWarningBox } from "../ModalComponents/DangerWarningBox";
+import { notifyAssistantSurveyDeleted } from "../Surveys/SurveyBuilderAssistant/surveyBuilderAssistantStorage";
 
 type DeleteSurveyFormValues = {
   confirmationText: string;
@@ -50,8 +51,13 @@ const DeleteSurveyModal = ({
     const input = confirmationText.trim();
     const expected = sTitle?.trim();
 
-    if (input === expected) {
-      await deleteSurvey(sID);
+    if (input === expected && sID) {
+      try {
+        await deleteSurvey(sID).unwrap();
+        notifyAssistantSurveyDeleted(sID);
+      } catch {
+        // The mutation state handles the existing error toast.
+      }
     } else {
       console.error(error);
     }

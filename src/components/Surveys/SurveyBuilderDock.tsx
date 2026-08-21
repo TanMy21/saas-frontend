@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 
-import UploadIcon from "@mui/icons-material/Upload";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import { BsFillShareFill } from "react-icons/bs";
 import { IoMdSettings } from "react-icons/io";
@@ -14,15 +13,12 @@ import {
   openShareModal,
 } from "../../app/slices/overlaySlice";
 import { setCanvasView } from "../../app/slices/surveyCanvasSlice";
+import { openSurveyBuilderAssistant } from "../../app/slices/surveySlice";
 import { RootState } from "../../app/store";
 import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import useAuth from "../../hooks/useAuth";
 import { DockItemProps, SurveyIslandProps } from "../../utils/types";
 import SnackbarAlert from "../SnackbarAlert";
-
-const GenerateSurveyModal = lazy(
-  () => import("../GenerateSurveyModal/GenerateSurveyModal"),
-);
 
 const ShareSurveyModal = lazy(() => import("../Modals/ShareSurveyModal"));
 
@@ -199,7 +195,6 @@ const ViewIconSegment = ({
 const SurveyBuilderDock = ({
   shareID,
   published,
-  onOpenImport,
   title,
   isLocked,
 }: SurveyIslandProps) => {
@@ -207,16 +202,13 @@ const SurveyBuilderDock = ({
   const { surveyID } = useParams();
   const { can } = useAuth();
   const prevPublishedRef = useRef<boolean | null>(null);
-  const openGenerateState = useAppSelector(
-    (state: RootState) => state.surveyBuilder.isGenerateModalOpen,
-  );
 
   const shareModalOpen = useAppSelector((state: RootState) =>
     Boolean(state.overlayUI.shareModalOpen),
   );
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [openGenerate, setOpenGenerate] = useState(openGenerateState);
+
   const [openSettings, setOpenSettings] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
   const [_shareBtnSelected, setShareBtnSelected] = useState(false);
@@ -245,18 +237,12 @@ const SurveyBuilderDock = ({
       action: () => setOpenSettings(true),
       visible: can?.("UPDATE_SURVEY"),
     },
+
     {
-      id: "import",
-      icon: <UploadIcon />,
-      label: "Import questions",
-      action: () => onOpenImport(),
-      visible: can?.("UPDATE_SURVEY"),
-    },
-    {
-      id: "generate",
+      id: "assistant",
       icon: <RiAiGenerate />,
-      label: "Generate questions",
-      action: () => setOpenGenerate(true),
+      label: "Open assistant",
+      action: () => dispatch(openSurveyBuilderAssistant()),
       visible: can?.("UPDATE_SURVEY"),
     },
   ];
@@ -321,7 +307,7 @@ const SurveyBuilderDock = ({
             isHovered={hovered === item.id}
             setHovered={setHovered}
             id={item.id}
-            withDividerLeft={item.id === "import"}
+            withDividerLeft={item.id === "assistant"}
           />
         ))}
         <Suspense fallback={null}>
@@ -343,13 +329,6 @@ const SurveyBuilderDock = ({
               surveyID={surveyID!}
               openSettings={openSettings}
               setOpenSettings={setOpenSettings}
-            />
-          )}
-
-          {can?.("UPDATE_SURVEY") && openGenerate && (
-            <GenerateSurveyModal
-              openGenerate={openGenerate}
-              setOpenGenerate={setOpenGenerate}
             />
           )}
         </Suspense>

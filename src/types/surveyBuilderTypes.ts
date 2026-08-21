@@ -10,6 +10,7 @@ import {
   ElementProps,
   OptionType,
   QuestionTypeKey,
+  Element,
 } from "../utils/types";
 
 import { GeneratedDropdownOption } from "./genTypes";
@@ -303,3 +304,24 @@ export type ConfirmOptions = {
 export type ConfirmRequest = ConfirmOptions & {
   resolve: (value: boolean) => void;
 };
+
+export type SurveyOrderPreviewPart = {
+  type: "survey-order-preview";
+  draftVersion: number;
+  requestedGrouping: string;
+  questions: Array<{
+    text: string;
+    previousPosition: number;
+    proposedPosition: number;
+    moved: boolean;
+  }>;
+};
+
+export type SurveyBuilderContextPanel = "settings" | "assistant";
+
+export interface SurveyBuilderState {
+  elements: Element[];
+  isShareModalOpen?: boolean;
+  activeContextPanel: SurveyBuilderContextPanel;
+  assistantOpenRequestID: number;
+}

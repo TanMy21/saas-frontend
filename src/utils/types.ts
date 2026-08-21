@@ -14,19 +14,14 @@ import {
 import { type IconType } from "react-icons/lib";
 import { type NavigateFunction } from "react-router-dom";
 import * as THREE from "three";
-import { z } from "zod";
 
 import {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useSendLogoutMutation,
 } from "../app/slices/authApiSlice";
-import { useImportQuestionsMutation } from "../app/slices/elementApiSlice";
-import { useGenerateSurveyMutation } from "../app/slices/surveysApiSlice";
 import { useResendVerificationEmailMutation } from "../app/slices/userApiSlice";
 import { Role } from "../types/userTypes";
-
-import { generateSurveySchema } from "./schema";
 
 export type AppErrorBoundaryProps = Readonly<{
   readonly children: React.ReactNode;
@@ -117,7 +112,6 @@ export interface ColorPickerProps {
 export interface CanvasConsoleProps {
   display: "desktop" | "mobile";
   setDisplay?: React.Dispatch<React.SetStateAction<"desktop" | "mobile">>;
-  onOpenImport: () => void;
   question: Element | null;
   shareID: string;
   published: boolean;
@@ -640,21 +634,6 @@ export interface SurveyCardMetricIndicatorProps {
   title: string;
 }
 
-export interface GenerateSurveyModalProps {
-  openGenerate: boolean;
-  setOpenGenerate?: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export interface GenerateSurveyFormProps {
-  onGenerate?: () => void;
-  generateSurvey: ReturnType<typeof useGenerateSurveyMutation>[0];
-  setOpenGenerate?: React.Dispatch<React.SetStateAction<boolean>>;
-  handleClose: () => void;
-  setGenerationJobID: (jobID: string) => void;
-  isError: boolean;
-  error: ReturnType<typeof useGenerateSurveyMutation>[1]["error"];
-}
-
 export interface LocationStateProps {
   headerProps?: {
     tabValue?: string;
@@ -704,29 +683,6 @@ export interface ICustomePayload extends JwtPayload {
     role: Role;
   };
   exp?: number;
-}
-
-export interface ImportQuestionProps {
-  isOpen?: boolean;
-  onClose?: () => void;
-  openImport?: boolean;
-  setOpenImport?: React.Dispatch<React.SetStateAction<boolean>>;
-  surveyID?: string;
-}
-
-export interface ImportQuestionModalInputFieldProps {
-  surveyID: string;
-  isLoading: boolean;
-  importText: string;
-  existingQuestionsCount: number;
-  setImportText: React.Dispatch<React.SetStateAction<string>>;
-  setImportBtnClicked: React.Dispatch<React.SetStateAction<boolean>>;
-  importQuestions: ReturnType<typeof useImportQuestionsMutation>[0];
-  setImportJobID: (jobID: string) => void;
-  setAttemptedMode: React.Dispatch<
-    React.SetStateAction<"INITIAL" | "APPEND" | "REPLACE" | null>
-  >;
-  handleClose: () => void;
 }
 
 export interface InsightCardProps {
@@ -847,7 +803,7 @@ export interface UIState {
   overlayMessage?: string;
   publishAlertOpen?: boolean;
   shareModalOpen?: boolean;
-  overlayVariant?: "IMPORT" | "GENERATE" | "FEEDBACK" | "SIMPLE";
+  overlayVariant?: "FEEDBACK" | "SIMPLE";
 }
 
 export type QuestionTypeKey =
@@ -1275,14 +1231,6 @@ export interface SurveyBuilderCanvasProps {
   canvasQuestion?: Element | null;
 }
 
-export interface SurveyBuilderState {
-  elements: Element[];
-  isShareModalOpen?: boolean;
-  isGenerateModalOpen: boolean;
-  generationJobID: string | null;
-  importJobID: string | null;
-}
-
 export interface SurveyBuilderLeftSidebarProps {
   surveyID?: string;
   setQuestionId?: React.Dispatch<React.SetStateAction<string | null>>;
@@ -1387,7 +1335,6 @@ export interface SurveyTitleEditModalProps {
 
 export interface SurveyIslandProps {
   setDisplay?: React.Dispatch<React.SetStateAction<"desktop" | "mobile">>;
-  onOpenImport: () => void;
   shareID: string;
   published: boolean;
   title: string;
@@ -1716,8 +1663,6 @@ export interface NewWorkspaceModalProps {
   open: boolean;
   onClose: () => void;
 }
-
-export type GenerateSurveyFormData = z.infer<typeof generateSurveySchema>;
 
 export type MutateQuestionPayload = {
   questionID: string;

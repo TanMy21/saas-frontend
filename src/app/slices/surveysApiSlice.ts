@@ -1,7 +1,3 @@
-import {
-  AIGenerationJob,
-  getAIGenerationJobStatusPath,
-} from "../../utils/aiGenerationJobFlow";
 import { apiSlice } from "../api/apiSlice";
 
 export const surveysApiSlice = apiSlice.injectEndpoints({
@@ -30,48 +26,7 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Surveys", "Workspaces"],
     }),
-    generateSurvey: builder.mutation<
-      {
-        message: string;
-        jobID: string;
-        surveyID: string;
-        status:
-          | "PENDING"
-          | "PROCESSING"
-          | "COMPLETED"
-          | "FAILED"
-          | "CANCELED"
-          | "TIMED_OUT";
-      },
-      {
-        surveyID: string;
-        inputText?: string;
-        numberOfQuestions?: number;
-        questionTypes: string[];
-        mode?: "INITIAL" | "APPEND" | "REPLACE";
-      }
-    >({
-      query: ({
-        surveyID,
-        inputText,
-        numberOfQuestions,
-        questionTypes,
-        mode,
-      }) => ({
-        url: `/s/generate`,
-        method: "POST",
-        body: {
-          surveyID,
-          inputText,
-          numberOfQuestions,
-          questionTypes,
-          ...(mode ? { mode } : {}),
-        },
-      }),
-    }),
-    getAIGenerationJobStatus: builder.query<AIGenerationJob, string>({
-      query: getAIGenerationJobStatusPath,
-    }),
+
     updateSurveyTitleandDescription: builder.mutation({
       query: ({ surveyID, title, description }) => ({
         url: `/s/utd/${surveyID}`,
@@ -186,8 +141,7 @@ export const {
   useGetSurveyByIdQuery,
   useGetSurveyCanvasByIdQuery,
   useCreateSurveyMutation,
-  useGenerateSurveyMutation,
-  useGetAIGenerationJobStatusQuery,
+
   useUpdateSurveyTitleandDescriptionMutation,
   useUpdateSurveyTagsMutation,
   useUpdateSurveyArchiveMutation,

@@ -1,14 +1,14 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 import { Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Group, Panel } from "react-resizable-panels";
+import { Group, Panel, usePanelRef } from "react-resizable-panels";
 import { useLocation, useParams } from "react-router-dom";
 
 import { setQuestion, setSelectedQuestionId } from "../app/slices/elementSlice";
 import { setSurveyCanvas } from "../app/slices/surveyCanvasSlice";
 import { useGetSurveyCanvasByIdQuery } from "../app/slices/surveysApiSlice";
-import { setGenerateModalOpen } from "../app/slices/surveySlice";
+import { openSurveyBuilderAssistant } from "../app/slices/surveySlice";
 import { RootState } from "../app/store";
 import { useAppDispatch, useAppSelector } from "../app/typedReduxHooks";
 import CanvasConsole from "../components/CanvasConsole";
@@ -18,30 +18,23 @@ import SurveyBuilderHeader from "../components/Surveys/SurveyBuilderHeader";
 import SurveyBuilderLeftSidebar from "../components/Surveys/SurveyBuilderLeftSidebar";
 import { SurveyCanvasRefetchContext } from "../context/BuilderRefetchCanvas";
 // import useBuilderTourEnable from "../hooks/useBuilderTourEnable";
-import useAIGenerationJobPolling from "../hooks/useAIGenerationJobPolling";
 import useAuth from "../hooks/useAuth";
 import { useCanvasLoadingAndError } from "../hooks/useCanvasLoadingandError";
 import useFetchAuthenticatedUser from "../hooks/useFetchAuthenticatedUser";
-import useQuestionImportJobPolling from "../hooks/useQuestionImportJobPolling";
 import useSelectedQuestion from "../hooks/useSelectedQuestion";
 import useSortElements from "../hooks/useSortElements";
 import useSurveyBuilderModalLocation from "../hooks/useSurveyBuilderModalLocation";
 import useSurveyBuilderStateReset from "../hooks/useSurveyBuilderStateReset";
 import useSyncQuestionsToElements from "../hooks/useSyncQuestionsToElements";
+import { SurveyBuilderResizeHandle } from "../styles/surveyBuilderStyles";
+import {
+  COMPACT_PANEL_WIDTH,
+  CONTEXT_PANEL_MAX_WIDTH,
+} from "../utils/constants";
 import { Element } from "../utils/types";
-import { SurveyBuilderResizeHandle } from "../components/Surveys/SurveyBuilderResizeHandle";
-import { COMPACT_PANEL_WIDTH } from "../utils/constants";
-
-const GenerateSurveyModal = lazy(
-  () => import("../components/GenerateSurveyModal/GenerateSurveyModal"),
-);
 
 const CreateNewSurveyModal = lazy(
   () => import("../components/Modals/CreateNewSurveyModal"),
-);
-
-const ImportQuestionsModal = lazy(
-  () => import("../components/Modals/ImportQuestionsModal"),
 );
 
 const SurveyBuilder = () => {
@@ -51,9 +44,11 @@ const SurveyBuilder = () => {
   const location = useLocation();
   const theme = useTheme();
   const isWideLayout = useMediaQuery(theme.breakpoints.up("xl"));
+  const contextPanelDefaultSize = isWideLayout ? "16%" : "24%";
+  const settingsPanelRef = usePanelRef();
+  const settingsPanelWidthRef = useRef<number | null>(null);
 
-  const { isOpen, isOpenImport, isOpenGenerate } =
-    useSurveyBuilderModalLocation(location);
+  const { isOpen, isOpenAssistant } = useSurveyBuilderModalLocation(location);
   // const [stepIndex, setStepIndex] = useState(0);
   // const isTourEnabled = useBuilderTourEnable(user);
   const [_surveyTitle, setSurveyTitle] = useState<string>("");
@@ -61,10 +56,17 @@ const SurveyBuilder = () => {
   const [_loading, setLoading] = useState(false);
   const [hasRestored, setHasRestored] = useState(false);
   const [openScratch, setOpenScratch] = useState(isOpen);
-  const [openImportLocal, setOpenImportLocal] = useState(false);
   const [isQuestionsPanelCompact, setIsQuestionsPanelCompact] = useState(false);
 
   const display = useAppSelector((state: RootState) => state.surveyCanvas.view);
+
+  const activeContextPanel = useAppSelector(
+    (state: RootState) => state.surveyBuilder.activeContextPanel,
+  );
+
+  const assistantOpenRequestID = useAppSelector(
+    (state: RootState) => state.surveyBuilder.assistantOpenRequestID,
+  );
 
   const elements = useAppSelector(
     (state: RootState) => state.surveyBuilder.elements,
@@ -110,9 +112,6 @@ const SurveyBuilder = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  useAIGenerationJobPolling(refetchCanvas);
-  useQuestionImportJobPolling(refetchCanvas);
-
   const { getSurveyCanvas } = surveyCanvas ?? {};
   const {
     questions = [] as Element[],
@@ -145,17 +144,37 @@ const SurveyBuilder = () => {
   useSelectedQuestion(selectedQuestion, dispatch);
 
   useEffect(() => {
-    if (location.state?.openGenerate) {
-      dispatch(setGenerateModalOpen(true));
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
+    if (isLoadingCanvas) return;
+    if (activeContextPanel !== "assistant") return;
+    if (assistantOpenRequestID === 0) return;
+
+    settingsPanelRef.current?.resize(CONTEXT_PANEL_MAX_WIDTH);
+  }, [
+    activeContextPanel,
+    assistantOpenRequestID,
+    isLoadingCanvas,
+    settingsPanelRef,
+  ]);
 
   useEffect(() => {
-    if (isOpenImport) {
-      setOpenImportLocal(true);
+    if (isLoadingCanvas) return;
+    if (activeContextPanel !== "settings") return;
+
+    settingsPanelRef.current?.resize(
+      settingsPanelWidthRef.current ?? contextPanelDefaultSize,
+    );
+  }, [
+    activeContextPanel,
+    contextPanelDefaultSize,
+    isLoadingCanvas,
+    settingsPanelRef,
+  ]);
+
+  useEffect(() => {
+    if (isOpenAssistant) {
+      dispatch(openSurveyBuilderAssistant());
     }
-  }, [isOpenImport]);
+  }, [isOpenAssistant, dispatch]);
 
   useEffect(() => {
     if (!surveyID) return;
@@ -297,7 +316,6 @@ const SurveyBuilder = () => {
                   published={published}
                   title={title}
                   isLocked={isLocked}
-                  onOpenImport={() => setOpenImportLocal(true)}
                 />
               </Box>
             </Panel>
@@ -309,11 +327,17 @@ const SurveyBuilder = () => {
             />
 
             <Panel
+              panelRef={settingsPanelRef}
               id="survey-builder-settings"
               defaultSize={isWideLayout ? "16%" : "24%"}
               minSize={48}
-              maxSize={640}
+              maxSize={CONTEXT_PANEL_MAX_WIDTH}
               groupResizeBehavior="preserve-pixel-size"
+              onResize={({ inPixels }) => {
+                if (activeContextPanel === "settings") {
+                  settingsPanelWidthRef.current = inPixels;
+                }
+              }}
             >
               <Box
                 component="div"
@@ -340,16 +364,6 @@ const SurveyBuilder = () => {
                 surveyID={surveyID}
                 setSurveyTitle={setSurveyTitle}
               />
-            )}
-            {can?.("CREATE_QUESTION") && openImportLocal && (
-              <ImportQuestionsModal
-                isOpen={openImportLocal}
-                surveyID={surveyID}
-                onClose={() => setOpenImportLocal(false)}
-              />
-            )}
-            {can?.("CREATE_QUESTION") && isOpenGenerate && (
-              <GenerateSurveyModal openGenerate={isOpenGenerate} />
             )}
           </Suspense>
         </Box>

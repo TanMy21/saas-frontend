@@ -11,26 +11,6 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       query: (questionID) => `/q/${questionID}`,
       providesTags: ["Elements"],
     }),
-    getQuestionImportJobStatus: builder.query<
-      {
-        jobID: string;
-        surveyID: string;
-        jobType: "SURVEY_GENERATION" | "QUESTION_IMPORT";
-        status:
-          | "PENDING"
-          | "PROCESSING"
-          | "COMPLETED"
-          | "FAILED"
-          | "CANCELED"
-          | "CANCELLED"
-          | "TIMED_OUT";
-        generatedCount?: number | null;
-        errorMessage?: string | null;
-      },
-      string
-    >({
-      query: (jobID) => `/q/import/job/${jobID}`,
-    }),
     createElement: builder.mutation({
       query: (data) => ({
         url: "/q/create",
@@ -38,36 +18,6 @@ export const elementApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ["Elements"],
-    }),
-    importQuestions: builder.mutation<
-      {
-        message: string;
-        jobID: string;
-        surveyID: string;
-        status:
-          | "PENDING"
-          | "PROCESSING"
-          | "COMPLETED"
-          | "FAILED"
-          | "CANCELED"
-          | "CANCELLED"
-          | "TIMED_OUT";
-      },
-      {
-        surveyID: string;
-        inputText: string;
-        mode?: "INITIAL" | "APPEND" | "REPLACE";
-      }
-    >({
-      query: ({ surveyID, inputText, mode }) => ({
-        url: `/q/import`,
-        method: "POST",
-        body: {
-          surveyID,
-          inputText,
-          ...(mode ? { mode } : {}),
-        },
-      }),
     }),
     createScreenElement: builder.mutation({
       query: (data) => ({
@@ -345,7 +295,6 @@ export const elementApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetElementsForSurveyQuery,
   useGetElementByIDQuery,
-  useGetQuestionImportJobStatusQuery,
   useCreateElementMutation,
   useCreateScreenElementMutation,
   useUpdateElementTextMutation,
@@ -370,7 +319,6 @@ export const {
   useReplaceQuestionImageMutation,
   useDuplicateElementMutation,
   useDeleteElementMutation,
-  useImportQuestionsMutation,
   useSyncEditorImagesMutation,
   useToggleQuestionImageVisibilityMutation,
   useToggleQuestionVisibilityMutation,

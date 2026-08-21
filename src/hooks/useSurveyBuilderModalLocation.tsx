@@ -7,20 +7,18 @@ const useSurveyBuilderModalLocation = (location: Location) => {
   const navigate = useNavigate();
 
   const openScratch = location.state?.openScratch ?? false;
-  const openImport = location.state?.openImport ?? false;
-  const openGenerate = location.state?.openGenerate ?? false;
+  const openAssistant = location.state?.openAssistant ?? false;
 
   useEffect(() => {
-    if (openScratch || openImport || openGenerate) {
+    if (openScratch || openAssistant) {
       // Clear navigation state
       navigate(location.pathname, { replace: true });
     }
-  }, [openScratch, openImport, openGenerate, navigate, location.pathname]);
+  }, [openScratch, openAssistant, navigate, location.pathname]);
 
   return {
     isOpen: openScratch,
-    isOpenImport: openImport,
-    isOpenGenerate: openGenerate,
+    isOpenAssistant: openAssistant,
   };
 };
 

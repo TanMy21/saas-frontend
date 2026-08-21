@@ -42,7 +42,6 @@ import {
 } from "./richTextUtils";
 import { showToast } from "./showToast";
 import { EdgeStyle, LayoutMode, QuestionType, QuestionUIConfig } from "./types";
- 
 
 export const generateOptionLabel = (index: number, qType: string) => {
   if (qType === "RADIO" || qType === "MULTIPLE_CHOICE" || qType === "MEDIA") {
@@ -1493,19 +1492,4 @@ export const downloadExportFile = (
     a.remove();
     window.setTimeout(() => URL.revokeObjectURL(blobUrl), 0);
   });
-};
-
-export const getEmptyTextMessage = (attemptedMode: string | null) => {
-  if (!attemptedMode) return "";
-
-  switch (attemptedMode) {
-    case "INITIAL":
-      return "Add some questions before importing.";
-    case "APPEND":
-      return "Add some questions to append them to the survey.";
-    case "REPLACE":
-      return "Add some questions before replacing the existing ones.";
-    default:
-      return "Add some questions before importing.";
-  }
 };
