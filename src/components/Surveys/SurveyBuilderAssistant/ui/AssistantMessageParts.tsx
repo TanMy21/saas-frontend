@@ -14,6 +14,7 @@ import { Check, CheckCircle2, FileText } from "lucide-react";
 
 import type {
   AssistantApprovalControlsPart,
+  AssistantDocumentAttachmentPart,
   AssistantDraftQuestion,
   AssistantMessage,
   AssistantSurveyPreviewPart,
@@ -32,6 +33,16 @@ const formatQuestionType = (type: string) =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
+const formatFileSize = (sizeBytes: number) => {
+  if (sizeBytes < 1024) return `${sizeBytes} B`;
+
+  const sizeKilobytes = sizeBytes / 1024;
+
+  if (sizeKilobytes < 1024) return `${sizeKilobytes.toFixed(1)} KB`;
+
+  return `${(sizeKilobytes / 1024).toFixed(1)} MB`;
+};
+
 const TextPart = ({ part }: { part: AssistantTextPart }): ReactElement => (
   <Typography
     sx={{
@@ -44,6 +55,67 @@ const TextPart = ({ part }: { part: AssistantTextPart }): ReactElement => (
   >
     {part.text}
   </Typography>
+);
+
+const DocumentAttachmentPart = ({
+  isUser,
+  part,
+}: {
+  isUser: boolean;
+  part: AssistantDocumentAttachmentPart;
+}): ReactElement => (
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      gap: 0.8,
+      minWidth: 0,
+      px: 1,
+      py: 0.75,
+      border: "1px solid",
+      borderColor: isUser ? "rgba(255, 255, 255, 0.24)" : "#E2E8F0",
+      borderRadius: 2,
+      backgroundColor: isUser ? "rgba(255, 255, 255, 0.1)" : "#F8FAFC",
+    }}
+  >
+    <Box
+      sx={{
+        display: "grid",
+        placeItems: "center",
+        width: 28,
+        height: 28,
+        flexShrink: 0,
+        borderRadius: 1.5,
+        color: isUser ? "#FFFFFF" : "#4F46E5",
+        backgroundColor: isUser ? "rgba(255, 255, 255, 0.14)" : "#EEF2FF",
+      }}
+    >
+      <FileText size={15} aria-hidden="true" />
+    </Box>
+
+    <Box sx={{ minWidth: 0, flex: 1 }}>
+      <Typography
+        noWrap
+        title={part.fileName}
+        sx={{
+          color: isUser ? "#FFFFFF" : "#0F172A",
+          fontSize: "0.7rem",
+          fontWeight: 650,
+        }}
+      >
+        {part.fileName}
+      </Typography>
+      <Typography
+        sx={{
+          mt: 0.1,
+          color: isUser ? "rgba(255, 255, 255, 0.76)" : "#64748B",
+          fontSize: "0.62rem",
+        }}
+      >
+        {formatFileSize(part.sizeBytes)}
+      </Typography>
+    </Box>
+  </Box>
 );
 
 const QuestionOptions = ({
@@ -517,6 +589,14 @@ const AssistantMessageParts = ({
       switch (part.type) {
         case "text":
           return <TextPart key={key} part={part} />;
+        case "document-attachment":
+          return (
+            <DocumentAttachmentPart
+              key={key}
+              part={part}
+              isUser={message.role === "USER"}
+            />
+          );
         case "survey-preview":
           return <SurveyPreviewPart key={key} part={part} />;
         case "survey-order-preview":

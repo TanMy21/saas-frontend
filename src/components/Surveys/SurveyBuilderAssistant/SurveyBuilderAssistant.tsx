@@ -63,15 +63,14 @@ const AssistantWorkingIndicator = (): ReactElement => (
     }}
   >
     <CircularProgress size={14} thickness={4.5} />
-    <Typography sx={{ fontSize: "0.7rem" }}>
-      Working on it…
-    </Typography>
+    <Typography sx={{ fontSize: "0.7rem" }}>Working on it…</Typography>
   </Box>
 );
 
 const SurveyBuilderAssistantThread = (): ReactElement => {
   const {
     clearError,
+    composerDocuments,
     createNewThread,
     errorMessage,
     hasMoreMessages,
@@ -79,6 +78,7 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
     isGenerating,
     isInitializing,
     isLoadingOlder,
+    isPreparingDocuments,
     isSending,
     loadOlderMessages,
     messages,
@@ -92,7 +92,12 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
   );
 
   const isBusy =
-    isInitializing || isSending || isGenerating || isCommitting;
+    isInitializing ||
+    isSending ||
+    isGenerating ||
+    isCommitting ||
+    isPreparingDocuments ||
+    composerDocuments.length > 0;
   const stageLabel = getThreadStateLabel(thread);
   const stageColor =
     thread?.status === "ARCHIVED" || thread?.status === "COMPLETED"

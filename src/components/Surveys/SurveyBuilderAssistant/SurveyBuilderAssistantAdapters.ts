@@ -189,6 +189,7 @@ export const mergeAssistantMessages = (
 
 export const createOptimisticAssistantMessage = ({
   clientMessageID,
+  documentAttachments = [],
   message,
   sequence,
 }: OptimisticAssistantMessageInput): AssistantMessage => ({
@@ -203,6 +204,7 @@ export const createOptimisticAssistantMessage = ({
         type: "text",
         text: message,
       },
+      ...documentAttachments,
     ],
   },
   errorCode: null,

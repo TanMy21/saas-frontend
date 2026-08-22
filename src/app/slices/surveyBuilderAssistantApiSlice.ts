@@ -1,14 +1,19 @@
 import {
+  AssistantDocumentResponse,
   AssistantJob,
   AssistantMessagesResponse,
   AssistantThread,
   CommitAssistantDraftArgs,
   CommitAssistantDraftResponse,
+  DeleteAssistantDocumentResponse,
+  GetAssistantDocumentArgs,
   GetAssistantJobArgs,
   GetAssistantMessagesArgs,
   GetAssistantThreadArgs,
   SendAssistantMessageArgs,
   SendAssistantMessageResponse,
+  UploadAssistantDocumentArgs,
+  UploadAssistantDocumentResponse,
 } from "../../types/surveyBuilderAssistant.types";
 import { apiSlice } from "../api/apiSlice";
 
@@ -49,16 +54,60 @@ export const surveyBuilderAssistantApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 0,
     }),
 
+    uploadSurveyBuilderAssistantDocument: builder.mutation<
+      UploadAssistantDocumentResponse,
+      UploadAssistantDocumentArgs
+    >({
+      query: ({ surveyID, threadID, clientDocumentID, document }) => {
+        const body = new FormData();
+
+        body.append("clientDocumentID", clientDocumentID);
+        body.append("document", document);
+
+        return {
+          url: `${threadPath(surveyID, threadID)}/documents`,
+          method: "POST",
+          body,
+        };
+      },
+    }),
+
+    getSurveyBuilderAssistantDocument: builder.query<
+      AssistantDocumentResponse,
+      GetAssistantDocumentArgs
+    >({
+      query: ({ surveyID, threadID, documentID }) =>
+        `${threadPath(surveyID, threadID)}/documents/${documentID}`,
+      keepUnusedDataFor: 0,
+    }),
+
+    deleteSurveyBuilderAssistantDocument: builder.mutation<
+      DeleteAssistantDocumentResponse,
+      GetAssistantDocumentArgs
+    >({
+      query: ({ surveyID, threadID, documentID }) => ({
+        url: `${threadPath(surveyID, threadID)}/documents/${documentID}`,
+        method: "DELETE",
+      }),
+    }),
+
     sendSurveyBuilderAssistantMessage: builder.mutation<
       SendAssistantMessageResponse,
       SendAssistantMessageArgs
     >({
-      query: ({ surveyID, threadID, clientMessageID, message }) => ({
+      query: ({
+        surveyID,
+        threadID,
+        clientMessageID,
+        message,
+        documentIDs,
+      }) => ({
         url: `${threadPath(surveyID, threadID)}/messages`,
         method: "POST",
         body: {
           clientMessageID,
           message,
+          ...(documentIDs?.length ? { documentIDs } : {}),
         },
       }),
     }),
@@ -93,6 +142,9 @@ export const {
   useCreateSurveyBuilderAssistantThreadMutation,
   useLazyGetSurveyBuilderAssistantThreadQuery,
   useLazyGetSurveyBuilderAssistantMessagesQuery,
+  useUploadSurveyBuilderAssistantDocumentMutation,
+  useLazyGetSurveyBuilderAssistantDocumentQuery,
+  useDeleteSurveyBuilderAssistantDocumentMutation,
   useSendSurveyBuilderAssistantMessageMutation,
   useGetSurveyBuilderAssistantJobQuery,
   useCommitSurveyBuilderAssistantDraftMutation,

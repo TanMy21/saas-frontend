@@ -105,6 +105,22 @@ export type AssistantJobStatus =
   | "COMPLETED"
   | "FAILED";
 
+export type AssistantDocumentStatus =
+  | "UPLOADING"
+  | "PENDING_SCAN"
+  | "SCANNING"
+  | "REJECTED"
+  | "SCAN_FAILED"
+  | "ANALYZING"
+  | "READY"
+  | "ANALYSIS_FAILED"
+  | "DELETED";
+
+export type AssistantComposerDocumentStatus =
+  | AssistantDocumentStatus
+  | "UPLOAD_FAILED"
+  | "POLLING_FAILED";
+
 export type AssistantQuestionType =
   | "BINARY"
   | "CONCEPT_FIT"
@@ -196,6 +212,14 @@ export interface AssistantTextPart {
   text: string;
 }
 
+export interface AssistantDocumentAttachmentPart {
+  type: "document-attachment";
+  documentID: string;
+  fileName: string;
+  mimeType: string;
+  sizeBytes: number;
+}
+
 export interface AssistantSurveyPreviewPart {
   type: "survey-preview";
   draftVersion: number;
@@ -230,6 +254,7 @@ export interface AssistantApprovalControlsPart {
 
 export type AssistantMessagePart =
   | AssistantTextPart
+  | AssistantDocumentAttachmentPart
   | AssistantSurveyPreviewPart
   | AssistantSurveyOrderPreviewPart
   | AssistantApprovalControlsPart;
@@ -271,6 +296,48 @@ export interface AssistantJob {
   completedAt: ISODateString | null;
 }
 
+export interface AssistantDocument {
+  documentID: string;
+  clientDocumentID: string;
+  threadID: string;
+  status: AssistantDocumentStatus;
+  fileName: string;
+  mimeType: string;
+  sizeBytes: number;
+  analysis: unknown;
+  errorCode: string | null;
+  errorMessage: string | null;
+  createdAt: ISODateString;
+  updatedAt: ISODateString;
+  analyzedAt: ISODateString | null;
+  deletedAt: ISODateString | null;
+}
+
+export interface AssistantDocumentResponse {
+  jobID: string;
+  document: AssistantDocument;
+}
+
+export interface UploadAssistantDocumentResponse extends AssistantDocumentResponse {
+  replayed: boolean;
+}
+
+export interface DeleteAssistantDocumentResponse {
+  replayed: boolean;
+  document: AssistantDocument;
+}
+
+export interface AssistantComposerDocument {
+  clientDocumentID: string;
+  documentID: string | null;
+  file: File;
+  fileName: string;
+  mimeType: string;
+  sizeBytes: number;
+  status: AssistantComposerDocumentStatus;
+  errorMessage: string | null;
+}
+
 export interface CreateAssistantThreadArgs {
   surveyID: string;
 }
@@ -285,9 +352,19 @@ export interface GetAssistantMessagesArgs extends GetAssistantThreadArgs {
   beforeSequence?: number;
 }
 
+export interface UploadAssistantDocumentArgs extends GetAssistantThreadArgs {
+  clientDocumentID: string;
+  document: File;
+}
+
+export interface GetAssistantDocumentArgs extends GetAssistantThreadArgs {
+  documentID: string;
+}
+
 export interface SendAssistantMessageArgs extends GetAssistantThreadArgs {
   clientMessageID: string;
   message: string;
+  documentIDs?: string[];
 }
 
 export interface SendAssistantMessageResponse {
@@ -347,9 +424,18 @@ export interface SurveyBuilderAssistantContextValue {
   isLoadingOlder: boolean;
   hasMoreMessages: boolean;
   canSendMessages: boolean;
+  canSendComposerMessage: boolean;
+  composerDocuments: AssistantComposerDocument[];
+  isPreparingDocuments: boolean;
   errorMessage: string | null;
 
-  sendMessage: (message: string) => Promise<void>;
+  sendMessage: (
+    message: string,
+    documentAttachments?: AssistantDocumentAttachmentPart[],
+  ) => Promise<void>;
+  selectComposerDocuments: (documents: File[]) => Promise<void>;
+  retryComposerDocument: (clientDocumentID: string) => Promise<void>;
+  removeComposerDocument: (clientDocumentID: string) => Promise<void>;
   retryMessage: () => Promise<void>;
   loadOlderMessages: () => Promise<void>;
   commitDraft: (draftVersion: number) => Promise<void>;
@@ -365,6 +451,8 @@ export interface SurveyBuilderAssistantProviderProps {
 export interface PendingMessageRequest {
   clientMessageID: string;
   message: string;
+  documentIDs?: string[];
+  documentAttachments?: AssistantDocumentAttachmentPart[];
 }
 
 export interface PendingCommitRequest {
@@ -388,6 +476,7 @@ export interface OptimisticAssistantMessageInput {
   clientMessageID: string;
   message: string;
   sequence: number;
+  documentAttachments?: AssistantDocumentAttachmentPart[];
 }
 
 export type SurveyOrderPreviewProps = {

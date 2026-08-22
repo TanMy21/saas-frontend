@@ -18,6 +18,7 @@ import {
 import { useAppDispatch } from "../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../context/BuilderRefetchCanvas";
 import {
+  AssistantDocumentAttachmentPart,
   AssistantMessage,
   AssistantThread,
   PendingCommitRequest,
@@ -54,6 +55,7 @@ import {
   setAssistantActiveJobID,
   writeAssistantSession,
 } from "./surveyBuilderAssistantStorage";
+import { useSurveyBuilderAssistantDocuments } from "./useSurveyBuilderAssistantDocuments";
 
 export const SurveyBuilderAssistantProvider = ({
   children,
@@ -147,6 +149,49 @@ export const SurveyBuilderAssistantProvider = ({
     !isSending &&
     !isGenerating &&
     !isCommitting;
+
+  const handleDocumentError = useCallback((message: string) => {
+    setErrorMessage(message);
+  }, []);
+
+  const handleDocumentReady = useCallback(async () => {
+    if (!thread?.threadID) return;
+
+    try {
+      const latestMessages = await getMessages({
+        surveyID: assistantSurveyID,
+        threadID: thread.threadID,
+        limit: ASSISTANT_MESSAGE_PAGE_SIZE,
+      }).unwrap();
+
+      setMessages((current) =>
+        mergeAssistantMessages(current, latestMessages.messages),
+      );
+      setHasMoreMessages(latestMessages.hasMore);
+      setNextBeforeSequence(latestMessages.nextBeforeSequence);
+    } catch {
+      setErrorMessage(
+        "The document is ready, but the assistant response could not be refreshed. Reload the chat to see it.",
+      );
+    }
+  }, [assistantSurveyID, getMessages, thread?.threadID]);
+
+  const {
+    clearComposerDocuments,
+    composerDocuments,
+    hasUnreadyDocuments,
+    isPreparingDocuments,
+    removeComposerDocument,
+    retryComposerDocument,
+    selectComposerDocuments,
+  } = useSurveyBuilderAssistantDocuments({
+    thread,
+    canManageDocuments: canSendMessages,
+    onError: handleDocumentError,
+    onDocumentReady: handleDocumentReady,
+  });
+
+  const canSendComposerMessage = canSendMessages && !hasUnreadyDocuments;
 
   const loadInitialMessages = useCallback(
     async (threadID: string) => {
@@ -325,6 +370,7 @@ export const SurveyBuilderAssistantProvider = ({
         setOptimisticMessage(
           createOptimisticAssistantMessage({
             clientMessageID: request.clientMessageID,
+            documentAttachments: request.documentAttachments,
             message: request.message,
             sequence: lastSequence + 1,
           }),
@@ -346,10 +392,15 @@ export const SurveyBuilderAssistantProvider = ({
         threadID: targetThread.threadID,
         clientMessageID: request.clientMessageID,
         message: request.message,
+        documentIDs: request.documentIDs,
       };
 
       try {
         const response = await sendAssistantMessage(args).unwrap();
+
+        if (!isRetry && request.documentIDs?.length) {
+          clearComposerDocuments();
+        }
 
         handledJobIDRef.current = null;
         setActiveJobID(response.jobID);
@@ -384,6 +435,7 @@ export const SurveyBuilderAssistantProvider = ({
     },
     [
       assistantSurveyID,
+      clearComposerDocuments,
       isGenerating,
       isSending,
       messages,
@@ -393,7 +445,10 @@ export const SurveyBuilderAssistantProvider = ({
   );
 
   const sendMessage = useCallback(
-    async (message: string) => {
+    async (
+      message: string,
+      documentAttachments: AssistantDocumentAttachmentPart[] = [],
+    ) => {
       const normalizedMessage = message.trim();
 
       if (!normalizedMessage) {
@@ -411,6 +466,14 @@ export const SurveyBuilderAssistantProvider = ({
       const request: PendingMessageRequest = {
         clientMessageID: crypto.randomUUID(),
         message: normalizedMessage,
+        ...(documentAttachments.length
+          ? {
+              documentIDs: documentAttachments.map(
+                (document) => document.documentID,
+              ),
+              documentAttachments,
+            }
+          : {}),
       };
 
       setPendingMessage(request);
@@ -702,11 +765,25 @@ export const SurveyBuilderAssistantProvider = ({
     async (message: AppendMessage) => {
       const text = getAssistantAppendMessageText(message);
 
-      if (!text) return;
+      if (!text || !canSendComposerMessage) return;
 
-      await sendMessage(text);
+      const documentAttachments = composerDocuments.flatMap((document) =>
+        document.status === "READY" && document.documentID
+          ? [
+              {
+                type: "document-attachment" as const,
+                documentID: document.documentID,
+                fileName: document.fileName,
+                mimeType: document.mimeType,
+                sizeBytes: document.sizeBytes,
+              },
+            ]
+          : [],
+      );
+
+      await sendMessage(text, documentAttachments);
     },
-    [sendMessage],
+    [canSendComposerMessage, composerDocuments, sendMessage],
   );
 
   const runtime = useExternalStoreRuntime({
@@ -727,8 +804,14 @@ export const SurveyBuilderAssistantProvider = ({
       isLoadingOlder,
       hasMoreMessages,
       canSendMessages,
+      canSendComposerMessage,
+      composerDocuments,
+      isPreparingDocuments,
       errorMessage,
       sendMessage,
+      selectComposerDocuments,
+      retryComposerDocument,
+      removeComposerDocument,
       retryMessage,
       loadOlderMessages,
       commitDraft,
@@ -737,8 +820,10 @@ export const SurveyBuilderAssistantProvider = ({
     }),
     [
       canSendMessages,
+      canSendComposerMessage,
       clearError,
       commitDraft,
+      composerDocuments,
       createNewThread,
       displayMessages,
       errorMessage,
@@ -747,9 +832,13 @@ export const SurveyBuilderAssistantProvider = ({
       isGenerating,
       isInitializing,
       isLoadingOlder,
+      isPreparingDocuments,
       isSending,
       loadOlderMessages,
+      removeComposerDocument,
       retryMessage,
+      retryComposerDocument,
+      selectComposerDocuments,
       sendMessage,
       thread,
     ],
