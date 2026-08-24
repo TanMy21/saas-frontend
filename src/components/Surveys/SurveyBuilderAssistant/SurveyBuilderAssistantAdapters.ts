@@ -16,7 +16,8 @@ import {
 const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
 
-const TECHNICAL_ERROR_CODE_PATTERN = /\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+){2,}\b/;
+const TECHNICAL_ERROR_CODE_PATTERN =
+  /\b[A-Z][A-Z0-9]*(?:\\?_[A-Z0-9]+){2,}\b/i;
 
 export const ASSISTANT_RESPONSE_FAILURE_MESSAGE =
   "I couldn’t complete that response. Please try again or rephrase your request.";

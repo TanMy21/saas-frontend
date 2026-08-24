@@ -217,7 +217,7 @@ const QuestionTypeGrid = ({
                 sx={{
                   minWidth: 0,
                   color: "#0F172A",
-                  fontSize: "0.72rem",
+                  fontSize: "var(--assistant-chat-font-primary, 0.875rem)",
                   fontWeight: 700,
                   lineHeight: 1.35,
                 }}
@@ -233,7 +233,7 @@ const QuestionTypeGrid = ({
                     height: 17,
                     color: "#6D28D9",
                     backgroundColor: "#EDE9FE",
-                    fontSize: "0.54rem",
+                    fontSize: "var(--assistant-chat-font-label, 0.75rem)",
                     fontWeight: 700,
                     "& .MuiChip-label": { px: 0.65 },
                   }}
@@ -245,7 +245,7 @@ const QuestionTypeGrid = ({
               sx={{
                 mt: 0.25,
                 color: "#64748B",
-                fontSize: "0.65rem",
+                fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
                 lineHeight: 1.4,
               }}
             >
@@ -335,7 +335,11 @@ export const GenerationQuestionTypePicker = ({
       }}
     >
       <Typography
-        sx={{ color: "#0F172A", fontSize: "0.8rem", fontWeight: 750 }}
+        sx={{
+          color: "#0F172A",
+          fontSize: "var(--assistant-chat-font-title, 0.9375rem)",
+          fontWeight: 750,
+        }}
       >
         Choose question types
       </Typography>
@@ -343,7 +347,7 @@ export const GenerationQuestionTypePicker = ({
         sx={{
           mt: 0.3,
           color: "#64748B",
-          fontSize: "0.69rem",
+          fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
           lineHeight: 1.45,
         }}
       >
@@ -368,7 +372,7 @@ export const GenerationQuestionTypePicker = ({
         <Typography
           sx={{
             color: "#475569",
-            fontSize: "0.64rem",
+            fontSize: "var(--assistant-chat-font-label, 0.75rem)",
             fontWeight: 750,
             letterSpacing: "0.06em",
             textTransform: "uppercase",
@@ -390,7 +394,7 @@ export const GenerationQuestionTypePicker = ({
         sx={{
           mt: 0.9,
           color: "#64748B",
-          fontSize: "0.64rem",
+          fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
           lineHeight: 1.45,
         }}
       >
@@ -409,7 +413,7 @@ export const GenerationQuestionTypePicker = ({
             backgroundColor: "#4F46E5",
             boxShadow: "none",
             textTransform: "none",
-            fontSize: "0.72rem",
+            fontSize: "var(--assistant-chat-font-primary, 0.875rem)",
             fontWeight: 700,
             "&:hover": { backgroundColor: "#4338CA", boxShadow: "none" },
           }}
@@ -432,7 +436,7 @@ export const GenerationQuestionTypePicker = ({
             borderRadius: 2,
             color: "#475569",
             textTransform: "none",
-            fontSize: "0.72rem",
+            fontSize: "var(--assistant-chat-font-primary, 0.875rem)",
             fontWeight: 650,
             "&:hover": { borderColor: "#94A3B8", backgroundColor: "#F8FAFC" },
           }}

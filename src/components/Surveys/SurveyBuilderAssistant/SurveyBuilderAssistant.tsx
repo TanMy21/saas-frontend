@@ -10,14 +10,10 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import { MessageSquarePlus, Sparkles, X } from "lucide-react";
+import { MessageSquarePlus, X } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import { useAppTheme } from "../../../theme/useAppTheme";
-import type {
-  AssistantThread,
-  AssistantThreadStage,
-} from "../../../types/surveyBuilderAssistant.types";
 
 import { useSurveyBuilderAssistant } from "./SurveyBuilderAssistantContext";
 import { SurveyBuilderAssistantProvider } from "./SurveyBuilderAssistantProvider";
@@ -27,30 +23,6 @@ import AssistantEmptyState from "./ui/AssistantEmptyState";
 import AssistantMessage from "./ui/AssistantMessage";
 
 const Box = styled("div")({});
-
-const getStageLabel = (stage?: AssistantThreadStage) => {
-  switch (stage) {
-    case "PROCESSING":
-      return "Working";
-    case "REVIEW":
-      return "Review draft";
-    case "COMMITTING":
-      return "Creating questions";
-    case "COMMITTED":
-      return "Questions created";
-    case "FAILED":
-      return "Needs attention";
-    default:
-      return "Ready";
-  }
-};
-
-const getThreadStateLabel = (thread: AssistantThread | null) => {
-  if (thread?.status === "ARCHIVED") return "Archived";
-  if (thread?.status === "COMPLETED") return "Previous chat";
-
-  return getStageLabel(thread?.stage);
-};
 
 const AssistantWorkingIndicator = (): ReactElement => (
   <Box
@@ -63,9 +35,7 @@ const AssistantWorkingIndicator = (): ReactElement => (
     }}
   >
     <CircularProgress size={14} thickness={4.5} />
-    <Typography sx={{ fontSize: "0.7rem" }}>
-      Working on it…
-    </Typography>
+    <Typography sx={{ fontSize: "0.7rem" }}>Working on it…</Typography>
   </Box>
 );
 
@@ -82,26 +52,16 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
     isSending,
     loadOlderMessages,
     messages,
-    thread,
   } = useSurveyBuilderAssistant();
   const { scrollStyles } = useAppTheme();
+  const [chatFontSize, setChatFontSize] = useState(16);
 
   const messagesByID = useMemo(
     () => new Map(messages.map((message) => [message.messageID, message])),
     [messages],
   );
 
-  const isBusy =
-    isInitializing || isSending || isGenerating || isCommitting;
-  const stageLabel = getThreadStateLabel(thread);
-  const stageColor =
-    thread?.status === "ARCHIVED" || thread?.status === "COMPLETED"
-      ? "#64748B"
-      : thread?.stage === "FAILED"
-        ? "#B91C1C"
-        : thread?.stage === "COMMITTED"
-          ? "#15803D"
-          : "#475569";
+  const isBusy = isInitializing || isSending || isGenerating || isCommitting;
 
   return (
     <ThreadPrimitive.Root
@@ -122,44 +82,51 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
           justifyContent: "space-between",
           gap: 1,
           px: 2,
-          py: 1.1,
+          py: 0.5,
           flexShrink: 0,
           borderBottom: "1px solid #E2E8F0",
           backgroundColor: "#FFFFFF",
         }}
       >
         <Box
-          sx={{ display: "flex", alignItems: "center", gap: 0.85, minWidth: 0 }}
+          role="group"
+          aria-label="Chat text size"
+          sx={{
+            display: "flex",
+            overflow: "hidden",
+            flexShrink: 0,
+            border: "1px solid #E2E8F0",
+            borderRadius: 1.5,
+            "& > button": {
+              width: 28,
+              height: 28,
+              color: "#64748B",
+              fontSize: "0.8rem",
+              fontWeight: 700,
+            },
+            "& > button:hover": {
+              color: "#0F172A",
+              backgroundColor: "#F1F5F9",
+            },
+            "& > button.Mui-disabled": { opacity: 0.35 },
+          }}
         >
-          <Box
-            sx={{
-              display: "grid",
-              placeItems: "center",
-              width: 29,
-              height: 29,
-              flexShrink: 0,
-              borderRadius: 1.75,
-              color: "#4F46E5",
-              backgroundColor: "#EEF2FF",
-            }}
+          <ButtonBase
+            disabled={chatFontSize === 14}
+            aria-label="Decrease chat text size"
+            title="Decrease chat text size"
+            onClick={() => setChatFontSize((size) => Math.max(14, size - 1))}
           >
-            <Sparkles size={15} aria-hidden="true" />
-          </Box>
-
-          <Box sx={{ minWidth: 0 }}>
-            <Typography
-              noWrap
-              sx={{ color: "#0F172A", fontSize: "0.8rem", fontWeight: 750 }}
-            >
-              Assistant
-            </Typography>
-            <Typography
-              noWrap
-              sx={{ color: stageColor, fontSize: "0.65rem", fontWeight: 600 }}
-            >
-              {stageLabel}
-            </Typography>
-          </Box>
+            A−
+          </ButtonBase>
+          <ButtonBase
+            disabled={chatFontSize === 18}
+            aria-label="Increase chat text size"
+            title="Increase chat text size"
+            onClick={() => setChatFontSize((size) => Math.min(18, size + 1))}
+          >
+            A+
+          </ButtonBase>
         </Box>
 
         <Button
@@ -242,6 +209,11 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
             px: 2,
             py: 2,
             boxSizing: "border-box",
+            "--assistant-chat-font-body": `${chatFontSize}px`,
+            "--assistant-chat-font-title": `${chatFontSize - 1}px`,
+            "--assistant-chat-font-primary": `${chatFontSize - 2}px`,
+            "--assistant-chat-font-secondary": `${chatFontSize - 3}px`,
+            "--assistant-chat-font-label": `${chatFontSize - 4}px`,
             ...scrollStyles.elementsPanel,
           }}
         >

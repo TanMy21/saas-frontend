@@ -54,11 +54,11 @@ const ComposerSend = styled(ComposerPrimitive.Send)(() => ({
   padding: 0,
   border: 0,
   borderRadius: 9,
-  backgroundColor: "#0F172A",
+  backgroundColor: "#338FEF",
   color: "#FFFFFF",
   cursor: "pointer",
   transition: "background-color 160ms ease, opacity 160ms ease",
-  "&:hover": { backgroundColor: "#334155" },
+  "&:hover": { backgroundColor: "#2178d4" },
   "&:disabled": { cursor: "default", opacity: 0.32 },
 }));
 
@@ -96,7 +96,7 @@ const AssistantComposer = (): ReactElement => {
           ? "Creating questions in your survey"
           : isGenerating || isSending
             ? "Processing..."
-            : "Messages can contain up to 10,000 characters";
+            : "";
 
   return (
     <Box sx={{ px: 2, pt: 1, pb: 1.5, flexShrink: 0 }}>

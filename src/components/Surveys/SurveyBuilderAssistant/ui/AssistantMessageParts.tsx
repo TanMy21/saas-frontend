@@ -36,8 +36,8 @@ const TextPart = ({ part }: { part: AssistantTextPart }): ReactElement => (
   <Typography
     sx={{
       color: "inherit",
-      fontSize: "0.78rem",
-      lineHeight: 1.55,
+      fontSize: "var(--assistant-chat-font-body, 1rem)",
+      lineHeight: 1.6,
       overflowWrap: "anywhere",
       whiteSpace: "pre-wrap",
     }}
@@ -72,14 +72,18 @@ const QuestionOptions = ({
               borderRadius: "50%",
               color: "#64748B",
               backgroundColor: "#F1F5F9",
-              fontSize: "0.6rem",
+              fontSize: "var(--assistant-chat-font-label, 0.75rem)",
               fontWeight: 700,
             }}
           >
             {index + 1}
           </Box>
           <Typography
-            sx={{ color: "#475569", fontSize: "0.7rem", lineHeight: 1.45 }}
+            sx={{
+              color: "#475569",
+              fontSize: "var(--assistant-chat-font-primary, 0.875rem)",
+              lineHeight: 1.45,
+            }}
           >
             {option.text}
           </Typography>
@@ -127,7 +131,7 @@ const SurveyPreviewPart = ({
               noWrap
               sx={{
                 color: isReplaceAll ? "#92400E" : "#0F172A",
-                fontSize: "0.8rem",
+                fontSize: "var(--assistant-chat-font-title, 0.9375rem)",
                 fontWeight: 750,
               }}
             >
@@ -139,7 +143,7 @@ const SurveyPreviewPart = ({
               sx={{
                 mt: 0.2,
                 color: isReplaceAll ? "#B45309" : "#64748B",
-                fontSize: "0.68rem",
+                fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
               }}
             >
               {part.questions.length} question
@@ -179,7 +183,7 @@ const SurveyPreviewPart = ({
           >
             <Typography
               sx={{
-                fontSize: "0.74rem",
+                fontSize: "var(--assistant-chat-font-title, 0.9375rem)",
                 fontWeight: 750,
                 lineHeight: 1.45,
               }}
@@ -190,7 +194,7 @@ const SurveyPreviewPart = ({
             <Typography
               sx={{
                 mt: 0.35,
-                fontSize: "0.69rem",
+                fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
                 lineHeight: 1.5,
               }}
             >
@@ -213,7 +217,7 @@ const SurveyPreviewPart = ({
             px: 1.5,
             py: 2,
             color: "#64748B",
-            fontSize: "0.72rem",
+            fontSize: "var(--assistant-chat-font-primary, 0.875rem)",
           }}
         >
           This draft does not contain any questions yet.
@@ -227,7 +231,8 @@ const SurveyPreviewPart = ({
                   sx={{
                     minWidth: 18,
                     color: "#64748B",
-                    fontSize: "0.7rem",
+                    fontSize:
+                      "var(--assistant-chat-font-secondary, 0.8125rem)",
                     fontWeight: 750,
                     lineHeight: 1.5,
                   }}
@@ -239,7 +244,8 @@ const SurveyPreviewPart = ({
                   <Typography
                     sx={{
                       color: "#0F172A",
-                      fontSize: "0.75rem",
+                      fontSize:
+                        "var(--assistant-chat-font-primary, 0.875rem)",
                       fontWeight: 650,
                       lineHeight: 1.45,
                       overflowWrap: "anywhere",
@@ -253,7 +259,8 @@ const SurveyPreviewPart = ({
                       sx={{
                         mt: 0.4,
                         color: "#64748B",
-                        fontSize: "0.69rem",
+                        fontSize:
+                          "var(--assistant-chat-font-secondary, 0.8125rem)",
                         lineHeight: 1.45,
                         whiteSpace: "pre-wrap",
                       }}
@@ -270,7 +277,8 @@ const SurveyPreviewPart = ({
                         height: 20,
                         color: "#475569",
                         backgroundColor: "#F1F5F9",
-                        fontSize: "0.625rem",
+                        fontSize:
+                          "var(--assistant-chat-font-label, 0.75rem)",
                       }}
                     />
 
@@ -282,7 +290,8 @@ const SurveyPreviewPart = ({
                           height: 20,
                           color: "#4338CA",
                           backgroundColor: "#EEF2FF",
-                          fontSize: "0.625rem",
+                          fontSize:
+                            "var(--assistant-chat-font-label, 0.75rem)",
                         }}
                       />
                     )}
@@ -301,10 +310,23 @@ const SurveyPreviewPart = ({
 
 export function SurveyOrderPreview({ part }: SurveyOrderPreviewProps) {
   return (
-    <div className="space-y-3 rounded-lg border p-4">
+    <div
+      className="space-y-3 rounded-lg border p-4"
+      style={{ fontSize: "var(--assistant-chat-font-primary, 0.875rem)" }}
+    >
       <div>
-        <p className="font-medium">Proposed question order</p>
-        <p className="text-sm text-muted-foreground">
+        <p
+          className="font-medium"
+          style={{ fontSize: "var(--assistant-chat-font-title, 0.9375rem)" }}
+        >
+          Proposed question order
+        </p>
+        <p
+          className="text-muted-foreground"
+          style={{
+            fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
+          }}
+        >
           {part.requestedGrouping}
         </p>
       </div>
@@ -321,7 +343,12 @@ export function SurveyOrderPreview({ part }: SurveyOrderPreviewProps) {
               <p>{question.text}</p>
 
               {question.moved && (
-                <p className="text-xs text-muted-foreground">
+                <p
+                  className="text-muted-foreground"
+                  style={{
+                    fontSize: "var(--assistant-chat-font-label, 0.75rem)",
+                  }}
+                >
                   Moved from position {question.previousPosition}
                 </p>
               )}
@@ -406,7 +433,7 @@ const ApprovalControlsPart = ({
           <Typography
             sx={{
               color: "#166534",
-              fontSize: "0.75rem",
+              fontSize: "var(--assistant-chat-font-primary, 0.875rem)",
               lineHeight: 1.5,
             }}
           >
@@ -430,7 +457,12 @@ const ApprovalControlsPart = ({
           boxSizing: "border-box",
         }}
       >
-        <Typography sx={{ color: "#64748B", fontSize: "0.75rem" }}>
+        <Typography
+          sx={{
+            color: "#64748B",
+            fontSize: "var(--assistant-chat-font-primary, 0.875rem)",
+          }}
+        >
           This previous chat is read-only.
         </Typography>
       </Paper>
@@ -452,7 +484,7 @@ const ApprovalControlsPart = ({
       <Typography
         sx={{
           color: isReplaceAll ? "#92400E" : "#0F172A",
-          fontSize: "0.78rem",
+          fontSize: "var(--assistant-chat-font-title, 0.9375rem)",
           fontWeight: 700,
         }}
       >
@@ -463,7 +495,7 @@ const ApprovalControlsPart = ({
         sx={{
           mt: 0.35,
           color: isReplaceAll ? "#92400E" : "#64748B",
-          fontSize: "0.7rem",
+          fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
           lineHeight: 1.45,
         }}
       >
@@ -491,7 +523,7 @@ const ApprovalControlsPart = ({
           backgroundColor: isReplaceAll ? "#B45309" : "#0F172A",
           boxShadow: "none",
           textTransform: "none",
-          fontSize: "0.75rem",
+          fontSize: "var(--assistant-chat-font-primary, 0.875rem)",
           fontWeight: 650,
           "&:hover": {
             backgroundColor: isReplaceAll ? "#92400E" : "#334155",

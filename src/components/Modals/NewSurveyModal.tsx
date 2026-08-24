@@ -79,13 +79,13 @@ const NewSurveyModal = ({
     {
       id: "assistant",
       icon: Sparkles,
-      title: "Build with AI assistant",
+      title: "Build with Assistant",
       description:
         "Create a survey through an interactive conversation with the assistant",
       gradient: "linear-gradient(90deg,#1e3a8a,#1d4ed8)",
-      bgColor: "#eff6ff",
-      iconColor: "#1d4ed8",
-      hoverGradient: "linear-gradient(90deg,#1e40af,#1e3a8a)",
+      bgColor: "#e7edf3",
+      iconColor: "#29445f",
+      hoverGradient: "linear-gradient(90deg, #dedbd5, #d1cdc4)",
       onClick: handleOpenAssistant,
     },
   ];
