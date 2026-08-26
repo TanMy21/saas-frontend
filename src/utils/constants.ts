@@ -17,6 +17,7 @@ import {
   UserPlus,
   LockOpenIcon,
   TrendingUpIcon,
+  ShieldCheck,
 } from "lucide-react";
 
 import { FeedbackTypeUI } from "../types/feedBackTypes";
@@ -170,6 +171,11 @@ export const CONCEPT_FIT_IMAGE_ROLE = "CONCEPT_FIT_STIMULUS";
 
 export const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: "general", label: "General", icon: User },
+  {
+    id: "activity",
+    label: "Org Activity",
+    icon: ShieldCheck,
+  },
   { id: "create-user", label: "Add Member", icon: UserPlus },
   { id: "security", label: "Security", icon: Shield },
   // { id: "notifications", label: "Notifications", icon: Bell },
@@ -434,7 +440,6 @@ export const elementStartTypes = [
   "EMAIL_CONTACT",
 ];
 
-
 export const orderedElementTypes = [
   "BINARY",
   "MEDIA",
@@ -669,3 +674,10 @@ export const SOFT_EDIT_MESSAGES = {
   SHARE_LINK_REGENERATE:
     "Regenerating this link will disable the current link. Existing responses are unaffected.",
 } as const;
+
+
+export const organizationAuthorizationCodes = new Set([
+  "ORGANIZATION_OWNER_REQUIRED",
+  "ENTERPRISE_PLAN_REQUIRED",
+  "EMAIL_VERIFICATION_REQUIRED",
+]);

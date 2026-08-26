@@ -25,6 +25,8 @@ const OrgMembers = lazy(() =>
   })),
 );
 
+const ActivityTab = lazy(() => import("../components/Settings/ActivityTab"));
+
 const Settings = () => {
   const { scrollStyles } = useAppTheme();
   const { can } = useAuth();
@@ -32,6 +34,18 @@ const Settings = () => {
   const { data: user } = useGetMeQuery("User", {
     refetchOnMountOrArgChange: true,
   });
+
+  const activeOrg = user?.activeOrg;
+
+  const activeOrgID =
+    activeOrg?.organization?.orgID ?? activeOrg?.relatedOrgID ?? null;
+
+  const activeOrgTier = activeOrg?.organization?.tier ?? user?.tier;
+
+  const canViewActivity =
+    Boolean(activeOrgID) &&
+    activeOrg?.role === "OWNER" &&
+    activeOrgTier === "ENTERPRISE";
 
   const validateTab = useCallback(
     (tab: TabId) => {
@@ -41,9 +55,13 @@ const Settings = () => {
         return "general";
       }
 
+      if (tab === "activity" && !canViewActivity) {
+        return "general";
+      }
+
       return tab;
     },
-    [can, user],
+    [can, user, canViewActivity],
   );
 
   const [activeTab, setActiveTab] = useStoredState<TabId>(
@@ -66,7 +84,8 @@ const Settings = () => {
 
   return (
     <>
-      <Box component="div"
+      <Box
+        component="div"
         sx={{
           height: "100vh",
           display: "flex",
@@ -75,7 +94,8 @@ const Settings = () => {
         }}
       >
         {/* Header */}
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             position: "sticky",
             top: 0,
@@ -87,7 +107,8 @@ const Settings = () => {
         </Box>
 
         {/* Main Layout */}
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             width: "100%",
             margin: "auto",
@@ -96,7 +117,8 @@ const Settings = () => {
             ...scrollStyles.builderMain,
           }}
         >
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               width: "100%",
               px: { xs: 2, sm: 3, lg: 6 },
@@ -104,7 +126,8 @@ const Settings = () => {
               pb: "4%",
             }}
           >
-            <Box component="div"
+            <Box
+              component="div"
               sx={{
                 maxWidth: 1280,
                 mx: "auto",
@@ -113,18 +136,24 @@ const Settings = () => {
               }}
             >
               {/* Sidebar */}
-              <Box component="div"
+              <Box
+                component="div"
                 sx={{
                   width: { xs: "100%", lg: "25%" },
                 }}
               >
                 <GlassCard>
-                  <SidebarNav activeTab={activeTab} onChange={setActiveTab} />
+                  <SidebarNav
+                    activeTab={activeTab}
+                    onChange={setActiveTab}
+                    showActivity={canViewActivity}
+                  />
                 </GlassCard>
               </Box>
 
               {/* Main Content */}
-              <Box component="div"
+              <Box
+                component="div"
                 sx={{
                   width: { xs: "100%", lg: "75%" },
                   "@media (width: 1280px), (width: 1366px)": {
@@ -135,7 +164,8 @@ const Settings = () => {
                 <GlassCard>
                   <Suspense
                     fallback={
-                      <Box component="div"
+                      <Box
+                        component="div"
                         sx={{
                           minHeight: 320,
                           display: "flex",
@@ -154,6 +184,10 @@ const Settings = () => {
                     {activeTab === "create-user" && can("INVITE_USER") && (
                       <OrgMembers />
                     )}
+
+                    {activeTab === "activity" &&
+                      canViewActivity &&
+                      activeOrgID && <ActivityTab orgID={activeOrgID} />}
 
                     {activeTab === "security" && <SecurityTab />}
 

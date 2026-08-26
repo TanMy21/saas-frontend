@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import DOMPurify from "dompurify";
 import { type Transition } from "motion/react";
 
@@ -1492,4 +1493,21 @@ export const downloadExportFile = (
     a.remove();
     window.setTimeout(() => URL.revokeObjectURL(blobUrl), 0);
   });
+};
+
+
+export const getErrorCode = (
+  error: FetchBaseQueryError | undefined,
+): string | undefined => {
+  if (
+    !error ||
+    typeof error.data !== "object" ||
+    error.data === null
+  ) {
+    return undefined;
+  }
+
+  const data = error.data as { code?: unknown };
+
+  return typeof data.code === "string" ? data.code : undefined;
 };

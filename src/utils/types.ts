@@ -90,6 +90,7 @@ export type NotificationSettings = {
 
 export type TabId =
   | "general"
+  | "activity"
   | "security"
   | "notifications"
   | "subscription"
