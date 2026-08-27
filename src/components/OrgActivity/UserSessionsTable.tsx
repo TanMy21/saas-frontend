@@ -6,6 +6,7 @@ import {
   Button,
   Chip,
   CircularProgress,
+  InputAdornment,
   Pagination,
   Stack,
   Table,
@@ -18,12 +19,57 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { Search } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
 import { useGetOrganizationUserSessionsQuery } from "../../app/slices/orgApiSlice";
 import { useDebounce } from "../../hooks/useDebounce";
+import LabeledField from "../Settings/LabelField";
 
 const PAGE_LIMIT = 25;
+
+const activitySearchFieldSx = {
+  "& .MuiOutlinedInput-root": {
+    minHeight: 48,
+    borderRadius: 2.25,
+    backgroundColor: "rgba(255,255,255,0.72)",
+    transition:
+      "border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease",
+
+    "& fieldset": {
+      borderColor: "rgba(148,163,184,0.38)",
+    },
+
+    "&:hover": {
+      backgroundColor: "#fff",
+
+      "& fieldset": {
+        borderColor: "rgba(0,116,235,0.58)",
+      },
+    },
+
+    "&.Mui-focused": {
+      backgroundColor: "#fff",
+      boxShadow: "0 0 0 4px rgba(0,116,235,0.11)",
+
+      "& fieldset": {
+        borderColor: "#0074EB",
+        borderWidth: 1,
+      },
+    },
+
+    "& input": {
+      fontSize: "0.925rem",
+      fontWeight: 500,
+      color: "#0F172A",
+    },
+
+    "& input::placeholder": {
+      color: "#94A3B8",
+      opacity: 1,
+    },
+  },
+};
 
 const displayValue = (value: string | null | undefined) => value?.trim() || "—";
 
@@ -169,11 +215,18 @@ export default function UserSessionsTable({ orgID }: { orgID: string }) {
           alignItems: "center",
         }}
       >
-        <TextField
-          size="small"
-          label="Search"
+        <LabeledField
+          topLabel="Search sessions"
           placeholder="Email, IP, browser, device..."
           value={search}
+          sx={activitySearchFieldSx}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search size={18} color="#64748B" />
+              </InputAdornment>
+            ),
+          }}
           onChange={(event) => {
             setSearch(event.target.value);
 
@@ -185,29 +238,11 @@ export default function UserSessionsTable({ orgID }: { orgID: string }) {
 
         <TextField
           size="small"
-          label="State"
+          label="Status"
           placeholder="ACTIVE"
           value={state}
           onChange={(event) =>
             updateFilter("sessionsState", event.target.value)
-          }
-        />
-
-        <TextField
-          size="small"
-          label="Country"
-          value={country}
-          onChange={(event) =>
-            updateFilter("sessionsCountry", event.target.value)
-          }
-        />
-
-        <TextField
-          size="small"
-          label="Device"
-          value={deviceType}
-          onChange={(event) =>
-            updateFilter("sessionsDevice", event.target.value)
           }
         />
 
@@ -269,11 +304,8 @@ export default function UserSessionsTable({ orgID }: { orgID: string }) {
                 <TableRow>
                   <TableCell>User</TableCell>
                   <TableCell>Status</TableCell>
-                  <TableCell>Network</TableCell>
-                  <TableCell>Device</TableCell>
                   <TableCell>Created</TableCell>
                   <TableCell>Last active</TableCell>
-                  <TableCell>Expires</TableCell>
                 </TableRow>
               </TableHead>
 
@@ -301,39 +333,11 @@ export default function UserSessionsTable({ orgID }: { orgID: string }) {
                     </TableCell>
 
                     <TableCell>
-                      <Typography variant="body2">
-                        {displayValue(session.network.ipAddress)}
-                      </Typography>
-
-                      <Typography variant="caption" color="text.secondary">
-                        {[session.network.city, session.network.country]
-                          .filter(Boolean)
-                          .join(", ") || "—"}
-                      </Typography>
-                    </TableCell>
-
-                    <TableCell>
-                      <Typography variant="body2">
-                        {displayValue(session.device.deviceType)}
-                      </Typography>
-
-                      <Typography variant="caption" color="text.secondary">
-                        {[session.device.browser, session.device.os]
-                          .filter(Boolean)
-                          .join(" · ") || "—"}
-                      </Typography>
-                    </TableCell>
-
-                    <TableCell>
                       <LocalTimestamp value={session.createdAt} />
                     </TableCell>
 
                     <TableCell>
                       <LocalTimestamp value={session.lastActiveAt} />
-                    </TableCell>
-
-                    <TableCell>
-                      <LocalTimestamp value={session.expiresAt} />
                     </TableCell>
                   </TableRow>
                 ))}

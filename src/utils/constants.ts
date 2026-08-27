@@ -173,7 +173,7 @@ export const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: "general", label: "General", icon: User },
   {
     id: "activity",
-    label: "Org Activity",
+    label: "Activity",
     icon: ShieldCheck,
   },
   { id: "create-user", label: "Add Member", icon: UserPlus },

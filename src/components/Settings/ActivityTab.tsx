@@ -40,8 +40,8 @@ export default function ActivityTab({ orgID }: { orgID: string }) {
           borderColor: "divider",
         }}
       >
-        <Tab value="sessions" label="User Sessions" />
-        <Tab value="audit-logs" label="Audit Logs" />
+        <Tab value="sessions" label="Sessions" />
+        <Tab value="audit-logs" label="Events" />
       </Tabs>
 
       {activeView === "sessions" && <UserSessionsTable orgID={orgID} />}

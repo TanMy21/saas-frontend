@@ -6,6 +6,7 @@ import {
   Button,
   Chip,
   CircularProgress,
+  InputAdornment,
   Pagination,
   Stack,
   Table,
@@ -18,12 +19,57 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { Search } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
 import { useGetOrganizationAuditLogsQuery } from "../../app/slices/orgApiSlice";
 import { useDebounce } from "../../hooks/useDebounce";
+import LabeledField from "../Settings/LabelField";
 
 const PAGE_LIMIT = 25;
+
+const activitySearchFieldSx = {
+  "& .MuiOutlinedInput-root": {
+    minHeight: 48,
+    borderRadius: 2.25,
+    backgroundColor: "rgba(255,255,255,0.72)",
+    transition:
+      "border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease",
+
+    "& fieldset": {
+      borderColor: "rgba(148,163,184,0.38)",
+    },
+
+    "&:hover": {
+      backgroundColor: "#fff",
+
+      "& fieldset": {
+        borderColor: "rgba(0,116,235,0.58)",
+      },
+    },
+
+    "&.Mui-focused": {
+      backgroundColor: "#fff",
+      boxShadow: "0 0 0 4px rgba(0,116,235,0.11)",
+
+      "& fieldset": {
+        borderColor: "#0074EB",
+        borderWidth: 1,
+      },
+    },
+
+    "& input": {
+      fontSize: "0.925rem",
+      fontWeight: 500,
+      color: "#0F172A",
+    },
+
+    "& input::placeholder": {
+      color: "#94A3B8",
+      opacity: 1,
+    },
+  },
+};
 
 const displayValue = (value: string | null | undefined) => value?.trim() || "—";
 
@@ -176,11 +222,18 @@ export default function AuditLogsTable({ orgID }: { orgID: string }) {
           alignItems: "center",
         }}
       >
-        <TextField
-          size="small"
-          label="Search"
+        <LabeledField
+          topLabel="Search events"
           placeholder="Actor, request, entity, IP..."
           value={search}
+          sx={activitySearchFieldSx}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search size={18} color="#64748B" />
+              </InputAdornment>
+            ),
+          }}
           onChange={(event) => {
             setSearch(event.target.value);
 
@@ -285,7 +338,6 @@ export default function AuditLogsTable({ orgID }: { orgID: string }) {
                   <TableCell>Actor</TableCell>
                   <TableCell>Action</TableCell>
                   <TableCell>Entity</TableCell>
-                  <TableCell>Context</TableCell>
                   <TableCell>Occurred at</TableCell>
                 </TableRow>
               </TableHead>
@@ -319,16 +371,6 @@ export default function AuditLogsTable({ orgID }: { orgID: string }) {
 
                       <Typography variant="caption" color="text.secondary">
                         {displayValue(log.entity.id)}
-                      </Typography>
-                    </TableCell>
-
-                    <TableCell>
-                      <Typography variant="body2">
-                        IP: {displayValue(log.context.ipAddress)}
-                      </Typography>
-
-                      <Typography variant="caption" color="text.secondary">
-                        Request: {displayValue(log.context.requestID)}
                       </Typography>
                     </TableCell>
 
