@@ -80,6 +80,12 @@ const SurveyBuilderCanvas = ({
         "&::-webkit-scrollbar": {
           display: "none",
         },
+        "@media (max-height: 740px)": {
+          boxSizing: "border-box",
+          maxHeight: "none",
+          mt: "8px",
+          mb: "8px",
+        },
       }}
     >
       <DevicePreview display={display}>

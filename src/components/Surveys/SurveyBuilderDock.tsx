@@ -265,7 +265,7 @@ const SurveyBuilderDock = ({
           left: 0,
           right: 0,
           mx: "auto",
-          mt: { md: "5%", xl: "2%" },
+          mt: { md: "2%", xl: "2%" },
           backgroundColor: "rgba(255,255,255,0.8)",
           borderRadius: 5,
           border: "1px solid rgba(0,0,0,0.06)",
