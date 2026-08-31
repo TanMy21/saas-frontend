@@ -60,7 +60,7 @@ const AssistantEmptyState = (): ReactElement => {
           <Typography
             sx={{ color: "#0F172A", fontSize: "0.875rem", fontWeight: 700 }}
           >
-            Build with the survey assistant
+            Build with the assistant
           </Typography>
           <Typography
             sx={{

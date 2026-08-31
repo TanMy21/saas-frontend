@@ -237,7 +237,7 @@ const SurveyBuilder = () => {
             sx={{
               display: "flex",
               width: "100%",
-              height: "6vh",
+              height: "64px",
               // border: "2px solid red",
               flexShrink: 0,
             }}
@@ -280,7 +280,7 @@ const SurveyBuilder = () => {
                 component="div"
                 sx={{
                   width: "100%",
-                  height: "94vh",
+                  height: "100%",
                   minWidth: 0,
                   backgroundColor: "white",
                 }}
@@ -303,10 +303,11 @@ const SurveyBuilder = () => {
               id="survey-builder-canvas"
               defaultSize={isWideLayout ? "68%" : "60%"}
               minSize={600}
+              style={{ overflow: "hidden" }}
             >
               <Box
                 component="div"
-                sx={{ width: "100%", height: "94vh", minWidth: 0 }}
+                sx={{ width: "100%", height: "100%", minWidth: 0 }}
               >
                 <CanvasConsole
                   display={display}

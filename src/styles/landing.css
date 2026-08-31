@@ -2190,6 +2190,56 @@
   border-color: #fde68a;
 }
 
+/* Keeps the desktop feature layout visible in short laptop viewports. */
+@media (min-width: 1025px) and (max-height: 740px) {
+  .feature-static-content {
+    margin-bottom: 8px;
+  }
+
+  .feature-main-title {
+    margin-bottom: 12px;
+    font-size: 46px;
+  }
+
+  .feature-main-subtitle {
+    margin-bottom: 16px;
+    font-size: 17px;
+    line-height: 1.45;
+  }
+
+  .feature-dynamic-content {
+    height: 380px;
+  }
+
+  .feature-step-row {
+    margin-bottom: 10px;
+  }
+
+  .feature-title {
+    margin-bottom: 12px;
+    font-size: 32px;
+  }
+
+  .feature-description {
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .feature-bullets {
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .feature-bullet-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .feature-bullet-desc {
+    font-size: 13px;
+  }
+}
+
 /* Tablet */
 @media (max-width: 1024px) {
   .feature-sticky-wrapper {

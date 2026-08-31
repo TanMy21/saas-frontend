@@ -57,8 +57,10 @@ const CanvasConsole = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        overflowY: "visible",
         width: "100%",
+        height: "100%",
+        minHeight: 0,
+        overflow: "hidden",
         // border: "2px solid orange",
       }}
     >
@@ -79,7 +81,8 @@ const CanvasConsole = ({
           marginLeft: "1%",
           marginTop: isLocked ? 0 : "1%",
           maxWidth: "98%",
-          height: "80vh",
+          flex: 1,
+          minHeight: 0,
           overflow: "hidden",
           // border: "2px solid green",
         }}
