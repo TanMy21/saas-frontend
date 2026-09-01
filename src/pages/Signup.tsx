@@ -30,6 +30,9 @@ import {
   startVerificationResendCooldown,
 } from "../utils/verificationSession";
 
+const COMPACT_1366_MEDIA_QUERY =
+  "@media (min-width: 1360px) and (max-width: 1370px) and (max-height: 740px)";
+
 const Signup = () => {
   const { primary, background, grey, shadows, gradient, borders, brand } =
     useAppTheme();
@@ -126,6 +129,11 @@ const Signup = () => {
               width: "100%",
               margin: 0,
             },
+            [COMPACT_1366_MEDIA_QUERY]: {
+              width: "44%",
+              maxWidth: 480,
+              margin: "1% auto",
+            },
           }}
         >
           {/* Logo */}
@@ -136,6 +144,10 @@ const Signup = () => {
               margin: "0 auto",
               width: "60%",
               height: { md: "8%", lg: "12%", xl: "12%" },
+              [COMPACT_1366_MEDIA_QUERY]: {
+                width: "52%",
+                height: "auto",
+              },
               // border: "2px solid red",
             }}
           >
@@ -147,6 +159,10 @@ const Signup = () => {
                 alignItems: "center",
                 width: { xs: "40%", sm: "40%", md: "36%", xl: "32%" },
                 height: "98%",
+                [COMPACT_1366_MEDIA_QUERY]: {
+                  width: "30%",
+                  height: "auto",
+                },
                 // border: "2px solid green",
               }}
             >
@@ -158,13 +174,18 @@ const Signup = () => {
                   textDecoration: "none",
                 }}
               >
-                <img
+                <Box
+                  component="img"
                   src="/Logo.webp"
                   alt="logo"
-                  style={{
+                  sx={{
                     maxWidth: "80%",
                     maxHeight: "96%",
                     objectFit: "contain",
+                    [COMPACT_1366_MEDIA_QUERY]: {
+                      maxWidth: "70%",
+                      maxHeight: "80%",
+                    },
                   }}
                 />
               </Link>
@@ -180,12 +201,21 @@ const Signup = () => {
               alignItems: "center",
               width: "80%",
               height: "40px",
+              [COMPACT_1366_MEDIA_QUERY]: {
+                height: "32px",
+              },
               // border: "2px solid red",
             }}
           >
             <Typography
               variant="body1"
-              sx={{ fontSize: "20px", color: grey[600] }}
+              sx={{
+                fontSize: "20px",
+                color: grey[600],
+                [COMPACT_1366_MEDIA_QUERY]: {
+                  fontSize: "18px",
+                },
+              }}
             >
               Create . Share . Understand
             </Typography>
@@ -198,6 +228,10 @@ const Signup = () => {
               margin: "1% auto",
               width: "96%",
               height: "76%",
+              [COMPACT_1366_MEDIA_QUERY]: {
+                margin: "0 auto",
+                height: "auto",
+              },
               // border: "2px solid red",
             }}
           >
@@ -215,6 +249,10 @@ const Signup = () => {
                 p: { xs: 3, sm: 4 },
                 borderRadius: 3,
                 boxShadow: shadows[9],
+                [COMPACT_1366_MEDIA_QUERY]: {
+                  height: "auto",
+                  p: 2.5,
+                },
               }}
             >
               <form onSubmit={handleSubmit(submitRegisterData)}>
@@ -225,6 +263,11 @@ const Signup = () => {
                     width: "98%",
                     height: "96%",
                     gap: 1,
+                    [COMPACT_1366_MEDIA_QUERY]: {
+                      width: "100%",
+                      height: "auto",
+                      gap: 0.5,
+                    },
                     // border: "2px solid black",
                   }}
                 >
@@ -244,6 +287,11 @@ const Signup = () => {
                       width: "100%",
                       height: "4%",
                       mb: 2,
+                      [COMPACT_1366_MEDIA_QUERY]: {
+                        height: "auto",
+                        gap: 1.5,
+                        mb: 1,
+                      },
                       // border: "2px solid red",
                     }}
                   >
@@ -336,6 +384,9 @@ const Signup = () => {
                       flexDirection: "row",
                       width: "100%",
                       height: "4%",
+                      [COMPACT_1366_MEDIA_QUERY]: {
+                        height: "auto",
+                      },
                       // border: "2px solid red",
                     }}
                   >
@@ -351,6 +402,9 @@ const Signup = () => {
                         mb: 2,
                         borderRadius: 3,
                         backgroundColor: brand.bgColor2,
+                        [COMPACT_1366_MEDIA_QUERY]: {
+                          mb: 1,
+                        },
                         "& .MuiFilledInput-root": {
                           borderRadius: 3,
                           backgroundColor: brand.bgColor2,
@@ -380,6 +434,9 @@ const Signup = () => {
                       flexDirection: "row",
                       width: "100%",
                       height: "4%",
+                      [COMPACT_1366_MEDIA_QUERY]: {
+                        height: "auto",
+                      },
                       // border: "2px solid red",
                     }}
                   >
@@ -397,6 +454,9 @@ const Signup = () => {
                         mb: 2,
                         borderRadius: 3,
                         backgroundColor: brand.bgColor2,
+                        [COMPACT_1366_MEDIA_QUERY]: {
+                          mb: 1,
+                        },
                         "& .MuiFilledInput-root": {
                           borderRadius: 3,
                           backgroundColor: brand.bgColor2,
@@ -439,6 +499,9 @@ const Signup = () => {
                       flexDirection: "row",
                       width: "100%",
                       height: "4%",
+                      [COMPACT_1366_MEDIA_QUERY]: {
+                        height: "auto",
+                      },
                       // border: "2px solid red",
                     }}
                   >
@@ -456,6 +519,9 @@ const Signup = () => {
                         mb: 2,
                         borderRadius: 3,
                         backgroundColor: brand.bgColor2,
+                        [COMPACT_1366_MEDIA_QUERY]: {
+                          mb: 1,
+                        },
                         "& .MuiFilledInput-root": {
                           borderRadius: 3,
                           backgroundColor: brand.bgColor2,
@@ -500,6 +566,9 @@ const Signup = () => {
                       flexDirection: "row",
                       width: "100%",
                       height: "4%",
+                      [COMPACT_1366_MEDIA_QUERY]: {
+                        height: "auto",
+                      },
                       // border: "2px solid red",
                     }}
                   >
@@ -517,6 +586,9 @@ const Signup = () => {
                         mb: 2,
                         borderRadius: 3,
                         backgroundColor: brand.bgColor2,
+                        [COMPACT_1366_MEDIA_QUERY]: {
+                          mb: 1,
+                        },
                         "& .MuiFilledInput-root": {
                           borderRadius: 3,
                           backgroundColor: brand.bgColor2,
@@ -546,6 +618,9 @@ const Signup = () => {
                       flexDirection: "row",
                       width: "100%",
                       height: "4%",
+                      [COMPACT_1366_MEDIA_QUERY]: {
+                        height: "auto",
+                      },
                       // border: "2px solid red",
                     }}
                   >
@@ -567,7 +642,15 @@ const Signup = () => {
                       {isLoading ? "Creating account..." : "Join the Flow →"}
                     </Button>
                   </Box>
-                  <Divider sx={{ my: 1, color: brand.divider1 }}>
+                  <Divider
+                    sx={{
+                      my: 1,
+                      color: brand.divider1,
+                      [COMPACT_1366_MEDIA_QUERY]: {
+                        my: 0.5,
+                      },
+                    }}
+                  >
                     or continue with
                   </Divider>
                   {/* sso button */}
@@ -577,6 +660,9 @@ const Signup = () => {
                       flexDirection: "row",
                       width: "100%",
                       height: "6%",
+                      [COMPACT_1366_MEDIA_QUERY]: {
+                        height: "auto",
+                      },
                       // border: "2px solid red",
                     }}
                   >
@@ -618,6 +704,10 @@ const Signup = () => {
               width: "100%",
               mt: 1,
               height: "6%",
+              [COMPACT_1366_MEDIA_QUERY]: {
+                mt: 0.5,
+                height: "auto",
+              },
               // border: "2px solid red",
             }}
           >

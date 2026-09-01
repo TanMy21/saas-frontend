@@ -37,6 +37,9 @@ import { loginSchema } from "../utils/schema";
 import { showToast } from "../utils/showToast";
 import { LoginFormData } from "../utils/types";
 
+const COMPACT_1366_MEDIA_QUERY =
+  "@media (min-width: 1360px) and (max-width: 1370px) and (max-height: 740px)";
+
 const Signin = () => {
   const { primary, background, grey, shadows, gradient, borders, brand } =
     useAppTheme();
@@ -210,6 +213,9 @@ const Signin = () => {
               width: "100%",
               maxWidth: 480,
               marginTop: "-4%",
+              [COMPACT_1366_MEDIA_QUERY]: {
+                maxWidth: 440,
+              },
             }}
           >
             <Box component="div"
@@ -218,17 +224,25 @@ const Signin = () => {
                 flexDirection: "column",
                 textAlign: "center",
                 mb: 3,
+                [COMPACT_1366_MEDIA_QUERY]: {
+                  mb: 2,
+                },
               }}
             >
               <Box component="div" sx={{ width: "60%", height: "60%", margin: "auto" }}>
                 <Link to="/" style={{ textDecoration: "none" }}>
-                  <img
+                  <Box
+                    component="img"
                     src="/Logo.webp"
                     alt="logo"
-                    style={{
+                    sx={{
                       maxWidth: "25%",
                       maxHeight: "25%",
                       objectFit: "contain",
+                      [COMPACT_1366_MEDIA_QUERY]: {
+                        maxWidth: "20%",
+                        maxHeight: "20%",
+                      },
                     }}
                   />
                 </Link>
@@ -257,6 +271,9 @@ const Signin = () => {
                 p: 4,
                 borderRadius: 5,
                 boxShadow: shadows[9],
+                [COMPACT_1366_MEDIA_QUERY]: {
+                  p: 3,
+                },
               }}
             >
               <form onSubmit={handleSubmit(submitLoginData)}>
@@ -275,6 +292,9 @@ const Signin = () => {
                     mb: 2,
                     borderRadius: 3,
                     backgroundColor: brand.bgColor3,
+                    [COMPACT_1366_MEDIA_QUERY]: {
+                      mb: 1.5,
+                    },
                     "& .MuiFilledInput-root": {
                       borderRadius: 3,
                       backgroundColor: brand.bgColor3,
@@ -308,6 +328,9 @@ const Signin = () => {
                     mb: 2,
                     borderRadius: 3,
                     backgroundColor: brand.bgColor3,
+                    [COMPACT_1366_MEDIA_QUERY]: {
+                      mb: 1.5,
+                    },
                     "& .MuiFilledInput-root": {
                       borderRadius: 3,
                       backgroundColor: brand.bgColor3,
@@ -340,7 +363,14 @@ const Signin = () => {
                 />
 
                 <Box component="div"
-                  sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    mb: 2,
+                    [COMPACT_1366_MEDIA_QUERY]: {
+                      mb: 1.5,
+                    },
+                  }}
                 >
                   <Link
                     to="/forgot"
@@ -373,7 +403,15 @@ const Signin = () => {
                 >
                   Sign in <LoginIcon />
                 </Button>
-                <Divider sx={{ color: brand.divider1, my: 3 }}>
+                <Divider
+                  sx={{
+                    color: brand.divider1,
+                    my: 3,
+                    [COMPACT_1366_MEDIA_QUERY]: {
+                      my: 2,
+                    },
+                  }}
+                >
                   or continue with
                 </Divider>
                 <Button
@@ -400,7 +438,14 @@ const Signin = () => {
                 </Button>
                 <Typography
                   variant="body2"
-                  sx={{ textAlign: "center", mt: 2, color: grey[600] }}
+                  sx={{
+                    textAlign: "center",
+                    mt: 2,
+                    color: grey[600],
+                    [COMPACT_1366_MEDIA_QUERY]: {
+                      mt: 1.5,
+                    },
+                  }}
                 >
                   Don't have an account?{" "}
                   <Link

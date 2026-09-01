@@ -8,6 +8,9 @@ import { NewSurveyProps } from "../../utils/types";
 
 const NewSurveyModal = lazy(() => import("../Modals/NewSurveyModal"));
 
+const COMPACT_1366_MEDIA_QUERY =
+  "@media (min-width: 1360px) and (max-width: 1370px) and (max-height: 740px)";
+
 const CreateNewSurveyCard = ({
   workspaceId,
   workspaceName,
@@ -116,13 +119,23 @@ const CreateNewSurveyCard = ({
                 "@media (prefers-reduced-motion: reduce)": {
                   transition: "none",
                 },
+                [COMPACT_1366_MEDIA_QUERY]: {
+                  width: 40,
+                  height: 40,
+                  marginBottom: 1,
+                },
               }}
             >
               <AddIcon
                 sx={{ fontSize: { md: 26, xl: 30 }, color: primary.dark }}
               />
             </Box>
-            <Typography sx={textStyles.strongH6}>
+            <Typography
+              sx={{
+                ...textStyles.strongH6,
+                [COMPACT_1366_MEDIA_QUERY]: { fontSize: "1.125rem" },
+              }}
+            >
               {" "}
               {isSurveyLimitReached
                 ? "Survey limit reached"
@@ -133,6 +146,7 @@ const CreateNewSurveyCard = ({
               sx={{
                 ...textStyles.bodyGrey,
                 fontSize: { md: 16, xl: 20 },
+                [COMPACT_1366_MEDIA_QUERY]: { fontSize: 14 },
               }}
             >
               {isSurveyLimitReached

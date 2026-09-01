@@ -3,6 +3,9 @@ import { Box, Typography } from "@mui/material";
 import { useAppTheme } from "../../theme/useAppTheme";
 import { SurveyCardMetricIndicatorProps } from "../../utils/types";
 
+const COMPACT_1366_MEDIA_QUERY =
+  "@media (min-width: 1360px) and (max-width: 1370px) and (max-height: 740px)";
+
 const GridSurveyCardMetricIndicator = ({
   value,
   title,
@@ -36,7 +39,14 @@ const GridSurveyCardMetricIndicator = ({
           // border: "2px solid red",
         }}
       >
-        <Typography sx={textStyles.metricLabelValue}>{value}</Typography>
+        <Typography
+          sx={{
+            ...textStyles.metricLabelValue,
+            [COMPACT_1366_MEDIA_QUERY]: { fontSize: 28 },
+          }}
+        >
+          {value}
+        </Typography>
       </Box>
       <Box component="div"
         sx={{
@@ -49,7 +59,14 @@ const GridSurveyCardMetricIndicator = ({
           // border: "2px solid blue",
         }}
       >
-        <Typography sx={textStyles.metricLabelTitle}>{title}</Typography>
+        <Typography
+          sx={{
+            ...textStyles.metricLabelTitle,
+            [COMPACT_1366_MEDIA_QUERY]: { fontSize: 14 },
+          }}
+        >
+          {title}
+        </Typography>
       </Box>
     </Box>
   );

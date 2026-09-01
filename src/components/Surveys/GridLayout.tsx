@@ -6,6 +6,9 @@ import { WorkspaceLayoutProps } from "../../utils/types";
 import CreateNewSurveyCard from "./CreateNewSurveyCard";
 import GridSurveyCard from "./GridSurveyCard";
 
+const COMPACT_1366_MEDIA_QUERY =
+  "@media (min-width: 1360px) and (max-width: 1370px) and (max-height: 740px)";
+
 const GridLayout = ({
   surveys,
   workspaceId,
@@ -41,6 +44,10 @@ const GridLayout = ({
           xl: "calc((180px * 3) + (16px * 2) + 32px)",
         },
         minHeight: { xs: "auto", md: "60vh" },
+        [COMPACT_1366_MEDIA_QUERY]: {
+          gridAutoRows: "164px",
+          maxHeight: "calc((164px * 3) + (16px * 2) + 28px)",
+        },
         // border: "2px solid green",
       }}
     >

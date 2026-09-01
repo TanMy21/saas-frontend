@@ -8,6 +8,9 @@ import { GridSurveyCardProps } from "../../utils/types";
 import GridSurveyCardMetricIndicator from "./GridSurveyCardMetricIndicator";
 import SurveyCardDropDownMenu from "./SurveyCardDropDownMenu";
 
+const COMPACT_1366_MEDIA_QUERY =
+  "@media (min-width: 1360px) and (max-width: 1370px) and (max-height: 740px)";
+
 const GridSurveyCard = ({
   survey,
   workspaceId,
@@ -107,13 +110,22 @@ const GridSurveyCard = ({
               }}
             >
               <Tooltip title={survey.title} placement="top" arrow>
-                <Typography sx={textStyles.cardSurveyTitle}>
+                <Typography
+                  sx={{
+                    ...textStyles.cardSurveyTitle,
+                    [COMPACT_1366_MEDIA_QUERY]: { fontSize: "1.125rem" },
+                  }}
+                >
                   {survey.title}
                 </Typography>
               </Tooltip>
             </Box>
             <Typography
-              sx={{ ...textStyles.cardSurveyCreatedAt, fontSize: { md: 16 } }}
+              sx={{
+                ...textStyles.cardSurveyCreatedAt,
+                fontSize: { md: 16 },
+                [COMPACT_1366_MEDIA_QUERY]: { fontSize: 14 },
+              }}
             >
               created: {formatDate(survey.createdAt)}
             </Typography>

@@ -16,6 +16,9 @@ import SurveysViewModeToggle from "../Surveys/SurveysViewModeToggle";
 
 import WorkspaceDropDown from "./WorkspaceDropDownMenu";
 
+const COMPACT_1366_MEDIA_QUERY =
+  "@media (min-width: 1360px) and (max-width: 1370px) and (max-height: 740px)";
+
 const WorkspaceToolbar = ({
   workspaceId,
   workspaceName,
@@ -150,6 +153,9 @@ const WorkspaceToolbar = ({
                 maxWidth: { xs: "70vw", lg: "32vw" },
                 overflow: "hidden",
                 textOverflow: "ellipsis",
+                [COMPACT_1366_MEDIA_QUERY]: {
+                  fontSize: "1.875rem",
+                },
                 "&:hover": {
                   backgroundColor: "rgba(2,43,103,0.06)",
                   boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4)",
@@ -179,6 +185,9 @@ const WorkspaceToolbar = ({
               maxWidth: { xs: "70vw", lg: "60vw" },
               overflow: "hidden",
               textOverflow: "ellipsis",
+              [COMPACT_1366_MEDIA_QUERY]: {
+                fontSize: "1.875rem",
+              },
             }}
           >
             {isArchiveWorkspace ? (
