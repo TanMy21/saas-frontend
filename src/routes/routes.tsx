@@ -15,6 +15,9 @@ const QuestionFlow = lazy(() => import("../pages/QuestionFlow"));
 const Settings = lazy(() => import("../pages/Settings"));
 const SurveyBuilder = lazy(() => import("../pages/SurveyBuilder"));
 const SurveyResults = lazy(() => import("../pages/SurveyResults"));
+const SurveyPreview = lazy(
+  () => import("../components/preview/SurveyPreview"),
+);
 const EmailNotVerified = lazy(() => import("../pages/EmailNotVerified"));
 
 const ForgotPassword = lazy(() => import("../pages/ForgotPassword"));
@@ -113,6 +116,10 @@ const router = createSentryBrowserRouter([
               {
                 path: "/survey/:surveyID",
                 element: <SurveyBuilder />,
+              },
+              {
+                path: "/survey/:surveyID/preview",
+                element: <SurveyPreview />,
               },
               {
                 path: "/s/flow/:surveyID",

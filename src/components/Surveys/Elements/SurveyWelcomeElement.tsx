@@ -45,7 +45,7 @@ const SurveyWelcomeElement = ({ display }: SurveyWelcomeElementProps) => {
           Welcome!
         </Typography>
         <Typography fontSize={subtextFontSize} color={"#424242"} mt={2}>
-          Get started by clicking on the Add button + to add Survey Elements.
+          Get started by clicking on the Add button to add Survey Elements.
         </Typography>
       </Box>
     </Box>

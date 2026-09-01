@@ -38,9 +38,7 @@ const CanvasConsole = ({
     useCallback(
       (value) => {
         const next =
-          typeof value === "function"
-            ? value(publishAlertOpen!)
-            : value;
+          typeof value === "function" ? value(publishAlertOpen!) : value;
 
         if (next) dispatch(openPublishAlert());
         else dispatch(closePublishAlert());
@@ -53,7 +51,8 @@ const CanvasConsole = ({
   }
 
   return (
-    <Box component="div"
+    <Box
+      component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -74,7 +73,8 @@ const CanvasConsole = ({
 
       {isLocked && <SurveyLockedBanner />}
 
-      <Box component="div"
+      <Box
+        component="div"
         sx={{
           display: "flex",
           justifyContent: "center",
