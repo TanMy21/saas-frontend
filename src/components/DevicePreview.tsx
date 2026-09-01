@@ -16,14 +16,14 @@ export default function DevicePreview({
         display: "flex",
         justifyContent: "center",
         width: "32%",
-        height: display === "mobile" ? "92vh" : "100%",
+        height: display === "mobile" ? "min(92vh, 100%)" : "100%",
         overflow: "hidden",
         // border:"2px solid red",
       }}
     >
       <div
         style={{
-          height: "85%",
+          height: "min(calc(100% - 16px), 78vh)",
           aspectRatio: aspect,
           maxWidth: "100%",
           maxHeight: "100%",

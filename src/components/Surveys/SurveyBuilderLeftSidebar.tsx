@@ -192,7 +192,7 @@ const SurveyBuilderLeftSidebar = ({
           margin: "2% auto",
           width: "100%",
           height: "64px",
-          marginTop: { md: "8%", xl: "4%" },
+          marginTop: { md: "6%", xl: "4%" },
           // borderBottom: "2px solid #F3F4F6",
         }}
       >
