@@ -18,6 +18,10 @@ export const surveysApiSlice = apiSlice.injectEndpoints({
       query: (surveyID) => `/s/survey/canvas/${surveyID}`,
       providesTags: ["Surveys"],
     }),
+    getSurveyPreviewById: builder.query({
+      query: (surveyID) => `/s/survey/preview/${surveyID}`,
+      providesTags: ["Surveys"],
+    }),
     createSurvey: builder.mutation({
       query: (data) => ({
         url: `/s/create`,
@@ -140,6 +144,8 @@ export const {
   useGetSurveySettingsQuery,
   useGetSurveyByIdQuery,
   useGetSurveyCanvasByIdQuery,
+
+  useGetSurveyPreviewByIdQuery,
   useCreateSurveyMutation,
 
   useUpdateSurveyTitleandDescriptionMutation,

@@ -9,6 +9,7 @@ import { useGetWorkspaceByIdQuery } from "../../app/slices/workspaceApiSlice";
 import { SurveyBuilderHeaderProps } from "../../utils/types";
 import ShareButton from "../Buttons/ShareButton";
 import HeaderIconMenu from "../HeaderIconMenu";
+import PreviewButton from "../preview/PreviewButton";
 
 import SurveyBuilderHeaderTabs from "./SurveyBuilderHeaders/SurveyBuilderHeaderTabs";
 import SurveyNavigation from "./SurveyBuilderHeaders/SurveyNavigation";
@@ -78,7 +79,8 @@ const SurveyBuilderHeader = ({
         >
           {/* -------------------   Workspace name and survey title ------------------- */}
 
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -130,10 +132,13 @@ const SurveyBuilderHeader = ({
             }}
           >
             {tabValue === "create" && (
-              <ShareButton
-                surveyID={getSurveyCanvas?.surveyID}
-                published={published}
-              />
+              <>
+                <PreviewButton surveyID={getSurveyCanvas?.surveyID} />
+                <ShareButton
+                  surveyID={getSurveyCanvas?.surveyID}
+                  published={published}
+                />
+              </>
             )}
             <HeaderIconMenu />
           </Box>
