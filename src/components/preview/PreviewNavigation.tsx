@@ -27,37 +27,38 @@ const PreviewNavigation = ({
       component="div"
       data-ignore-scrollnav="true"
       sx={{
-        position: "relative",
+        position: "absolute",
+        bottom: 0,
+        left: 0,
         zIndex: 60,
         width: "100%",
-        flexShrink: 0,
-        borderTop: isMobile ? "1px solid rgba(226, 232, 240, 0.7)" : 0,
-        backgroundColor: isMobile ? "rgba(255, 255, 255, 0.95)" : "transparent",
+        borderTop: 0,
+        backgroundColor: "transparent",
         pt: isMobile ? 1 : 0,
-        backdropFilter: isMobile ? "blur(4px)" : "none",
+        backdropFilter: "none",
         pointerEvents: "none",
       }}
     >
       <Box
         component="nav"
-      aria-label="Preview question navigation"
-      sx={{
+        aria-label="Preview question navigation"
+        sx={{
           position: "relative",
-        display: "flex",
+          display: "flex",
           width: "100%",
           boxSizing: "border-box",
           minHeight: isMobile ? 64 : 56,
-        alignItems: "center",
+          alignItems: "center",
           justifyContent: isMobile ? "center" : "flex-end",
           pr: isMobile ? 0 : "8%",
           pb: isMobile
             ? "max(env(safe-area-inset-bottom), 12px)"
             : "max(env(safe-area-inset-bottom), 8px)",
-      }}
-    >
+        }}
+      >
         <Box
           component="div"
-        sx={{
+          sx={{
             display: "flex",
             alignItems: "center",
             gap: 1,
@@ -67,8 +68,8 @@ const PreviewNavigation = ({
             boxShadow: "0 4px 12px rgba(15, 23, 42, 0.12)",
             backdropFilter: "blur(4px)",
             pointerEvents: "auto",
-        }}
-      >
+          }}
+        >
           {!isFirst && (
             <IconButton
               onClick={onPrevious}

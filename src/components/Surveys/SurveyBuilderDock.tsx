@@ -24,12 +24,12 @@ const ShareSurveyModal = lazy(() => import("../Modals/ShareSurveyModal"));
 
 const SurveySettingsModal = lazy(() => import("../Modals/SurveySettingsModal"));
 
-const DOCK_HEIGHT = 36;
-const DEFAULT_ICON_SIZE = 24;
-const DEFAULT_BUTTON_SIZE = 24;
-const HOVER_BUTTON_SIZE = 48;
+const DOCK_HEIGHT = 28;
+const DEFAULT_ICON_SIZE = 20;
+const DEFAULT_BUTTON_SIZE = 20;
+const HOVER_BUTTON_SIZE = 28;
 
-const SEG_SIZE = 36;
+const SEG_SIZE = 28;
 const SEG_GAP = 4;
 const SEG_PAD = 4;
 

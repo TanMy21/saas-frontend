@@ -112,6 +112,7 @@ function Model({ src, onReady }: Readonly<Model3DParams>) {
   return (
     <Bounds fit clip observe margin={1.1}>
       <primitive object={scene} />
+
       <RefocusButtons />
     </Bounds>
   );
@@ -216,7 +217,7 @@ export const Interactive3DModelViewer = ({
   autoRotateSpeed = 0.5,
   minDistance = 0.2,
   maxDistance = 6,
-  maxPolarAngle = Math.PI / 2,
+  maxPolarAngle = Math.PI - 0.01,
   initialView = "front",
   frontIsNegZ = true,
 }: Interactive3DModelViewerProps) => {

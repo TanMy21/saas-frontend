@@ -31,6 +31,8 @@ const PreviewShell = ({ viewport, children }: PreviewShellProps) => {
         component="div"
         aria-label={`${isMobile ? "Mobile" : "Desktop"} survey preview shell`}
         sx={{
+          position: "relative",
+          isolation: "isolate",
           width: isMobile ? 375 : 1440,
           height: isMobile ? 812 : "100%",
           minWidth: 0,

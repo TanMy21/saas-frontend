@@ -74,6 +74,8 @@ const PreviewQuestionRenderer = ({
       ref={scrollContainerRef}
       aria-labelledby={`preview-question-${question.questionID}`}
       sx={{
+        position: "relative",
+        zIndex: 0,
         display: "flex",
         flex: 1,
         minHeight: 0,
@@ -99,6 +101,7 @@ const PreviewQuestionRenderer = ({
           maxWidth: isMobile ? "100%" : 860,
           boxSizing: "border-box",
           m: "auto",
+          pb: "calc(88px + env(safe-area-inset-bottom, 0px))",
           px: isMobileScale ? 4 : isMobile ? 2.5 : 5,
           py: isMobile ? 4 : 6,
         }}
@@ -158,8 +161,8 @@ const PreviewQuestionRenderer = ({
                   sx={{
                     color: preferences?.titleTextColor ?? "#101828",
                     fontSize: isMobile
-                      ? preferences?.titleFontSizeMobile ?? 26
-                      : preferences?.titleFontSize ?? 34,
+                      ? (preferences?.titleFontSizeMobile ?? 26)
+                      : (preferences?.titleFontSize ?? 34),
                     fontWeight: 700,
                     lineHeight: 1.2,
                     textAlign: isCenteredScreen ? "center" : undefined,
@@ -186,8 +189,8 @@ const PreviewQuestionRenderer = ({
                       mt: 1.5,
                       color: preferences?.descriptionTextColor ?? "#667085",
                       fontSize: isMobile
-                        ? preferences?.descriptionFontSizeMobile ?? 15
-                        : preferences?.descriptionFontSize ?? 16,
+                        ? (preferences?.descriptionFontSizeMobile ?? 15)
+                        : (preferences?.descriptionFontSize ?? 16),
                       lineHeight: 1.5,
                       textAlign: "center",
                       overflowWrap: "anywhere",
