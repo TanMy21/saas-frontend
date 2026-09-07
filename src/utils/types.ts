@@ -908,36 +908,58 @@ export interface ElementBackgroundPreferencesRemoveButtonsProps {
 export interface InsightsResponse {
   meta: {
     surveyID: string;
-    surveyTitle: string;
+    title: string;
+    generatedAt: string;
     totalParticipants: number;
+    filtersApplied: {
+      time: "all" | "week" | "month" | "custom";
+      device: "all" | "mobile" | "desktop" | "tablet";
+    };
   };
+
   summary: {
     starts: number;
     completed: number;
+    inProgress: number;
+    dropOffCount: number;
     completionRate: number;
     dropOffRate: number;
+    unattributedDropOffCount: number;
     biggestDropOff: {
       questionID: string;
       text: string;
       order: number;
+      displayOrder: number;
+      internalOrder: number;
       dropOffRate: number;
+      dropOffCount: number;
     };
   };
+
   trends: {
-    series: Array<{ date: string; value: number }>;
+    defaultMetric: "starts";
+    timeRange: "all" | "week" | "month" | "custom";
+    series: Array<{
+      date: string;
+      starts: number;
+      completionRate: number;
+      dropOffRate: number;
+    }>;
   };
+
   dropOffTable: Array<{
     questionID: string;
     order: number;
+    displayOrder: number;
     text: string;
     type: string;
     reached: number;
     answered: number;
-    dropped: number;
+    skipped: number;
+    dropOffCount: number;
     dropOffRate: number;
     avgTimeMs: number;
   }>;
-  questionDetails: Record<string, any>;
 }
 
 export interface QuestionImageUploadModalProps {

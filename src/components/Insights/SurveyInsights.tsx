@@ -59,7 +59,8 @@ export const SurveyInsights = () => {
 
     return data.dropOffTable.map((q: any) => ({
       id: q.questionID,
-      number: `Q${q.displayOrder ?? q.order}`,
+      number:
+        q.questionID === "unattributed" ? "—" : `Q${q.displayOrder ?? q.order}`,
       text: q.text,
       type: q.type,
       reached: q.reached,
@@ -227,7 +228,11 @@ export const SurveyInsights = () => {
             subtext={
               metrics?.biggestDropOff && (
                 <>
-                  <strong>{`Q${metrics.biggestDropOff.order}. `}</strong>
+                  <strong>
+                    {metrics.biggestDropOff.questionID === "unattributed"
+                      ? ""
+                      : `Q${metrics.biggestDropOff.order}. `}
+                  </strong>
                   {htmlToPlainText(metrics.biggestDropOff.text)}
                 </>
               )
