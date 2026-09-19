@@ -59,8 +59,7 @@ export const SurveyInsights = () => {
 
     return data.dropOffTable.map((q: any) => ({
       id: q.questionID,
-      number:
-        q.questionID === "unattributed" ? "—" : `Q${q.displayOrder ?? q.order}`,
+      number: `Q${q.displayOrder ?? q.order}`,
       text: q.text,
       type: q.type,
       reached: q.reached,
@@ -224,17 +223,19 @@ export const SurveyInsights = () => {
           />
           <SummaryCard
             label="Biggest Drop-off"
-            value={`${metrics?.biggestDropOff.dropOffRate}%`}
+            value={
+              metrics?.biggestDropOff.questionID
+                ? `${metrics.biggestDropOff.dropOffRate}%`
+                : "—"
+            }
             subtext={
-              metrics?.biggestDropOff && (
+              metrics?.biggestDropOff.questionID ? (
                 <>
-                  <strong>
-                    {metrics.biggestDropOff.questionID === "unattributed"
-                      ? ""
-                      : `Q${metrics.biggestDropOff.order}. `}
-                  </strong>
+                  <strong>{`Q${metrics.biggestDropOff.order}. `}</strong>
                   {htmlToPlainText(metrics.biggestDropOff.text)}
                 </>
+              ) : (
+                "No attributable question"
               )
             }
             icon={ArrowDownRight}

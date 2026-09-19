@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import {
   Box,
@@ -24,6 +24,7 @@ const MediaElementImageUploadModal = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [
     uploadImage,
@@ -131,7 +132,8 @@ const MediaElementImageUploadModal = ({
       {isLoading ? (
         <UploadImageAnimation />
       ) : (
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             position: "fixed",
             inset: 0,
@@ -143,7 +145,8 @@ const MediaElementImageUploadModal = ({
           }}
         >
           {/* Modal content box */}
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               position: "relative",
               bgcolor: "common.white",
@@ -160,7 +163,8 @@ const MediaElementImageUploadModal = ({
             }}
           >
             {/* Header */}
-            <Box component="div"
+            <Box
+              component="div"
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -171,7 +175,10 @@ const MediaElementImageUploadModal = ({
               }}
             >
               <Stack direction="row" spacing={1.5} alignItems="center">
-                <Box component="div" sx={{ p: 1, bgcolor: "blue.50", borderRadius: 2 }}>
+                <Box
+                  component="div"
+                  sx={{ p: 1, bgcolor: "blue.50", borderRadius: 2 }}
+                >
                   <ImageIcon size={28} color="#2563eb" />
                 </Box>
                 <Typography
@@ -201,7 +208,8 @@ const MediaElementImageUploadModal = ({
             <Box component="div" sx={{ p: 3 }}>
               {preview ? (
                 <Box component="div">
-                  <Box component="div"
+                  <Box
+                    component="div"
                     sx={{
                       position: "relative",
                       overflow: "hidden",
@@ -243,7 +251,10 @@ const MediaElementImageUploadModal = ({
                       <Trash2 size={16} />
                     </IconButton>
                   </Box>
-                  <Box component="div" sx={{ mt: 2, textAlign: "center", color: "grey.600" }}>
+                  <Box
+                    component="div"
+                    sx={{ mt: 2, textAlign: "center", color: "grey.600" }}
+                  >
                     <Typography fontWeight={500}>
                       {selectedFile?.name}
                     </Typography>
@@ -253,12 +264,13 @@ const MediaElementImageUploadModal = ({
                   </Box>
                 </Box>
               ) : (
-                <Box component="div"
+                <Box
+                  component="div"
                   onDragEnter={handleDragEnter}
                   onDragLeave={handleDragLeave}
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
-                  onClick={() => document.getElementById("file-input")?.click()}
+                  onClick={() => fileInputRef.current?.click()}
                   sx={{
                     position: "relative",
                     border: "2px dashed",
@@ -276,16 +288,19 @@ const MediaElementImageUploadModal = ({
                   }}
                 >
                   <input
+                    ref={fileInputRef}
                     type="file"
-                    id="file-input"
                     onChange={handleFileChange}
+                    onClick={(event) => event.stopPropagation()}
                     disabled={isLoading}
                     accept="image/jpeg,image/png,image/webp"
+                    aria-label="Choose image file"
                     hidden
                   />
 
                   <Stack spacing={2} alignItems="center">
-                    <Box component="div"
+                    <Box
+                      component="div"
                       sx={{
                         p: 2,
                         borderRadius: "50%",
@@ -321,7 +336,8 @@ const MediaElementImageUploadModal = ({
                         </Typography>
                       </Typography>
                     </Box>
-                    <Box component="div"
+                    <Box
+                      component="div"
                       sx={{
                         fontSize: 14,
                         color: "grey.500",
@@ -339,7 +355,8 @@ const MediaElementImageUploadModal = ({
             </Box>
 
             {/* Footer */}
-            <Box component="div"
+            <Box
+              component="div"
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",

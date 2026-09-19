@@ -7,104 +7,29 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  rectSortingStrategy,
-} from "@dnd-kit/sortable";
-import AddIcon from "@mui/icons-material/Add";
+import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { Box } from "@mui/material";
 
-import {
-  useCreateNewOptionMutation,
-  useGetOptionsOfQuestionQuery,
-  useUpdateOptionOrderMutation,
-} from "../../../app/slices/optionApiSlice";
-import useAuth from "../../../hooks/useAuth";
-import { useSurveyEditLock } from "../../../hooks/useSurveyEditLock";
-import { useToast } from "../../../hooks/useToast";
-import { SOFT_EDIT_MESSAGES } from "../../../utils/constants";
-import { showToast } from "../../../utils/showToast";
-import { MediaOptionsContainerProps, OptionType } from "../../../utils/types";
-import { MAX_OPTIONS } from "../../../utils/utils";
+import useMediaOptions from "../../../hooks/useMediaOptions";
+import { MediaOptionsContainerProps } from "../../../utils/types";
 
+import AddMediaOptionCard from "./AddMediaOptionCard";
 import MediaOption from "./MediaOption";
 
 const MediaOptionsContainer = ({
   qID,
   display,
 }: MediaOptionsContainerProps) => {
-  const { can } = useAuth();
-  const { confirmSoftEdit } = useSurveyEditLock();
-  const canCreate = can("CREATE_OPTION");
-  const canReorder = can("REORDER_OPTION");
+  const { options, canCreate, addDisabled, addMedia, onDragEnd } =
+    useMediaOptions(qID);
 
-  const { data: options = [] as OptionType[], refetch } =
-    useGetOptionsOfQuestionQuery(qID);
+  const [selectedOptionID, setSelectedOptionID] = useState<string | null>(null);
 
-  const [createNewOption, { isError, error }] = useCreateNewOptionMutation();
-  const [updateOptionOrder] = useUpdateOptionOrderMutation();
-
-  const sensors = useSensors(useSensor(PointerSensor));
-
-  const [_inputValue, setInputValue] = useState("");
-
-  const disableInput = options.length >= MAX_OPTIONS;
-
-  const addMedia = async () => {
-    if (!canCreate) return;
-    if (!await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE)) return;
-
-    if (options.length >= MAX_OPTIONS) {
-      showToast.info("Limit reached. You can add up to 10 options.");
-      return;
-    }
-
-    const nextCharCode = "A".charCodeAt(0) + options.length;
-    const nextChoiceLetter = String.fromCharCode(nextCharCode);
-
-    try {
-      await createNewOption({
-        questionID: qID,
-        options: [
-          { text: `${nextChoiceLetter}`, value: `Choice ${nextChoiceLetter}` },
-        ],
-      }).unwrap();
-
-      setInputValue("");
-      await refetch();
-    } catch (err) {
-      console.error("Add media option error:", err);
-      showToast.error("Failed to add option.");
-    }
-  };
-
-  const onDragEnd = async (event: any) => {
-    if (!canReorder) return;
-
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-
-    const oldIndex = options.findIndex((o) => o.optionID === active.id);
-    const newIndex = options.findIndex((o) => o.optionID === over.id);
-
-    const reordered = arrayMove(options, oldIndex, newIndex);
-    await updateOptionOrder({
-      options: reordered.map((opt, idx) => ({
-        optionID: opt.optionID,
-        order: idx + 1,
-      })),
-    })
-      .unwrap()
-      .then(() => refetch())
-      .catch((err) => console.error("Order update error:", err));
-  };
-
-  useToast({
-    isError,
-    error,
-    errorFallbackMessage: "Something went wrong.",
-  });
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 8 },
+    }),
+  );
 
   return (
     <DndContext
@@ -116,7 +41,8 @@ const MediaOptionsContainer = ({
         items={options.map((option) => option.optionID)}
         strategy={rectSortingStrategy}
       >
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             display: "grid",
             gridTemplateColumns: {
@@ -131,52 +57,31 @@ const MediaOptionsContainer = ({
             margin: "0 auto",
             padding: 1,
             "@media (max-width: 900px)": {
-              gridTemplateColumns: "repeat(2, 1fr)", // tablet
+              gridTemplateColumns: "repeat(2, 1fr)",
             },
             "@media (max-width: 600px)": {
-              gridTemplateColumns: "1fr", // mobile
+              gridTemplateColumns: "1fr",
             },
           }}
         >
           {options.map((option) => (
-            <MediaOption key={option.optionID} option={option} />
+            <MediaOption
+              key={option.optionID}
+              option={option}
+              isSelected={selectedOptionID === option.optionID}
+              onSelect={() => setSelectedOptionID(option.optionID)}
+            />
           ))}
+
           {canCreate && (
-            <Box
-              component="button"
-              onClick={addMedia}
-              disabled={disableInput}
-              sx={{
-                border: "2px dashed #d0d5ff",
-                borderRadius: "16px",
-                backgroundColor: "rgba(91, 106, 208, 0.02)",
-                color: "#5b6ad0",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "12px",
-                fontSize: 16,
-                fontWeight: 600,
-                flex: 1,
-                minHeight: { xs: 160, sm: 200, md: 240, xl: 240 },
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  backgroundColor: "rgba(91, 106, 208, 0.05)",
-                  borderColor: "#5b6ad0",
-                  transform: "translateY(-2px)",
-                },
-              }}
-            >
-              <AddIcon sx={{ fontSize: 24 }} />
-              <span>Add Option</span>
-            </Box>
+            <AddMediaOptionCard
+              disabled={addDisabled}
+              onClick={() => void addMedia()}
+            />
           )}
         </Box>
       </SortableContext>
     </DndContext>
   );
 };
-
 export default MediaOptionsContainer;

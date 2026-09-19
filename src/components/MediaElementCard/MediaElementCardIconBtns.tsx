@@ -5,6 +5,8 @@ import ImageIcon from "@mui/icons-material/Image";
 import { Box, IconButton, Tooltip } from "@mui/material";
 
 import { useRemoveImageMutation } from "../../app/slices/optionApiSlice";
+import { useSurveyEditLock } from "../../hooks/useSurveyEditLock";
+import { SOFT_EDIT_MESSAGES } from "../../utils/constants";
 import { MediaElementCardIconBtnProps } from "../../utils/types";
 import MediaElementImageUploadModal from "../Modals/MediaElementImageUploadModal";
 
@@ -13,18 +15,24 @@ const MediaElementCardIconBtns = ({
 }: MediaElementCardIconBtnProps) => {
   const [replaceImageModalOpen, setReplaceImageModalOpen] =
     useState<boolean>(false);
+  const { confirmSoftEdit } = useSurveyEditLock();
   const [removeImage] = useRemoveImageMutation();
 
   const handleRemoveImage = async () => {
+    const confirmed = await confirmSoftEdit(SOFT_EDIT_MESSAGES.OPTION_CHANGE);
+
+    if (!confirmed) return;
+
     try {
       await removeImage(optionID).unwrap();
     } catch (error) {
-      console.error(error);
+      console.error("Remove image error:", error);
     }
   };
 
   return (
-    <Box component="div"
+    <Box
+      component="div"
       className="control-buttons"
       sx={{
         display: "flex",
@@ -64,7 +72,7 @@ const MediaElementCardIconBtns = ({
       <Tooltip title="Remove image">
         <IconButton
           tabIndex={-1}
-          onClick={handleRemoveImage}
+          onClick={() => void handleRemoveImage()}
           sx={{
             width: "28px",
             height: "28px",

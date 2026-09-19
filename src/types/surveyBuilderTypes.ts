@@ -325,3 +325,5 @@ export interface SurveyBuilderState {
   activeContextPanel: SurveyBuilderContextPanel;
   assistantOpenRequestID: number;
 }
+
+ 

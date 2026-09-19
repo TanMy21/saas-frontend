@@ -736,6 +736,8 @@ export interface MediaOptionsContainerProps {
 
 export interface MediaOptionProps {
   option: OptionType;
+  isSelected: boolean;
+  onSelect: () => void;
 }
 
 export interface NewSurveyActionCardProps {
