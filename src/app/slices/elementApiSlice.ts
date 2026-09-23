@@ -1,6 +1,18 @@
 import { Element, MutateQuestionPayload } from "../../utils/types";
 import { apiSlice } from "../api/apiSlice";
 
+interface ModelJobStatus {
+  jobID: string;
+  questionID: string;
+  status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+  model3DID: string | null;
+  errorCode: string | null;
+  errorMessage: string | null;
+  createdAt: string;
+  startedAt: string | null;
+  completedAt: string | null;
+}
+
 export const elementApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getElementsForSurvey: builder.query<Element[], string>({
@@ -198,6 +210,9 @@ export const elementApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Elements", "Surveys"],
     }),
+    getModelJobStatus: builder.query<ModelJobStatus, string>({
+      query: (jobID) => `/q/model/job/${encodeURIComponent(jobID)}`,
+    }),
     replace3DModel: builder.mutation({
       query: ({ formData, questionID }) => ({
         url: `/q/u/model/${questionID}`,
@@ -316,6 +331,7 @@ export const {
   useRemoveQuestionTemplateImageMutation,
   useRemoveQuestionBackgroundColorMutation,
   useReplace3DModelMutation,
+  useLazyGetModelJobStatusQuery,
   useReplaceQuestionImageMutation,
   useDuplicateElementMutation,
   useDeleteElementMutation,

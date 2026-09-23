@@ -28,13 +28,15 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useReplace3DModelMutation } from "../../app/slices/elementApiSlice";
+import {
+  useLazyGetModelJobStatusQuery,
+  useReplace3DModelMutation,
+} from "../../app/slices/elementApiSlice";
 import {
   setQuestion,
   updateSelectedQuestion3DModel,
 } from "../../app/slices/elementSlice";
-import { RootState } from "../../app/store";
-import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
+import { useAppDispatch } from "../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../context/BuilderRefetchCanvas";
 import { useSurveyEditLock } from "../../hooks/useSurveyEditLock";
 import { SOFT_EDIT_MESSAGES } from "../../utils/constants";
@@ -51,10 +53,6 @@ const Replace3DModelModal = ({
   const dispatch = useAppDispatch();
   const { confirmSoftEdit } = useSurveyEditLock();
 
-  const question = useAppSelector(
-    (state: RootState) => state.question.selectedQuestion,
-  );
-
   const [isDragOver, setIsDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -63,7 +61,12 @@ const Replace3DModelModal = ({
   const [isReplacementComplete, setIsReplacementComplete] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const pollIntervalRef = useRef<number | null>(null);
+  const pollTimerRef = useRef<number | null>(null);
+  const deadlineRef = useRef<number | null>(null);
+  const operationRef = useRef(0);
+  const requestRef = useRef<{ abort: () => void } | null>(null);
+  const stopProgressRef = useRef<(() => void) | null>(null);
+  const [getModelJobStatus] = useLazyGetModelJobStatusQuery();
 
   const acceptedFormats = useMemo(() => [".glb"], []);
   const maxFileSize = 10 * 1024 * 1024;
@@ -73,18 +76,21 @@ const Replace3DModelModal = ({
 
   const isBusy = isLoading || isProcessingReplacement;
 
-  const clearPollInterval = useCallback(() => {
-    if (pollIntervalRef.current) {
-      window.clearInterval(pollIntervalRef.current);
-      pollIntervalRef.current = null;
-    }
+  const clearPolling = useCallback(() => {
+    operationRef.current += 1;
+    if (pollTimerRef.current !== null) window.clearTimeout(pollTimerRef.current);
+    if (deadlineRef.current !== null) window.clearTimeout(deadlineRef.current);
+    pollTimerRef.current = null;
+    deadlineRef.current = null;
+    requestRef.current?.abort();
+    requestRef.current = null;
+    stopProgressRef.current?.();
+    stopProgressRef.current = null;
   }, []);
 
   useEffect(() => {
-    return () => {
-      clearPollInterval();
-    };
-  }, [clearPollInterval]);
+    return clearPolling;
+  }, [clearPolling, open, questionID]);
 
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return "0 Bytes";
@@ -110,18 +116,6 @@ const Replace3DModelModal = ({
     return null;
   };
 
-  const hasModelChanged = (nextModel: any, previousModel: any) => {
-    if (!nextModel?.fileUrl) return false;
-    if (!previousModel) return true;
-
-    return (
-      nextModel.updatedAt !== previousModel.updatedAt ||
-      nextModel.contentHash !== previousModel.contentHash ||
-      nextModel.public_id !== previousModel.public_id ||
-      nextModel.fileUrl !== previousModel.fileUrl
-    );
-  };
-
   const startSimulatedProgress = useCallback(() => {
     setProgress(0);
 
@@ -136,7 +130,7 @@ const Replace3DModelModal = ({
   }, []);
 
   const resetLocal = useCallback(() => {
-    clearPollInterval();
+    clearPolling();
 
     setIsDragOver(false);
     setError(null);
@@ -150,7 +144,12 @@ const Replace3DModelModal = ({
     }
 
     reset();
-  }, [clearPollInterval, reset]);
+  }, [clearPolling, reset]);
+
+  useEffect(() => {
+    resetLocal();
+    // Mutation reset changes identity during upload; only reset for modal/target changes.
+  }, [open, questionID]);
 
   const handleRequestClose = useCallback(() => {
     if (isBusy) return;
@@ -160,70 +159,95 @@ const Replace3DModelModal = ({
   }, [isBusy, onClose, resetLocal]);
 
   const pollForReplacedModel = useCallback(
-    (previousModel: any) => {
-      clearPollInterval();
+    (jobID: string) => {
+      const operation = operationRef.current;
+      let completed = false;
+      const statusUnknown =
+        "Replacement status could not be confirmed. Please refresh to check the model before trying again.";
+      const refreshError =
+        "The replacement completed, but the updated model could not be loaded. Please refresh the canvas.";
+      const finishWithError = (message: string) => {
+        clearPolling();
+        setIsProcessingReplacement(false);
+        setProgress(0);
+        setError(message);
+      };
 
-      let attempts = 0;
-      const maxAttempts = 30;
+      if (!jobID) {
+        finishWithError(statusUnknown);
+        return;
+      }
 
-      pollIntervalRef.current = window.setInterval(() => {
-        attempts += 1;
+      // A separate deadline also bounds requests that never settle.
+      deadlineRef.current = window.setTimeout(() => {
+        if (operation !== operationRef.current) return;
+        finishWithError(completed ? refreshError : statusUnknown);
+      }, 45000);
 
-        const refetchResult = refetchCanvas() as any;
+      const poll = async () => {
+        try {
+          const request = getModelJobStatus(jobID, false);
+          requestRef.current = request;
+          const job = await request.unwrap();
+          if (operation !== operationRef.current) return;
+          requestRef.current = null;
 
-        refetchResult
-          ?.then?.((result: any) => {
+          if (job.status === "FAILED") {
+            finishWithError(
+              job.errorCode === "MODEL_TRIANGLE_LIMIT_EXCEEDED"
+                ? "This model exceeds the supported triangle limit. Reduce its mesh complexity and upload it again."
+                : job.errorMessage || "Failed to replace the model.",
+            );
+            return;
+          }
+
+          if (job.status === "COMPLETED") {
+            completed = true;
+            const result = await (refetchCanvas() as any);
+            if (operation !== operationRef.current) return;
             const questions =
               result?.data?.getSurveyCanvas?.questions ??
               result?.data?.questions ??
               [];
-
             const updatedQuestion = questions.find(
               (item: any) => item.questionID === questionID,
             );
-
-            const nextModel = updatedQuestion?.Model3D;
-
-            if (hasModelChanged(nextModel, previousModel)) {
-              dispatch(setQuestion(updatedQuestion));
-              dispatch(updateSelectedQuestion3DModel(nextModel));
-
-              setProgress(100);
-              setIsProcessingReplacement(false);
-              setIsReplacementComplete(true);
-
-              showToast.success("3D model replaced.");
-              clearPollInterval();
+            if (result?.error || !updatedQuestion?.Model3D) {
+              finishWithError(refreshError);
               return;
             }
+            dispatch(setQuestion(updatedQuestion));
+            dispatch(updateSelectedQuestion3DModel(updatedQuestion.Model3D));
+            clearPolling();
+            setProgress(100);
+            setIsProcessingReplacement(false);
+            setIsReplacementComplete(true);
+            showToast.success("3D model replaced.");
+            return;
+          }
 
-            if (attempts >= maxAttempts) {
-              setIsProcessingReplacement(false);
-              showToast.info(
-                "Replacement is still processing. Refresh in a moment if it does not appear.",
-              );
-              clearPollInterval();
-            }
-          })
-          ?.catch?.((pollError: unknown) => {
-            console.error("Failed to refresh replacement status:", pollError);
-
-            if (attempts >= maxAttempts) {
-              setIsProcessingReplacement(false);
-              showToast.info(
-                "Replacement is still processing. Refresh in a moment if it does not appear.",
-              );
-              clearPollInterval();
-            }
-          });
-      }, 1500);
+          if (job.status !== "PENDING" && job.status !== "PROCESSING") {
+            finishWithError(statusUnknown);
+            return;
+          }
+          // Schedule only after the preceding request finishes.
+          pollTimerRef.current = window.setTimeout(() => void poll(), 1500);
+        } catch {
+          if (operation !== operationRef.current) return;
+          finishWithError(completed ? refreshError : statusUnknown);
+        }
+      };
+      void poll();
     },
-    [clearPollInterval, dispatch, questionID, refetchCanvas],
+    [clearPolling, dispatch, getModelJobStatus, questionID, refetchCanvas],
   );
 
   const handleFileSelect = useCallback(
     async (file: File) => {
+      if (isBusy) return;
+      const confirmationOperation = operationRef.current;
       if (!(await confirmSoftEdit(SOFT_EDIT_MESSAGES.MODEL_3D_CHANGE))) return;
+      if (confirmationOperation !== operationRef.current) return;
 
       const validation = validateFile(file);
 
@@ -233,7 +257,8 @@ const Replace3DModelModal = ({
         return;
       }
 
-      const previousModel = question?.Model3D;
+      clearPolling();
+      const operation = operationRef.current;
 
       setError(null);
       setSelectedFile(file);
@@ -245,19 +270,25 @@ const Replace3DModelModal = ({
       formData.append("name", file.name);
 
       const stop = startSimulatedProgress();
+      stopProgressRef.current = stop;
 
       try {
-        await replace3DModel({
+        const request = replace3DModel({
           formData,
           questionID,
-        }).unwrap();
+        });
+        requestRef.current = request;
+        const response = await request.unwrap();
+        if (operation !== operationRef.current) return;
+        requestRef.current = null;
 
         stop();
         setIsProcessingReplacement(true);
         showToast.success("Replacement uploaded. Processing 3D model...");
-        pollForReplacedModel(previousModel);
+        pollForReplacedModel(response?.jobID);
       } catch (e: any) {
-        stop();
+        if (operation !== operationRef.current) return;
+        clearPolling();
 
         setError(
           typeof e?.data === "string"
@@ -272,7 +303,8 @@ const Replace3DModelModal = ({
     [
       confirmSoftEdit,
       pollForReplacedModel,
-      question?.Model3D,
+      clearPolling,
+      isBusy,
       questionID,
       replace3DModel,
       startSimulatedProgress,
