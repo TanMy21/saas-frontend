@@ -225,6 +225,10 @@ export const authReasonMessages: Record<
     severity: "success",
     message: "You have been logged out.",
   },
+  "reconnect-failed": {
+    severity: "error",
+    message: "Please sign in again.",
+  },
   unauthorized: {
     severity: "error",
     message: "Please log in to continue.",
@@ -674,7 +678,6 @@ export const SOFT_EDIT_MESSAGES = {
   SHARE_LINK_REGENERATE:
     "Regenerating this link will disable the current link. Existing responses are unaffected.",
 } as const;
-
 
 export const organizationAuthorizationCodes = new Set([
   "ORGANIZATION_OWNER_REQUIRED",

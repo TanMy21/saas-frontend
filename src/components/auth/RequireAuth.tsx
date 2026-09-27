@@ -2,10 +2,15 @@ import { useEffect } from "react";
 
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-import { useLazyGoogleAuthQuery } from "../../app/slices/authApiSlice";
+import {
+  useLazyGoogleAuthQuery,
+  useRefreshMutation,
+} from "../../app/slices/authApiSlice";
 import { selectCurrentToken, setCredentials } from "../../app/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import useAuth from "../../hooks/useAuth";
+import { showToast } from "../../utils/showToast";
+import LogoLoader from "../Loaders/LogoLoader";
 
 const RequireAuth = () => {
   // const user = useSelector(selectUser);
@@ -20,19 +25,95 @@ const RequireAuth = () => {
 
   const [googleAuth, { data }] = useLazyGoogleAuthQuery();
 
+  const [
+    refresh,
+    {
+      isLoading: isRefreshing,
+      isError: refreshFailed,
+      error: refreshError,
+      reset: resetRefresh,
+    },
+  ] = useRefreshMutation();
+
   useEffect(() => {
-    if ((isGoogleAuth || hasPendingInvite) && !accessToken) {
-      googleAuth({});
+    // If the access token is present and not expired, or if we have
+    // successfully restored the access token.
+    if (!accessToken || !tokenExpired) {
+      if (refreshFailed) {
+        resetRefresh();
+      }
+      return;
     }
 
-    if (data) {
-      const { accessToken } = data;
-      dispatch(setCredentials({ accessToken }));
+    // atk expired refresh the atk.
+    if (!isRefreshing && !refreshFailed) {
+      void refresh();
     }
-  }, [isGoogleAuth, hasPendingInvite, accessToken, googleAuth, data, dispatch]);
+  }, [
+    accessToken,
+    tokenExpired,
+    isRefreshing,
+    refreshFailed,
+    refresh,
+    resetRefresh,
+  ]);
+
+  useEffect(() => {
+    if ((isGoogleAuth || hasPendingInvite) && !accessToken) {
+      void googleAuth({});
+    }
+  }, [isGoogleAuth, hasPendingInvite, accessToken, googleAuth]);
+
+  useEffect(() => {
+    if (data?.accessToken) {
+      dispatch(setCredentials({ accessToken: data.accessToken }));
+    }
+  }, [data, dispatch]);
+
+  useEffect(() => {
+    if (!accessToken || !tokenExpired || !refreshFailed) return;
+
+    if (
+      refreshError &&
+      "status" in refreshError &&
+      refreshError.status === 401
+    ) {
+      return;
+    }
+
+    const id = "session-restore-error";
+
+    showToast.error("Please login again.", { id });
+
+    return () => showToast.dismiss(id);
+  }, [accessToken, tokenExpired, refreshFailed, refreshError]);
 
   if ((isGoogleAuth || hasPendingInvite) && !accessToken) {
     return <div>Loading...</div>;
+  }
+
+  if (accessToken && tokenExpired) {
+    const sessionRejected =
+      refreshFailed &&
+      refreshError != null &&
+      "status" in refreshError &&
+      refreshError.status === 401;
+
+    if (sessionRejected) {
+      return (
+        <Navigate
+          to="/login?reason=session-expired"
+          state={{ from: location }}
+          replace
+        />
+      );
+    }
+
+    if (refreshFailed) {
+      return null;
+    }
+
+    return <LogoLoader />;
   }
 
   if (isAuthenticated && isVerified && !tokenExpired) {

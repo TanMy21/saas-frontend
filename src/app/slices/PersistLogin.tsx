@@ -1,66 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 
-import { CircularProgress } from "@mui/material";
 import { Outlet } from "react-router-dom";
 
-import usePersist from "../../hooks/persist";
 import { useAppDispatch, useAppSelector } from "../typedReduxHooks";
 
-import { useRefreshMutation } from "./authApiSlice";
 import { selectCurrentToken } from "./authSlice";
 import { fetchUser } from "./userSlice";
 
 const PersistLogin = () => {
-  const [persist] = usePersist();
   const token = useAppSelector(selectCurrentToken);
-  const isLoggingOutRef = useRef(false);
-  // const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
-
-  const [trueSuccess, setTrueSuccess] = useState(false);
-
-  const [refresh, { isUninitialized, isLoading, isSuccess, isError }] =
-    useRefreshMutation();
-
-  // const [sendLogout] = useSendLogoutMutation();
-
-  // const logoutUser = async () => {
-  //   try {
-  //     isLoggingOutRef.current = true;
-  //     await sendLogout().unwrap();
-  //     dispatch(logOut());
-  //     navigate("/login?reason=session-expired", { replace: true });
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  useEffect(() => {
-    const verifyRefreshToken = async () => {
-      try {
-        //const response =
-        await refresh();
-        //const { accessToken } = response.data
-        setTrueSuccess(true);
-      } catch (err) {
-        // logoutUser();
-        console.error(err);
-      }
-    };
-
-    if (persist && !token && !isLoggingOutRef.current) {
-      verifyRefreshToken();
-    }
-
-    // eslint-disable-next-line
-  }, [refresh, persist, token]);
-
-  // useEffect(() => {
-  //   if (isError) {
-  //     logoutUser();
-  //   }
-  //   // eslint-disable-next-line
-  // }, [isError]);
 
   useEffect(() => {
     if (token) {
@@ -68,27 +18,6 @@ const PersistLogin = () => {
     }
   }, [token, dispatch]);
 
-  let content;
-  if (!persist) {
-    // persist: no
-
-    content = <Outlet />;
-  } else if (isLoading) {
-    //persist: yes, token: no
-    content = <CircularProgress />;
-  } else if (isError) {
-    //persist: yes, token: no
-    content = null;
-  } else if (isSuccess && trueSuccess) {
-    //persist: yes, token: yes
-    content = <Outlet />;
-  } else if (token && isUninitialized) {
-    //persist: yes, token: yes
-    content = <Outlet />;
-  } else {
-    content = null;
-  }
-
-  return content;
+  return <Outlet />;
 };
 export default PersistLogin;

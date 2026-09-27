@@ -680,7 +680,7 @@ const Replace3DModelModal = ({
                     variant="body2"
                     sx={{ mt: 1.5, color: "error.main", fontWeight: 600 }}
                   >
-                    Maximum file size: 10MB (strict)
+                    Maximum file size: 10MB 
                   </Typography>
                 </Paper>
 
