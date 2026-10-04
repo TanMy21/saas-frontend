@@ -765,7 +765,7 @@ const electricBlueLightTheme = createTheme({
       // scrollbarGutter: "stable both-edges",
       "@supports (-moz-appearance: none)": {
         scrollbarWidth: "thin",
-        scrollbarColor: "#005BC4 #f1f1f1",
+        scrollbarColor: "#94a8c2 #eef2f7",
       },
       "&::-webkit-scrollbar": {
         width: "8px",
@@ -774,7 +774,7 @@ const electricBlueLightTheme = createTheme({
         background: "#f1f1f1",
       },
       "&::-webkit-scrollbar-thumb": {
-        background: "#005BC4",
+        background: "#94a8c2",
         borderRadius: "10px",
         "&:hover": {
           background: "#555",

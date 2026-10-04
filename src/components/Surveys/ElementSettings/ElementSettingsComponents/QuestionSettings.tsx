@@ -7,7 +7,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Switch,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -32,6 +31,7 @@ import {
 import { questionBasicSettingsSchema } from "../../../../utils/schema";
 import { showToast } from "../../../../utils/showToast";
 import { QuestionSetting } from "../../../../utils/types";
+import { CustomToggle } from "../../../Buttons/CustomToggle";
 
 import { RichTextField } from "./RichTextField";
 import SettingSaveStatus from "./SettingSaveStatus";
@@ -664,7 +664,7 @@ const QuestionContentSettings = () => {
                 </Typography>
               </Box>
 
-              <Switch
+              <CustomToggle
                 checked={localShowQuestion}
                 disabled={!canEditQuestion || isSavingBasicSettings}
                 onChange={(event) => {
@@ -687,7 +687,7 @@ const QuestionContentSettings = () => {
                 </Typography>
               </Box>
 
-              <Switch
+              <CustomToggle
                 checked={localRequired}
                 disabled={!canEditQuestion || isSavingBasicSettings}
                 onChange={(event) => {

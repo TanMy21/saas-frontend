@@ -19,9 +19,6 @@ const Header = () => {
 
         {/* Actions */}
         <div className="header-actions">
-          <a href="/login" className="login-link">
-            Login
-          </a>
           <button className="header-btn-primary" onClick={handleStartFlow}>
             Get Started
           </button>

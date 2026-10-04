@@ -3,7 +3,6 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import { BsFillShareFill } from "react-icons/bs";
 import { IoMdSettings } from "react-icons/io";
-import { RiAiGenerate } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 
 import {
@@ -13,7 +12,6 @@ import {
   openShareModal,
 } from "../../app/slices/overlaySlice";
 import { setCanvasView } from "../../app/slices/surveyCanvasSlice";
-import { openSurveyBuilderAssistant } from "../../app/slices/surveySlice";
 import { RootState } from "../../app/store";
 import { useAppDispatch, useAppSelector } from "../../app/typedReduxHooks";
 import useAuth from "../../hooks/useAuth";
@@ -235,14 +233,6 @@ const SurveyBuilderDock = ({
       icon: <IoMdSettings />,
       label: "Settings",
       action: () => setOpenSettings(true),
-      visible: can?.("UPDATE_SURVEY"),
-    },
-
-    {
-      id: "assistant",
-      icon: <RiAiGenerate />,
-      label: "Open assistant",
-      action: () => dispatch(openSurveyBuilderAssistant()),
       visible: can?.("UPDATE_SURVEY"),
     },
   ];

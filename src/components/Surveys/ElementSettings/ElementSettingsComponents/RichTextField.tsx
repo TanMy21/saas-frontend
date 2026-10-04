@@ -15,7 +15,8 @@ export function RichTextField({
   readOnly = false,
 }: RichTextFieldProps) {
   return (
-    <Box component="div"
+    <Box
+      component="div"
       sx={{
         borderRadius: "8px",
         height,
@@ -31,7 +32,13 @@ export function RichTextField({
         alignItems: "center",
         transition: "background-color 0.2s ease",
         "&:hover": { backgroundColor: "#E5E7EB" },
-        "&:focus-within": { backgroundColor: "#E0E7FF" },
+        "&:focus-within": {
+          backgroundColor: "#E0E7FF",
+          height: "auto",
+          minHeight: 42,
+          py: 1.5,
+          alignItems: "flex-start",
+        },
         ...sx,
       }}
     >

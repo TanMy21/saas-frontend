@@ -50,7 +50,8 @@ export const DashBoardHeader = ({
         height: { xs: 56, sm: 56, md: 60 },
       }}
     >
-      <Box component="div"
+      <Box
+        component="div"
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -61,7 +62,8 @@ export const DashBoardHeader = ({
           // border: "2px solid red",
         }}
       >
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             display: "flex",
             justifyContent: "flex-start",
@@ -99,7 +101,8 @@ export const DashBoardHeader = ({
             archivedCount={archivedCount}
           />
         </Box>
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             display: "flex",
             justifyContent: "flex-end",
@@ -109,7 +112,8 @@ export const DashBoardHeader = ({
             // border: "2px solid green",
           }}
         >
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               display: "flex",
               justifyContent: "flex-end",
@@ -120,9 +124,12 @@ export const DashBoardHeader = ({
               // border: "1px solid red",
             }}
           >
-            <FeedbackButton />
+            
+              <FeedbackButton />
+         
           </Box>
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               display: "flex",
               justifyContent: "flex-end",
@@ -165,7 +172,8 @@ export const SettingsPageHeader = () => {
         WebkitBackdropFilter: "blur(6px)",
       }}
     >
-      <Box component="div"
+      <Box
+        component="div"
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -177,7 +185,8 @@ export const SettingsPageHeader = () => {
         }}
       >
         {/* Left section: nav + divider + title */}
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -213,7 +222,10 @@ export const SettingsPageHeader = () => {
             sx={{ mx: 2, borderColor: brand.borderColor1 }}
           />
 
-          <Box component="div" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box
+            component="div"
+            sx={{ display: "flex", alignItems: "center", gap: 1 }}
+          >
             <Settings style={{ fontSize: 28, color: "#0F1828" }} />
             <Typography
               sx={{

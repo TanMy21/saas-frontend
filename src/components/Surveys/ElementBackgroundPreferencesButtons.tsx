@@ -26,11 +26,25 @@ const ElementBackgroundPreferencesButtons = ({
             top: 8,
             left: 8,
             zIndex: 2,
+            width: 40,
+            height: 40,
+            padding: 0,
+            fontSize: 20,
+            borderRadius: "50%",
             backgroundColor: "#FFFFFF",
             color: "#424242",
-            borderRadius: "50%",
+            border: "1px solid rgba(15, 23, 42, 0.06)",
+            boxShadow:
+              "0 2px 6px rgba(15, 23, 42, 0.10), 0 1px 2px rgba(15, 23, 42, 0.06)",
+            transition: "background-color 160ms ease, box-shadow 160ms ease",
             "&:hover": {
-              backgroundColor: "#F5F5F5",
+              backgroundColor: "#F8FAFC",
+              boxShadow:
+                "0 4px 12px rgba(15, 23, 42, 0.16), 0 1px 3px rgba(15, 23, 42, 0.08)",
+            },
+            "&.Mui-focusVisible": {
+              outline: "2px solid #1976D2",
+              outlineOffset: 3,
             },
           }}
         >
@@ -52,11 +66,25 @@ const ElementBackgroundPreferencesButtons = ({
             top: 8,
             right: 8,
             zIndex: 2,
+            width: 40,
+            height: 40,
+            padding: 0,
+            fontSize: 20,
+            borderRadius: "50%",
             backgroundColor: "#FFFFFF",
             color: "#424242",
-            borderRadius: "50%",
+            border: "1px solid rgba(15, 23, 42, 0.06)",
+            boxShadow:
+              "0 2px 6px rgba(15, 23, 42, 0.10), 0 1px 2px rgba(15, 23, 42, 0.06)",
+            transition: "background-color 160ms ease, box-shadow 160ms ease",
             "&:hover": {
-              backgroundColor: "#F5F5F5",
+              backgroundColor: "#F8FAFC",
+              boxShadow:
+                "0 4px 12px rgba(15, 23, 42, 0.16), 0 1px 3px rgba(15, 23, 42, 0.08)",
+            },
+            "&.Mui-focusVisible": {
+              outline: "2px solid #1976D2",
+              outlineOffset: 3,
             },
           }}
         >

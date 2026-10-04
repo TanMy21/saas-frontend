@@ -75,9 +75,10 @@ const ElementBackgroundPreferencesRemoveButtons = ({
             sx={{
               position: "absolute",
               top: 8,
-              left: "50%",
-              cursor: "grab",
-              transform: "translateX(-50%)",
+              left: 56,
+              width: 40,
+              height: 40,
+              cursor: "pointer",
               zIndex: 20,
               "&:hover": {
                 backgroundColor: "#F5F5F5",

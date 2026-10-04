@@ -58,7 +58,7 @@ const Homepage = () => {
           <Features scrollParentRef={pageScrollRef} />
         </DeferredSection>
 
-        <DeferredSection minHeight="400vh" rootRef={pageScrollRef}>
+        <DeferredSection minHeight="60px" rootRef={pageScrollRef}>
           <UseCases scrollParentRef={pageScrollRef} />
         </DeferredSection>
 

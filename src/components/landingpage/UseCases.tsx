@@ -1,15 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import CustomerResearchImg from "../../assets/customer research.webp";
 import MarketingResearchImg from "../../assets/marketing research.webp";
 import PhysicalResearchImg from "../../assets/physical product.webp";
 import ProductResearchImg from "../../assets/product research.webp";
 import { useCases } from "../../data/landingPageData";
-import { UseCasesProps } from "../../types/landingTypes";
-
-function getScrollViewportHeight(scrollParent: HTMLDivElement | null) {
-  return scrollParent ? scrollParent.clientHeight : window.innerHeight;
-}
+import type { UseCasesProps } from "../../types/landingTypes";
 
 const useCaseImages = [
   {
@@ -18,163 +14,208 @@ const useCaseImages = [
   },
   {
     src: ProductResearchImg,
-    alt: "Product team reviewing a physical product prototype and sketches",
+    alt: "Product team reviewing a prototype and sketches",
   },
   {
     src: MarketingResearchImg,
-    alt: "Marketing team discussing audience research on a strategy board",
+    alt: "Marketing team discussing audience research",
   },
   {
     src: PhysicalResearchImg,
-    alt: "Premium perfume bottle used for physical product feedback",
+    alt: "Physical product presented for feedback",
   },
 ];
 
 const UseCases = ({ scrollParentRef }: UseCasesProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [isInView, setIsInView] = useState(false);
 
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const lastInteractionRef = useRef(0);
+  const sectionId = useId();
+
+  // Change the expanded item as the user scrolls through the sticky section.
   useEffect(() => {
-    /**
-     * handleScroll
-     * Calculates scroll progress inside the UseCases section and maps it to the active use case index.
-     */
-    const handleScroll = () => {
-      const container = containerRef.current;
-      const scrollParent = scrollParentRef?.current ?? null;
-
-      if (!container) return;
-
-      const rect = container.getBoundingClientRect();
-
-      // Uses parent container height if lp-root is the scroll container.
-      const viewportHeight = getScrollViewportHeight(scrollParent);
-
-      // Measures how much of this use case section has passed through the viewport.
-      const scrollDistance = -rect.top;
-
-      // Prevents division by zero if layout height becomes invalid.
-      const scrollableHeight = Math.max(rect.height - viewportHeight, 1);
-
-      if (scrollDistance <= 0) {
-        setActiveIndex(0);
-        return;
-      }
-
-      if (scrollDistance >= scrollableHeight) {
-        setActiveIndex(useCases.length - 1);
-        return;
-      }
-
-      // Converts scroll position into progress from 0 to 1.
-      const progress = scrollDistance / scrollableHeight;
-
-      // Converts progress into one of the use case indexes.
-      const nextIndex = Math.floor(progress * useCases.length);
-
-      setActiveIndex(Math.min(nextIndex, useCases.length - 1));
-    };
+    const track = trackRef.current;
+    if (!track) return;
 
     const scrollParent = scrollParentRef?.current ?? null;
-    const scrollTarget: HTMLElement | Window = scrollParent ?? window;
+    const scrollTarget: HTMLElement | Window =
+      scrollParent ?? window;
 
-    scrollTarget.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
+    const updateFromScroll = () => {
+      // The stacked mobile layout does not use scroll stages.
+      if (window.matchMedia("(max-width: 800px)").matches) return;
 
-    // Initializes active item correctly when component mounts.
-    handleScroll();
+      const viewportHeight = scrollParent
+        ? scrollParent.clientHeight
+        : window.innerHeight;
+
+      const viewportTop = scrollParent
+        ? scrollParent.getBoundingClientRect().top
+        : 0;
+
+      const trackRect = track.getBoundingClientRect();
+      const scrollableDistance = Math.max(
+        trackRect.height - viewportHeight,
+        1,
+      );
+
+      const progress = Math.min(
+        Math.max(
+          (viewportTop - trackRect.top) / scrollableDistance,
+          0,
+        ),
+        1,
+      );
+
+      const nextIndex = Math.min(
+        Math.floor(progress * useCases.length),
+        useCases.length - 1,
+      );
+
+      lastInteractionRef.current = Date.now();
+      setActiveIndex(nextIndex);
+    };
+
+    scrollTarget.addEventListener("scroll", updateFromScroll, {
+      passive: true,
+    });
+    window.addEventListener("resize", updateFromScroll);
+    updateFromScroll();
 
     return () => {
-      scrollTarget.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
+      scrollTarget.removeEventListener("scroll", updateFromScroll);
+      window.removeEventListener("resize", updateFromScroll);
     };
   }, [scrollParentRef]);
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      {
+        root: scrollParentRef?.current ?? null,
+        threshold: 0.15,
+      },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [scrollParentRef]);
+
+  // Auto-expand while visible, allowing time after a click or scroll.
+  useEffect(() => {
+    if (!isInView) return;
+
+    const timer = window.setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+
+      if (
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        return;
+      }
+
+      // Pause while someone navigates the list with a keyboard.
+      if (sectionRef.current?.querySelector(":focus-visible")) {
+        return;
+      }
+
+      if (Date.now() - lastInteractionRef.current < 5500) {
+        return;
+      }
+
+      setActiveIndex((current) => (current + 1) % useCases.length);
+    }, 5500);
+
+    return () => window.clearInterval(timer);
+  }, [isInView]);
+
   return (
-    <section className="uc-page-section">
-      <div
-        ref={containerRef}
-        className="uc-scroll-container"
-        style={{
-          // Creates enough scroll distance for every use case on desktop/tablet.
-          height: `${useCases.length * 100}vh`,
-        }}
+    <div ref={trackRef} className="uc-scroll-track">
+      <section
+        ref={sectionRef}
+        className="uc-section"
+        aria-labelledby={`${sectionId}-heading`}
       >
-        <div className="uc-sticky-wrapper">
-          <div className="uc-inner">
-            <div className="uc-layout">
-              <div className="uc-left-column">
-                <div className="uc-static-content">
-                  <h2 className="uc-main-title">
-                    Feedback for every kind of decision
-                  </h2>
+        <div className="uc-inner">
+          <div className="uc-heading">
+            <h2 id={`${sectionId}-heading`}>
+              Feedback for every
+              <br />
+              kind of decision
+            </h2>
+          </div>
 
-                  <p className="uc-main-subtitle">
-                    Capture the signals behind every response and turn them into
-                    clearer direction.
-                  </p>
-                </div>
+          <div className="uc-layout">
+            <div className="uc-list">
+              {useCases.map((useCase, index) => {
+                const isActive = activeIndex === index;
+                const panelId = `${sectionId}-panel-${index}`;
 
-                <div className="uc-dynamic-content">
-                  {useCases.map((useCase, index) => (
-                    <div
-                      key={useCase.title}
-                      className={`uc-dynamic-item ${
-                        activeIndex === index ? "uc-active" : ""
-                      }`}
-                    >
-                      <h3 className="uc-use-case-title">{useCase.title}</h3>
-
-                      <p className="uc-use-case-description">
-                        {useCase.description}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="uc-right-column">
-                {useCases.map((useCase, index) => {
-                  const image = useCaseImages[index];
-
-                  return (
-                    <div
-                      key={useCase.mockupLabel}
-                      className={`uc-image-panel ${
-                        activeIndex === index ? "uc-active" : ""
-                      }`}
-                    >
-                      <img
-                        src={image.src}
-                        alt={image.alt}
-                        className="uc-use-case-image"
-                        loading="lazy"
-                        decoding="async"
-                      />
-
-                      <div className="uc-image-overlay">
-                        <span>{useCase.mockupLabel}</span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="uc-progress" aria-hidden="true">
-                {useCases.map((useCase, index) => (
+                return (
                   <div
                     key={useCase.title}
-                    className={`uc-progress-dot ${
-                      activeIndex === index ? "uc-active" : ""
+                    className={`uc-item ${
+                      isActive ? "uc-active" : ""
                     }`}
+                  >
+                    <button
+                      type="button"
+                      className="uc-item-trigger"
+                      onClick={() => {
+                        lastInteractionRef.current = Date.now();
+                        setActiveIndex(index);
+                      }}
+                      aria-expanded={isActive}
+                      aria-controls={panelId}
+                    >
+                      <span>{useCase.title}</span>
+                      <span
+                        className="uc-item-indicator"
+                        aria-hidden="true"
+                      />
+                    </button>
+
+                    <div
+                      id={panelId}
+                      className="uc-item-panel"
+                      hidden={!isActive}
+                    >
+                      <p>{useCase.description}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="uc-visual" aria-label="Use case imagery">
+              {useCaseImages.map((image, index) => (
+                <div
+                  key={image.src}
+                  className={`uc-image-layer ${
+                    activeIndex === index ? "uc-active" : ""
+                  }`}
+                  aria-hidden={activeIndex !== index}
+                >
+                  <img
+                    src={image.src}
+                    alt={activeIndex === index ? image.alt : ""}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    decoding="async"
                   />
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
+
 export default UseCases;

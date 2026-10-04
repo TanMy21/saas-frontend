@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import { MessageSquarePlus } from "lucide-react";
 
 import { openFeedbackModal } from "../../app/slices/feedbackSlice";
@@ -7,6 +7,7 @@ import { useAppDispatch } from "../../app/typedReduxHooks";
 const FeedbackButton = () => {
   const dispatch = useAppDispatch();
   return (
+    <Tooltip title="Feedback">
     <Button
       onClick={() => dispatch(openFeedbackModal())}
       sx={{
@@ -27,7 +28,7 @@ const FeedbackButton = () => {
       }}
     >
       <MessageSquarePlus />
-    </Button>
+    </Button></Tooltip>
   );
 };
 

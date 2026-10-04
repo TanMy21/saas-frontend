@@ -108,9 +108,10 @@ export default function EditablePlainText({
         outline: "none",
         minWidth: 0,
         width: "100%",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
+        whiteSpace: isFocused ? "pre-wrap" : "nowrap",
+        overflowWrap: "anywhere",
+        overflow: isFocused ? "visible" : "hidden",
+        textOverflow: isFocused ? "clip" : "ellipsis",
         direction: "ltr",
         unicodeBidi: "plaintext",
       }}

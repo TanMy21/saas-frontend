@@ -25,7 +25,8 @@ const ElementSettingsContainer = ({
   return (
     <>
       <PermissionContext.Provider value={{ canEditQuestion }}>
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -35,13 +36,34 @@ const ElementSettingsContainer = ({
             m: 0,
             p: 0,
             boxSizing: "border-box",
+            "& .MuiAccordion-root": {
+              position: "relative",
+              borderTop: 0,
+              borderBottom: "1px solid transparent",
+
+              "&::before": {
+                display: "none",
+              },
+
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                left: "16px",
+                right: "16px",
+                bottom: 0,
+                height: "1px",
+                backgroundColor: "#E0E0E0",
+                pointerEvents: "none",
+              },
+            },
             // border: "2px solid blue",
           }}
         >
           {question?.type && questionId && ElementSettingsComponent && (
             <Suspense
               fallback={
-                <Box component="div"
+                <Box
+                  component="div"
                   sx={{
                     minHeight: 160,
                     display: "flex",
