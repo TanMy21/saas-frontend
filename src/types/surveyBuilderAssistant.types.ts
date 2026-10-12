@@ -4,7 +4,7 @@ import { STORAGE_VERSION } from "../utils/constants";
 
 export type SurveyChatRole = "assistant" | "user";
 
-export type AssistantCommitMode = "APPEND" | "REPLACE_ALL" | "REORDER";
+export type AssistantCommitMode = "APPEND" | "REPLACE_ALL" | "REPLACE_SELECTED" | "REORDER";
 
 export type SurveyChatMessageKind =
   | "welcome"
@@ -176,6 +176,7 @@ export interface AssistantWorkflowState {
   draftVersion?: number;
   activeMode?: "IMPORT" | "GENERATE" | null;
   generationRequirements?: AssistantGenerationRequirements | null;
+  pendingReplacementRequest?: string | null;
 }
 
 export interface AssistantThread {
@@ -202,6 +203,8 @@ export interface AssistantSurveyPreviewPart {
   commitMode: AssistantCommitMode;
   replacedQuestionCount?: number | null;
   removesFlowLogic?: boolean;
+  replacementTargets?: AssistantReplacementTarget[];
+  flowLogicScope?: "NONE" | "ALL" | "SELECTED";
   title: string;
   questions: AssistantDraftQuestion[];
 }
@@ -314,6 +317,16 @@ export interface AssistantCommitResult {
   draftVersion: number;
   createdQuestionIDs: string[];
   createdQuestionCount: number;
+  mode?: AssistantCommitMode;
+  removedQuestionIDs?: string[];
+  removedQuestionCount?: number;
+  removedFlowConditionCount?: number;
+  replacements?: {
+    oldQuestionID: string;
+    newQuestionID: string;
+    position: number;
+    order: number;
+  }[];
   committedAt: ISODateString;
 }
 
@@ -394,7 +407,17 @@ export type SurveyOrderPreviewProps = {
   part: AssistantSurveyOrderPreviewPart;
 };
 
+export interface AssistantReplacementTarget {
+  questionRef: string;
+  questionID: string;
+  draftQuestionID: string;
+  previousPosition: number;
+  previousOrder: number;
+  text: string;
+}
+
 export interface AssistantReplacementProposal {
   baseQuestionHash: string;
   replacedQuestionCount: number;
+  targets?: AssistantReplacementTarget[];
 }

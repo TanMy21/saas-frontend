@@ -99,14 +99,32 @@ const SurveyPreviewPart = ({
   part: AssistantSurveyPreviewPart;
 }): ReactElement => {
   const isReplaceAll = part.commitMode === "REPLACE_ALL";
-  const replacedQuestionCount = part.replacedQuestionCount ?? 0;
+  const isReplaceSelected = part.commitMode === "REPLACE_SELECTED";
+  const isReplacement = isReplaceAll || isReplaceSelected;
+  const targetByDraftID = new Map(
+    (part.replacementTargets ?? []).map(target => [target.draftQuestionID, target]),
+  );
+  const replacedQuestionCount =
+    part.replacedQuestionCount ?? (isReplaceSelected ? part.questions.length : 0);
+
+  const previewDescription = isReplaceSelected
+    ? `${replacedQuestionCount} selected question${replacedQuestionCount === 1 ? "" : "s"} will be replaced at ${replacedQuestionCount === 1 ? "its current position" : "their current positions"}. Other questions stay unchanged.${
+        part.removesFlowLogic !== false
+          ? " Flow rules referencing the selected questions will be removed."
+          : ""
+      }`
+    : `${replacedQuestionCount} current question${replacedQuestionCount === 1 ? "" : "s"} will be removed and ${part.questions.length} replacement question${part.questions.length === 1 ? "" : "s"} will be created.${
+        part.removesFlowLogic !== false
+          ? " Existing flow logic tied to the current questions will also be removed."
+          : ""
+      }`;
 
   return (
     <Paper
       variant="outlined"
       sx={{
         width: "100%",
-        borderColor: isReplaceAll ? "#F59E0B" : "#E2E8F0",
+        borderColor: isReplacement ? "#F59E0B" : "#E2E8F0",
         borderRadius: 2.5,
         overflow: "hidden",
         boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
@@ -117,7 +135,7 @@ const SurveyPreviewPart = ({
         sx={{
           px: 1.5,
           py: 1.25,
-          backgroundColor: isReplaceAll ? "#FFFBEB" : "#F8FAFC",
+          backgroundColor: isReplacement ? "#FFFBEB" : "#F8FAFC",
         }}
       >
         <Stack
@@ -130,19 +148,20 @@ const SurveyPreviewPart = ({
             <Typography
               noWrap
               sx={{
-                color: isReplaceAll ? "#92400E" : "#0F172A",
+                color: isReplacement ? "#92400E" : "#0F172A",
                 fontSize: "var(--assistant-chat-font-title, 0.9375rem)",
                 fontWeight: 750,
               }}
             >
-              {part.title ||
-                (isReplaceAll ? "Replacement survey draft" : "Survey draft")}
+              {isReplaceSelected
+                ? "Selected question replacements"
+                : part.title || (isReplaceAll ? "Replacement survey draft" : "Survey draft")}
             </Typography>
 
             <Typography
               sx={{
                 mt: 0.2,
-                color: isReplaceAll ? "#B45309" : "#64748B",
+                color: isReplacement ? "#B45309" : "#64748B",
                 fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
               }}
             >
@@ -160,8 +179,8 @@ const SurveyPreviewPart = ({
               height: 30,
               flexShrink: 0,
               borderRadius: 1.75,
-              color: isReplaceAll ? "#B45309" : "#4F46E5",
-              backgroundColor: isReplaceAll ? "#FEF3C7" : "#EEF2FF",
+              color: isReplacement ? "#B45309" : "#4F46E5",
+              backgroundColor: isReplacement ? "#FEF3C7" : "#EEF2FF",
             }}
           >
             <FileText size={16} aria-hidden="true" />
@@ -171,7 +190,7 @@ const SurveyPreviewPart = ({
 
       <Divider />
 
-      {isReplaceAll && (
+      {isReplacement && (
         <>
           <Box
             sx={{
@@ -188,7 +207,9 @@ const SurveyPreviewPart = ({
                 lineHeight: 1.45,
               }}
             >
-              This is a complete replacement preview.
+              {isReplaceSelected
+                ? "This replaces only the selected questions."
+                : "This is a complete replacement preview."}
             </Typography>
 
             <Typography
@@ -198,12 +219,7 @@ const SurveyPreviewPart = ({
                 lineHeight: 1.5,
               }}
             >
-              {replacedQuestionCount} current question
-              {replacedQuestionCount === 1 ? "" : "s"} will be removed and{" "}
-              {part.questions.length} replacement question
-              {part.questions.length === 1 ? "" : "s"} will be created.
-              {part.removesFlowLogic !== false &&
-                " Existing flow logic tied to the current questions will also be removed."}
+              {previewDescription}
             </Typography>
           </Box>
 
@@ -237,10 +253,40 @@ const SurveyPreviewPart = ({
                     lineHeight: 1.5,
                   }}
                 >
-                  {index + 1}.
+                  {isReplaceSelected
+                    ? targetByDraftID.get(question.draftQuestionID)?.previousPosition ?? "?"
+                    : index + 1}.
                 </Typography>
 
                 <Box sx={{ minWidth: 0, flex: 1 }}>
+                  {isReplaceSelected && (
+                    <>
+                      <Typography
+                        sx={{
+                          mb: 0.75,
+                          color: "#64748B",
+                          fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
+                          lineHeight: 1.5,
+                          overflowWrap: "anywhere",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        Original: {targetByDraftID.get(question.draftQuestionID)?.text
+                          ?? "Original question unavailable"}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          mb: 0.35,
+                          color: "#92400E",
+                          fontSize: "var(--assistant-chat-font-label, 0.75rem)",
+                          fontWeight: 700,
+                        }}
+                      >
+                        Replacement
+                      </Typography>
+                    </>
+                  )}
+
                   <Typography
                     sx={{
                       color: "#0F172A",
@@ -382,17 +428,26 @@ const ApprovalControlsPart = ({
     0;
 
   const isReplaceAll = commitMode === "REPLACE_ALL";
+  const isReplaceSelected = commitMode === "REPLACE_SELECTED";
+  const isReplacement = isReplaceAll || isReplaceSelected;
   const isReorder = commitMode === "REORDER";
+
+  const isStaleSelectedPreview =
+    isReplaceSelected && part.draftVersion !== thread?.draft.version;
 
   const hasApprovableDraft = isReorder || questionCount > 0;
 
-  const title = isReplaceAll
+  const title = isReplaceSelected
+    ? "Replace these selected questions?"
+    : isReplaceAll
     ? "Replace all current questions?"
     : isReorder
       ? "Ready to apply this question order?"
       : "Ready to create these questions?";
 
-  const description = isReplaceAll
+  const description = isReplaceSelected
+    ? `${questionCount} selected question${questionCount === 1 ? "" : "s"} will be replaced at ${questionCount === 1 ? "its original position" : "their original positions"}. Other questions stay unchanged. Flow rules referencing the selected questions will be removed.`
+    : isReplaceAll
     ? `${replacedQuestionCount} current question${
         replacedQuestionCount === 1 ? "" : "s"
       } will be removed and ${questionCount} replacement question${
@@ -402,13 +457,15 @@ const ApprovalControlsPart = ({
       ? "This will reorder the existing survey questions. No questions will be created or deleted."
       : "This appends the latest draft to the survey. You can continue asking for changes before approving.";
 
-  const buttonLabel = isReplaceAll
+  const buttonLabel = isReplaceSelected
+    ? `Replace ${questionCount} selected question${questionCount === 1 ? "" : "s"}`
+    : isReplaceAll
     ? `Replace with ${questionCount} question${questionCount === 1 ? "" : "s"}`
     : isReorder
       ? "Apply reorder"
       : `Create ${questionCount} question${questionCount === 1 ? "" : "s"}`;
 
-  const committingLabel = isReplaceAll
+  const committingLabel = isReplacement
     ? "Replacing questions…"
     : isReorder
       ? "Applying reorder…"
@@ -475,15 +532,15 @@ const ApprovalControlsPart = ({
       sx={{
         width: "100%",
         p: 1.25,
-        borderColor: isReplaceAll ? "#F59E0B" : "#C7D2FE",
+        borderColor: isReplacement ? "#F59E0B" : "#C7D2FE",
         borderRadius: 2.5,
-        backgroundColor: isReplaceAll ? "#FFFBEB" : "#F8FAFF",
+        backgroundColor: isReplacement ? "#FFFBEB" : "#F8FAFF",
         boxSizing: "border-box",
       }}
     >
       <Typography
         sx={{
-          color: isReplaceAll ? "#92400E" : "#0F172A",
+          color: isReplacement ? "#92400E" : "#0F172A",
           fontSize: "var(--assistant-chat-font-title, 0.9375rem)",
           fontWeight: 700,
         }}
@@ -494,7 +551,7 @@ const ApprovalControlsPart = ({
       <Typography
         sx={{
           mt: 0.35,
-          color: isReplaceAll ? "#92400E" : "#64748B",
+          color: isReplacement ? "#92400E" : "#64748B",
           fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
           lineHeight: 1.45,
         }}
@@ -506,7 +563,8 @@ const ApprovalControlsPart = ({
         fullWidth
         variant="contained"
         disabled={
-          isReadOnly || isCommitting || isGenerating || !hasApprovableDraft
+          isReadOnly || isCommitting || isGenerating ||
+          !hasApprovableDraft || isStaleSelectedPreview
         }
         onClick={() => void commitDraft(part.draftVersion)}
         startIcon={
@@ -520,13 +578,13 @@ const ApprovalControlsPart = ({
           mt: 1.1,
           minHeight: 36,
           borderRadius: 2,
-          backgroundColor: isReplaceAll ? "#B45309" : "#0F172A",
+          backgroundColor: isReplacement ? "#B45309" : "#0F172A",
           boxShadow: "none",
           textTransform: "none",
           fontSize: "var(--assistant-chat-font-primary, 0.875rem)",
           fontWeight: 650,
           "&:hover": {
-            backgroundColor: isReplaceAll ? "#92400E" : "#334155",
+            backgroundColor: isReplacement ? "#92400E" : "#334155",
             boxShadow: "none",
           },
         }}

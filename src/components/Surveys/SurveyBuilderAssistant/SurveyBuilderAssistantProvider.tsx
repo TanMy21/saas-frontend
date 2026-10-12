@@ -596,23 +596,32 @@ export const SurveyBuilderAssistantProvider = ({
       } catch (error) {
         const parsedError = parseAssistantApiError(
           error,
-          "The questions could not be created.",
+          "The survey changes could not be applied.",
         );
+
+        const isStaleSelectedReplacement =
+          parsedError.status === 409 &&
+          parsedError.code === "STALE_SELECTED_REPLACEMENT_PROPOSAL";
 
         if (
           parsedError.status === 409 &&
-          parsedError.code === "SURVEY_BUILDER_DRAFT_VERSION_CONFLICT"
+          (parsedError.code === "SURVEY_BUILDER_DRAFT_VERSION_CONFLICT" ||
+            isStaleSelectedReplacement)
         ) {
           pendingCommitRef.current = null;
 
           try {
             await refreshThreadAndMessages();
           } catch {
-            // The original version-conflict error remains visible.
+            // The original commit error remains visible.
           }
         }
 
-        setErrorMessage(parsedError.message);
+        setErrorMessage(
+          isStaleSelectedReplacement
+            ? "This replacement preview is out of date. Ask the assistant for a new preview before approving."
+            : parsedError.message,
+        );
       }
     },
     [
