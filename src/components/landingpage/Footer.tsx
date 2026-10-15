@@ -21,10 +21,10 @@ const Footer = () => {
 
           {/* Center navigation */}
           <nav className="footer-nav" aria-label="Footer navigation">
-            <a href="#features">Privacy policy</a>
-            <a href="#use-cases">Terms of use</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#company">Company</a>
+            <a href="#">Privacy policy</a>
+            <a href="#">Terms of use</a>
+            <a href="#">Pricing</a>
+            <a href="#">Company</a>
           </nav>
 
           {/* Right side replacement for social icons */}

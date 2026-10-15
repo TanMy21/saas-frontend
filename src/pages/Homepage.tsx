@@ -10,9 +10,7 @@ import "../styles/landing.css";
 const CTA = lazy(() => import("../components/landingpage/CTA"));
 const Features = lazy(() => import("../components/landingpage/Features"));
 const Footer = lazy(() => import("../components/landingpage/Footer"));
-const HowItWorks = lazy(
-  () => import("../components/landingpage/HowItWorks"),
-);
+const HowItWorks = lazy(() => import("../components/landingpage/HowItWorks"));
 const UseCases = lazy(() => import("../components/landingpage/UseCases"));
 
 const Homepage = () => {
@@ -46,7 +44,7 @@ const Homepage = () => {
           </div>
         </section>
 
-        <section className="lp-section how">
+        <section id="how-it-works" className="lp-section how">
           <div className="lp-container">
             <DeferredSection minHeight="700px" rootRef={pageScrollRef}>
               <HowItWorks />
@@ -54,11 +52,19 @@ const Homepage = () => {
           </div>
         </section>
 
-        <DeferredSection minHeight="400vh" rootRef={pageScrollRef}>
+        <DeferredSection
+          id="features"
+          minHeight="400vh"
+          rootRef={pageScrollRef}
+        >
           <Features scrollParentRef={pageScrollRef} />
         </DeferredSection>
 
-        <DeferredSection minHeight="60px" rootRef={pageScrollRef}>
+        <DeferredSection
+          id="use-cases"
+          minHeight="60px"
+          rootRef={pageScrollRef}
+        >
           <UseCases scrollParentRef={pageScrollRef} />
         </DeferredSection>
 

@@ -10,6 +10,7 @@ import {
 
 interface DeferredSectionProps {
   children: ReactNode;
+  id?: string;
   minHeight: CSSProperties["minHeight"];
   rootRef?: RefObject<Element | null>;
   rootMargin?: string;
@@ -21,6 +22,7 @@ interface DeferredSectionProps {
  */
 const DeferredSection = ({
   children,
+  id,
   minHeight,
   rootRef,
   rootMargin = "800px 0px",
@@ -59,6 +61,7 @@ const DeferredSection = ({
   return (
     <div
       ref={triggerRef}
+      id={id}
       style={{ minHeight }}
       aria-hidden={shouldRender ? undefined : true}
     >

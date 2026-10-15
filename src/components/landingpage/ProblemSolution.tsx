@@ -162,7 +162,7 @@ const ProblemSolution = () => {
           <h2 id={`${sectionId}-heading`}>
             Plenty of responses.
             <br />
-            Still missing the full picture.
+            Still missing the full picture
           </h2>
         </div>
 
