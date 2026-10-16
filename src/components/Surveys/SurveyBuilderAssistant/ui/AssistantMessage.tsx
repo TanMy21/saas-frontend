@@ -18,6 +18,7 @@ import { safeCopyText } from "../../../../utils/utils";
 import { useSurveyBuilderAssistant } from "../SurveyBuilderAssistantContext";
 
 import AssistantMessageParts from "./AssistantMessageParts";
+import AssistantQuestionFlow from "./AssistantQuestionFlow";
 import { GenerationQuestionTypePickerSlot } from "./GenerationQuestionTypePicker";
 
 const Box = styled("div")({});
@@ -55,6 +56,7 @@ const AssistantMessage = ({
     thread,
   } = useSurveyBuilderAssistant();
   const [isCopied, setIsCopied] = useState(false);
+  const resendInFlightRef = useRef(false);
   const copyResetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
@@ -110,6 +112,25 @@ const AssistantMessage = ({
     }, 1600);
   };
 
+  const handleResendMessage = async () => {
+    if (
+      !userMessageText ||
+      !canSendMessages ||
+      isPending ||
+      resendInFlightRef.current
+    ) {
+      return;
+    }
+
+    resendInFlightRef.current = true;
+
+    try {
+      await sendMessage(userMessageText);
+    } finally {
+      resendInFlightRef.current = false;
+    }
+  };
+
   const assistantLabel =
     message.role === "SYSTEM"
       ? "System"
@@ -161,24 +182,32 @@ const AssistantMessage = ({
               backgroundColor: isUser ? "#4F46E5" : "transparent",
             }}
           >
-            <AssistantMessageParts message={message} />
-          </Box>
-
-          {!isUser && (
-            <Box sx={{ mt: 1 }}>
-              <GenerationQuestionTypePickerSlot
+            {isUser ? (
+              <AssistantMessageParts message={message} />
+            ) : (
+              <AssistantQuestionFlow
                 message={message}
                 latestCompletedAssistantMessageID={
                   latestCompletedAssistantMessageID
                 }
-                thread={thread}
-                canSendMessages={canSendMessages}
-                isGenerating={isGenerating}
-                isSending={isSending}
-                sendMessage={sendMessage}
-              />
-            </Box>
-          )}
+              >
+                <AssistantMessageParts message={message} />
+                <Box sx={{ mt: 1 }}>
+                  <GenerationQuestionTypePickerSlot
+                    message={message}
+                    latestCompletedAssistantMessageID={
+                      latestCompletedAssistantMessageID
+                    }
+                    thread={thread}
+                    canSendMessages={canSendMessages}
+                    isGenerating={isGenerating}
+                    isSending={isSending}
+                    sendMessage={sendMessage}
+                  />
+                </Box>
+              </AssistantQuestionFlow>
+            )}
+          </Box>
 
           {isUser && (
             <Stack
@@ -211,6 +240,27 @@ const AssistantMessage = ({
                 </span>
               </Tooltip>
 
+              {!isFailed && (
+                <Tooltip title="Resend prompt" arrow>
+                  <span>
+                    <IconButton
+                      size="small"
+                      disabled={!userMessageText || !canSendMessages || isPending}
+                      aria-label="Resend prompt"
+                      onClick={() => void handleResendMessage()}
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        color: "#64748B",
+                        "&:hover": { backgroundColor: "#F1F5F9" },
+                      }}
+                    >
+                      <RefreshCw size={13} aria-hidden="true" />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              )}
+
               {isPending ? (
                 <>
                   <CircularProgress size={10} thickness={5} />
@@ -221,6 +271,7 @@ const AssistantMessage = ({
               ) : isFailed ? (
                 <Button
                   size="small"
+                  disabled={!canSendMessages}
                   onClick={() => void retryMessage()}
                   startIcon={<RefreshCw size={12} />}
                   sx={{

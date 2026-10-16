@@ -5,6 +5,9 @@ import { IconButton, styled, Tooltip, Typography } from "@mui/material";
 import { ArrowUp } from "lucide-react";
 
 import { useSurveyBuilderAssistant } from "../SurveyBuilderAssistantContext";
+import { isAssistantThreadReadOnly } from "../surveyBuilderAssistantLifecycle";
+
+import AssistantNotice from "./AssistantNotice";
 
 const Box = styled("div")({});
 const PulseDot = styled("span")({});
@@ -73,6 +76,7 @@ const AssistantComposer = (): ReactElement => {
   } = useSurveyBuilderAssistant();
 
   const isBusy = isInitializing || isSending || isGenerating || isCommitting;
+  const isReadOnly = isAssistantThreadReadOnly(thread);
 
   const placeholder = !thread
     ? "Preparing the assistant…"
@@ -88,18 +92,32 @@ const AssistantComposer = (): ReactElement => {
 
   const helperText = !thread
     ? "Starting a new chat"
-    : thread.status === "ARCHIVED"
-      ? "Archived chats cannot accept messages"
-      : thread.status === "COMPLETED"
-        ? "Previous chats are read-only"
-        : isCommitting
-          ? "Creating questions in your survey"
-          : isGenerating || isSending
-            ? "Processing..."
-            : "";
+    : isReadOnly
+      ? ""
+      : isCommitting
+        ? "Creating questions in your survey"
+        : isGenerating || isSending
+          ? "Processing..."
+          : "";
 
   return (
     <Box sx={{ px: 2, pt: 1, pb: 1.5, flexShrink: 0 }}>
+      {isReadOnly && (
+        <Box sx={{ mb: 1 }}>
+          <AssistantNotice
+            notice={{
+              tone: "neutral",
+              title:
+                thread?.status === "ARCHIVED"
+                  ? "This chat is archived"
+                  : "This chat is read-only",
+              policy: "Read-only",
+              explanation:
+                "You can review this conversation. Use New chat above to continue building your survey.",
+            }}
+          />
+        </Box>
+      )}
       <ComposerRoot>
         <ComposerInput
           disabled={!canSendMessages}

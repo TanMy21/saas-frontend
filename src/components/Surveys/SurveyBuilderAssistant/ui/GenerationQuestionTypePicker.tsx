@@ -471,6 +471,7 @@ export const GenerationQuestionTypePickerSlot = ({
   const shouldDisplay =
     message.role === "ASSISTANT" &&
     message.status === "COMPLETED" &&
+    !message.content.parts.some(part => part.type === "notice") &&
     message.messageID === latestCompletedAssistantMessageID &&
     workflowState?.activeMode === "GENERATE" &&
     workflowState.missingFields?.includes("QUESTION_TYPES") === true &&

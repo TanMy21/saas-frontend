@@ -19,9 +19,11 @@ import { useAppDispatch } from "../../../app/typedReduxHooks";
 import { useSurveyCanvasRefetch } from "../../../context/BuilderRefetchCanvas";
 import {
   AssistantMessage,
+  AssistantMessageSubmissionResult,
   AssistantThread,
   PendingCommitRequest,
   PendingMessageRequest,
+  ParsedAssistantApiError,
   SendAssistantMessageArgs,
   SurveyBuilderAssistantProviderProps,
 } from "../../../types/surveyBuilderAssistant.types";
@@ -48,6 +50,10 @@ import {
   isAssistantThreadReadOnly,
 } from "./surveyBuilderAssistantLifecycle";
 import {
+  getAssistantApiNotice,
+  isAssistantStalePreviewError,
+} from "./surveyBuilderAssistantNotices";
+import {
   clearAssistantActiveJobID,
   clearAssistantSession,
   readAssistantSession,
@@ -73,10 +79,27 @@ export const SurveyBuilderAssistantProvider = ({
   const [isInitializing, setIsInitializing] = useState(true);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
   const [hasMoreMessages, setHasMoreMessages] = useState(false);
+  const [invalidDraftVersions, setInvalidDraftVersions] = useState<number[]>([]);
   const [nextBeforeSequence, setNextBeforeSequence] = useState<number | null>(
     null,
   );
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [assistantError, setAssistantError] =
+    useState<ParsedAssistantApiError | null>(null);
+  const setErrorMessage = useCallback(
+    (message: string | null, error?: ParsedAssistantApiError) => {
+      setAssistantError(
+        message === null
+          ? null
+          : { status: null, code: null, ...error, message },
+      );
+    },
+    [],
+  );
+  const errorMessage = assistantError?.message ?? null;
+  const errorNotice = useMemo(
+    () => (assistantError ? getAssistantApiNotice(assistantError) : null),
+    [assistantError],
+  );
 
   const initializationSurveyIDRef = useRef<string | null>(null);
   const handledJobIDRef = useRef<string | null>(null);
@@ -218,6 +241,7 @@ export const SurveyBuilderAssistantProvider = ({
     setIsInitializing(true);
     setErrorMessage(null);
     setThread(null);
+    setInvalidDraftVersions([]);
     setMessages([]);
     setOptimisticMessage(null);
     setPendingMessage(null);
@@ -281,7 +305,7 @@ export const SurveyBuilderAssistantProvider = ({
         "Unable to start the survey assistant.",
       );
 
-      setErrorMessage(parsedError.message);
+      setErrorMessage(parsedError.message, parsedError);
     } finally {
       setIsInitializing(false);
     }
@@ -304,14 +328,17 @@ export const SurveyBuilderAssistantProvider = ({
       request: PendingMessageRequest,
       isRetry: boolean,
       targetThread: AssistantThread | null = thread,
-    ) => {
+    ): Promise<AssistantMessageSubmissionResult> => {
       if (
         !targetThread?.threadID ||
         !canSendAssistantThreadMessage(targetThread) ||
         isSending ||
         isGenerating
       ) {
-        return;
+        return {
+          success: false,
+          error: "Please wait until the assistant is ready to receive your answers.",
+        };
       }
 
       setErrorMessage(null);
@@ -363,13 +390,14 @@ export const SurveyBuilderAssistantProvider = ({
               }
             : current,
         );
+        return { success: true };
       } catch (error) {
         const parsedError = parseAssistantApiError(
           error,
           "The message could not be sent.",
         );
 
-        setErrorMessage(parsedError.message);
+        setErrorMessage(parsedError.message, parsedError);
 
         setOptimisticMessage((current) =>
           current?.messageID === request.clientMessageID
@@ -380,6 +408,7 @@ export const SurveyBuilderAssistantProvider = ({
               }
             : current,
         );
+        return { success: false, error: parsedError.message };
       }
     },
     [
@@ -392,21 +421,37 @@ export const SurveyBuilderAssistantProvider = ({
     ],
   );
 
-  const sendMessage = useCallback(
-    async (message: string) => {
+  const sendMessageWithResult = useCallback(
+    async (message: string): Promise<AssistantMessageSubmissionResult> => {
       const normalizedMessage = message.trim();
 
       if (!normalizedMessage) {
         setErrorMessage("Enter a message before sending.");
-        return;
+        return { success: false, error: "Enter a message before sending." };
       }
 
       if (normalizedMessage.length > 10_000) {
         setErrorMessage("Messages cannot contain more than 10,000 characters.");
-        return;
+        return {
+          success: false,
+          error: "Messages cannot contain more than 10,000 characters.",
+        };
       }
 
-      if (!canSendMessages) return;
+      if (!canSendMessages) {
+        return {
+          success: false,
+          error: "Please wait until the assistant is ready to receive your answers.",
+        };
+      }
+
+      if (
+        pendingMessage?.message === normalizedMessage &&
+        optimisticMessage?.messageID === pendingMessage.clientMessageID &&
+        optimisticMessage.status === "FAILED"
+      ) {
+        return submitMessageRequest(pendingMessage, true, thread);
+      }
 
       const request: PendingMessageRequest = {
         clientMessageID: crypto.randomUUID(),
@@ -414,9 +459,16 @@ export const SurveyBuilderAssistantProvider = ({
       };
 
       setPendingMessage(request);
-      await submitMessageRequest(request, false, thread);
+      return submitMessageRequest(request, false, thread);
     },
-    [canSendMessages, submitMessageRequest, thread],
+    [canSendMessages, optimisticMessage, pendingMessage, submitMessageRequest, thread],
+  );
+
+  const sendMessage = useCallback(
+    async (message: string) => {
+      await sendMessageWithResult(message);
+    },
+    [sendMessageWithResult],
   );
 
   const retryMessage = useCallback(async () => {
@@ -467,7 +519,7 @@ export const SurveyBuilderAssistantProvider = ({
           "The assistant finished, but its response could not be loaded.",
         );
 
-        setErrorMessage(parsedError.message);
+        setErrorMessage(parsedError.message, parsedError);
       } finally {
         setOptimisticMessage(null);
       }
@@ -504,7 +556,7 @@ export const SurveyBuilderAssistantProvider = ({
       "Unable to check the assistant job status.",
     );
 
-    setErrorMessage(parsedError.message);
+    setErrorMessage(parsedError.message, parsedError);
   }, [activeJobError, activeJobID]);
 
   const loadOlderMessages = useCallback(async () => {
@@ -538,7 +590,7 @@ export const SurveyBuilderAssistantProvider = ({
         "Older assistant messages could not be loaded.",
       );
 
-      setErrorMessage(parsedError.message);
+      setErrorMessage(parsedError.message, parsedError);
     } finally {
       setIsLoadingOlder(false);
     }
@@ -556,6 +608,7 @@ export const SurveyBuilderAssistantProvider = ({
       if (
         !thread?.threadID ||
         thread.status !== "ACTIVE" ||
+        invalidDraftVersions.includes(draftVersion) ||
         isAssistantThreadProcessing(thread) ||
         isAssistantThreadCommitted(thread) ||
         isAssistantThreadReadOnly(thread) ||
@@ -599,16 +652,15 @@ export const SurveyBuilderAssistantProvider = ({
           "The survey changes could not be applied.",
         );
 
-        const isStaleSelectedReplacement =
-          parsedError.status === 409 &&
-          parsedError.code === "STALE_SELECTED_REPLACEMENT_PROPOSAL";
+        const isStalePreview = isAssistantStalePreviewError(parsedError);
 
-        if (
-          parsedError.status === 409 &&
-          (parsedError.code === "SURVEY_BUILDER_DRAFT_VERSION_CONFLICT" ||
-            isStaleSelectedReplacement)
-        ) {
+        if (isStalePreview) {
           pendingCommitRef.current = null;
+          setInvalidDraftVersions((current) =>
+            current.includes(draftVersion)
+              ? current
+              : [...current, draftVersion],
+          );
 
           try {
             await refreshThreadAndMessages();
@@ -617,15 +669,13 @@ export const SurveyBuilderAssistantProvider = ({
           }
         }
 
-        setErrorMessage(
-          isStaleSelectedReplacement
-            ? "This replacement preview is out of date. Ask the assistant for a new preview before approving."
-            : parsedError.message,
-        );
+        // Stale previews show their warning beside the affected approval control.
+        setErrorMessage(isStalePreview ? null : parsedError.message, parsedError);
       }
     },
     [
       commitAssistantDraft,
+      invalidDraftVersions,
       dispatch,
       isCommitting,
       isGenerating,
@@ -661,6 +711,7 @@ export const SurveyBuilderAssistantProvider = ({
       pendingCommitRef.current = null;
 
       setThread(createdThread);
+      setInvalidDraftVersions([]);
       setMessages([]);
       setOptimisticMessage(null);
       setPendingMessage(null);
@@ -676,7 +727,7 @@ export const SurveyBuilderAssistantProvider = ({
           "The new chat was created, but its messages could not be loaded.",
         );
 
-        setErrorMessage(parsedError.message);
+        setErrorMessage(parsedError.message, parsedError);
       }
     } catch (error) {
       const parsedError = parseAssistantApiError(
@@ -689,6 +740,7 @@ export const SurveyBuilderAssistantProvider = ({
           parsedError.code === "SURVEY_BUILDER_THREAD_BUSY"
           ? "Please wait for the current operation to finish before starting a new chat."
           : parsedError.message,
+        parsedError,
       );
     } finally {
       setIsInitializing(false);
@@ -736,8 +788,11 @@ export const SurveyBuilderAssistantProvider = ({
       isLoadingOlder,
       hasMoreMessages,
       canSendMessages,
+      invalidDraftVersions,
       errorMessage,
+      errorNotice,
       sendMessage,
+      sendMessageWithResult,
       retryMessage,
       loadOlderMessages,
       commitDraft,
@@ -751,7 +806,9 @@ export const SurveyBuilderAssistantProvider = ({
       createNewThread,
       displayMessages,
       errorMessage,
+      errorNotice,
       hasMoreMessages,
+      invalidDraftVersions,
       isCommitting,
       isGenerating,
       isInitializing,
@@ -760,6 +817,7 @@ export const SurveyBuilderAssistantProvider = ({
       loadOlderMessages,
       retryMessage,
       sendMessage,
+      sendMessageWithResult,
       thread,
     ],
   );

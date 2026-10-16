@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 
 import {
+  Alert,
   Button,
   Chip,
   CircularProgress,
@@ -20,8 +21,16 @@ import type {
   AssistantTextPart,
   SurveyOrderPreviewProps,
 } from "../../../../types/surveyBuilderAssistant.types";
+import { getAssistantCapabilities } from "../SurveyBuilderAssistantAdapters";
 import { useSurveyBuilderAssistant } from "../SurveyBuilderAssistantContext";
 import { isAssistantThreadReadOnly } from "../surveyBuilderAssistantLifecycle";
+import {
+  getAssistantNotice,
+  getAssistantReplacementNotice,
+} from "../surveyBuilderAssistantNotices";
+
+import AssistantCapabilities from "./AssistantCapabilities";
+import AssistantNotice from "./AssistantNotice";
 
 const Box = styled("div")({});
 
@@ -32,19 +41,30 @@ const formatQuestionType = (type: string) =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
-const TextPart = ({ part }: { part: AssistantTextPart }): ReactElement => (
-  <Typography
-    sx={{
-      color: "inherit",
-      fontSize: "var(--assistant-chat-font-body, 1rem)",
-      lineHeight: 1.6,
-      overflowWrap: "anywhere",
-      whiteSpace: "pre-wrap",
-    }}
-  >
-    {part.text}
-  </Typography>
-);
+const TextPart = ({
+  part,
+  isAssistant,
+}: {
+  part: AssistantTextPart;
+  isAssistant: boolean;
+}): ReactElement => {
+  const capabilities = isAssistant ? getAssistantCapabilities(part.text) : null;
+  if (capabilities) return <AssistantCapabilities {...capabilities} />;
+
+  return (
+    <Typography
+      sx={{
+        color: "inherit",
+        fontSize: "var(--assistant-chat-font-body, 1rem)",
+        lineHeight: 1.6,
+        overflowWrap: "anywhere",
+        whiteSpace: "pre-wrap",
+      }}
+    >
+      {part.text}
+    </Typography>
+  );
+};
 
 const QuestionOptions = ({
   question,
@@ -95,29 +115,20 @@ const QuestionOptions = ({
 
 const SurveyPreviewPart = ({
   part,
+  showReplacementNotice = true,
 }: {
   part: AssistantSurveyPreviewPart;
+  showReplacementNotice?: boolean;
 }): ReactElement => {
   const isReplaceAll = part.commitMode === "REPLACE_ALL";
   const isReplaceSelected = part.commitMode === "REPLACE_SELECTED";
   const isReplacement = isReplaceAll || isReplaceSelected;
   const targetByDraftID = new Map(
-    (part.replacementTargets ?? []).map(target => [target.draftQuestionID, target]),
+    (part.replacementTargets ?? []).map((target) => [
+      target.draftQuestionID,
+      target,
+    ]),
   );
-  const replacedQuestionCount =
-    part.replacedQuestionCount ?? (isReplaceSelected ? part.questions.length : 0);
-
-  const previewDescription = isReplaceSelected
-    ? `${replacedQuestionCount} selected question${replacedQuestionCount === 1 ? "" : "s"} will be replaced at ${replacedQuestionCount === 1 ? "its current position" : "their current positions"}. Other questions stay unchanged.${
-        part.removesFlowLogic !== false
-          ? " Flow rules referencing the selected questions will be removed."
-          : ""
-      }`
-    : `${replacedQuestionCount} current question${replacedQuestionCount === 1 ? "" : "s"} will be removed and ${part.questions.length} replacement question${part.questions.length === 1 ? "" : "s"} will be created.${
-        part.removesFlowLogic !== false
-          ? " Existing flow logic tied to the current questions will also be removed."
-          : ""
-      }`;
 
   return (
     <Paper
@@ -155,7 +166,8 @@ const SurveyPreviewPart = ({
             >
               {isReplaceSelected
                 ? "Selected question replacements"
-                : part.title || (isReplaceAll ? "Replacement survey draft" : "Survey draft")}
+                : part.title ||
+                  (isReplaceAll ? "Replacement survey draft" : "Survey draft")}
             </Typography>
 
             <Typography
@@ -190,37 +202,15 @@ const SurveyPreviewPart = ({
 
       <Divider />
 
-      {isReplacement && (
+      {isReplacement && showReplacementNotice && (
         <>
-          <Box
-            sx={{
-              px: 1.5,
-              py: 1.25,
-              color: "#92400E",
-              backgroundColor: "#FFFBEB",
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: "var(--assistant-chat-font-title, 0.9375rem)",
-                fontWeight: 750,
-                lineHeight: 1.45,
-              }}
-            >
-              {isReplaceSelected
-                ? "This replaces only the selected questions."
-                : "This is a complete replacement preview."}
-            </Typography>
-
-            <Typography
-              sx={{
-                mt: 0.35,
-                fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
-                lineHeight: 1.5,
-              }}
-            >
-              {previewDescription}
-            </Typography>
+          <Box sx={{ px: 1.5, py: 1.25 }}>
+            <AssistantNotice
+              notice={getAssistantReplacementNotice({
+                ...part,
+                questionCount: part.questions.length,
+              })}
+            />
           </Box>
 
           <Divider />
@@ -247,15 +237,16 @@ const SurveyPreviewPart = ({
                   sx={{
                     minWidth: 18,
                     color: "#64748B",
-                    fontSize:
-                      "var(--assistant-chat-font-secondary, 0.8125rem)",
+                    fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
                     fontWeight: 750,
                     lineHeight: 1.5,
                   }}
                 >
                   {isReplaceSelected
-                    ? targetByDraftID.get(question.draftQuestionID)?.previousPosition ?? "?"
-                    : index + 1}.
+                    ? (targetByDraftID.get(question.draftQuestionID)
+                        ?.previousPosition ?? "?")
+                    : index + 1}
+                  .
                 </Typography>
 
                 <Box sx={{ minWidth: 0, flex: 1 }}>
@@ -265,14 +256,16 @@ const SurveyPreviewPart = ({
                         sx={{
                           mb: 0.75,
                           color: "#64748B",
-                          fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
+                          fontSize:
+                            "var(--assistant-chat-font-secondary, 0.8125rem)",
                           lineHeight: 1.5,
                           overflowWrap: "anywhere",
                           whiteSpace: "pre-wrap",
                         }}
                       >
-                        Original: {targetByDraftID.get(question.draftQuestionID)?.text
-                          ?? "Original question unavailable"}
+                        Original:{" "}
+                        {targetByDraftID.get(question.draftQuestionID)?.text ??
+                          "Original question unavailable"}
                       </Typography>
                       <Typography
                         sx={{
@@ -290,8 +283,7 @@ const SurveyPreviewPart = ({
                   <Typography
                     sx={{
                       color: "#0F172A",
-                      fontSize:
-                        "var(--assistant-chat-font-primary, 0.875rem)",
+                      fontSize: "var(--assistant-chat-font-primary, 0.875rem)",
                       fontWeight: 650,
                       lineHeight: 1.45,
                       overflowWrap: "anywhere",
@@ -323,8 +315,7 @@ const SurveyPreviewPart = ({
                         height: 20,
                         color: "#475569",
                         backgroundColor: "#F1F5F9",
-                        fontSize:
-                          "var(--assistant-chat-font-label, 0.75rem)",
+                        fontSize: "var(--assistant-chat-font-label, 0.75rem)",
                       }}
                     />
 
@@ -336,8 +327,7 @@ const SurveyPreviewPart = ({
                           height: 20,
                           color: "#4338CA",
                           backgroundColor: "#EEF2FF",
-                          fontSize:
-                            "var(--assistant-chat-font-label, 0.75rem)",
+                          fontSize: "var(--assistant-chat-font-label, 0.75rem)",
                         }}
                       />
                     )}
@@ -408,13 +398,23 @@ export function SurveyOrderPreview({ part }: SurveyOrderPreviewProps) {
 
 const ApprovalControlsPart = ({
   part,
+  preview,
 }: {
   part: AssistantApprovalControlsPart;
-}): ReactElement => {
-  const { commitDraft, isCommitting, isGenerating, thread } =
-    useSurveyBuilderAssistant();
+  preview?: AssistantSurveyPreviewPart;
+}): ReactElement | null => {
+  const {
+    commitDraft,
+    invalidDraftVersions,
+    isCommitting,
+    isGenerating,
+    isSending,
+    thread,
+  } = useSurveyBuilderAssistant();
 
-  const isCommitted = thread?.stage === "COMMITTED";
+  const isCommitted =
+    thread?.stage === "COMMITTED" &&
+    part.draftVersion + 1 === thread.draft.version;
   const isReadOnly = isAssistantThreadReadOnly(thread);
 
   const commitMode = part.commitMode ?? thread?.draft.commitMode ?? "APPEND";
@@ -432,38 +432,21 @@ const ApprovalControlsPart = ({
   const isReplacement = isReplaceAll || isReplaceSelected;
   const isReorder = commitMode === "REORDER";
 
-  const isStaleSelectedPreview =
-    isReplaceSelected && part.draftVersion !== thread?.draft.version;
+  const isStalePreview = invalidDraftVersions.includes(part.draftVersion);
 
   const hasApprovableDraft = isReorder || questionCount > 0;
 
-  const title = isReplaceSelected
-    ? "Replace these selected questions?"
-    : isReplaceAll
-    ? "Replace all current questions?"
-    : isReorder
-      ? "Ready to apply this question order?"
-      : "Ready to create these questions?";
-
-  const description = isReplaceSelected
-    ? `${questionCount} selected question${questionCount === 1 ? "" : "s"} will be replaced at ${questionCount === 1 ? "its original position" : "their original positions"}. Other questions stay unchanged. Flow rules referencing the selected questions will be removed.`
-    : isReplaceAll
-    ? `${replacedQuestionCount} current question${
-        replacedQuestionCount === 1 ? "" : "s"
-      } will be removed and ${questionCount} replacement question${
-        questionCount === 1 ? "" : "s"
-      } will be created. Existing flow logic tied to the old questions will also be removed.`
-    : isReorder
-      ? "This will reorder the existing survey questions. No questions will be created or deleted."
-      : "This appends the latest draft to the survey. You can continue asking for changes before approving.";
+  const title = isReorder
+    ? "Ready to apply this question order?"
+    : "Ready to create these questions?";
 
   const buttonLabel = isReplaceSelected
     ? `Replace ${questionCount} selected question${questionCount === 1 ? "" : "s"}`
     : isReplaceAll
-    ? `Replace with ${questionCount} question${questionCount === 1 ? "" : "s"}`
-    : isReorder
-      ? "Apply reorder"
-      : `Create ${questionCount} question${questionCount === 1 ? "" : "s"}`;
+      ? `Replace with ${questionCount} question${questionCount === 1 ? "" : "s"}`
+      : isReorder
+        ? "Apply reorder"
+        : `Create ${questionCount} question${questionCount === 1 ? "" : "s"}`;
 
   const committingLabel = isReplacement
     ? "Replacing questions…"
@@ -502,28 +485,24 @@ const ApprovalControlsPart = ({
   }
 
   if (isReadOnly) {
+    return null;
+  }
+
+  if (isStalePreview) {
     return (
-      <Paper
-        variant="outlined"
-        sx={{
-          width: "100%",
-          p: 1.25,
-          borderColor: "#E2E8F0",
-          borderRadius: 2.5,
-          backgroundColor: "#F8FAFC",
-          boxSizing: "border-box",
-        }}
-      >
-        <Typography
-          sx={{
-            color: "#64748B",
-            fontSize: "var(--assistant-chat-font-primary, 0.875rem)",
-          }}
-        >
-          This previous chat is read-only.
-        </Typography>
-      </Paper>
+      <AssistantNotice
+        notice={getAssistantNotice({
+          type: "notice",
+          reason: "STALE_PREVIEW",
+          text: "This preview can no longer be approved. Review the latest preview, or ask the assistant for a new one.",
+        })}
+      />
     );
+  }
+
+  // Older previews stay in chat history without obsolete approval controls.
+  if (part.draftVersion !== thread?.draft.version) {
+    return null;
   }
 
   return (
@@ -538,33 +517,39 @@ const ApprovalControlsPart = ({
         boxSizing: "border-box",
       }}
     >
-      <Typography
-        sx={{
-          color: isReplacement ? "#92400E" : "#0F172A",
-          fontSize: "var(--assistant-chat-font-title, 0.9375rem)",
-          fontWeight: 700,
-        }}
-      >
-        {title}
-      </Typography>
-
-      <Typography
-        sx={{
-          mt: 0.35,
-          color: isReplacement ? "#92400E" : "#64748B",
-          fontSize: "var(--assistant-chat-font-secondary, 0.8125rem)",
-          lineHeight: 1.45,
-        }}
-      >
-        {description}
-      </Typography>
+      {isReplacement ? (
+        <AssistantNotice
+          notice={getAssistantReplacementNotice({
+            commitMode,
+            questionCount,
+            replacedQuestionCount,
+            removesFlowLogic: preview?.removesFlowLogic,
+            flowLogicScope: preview?.flowLogicScope,
+          })}
+        />
+      ) : (
+        <>
+          <Typography
+            sx={{
+              color: "#0F172A",
+              fontSize: "var(--assistant-chat-font-title, 0.9375rem)",
+              fontWeight: 700,
+            }}
+          >
+            {title}
+          </Typography>
+        </>
+      )}
 
       <Button
         fullWidth
         variant="contained"
         disabled={
-          isReadOnly || isCommitting || isGenerating ||
-          !hasApprovableDraft || isStaleSelectedPreview
+          !thread ||
+          isCommitting ||
+          isGenerating ||
+          isSending ||
+          !hasApprovableDraft
         }
         onClick={() => void commitDraft(part.draftVersion)}
         startIcon={
@@ -599,23 +584,92 @@ const AssistantMessageParts = ({
   message,
 }: {
   message: AssistantMessage;
-}): ReactElement => (
-  <Stack spacing={1} sx={{ width: "100%", minWidth: 0 }}>
-    {message.content.parts.map((part, index) => {
-      const key = `${message.messageID}-${part.type}-${index}`;
+}): ReactElement => {
+  const { messages } = useSurveyBuilderAssistant();
 
-      switch (part.type) {
-        case "text":
-          return <TextPart key={key} part={part} />;
-        case "survey-preview":
-          return <SurveyPreviewPart key={key} part={part} />;
-        case "survey-order-preview":
-          return <SurveyOrderPreview part={part} />;
-        case "approval-controls":
-          return <ApprovalControlsPart key={key} part={part} />;
-      }
-    })}
-  </Stack>
-);
+  if (message.role !== "USER" && message.status === "FAILED") {
+    if (message.errorCode === "SELECTIVE_REPLACEMENT_DRAFT_CONFLICT") {
+      return (
+        <TextPart
+          part={{
+            type: "text",
+            text: "That replacement was blocked because another preview was awaiting approval.",
+          }}
+          isAssistant
+        />
+      );
+    }
+
+    return (
+      <Alert
+        severity="error"
+        role="note"
+        sx={{
+          fontSize: "var(--assistant-chat-font-primary, 14px)",
+          lineHeight: 1.5,
+        }}
+      >
+        {message.content.parts
+          .flatMap((part) => (part.type === "text" ? [part.text] : []))
+          .join("\n")}
+      </Alert>
+    );
+  }
+
+  return (
+    <Stack spacing={1} sx={{ width: "100%", minWidth: 0 }}>
+      {message.content.parts.map((part, index) => {
+        const key = `${message.messageID}-${part.type}-${index}`;
+
+        switch (part.type) {
+          case "text":
+            return (
+              <TextPart
+                key={key}
+                part={part}
+                isAssistant={message.role === "ASSISTANT"}
+              />
+            );
+          case "notice":
+            return (
+              <AssistantNotice
+                key={key}
+                notice={getAssistantNotice(part)}
+                interactive={message.messageID === messages.at(-1)?.messageID}
+              />
+            );
+          case "survey-preview":
+            return (
+              <SurveyPreviewPart
+                key={key}
+                part={part}
+                showReplacementNotice={
+                  !message.content.parts.some(
+                    (candidate) =>
+                      candidate.type === "approval-controls" &&
+                      candidate.draftVersion === part.draftVersion,
+                  )
+                }
+              />
+            );
+          case "survey-order-preview":
+            return <SurveyOrderPreview key={key} part={part} />;
+          case "approval-controls":
+            return (
+              <ApprovalControlsPart
+                key={key}
+                part={part}
+                preview={message.content.parts.find(
+                  (candidate): candidate is AssistantSurveyPreviewPart =>
+                    candidate.type === "survey-preview" &&
+                    candidate.draftVersion === part.draftVersion,
+                )}
+              />
+            );
+        }
+      })}
+    </Stack>
+  );
+};
 
 export default AssistantMessageParts;

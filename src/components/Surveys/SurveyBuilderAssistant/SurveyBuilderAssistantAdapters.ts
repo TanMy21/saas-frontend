@@ -75,8 +75,7 @@ export const normalizeAssistantMessageForDisplay = (
   return {
     ...message,
     role: "ASSISTANT",
-    status: "COMPLETED",
-    errorCode: null,
+    status: "FAILED",
     content: {
       parts: [
         {
@@ -94,7 +93,7 @@ export const createAssistantFailureMessage = (
 ): AssistantMessage => ({
   messageID: `assistant-failure-${job.jobID}`,
   role: "ASSISTANT",
-  status: "COMPLETED",
+  status: "FAILED",
   sequence,
   authorUserID: null,
   content: {
@@ -105,14 +104,15 @@ export const createAssistantFailureMessage = (
       },
     ],
   },
-  errorCode: null,
+  errorCode: job.errorCode,
   createdAt: job.completedAt ?? new Date().toISOString(),
 });
 
 export const getAssistantMessageText = (message: AssistantMessage) => {
   const text = message.content.parts
-    .filter(isAssistantTextPart)
-    .map((part) => part.text)
+    .flatMap((part) =>
+      part.type === "text" || part.type === "notice" ? [part.text] : [],
+    )
     .join("\n")
     .trim();
 
@@ -133,6 +133,27 @@ export const getAssistantMessageText = (message: AssistantMessage) => {
   }
 
   return "";
+};
+
+export const getAssistantCapabilities = (text: string) => {
+  const [heading, ...lines] = text.trim().split(/\r?\n/);
+  if (!/^Here[’']s what I can do in chat:$/.test(heading)) return null;
+
+  const items: { title: string; description: string }[] = [];
+  const footer: string[] = [];
+
+  for (const line of lines) {
+    if (!line.trim()) continue;
+
+    const item = line.match(/^- \*\*(.+?)\*\*\s*(.*)$/);
+    if (item && footer.length === 0) {
+      items.push({ title: item[1], description: item[2] });
+    } else {
+      footer.push(line);
+    }
+  }
+
+  return items.length > 0 ? { items, footer: footer.join("\n") } : null;
 };
 
 export const getAssistantRuntimeRole = (

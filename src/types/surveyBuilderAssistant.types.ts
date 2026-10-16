@@ -179,6 +179,10 @@ export interface AssistantWorkflowState {
   pendingReplacementRequest?: string | null;
 }
 
+export type AssistantMessageSubmissionResult =
+  | { success: true }
+  | { success: false; error: string };
+
 export interface AssistantThread {
   threadID: string;
   surveyID: string;
@@ -195,6 +199,20 @@ export interface AssistantThread {
 export interface AssistantTextPart {
   type: "text";
   text: string;
+}
+
+export interface AssistantNoticePart {
+  type: "notice";
+  reason: string;
+  text: string;
+}
+
+export interface AssistantNoticeData {
+  tone: "refusal" | "warning" | "info" | "neutral";
+  title: string;
+  policy: string;
+  explanation: string;
+  alternatives?: readonly string[];
 }
 
 export interface AssistantSurveyPreviewPart {
@@ -233,6 +251,7 @@ export interface AssistantApprovalControlsPart {
 
 export type AssistantMessagePart =
   | AssistantTextPart
+  | AssistantNoticePart
   | AssistantSurveyPreviewPart
   | AssistantSurveyOrderPreviewPart
   | AssistantApprovalControlsPart;
@@ -360,9 +379,14 @@ export interface SurveyBuilderAssistantContextValue {
   isLoadingOlder: boolean;
   hasMoreMessages: boolean;
   canSendMessages: boolean;
+  invalidDraftVersions: number[];
   errorMessage: string | null;
+  errorNotice: AssistantNoticeData | null;
 
   sendMessage: (message: string) => Promise<void>;
+  sendMessageWithResult: (
+    message: string,
+  ) => Promise<AssistantMessageSubmissionResult>;
   retryMessage: () => Promise<void>;
   loadOlderMessages: () => Promise<void>;
   commitDraft: (draftVersion: number) => Promise<void>;

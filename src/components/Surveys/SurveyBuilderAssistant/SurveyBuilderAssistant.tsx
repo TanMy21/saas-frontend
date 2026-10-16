@@ -6,7 +6,6 @@ import {
   Button,
   ButtonBase,
   CircularProgress,
-  Paper,
   styled,
   Typography,
 } from "@mui/material";
@@ -14,6 +13,7 @@ import { MessageSquarePlus, X } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import { useAppTheme } from "../../../theme/useAppTheme";
+import { GuardrailNotice } from "../../assistant-ui/guardrail-notice";
 
 import { useSurveyBuilderAssistant } from "./SurveyBuilderAssistantContext";
 import { SurveyBuilderAssistantProvider } from "./SurveyBuilderAssistantProvider";
@@ -21,8 +21,10 @@ import { subscribeToAssistantSurveyDeleted } from "./surveyBuilderAssistantStora
 import AssistantComposer from "./ui/AssistantComposer";
 import AssistantEmptyState from "./ui/AssistantEmptyState";
 import AssistantMessage from "./ui/AssistantMessage";
+import AssistantNotice from "./ui/AssistantNotice";
 
 const Box = styled("div")({});
+const AssistantThreadRoot = styled(ThreadPrimitive.Root)({});
 
 const AssistantWorkingIndicator = (): ReactElement => (
   <Box
@@ -44,6 +46,7 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
     clearError,
     createNewThread,
     errorMessage,
+    errorNotice,
     hasMoreMessages,
     isCommitting,
     isGenerating,
@@ -64,7 +67,14 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
   const isBusy = isInitializing || isSending || isGenerating || isCommitting;
 
   return (
-    <ThreadPrimitive.Root
+    <AssistantThreadRoot
+      sx={{
+        "--assistant-chat-font-body": `${chatFontSize}px`,
+        "--assistant-chat-font-title": `${chatFontSize - 1}px`,
+        "--assistant-chat-font-primary": `${chatFontSize - 2}px`,
+        "--assistant-chat-font-secondary": `${chatFontSize - 3}px`,
+        "--assistant-chat-font-label": `${chatFontSize - 4}px`,
+      }}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -157,7 +167,18 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
         </Button>
       </Box>
 
-      {errorMessage && (
+      {errorNotice && (
+        <Box sx={{ mx: 2, mt: 1.25, flexShrink: 0 }}>
+          <AssistantNotice
+            notice={errorNotice}
+            interactive
+            announce
+            onDismiss={clearError}
+          />
+        </Box>
+      )}
+
+      {!errorNotice && errorMessage && (
         <Box
           role="alert"
           sx={{
@@ -209,11 +230,6 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
             px: 2,
             py: 2,
             boxSizing: "border-box",
-            "--assistant-chat-font-body": `${chatFontSize}px`,
-            "--assistant-chat-font-title": `${chatFontSize - 1}px`,
-            "--assistant-chat-font-primary": `${chatFontSize - 2}px`,
-            "--assistant-chat-font-secondary": `${chatFontSize - 3}px`,
-            "--assistant-chat-font-label": `${chatFontSize - 4}px`,
             ...scrollStyles.elementsPanel,
           }}
         >
@@ -251,25 +267,19 @@ const SurveyBuilderAssistantThread = (): ReactElement => {
       </ThreadPrimitive.Viewport>
 
       <AssistantComposer />
-    </ThreadPrimitive.Root>
+    </AssistantThreadRoot>
   );
 };
 
 const MissingSurveyAssistant = (): ReactElement => (
-  <Paper
-    variant="outlined"
-    sx={{
-      m: 2,
-      p: 2,
-      borderColor: "#FECACA",
-      borderRadius: 2.5,
-      backgroundColor: "#FEF2F2",
-    }}
-  >
-    <Typography sx={{ color: "#991B1B", fontSize: "0.75rem" }}>
-      A survey is required to start the assistant.
-    </Typography>
-  </Paper>
+  <Box sx={{ m: 2 }}>
+    <GuardrailNotice
+      tone="info"
+      title="Open a survey to get started"
+      policy="Survey required"
+      explanation="A survey is required to start the assistant."
+    />
+  </Box>
 );
 
 const SurveyBuilderAssistant = (): ReactElement | null => {
