@@ -20,6 +20,7 @@ import {
 import { useToast } from "../hooks/useToast";
 import { useAppTheme } from "../theme/useAppTheme";
 import { getInitials } from "../utils/utils";
+import { newPasswordSchema } from "../utils/schema";
 
 export const AcceptInvite = () => {
   const { textStyles, background, grey, shadows, iconStyle } = useAppTheme();
@@ -60,10 +61,8 @@ export const AcceptInvite = () => {
   // Client-side validity for enabling the submit button
   const valid =
     !!token &&
-    password.length >= 8 &&
-    password === confirm &&
-    /[A-Z]/.test(password) &&
-    /[0-9]/.test(password);
+    newPasswordSchema.safeParse(password).success &&
+    password === confirm;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,7 +107,8 @@ export const AcceptInvite = () => {
 
   if (isInviteLoading) {
     return (
-      <Box component="div"
+      <Box
+        component="div"
         sx={{
           minHeight: "100vh",
           bgcolor: grey[50],
@@ -130,7 +130,8 @@ export const AcceptInvite = () => {
 
   if (!token || isInviteError || !invite) {
     return (
-      <Box component="div"
+      <Box
+        component="div"
         sx={{
           minHeight: "100vh",
           bgcolor: grey[50],
@@ -140,7 +141,8 @@ export const AcceptInvite = () => {
           px: 2,
         }}
       >
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             margin: "auto",
             width: "100%",
@@ -163,7 +165,8 @@ export const AcceptInvite = () => {
             }}
           >
             <Stack spacing={3}>
-              <Box component="div"
+              <Box
+                component="div"
                 sx={{
                   width: "98",
                   height: 80,
@@ -172,7 +175,8 @@ export const AcceptInvite = () => {
                   mx: "auto",
                 }}
               >
-                <Box component="div"
+                <Box
+                  component="div"
                   sx={{
                     width: 64,
                     height: 64,
@@ -188,7 +192,8 @@ export const AcceptInvite = () => {
                 </Box>
               </Box>
 
-              <Box component="div"
+              <Box
+                component="div"
                 sx={{
                   display: "flex",
                   justifyContent: "center",
@@ -228,10 +233,10 @@ export const AcceptInvite = () => {
     );
   }
 
-  // Success card display before redirecting to login
   if (isAcceptSuccess) {
     return (
-      <Box component="div"
+      <Box
+        component="div"
         sx={{
           minHeight: "100vh",
           bgcolor: grey[50],
@@ -265,7 +270,8 @@ export const AcceptInvite = () => {
   }
 
   return (
-    <Box component="div"
+    <Box
+      component="div"
       sx={{
         minHeight: "100vh",
         bgcolor: grey[50],
@@ -288,7 +294,8 @@ export const AcceptInvite = () => {
       >
         <Stack spacing={3}>
           <Stack spacing={1} alignItems="center" textAlign="center">
-            <Box component="div"
+            <Box
+              component="div"
               sx={{
                 width: 40,
                 height: 40,
@@ -312,7 +319,8 @@ export const AcceptInvite = () => {
             </Typography>
           </Stack>
 
-          <Box component="div"
+          <Box
+            component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -323,7 +331,8 @@ export const AcceptInvite = () => {
               border: `1px solid ${grey[200]}`,
             }}
           >
-            <Box component="div"
+            <Box
+              component="div"
               sx={{
                 width: 36,
                 height: 36,

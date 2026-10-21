@@ -8,6 +8,15 @@ dayjs.extend(isSameOrAfter);
 
 const hexColorRegex = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
 
+export const newPasswordSchema = z
+  .string()
+  .min(8, "Password must contain at least 8 characters")
+  .max(72, "Password must contain at most 72 characters")
+  .refine(
+    (value) => new TextEncoder().encode(value).length <= 72,
+    "Password must fit within 72 UTF-8 bytes",
+  );
+
 export const registerSchema: ZodType<RegisterFormData> = z
   .object({
     firstname: z
@@ -19,14 +28,8 @@ export const registerSchema: ZodType<RegisterFormData> = z
       .min(2, { message: "Last Name should be more than 1 character *" })
       .max(30, { message: "Last Name should be less than 30 characters *" }),
     email: z.string().email(),
-    password: z
-      .string()
-      .min(6, { message: "password should be more than 6 characters *" })
-      .max(20, { message: "password should be less than 20 characters *" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "password should be more than 6 characters *" })
-      .max(20, { message: "password should be less than 20 characters *" }),
+    password: newPasswordSchema,
+    confirmPassword: newPasswordSchema,
     organization: z
       .string()
       .min(2, {
@@ -109,14 +112,8 @@ export const forgetPasswordSchema = z.object({
 export const updatePasswordSchema = z
   .object({
     currentPassword: z.string().min(1, "Current password is required"),
-    password: z
-      .string()
-      .min(6, { message: "password should be more than 6 characters *" })
-      .max(20, { message: "password should be less than 20 characters *" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "password should be more than 6 characters *" })
-      .max(20, { message: "password should be less than 20 characters *" }),
+    password: newPasswordSchema,
+    confirmPassword: newPasswordSchema,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match *",
@@ -125,14 +122,8 @@ export const updatePasswordSchema = z
 
 export const resetPasswordSchema = z
   .object({
-    password: z
-      .string()
-      .min(6, { message: "password should be more than 6 characters *" })
-      .max(20, { message: "password should be less than 20 characters *" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "password should be more than 6 characters *" })
-      .max(20, { message: "password should be less than 20 characters *" }),
+    password: newPasswordSchema,
+    confirmPassword: newPasswordSchema,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match *",
@@ -142,11 +133,8 @@ export const resetPasswordSchema = z
 export const resetPasswordOtpSchema = z
   .object({
     otp: z.string().regex(/^\d{6}$/, "Enter the complete six-digit reset code"),
-    password: z
-      .string()
-      .min(6, "Password must contain at least 6 characters")
-      .max(255, "Password is too long"),
-    confirmPassword: z.string().min(1, "Please confirm your new password"),
+    password: newPasswordSchema,
+    confirmPassword: newPasswordSchema,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
