@@ -4,9 +4,7 @@ import {
   Alert,
   Box,
   Button,
-  Chip,
   CircularProgress,
-  InputAdornment,
   Pagination,
   Stack,
   Table,
@@ -15,61 +13,18 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Search } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
 import { useGetOrganizationUserSessionsQuery } from "../../app/slices/orgApiSlice";
 import { useDebounce } from "../../hooks/useDebounce";
-import LabeledField from "../Settings/LabelField";
+
+import ActivityBadge from "./ActivityBadge";
+import ActivityFilters from "./ActivityFilters";
 
 const PAGE_LIMIT = 25;
-
-const activitySearchFieldSx = {
-  "& .MuiOutlinedInput-root": {
-    minHeight: 48,
-    borderRadius: 2.25,
-    backgroundColor: "rgba(255,255,255,0.72)",
-    transition:
-      "border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease",
-
-    "& fieldset": {
-      borderColor: "rgba(148,163,184,0.38)",
-    },
-
-    "&:hover": {
-      backgroundColor: "#fff",
-
-      "& fieldset": {
-        borderColor: "rgba(0,116,235,0.58)",
-      },
-    },
-
-    "&.Mui-focused": {
-      backgroundColor: "#fff",
-      boxShadow: "0 0 0 4px rgba(0,116,235,0.11)",
-
-      "& fieldset": {
-        borderColor: "#0074EB",
-        borderWidth: 1,
-      },
-    },
-
-    "& input": {
-      fontSize: "0.925rem",
-      fontWeight: 500,
-      color: "#0F172A",
-    },
-
-    "& input::placeholder": {
-      color: "#94A3B8",
-      opacity: 1,
-    },
-  },
-};
 
 const displayValue = (value: string | null | undefined) => value?.trim() || "—";
 
@@ -203,53 +158,27 @@ export default function UserSessionsTable({ orgID }: { orgID: string }) {
 
   return (
     <Stack spacing={2.5}>
-      <Box
-        component="div"
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "1fr",
-            md: "minmax(220px, 2fr) repeat(3, minmax(130px, 1fr)) auto",
-          },
-          gap: 1.5,
-          alignItems: "center",
-        }}
-      >
-        <LabeledField
-          topLabel="Search sessions"
-          placeholder="Email, IP, browser, device..."
-          value={search}
-          sx={activitySearchFieldSx}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search size={18} color="#64748B" />
-              </InputAdornment>
-            ),
-          }}
-          onChange={(event) => {
-            setSearch(event.target.value);
+      <ActivityFilters
+        searchLabel="Search sessions"
+        searchPlaceholder="Email..."
+        search={search}
+        onSearchChange={(value) => {
+          setSearch(value);
 
-            if (page !== 1) {
-              updatePage(1);
-            }
-          }}
-        />
-
-        <TextField
-          size="small"
-          label="Status"
-          placeholder="ACTIVE"
-          value={state}
-          onChange={(event) =>
-            updateFilter("sessionsState", event.target.value)
+          if (page !== 1) {
+            updatePage(1);
           }
-        />
-
-        <Button variant="outlined" onClick={clearFilters}>
-          Clear
-        </Button>
-      </Box>
+        }}
+        fields={[
+          {
+            label: "Status",
+            placeholder: "e.g. ACTIVE",
+            value: state,
+            onChange: (value) => updateFilter("sessionsState", value),
+          },
+        ]}
+        onClear={clearFilters}
+      />
 
       {isFetching && !isLoading && (
         <Typography variant="caption" color="text.secondary">
@@ -323,13 +252,7 @@ export default function UserSessionsTable({ orgID }: { orgID: string }) {
                     </TableCell>
 
                     <TableCell>
-                      <Chip
-                        size="small"
-                        label={displayValue(session.state)}
-                        color={
-                          session.state === "ACTIVE" ? "success" : "default"
-                        }
-                      />
+                      <ActivityBadge kind="status" value={session.state} />
                     </TableCell>
 
                     <TableCell>

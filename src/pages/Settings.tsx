@@ -155,6 +155,7 @@ const Settings = () => {
               <Box
                 component="div"
                 sx={{
+                  minWidth: 0,
                   width: { xs: "100%", lg: "75%" },
                   "@media (width: 1280px), (width: 1366px)": {
                     width: "calc(75% - 8%)",

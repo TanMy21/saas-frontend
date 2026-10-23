@@ -4,9 +4,7 @@ import {
   Alert,
   Box,
   Button,
-  Chip,
   CircularProgress,
-  InputAdornment,
   Pagination,
   Stack,
   Table,
@@ -15,61 +13,18 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Search } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
 import { useGetOrganizationAuditLogsQuery } from "../../app/slices/orgApiSlice";
 import { useDebounce } from "../../hooks/useDebounce";
-import LabeledField from "../Settings/LabelField";
+
+import ActivityBadge from "./ActivityBadge";
+import ActivityFilters from "./ActivityFilters";
 
 const PAGE_LIMIT = 25;
-
-const activitySearchFieldSx = {
-  "& .MuiOutlinedInput-root": {
-    minHeight: 48,
-    borderRadius: 2.25,
-    backgroundColor: "rgba(255,255,255,0.72)",
-    transition:
-      "border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease",
-
-    "& fieldset": {
-      borderColor: "rgba(148,163,184,0.38)",
-    },
-
-    "&:hover": {
-      backgroundColor: "#fff",
-
-      "& fieldset": {
-        borderColor: "rgba(0,116,235,0.58)",
-      },
-    },
-
-    "&.Mui-focused": {
-      backgroundColor: "#fff",
-      boxShadow: "0 0 0 4px rgba(0,116,235,0.11)",
-
-      "& fieldset": {
-        borderColor: "#0074EB",
-        borderWidth: 1,
-      },
-    },
-
-    "& input": {
-      fontSize: "0.925rem",
-      fontWeight: 500,
-      color: "#0F172A",
-    },
-
-    "& input::placeholder": {
-      color: "#94A3B8",
-      opacity: 1,
-    },
-  },
-};
 
 const displayValue = (value: string | null | undefined) => value?.trim() || "—";
 
@@ -134,11 +89,6 @@ export default function AuditLogsTable({ orgID }: { orgID: string }) {
 
   const page = Math.max(1, Number(searchParams.get("auditPage") ?? "1") || 1);
 
-  const actorEmail = searchParams.get("auditActorEmail") ?? "";
-  const entityType = searchParams.get("auditEntityType") ?? "";
-  const actionType = searchParams.get("auditActionType") ?? "";
-  const entityID = searchParams.get("auditEntityID") ?? "";
-
   useEffect(() => {
     const currentSearch = searchParams.get("auditSearch") ?? "";
 
@@ -155,19 +105,6 @@ export default function AuditLogsTable({ orgID }: { orgID: string }) {
     next.set("auditPage", "1");
     setSearchParams(next, { replace: true });
   }, [debouncedSearch, searchParams, setSearchParams]);
-
-  const updateFilter = (key: string, value: string) => {
-    const next = new URLSearchParams(searchParams);
-
-    if (value.trim()) {
-      next.set(key, value);
-    } else {
-      next.delete(key);
-    }
-
-    next.set("auditPage", "1");
-    setSearchParams(next, { replace: true });
-  };
 
   const updatePage = (nextPage: number) => {
     const next = new URLSearchParams(searchParams);
@@ -198,10 +135,6 @@ export default function AuditLogsTable({ orgID }: { orgID: string }) {
         page,
         limit: PAGE_LIMIT,
         search: debouncedSearch.trim() || undefined,
-        actorEmail: actorEmail || undefined,
-        entityType: entityType || undefined,
-        actionType: actionType || undefined,
-        entityID: entityID || undefined,
       },
     });
 
@@ -210,79 +143,19 @@ export default function AuditLogsTable({ orgID }: { orgID: string }) {
 
   return (
     <Stack spacing={2.5}>
-      <Box
-        component="div"
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "1fr",
-            md: "minmax(210px, 2fr) repeat(4, minmax(125px, 1fr)) auto",
-          },
-          gap: 1.5,
-          alignItems: "center",
+      <ActivityFilters
+        searchLabel="Search events"
+        searchPlaceholder="Actor, action, entity..."
+        search={search}
+        onSearchChange={(value) => {
+          setSearch(value);
+
+          if (page !== 1) {
+            updatePage(1);
+          }
         }}
-      >
-        <LabeledField
-          topLabel="Search events"
-          placeholder="Actor, request, entity, IP..."
-          value={search}
-          sx={activitySearchFieldSx}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search size={18} color="#64748B" />
-              </InputAdornment>
-            ),
-          }}
-          onChange={(event) => {
-            setSearch(event.target.value);
-
-            if (page !== 1) {
-              updatePage(1);
-            }
-          }}
-        />
-
-        <TextField
-          size="small"
-          label="Actor email"
-          value={actorEmail}
-          onChange={(event) =>
-            updateFilter("auditActorEmail", event.target.value)
-          }
-        />
-
-        <TextField
-          size="small"
-          label="Entity type"
-          value={entityType}
-          onChange={(event) =>
-            updateFilter("auditEntityType", event.target.value)
-          }
-        />
-
-        <TextField
-          size="small"
-          label="Action"
-          value={actionType}
-          onChange={(event) =>
-            updateFilter("auditActionType", event.target.value)
-          }
-        />
-
-        <TextField
-          size="small"
-          label="Entity ID"
-          value={entityID}
-          onChange={(event) =>
-            updateFilter("auditEntityID", event.target.value)
-          }
-        />
-
-        <Button variant="outlined" onClick={clearFilters}>
-          Clear
-        </Button>
-      </Box>
+        onClear={clearFilters}
+      />
 
       {isFetching && !isLoading && (
         <Typography variant="caption" color="text.secondary">
@@ -356,12 +229,7 @@ export default function AuditLogsTable({ orgID }: { orgID: string }) {
                     </TableCell>
 
                     <TableCell>
-                      <Tooltip title={displayValue(log.entity.action)}>
-                        <Chip
-                          size="small"
-                          label={formatEnum(log.entity.action)}
-                        />
-                      </Tooltip>
+                      <ActivityBadge kind="event" value={log.entity.action} />
                     </TableCell>
 
                     <TableCell>

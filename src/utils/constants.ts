@@ -13,11 +13,11 @@ import {
   RotateCcw,
   Shield,
   TimerOff,
-  User,
   UserPlus,
   LockOpenIcon,
   TrendingUpIcon,
-  ShieldCheck,
+  SquareActivity,
+  Settings2,
 } from "lucide-react";
 
 import { FeedbackTypeUI } from "../types/feedBackTypes";
@@ -170,11 +170,11 @@ export const CONCEPT_FIT_DISPLAY_MODE_OPTIONS = [
 export const CONCEPT_FIT_IMAGE_ROLE = "CONCEPT_FIT_STIMULUS";
 
 export const TABS: { id: TabId; label: string; icon: any }[] = [
-  { id: "general", label: "General", icon: User },
+  { id: "general", label: "General", icon: Settings2 },
   {
     id: "activity",
     label: "Activity",
-    icon: ShieldCheck,
+    icon: SquareActivity,
   },
   { id: "create-user", label: "Add Member", icon: UserPlus },
   { id: "security", label: "Security", icon: Shield },
